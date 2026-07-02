@@ -1,0 +1,29 @@
+/**
+ * @file Math.hh
+ * @author Theo Wimber (theowimber@abeams.app)
+ * @brief Defines aliases of glm types
+ * @version 0.1
+ * @date 2026-07-01
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+
+#include <glm.hpp>
+#include <gtx/quaternion.hpp>
+
+
+
+namespace MonoWorks 
+{
+    using Vector     = ::glm::vec3;
+    using Vector2    = ::glm::vec2;
+    using Vector4    = ::glm::vec4;
+
+    using Matrix     = ::glm::mat4;
+    using Matrix3    = ::glm::mat3;
+    using Matrix2    = ::glm::mat2;
+
+    using Quaternion = ::glm::quat;
+    using Angle      = ::glm::vec3;
+}

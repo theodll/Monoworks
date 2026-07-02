@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 3.5)
 
 project(Monoworks LANGUAGES CXX)
 
+list(APPEND CMAKE_PREFIX_PATH "C:/Qt/6.11.1/msvc2022_64")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+set(COMPILE_WARNING_AS_ERROR ON)
 
 if(WIN32)
     add_compile_definitions(MW_PLATFORM_WINDOWS)
@@ -24,3 +27,4 @@ add_compile_definitions(
 add_subdirectory(MonoEngine)
 add_subdirectory(MonoEditor)
 add_subdirectory(MonoRuntime)
+add_subdirectory(Common/extern/doctest)
