@@ -26,7 +26,7 @@ namespace Monoworks
 	private:
 		struct SEntry
 		{
-			void* Memory = nullptr;
+			void* pMemory = nullptr;
 			u32   Size = 0;
 			u32   Generation = 0;
 			bool  Alive = false;

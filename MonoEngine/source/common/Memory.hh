@@ -30,7 +30,12 @@ namespace Monoworks
 	class Ref 
 	{
 	public:
-		
+		Ref() : m_Instance({}) const noexcept {};
+		Ref(std::nullptr_t n) : m_Instance({}) const noexcept {};
+		Ref(const SHandle instance) : m_Instance(instance) const noexcept 
+		{
+			INCREF
+		}
 
 
 		[[nodiscard]] static Ref<T> Create() noexcept;
