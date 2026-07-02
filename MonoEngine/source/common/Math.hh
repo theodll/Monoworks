@@ -9,8 +9,10 @@
  * 
  */
 
-#include <glm.hpp>
-#include <gtx/quaternion.hpp>
+#include <glm/glm.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 
 
 

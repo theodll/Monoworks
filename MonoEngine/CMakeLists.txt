@@ -2,11 +2,11 @@
 
 add_library(MonoEngine STATIC "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh")
 
-add_subdirectory("extern/glm")
+add_subdirectory("thirdparty/glm")
 # add_subdirectory("extern/imgui")
-add_subdirectory("extern/spdlog")
-add_subdirectory("extern/tracy")
-add_subdirectory("extern/volk")
+add_subdirectory("thirdparty/spdlog")
+add_subdirectory("thirdparty/tracy")
+add_subdirectory("thirdparty/volk")
 
 find_package(Vulkan REQUIRED)
 
