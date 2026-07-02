@@ -1,3 +1,4 @@
+#pragma once
 /**
  * @file Math.hh
  * @author Theo Wimber (theowimber@abeams.app)

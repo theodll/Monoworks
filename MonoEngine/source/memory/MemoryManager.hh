@@ -1,43 +1,39 @@
 #pragma once
-#include <Common/Base.hh>
-
+#include <common/Base.hh>
 #include <vector>
+#include <mutex>
 
-namespace Monoworks 
+namespace Monoworks
 {
-	using handle_t = u64;
-
-	struct SHeader 
+	struct SHandle
 	{
-		handle_t Handle;
-		u32		 Size;
-		bool     Occupied;
+		u32 Index = 0;     
+		u32 Generation = 0;
 	};
 
-	struct SEntry 
+	class CMemoryManager
 	{
-		handle_t Handle;
-		byte_t* Memory;
-		u32	 Size;
-	};
-
-	class CMemoryManager 
-	{
-	public: 
+	public:
 		CMemoryManager() = delete;
 
 		static void Init() noexcept;
 		static void Shutdown() noexcept;
 
-		[[nodiscard]] static const handle_t Allocate(u32 size);
-		static void Delete(const handle_t handle);
+		[[nodiscard]] static SHandle Allocate(u32 size) noexcept;
+		static void Delete(const SHandle handle) noexcept;
+		[[nodiscard]] static void* Get(const SHandle handle) noexcept;
 
 	private:
-		[[nodiscard]] handle_t CreateHandle() noexcept;
+		struct SEntry
+		{
+			void* Memory = nullptr;
+			u32   Size = 0;
+			u32   Generation = 0;
+			bool  Alive = false;
+		};
 
-
-		static std::vector<SEntry> m_EntryTable;
-		static u32 m_HandleCount;
+		static std::vector<SEntry> s_EntryTable;
+		static std::vector<u32>    s_FreeList;
+		static std::mutex          s_Mutex;
 	};
-
 }

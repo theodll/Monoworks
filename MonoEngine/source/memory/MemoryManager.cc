@@ -1,41 +1,92 @@
 #include <mwpch.hh>
+#include <mutex>
 #include "MemoryManager.hh"
 
-namespace Monoworks 
+namespace Monoworks
 {
-	void Init() noexcept 
+	std::vector<CMemoryManager::SEntry> CMemoryManager::s_EntryTable;
+	std::vector<u32> CMemoryManager::s_FreeList;
+	std::mutex CMemoryManager::s_Mutex;
+
+	void CMemoryManager::Init() noexcept
 	{
+		s_EntryTable.reserve(1024);
+		s_EntryTable.emplace_back()
 	}
 
-	void Shutdown() noexcept 
+	void CMemoryManager::Shutdown() noexcept
 	{
-
+		std::lock_guard Lock(s_Mutex);
+		for (auto& Entry : s_EntryTable)
+		{
+			if (Entry.Alive)
+				::operator delete(Entry.pMemory);
+		}
+		s_EntryTable.clear();
+		s_FreeList.clear();
 	}
 
-	[[nodiscard]] const handle_t CMemoryManager::Allocate(u32 size)
+	[[nodiscard]] SHandle CMemoryManager::Allocate(u32 size) noexcept
 	{
-		if (size = < 0)
-			throw std::bad_alloc; // TODO: ERROR CODE 
+		if (size == 0)
+			return SHandle{};
 
-		SEntry entry{};
-		entry.Memory = new byte_t[size];
-		entry.Size = size;
-		
+		void* pMemory = ::operator new(size, std::nothrow);
+		if (!pMemory)
+			return SHandle{};
 
-		m_EntryTable.push_back();
+		std::lock_guard Lock(s_Mutex);
 
-		return handle_t();
+		u32 Index;
+		if (!s_FreeList.empty())
+		{
+			Index = s_FreeList.back();
+			s_FreeList.pop_back();
+		}
+		else
+		{
+			Index = (u32)s_EntryTable.size();
+			s_EntryTable.emplace_back();
+		}
+
+		SEntry& Entry = s_EntryTable[Index];
+		Entry.pMemory = Memory;
+		Entry.Size = size;
+		Entry.Alive = true;
+
+		return SHandle{ Index, Entry.Generation };
 	}
 
-	void CMemoryManager::Delete(handle_t handle)
+	void CMemoryManager::Delete(const SHandle handle) noexcept
 	{
+		std::lock_guard Lock(s_Mutex);
+
+		if (handle.Index == 0 || handle.Index >= s_EntryTable.size())
+			return;
+
+		SEntry& Entry = s_EntryTable[handle.Index];
+		if (!Entry.Alive || Entry.Generation != handle.Generation)
+			return; 
+
+		::operator delete(Entry.Memory);
+		Entry.pMemory = nullptr;
+		Entry.Alive = false;
+		Entry.Generation++;
+
+		s_FreeList.push_back(handle.Index);
 	}
 
-	[[nodiscard]] handle_t CMemoryManager::CreateHandle() noexcept
+	[[nodiscard]] void* CMemoryManager::Get(const SHandle handle) noexcept
 	{
-		handle_t handle;
-		while (!_rdrand64_step(reinterpret_cast<u64*>(&handle)));
-		return handle; 
-	}
+		std::lock_guard Lock(s_Mutex);
 
+		if (handle.Index == 0 || handle.Index >= s_EntryTable.size())
+			return nullptr;
+
+		SEntry& Entry = s_EntryTable[handle.Index];
+		if (!Entry.Alive || Entry.Generation != handle.Generation)
+			return nullptr;
+
+		return Entry.Memory;
+	}
 }
