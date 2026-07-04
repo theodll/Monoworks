@@ -11,12 +11,12 @@ namespace Monoworks
 	void CMemoryManager::Init() noexcept
 	{
 		s_EntryTable.reserve(1024);
-		s_EntryTable.emplace_back()
+		s_EntryTable.emplace_back();
 	}
 
 	void CMemoryManager::Shutdown() noexcept
 	{
-		std::lock_guard Lock(s_Mutex);
+		std::lock_guard<std::mutex> Lock(s_Mutex);
 		for (auto& Entry : s_EntryTable)
 		{
 			if (Entry.Alive)
@@ -35,7 +35,7 @@ namespace Monoworks
 		if (!pMemory)
 			return SHandle{};
 
-		std::lock_guard Lock(s_Mutex);
+		std::lock_guard<std::mutex> Lock(s_Mutex);
 
 		u32 Index;
 		if (!s_FreeList.empty())
@@ -50,7 +50,7 @@ namespace Monoworks
 		}
 
 		SEntry& Entry = s_EntryTable[Index];
-		Entry.pMemory = Memory;
+		Entry.pMemory = pMemory;
 		Entry.Size = size;
 		Entry.Alive = true;
 
@@ -59,7 +59,7 @@ namespace Monoworks
 
 	void CMemoryManager::Delete(const SHandle handle) noexcept
 	{
-		std::lock_guard Lock(s_Mutex);
+		std::lock_guard<std::mutex> Lock(s_Mutex);
 
 		if (handle.Index == 0 || handle.Index >= s_EntryTable.size())
 			return;
@@ -68,7 +68,7 @@ namespace Monoworks
 		if (!Entry.Alive || Entry.Generation != handle.Generation)
 			return; 
 
-		::operator delete(Entry.Memory);
+		::operator delete(Entry.pMemory);
 		Entry.pMemory = nullptr;
 		Entry.Alive = false;
 		Entry.Generation++;
@@ -78,7 +78,7 @@ namespace Monoworks
 
 	[[nodiscard]] void* CMemoryManager::Get(const SHandle handle) noexcept
 	{
-		std::lock_guard Lock(s_Mutex);
+		std::lock_guard<std::mutex> Lock(s_Mutex);
 
 		if (handle.Index == 0 || handle.Index >= s_EntryTable.size())
 			return nullptr;
@@ -87,6 +87,24 @@ namespace Monoworks
 		if (!Entry.Alive || Entry.Generation != handle.Generation)
 			return nullptr;
 
-		return Entry.Memory;
+		return Entry.pMemory;
 	}
+    
+	[[nodiscard]] bool CMemoryManager::IsValid(const SHandle handle) noexcept
+    {
+		if (handle.Index == 0)
+			return false;
+
+		uptr_t ptr = (uptr_t)CMemoryManager::Get(handle);
+		if (ptr == 0)
+			return false;
+		
+		if (!s_EntryTable[handle.Index].Alive)
+			return false;
+		
+		if (!s_EntryTable[handle.Index].pMemory)
+			return false;
+		
+        return true;
+    }
 }

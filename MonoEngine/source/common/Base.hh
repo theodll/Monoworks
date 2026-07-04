@@ -1,3 +1,14 @@
+/**
+ * @file Base.hh
+ * @author Theo Wimber (theowimber@abeams.app)
+ * @brief Common definitions for the entire engine
+ * @version 0.1
+ * @date 2026-07-03
+ * 
+ * @copyright Copyright (c) 2026
+ * 
+ */
+
 #pragma once
 #include <cstdint>
 
