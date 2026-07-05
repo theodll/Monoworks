@@ -4,9 +4,9 @@
  * @brief System to manage raw memory and defragment memory
  * @version 0.1
  * @date 2026-07-03
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 
 #pragma once
@@ -18,7 +18,7 @@ namespace Monoworks
 {
 	struct SHandle
 	{
-		u32 Index = 0;     
+		u32 Index = 0;
 		u32 Generation = 0;
 	};
 
@@ -41,9 +41,9 @@ namespace Monoworks
 
 		/**
 		 * @brief Allocates the required memory and returns the corresponding SHandle
-		 * @param size 
+		 * @param size
 		 * Required size in bytes of memory to be allocated
-		 * @return SHandle 
+		 * @return SHandle
 		 * SHandle corresponding to the allocated memory
 		 */
 		[[nodiscard]] static SHandle Allocate(u32 size) noexcept;
@@ -56,9 +56,9 @@ namespace Monoworks
 
 		/**
 		 * @brief Accesses the memory of the corresponding SHandle
-		 * @param handle 
+		 * @param handle
 		 * SHandle corresponding to the memory to access
-		 * @return void* 
+		 * @return void*
 		 * Pointer to the allocated memory
 		 */
 		[[nodiscard]] static void* Get(const SHandle handle) noexcept;
@@ -71,7 +71,7 @@ namespace Monoworks
 		 */
 		[[nodiscard]] static bool IsValid(const SHandle handle) noexcept;
 
-		
+
 	private:
 		struct SEntry
 		{
