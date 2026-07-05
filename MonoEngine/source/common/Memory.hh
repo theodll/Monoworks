@@ -32,35 +32,35 @@ namespace Monoworks
 	 * @tparam T Type of the object in memory
 	 */
 	template <typename T>
-	class Ref
+	class CRef
 	{
 	private:
 
-		struct ControlBlock
+		struct SControlBlock
 		{
 			std::atomic<u32> RefCount;
 			T Object;
 
 			template <typename... Args>
-			ControlBlock(Args&&... args)
+			SControlBlock(Args&&... args)
 				: RefCount(1), Object(std::forward<Args>(args)...) {
 			}
 		};
 
 		SHandle m_Handle = MW_NULL_MEMORY;
 
-		[[nodiscard]] ControlBlock* GetControlBlock() const noexcept
+		[[nodiscard]] SControlBlock* GetControlBlock() const noexcept
 		{
 			if (m_Handle != MW_NULL_MEMORY && CMemoryManager::IsValid(m_Handle))
 			{
-				return static_cast<ControlBlock*>(CMemoryManager::Get(m_Handle));
+				return static_cast<SControlBlock*>(CMemoryManager::Get(m_Handle));
 			}
 			return nullptr;
 		}
 
 		void IncRef() noexcept
 		{
-			if (ControlBlock* cb = GetControlBlock())
+			if (SControlBlock* cb = GetControlBlock())
 			{
 				cb->RefCount.fetch_add(1, std::memory_order_relaxed);
 			}
@@ -68,12 +68,12 @@ namespace Monoworks
 
 		void DecRef() noexcept
 		{
-			ControlBlock* cb = GetControlBlock();
+			SControlBlock* cb = GetControlBlock();
 			if (cb)
 			{
 				if (cb->RefCount.fetch_sub(1, std::memory_order_acq_rel) == 1)
 				{
-					cb->~ControlBlock();
+					cb->~SControlBlock();
 					CMemoryManager::Delete(m_Handle);
 				}
 			}
@@ -81,27 +81,27 @@ namespace Monoworks
 		}
 
 	public:
-		Ref() noexcept = default;
-		Ref(std::nullptr_t) noexcept {}
+		CRef() noexcept = default;
+		CRef(std::nullptr_t) noexcept {}
 
-		Ref(const Ref<T>& other) noexcept
+		CRef(const CRef<T>& other) noexcept
 			: m_Handle(other.m_Handle)
 		{
 			IncRef();
 		}
 
-		Ref(Ref<T>&& other) noexcept
+		CRef(CRef<T>&& other) noexcept
 			: m_Handle(other.m_Handle)
 		{
 			other.m_Handle = MW_NULL_MEMORY;
 		}
 
-		~Ref() noexcept
+		~CRef() noexcept
 		{
 			DecRef();
 		}
 
-		Ref& operator=(const Ref<T>& other) noexcept
+		CRef& operator=(const CRef<T>& other) noexcept
 		{
 			if (this != &other)
 			{
@@ -112,7 +112,7 @@ namespace Monoworks
 			return *this;
 		}
 
-		Ref& operator=(Ref<T>&& other) noexcept
+		CRef& operator=(CRef<T>&& other) noexcept
 		{
 			if (this != &other)
 			{
@@ -123,7 +123,7 @@ namespace Monoworks
 			return *this;
 		}
 
-		Ref& operator=(std::nullptr_t) noexcept
+		CRef& operator=(std::nullptr_t) noexcept
 		{
 			DecRef();
 			return *this;
@@ -135,14 +135,14 @@ namespace Monoworks
 		 * @return Ref<T> Returns the created shared pointer
 		 */
 		template <typename... Args>
-		[[nodiscard]] static Ref<T> Create(Args&&... args)
+		[[nodiscard]] static CRef<T> Create(Args&&... args)
 		{
 			SHandle handle = CMemoryManager::Allocate(sizeof(ControlBlock));
 			void* rawMem = CMemoryManager::Get(handle);
 
-			new (rawMem) ControlBlock(std::forward<Args>(args)...);
+			new (rawMem) SControlBlock(std::forward<Args>(args)...);
 
-			Ref<T> ref;
+			CRef<T> ref;
 			ref.m_Handle = handle;
 			return ref;
 		};
@@ -156,7 +156,7 @@ namespace Monoworks
 			if (!CMemoryManager::IsValid(m_Handle))
 				return nullptr;
 
-			if (ControlBlock* cb = GetControlBlock())
+			if (SControlBlock* cb = GetControlBlock())
 			{
 				return &cb->Object;
 			}
@@ -187,13 +187,13 @@ namespace Monoworks
 	};
 
 	template<class T, class U>
-	inline bool operator==(const Ref<T>& a, const Ref<U>& b) noexcept
+	inline bool operator==(const CRef<T>& a, const CRef<U>& b) noexcept
 	{
 		return a.GetHandle() == b.GetHandle();
 	}
 
 	template<class T, class U>
-	inline bool operator!=(const Ref<T>& a, const Ref<U>& b) noexcept
+	inline bool operator!=(const CRef<T>& a, const CRef<U>& b) noexcept
 	{
 		return !(a == b);
 	}
