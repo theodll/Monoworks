@@ -15,13 +15,13 @@ target_include_directories(MonoEngine PUBLIC "source/" "specific/" ".")
 target_link_libraries(MonoEngine PRIVATE
     Vulkan::Vulkan
     spdlog::spdlog
-    glm::glm
     Tracy::TracyClient
     volk::volk
 )
 
 target_link_libraries(MonoEngine PUBLIC
     doctest::doctest
+    glm::glm
 )
 
 target_precompile_headers(MonoEngine PUBLIC mwpch.hh)
