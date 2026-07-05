@@ -1,9 +1,9 @@
 add_executable(MonoRuntime "source/core/Entrypoint.hh" "source/core/Entrypoint.cc")
 
-if(APPLE)
-    find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
+if(USE_SYSTEM_SDL3)
+    find_package(SDL3 REQUIRED CONFIG COMPONENTS SDL3-shared)
 else()
-    add_subdirectory("extern/sdl")
+    add_subdirectory(extern/sdl)
 endif()
 
 target_link_libraries(MonoRuntime PRIVATE MonoEngine SDL3::SDL3)
