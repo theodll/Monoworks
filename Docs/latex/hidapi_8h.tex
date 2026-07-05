@@ -1,0 +1,176 @@
+\doxysection{Mono\+Runtime/\+extern/\+sdl/\+src/\+hidapi/\+hidapi/\+hidapi.h File Reference}
+\hypertarget{hidapi_8h}{}\label{hidapi_8h}\index{MonoRuntime/extern/sdl/src/hidapi/hidapi/hidapi.h@{MonoRuntime/extern/sdl/src/hidapi/hidapi/hidapi.h}}
+{\ttfamily \+\#include $<$wchar.\+h$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structhid__api__version}{hid\+\_\+api\+\_\+version}}
+\item 
+struct \doxymbox{\hyperlink{structhid__device__info}{hid\+\_\+device\+\_\+info}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\+\#define \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}}
+\item 
+\+\#define \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}}
+\item 
+\+\#define \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}}~\doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}}
+\item 
+\+\#define {\bfseries HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+MAJOR}~0
+\begin{DoxyCompactList}\small\item\em Static/\+compile-\/time major version of the library. \end{DoxyCompactList}\item 
+\+\#define {\bfseries HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+MINOR}~14
+\begin{DoxyCompactList}\small\item\em Static/\+compile-\/time minor version of the library. \end{DoxyCompactList}\item 
+\+\#define {\bfseries HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+PATCH}~0
+\begin{DoxyCompactList}\small\item\em Static/\+compile-\/time patch version of the library. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{hidapi_8h_afa7c083782c8443ec0fe6beb91a1d707}{HID\+\_\+\+API\+\_\+\+AS\+\_\+\+STR\+\_\+\+IMPL}}(x)
+\item 
+\+\#define \doxymbox{\hyperlink{hidapi_8h_a1101a6e6537ef29a9a4fce144f688d76}{HID\+\_\+\+API\+\_\+\+AS\+\_\+\+STR}}(x)
+\item 
+\+\#define \doxymbox{\hyperlink{hidapi_8h_a9dc5531e54326ad9591b6cdc984519d4}{HID\+\_\+\+API\+\_\+\+TO\+\_\+\+VERSION\+\_\+\+STR}}(v1,  v2,  v3)
+\item 
+\+\#define \doxymbox{\hyperlink{group___a_p_i_gaf415391c655f68807580fe3fb8f7ba67}{HID\+\_\+\+API\+\_\+\+MAKE\+\_\+\+VERSION}}(mj,  mn,  p)
+\begin{DoxyCompactList}\small\item\em Coverts a version as Major/\+\+Minor/\+\+Patch into a number:\+ \texorpdfstring{$<$}{<}8 bit major\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}16 bit minor\texorpdfstring{$>$}{>}\texorpdfstring{$<$}{<}8 bit patch\texorpdfstring{$>$}{>}. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{group___a_p_i_gade33c6fcd36510e02004311124ea2093}{HID\+\_\+\+API\+\_\+\+VERSION}}~\doxymbox{\hyperlink{group___a_p_i_gaf415391c655f68807580fe3fb8f7ba67}{HID\+\_\+\+API\+\_\+\+MAKE\+\_\+\+VERSION}}(\doxymbox{\hyperlink{group___a_p_i_ga18c2d93881cb81d8bbfe6f745853ee35}{HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+MAJOR}}, \doxymbox{\hyperlink{group___a_p_i_gadea0ff99909e90630d71c3083ee7e1c5}{HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+MINOR}}, \doxymbox{\hyperlink{group___a_p_i_ga1d5251509ebfa4179e477c5cd79a6d23}{HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+PATCH}})
+\begin{DoxyCompactList}\small\item\em Static/\+compile-\/time version of the library. \end{DoxyCompactList}\item 
+\+\#define {\bfseries HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+STR}~HID\+\_\+\+API\+\_\+\+TO\+\_\+\+VERSION\+\_\+\+STR(\doxymbox{\hyperlink{group___a_p_i_ga18c2d93881cb81d8bbfe6f745853ee35}{HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+MAJOR}}, \doxymbox{\hyperlink{group___a_p_i_gadea0ff99909e90630d71c3083ee7e1c5}{HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+MINOR}}, \doxymbox{\hyperlink{group___a_p_i_ga1d5251509ebfa4179e477c5cd79a6d23}{HID\+\_\+\+API\+\_\+\+VERSION\+\_\+\+PATCH}})
+\begin{DoxyCompactList}\small\item\em Static/\+compile-\/time string version of the library. \end{DoxyCompactList}\item 
+\+\#define \doxymbox{\hyperlink{group___a_p_i_ga4e861f585ad041d94b142e1c2ee00b3f}{HID\+\_\+\+API\+\_\+\+MAX\+\_\+\+REPORT\+\_\+\+DESCRIPTOR\+\_\+\+SIZE}}~4096
+\begin{DoxyCompactList}\small\item\em Maximum expected HID Report descriptor size in bytes. \end{DoxyCompactList}\item 
+\Hypertarget{hidapi_8h_a2a011b407cac028e92f5fb567baa7f13}\label{hidapi_8h_a2a011b407cac028e92f5fb567baa7f13} 
+\+\#define {\bfseries DEFINED\+\_\+\+HID\+\_\+\+TYPES}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \doxymbox{\hyperlink{structhid__device__}{hid\+\_\+device\+\_\+}} \doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \doxymbox{\hyperlink{group___a_p_i_ga15cb543842973ca41daa21feaec534ce}{hid\+\_\+bus\+\_\+type}} \{ \newline
+\doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534ceacab9ef7570aa48c13a99b28c61ae918e}{HID\+\_\+\+API\+\_\+\+BUS\+\_\+\+UNKNOWN}} = 0x00
+, \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cea77e86719dfaeabc96759f6cff3a5ca8d}{HID\+\_\+\+API\+\_\+\+BUS\+\_\+\+USB}} = 0x01
+, \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cead412c6f0da75b302b713af3a6394a0d4}{HID\+\_\+\+API\+\_\+\+BUS\+\_\+\+BLUETOOTH}} = 0x02
+, \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534ceafdf48944998bb760c6995402eea306a0}{HID\+\_\+\+API\+\_\+\+BUS\+\_\+\+I2C}} = 0x03
+, \newline
+\doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cea092944e74cc9fe695c08f9e149dcbb38}{HID\+\_\+\+API\+\_\+\+BUS\+\_\+\+SPI}} = 0x04
+ \}
+\begin{DoxyCompactList}\small\item\em HID underlying bus types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga142ffc1b0b7a7fa412d3862b2a17164b}{hid\+\_\+init}} (void)
+\begin{DoxyCompactList}\small\item\em Initialize the HIDAPI library. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gacf5da9ce37132eba69fc259f17f13023}{hid\+\_\+exit}} (void)
+\begin{DoxyCompactList}\small\item\em Finalize the HIDAPI library. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{structhid__device__info}{hid\+\_\+device\+\_\+info}} \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gaae7d1c3e90835556ddc73fabe3a9ca9d}{hid\+\_\+enumerate}} (unsigned short vendor\+\_\+id, unsigned short product\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Enumerate the HID Devices. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gafc2d2adf71db3784b783b9a554527aa4}{hid\+\_\+free\+\_\+enumeration}} (struct \doxymbox{\hyperlink{structhid__device__info}{hid\+\_\+device\+\_\+info}} \texorpdfstring{$\ast$}{*}devs)
+\begin{DoxyCompactList}\small\item\em Free an enumeration Linked List. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga6946f7e2f5d225d69308611db1e31ede}{hid\+\_\+open}} (unsigned short vendor\+\_\+id, unsigned short product\+\_\+id, const wchar\+\_\+t \texorpdfstring{$\ast$}{*}serial\+\_\+number)
+\begin{DoxyCompactList}\small\item\em Open a HID device using a Vendor ID (VID), Product ID (PID) and optionally a serial number. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga954ecb58b5dfb4a6ef6be3dcd520e42f}{hid\+\_\+open\+\_\+path}} (const char \texorpdfstring{$\ast$}{*}path)
+\begin{DoxyCompactList}\small\item\em Open a HID device by its path name. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gaa691d2c469b9654128196bf7ef8edd9d}{hid\+\_\+write}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, const unsigned char \texorpdfstring{$\ast$}{*}data, size\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Write an \doxylink{struct_output}{Output} report to a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gaa5c9ed5aa290688ffac03343989ad75a}{hid\+\_\+read\+\_\+timeout}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, unsigned char \texorpdfstring{$\ast$}{*}data, size\+\_\+t length, int milliseconds)
+\begin{DoxyCompactList}\small\item\em Read an Input report from a HID device with timeout. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga2224269e8cd7c789f9fd4864a73f8c95}{hid\+\_\+read}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, unsigned char \texorpdfstring{$\ast$}{*}data, size\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Read an Input report from a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga0e9af0d8ed72f5610e9297c90b08e242}{hid\+\_\+set\+\_\+nonblocking}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, int nonblock)
+\begin{DoxyCompactList}\small\item\em Set the device handle to be non-\/blocking. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gae99a9ddbb5d9b03fddf40fb4a492cbec}{hid\+\_\+send\+\_\+feature\+\_\+report}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, const unsigned char \texorpdfstring{$\ast$}{*}data, size\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Send a Feature report to the device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gaa537a4b3c49d638c6ec9dedc08c44601}{hid\+\_\+get\+\_\+feature\+\_\+report}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, unsigned char \texorpdfstring{$\ast$}{*}data, size\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Get a feature report from a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga27ac7d92ea3a8ac58b1d8d865bd0264b}{hid\+\_\+get\+\_\+input\+\_\+report}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, unsigned char \texorpdfstring{$\ast$}{*}data, size\+\_\+t length)
+\begin{DoxyCompactList}\small\item\em Get a input report from a HID device. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga8d478a5986439ffb838fb1f1ba6ba5ec}{hid\+\_\+close}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev)
+\begin{DoxyCompactList}\small\item\em Close a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga702f45b42d85599eedd602c05661fde5}{hid\+\_\+get\+\_\+manufacturer\+\_\+string}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, wchar\+\_\+t \texorpdfstring{$\ast$}{*}string, size\+\_\+t maxlen)
+\begin{DoxyCompactList}\small\item\em Get The Manufacturer String from a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga648feb765c5e0da3e821ee84aeab9d99}{hid\+\_\+get\+\_\+product\+\_\+string}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, wchar\+\_\+t \texorpdfstring{$\ast$}{*}string, size\+\_\+t maxlen)
+\begin{DoxyCompactList}\small\item\em Get The Product String from a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga3442db3ece59fe248b0625a4c8fca617}{hid\+\_\+get\+\_\+serial\+\_\+number\+\_\+string}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, wchar\+\_\+t \texorpdfstring{$\ast$}{*}string, size\+\_\+t maxlen)
+\begin{DoxyCompactList}\small\item\em Get The Serial Number String from a HID device. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{structhid__device__info}{hid\+\_\+device\+\_\+info}} \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga2d8b34ae8cfdd4f4d132814d5b70c128}{hid\+\_\+get\+\_\+device\+\_\+info}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev)
+\begin{DoxyCompactList}\small\item\em Get The struct \doxylink{structhid__device__info}{hid\+\_\+device\+\_\+info} from a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_ga18546669554746d0f292ca5e23372e06}{hid\+\_\+get\+\_\+indexed\+\_\+string}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, int string\+\_\+index, wchar\+\_\+t \texorpdfstring{$\ast$}{*}string, size\+\_\+t maxlen)
+\begin{DoxyCompactList}\small\item\em Get a string from a HID device, based on its string index. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gaaa8bc561909c1c6b413f1fcdc16333ef}{hid\+\_\+get\+\_\+report\+\_\+descriptor}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, unsigned char \texorpdfstring{$\ast$}{*}buf, size\+\_\+t buf\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Get a report descriptor from a HID device. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} const wchar\+\_\+t \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gabdb1e88a803bab198333a3c5f131b12e}{hid\+\_\+error}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev)
+\begin{DoxyCompactList}\small\item\em Get a string describing the last error which occurred. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} const struct \doxymbox{\hyperlink{structhid__api__version}{hid\+\_\+api\+\_\+version}} \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gaea589e58403a465361a347c0754a3da2}{hid\+\_\+version}} (void)
+\begin{DoxyCompactList}\small\item\em Get a runtime version of the library. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} const char \texorpdfstring{$\ast$}{*}\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gacbceccb9fd443fd7cb164dee029fbf64}{hid\+\_\+version\+\_\+str}} (void)
+\begin{DoxyCompactList}\small\item\em Get a runtime version string of the library. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{hidapi_8h_doc-define-members}
+\Hypertarget{hidapi_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{hidapi_8h_a1101a6e6537ef29a9a4fce144f688d76}\index{hidapi.h@{hidapi.h}!HID\_API\_AS\_STR@{HID\_API\_AS\_STR}}
+\index{HID\_API\_AS\_STR@{HID\_API\_AS\_STR}!hidapi.h@{hidapi.h}}
+\doxysubsubsection{\texorpdfstring{HID\_API\_AS\_STR}{HID\_API\_AS\_STR}}
+{\footnotesize\ttfamily \label{hidapi_8h_a1101a6e6537ef29a9a4fce144f688d76} 
+\+\#define HID\+\_\+\+API\+\_\+\+AS\+\_\+\+STR(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{HID\_API\_AS\_STR\_IMPL(x)}
+
+\end{DoxyCode}
+\Hypertarget{hidapi_8h_afa7c083782c8443ec0fe6beb91a1d707}\index{hidapi.h@{hidapi.h}!HID\_API\_AS\_STR\_IMPL@{HID\_API\_AS\_STR\_IMPL}}
+\index{HID\_API\_AS\_STR\_IMPL@{HID\_API\_AS\_STR\_IMPL}!hidapi.h@{hidapi.h}}
+\doxysubsubsection{\texorpdfstring{HID\_API\_AS\_STR\_IMPL}{HID\_API\_AS\_STR\_IMPL}}
+{\footnotesize\ttfamily \label{hidapi_8h_afa7c083782c8443ec0fe6beb91a1d707} 
+\+\#define HID\+\_\+\+API\+\_\+\+AS\+\_\+\+STR\+\_\+\+IMPL(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#x}}
+
+\end{DoxyCode}
+\Hypertarget{hidapi_8h_af140a25716604e86096670a505a58ee0}\index{hidapi.h@{hidapi.h}!HID\_API\_CALL@{HID\_API\_CALL}}
+\index{HID\_API\_CALL@{HID\_API\_CALL}!hidapi.h@{hidapi.h}}
+\doxysubsubsection{\texorpdfstring{HID\_API\_CALL}{HID\_API\_CALL}}
+{\footnotesize\ttfamily \label{hidapi_8h_af140a25716604e86096670a505a58ee0} 
+\+\#define HID\+\_\+\+API\+\_\+\+CALL}
+
+API call macro \Hypertarget{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}\index{hidapi.h@{hidapi.h}!HID\_API\_EXPORT@{HID\_API\_EXPORT}}
+\index{HID\_API\_EXPORT@{HID\_API\_EXPORT}!hidapi.h@{hidapi.h}}
+\doxysubsubsection{\texorpdfstring{HID\_API\_EXPORT}{HID\_API\_EXPORT}}
+{\footnotesize\ttfamily \label{hidapi_8h_aa60150016800ccb88fdf140e8553ae13} 
+\+\#define HID\+\_\+\+API\+\_\+\+EXPORT}
+
+API export macro \Hypertarget{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}\index{hidapi.h@{hidapi.h}!HID\_API\_EXPORT\_CALL@{HID\_API\_EXPORT\_CALL}}
+\index{HID\_API\_EXPORT\_CALL@{HID\_API\_EXPORT\_CALL}!hidapi.h@{hidapi.h}}
+\doxysubsubsection{\texorpdfstring{HID\_API\_EXPORT\_CALL}{HID\_API\_EXPORT\_CALL}}
+{\footnotesize\ttfamily \label{hidapi_8h_a70c49eda5025c1bc455af77da19ca312} 
+\+\#define HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL~\doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\+\_\+\+API\+\_\+\+EXPORT}} \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\+\_\+\+API\+\_\+\+CALL}}}
+
+API export and call macro \Hypertarget{hidapi_8h_a9dc5531e54326ad9591b6cdc984519d4}\index{hidapi.h@{hidapi.h}!HID\_API\_TO\_VERSION\_STR@{HID\_API\_TO\_VERSION\_STR}}
+\index{HID\_API\_TO\_VERSION\_STR@{HID\_API\_TO\_VERSION\_STR}!hidapi.h@{hidapi.h}}
+\doxysubsubsection{\texorpdfstring{HID\_API\_TO\_VERSION\_STR}{HID\_API\_TO\_VERSION\_STR}}
+{\footnotesize\ttfamily \label{hidapi_8h_a9dc5531e54326ad9591b6cdc984519d4} 
+\+\#define HID\+\_\+\+API\+\_\+\+TO\+\_\+\+VERSION\+\_\+\+STR(\begin{DoxyParamCaption}\item[{}]{v1}{, }\item[{}]{v2}{, }\item[{}]{v3}{}\end{DoxyParamCaption})}
+
+{\bfseries Value:\+}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{HID\_API\_AS\_STR(v1.v2.v3)}
+
+\end{DoxyCode}
+
+
+\label{hidapi_8h_doc-typedef-members}
+\Hypertarget{hidapi_8h_doc-typedef-members}
+\doxysubsection{Typedef Documentation}
+\Hypertarget{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}\index{hidapi.h@{hidapi.h}!hid\_device@{hid\_device}}
+\index{hid\_device@{hid\_device}!hidapi.h@{hidapi.h}}
+\doxysubsubsection{\texorpdfstring{hid\_device}{hid\_device}}
+{\footnotesize\ttfamily \label{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc} 
+typedef struct \doxymbox{\hyperlink{structhid__device__}{hid\+\_\+device\+\_\+}} \doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}}}
+
+opaque hidapi structure 

@@ -1,0 +1,86 @@
+\doxysection{udp\+\_\+client.\+h}
+\hypertarget{udp__client_8h_source}{}\label{udp__client_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/details/udp\_client.h@{MonoEngine/thirdparty/spdlog/include/spdlog/details/udp\_client.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ Helper\ RAII\ over\ unix\ udp\ client\ socket.}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Will\ throw\ on\ construction\ if\ the\ socket\ creation\ failed.}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#error\ "{}include\ udp\_client-\/windows.h\ instead"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <arpa/inet.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <netdb.h>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <netinet/in.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <netinet/udp.h>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <spdlog/details/os.h>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <sys/socket.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00026\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classdetails_1_1udp__client}{udp\_client}}\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ TX\_BUFFER\_SIZE\ =\ 1024\ *\ 10;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ socket\_\ =\ -\/1;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{struct\ }sockaddr\_in\ sockAddr\_;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ cleanup\_()\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (socket\_\ !=\ -\/1)\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ ::close(socket\_);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ socket\_\ =\ -\/1;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00041\ \ \ \ \ udp\_client(\textcolor{keyword}{const}\ std::string\ \&host,\ uint16\_t\ port)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ socket\_\ =\ ::socket(PF\_INET,\ SOCK\_DGRAM,\ 0);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (socket\_\ <\ 0)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}error:\ Create\ Socket\ Failed!"{}});}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ option\_value\ =\ TX\_BUFFER\_SIZE;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (::setsockopt(socket\_,\ SOL\_SOCKET,\ SO\_SNDBUF,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{char}\ *\textcolor{keyword}{>}(\&option\_value),\ \textcolor{keyword}{sizeof}(option\_value))\ <\ 0)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ cleanup\_();}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}error:\ setsockopt(SO\_SNDBUF)\ Failed!"{}});}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ sockAddr\_.sin\_family\ =\ AF\_INET;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ sockAddr\_.sin\_port\ =\ htons(port);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (::inet\_aton(host.c\_str(),\ \&sockAddr\_.sin\_addr)\ ==\ 0)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ cleanup\_();}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}error:\ Invalid\ address!"{}});}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ ::memset(sockAddr\_.sin\_zero,\ 0x00,\ \textcolor{keyword}{sizeof}(sockAddr\_.sin\_zero));}
+\DoxyCodeLine{00063\ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \string~udp\_client()\ \{\ cleanup\_();\ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{int}\ fd()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ socket\_;\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ Send\ exactly\ n\_bytes\ of\ the\ given\ data.}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ On\ error\ close\ the\ connection\ and\ throw.}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ send(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ n\_bytes)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ socklen\_t\ tolen\ =\ \textcolor{keyword}{sizeof}(sockAddr\_);}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (::sendto(socket\_,\ data,\ n\_bytes,\ 0,\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }sockaddr\ *\textcolor{keyword}{>}(\&sockAddr\_),}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tolen)\ ==\ -\/1)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}sendto(2)\ failed"{}},\ errno);}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ \};}
+\DoxyCodeLine{00079\ \}\ \ \textcolor{comment}{//\ namespace\ details}}
+\DoxyCodeLine{00080\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

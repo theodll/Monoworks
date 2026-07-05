@@ -1,0 +1,261 @@
+\doxysection{vulkan\+\_\+metal.\+h}
+\hypertarget{vulkan__metal_8h_source}{}\label{vulkan__metal_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_metal.h@{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_metal.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_METAL\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VULKAN\_METAL\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ 2015-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ Vulkan\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ VK\_EXT\_metal\_surface\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ VK\_EXT\_metal\_surface\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00025\ \textcolor{keyword}{@class}\ CAMetalLayer;}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ CAMetalLayer;}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ SDL\_UNSAFE\_UNRETAINED}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#if\ defined(\_\_OBJC\_\_)\ \&\&\ defined(\_\_has\_feature)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#if\ \_\_has\_feature(objc\_arc)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#undef\ SDL\_UNSAFE\_UNRETAINED}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ SDL\_UNSAFE\_UNRETAINED\ \_\_unsafe\_unretained}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ VK\_EXT\_METAL\_SURFACE\_SPEC\_VERSION\ 1}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ VK\_EXT\_METAL\_SURFACE\_EXTENSION\_NAME\ "{}VK\_EXT\_metal\_surface"{}}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ VkFlags\ VkMetalSurfaceCreateFlagsEXT;}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_metal_surface_create_info_e_x_t}{VkMetalSurfaceCreateInfoEXT}}\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00044\ \ \ \ \ VkMetalSurfaceCreateFlagsEXT\ \ \ \ flags;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{const}\ CAMetalLayer\ SDL\_UNSAFE\_UNRETAINED\ *pLayer;}
+\DoxyCodeLine{00046\ \}\ \doxymbox{\hyperlink{struct_vk_metal_surface_create_info_e_x_t}{VkMetalSurfaceCreateInfoEXT}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkCreateMetalSurfaceEXT)(VkInstance\ instance,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_metal_surface_create_info_e_x_t}{VkMetalSurfaceCreateInfoEXT}}*\ pCreateInfo,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ pAllocator,\ VkSurfaceKHR*\ pSurface);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00052\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkCreateMetalSurfaceEXT(}
+\DoxyCodeLine{00053\ \ \ \ \ VkInstance\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ instance,}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_metal_surface_create_info_e_x_t}{VkMetalSurfaceCreateInfoEXT}}*\ \ \ \ \ \ \ \ \ \ pCreateInfo,}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pAllocator,}
+\DoxyCodeLine{00056\ \ \ \ \ VkSurfaceKHR*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSurface);}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ VK\_EXT\_metal\_objects\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ VK\_EXT\_metal\_objects\ 1}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{@protocol\ }MTLDevice;}
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \_\_unsafe\_unretained\ id<MTLDevice>\ MTLDevice\_id;}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}*\ MTLDevice\_id;}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{@protocol\ }MTLCommandQueue;}
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ \_\_unsafe\_unretained\ id<MTLCommandQueue>\ MTLCommandQueue\_id;}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00074\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}*\ MTLCommandQueue\_id;}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00078\ \textcolor{keyword}{@protocol\ }MTLBuffer;}
+\DoxyCodeLine{00079\ \textcolor{keyword}{typedef}\ \_\_unsafe\_unretained\ id<MTLBuffer>\ MTLBuffer\_id;}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00081\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}*\ MTLBuffer\_id;}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00085\ \textcolor{keyword}{@protocol\ }MTLTexture;}
+\DoxyCodeLine{00086\ \textcolor{keyword}{typedef}\ \_\_unsafe\_unretained\ id<MTLTexture>\ MTLTexture\_id;}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00088\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}*\ MTLTexture\_id;}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\_\_IOSurface*\ IOSurfaceRef;}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wunguarded-\/availability"{}}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{@protocol\ }MTLSharedEvent;}
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ \_\_unsafe\_unretained\ id<MTLSharedEvent>\ MTLSharedEvent\_id;}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00099\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}*\ MTLSharedEvent\_id;}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ VK\_EXT\_METAL\_OBJECTS\_SPEC\_VERSION\ 2}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ VK\_EXT\_METAL\_OBJECTS\_EXTENSION\_NAME\ "{}VK\_EXT\_metal\_objects"{}}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ VkExportMetalObjectTypeFlagBitsEXT\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ VK\_EXPORT\_METAL\_OBJECT\_TYPE\_METAL\_DEVICE\_BIT\_EXT\ =\ 0x00000001,}
+\DoxyCodeLine{00107\ \ \ \ \ VK\_EXPORT\_METAL\_OBJECT\_TYPE\_METAL\_COMMAND\_QUEUE\_BIT\_EXT\ =\ 0x00000002,}
+\DoxyCodeLine{00108\ \ \ \ \ VK\_EXPORT\_METAL\_OBJECT\_TYPE\_METAL\_BUFFER\_BIT\_EXT\ =\ 0x00000004,}
+\DoxyCodeLine{00109\ \ \ \ \ VK\_EXPORT\_METAL\_OBJECT\_TYPE\_METAL\_TEXTURE\_BIT\_EXT\ =\ 0x00000008,}
+\DoxyCodeLine{00110\ \ \ \ \ VK\_EXPORT\_METAL\_OBJECT\_TYPE\_METAL\_IOSURFACE\_BIT\_EXT\ =\ 0x00000010,}
+\DoxyCodeLine{00111\ \ \ \ \ VK\_EXPORT\_METAL\_OBJECT\_TYPE\_METAL\_SHARED\_EVENT\_BIT\_EXT\ =\ 0x00000020,}
+\DoxyCodeLine{00112\ \ \ \ \ VK\_EXPORT\_METAL\_OBJECT\_TYPE\_FLAG\_BITS\_MAX\_ENUM\_EXT\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00113\ \}\ VkExportMetalObjectTypeFlagBitsEXT;}
+\DoxyCodeLine{00114\ \textcolor{keyword}{typedef}\ VkFlags\ VkExportMetalObjectTypeFlagsEXT;}
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_object_create_info_e_x_t}{VkExportMetalObjectCreateInfoEXT}}\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00118\ \ \ \ \ VkExportMetalObjectTypeFlagBitsEXT\ \ \ \ exportObjectType;}
+\DoxyCodeLine{00119\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_object_create_info_e_x_t}{VkExportMetalObjectCreateInfoEXT}};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_objects_info_e_x_t}{VkExportMetalObjectsInfoEXT}}\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00124\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_objects_info_e_x_t}{VkExportMetalObjectsInfoEXT}};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_device_info_e_x_t}{VkExportMetalDeviceInfoEXT}}\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00129\ \ \ \ \ MTLDevice\_id\ \ \ \ \ \ \ mtlDevice;}
+\DoxyCodeLine{00130\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_device_info_e_x_t}{VkExportMetalDeviceInfoEXT}};}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_command_queue_info_e_x_t}{VkExportMetalCommandQueueInfoEXT}}\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00135\ \ \ \ \ VkQueue\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queue;}
+\DoxyCodeLine{00136\ \ \ \ \ MTLCommandQueue\_id\ \ \ \ mtlCommandQueue;}
+\DoxyCodeLine{00137\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_command_queue_info_e_x_t}{VkExportMetalCommandQueueInfoEXT}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_buffer_info_e_x_t}{VkExportMetalBufferInfoEXT}}\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00142\ \ \ \ \ VkDeviceMemory\ \ \ \ \ memory;}
+\DoxyCodeLine{00143\ \ \ \ \ MTLBuffer\_id\ \ \ \ \ \ \ mtlBuffer;}
+\DoxyCodeLine{00144\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_buffer_info_e_x_t}{VkExportMetalBufferInfoEXT}};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_metal_buffer_info_e_x_t}{VkImportMetalBufferInfoEXT}}\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00149\ \ \ \ \ MTLBuffer\_id\ \ \ \ \ \ \ mtlBuffer;}
+\DoxyCodeLine{00150\ \}\ \doxymbox{\hyperlink{struct_vk_import_metal_buffer_info_e_x_t}{VkImportMetalBufferInfoEXT}};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_texture_info_e_x_t}{VkExportMetalTextureInfoEXT}}\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00155\ \ \ \ \ VkImage\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ image;}
+\DoxyCodeLine{00156\ \ \ \ \ VkImageView\ \ \ \ \ \ \ \ \ \ \ \ \ \ imageView;}
+\DoxyCodeLine{00157\ \ \ \ \ VkBufferView\ \ \ \ \ \ \ \ \ \ \ \ \ bufferView;}
+\DoxyCodeLine{00158\ \ \ \ \ VkImageAspectFlagBits\ \ \ \ plane;}
+\DoxyCodeLine{00159\ \ \ \ \ MTLTexture\_id\ \ \ \ \ \ \ \ \ \ \ \ mtlTexture;}
+\DoxyCodeLine{00160\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_texture_info_e_x_t}{VkExportMetalTextureInfoEXT}};}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_metal_texture_info_e_x_t}{VkImportMetalTextureInfoEXT}}\ \{}
+\DoxyCodeLine{00163\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00165\ \ \ \ \ VkImageAspectFlagBits\ \ \ \ plane;}
+\DoxyCodeLine{00166\ \ \ \ \ MTLTexture\_id\ \ \ \ \ \ \ \ \ \ \ \ mtlTexture;}
+\DoxyCodeLine{00167\ \}\ \doxymbox{\hyperlink{struct_vk_import_metal_texture_info_e_x_t}{VkImportMetalTextureInfoEXT}};}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_i_o_surface_info_e_x_t}{VkExportMetalIOSurfaceInfoEXT}}\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00172\ \ \ \ \ VkImage\ \ \ \ \ \ \ \ \ \ \ \ image;}
+\DoxyCodeLine{00173\ \ \ \ \ IOSurfaceRef\ \ \ \ \ \ \ ioSurface;}
+\DoxyCodeLine{00174\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_i_o_surface_info_e_x_t}{VkExportMetalIOSurfaceInfoEXT}};}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_metal_i_o_surface_info_e_x_t}{VkImportMetalIOSurfaceInfoEXT}}\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00179\ \ \ \ \ IOSurfaceRef\ \ \ \ \ \ \ ioSurface;}
+\DoxyCodeLine{00180\ \}\ \doxymbox{\hyperlink{struct_vk_import_metal_i_o_surface_info_e_x_t}{VkImportMetalIOSurfaceInfoEXT}};}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_export_metal_shared_event_info_e_x_t}{VkExportMetalSharedEventInfoEXT}}\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ VkStructureType\ \ \ \ \ \ sType;}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00185\ \ \ \ \ VkSemaphore\ \ \ \ \ \ \ \ \ \ semaphore;}
+\DoxyCodeLine{00186\ \ \ \ \ VkEvent\ \ \ \ \ \ \ \ \ \ \ \ \ \ event;}
+\DoxyCodeLine{00187\ \ \ \ \ MTLSharedEvent\_id\ \ \ \ mtlSharedEvent;}
+\DoxyCodeLine{00188\ \}\ \doxymbox{\hyperlink{struct_vk_export_metal_shared_event_info_e_x_t}{VkExportMetalSharedEventInfoEXT}};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_metal_shared_event_info_e_x_t}{VkImportMetalSharedEventInfoEXT}}\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ VkStructureType\ \ \ \ \ \ sType;}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00193\ \ \ \ \ MTLSharedEvent\_id\ \ \ \ mtlSharedEvent;}
+\DoxyCodeLine{00194\ \}\ \doxymbox{\hyperlink{struct_vk_import_metal_shared_event_info_e_x_t}{VkImportMetalSharedEventInfoEXT}};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{keyword}{typedef}\ void\ (VKAPI\_PTR\ *PFN\_vkExportMetalObjectsEXT)(VkDevice\ device,\ \doxymbox{\hyperlink{struct_vk_export_metal_objects_info_e_x_t}{VkExportMetalObjectsInfoEXT}}*\ pMetalObjectsInfo);}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00200\ VKAPI\_ATTR\ \textcolor{keywordtype}{void}\ VKAPI\_CALL\ vkExportMetalObjectsEXT(}
+\DoxyCodeLine{00201\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00202\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_export_metal_objects_info_e_x_t}{VkExportMetalObjectsInfoEXT}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pMetalObjectsInfo);}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{comment}{//\ VK\_EXT\_external\_memory\_metal\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ VK\_EXT\_external\_memory\_metal\ 1}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ VK\_EXT\_EXTERNAL\_MEMORY\_METAL\_SPEC\_VERSION\ 1}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ VK\_EXT\_EXTERNAL\_MEMORY\_METAL\_EXTENSION\_NAME\ "{}VK\_EXT\_external\_memory\_metal"{}}}
+\DoxyCodeLine{00211\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_memory_metal_handle_info_e_x_t}{VkImportMemoryMetalHandleInfoEXT}}\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00214\ \ \ \ \ VkExternalMemoryHandleTypeFlagBits\ \ \ \ handleType;}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ handle;}
+\DoxyCodeLine{00216\ \}\ \doxymbox{\hyperlink{struct_vk_import_memory_metal_handle_info_e_x_t}{VkImportMemoryMetalHandleInfoEXT}};}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_memory_metal_handle_properties_e_x_t}{VkMemoryMetalHandlePropertiesEXT}}\ \{}
+\DoxyCodeLine{00219\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00221\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ memoryTypeBits;}
+\DoxyCodeLine{00222\ \}\ \doxymbox{\hyperlink{struct_vk_memory_metal_handle_properties_e_x_t}{VkMemoryMetalHandlePropertiesEXT}};}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_memory_get_metal_handle_info_e_x_t}{VkMemoryGetMetalHandleInfoEXT}}\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00227\ \ \ \ \ VkDeviceMemory\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memory;}
+\DoxyCodeLine{00228\ \ \ \ \ VkExternalMemoryHandleTypeFlagBits\ \ \ \ handleType;}
+\DoxyCodeLine{00229\ \}\ \doxymbox{\hyperlink{struct_vk_memory_get_metal_handle_info_e_x_t}{VkMemoryGetMetalHandleInfoEXT}};}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetMemoryMetalHandleEXT)(VkDevice\ device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_memory_get_metal_handle_info_e_x_t}{VkMemoryGetMetalHandleInfoEXT}}*\ pGetMetalHandleInfo,\ \textcolor{keywordtype}{void}**\ pHandle);}
+\DoxyCodeLine{00232\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetMemoryMetalHandlePropertiesEXT)(VkDevice\ device,\ VkExternalMemoryHandleTypeFlagBits\ handleType,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ pHandle,\ \doxymbox{\hyperlink{struct_vk_memory_metal_handle_properties_e_x_t}{VkMemoryMetalHandlePropertiesEXT}}*\ pMemoryMetalHandleProperties);}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00236\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetMemoryMetalHandleEXT(}
+\DoxyCodeLine{00237\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_memory_get_metal_handle_info_e_x_t}{VkMemoryGetMetalHandleInfoEXT}}*\ \ \ \ \ \ \ \ pGetMetalHandleInfo,}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keywordtype}{void}**\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pHandle);}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00243\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetMemoryMetalHandlePropertiesEXT(}
+\DoxyCodeLine{00244\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00245\ \ \ \ \ VkExternalMemoryHandleTypeFlagBits\ \ \ \ \ \ \ \ \ \ handleType,}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pHandle,}
+\DoxyCodeLine{00247\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_memory_metal_handle_properties_e_x_t}{VkMemoryMetalHandlePropertiesEXT}}*\ \ \ \ \ \ \ \ \ \ \ pMemoryMetalHandleProperties);}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00252\ \}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,157 @@
+\doxysection{SDL\+\_\+wave.\+h}
+\hypertarget{_s_d_l__wave_8h_source}{}\label{_s_d_l__wave_8h_source}\index{MonoRuntime/extern/sdl/src/audio/SDL\_wave.h@{MonoRuntime/extern/sdl/src/audio/SDL\_wave.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ RIFF\ WAVE\ files\ are\ little-\/endian}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{/*******************************************/}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Define\ values\ for\ Microsoft\ WAVE\ format}}
+\DoxyCodeLine{00027\ \textcolor{comment}{/*******************************************/}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ FOURCC}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ RIFF\ 0x46464952\ }\textcolor{comment}{//\ "{}RIFF"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ WAVE\ 0x45564157\ }\textcolor{comment}{//\ "{}WAVE"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ FACT\ 0x74636166\ }\textcolor{comment}{//\ "{}fact"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ LIST\ 0x5453494c\ }\textcolor{comment}{//\ "{}LIST"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ BEXT\ 0x74786562\ }\textcolor{comment}{//\ "{}bext"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ JUNK\ 0x4B4E554A\ }\textcolor{comment}{//\ "{}JUNK"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ FMT\ \ 0x20746D66\ }\textcolor{comment}{//\ "{}fmt\ "{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ DATA\ 0x61746164\ }\textcolor{comment}{//\ "{}data"{}}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ Format\ tags}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ UNKNOWN\_CODE\ \ \ \ 0x0000}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ PCM\_CODE\ \ \ \ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ MS\_ADPCM\_CODE\ \ \ 0x0002}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ IEEE\_FLOAT\_CODE\ 0x0003}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ ALAW\_CODE\ \ \ \ \ \ \ 0x0006}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ MULAW\_CODE\ \ \ \ \ \ 0x0007}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ IMA\_ADPCM\_CODE\ \ 0x0011}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ MPEG\_CODE\ \ \ \ \ \ \ 0x0050}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ MPEGLAYER3\_CODE\ 0x0055}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ EXTENSIBLE\_CODE\ 0xFFFE}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ Stores\ the\ WAVE\ format\ information.}}
+\DoxyCodeLine{00050\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_wave_format}{WaveFormat}}}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ Uint16\ formattag;\ \ \ \ \ \textcolor{comment}{//\ Raw\ value\ of\ the\ first\ field\ in\ the\ fmt\ chunk\ data.}}
+\DoxyCodeLine{00053\ \ \ \ \ Uint16\ encoding;\ \ \ \ \ \ \textcolor{comment}{//\ Actual\ encoding,\ possibly\ from\ the\ extensible\ header.}}
+\DoxyCodeLine{00054\ \ \ \ \ Uint16\ channels;\ \ \ \ \ \ \textcolor{comment}{//\ Number\ of\ channels.}}
+\DoxyCodeLine{00055\ \ \ \ \ Uint32\ frequency;\ \ \ \ \ \textcolor{comment}{//\ Sampling\ rate\ in\ Hz.}}
+\DoxyCodeLine{00056\ \ \ \ \ Uint32\ byterate;\ \ \ \ \ \ \textcolor{comment}{//\ Average\ bytes\ per\ second.}}
+\DoxyCodeLine{00057\ \ \ \ \ Uint16\ blockalign;\ \ \ \ \textcolor{comment}{//\ Bytes\ per\ block.}}
+\DoxyCodeLine{00058\ \ \ \ \ Uint16\ bitspersample;\ \textcolor{comment}{//\ Currently\ supported\ are\ 8,\ 16,\ 24,\ 32,\ and\ 4\ for\ ADPCM.}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{/*\ Extra\ information\ size.\ Number\ of\ extra\ bytes\ starting\ at\ byte\ 18\ in\ the}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ \ \ \ \ *\ fmt\ chunk\ data.\ This\ is\ at\ least\ 22\ for\ the\ extensible\ header.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00063\ \ \ \ \ Uint16\ extsize;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ Extensible\ WAVE\ header\ fields}}
+\DoxyCodeLine{00066\ \ \ \ \ Uint16\ validsamplebits;}
+\DoxyCodeLine{00067\ \ \ \ \ Uint32\ samplesperblock;\ \textcolor{comment}{//\ For\ compressed\ formats.\ Can\ be\ zero.\ Actually\ 16\ bits\ in\ the\ header.}}
+\DoxyCodeLine{00068\ \ \ \ \ Uint32\ channelmask;}
+\DoxyCodeLine{00069\ \ \ \ \ Uint8\ subformat[16];\ \textcolor{comment}{//\ A\ format\ GUID.}}
+\DoxyCodeLine{00070\ \}\ \doxymbox{\hyperlink{struct_wave_format}{WaveFormat}};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ Stores\ information\ on\ the\ fact\ chunk.}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_wave_fact}{WaveFact}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{/*\ Represents\ the\ state\ of\ the\ fact\ chunk\ in\ the\ WAVE\ file.}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ \ \ \ \ *\ Set\ to\ -\/1\ if\ the\ fact\ chunk\ is\ invalid.}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ \ \ \ \ *\ Set\ to\ 0\ if\ the\ fact\ chunk\ is\ not\ present}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ \ \ \ \ *\ Set\ to\ 1\ if\ the\ fact\ chunk\ is\ present\ and\ valid.}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ \ \ \ \ *\ Set\ to\ 2\ if\ samplelength\ is\ going\ to\ be\ used\ as\ the\ number\ of\ sample\ frames.}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00081\ \ \ \ \ Sint32\ status;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{/*\ Version\ 1\ of\ the\ RIFF\ specification\ calls\ the\ field\ in\ the\ fact\ chunk}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ \ \ \ \ *\ dwFileSize.\ The\ Standards\ Update\ then\ calls\ it\ dwSampleLength\ and\ specifies}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ \ \ \ \ *\ that\ it\ is\ 'the\ length\ of\ the\ data\ in\ samples'.\ WAVE\ files\ from\ Windows}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ \ \ \ \ *\ with\ this\ chunk\ have\ it\ set\ to\ the\ samples\ per\ channel\ (sample\ frames).}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ \ \ \ \ *\ This\ is\ useful\ to\ truncate\ compressed\ audio\ to\ a\ specific\ sample\ count}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ \ \ \ \ *\ because\ a\ compressed\ block\ is\ usually\ decoded\ to\ a\ fixed\ number\ of}}
+\DoxyCodeLine{00089\ \textcolor{comment}{\ \ \ \ \ *\ sample\ frames.}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00091\ \ \ \ \ Uint32\ samplelength;\ \textcolor{comment}{//\ Raw\ sample\ length\ value\ from\ the\ fact\ chunk.}}
+\DoxyCodeLine{00092\ \}\ \doxymbox{\hyperlink{struct_wave_fact}{WaveFact}};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ Generic\ struct\ for\ the\ chunks\ in\ the\ WAVE\ file.}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_wave_chunk}{WaveChunk}}}
+\DoxyCodeLine{00096\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ Uint32\ fourcc;\ \ \ \textcolor{comment}{//\ FOURCC\ of\ the\ chunk.}}
+\DoxyCodeLine{00098\ \ \ \ \ Uint32\ length;\ \ \ \textcolor{comment}{//\ Size\ of\ the\ chunk\ data.}}
+\DoxyCodeLine{00099\ \ \ \ \ Sint64\ position;\ \textcolor{comment}{//\ Position\ of\ the\ data\ in\ the\ stream.}}
+\DoxyCodeLine{00100\ \ \ \ \ Uint8\ *data;\ \ \ \ \ \textcolor{comment}{//\ When\ allocated,\ this\ points\ to\ the\ chunk\ data.\ length\ is\ used\ for\ the\ memory\ allocation\ size.}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size;\ \ \ \ \ \textcolor{comment}{//\ Number\ of\ bytes\ in\ data\ that\ could\ be\ read\ from\ the\ stream.\ Can\ be\ smaller\ than\ length.}}
+\DoxyCodeLine{00102\ \}\ \doxymbox{\hyperlink{struct_wave_chunk}{WaveChunk}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{comment}{//\ Controls\ how\ the\ size\ of\ the\ RIFF\ chunk\ affects\ the\ loading\ of\ a\ WAVE\ file.}}
+\DoxyCodeLine{00105\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ WaveRiffSizeHint}
+\DoxyCodeLine{00106\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ RiffSizeNoHint,}
+\DoxyCodeLine{00108\ \ \ \ \ RiffSizeForce,}
+\DoxyCodeLine{00109\ \ \ \ \ RiffSizeIgnoreZero,}
+\DoxyCodeLine{00110\ \ \ \ \ RiffSizeIgnore,}
+\DoxyCodeLine{00111\ \ \ \ \ RiffSizeMaximum}
+\DoxyCodeLine{00112\ \}\ WaveRiffSizeHint;}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{//\ Controls\ how\ a\ truncated\ WAVE\ file\ is\ handled.}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ WaveTruncationHint}
+\DoxyCodeLine{00116\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ TruncNoHint,}
+\DoxyCodeLine{00118\ \ \ \ \ TruncVeryStrict,}
+\DoxyCodeLine{00119\ \ \ \ \ TruncStrict,}
+\DoxyCodeLine{00120\ \ \ \ \ TruncDropFrame,}
+\DoxyCodeLine{00121\ \ \ \ \ TruncDropBlock}
+\DoxyCodeLine{00122\ \}\ WaveTruncationHint;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{comment}{//\ Controls\ how\ the\ fact\ chunk\ affects\ the\ loading\ of\ a\ WAVE\ file.}}
+\DoxyCodeLine{00125\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ WaveFactChunkHint}
+\DoxyCodeLine{00126\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ FactNoHint,}
+\DoxyCodeLine{00128\ \ \ \ \ FactTruncate,}
+\DoxyCodeLine{00129\ \ \ \ \ FactStrict,}
+\DoxyCodeLine{00130\ \ \ \ \ FactIgnoreZero,}
+\DoxyCodeLine{00131\ \ \ \ \ FactIgnore}
+\DoxyCodeLine{00132\ \}\ WaveFactChunkHint;}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_wave_file}{WaveFile}}}
+\DoxyCodeLine{00135\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \doxymbox{\hyperlink{struct_wave_chunk}{WaveChunk}}\ chunk;}
+\DoxyCodeLine{00137\ \ \ \ \ \doxymbox{\hyperlink{struct_wave_format}{WaveFormat}}\ format;}
+\DoxyCodeLine{00138\ \ \ \ \ \doxymbox{\hyperlink{struct_wave_fact}{WaveFact}}\ fact;}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{/*\ Number\ of\ sample\ frames\ that\ will\ be\ decoded.\ Calculated\ either\ with\ the}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ \ \ \ \ *\ size\ of\ the\ data\ chunk\ or,\ if\ the\ appropriate\ hint\ is\ enabled,\ with\ the}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ \ \ \ \ *\ sample\ length\ value\ from\ the\ fact\ chunk.}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00144\ \ \ \ \ Sint64\ sampleframes;}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{void}\ *decoderdata;\ \textcolor{comment}{//\ Some\ decoders\ require\ extra\ data\ for\ a\ state.}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ WaveRiffSizeHint\ riffhint;}
+\DoxyCodeLine{00149\ \ \ \ \ WaveTruncationHint\ trunchint;}
+\DoxyCodeLine{00150\ \ \ \ \ WaveFactChunkHint\ facthint;}
+\DoxyCodeLine{00151\ \}\ \doxymbox{\hyperlink{struct_wave_file}{WaveFile}};}
+
+\end{DoxyCode}

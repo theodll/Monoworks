@@ -1,0 +1,554 @@
+\doxysection{Tracy\+Lock.\+hpp}
+\hypertarget{_tracy_lock_8hpp_source}{}\label{_tracy_lock_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/client/TracyLock.hpp@{MonoEngine/thirdparty/tracy/public/client/TracyLock.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYLOCK\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYLOCK\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../common/TracySystem.hpp"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlign.hpp"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}TracyProfiler.hpp"{}}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }LockableCtx}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00017\ \ \ \ \ tracy\_force\_inline\ LockableCtx(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ :\ m\_id(\ GetLockCounter().fetch\_add(\ 1,\ std::memory\_order\_relaxed\ )\ )}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ ,\ m\_lockCount(\ 0\ )}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ ,\ m\_active(\ \textcolor{keyword}{false}\ )}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00023\ \ \ \ \ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ assert(\ m\_id\ !=\ (std::numeric\_limits<uint32\_t>::max)()\ );}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockAnnounce\ );}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.id,\ m\_id\ );}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.lckloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.type,\ LockType::Lockable\ );}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00036\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ LockableCtx(\ \textcolor{keyword}{const}\ LockableCtx\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00039\ \ \ \ \ LockableCtx\&\ operator=(\ \textcolor{keyword}{const}\ LockableCtx\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ tracy\_force\_inline\ \string~LockableCtx()}
+\DoxyCodeLine{00042\ \ \ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockTerminate\ );}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockTerminate.id,\ m\_id\ );}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockTerminate.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ BeforeLock()}
+\DoxyCodeLine{00054\ \ \ \ \ \{}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ queue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ locks\ =\ m\_lockCount.fetch\_add(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ locks\ ==\ 0\ ||\ active\ )}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ !=\ connected\ )\ m\_active.store(\ connected,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ connected\ )\ queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !queue\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockWait\ );}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.id,\ m\_id\ );}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterLock()}
+\DoxyCodeLine{00078\ \ \ \ \ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockObtain\ );}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.id,\ m\_id\ );}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00085\ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterUnlock()}
+\DoxyCodeLine{00088\ \ \ \ \ \{}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ m\_lockCount.fetch\_sub(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active.load(\ std::memory\_order\_relaxed\ )\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ m\_active.store(\ \textcolor{keyword}{false},\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockRelease\ );}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockRelease.id,\ m\_id\ );}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockRelease.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00104\ \ \ \ \ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterTryLock(\ \textcolor{keywordtype}{bool}\ acquired\ )}
+\DoxyCodeLine{00107\ \ \ \ \ \{}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !acquired\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ queue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ locks\ =\ m\_lockCount.fetch\_add(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ locks\ ==\ 0\ ||\ active\ )}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ !=\ connected\ )\ m\_active.store(\ connected,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ connected\ )\ queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !queue\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ acquired\ )}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockObtain\ );}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.id,\ m\_id\ );}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \ \ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ Mark(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00135\ \ \ \ \ \{}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !connected\ )}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ )\ m\_active.store(\ \textcolor{keyword}{false},\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockMark\ );}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockMark.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockMark.id,\ m\_id\ );}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockMark.srcloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00153\ \ \ \ \ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ CustomName(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ size\ )}
+\DoxyCodeLine{00156\ \ \ \ \ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ assert(\ size\ <\ (std::numeric\_limits<uint16\_t>::max)()\ );}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ size\ );}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ memcpy(\ ptr,\ name,\ size\ );}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockName\ );}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockNameFat.id,\ m\_id\ );}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockNameFat.name,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockNameFat.size,\ (uint16\_t)size\ );}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00172\ \ \ \ \ uint32\_t\ m\_id;}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00175\ \ \ \ \ std::atomic<uint32\_t>\ m\_lockCount;}
+\DoxyCodeLine{00176\ \ \ \ \ std::atomic<bool>\ m\_active;}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00178\ \};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00181\ \textcolor{keyword}{class\ }Lockable}
+\DoxyCodeLine{00182\ \{}
+\DoxyCodeLine{00183\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00184\ \ \ \ \ tracy\_force\_inline\ Lockable(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ :\ m\_ctx(\ srcloc\ )}
+\DoxyCodeLine{00186\ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ Lockable(\ \textcolor{keyword}{const}\ Lockable\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00190\ \ \ \ \ Lockable\&\ operator=(\ \textcolor{keyword}{const}\ Lockable\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ lock()}
+\DoxyCodeLine{00193\ \ \ \ \ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ runAfter\ =\ m\_ctx.BeforeLock();}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ m\_lockable.lock();}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ runAfter\ )\ m\_ctx.AfterLock();}
+\DoxyCodeLine{00197\ \ \ \ \ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ unlock()}
+\DoxyCodeLine{00200\ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ m\_lockable.unlock();}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ m\_ctx.AfterUnlock();}
+\DoxyCodeLine{00203\ \ \ \ \ \}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ try\_lock()}
+\DoxyCodeLine{00206\ \ \ \ \ \{}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ acquired\ =\ m\_lockable.try\_lock();}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ m\_ctx.AfterTryLock(\ acquired\ );}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ acquired;}
+\DoxyCodeLine{00210\ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ Mark(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00213\ \ \ \ \ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ m\_ctx.Mark(\ srcloc\ );}
+\DoxyCodeLine{00215\ \ \ \ \ \}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ CustomName(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ size\ )}
+\DoxyCodeLine{00218\ \ \ \ \ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ m\_ctx.CustomName(\ name,\ size\ );}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ T\ m\_lockable;}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00225\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_lockable_ctx}{LockableCtx}}\ m\_ctx;}
+\DoxyCodeLine{00226\ \};}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{keyword}{class\ }SharedLockableCtx}
+\DoxyCodeLine{00230\ \{}
+\DoxyCodeLine{00231\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00232\ \ \ \ \ tracy\_force\_inline\ SharedLockableCtx(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ :\ m\_id(\ GetLockCounter().fetch\_add(\ 1,\ std::memory\_order\_relaxed\ )\ )}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ ,\ m\_lockCount(\ 0\ )}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ ,\ m\_active(\ \textcolor{keyword}{false}\ )}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00238\ \ \ \ \ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ assert(\ m\_id\ !=\ (std::numeric\_limits<uint32\_t>::max)()\ );}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockAnnounce\ );}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.id,\ m\_id\ );}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.lckloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockAnnounce.type,\ LockType::SharedLockable\ );}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00251\ \ \ \ \ \}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ SharedLockableCtx(\ \textcolor{keyword}{const}\ SharedLockableCtx\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00254\ \ \ \ \ SharedLockableCtx\&\ operator=(\ \textcolor{keyword}{const}\ SharedLockableCtx\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \ \ \ \ tracy\_force\_inline\ \string~SharedLockableCtx()}
+\DoxyCodeLine{00257\ \ \ \ \ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockTerminate\ );}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockTerminate.id,\ m\_id\ );}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockTerminate.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00266\ \ \ \ \ \}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ BeforeLock()}
+\DoxyCodeLine{00269\ \ \ \ \ \{}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ queue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ locks\ =\ m\_lockCount.fetch\_add(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ locks\ ==\ 0\ ||\ active\ )}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ !=\ connected\ )\ m\_active.store(\ connected,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ connected\ )\ queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !queue\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockWait\ );}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.id,\ m\_id\ );}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterLock()}
+\DoxyCodeLine{00293\ \ \ \ \ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockObtain\ );}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.id,\ m\_id\ );}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00300\ \ \ \ \ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterUnlock()}
+\DoxyCodeLine{00303\ \ \ \ \ \{}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ m\_lockCount.fetch\_sub(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active.load(\ std::memory\_order\_relaxed\ )\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ m\_active.store(\ \textcolor{keyword}{false},\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockRelease\ );}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockRelease.id,\ m\_id\ );}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockRelease.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00319\ \ \ \ \ \}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterTryLock(\ \textcolor{keywordtype}{bool}\ acquired\ )}
+\DoxyCodeLine{00322\ \ \ \ \ \{}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !acquired\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ queue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ locks\ =\ m\_lockCount.fetch\_add(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ locks\ ==\ 0\ ||\ active\ )}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ !=\ connected\ )\ m\_active.store(\ connected,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ connected\ )\ queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !queue\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ acquired\ )}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockObtain\ );}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.id,\ m\_id\ );}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00347\ \ \ \ \ \}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ BeforeLockShared()}
+\DoxyCodeLine{00350\ \ \ \ \ \{}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ queue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ locks\ =\ m\_lockCount.fetch\_add(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ locks\ ==\ 0\ ||\ active\ )}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ !=\ connected\ )\ m\_active.store(\ connected,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ connected\ )\ queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !queue\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockSharedWait\ );}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.id,\ m\_id\ );}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockWait.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00371\ \ \ \ \ \}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterLockShared()}
+\DoxyCodeLine{00374\ \ \ \ \ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockSharedObtain\ );}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.id,\ m\_id\ );}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00381\ \ \ \ \ \}}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterUnlockShared()}
+\DoxyCodeLine{00384\ \ \ \ \ \{}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ m\_lockCount.fetch\_sub(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active.load(\ std::memory\_order\_relaxed\ )\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ m\_active.store(\ \textcolor{keyword}{false},\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockSharedRelease\ );}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockReleaseShared.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockReleaseShared.id,\ m\_id\ );}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockReleaseShared.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00401\ \ \ \ \ \}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ AfterTryLockShared(\ \textcolor{keywordtype}{bool}\ acquired\ )}
+\DoxyCodeLine{00404\ \ \ \ \ \{}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !acquired\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ queue\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ locks\ =\ m\_lockCount.fetch\_add(\ 1,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ locks\ ==\ 0\ ||\ active\ )}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ !=\ connected\ )\ m\_active.store(\ connected,\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ connected\ )\ queue\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !queue\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ acquired\ )}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockSharedObtain\ );}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.id,\ m\_id\ );}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockObtain.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00429\ \ \ \ \ \}}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ Mark(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00432\ \ \ \ \ \{}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ active\ =\ m\_active.load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ connected\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !connected\ )}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ active\ )\ m\_active.store(\ \textcolor{keyword}{false},\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00443\ }
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockMark\ );}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockMark.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockMark.id,\ m\_id\ );}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockMark.srcloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00450\ \ \ \ \ \}}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ CustomName(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ size\ )}
+\DoxyCodeLine{00453\ \ \ \ \ \{}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ assert(\ size\ <\ (std::numeric\_limits<uint16\_t>::max)()\ );}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ size\ );}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ memcpy(\ ptr,\ name,\ size\ );}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::LockName\ );}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockNameFat.id,\ m\_id\ );}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockNameFat.name,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>lockNameFat.size,\ (uint16\_t)size\ );}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00466\ \ \ \ \ \}}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00469\ \ \ \ \ uint32\_t\ m\_id;}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00472\ \ \ \ \ std::atomic<uint32\_t>\ m\_lockCount;}
+\DoxyCodeLine{00473\ \ \ \ \ std::atomic<bool>\ m\_active;}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00475\ \};}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00478\ \textcolor{keyword}{class\ }SharedLockable}
+\DoxyCodeLine{00479\ \{}
+\DoxyCodeLine{00480\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00481\ \ \ \ \ tracy\_force\_inline\ SharedLockable(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ :\ m\_ctx(\ srcloc\ )}
+\DoxyCodeLine{00483\ \ \ \ \ \{}
+\DoxyCodeLine{00484\ \ \ \ \ \}}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00486\ \ \ \ \ SharedLockable(\ \textcolor{keyword}{const}\ SharedLockable\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00487\ \ \ \ \ SharedLockable\&\ operator=(\ \textcolor{keyword}{const}\ SharedLockable\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ lock()}
+\DoxyCodeLine{00490\ \ \ \ \ \{}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ runAfter\ =\ m\_ctx.BeforeLock();}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ m\_lockable.lock();}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ runAfter\ )\ m\_ctx.AfterLock();}
+\DoxyCodeLine{00494\ \ \ \ \ \}}
+\DoxyCodeLine{00495\ }
+\DoxyCodeLine{00496\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ unlock()}
+\DoxyCodeLine{00497\ \ \ \ \ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ m\_lockable.unlock();}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ m\_ctx.AfterUnlock();}
+\DoxyCodeLine{00500\ \ \ \ \ \}}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ try\_lock()}
+\DoxyCodeLine{00503\ \ \ \ \ \{}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ acquired\ =\ m\_lockable.try\_lock();}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ m\_ctx.AfterTryLock(\ acquired\ );}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ acquired;}
+\DoxyCodeLine{00507\ \ \ \ \ \}}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ lock\_shared()}
+\DoxyCodeLine{00510\ \ \ \ \ \{}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ runAfter\ =\ m\_ctx.BeforeLockShared();}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ m\_lockable.lock\_shared();}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ runAfter\ )\ m\_ctx.AfterLockShared();}
+\DoxyCodeLine{00514\ \ \ \ \ \}}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ unlock\_shared()}
+\DoxyCodeLine{00517\ \ \ \ \ \{}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ m\_lockable.unlock\_shared();}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ m\_ctx.AfterUnlockShared();}
+\DoxyCodeLine{00520\ \ \ \ \ \}}
+\DoxyCodeLine{00521\ }
+\DoxyCodeLine{00522\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ try\_lock\_shared()}
+\DoxyCodeLine{00523\ \ \ \ \ \{}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ acquired\ =\ m\_lockable.try\_lock\_shared();}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ m\_ctx.AfterTryLockShared(\ acquired\ );}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ acquired;}
+\DoxyCodeLine{00527\ \ \ \ \ \}}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ Mark(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*\ srcloc\ )}
+\DoxyCodeLine{00530\ \ \ \ \ \{}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ m\_ctx.Mark(\ srcloc\ );}
+\DoxyCodeLine{00532\ \ \ \ \ \}}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ CustomName(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ size\ )}
+\DoxyCodeLine{00535\ \ \ \ \ \{}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ m\_ctx.CustomName(\ name,\ size\ );}
+\DoxyCodeLine{00537\ \ \ \ \ \}}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \ \ \ \ T\ m\_lockable;}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00542\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_shared_lockable_ctx}{SharedLockableCtx}}\ m\_ctx;}
+\DoxyCodeLine{00543\ \};}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \}}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

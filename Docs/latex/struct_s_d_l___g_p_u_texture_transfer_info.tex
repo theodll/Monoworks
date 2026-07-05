@@ -1,0 +1,68 @@
+\doxysection{SDL\+\_\+\+GPUTexture\+Transfer\+Info Struct Reference}
+\hypertarget{struct_s_d_l___g_p_u_texture_transfer_info}{}\label{struct_s_d_l___g_p_u_texture_transfer_info}\index{SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}}
+
+
+{\ttfamily \+\#include $<$SDL\+\_\+gpu.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+SDL\+\_\+\+GPUTransfer\+Buffer \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_a2694310f1b590e82c38325ed0b02decc}{transfer\+\_\+buffer}}
+\item 
+Uint32 \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_a340f8733c1db1c81d38536d6e1b9f309}{offset}}
+\item 
+Uint32 \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_a88bd2cc67ced0dcb8b286af477887179}{pixels\+\_\+per\+\_\+row}}
+\item 
+Uint32 \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_ae57e799b9fc5487fdd4b2000667bc620}{rows\+\_\+per\+\_\+layer}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A structure specifying parameters related to transferring data to or from a texture.
+
+If either of {\ttfamily \doxylink{struct_s_d_l___g_p_u_texture_transfer_info_a88bd2cc67ced0dcb8b286af477887179}{pixels\+\_\+per\+\_\+row}} or {\ttfamily \doxylink{struct_s_d_l___g_p_u_texture_transfer_info_ae57e799b9fc5487fdd4b2000667bc620}{rows\+\_\+per\+\_\+layer}} is zero, then width and height of passed \doxylink{struct_s_d_l___g_p_u_texture_region}{SDL\+\_\+\+GPUTexture\+Region} to SDL\+\_\+\+Upload\+To\+GPUTexture or SDL\+\_\+\+Download\+From\+GPUTexture are used as default values respectively and data is considered to be tightly packed.
+
+{\bfseries{WARNING}}:\+ On some older/\+integrated hardware, Direct3D 12 requires texture data row pitch to be 256 byte aligned, and offsets to be aligned to 512 bytes. If they are not, SDL will make a temporary copy of the data that is properly aligned, but this adds overhead to the transfer process. Apps can avoid this by aligning their data appropriately, or using a different GPU backend than Direct3D 12.
+
+\begin{DoxySince}{Since}
+This struct is available since SDL 3.\+2.\+0.
+\end{DoxySince}
+\begin{DoxySeeAlso}{See also}
+SDL\+\_\+\+Upload\+To\+GPUTexture 
+
+SDL\+\_\+\+Download\+From\+GPUTexture 
+\end{DoxySeeAlso}
+
+
+\label{struct_s_d_l___g_p_u_texture_transfer_info_doc-variable-members}
+\Hypertarget{struct_s_d_l___g_p_u_texture_transfer_info_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_s_d_l___g_p_u_texture_transfer_info_a340f8733c1db1c81d38536d6e1b9f309}\index{SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}!offset@{offset}}
+\index{offset@{offset}!SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}}
+\doxysubsubsection{\texorpdfstring{offset}{offset}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_texture_transfer_info_a340f8733c1db1c81d38536d6e1b9f309} 
+Uint32 SDL\+\_\+\+GPUTexture\+Transfer\+Info::\+offset}
+
+The starting byte of the image data in the transfer buffer. \Hypertarget{struct_s_d_l___g_p_u_texture_transfer_info_a88bd2cc67ced0dcb8b286af477887179}\index{SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}!pixels\_per\_row@{pixels\_per\_row}}
+\index{pixels\_per\_row@{pixels\_per\_row}!SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}}
+\doxysubsubsection{\texorpdfstring{pixels\_per\_row}{pixels\_per\_row}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_texture_transfer_info_a88bd2cc67ced0dcb8b286af477887179} 
+Uint32 SDL\+\_\+\+GPUTexture\+Transfer\+Info::\+pixels\+\_\+per\+\_\+row}
+
+The number of pixels from one row to the next. \Hypertarget{struct_s_d_l___g_p_u_texture_transfer_info_ae57e799b9fc5487fdd4b2000667bc620}\index{SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}!rows\_per\_layer@{rows\_per\_layer}}
+\index{rows\_per\_layer@{rows\_per\_layer}!SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}}
+\doxysubsubsection{\texorpdfstring{rows\_per\_layer}{rows\_per\_layer}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_texture_transfer_info_ae57e799b9fc5487fdd4b2000667bc620} 
+Uint32 SDL\+\_\+\+GPUTexture\+Transfer\+Info::\+rows\+\_\+per\+\_\+layer}
+
+The number of rows from one layer/\+depth-\/slice to the next. \Hypertarget{struct_s_d_l___g_p_u_texture_transfer_info_a2694310f1b590e82c38325ed0b02decc}\index{SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}!transfer\_buffer@{transfer\_buffer}}
+\index{transfer\_buffer@{transfer\_buffer}!SDL\_GPUTextureTransferInfo@{SDL\_GPUTextureTransferInfo}}
+\doxysubsubsection{\texorpdfstring{transfer\_buffer}{transfer\_buffer}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_texture_transfer_info_a2694310f1b590e82c38325ed0b02decc} 
+SDL\+\_\+\+GPUTransfer\+Buffer\texorpdfstring{$\ast$}{*} SDL\+\_\+\+GPUTexture\+Transfer\+Info::\+transfer\+\_\+buffer}
+
+The transfer buffer used in the transfer operation. 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Runtime/\+extern/\+sdl/\+include/\+\+SDL3/\+SDL\+\_\+gpu.\+h\end{DoxyCompactItemize}

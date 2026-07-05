@@ -1,0 +1,40 @@
+\doxysection{Tracy\+Tagged\+Userland\+Address.\+hpp}
+\hypertarget{_tracy_tagged_userland_address_8hpp_source}{}\label{_tracy_tagged_userland_address_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/common/TracyTaggedUserlandAddress.hpp@{MonoEngine/thirdparty/tracy/public/common/TracyTaggedUserlandAddress.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYTAGGEDPTR\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYTAGGEDPTR\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }TaggedUserlandAddress}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint64\_t\ ptrShift\ =\ 8;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ uint64\_t\ highBits\ =\ 0xFF00000000000000;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ TaggedUserlandAddress()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00019\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{explicit}\ TaggedUserlandAddress(\ uint64\_t\ address,\ uint8\_t\ tag\ =\ 0\ )}
+\DoxyCodeLine{00020\ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ assert(\ (\ address\ \&\ highBits\ )\ ==\ 0\ );}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ m\_storage\ =\ (\ address\ <<\ ptrShift\ )\ |\ tag;}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ tracy\_force\_inline\ uint64\_t\ GetAddress()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_storage\ >>\ ptrShift;\ \}}
+\DoxyCodeLine{00026\ \ \ \ \ tracy\_force\_inline\ uint8\_t\ GetTag()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ uint8\_t(\ m\_storage\ \&\ 0xFF\ );\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00029\ \ \ \ \ uint64\_t\ m\_storage;}
+\DoxyCodeLine{00030\ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

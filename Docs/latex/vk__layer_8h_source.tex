@@ -1,0 +1,197 @@
+\doxysection{vk\+\_\+layer.\+h}
+\hypertarget{vk__layer_8h_source}{}\label{vk__layer_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vk\_layer.h@{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vk\_layer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 2015-\/2023\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ Copyright\ 2015-\/2023\ Valve\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ Copyright\ 2015-\/2023\ LunarG,\ Inc.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{/*\ Need\ to\ define\ dispatch\ table}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ Core\ struct\ can\ then\ have\ ptr\ to\ dispatch\ table\ at\ the\ top}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ Along\ with\ object\ ptrs\ for\ current\ and\ next\ OBJ}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}vulkan\_core.h"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ MAX\_NUM\_UNKNOWN\_EXTS\ 250}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \textcolor{comment}{//\ Loader-\/Layer\ version\ negotiation\ API.\ \ Versions\ add\ the\ following\ features:}}
+\DoxyCodeLine{00019\ \ \textcolor{comment}{//\ \ \ Versions\ 0/1\ -\/\ Initial.\ \ Doesn't\ support\ vk\_layerGetPhysicalDeviceProcAddr}}
+\DoxyCodeLine{00020\ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ vk\_icdNegotiateLoaderLayerInterfaceVersion.}}
+\DoxyCodeLine{00021\ \ \textcolor{comment}{//\ \ \ Version\ 2\ \ \ \ -\/\ Add\ support\ for\ vk\_layerGetPhysicalDeviceProcAddr\ and}}
+\DoxyCodeLine{00022\ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vk\_icdNegotiateLoaderLayerInterfaceVersion.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ CURRENT\_LOADER\_LAYER\_INTERFACE\_VERSION\ 2}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ MIN\_SUPPORTED\_LOADER\_LAYER\_INTERFACE\_VERSION\ 1}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ VK\_CURRENT\_CHAIN\_VERSION\ 1}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Typedef\ for\ use\ in\ the\ interfaces\ below}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifndef\ IS\_DEFINED\_PFN\_GetPhysicalDeviceProcAddr}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ PFN\_vkVoidFunction\ (VKAPI\_PTR\ *PFN\_GetPhysicalDeviceProcAddr)(VkInstance\ instance,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ pName);}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ IS\_DEFINED\_PFN\_GetPhysicalDeviceProcAddr}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Version\ negotiation\ values}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ VkNegotiateLayerStructType\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ LAYER\_NEGOTIATE\_UNINTIALIZED\ =\ 0,}
+\DoxyCodeLine{00037\ \ \ \ \ LAYER\_NEGOTIATE\_INTERFACE\_STRUCT\ =\ 1,}
+\DoxyCodeLine{00038\ \}\ VkNegotiateLayerStructType;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ Version\ negotiation\ structures}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_negotiate_layer_interface}{VkNegotiateLayerInterface}}\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ VkNegotiateLayerStructType\ sType;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ *pNext;}
+\DoxyCodeLine{00044\ \ \ \ \ uint32\_t\ loaderLayerInterfaceVersion;}
+\DoxyCodeLine{00045\ \ \ \ \ PFN\_vkGetInstanceProcAddr\ pfnGetInstanceProcAddr;}
+\DoxyCodeLine{00046\ \ \ \ \ PFN\_vkGetDeviceProcAddr\ pfnGetDeviceProcAddr;}
+\DoxyCodeLine{00047\ \ \ \ \ PFN\_GetPhysicalDeviceProcAddr\ pfnGetPhysicalDeviceProcAddr;}
+\DoxyCodeLine{00048\ \}\ \doxymbox{\hyperlink{struct_vk_negotiate_layer_interface}{VkNegotiateLayerInterface}};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ Version\ negotiation\ functions}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkNegotiateLoaderLayerInterfaceVersion)(\doxymbox{\hyperlink{struct_vk_negotiate_layer_interface}{VkNegotiateLayerInterface}}\ *pVersionStruct);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ Function\ prototype\ for\ unknown\ physical\ device\ extension\ command}}
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ VkResult(VKAPI\_PTR\ *PFN\_PhysDevExt)(VkPhysicalDevice\ phys\_device);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ CreateInstance\ and\ CreateDevice\ support\ structures}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{comment}{/*\ Sub\ type\ of\ structure\ for\ instance\ and\ device\ loader\ ext\ of\ CreateInfo.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ *\ When\ sType\ ==\ VK\_STRUCTURE\_TYPE\_LOADER\_INSTANCE\_CREATE\_INFO}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ *\ or\ sType\ ==\ VK\_STRUCTURE\_TYPE\_LOADER\_DEVICE\_CREATE\_INFO}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ *\ then\ VkLayerFunction\ indicates\ struct\ type\ pointed\ to\ by\ pNext}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ VkLayerFunction\_\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ VK\_LAYER\_LINK\_INFO\ =\ 0,}
+\DoxyCodeLine{00066\ \ \ \ \ VK\_LOADER\_DATA\_CALLBACK\ =\ 1,}
+\DoxyCodeLine{00067\ \ \ \ \ VK\_LOADER\_LAYER\_CREATE\_DEVICE\_CALLBACK\ =\ 2,}
+\DoxyCodeLine{00068\ \ \ \ \ VK\_LOADER\_FEATURES\ =\ 3,}
+\DoxyCodeLine{00069\ \}\ VkLayerFunction;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_layer_instance_link__}{VkLayerInstanceLink\_}}\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_layer_instance_link__}{VkLayerInstanceLink\_}}\ *pNext;}
+\DoxyCodeLine{00073\ \ \ \ \ PFN\_vkGetInstanceProcAddr\ pfnNextGetInstanceProcAddr;}
+\DoxyCodeLine{00074\ \ \ \ \ PFN\_GetPhysicalDeviceProcAddr\ pfnNextGetPhysicalDeviceProcAddr;}
+\DoxyCodeLine{00075\ \}\ VkLayerInstanceLink;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ *\ When\ creating\ the\ device\ chain\ the\ loader\ needs\ to\ pass}}
+\DoxyCodeLine{00079\ \textcolor{comment}{\ *\ down\ information\ about\ it's\ device\ structure\ needed\ at}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ *\ the\ end\ of\ the\ chain.\ Passing\ the\ data\ via\ the}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ *\ VkLayerDeviceInfo\ avoids\ issues\ with\ finding\ the}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ *\ exact\ instance\ being\ used.}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00084\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_layer_device_info__}{VkLayerDeviceInfo\_}}\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ *device\_info;}
+\DoxyCodeLine{00086\ \ \ \ \ PFN\_vkGetInstanceProcAddr\ pfnNextGetInstanceProcAddr;}
+\DoxyCodeLine{00087\ \}\ VkLayerDeviceInfo;}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkSetInstanceLoaderData)(VkInstance\ instance,}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *object);}
+\DoxyCodeLine{00091\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkSetDeviceLoaderData)(VkDevice\ device,}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *object);}
+\DoxyCodeLine{00093\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkLayerCreateDevice)(VkInstance\ instance,\ VkPhysicalDevice\ physicalDevice,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_device_create_info}{VkDeviceCreateInfo}}\ *pCreateInfo,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}\ *pAllocator,\ VkDevice\ *pDevice,\ PFN\_vkGetInstanceProcAddr\ layerGIPA,\ PFN\_vkGetDeviceProcAddr\ *nextGDPA);}
+\DoxyCodeLine{00095\ \textcolor{keyword}{typedef}\ void\ (VKAPI\_PTR\ *PFN\_vkLayerDestroyDevice)(VkDevice\ physicalDevice,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}\ *pAllocator,\ PFN\_vkDestroyDevice\ destroyFunction);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ VkLoaderFeastureFlagBits\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ VK\_LOADER\_FEATURE\_PHYSICAL\_DEVICE\_SORTING\ =\ 0x00000001,}
+\DoxyCodeLine{00099\ \}\ VkLoaderFlagBits;}
+\DoxyCodeLine{00100\ \textcolor{keyword}{typedef}\ VkFlags\ VkLoaderFeatureFlags;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00103\ \ \ \ \ VkStructureType\ sType;\ \textcolor{comment}{//\ VK\_STRUCTURE\_TYPE\_LOADER\_INSTANCE\_CREATE\_INFO}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *pNext;}
+\DoxyCodeLine{00105\ \ \ \ \ VkLayerFunction\ function;}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ VkLayerInstanceLink\ *pLayerInfo;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ PFN\_vkSetInstanceLoaderData\ pfnSetInstanceLoaderData;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ PFN\_vkLayerCreateDevice\ pfnLayerCreateDevice;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ PFN\_vkLayerDestroyDevice\ pfnLayerDestroyDevice;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \}\ layerDevice;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ VkLoaderFeatureFlags\ loaderFeatures;}
+\DoxyCodeLine{00114\ \ \ \ \ \}\ u;}
+\DoxyCodeLine{00115\ \}\ \doxymbox{\hyperlink{struct_vk_layer_instance_create_info}{VkLayerInstanceCreateInfo}};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_layer_device_link__}{VkLayerDeviceLink\_}}\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_layer_device_link__}{VkLayerDeviceLink\_}}\ *pNext;}
+\DoxyCodeLine{00119\ \ \ \ \ PFN\_vkGetInstanceProcAddr\ pfnNextGetInstanceProcAddr;}
+\DoxyCodeLine{00120\ \ \ \ \ PFN\_vkGetDeviceProcAddr\ pfnNextGetDeviceProcAddr;}
+\DoxyCodeLine{00121\ \}\ VkLayerDeviceLink;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00124\ \ \ \ \ VkStructureType\ sType;\ \textcolor{comment}{//\ VK\_STRUCTURE\_TYPE\_LOADER\_DEVICE\_CREATE\_INFO}}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *pNext;}
+\DoxyCodeLine{00126\ \ \ \ \ VkLayerFunction\ function;}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ VkLayerDeviceLink\ *pLayerInfo;}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ PFN\_vkSetDeviceLoaderData\ pfnSetDeviceLoaderData;}
+\DoxyCodeLine{00130\ \ \ \ \ \}\ u;}
+\DoxyCodeLine{00131\ \}\ \doxymbox{\hyperlink{struct_vk_layer_device_create_info}{VkLayerDeviceCreateInfo}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00134\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkNegotiateLoaderLayerInterfaceVersion(\doxymbox{\hyperlink{struct_vk_negotiate_layer_interface}{VkNegotiateLayerInterface}}\ *pVersionStruct);}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ VkChainType\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ VK\_CHAIN\_TYPE\_UNKNOWN\ =\ 0,}
+\DoxyCodeLine{00141\ \ \ \ \ VK\_CHAIN\_TYPE\_ENUMERATE\_INSTANCE\_EXTENSION\_PROPERTIES\ =\ 1,}
+\DoxyCodeLine{00142\ \ \ \ \ VK\_CHAIN\_TYPE\_ENUMERATE\_INSTANCE\_LAYER\_PROPERTIES\ =\ 2,}
+\DoxyCodeLine{00143\ \ \ \ \ VK\_CHAIN\_TYPE\_ENUMERATE\_INSTANCE\_VERSION\ =\ 3,}
+\DoxyCodeLine{00144\ \}\ VkChainType;}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_chain_header}{VkChainHeader}}\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ VkChainType\ type;}
+\DoxyCodeLine{00148\ \ \ \ \ uint32\_t\ version;}
+\DoxyCodeLine{00149\ \ \ \ \ uint32\_t\ size;}
+\DoxyCodeLine{00150\ \}\ \doxymbox{\hyperlink{struct_vk_chain_header}{VkChainHeader}};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_extension_properties_chain}{VkEnumerateInstanceExtensionPropertiesChain}}\ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_chain_header}{VkChainHeader}}\ header;}
+\DoxyCodeLine{00154\ \ \ \ \ VkResult(VKAPI\_PTR\ *pfnNextLayer)(\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_extension_properties_chain}{VkEnumerateInstanceExtensionPropertiesChain}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ uint32\_t\ *,}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_vk_extension_properties}{VkExtensionProperties}}\ *);}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_extension_properties_chain}{VkEnumerateInstanceExtensionPropertiesChain}}\ *pNextLink;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{inline}\ VkResult\ CallDown(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pLayerName,\ uint32\_t\ *pPropertyCount,\ \doxymbox{\hyperlink{struct_vk_extension_properties}{VkExtensionProperties}}\ *pProperties)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pfnNextLayer(pNextLink,\ pLayerName,\ pPropertyCount,\ pProperties);}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00163\ \}\ \doxymbox{\hyperlink{struct_vk_enumerate_instance_extension_properties_chain}{VkEnumerateInstanceExtensionPropertiesChain}};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_layer_properties_chain}{VkEnumerateInstanceLayerPropertiesChain}}\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_chain_header}{VkChainHeader}}\ header;}
+\DoxyCodeLine{00167\ \ \ \ \ VkResult(VKAPI\_PTR\ *pfnNextLayer)(\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_layer_properties_chain}{VkEnumerateInstanceLayerPropertiesChain}}\ *,\ uint32\_t\ *,\ \doxymbox{\hyperlink{struct_vk_layer_properties}{VkLayerProperties}}\ *);}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_layer_properties_chain}{VkEnumerateInstanceLayerPropertiesChain}}\ *pNextLink;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{inline}\ VkResult\ CallDown(uint32\_t\ *pPropertyCount,\ \doxymbox{\hyperlink{struct_vk_layer_properties}{VkLayerProperties}}\ *pProperties)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pfnNextLayer(pNextLink,\ pPropertyCount,\ pProperties);}
+\DoxyCodeLine{00173\ \ \ \ \ \}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00175\ \}\ \doxymbox{\hyperlink{struct_vk_enumerate_instance_layer_properties_chain}{VkEnumerateInstanceLayerPropertiesChain}};}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_version_chain}{VkEnumerateInstanceVersionChain}}\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_chain_header}{VkChainHeader}}\ header;}
+\DoxyCodeLine{00179\ \ \ \ \ VkResult(VKAPI\_PTR\ *pfnNextLayer)(\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_version_chain}{VkEnumerateInstanceVersionChain}}\ *,\ uint32\_t\ *);}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_enumerate_instance_version_chain}{VkEnumerateInstanceVersionChain}}\ *pNextLink;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keyword}{inline}\ VkResult\ CallDown(uint32\_t\ *pApiVersion)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pfnNextLayer(pNextLink,\ pApiVersion);}
+\DoxyCodeLine{00185\ \ \ \ \ \}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00187\ \}\ \doxymbox{\hyperlink{struct_vk_enumerate_instance_version_chain}{VkEnumerateInstanceVersionChain}};}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00190\ \}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

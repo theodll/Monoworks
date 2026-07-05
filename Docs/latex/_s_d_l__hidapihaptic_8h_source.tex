@@ -1,0 +1,54 @@
+\doxysection{SDL\+\_\+hidapihaptic.\+h}
+\hypertarget{_s_d_l__hidapihaptic_8h_source}{}\label{_s_d_l__hidapihaptic_8h_source}\index{MonoRuntime/extern/sdl/src/haptic/hidapi/SDL\_hidapihaptic.h@{MonoRuntime/extern/sdl/src/haptic/hidapi/SDL\_hidapihaptic.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 2025\ Katharine\ Chui\ <katharine.chui@gmail.com>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ All\ hid\ command\ sent\ and\ effect\ rendering\ are\ ported\ from\ https://github.com/berarma/new-\/lg4ff}}
+\DoxyCodeLine{00024\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifndef\ SDL\_hidapihaptic\_h\_}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ SDL\_hidapihaptic\_h\_}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticInit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00030\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticIsHidapi(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_JoystickIsHaptic(\doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);}
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticOpenFromJoystick(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);}
+\DoxyCodeLine{00033\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_JoystickSameHaptic(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{void}\ SDL\_HIDAPI\_HapticClose(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{void}\ SDL\_HIDAPI\_HapticQuit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00036\ SDL\_HapticEffectID\ SDL\_HIDAPI\_HapticNewEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}\ *base);}
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticUpdateEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ \textcolor{keywordtype}{id},\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}\ *data);}
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticRunEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ \textcolor{keywordtype}{id},\ Uint32\ iterations);}
+\DoxyCodeLine{00039\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticStopEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ SDL\_HIDAPI\_HapticDestroyEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticGetEffectStatus(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticSetGain(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keywordtype}{int}\ gain);}
+\DoxyCodeLine{00043\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticSetAutocenter(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keywordtype}{int}\ autocenter);}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticPause(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticResume(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{bool}\ SDL\_HIDAPI\_HapticStopAll(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//SDL\_hidapihaptic\_h\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,101 @@
+\doxysection{Tracy\+Llm\+Tools.\+hpp}
+\hypertarget{_tracy_llm_tools_8hpp_source}{}\label{_tracy_llm_tools_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlmTools.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlmTools.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYLLMTOOLS\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYLLMTOOLS\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}TracyLlmEmbeddings.hpp"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}tracy\_robin\_hood.h"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_embed_data}{EmbedData}};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00017\ \{}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_llm_skill}{LlmSkill}};}
+\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{TracyLlmApi}};}
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_tracy_manual_data}{TracyManualData}};}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_view}{View}};}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }TracyLlmTools}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_tracy_llm_tools_1_1_embedding_state}{EmbeddingState}}}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ std::string\ model;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ done\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ inProgress\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ progress\ =\ 0;}
+\DoxyCodeLine{00034\ \ \ \ \ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ TracyLlmTools(\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_tracy_manual_data}{TracyManualData}}\&\ manual,\ \textcolor{keyword}{const}\ std::vector<LlmSkill>\&\ skills\ );}
+\DoxyCodeLine{00037\ \ \ \ \ \string~TracyLlmTools();}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ std::string\ HandleToolCalls(\ \textcolor{keyword}{const}\ std::string\&\ tool,\ \textcolor{keyword}{const}\ nlohmann::json\&\ json,\ \doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{TracyLlmApi}}\&\ api,\ \textcolor{keywordtype}{int}\ contextSize,\ \textcolor{keywordtype}{bool}\ hasEmbeddingsModel\ );}
+\DoxyCodeLine{00040\ \ \ \ \ std::string\ GetCurrentTime()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ CalcCtxBasedLimit(\ \textcolor{keywordtype}{int}\ ctxSize\ );}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{structtracy_1_1_tracy_llm_tools_1_1_embedding_state}{EmbeddingState}}\ GetManualEmbeddingsState()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectManualEmbeddings(\ \textcolor{keyword}{const}\ std::string\&\ model\ );}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ BuildManualEmbeddings(\ \textcolor{keyword}{const}\ std::string\&\ model,\ \doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{TracyLlmApi}}\&\ api\ );}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ CancelManualEmbeddings();}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_netAccess\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00052\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ CalcMaxSize()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00053\ \ \ \ \ [[nodiscard]]\ std::string\ TrimString(\ std::string\&\&\ str\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ std::string\ FetchHttp(\ \textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::vector<const\ char*>\&\ headers\ =\ \{\},\ \textcolor{keywordtype}{bool}\ cache\ =\ true\ );}
+\DoxyCodeLine{00056\ \ \ \ \ std::string\ SearchWikipedia(\ std::string\ query,\ \textcolor{keyword}{const}\ std::string\&\ lang\ );}
+\DoxyCodeLine{00057\ \ \ \ \ std::string\ GetWikipedia(\ std::string\ page,\ \textcolor{keyword}{const}\ std::string\&\ lang\ );}
+\DoxyCodeLine{00058\ \ \ \ \ std::string\ GetDictionary(\ std::string\ word,\ \textcolor{keyword}{const}\ std::string\&\ lang\ );}
+\DoxyCodeLine{00059\ \ \ \ \ std::string\ SearchWeb(\ std::string\ query\ );}
+\DoxyCodeLine{00060\ \ \ \ \ std::string\ SearchWebGoogle(\ std::string\ query\ );}
+\DoxyCodeLine{00061\ \ \ \ \ std::string\ SearchWebBrave(\ std::string\ query\ );}
+\DoxyCodeLine{00062\ \ \ \ \ std::string\ SearchWebDuckDuckGo(\ std::string\ query\ );}
+\DoxyCodeLine{00063\ \ \ \ \ std::string\ GetWebpage(\ \textcolor{keyword}{const}\ std::string\&\ url\ );}
+\DoxyCodeLine{00064\ \ \ \ \ std::string\ SearchManual(\ \textcolor{keyword}{const}\ std::string\&\ query,\ \doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{TracyLlmApi}}\&\ api,\ \textcolor{keywordtype}{bool}\ hasEmbeddingsModel\ );}
+\DoxyCodeLine{00065\ \ \ \ \ std::string\ SourceFile(\ \textcolor{keyword}{const}\ std::string\&\ file,\ uint32\_t\ \doxymbox{\hyperlink{structtracy_1_1line}{line}},\ uint32\_t\ \doxymbox{\hyperlink{classcontext}{context}},\ uint32\_t\ contextBack\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00066\ \ \ \ \ std::string\ SourceSearch(\ std::string\ query,\ \textcolor{keywordtype}{bool}\ caseInsensitive,\ \textcolor{keyword}{const}\ std::string\&\ path\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00067\ \ \ \ \ std::string\ GetSkill(\ \textcolor{keyword}{const}\ std::string\&\ name\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00068\ \ \ \ \ std::string\ SymbolDisasm(\ \textcolor{keyword}{const}\ std::string\&\ address\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00069\ \ \ \ \ std::string\ SymbolParents(\ \textcolor{keyword}{const}\ std::string\&\ address,\ uint32\_t\ limit\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00070\ \ \ \ \ std::string\ SamplingStats(\ \textcolor{keyword}{const}\ std::string\&\ query,\ uint32\_t\ limit\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ ManualEmbeddingsWorker(\ \doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{TracyLlmApi}}\&\ api\ );}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ unordered\_flat\_map<std::string,\ std::string>\ m\_webCache;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_ctxSize;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{mutable}\ std::mutex\ m\_lock;}
+\DoxyCodeLine{00079\ \ \ \ \ std::thread\ m\_thread;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_cancel\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00081\ \ \ \ \ EmbeddingState\ m\_manualEmbeddingState;}
+\DoxyCodeLine{00082\ \ \ \ \ std::unique\_ptr<TracyLlmEmbeddings>\ m\_manualEmbeddings;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ std::vector<std::pair<std::string,\ uint32\_t>>\ m\_chunkData;}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ m\_worker;}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ m\_view;}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_tracy_manual_data}{TracyManualData}}\&\ m\_manual;}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<LlmSkill>\&\ m\_skills;}
+\DoxyCodeLine{00091\ \};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

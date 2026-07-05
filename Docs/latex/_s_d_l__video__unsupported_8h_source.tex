@@ -1,0 +1,67 @@
+\doxysection{SDL\+\_\+video\+\_\+unsupported.\+h}
+\hypertarget{_s_d_l__video__unsupported_8h_source}{}\label{_s_d_l__video__unsupported_8h_source}\index{MonoRuntime/extern/sdl/src/video/SDL\_video\_unsupported.h@{MonoRuntime/extern/sdl/src/video/SDL\_video\_unsupported.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#if\ !defined(SDL\_VIDEO\_DRIVER\_WINDOWS)}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RegisterApp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ Uint32\ style,\ \textcolor{keywordtype}{void}\ *hInst);}
+\DoxyCodeLine{00027\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UnregisterApp(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00028\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetWindowsMessageHook(SDL\_WindowsMessageHook\ callback,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_PLATFORM\_WINDOWS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetDXGIOutputInfo(SDL\_DisplayID\ displayID,\ \textcolor{keywordtype}{int}\ *adapterIndex,\ \textcolor{keywordtype}{int}\ *outputIndex);}
+\DoxyCodeLine{00033\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetDirect3D9AdapterIndex(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_XBOXONE)\ ||\ defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetDirect3D9AdapterIndex(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_VIDEO\_DRIVER\_WINDOWS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_GDK)}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }XTaskQueueHandle\ XTaskQueueHandle;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetGDKTaskQueue(XTaskQueueHandle\ *outTaskQueue);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_PLATFORM\_GDK\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_IOS)\ ||\ defined(SDL\_PLATFORM\_TVOS)\ ||\ defined(SDL\_PLATFORM\_VISIONOS)}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_OnApplicationDidChangeStatusBarOrientation(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#if\ !defined(SDL\_VIDEO\_DRIVER\_UIKIT)}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDL\_iOSAnimationCallback)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetiOSAnimationCallback(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ interval,\ SDL\_iOSAnimationCallback\ callback,\ \textcolor{keywordtype}{void}\ *callbackParam);}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetiOSEventPump(\textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

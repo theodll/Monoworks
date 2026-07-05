@@ -1,0 +1,54 @@
+\doxysection{pca.\+hpp}
+\hypertarget{pca_8hpp_source}{}\label{pca_8hpp_source}\index{MonoEngine/thirdparty/glm/glm/gtx/pca.hpp@{MonoEngine/thirdparty/glm/glm/gtx/pca.hpp}}
+\doxymbox{\hyperlink{pca_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{glm_8hpp}{../glm.hpp}}"{}}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{ext_2scalar__relational_8hpp}{../ext/scalar\_relational.hpp}}"{}}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#ifndef\ GLM\_ENABLE\_EXPERIMENTAL}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ \ \ error\ "{}GLM:\ GLM\_GTX\_pca\ is\ an\ experimental\ extension\ and\ may\ change\ in\ the\ future.\ Use\ \#define\ GLM\_ENABLE\_EXPERIMENTAL\ before\ including\ it,\ if\ you\ really\ want\ to\ use\ it."{}}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#elif\ GLM\_MESSAGES\ ==\ GLM\_ENABLE\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_pca\ extension\ included"{})}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\ \{}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00059\ \ \ \ \ GLM\_INLINE\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}*\ v,\ \textcolor{keywordtype}{size\_t}\ n);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00066\ \ \ \ \ GLM\_INLINE\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}*\ v,\ \textcolor{keywordtype}{size\_t}\ n,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ c);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00071\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(I\ \textcolor{keyword}{const}\&\ b,\ I\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}});}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00076\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(I\ \textcolor{keyword}{const}\&\ b,\ I\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}},\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ c);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00087\ \ \ \ \ GLM\_FUNC\_DECL\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ findEigenvaluesSymReal}
+\DoxyCodeLine{00088\ \ \ \ \ (}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ covarMat,}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\&\ outEigenvalues,}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\&\ outEigenvectors}
+\DoxyCodeLine{00092\ \ \ \ \ );}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00097\ \ \ \ \ GLM\_FUNC\_DISCARD\_DECL\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__gtx__pca_ga2824ef6f23df255f86b9c33cebd5da2f}{sortEigenvalues}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\&\ eigenvalues,\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<2,\ 2,\ T,\ Q>}}\&\ eigenvectors);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00102\ \ \ \ \ GLM\_FUNC\_DISCARD\_DECL\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__gtx__pca_ga2824ef6f23df255f86b9c33cebd5da2f}{sortEigenvalues}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\&\ eigenvalues,\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\&\ eigenvectors);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00107\ \ \ \ \ GLM\_FUNC\_DISCARD\_DECL\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__gtx__pca_ga2824ef6f23df255f86b9c33cebd5da2f}{sortEigenvalues}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\&\ eigenvalues,\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\&\ eigenvectors);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00110\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#include\ "{}pca.inl"{}}}
+
+\end{DoxyCode}

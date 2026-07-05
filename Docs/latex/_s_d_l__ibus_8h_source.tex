@@ -1,0 +1,61 @@
+\doxysection{SDL\+\_\+ibus.\+h}
+\hypertarget{_s_d_l__ibus_8h_source}{}\label{_s_d_l__ibus_8h_source}\index{MonoRuntime/extern/sdl/src/core/linux/SDL\_ibus.h@{MonoRuntime/extern/sdl/src/core/linux/SDL\_ibus.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_ibus\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_ibus\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ HAVE\_IBUS\_IBUS\_H}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ SDL\_USE\_IBUS\ 1}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <ibus.h>}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_IBus\_Init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_IBus\_Quit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Lets\ the\ IBus\ server\ know\ about\ changes\ in\ window\ focus}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_IBus\_SetFocus(\textcolor{keywordtype}{bool}\ focused);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ Closes\ the\ candidate\ list\ and\ resets\ any\ text\ currently\ being\ edited}}
+\DoxyCodeLine{00038\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_IBus\_Reset(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{/*\ Sends\ a\ keypress\ event\ to\ IBus,\ returns\ true\ if\ IBus\ used\ this\ event\ to}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ \ \ update\ its\ candidate\ list\ or\ change\ input\ methods.\ PumpEvents\ should\ be}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ \ \ called\ some\ time\ after\ this,\ to\ receive\ the\ TextInput\ /\ TextEditing\ event\ back.\ */}}
+\DoxyCodeLine{00043\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_IBus\_ProcessKeyEvent(Uint32\ keysym,\ Uint32\ keycode,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{/*\ Update\ the\ position\ of\ IBus'\ candidate\ list.\ If\ rect\ is\ NULL\ then\ this\ will}}
+\DoxyCodeLine{00046\ \textcolor{comment}{\ \ \ just\ reposition\ it\ relative\ to\ the\ focused\ window's\ new\ position.\ */}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_IBus\_UpdateTextInputArea(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{/*\ Checks\ DBus\ for\ new\ IBus\ events,\ and\ calls\ SDL\_SendKeyboardText\ /}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ \ \ SDL\_SendEditingText\ for\ each\ event\ it\ finds\ */}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_IBus\_PumpEvents(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HAVE\_IBUS\_IBUS\_H}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_ibus\_h\_}}
+
+\end{DoxyCode}

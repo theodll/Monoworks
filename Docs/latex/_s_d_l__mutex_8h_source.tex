@@ -1,0 +1,225 @@
+\doxysection{SDL\+\_\+mutex.\+h}
+\hypertarget{_s_d_l__mutex_8h_source}{}\label{_s_d_l__mutex_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_mutex.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_mutex.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_mutex\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_mutex\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_atomic.h>}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_thread.h>}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(x)\ \ \ \_\_attribute\_\_((x))}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#elif\ defined(SDL\_THREAD\_SAFETY\_ANALYSIS)\ \&\&\ defined(\_\_clang\_\_)\ \&\&\ (!defined(SWIG))}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(x)\ \ \ \_\_attribute\_\_((x))}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(x)\ \ \ }\textcolor{comment}{/*\ no-\/op\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ SDL\_CAPABILITY(x)\ \(\backslash\)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(capability(x))}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ SDL\_SCOPED\_CAPABILITY\ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(scoped\_lockable)}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ SDL\_GUARDED\_BY(x)\ \(\backslash\)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(guarded\_by(x))}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ SDL\_PT\_GUARDED\_BY(x)\ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(pt\_guarded\_by(x))}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ SDL\_ACQUIRED\_BEFORE(x)\ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(acquired\_before(x))}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ SDL\_ACQUIRED\_AFTER(x)\ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(acquired\_after(x))}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ SDL\_REQUIRES(x)\ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(requires\_capability(x))}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ SDL\_REQUIRES\_SHARED(x)\ \(\backslash\)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(requires\_shared\_capability(x))}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ SDL\_ACQUIRE(x)\ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(acquire\_capability(x))}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ SDL\_ACQUIRE\_SHARED(x)\ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(acquire\_shared\_capability(x))}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ SDL\_RELEASE(x)\ \(\backslash\)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(release\_capability(x))}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ SDL\_RELEASE\_SHARED(x)\ \(\backslash\)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(release\_shared\_capability(x))}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#define\ SDL\_RELEASE\_GENERIC(x)\ \(\backslash\)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(release\_generic\_capability(x))}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ SDL\_TRY\_ACQUIRE(x,\ y)\ \(\backslash\)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(try\_acquire\_capability(x,\ y))}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ SDL\_TRY\_ACQUIRE\_SHARED(x,\ y)\ \(\backslash\)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(try\_acquire\_shared\_capability(x,\ y))}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ SDL\_EXCLUDES(x)\ \(\backslash\)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(locks\_excluded(x))}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ SDL\_ASSERT\_CAPABILITY(x)\ \(\backslash\)}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(assert\_capability(x))}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ SDL\_ASSERT\_SHARED\_CAPABILITY(x)\ \(\backslash\)}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(assert\_shared\_capability(x))}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ SDL\_RETURN\_CAPABILITY(x)\ \(\backslash\)}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(lock\_returned(x))}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ SDL\_NO\_THREAD\_SAFETY\_ANALYSIS\ \(\backslash\)}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\ \ SDL\_THREAD\_ANNOTATION\_ATTRIBUTE\_\_(no\_thread\_safety\_analysis)}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{comment}{/******************************************************************************/}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00274\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00276\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00282\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}};}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00320\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *\ SDLCALL\ SDL\_CreateMutex(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00346\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_LockMutex(\doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *mutex)\ SDL\_ACQUIRE(mutex);}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00369\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_TryLockMutex(\doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *mutex)\ SDL\_TRY\_ACQUIRE(\textcolor{keyword}{true},\ mutex);}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00391\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UnlockMutex(\doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *mutex)\ SDL\_RELEASE(mutex);}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00410\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyMutex(\doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *mutex);}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Mutex\ functions\ */}}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00418\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00438\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ \doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}};}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00482\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *\ SDLCALL\ SDL\_CreateRWLock(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00521\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_LockRWLockForReading(\doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *rwlock)\ SDL\_ACQUIRE\_SHARED(rwlock);}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00554\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_LockRWLockForWriting(\doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *rwlock)\ SDL\_ACQUIRE(rwlock);}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00581\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_TryLockRWLockForReading(\doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *rwlock)\ SDL\_TRY\_ACQUIRE\_SHARED(\textcolor{keyword}{true},\ rwlock);}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00613\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_TryLockRWLockForWriting(\doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *rwlock)\ SDL\_TRY\_ACQUIRE(\textcolor{keyword}{true},\ rwlock);}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00641\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UnlockRWLock(\doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *rwlock)\ SDL\_RELEASE\_GENERIC(rwlock);}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00660\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyRWLock(\doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *rwlock);}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Read/write\ lock\ functions\ */}}
+\DoxyCodeLine{00663\ }
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00668\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00684\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ \doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}};}
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00710\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ *\ SDLCALL\ SDL\_CreateSemaphore(Uint32\ initial\_value);}
+\DoxyCodeLine{00711\ }
+\DoxyCodeLine{00726\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroySemaphore(\doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ *sem);}
+\DoxyCodeLine{00727\ }
+\DoxyCodeLine{00748\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_WaitSemaphore(\doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ *sem);}
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00769\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_TryWaitSemaphore(\doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ *sem);}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00791\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WaitSemaphoreTimeout(\doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ *sem,\ Sint32\ timeoutMS);}
+\DoxyCodeLine{00792\ }
+\DoxyCodeLine{00806\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SignalSemaphore(\doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ *sem);}
+\DoxyCodeLine{00807\ }
+\DoxyCodeLine{00818\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_GetSemaphoreValue(\doxymbox{\hyperlink{struct_s_d_l___semaphore}{SDL\_Semaphore}}\ *sem);}
+\DoxyCodeLine{00819\ }
+\DoxyCodeLine{00820\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Semaphore\ functions\ */}}
+\DoxyCodeLine{00821\ }
+\DoxyCodeLine{00822\ }
+\DoxyCodeLine{00826\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00827\ }
+\DoxyCodeLine{00841\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}}\ \doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}};}
+\DoxyCodeLine{00842\ }
+\DoxyCodeLine{00859\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}}\ *\ SDLCALL\ SDL\_CreateCondition(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00860\ }
+\DoxyCodeLine{00872\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyCondition(\doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}}\ *cond);}
+\DoxyCodeLine{00873\ }
+\DoxyCodeLine{00887\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SignalCondition(\doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}}\ *cond);}
+\DoxyCodeLine{00888\ }
+\DoxyCodeLine{00902\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BroadcastCondition(\doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}}\ *cond);}
+\DoxyCodeLine{00903\ }
+\DoxyCodeLine{00930\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_WaitCondition(\doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}}\ *cond,\ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *mutex);}
+\DoxyCodeLine{00931\ }
+\DoxyCodeLine{00960\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WaitConditionTimeout(\doxymbox{\hyperlink{struct_s_d_l___condition}{SDL\_Condition}}\ *cond,}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *mutex,\ Sint32\ timeoutMS);}
+\DoxyCodeLine{00962\ }
+\DoxyCodeLine{00963\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Condition\ variable\ functions\ */}}
+\DoxyCodeLine{00964\ }
+\DoxyCodeLine{00968\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00969\ }
+\DoxyCodeLine{00975\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_InitStatus}
+\DoxyCodeLine{00976\ \{}
+\DoxyCodeLine{00977\ \ \ \ \ SDL\_INIT\_STATUS\_UNINITIALIZED,}
+\DoxyCodeLine{00978\ \ \ \ \ SDL\_INIT\_STATUS\_INITIALIZING,}
+\DoxyCodeLine{00979\ \ \ \ \ SDL\_INIT\_STATUS\_INITIALIZED,}
+\DoxyCodeLine{00980\ \ \ \ \ SDL\_INIT\_STATUS\_UNINITIALIZING}
+\DoxyCodeLine{00981\ \}\ SDL\_InitStatus;}
+\DoxyCodeLine{00982\ }
+\DoxyCodeLine{01039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___init_state}{SDL\_InitState}}}
+\DoxyCodeLine{01040\ \{}
+\DoxyCodeLine{01041\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ status;}
+\DoxyCodeLine{01042\ \ \ \ \ SDL\_ThreadID\ thread;}
+\DoxyCodeLine{01043\ \ \ \ \ \textcolor{keywordtype}{void}\ *reserved;}
+\DoxyCodeLine{01044\ \}\ \doxymbox{\hyperlink{struct_s_d_l___init_state}{SDL\_InitState}};}
+\DoxyCodeLine{01045\ }
+\DoxyCodeLine{01067\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ShouldInit(\doxymbox{\hyperlink{struct_s_d_l___init_state}{SDL\_InitState}}\ *state);}
+\DoxyCodeLine{01068\ }
+\DoxyCodeLine{01088\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ShouldQuit(\doxymbox{\hyperlink{struct_s_d_l___init_state}{SDL\_InitState}}\ *state);}
+\DoxyCodeLine{01089\ }
+\DoxyCodeLine{01107\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetInitialized(\doxymbox{\hyperlink{struct_s_d_l___init_state}{SDL\_InitState}}\ *state,\ \textcolor{keywordtype}{bool}\ initialized);}
+\DoxyCodeLine{01108\ }
+\DoxyCodeLine{01109\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Thread-\/safe\ initialization\ state\ functions\ */}}
+\DoxyCodeLine{01110\ }
+\DoxyCodeLine{01111\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{01112\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01113\ \}}
+\DoxyCodeLine{01114\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01115\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{01116\ }
+\DoxyCodeLine{01117\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_mutex\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

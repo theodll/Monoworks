@@ -1,0 +1,23 @@
+\doxysection{texture.\+inl}
+\hypertarget{texture_8inl_source}{}\label{texture_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/texture.inl@{MonoEngine/thirdparty/glm/glm/gtx/texture.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keyword}{template}\ <length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{inline}\ T\ \doxymbox{\hyperlink{group__gtx__texture_gaa8c377f4e63486db4fa872d77880da73}{levels}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ Extent)}
+\DoxyCodeLine{00007\ \ \ \ \ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ glm::log2(\doxymbox{\hyperlink{group__gtx__component__wise_gabfa4bb19298c8c73d4217ba759c496b6}{compMax}}(Extent))\ +\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1);}
+\DoxyCodeLine{00009\ \ \ \ \ \}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{inline}\ T\ levels(T\ Extent)}
+\DoxyCodeLine{00013\ \ \ \ \ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ levels(vec<1,\ T,\ defaultp>(Extent));}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00017\ }
+
+\end{DoxyCode}

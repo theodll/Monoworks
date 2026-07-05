@@ -1,0 +1,81 @@
+\doxysection{SDL\+\_\+touch.\+h}
+\hypertarget{_s_d_l__touch_8h_source}{}\label{_s_d_l__touch_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_touch.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_touch.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#ifndef\ SDL\_touch\_h\_}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ SDL\_touch\_h\_}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_mouse.h>}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00049\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ Uint64\ SDL\_TouchID;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{typedef}\ Uint64\ SDL\_FingerID;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_TouchDeviceType}
+\DoxyCodeLine{00084\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ SDL\_TOUCH\_DEVICE\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00086\ \ \ \ \ SDL\_TOUCH\_DEVICE\_DIRECT,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00087\ \ \ \ \ SDL\_TOUCH\_DEVICE\_INDIRECT\_ABSOLUTE,\ }
+\DoxyCodeLine{00088\ \ \ \ \ SDL\_TOUCH\_DEVICE\_INDIRECT\_RELATIVE\ \ }
+\DoxyCodeLine{00089\ \}\ SDL\_TouchDeviceType;}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___finger}{SDL\_Finger}}}
+\DoxyCodeLine{00103\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ SDL\_FingerID\ \doxymbox{\hyperlink{struct_s_d_l___finger_a3cec630146eeec5bd6299a9387a6f16a}{id}};\ \ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___finger_ab91dfbd03c3215560457fef44e1c7755}{x}};\ \ }
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___finger_a0a2c7a06ae641940111e03801c672cf9}{y}};\ \ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___finger_a0ecb50c7fd699d59899ac60c941bdee6}{pressure}};\ }
+\DoxyCodeLine{00108\ \}\ \doxymbox{\hyperlink{struct_s_d_l___finger}{SDL\_Finger}};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ SDL\_TOUCH\_MOUSEID\ ((SDL\_MouseID)-\/1)}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ SDL\_MOUSE\_TOUCHID\ ((SDL\_TouchID)-\/1)}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00140\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_TouchID\ *\ SDLCALL\ SDL\_GetTouchDevices(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00151\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetTouchDeviceName(SDL\_TouchID\ touchID);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_TouchDeviceType\ SDLCALL\ SDL\_GetTouchDeviceType(SDL\_TouchID\ touchID);}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___finger}{SDL\_Finger}}\ **\ SDLCALL\ SDL\_GetTouchFingers(SDL\_TouchID\ touchID,\ \textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00180\ \}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_touch\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

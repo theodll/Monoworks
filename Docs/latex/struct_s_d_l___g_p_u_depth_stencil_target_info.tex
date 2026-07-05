@@ -1,0 +1,148 @@
+\doxysection{SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info Struct Reference}
+\hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info}{}\label{struct_s_d_l___g_p_u_depth_stencil_target_info}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+
+
+{\ttfamily \+\#include $<$SDL\+\_\+gpu.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+SDL\+\_\+\+GPUTexture \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a42d1055f0f59752ce3a007d6f08a3ee7}{texture}}
+\item 
+float \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_afb22e2e139ec793ba6809c27e72f14b7}{clear\+\_\+depth}}
+\item 
+SDL\+\_\+\+GPULoad\+Op \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_abd3ef0c4fd8c36ec838195fef4e0da58}{load\+\_\+op}}
+\item 
+SDL\+\_\+\+GPUStore\+Op \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a6593c8284cd371e349f9da46fd5a3415}{store\+\_\+op}}
+\item 
+SDL\+\_\+\+GPULoad\+Op \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_afd49dce122ebc0f006ecab5de59f82f6}{stencil\+\_\+load\+\_\+op}}
+\item 
+SDL\+\_\+\+GPUStore\+Op \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a803f44c4b8032f7d9481ff010958b5b1}{stencil\+\_\+store\+\_\+op}}
+\item 
+bool \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a40965a6d730a709dfaca5ba0604c479e}{cycle}}
+\item 
+Uint8 \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a31dabbc1c45f6646bb3e90868c87d4b9}{clear\+\_\+stencil}}
+\item 
+Uint8 \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a165eece7acc2b7d999f380d53c93cf54}{mip\+\_\+level}}
+\item 
+Uint8 \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_af2d6c3a0f28a3ed57c423436a1197239}{layer}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A structure specifying the parameters of a depth-\/stencil target used by a render pass.
+
+The load\+\_\+op field determines what is done with the depth contents of the texture at the beginning of the render pass.
+
+
+\begin{DoxyItemize}
+\item LOAD:\+ Loads the depth values currently in the texture.
+\item CLEAR:\+ Clears the texture to a single depth.
+\item DONT\+\_\+\+CARE:\+ The driver will do whatever it wants with the memory. This is a good option if you know that every single pixel will be touched in the render pass.
+\end{DoxyItemize}
+
+The store\+\_\+op field determines what is done with the depth results of the render pass.
+
+
+\begin{DoxyItemize}
+\item STORE:\+ Stores the depth results in the texture.
+\item DONT\+\_\+\+CARE:\+ The driver will do whatever it wants with the depth results. This is often a good option for depth/\+stencil textures that don\textquotesingle{}t need to be reused again.
+\end{DoxyItemize}
+
+The stencil\+\_\+load\+\_\+op field determines what is done with the stencil contents of the texture at the beginning of the render pass.
+
+
+\begin{DoxyItemize}
+\item LOAD:\+ Loads the stencil values currently in the texture.
+\item CLEAR:\+ Clears the stencil values to a single value.
+\item DONT\+\_\+\+CARE:\+ The driver will do whatever it wants with the memory. This is a good option if you know that every single pixel will be touched in the render pass.
+\end{DoxyItemize}
+
+The stencil\+\_\+store\+\_\+op field determines what is done with the stencil results of the render pass.
+
+
+\begin{DoxyItemize}
+\item STORE:\+ Stores the stencil results in the texture.
+\item DONT\+\_\+\+CARE:\+ The driver will do whatever it wants with the stencil results. This is often a good option for depth/\+stencil textures that don\textquotesingle{}t need to be reused again.
+\end{DoxyItemize}
+
+Note that depth/\+stencil targets do not support multisample resolves.
+
+Due to ABI limitations, depth textures with more than 255 layers are not supported.
+
+\begin{DoxySince}{Since}
+This struct is available since SDL 3.\+2.\+0.
+\end{DoxySince}
+\begin{DoxySeeAlso}{See also}
+SDL\+\_\+\+Begin\+GPURender\+Pass 
+\end{DoxySeeAlso}
+
+
+\label{struct_s_d_l___g_p_u_depth_stencil_target_info_doc-variable-members}
+\Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_afb22e2e139ec793ba6809c27e72f14b7}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!clear\_depth@{clear\_depth}}
+\index{clear\_depth@{clear\_depth}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{clear\_depth}{clear\_depth}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_afb22e2e139ec793ba6809c27e72f14b7} 
+float SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+clear\+\_\+depth}
+
+The value to clear the depth component to at the beginning of the render pass. Ignored if SDL\+\_\+\+GPU\+\_\+\+LOADOP\+\_\+\+CLEAR is not used. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_a31dabbc1c45f6646bb3e90868c87d4b9}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!clear\_stencil@{clear\_stencil}}
+\index{clear\_stencil@{clear\_stencil}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{clear\_stencil}{clear\_stencil}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_a31dabbc1c45f6646bb3e90868c87d4b9} 
+Uint8 SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+clear\+\_\+stencil}
+
+The value to clear the stencil component to at the beginning of the render pass. Ignored if SDL\+\_\+\+GPU\+\_\+\+LOADOP\+\_\+\+CLEAR is not used. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_a40965a6d730a709dfaca5ba0604c479e}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!cycle@{cycle}}
+\index{cycle@{cycle}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{cycle}{cycle}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_a40965a6d730a709dfaca5ba0604c479e} 
+bool SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+cycle}
+
+true cycles the texture if the texture is bound and any load ops are not LOAD \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_af2d6c3a0f28a3ed57c423436a1197239}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!layer@{layer}}
+\index{layer@{layer}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{layer}{layer}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_af2d6c3a0f28a3ed57c423436a1197239} 
+Uint8 SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+layer}
+
+The layer index to use as the depth stencil target. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_abd3ef0c4fd8c36ec838195fef4e0da58}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!load\_op@{load\_op}}
+\index{load\_op@{load\_op}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{load\_op}{load\_op}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_abd3ef0c4fd8c36ec838195fef4e0da58} 
+SDL\+\_\+\+GPULoad\+Op SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+load\+\_\+op}
+
+What is done with the depth contents at the beginning of the render pass. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_a165eece7acc2b7d999f380d53c93cf54}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!mip\_level@{mip\_level}}
+\index{mip\_level@{mip\_level}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{mip\_level}{mip\_level}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_a165eece7acc2b7d999f380d53c93cf54} 
+Uint8 SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+mip\+\_\+level}
+
+The mip level to use as the depth stencil target. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_afd49dce122ebc0f006ecab5de59f82f6}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!stencil\_load\_op@{stencil\_load\_op}}
+\index{stencil\_load\_op@{stencil\_load\_op}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{stencil\_load\_op}{stencil\_load\_op}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_afd49dce122ebc0f006ecab5de59f82f6} 
+SDL\+\_\+\+GPULoad\+Op SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+stencil\+\_\+load\+\_\+op}
+
+What is done with the stencil contents at the beginning of the render pass. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_a803f44c4b8032f7d9481ff010958b5b1}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!stencil\_store\_op@{stencil\_store\_op}}
+\index{stencil\_store\_op@{stencil\_store\_op}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{stencil\_store\_op}{stencil\_store\_op}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_a803f44c4b8032f7d9481ff010958b5b1} 
+SDL\+\_\+\+GPUStore\+Op SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+stencil\+\_\+store\+\_\+op}
+
+What is done with the stencil results of the render pass. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_a6593c8284cd371e349f9da46fd5a3415}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!store\_op@{store\_op}}
+\index{store\_op@{store\_op}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{store\_op}{store\_op}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_a6593c8284cd371e349f9da46fd5a3415} 
+SDL\+\_\+\+GPUStore\+Op SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+store\+\_\+op}
+
+What is done with the depth results of the render pass. \Hypertarget{struct_s_d_l___g_p_u_depth_stencil_target_info_a42d1055f0f59752ce3a007d6f08a3ee7}\index{SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}!texture@{texture}}
+\index{texture@{texture}!SDL\_GPUDepthStencilTargetInfo@{SDL\_GPUDepthStencilTargetInfo}}
+\doxysubsubsection{\texorpdfstring{texture}{texture}}
+{\footnotesize\ttfamily \label{struct_s_d_l___g_p_u_depth_stencil_target_info_a42d1055f0f59752ce3a007d6f08a3ee7} 
+SDL\+\_\+\+GPUTexture\texorpdfstring{$\ast$}{*} SDL\+\_\+\+GPUDepth\+Stencil\+Target\+Info::\+texture}
+
+The texture that will be used as the depth stencil target by the render pass. 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Runtime/\+extern/\+sdl/\+include/\+\+SDL3/\+SDL\+\_\+gpu.\+h\end{DoxyCompactItemize}

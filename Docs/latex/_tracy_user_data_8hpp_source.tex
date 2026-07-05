@@ -1,0 +1,81 @@
+\doxysection{Tracy\+User\+Data.\+hpp}
+\hypertarget{_tracy_user_data_8hpp_source}{}\label{_tracy_user_data_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyUserData.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyUserData.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYUSERDATA\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYUSERDATA\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}TracyViewData.hpp"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_annotation}{Annotation}};}
+\DoxyCodeLine{00016\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_source_regex}{SourceRegex}};}
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_view_data}{ViewData}};}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }UserData}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \ \ UserData();}
+\DoxyCodeLine{00023\ \ \ \ \ UserData(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ program,\ uint64\_t\ time,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filePath\ );}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{bool}\ Valid()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !m\_program.empty();\ \}}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ Init(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ program,\ uint64\_t\ time,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filePath\ );}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ SetFilePath(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filePath\ );}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ GetDescription()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_description;\ \}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ SetDescription(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ description\ );}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadState(\ \doxymbox{\hyperlink{structtracy_1_1_view_data}{ViewData}}\&\ data\ );}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ StoreState(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_view_data}{ViewData}}\&\ data\ );}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ StateShouldBePreserved();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadAnnotations(\ std::vector<std::shared\_ptr<Annotation>>\&\ data\ );}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ StoreAnnotations(\ \textcolor{keyword}{const}\ std::vector<std::shared\_ptr<Annotation>>\&\ data\ );}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadSourceSubstitutions(\ std::vector<SourceRegex>\&\ data\ );}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ StoreSourceSubstitutions(\ \textcolor{keyword}{const}\ std::vector<SourceRegex>\&\ data\ );}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{bool}\ Save();}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsSidecarPublic()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_sidecarPublic;\ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ SetSidecarPublic(\ \textcolor{keywordtype}{bool}\ state\ );}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00048\ \ \ \ \ FILE*\ OpenFile(\ \textcolor{keywordtype}{bool}\ write\ );}
+\DoxyCodeLine{00049\ \ \ \ \ FILE*\ OpenFileLegacy(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ filename\ );}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ std::string\ GetSidecarPath(\ \textcolor{keywordtype}{bool}\ write\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ Load();}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadLegacyDescription();}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadLegacyState();}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadLegacyAnnotations();}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ LoadLegacySourceSubstitutions();}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ std::string\ m\_program;}
+\DoxyCodeLine{00061\ \ \ \ \ uint64\_t\ m\_time;}
+\DoxyCodeLine{00062\ \ \ \ \ std::string\ m\_filePath;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ std::string\ m\_description;}
+\DoxyCodeLine{00065\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_view_data}{ViewData}}\ m\_viewData;}
+\DoxyCodeLine{00066\ \ \ \ \ std::vector<std::shared\_ptr<Annotation>>\ m\_annotations;}
+\DoxyCodeLine{00067\ \ \ \ \ std::vector<SourceRegex>\ m\_sourceSubstitutions;}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_preserveState;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_sidecarPublic;}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

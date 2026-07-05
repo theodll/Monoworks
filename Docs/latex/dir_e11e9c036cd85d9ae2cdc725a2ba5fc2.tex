@@ -1,0 +1,50 @@
+\doxysection{Mono\+Engine/\+thirdparty/\+imgui/\+misc/\+freetype Directory Reference}
+\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2}{}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2}\index{MonoEngine/thirdparty/imgui/misc/freetype Directory Reference@{MonoEngine/thirdparty/imgui/misc/freetype Directory Reference}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries imgui\+\_\+freetype.\+h}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md801}{}\doxysubsection{\texorpdfstring{imgui\+\_\+freetype}{imgui\+\_\+freetype}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md801}
+Build font atlases using Free\+Type instead of stb\+\_\+truetype (which is the default font rasterizer). ~\newline
+by @vuhdo, @mikesart, @ocornut.\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md802}{}\doxysubsubsection{\texorpdfstring{Usage}{Usage}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md802}
+
+\begin{DoxyEnumerate}
+\item Get latest Free\+Type binaries or build yourself (under Windows you may use vcpkg with {\ttfamily vcpkg install freetype -\/-\/triplet=x64-\/windows}, {\ttfamily vcpkg integrate install}).
+\item Add \doxylink{imgui__freetype_8h_source}{imgui\+\_\+freetype.\+h}/\+cpp alongside your project files.
+\item Add {\ttfamily \#define IMGUI\+\_\+\+ENABLE\+\_\+\+FREETYPE} in your \href{https://github.com/ocornut/imgui/blob/master/imconfig.h}{\texttt{imconfig.\+h}} file to make Dear Im\+Gui automatically use the imgui\+\_\+freetype loader. If your copy Dear Im\+Gui is precompiled, you can always enable imgui\+\_\+freetype by calling Im\+Font\+Atlas::\+\+Set\+Font\+Loader().
+\end{DoxyEnumerate}\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md803}{}\doxysubsubsection{\texorpdfstring{About Gamma Correct Blending}{About Gamma Correct Blending}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md803}
+Free\+Type assumes blending in linear space rather than gamma space. See Free\+Type note for \href{https://freetype.org/freetype2/docs/reference/ft2-glyph_retrieval.html\#ft_render_glyph}{\texttt{FT\+\_\+\+Render\+\_\+\+Glyph}}. For correct results you need to be using s\+RGB and convert to linear space in the pixel shader output. The default Dear Im\+Gui styles will be impacted by this change (alpha values will need tweaking).\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md804}{}\doxysubsubsection{\texorpdfstring{Testbed for toying with settings (for developers)}{Testbed for toying with settings (for developers)}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md804}
+See \href{https://gist.github.com/ocornut/b3a9ecf13502fd818799a452969649ad}{\texttt{https:\+/\+/\+gist.\+github.\+com/\+ocornut/\+b3a9ecf13502fd818799a452969649ad}}\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md805}{}\doxysubsubsection{\texorpdfstring{Known issues}{Known issues}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md805}
+
+\begin{DoxyItemize}
+\item Oversampling settings are ignored but also not so much necessary with the higher quality rendering.
+\end{DoxyItemize}\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md806}{}\doxysubsubsection{\texorpdfstring{Comparison}{Comparison}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md806}
+Small, thin anti-\/aliased fonts typically benefit a lot from Free\+Type\textquotesingle{}s hinting:\+ \hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md807}{}\doxysubsubsection{\texorpdfstring{Colorful glyphs/\+emojis}{Colorful glyphs/\+emojis}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md807}
+You can use the {\ttfamily Im\+Gui\+Free\+Type\+Builder\+Flags\+\_\+\+Load\+Color} flag to load certain colorful glyphs. See the \href{https://github.com/ocornut/imgui/blob/master/docs/FONTS.md\#using-colorful-glyphsemojis}{\texttt{"{}\+Using Colorful Glyphs/\+\+Emojis"{}}} section of FONTS.\+md.
+
+\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md808}{}\doxysubsubsection{\texorpdfstring{Using Open\+Type SVG fonts (SVGin\+OT)}{Using Open\+Type SVG fonts (SVGin\+OT)}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md808}
+
+\begin{DoxyItemize}
+\item {\itshape SVG in Open Type} is a standard by Adobe and Mozilla for color Open\+Type and Open Font Format fonts. It allows font creators to embed complete SVG files within a font enabling full color and even animations.
+\item Popular fonts such as \href{https://github.com/13rac1/twemoji-color-font}{\texttt{twemoji}} and fonts made with \href{https://github.com/13rac1/scfbuild}{\texttt{scfbuild}} is SVGin\+OT.
+\item Two alternatives are possible to render SVG fonts:\+ use "{}lunasvg"{} or "{}plutosvg"{}. plutosvg will support some more fonts (e.\+g. Noto\+Color\+Emoji-\/\+Regular) and may load them faster.
+\end{DoxyItemize}\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md809}{}\doxysubsubsubsection{\texorpdfstring{Using lunasvg}{Using lunasvg}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md809}
+Requires:\+ \href{https://github.com/sammycage/lunasvg}{\texttt{lunasvg}} v2.\+3.\+2 and above
+\begin{DoxyItemize}
+\item Add {\ttfamily \#define IMGUI\+\_\+\+ENABLE\+\_\+\+FREETYPE\+\_\+\+LUNASVG} in your {\ttfamily \doxylink{imconfig_8h_source}{imconfig.\+h}}.
+\item Get latest lunasvg binaries or build yourself. Under Windows you may use vcpkg with:\+ {\ttfamily vcpkg install lunasvg -\/-\/triplet=x64-\/windows}.
+\end{DoxyItemize}\hypertarget{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md810}{}\doxysubsubsubsection{\texorpdfstring{Using plutosvg (and plutovg)}{Using plutosvg (and plutovg)}}\label{dir_e11e9c036cd85d9ae2cdc725a2ba5fc2_autotoc_md810}
+
+\begin{DoxyItemize}
+\item Add {\ttfamily \#define IMGUI\+\_\+\+ENABLE\+\_\+\+FREETYPE\+\_\+\+PLUTOSVG} in your {\ttfamily \doxylink{imconfig_8h_source}{imconfig.\+h}}.
+\item Get latest plutosvg binaries or build yourself. Under Windows you may use vcpkg with:\+ {\ttfamily vcpkg install plutosvg -\/-\/triplet=x64-\/windows}. Alternatively, if you build imgui from vcpkg, you just need to enable the plutosvg feature:\+ {\ttfamily vcpkg install imgui\+[plutosvg]\+ -\/-\/triplet=x64-\/windows}
+\item If you prefer to build plutosvg manually:\+
+\begin{DoxyItemize}
+\item Compilation hints for plutovg:\+ Compile all source files in {\ttfamily plutovg/\+source/\+\texorpdfstring{$\ast$}{*}.c} + Add include directory:\+ {\ttfamily plutovg/\+include} + {\ttfamily plutovg/\+stb}
+\item Compilation hints for plutosvg:\+ Compile {\ttfamily plutosvg/\+source/\+plutosvg.\+c} + Add include directory:\+ {\ttfamily plutosvg/\+source} + Add define:\+ {\ttfamily PLUTOSVG\+\_\+\+HAS\+\_\+\+FREETYPE} + Link with:\+ plutovg, freetype 
+\end{DoxyItemize}
+\end{DoxyItemize}

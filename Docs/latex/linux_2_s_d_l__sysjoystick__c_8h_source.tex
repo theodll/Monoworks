@@ -1,0 +1,123 @@
+\doxysection{SDL\+\_\+sysjoystick\+\_\+c.\+h}
+\hypertarget{linux_2_s_d_l__sysjoystick__c_8h_source}{}\label{linux_2_s_d_l__sysjoystick__c_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/linux/SDL\_sysjoystick\_c.h@{MonoRuntime/extern/sdl/src/joystick/linux/SDL\_sysjoystick\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_sysjoystick\_c\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_sysjoystick\_c\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <linux/input.h>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{struct\ }SDL\_joylist\_item;}
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }SDL\_sensorlist\_item;}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ The\ private\ structure\ used\ to\ keep\ track\ of\ a\ joystick}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata}{joystick\_hwdata}}}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{int}\ fd;}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ linux\ driver\ creates\ a\ separate\ device\ for\ gyro/accelerometer}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{int}\ fd\_sensor;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_joylist\_item\ *item;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_sensorlist\_item\ *item\_sensor;}
+\DoxyCodeLine{00038\ \ \ \ \ SDL\_GUID\ guid;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{char}\ *fname;\ \textcolor{comment}{//\ Used\ in\ haptic\ subsystem}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ ff\_rumble;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{bool}\ ff\_sine;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{struct\ }ff\_effect\ effect;}
+\DoxyCodeLine{00044\ \ \ \ \ Uint32\ effect\_expiration;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ The\ current\ Linux\ joystick\ driver\ maps\ balls\ to\ two\ axes}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata_1_1hwdata__ball}{hwdata\_ball}}}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axis[2];}
+\DoxyCodeLine{00050\ \ \ \ \ \}\ *balls;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ The\ current\ Linux\ joystick\ driver\ maps\ hats\ to\ two\ axes}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata_1_1hwdata__hat}{hwdata\_hat}}}
+\DoxyCodeLine{00054\ \ \ \ \ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axis[2];}
+\DoxyCodeLine{00056\ \ \ \ \ \}\ *hats;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ Support\ for\ the\ Linux\ 2.4\ unified\ input\ interface}}
+\DoxyCodeLine{00059\ \ \ \ \ Uint8\ key\_map[KEY\_MAX];}
+\DoxyCodeLine{00060\ \ \ \ \ Uint8\ abs\_map[ABS\_MAX];}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_key[KEY\_MAX];}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_abs[ABS\_MAX];}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_accelerometer;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_gyro;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ Support\ for\ the\ classic\ joystick\ interface}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ classic;}
+\DoxyCodeLine{00068\ \ \ \ \ Uint16\ *key\_pam;}
+\DoxyCodeLine{00069\ \ \ \ \ Uint8\ *abs\_pam;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata_1_1axis__correct}{axis\_correct}}}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_deadzones;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Deadzone\ coefficients}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ coef[3];}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Raw\ coordinate\ scale}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ minimum;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ maximum;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ scale;}
+\DoxyCodeLine{00082\ \ \ \ \ \}\ abs\_correct[ABS\_MAX];}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{float}\ accelerometer\_scale[3];}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{float}\ gyro\_scale[3];}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{/*\ Each\ axis\ is\ read\ independently,\ if\ we\ don't\ get\ all\ axis\ this\ call\ to}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ \ \ \ \ *\ LINUX\_JoystickUpdateupdate(),\ store\ them\ for\ the\ next\ one\ */}}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{float}\ gyro\_data[3];}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{float}\ accel\_data[3];}
+\DoxyCodeLine{00091\ \ \ \ \ Uint64\ sensor\_tick;}
+\DoxyCodeLine{00092\ \ \ \ \ Sint32\ last\_tick;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{bool}\ report\_sensor;}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{bool}\ fresh;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{bool}\ recovering\_from\_dropped;}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{bool}\ recovering\_from\_dropped\_sensor;}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{//\ Steam\ Controller\ support}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_bSteamController;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ 4\ =\ (ABS\_HAT3X-\/ABS\_HAT0X)/2\ (see\ input-\/event-\/codes.h\ in\ kernel)}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{int}\ hats\_indices[4];}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_hat[4];}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata_1_1hat__axis__correct}{hat\_axis\_correct}}}
+\DoxyCodeLine{00106\ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ use\_deadzones;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ minimum[2];}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ maximum[2];}
+\DoxyCodeLine{00110\ \ \ \ \ \}\ hat\_correct[4];}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ Set\ when\ gamepad\ is\ pending\ removal\ due\ to\ ENODEV\ read\ error}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{bool}\ gone;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{bool}\ sensor\_gone;}
+\DoxyCodeLine{00115\ \};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_sysjoystick\_c\_h\_}}
+
+\end{DoxyCode}

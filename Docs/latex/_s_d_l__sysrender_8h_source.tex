@@ -1,0 +1,438 @@
+\doxysection{SDL\+\_\+sysrender.\+h}
+\hypertarget{_s_d_l__sysrender_8h_source}{}\label{_s_d_l__sysrender_8h_source}\index{MonoRuntime/extern/sdl/src/render/SDL\_sysrender.h@{MonoRuntime/extern/sdl/src/render/SDL\_sysrender.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_sysrender\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_sysrender\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../video/SDL\_surface\_c.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}SDL\_yuv\_sw\_c.h"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___d_rect}{SDL\_DRect}}}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{double}\ x;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{double}\ y;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{double}\ w;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{double}\ h;}
+\DoxyCodeLine{00044\ \}\ \doxymbox{\hyperlink{struct_s_d_l___d_rect}{SDL\_DRect}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ The\ SDL\ 2D\ rendering\ system}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ Rendering\ view\ state}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___render_view_state}{SDL\_RenderViewState}}}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{int}\ pixel\_w;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{int}\ pixel\_h;}
+\DoxyCodeLine{00055\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ viewport;}
+\DoxyCodeLine{00056\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ pixel\_viewport;}
+\DoxyCodeLine{00057\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ clip\_rect;}
+\DoxyCodeLine{00058\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ pixel\_clip\_rect;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{bool}\ clipping\_enabled;}
+\DoxyCodeLine{00060\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ scale;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ Support\ for\ logical\ output\ coordinates}}
+\DoxyCodeLine{00063\ \ \ \ \ SDL\_RendererLogicalPresentation\ logical\_presentation\_mode;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{int}\ logical\_w,\ logical\_h;}
+\DoxyCodeLine{00065\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_rect}{SDL\_FRect}}\ logical\_src\_rect;}
+\DoxyCodeLine{00066\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_rect}{SDL\_FRect}}\ logical\_dst\_rect;}
+\DoxyCodeLine{00067\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ logical\_scale;}
+\DoxyCodeLine{00068\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ logical\_offset;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ current\_scale;\ \ \textcolor{comment}{//\ this\ is\ just\ \`{}scale\ *\ logical\_scale`,\ precalculated,\ since\ we\ use\ it\ a\ lot.}}
+\DoxyCodeLine{00071\ \}\ \doxymbox{\hyperlink{struct_s_d_l___render_view_state}{SDL\_RenderViewState}};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ Define\ the\ SDL\ texture\ palette\ structure}}
+\DoxyCodeLine{00074\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___texture_palette}{SDL\_TexturePalette}}}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ refcount;}
+\DoxyCodeLine{00077\ \ \ \ \ Uint32\ version;}
+\DoxyCodeLine{00078\ \ \ \ \ Uint32\ last\_command\_generation;\ \textcolor{comment}{//\ last\ command\ queue\ generation\ this\ palette\ was\ in.}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Driver\ specific\ palette\ representation}}
+\DoxyCodeLine{00080\ \}\ \doxymbox{\hyperlink{struct_s_d_l___texture_palette}{SDL\_TexturePalette}};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{//\ Define\ the\ SDL\ texture\ structure}}
+\DoxyCodeLine{00083\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}}
+\DoxyCodeLine{00084\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//\ Public\ API\ definition}}
+\DoxyCodeLine{00086\ \ \ \ \ SDL\_PixelFormat\ format;\ \ \ \ \ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{int}\ w;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{int}\ h;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___texture_a678abbf58cabf1196ef4a795b394cbb2}{refcount}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ Private\ API\ definition}}
+\DoxyCodeLine{00093\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer;}
+\DoxyCodeLine{00094\ \ \ \ \ SDL\_Colorspace\ colorspace;\ \ \textcolor{comment}{//\ The\ colorspace\ of\ the\ texture}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{float}\ SDR\_white\_point;\ \ \ \ \ \ \textcolor{comment}{//\ The\ SDR\ white\ point\ for\ this\ content}}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{float}\ HDR\_headroom;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ HDR\ headroom\ needed\ by\ this\ content}}
+\DoxyCodeLine{00097\ \ \ \ \ SDL\_TextureAccess\ access;\ \ \ \textcolor{comment}{//\ The\ texture\ access\ mode}}
+\DoxyCodeLine{00098\ \ \ \ \ SDL\_BlendMode\ blendMode;\ \ \ \ \textcolor{comment}{//\ The\ texture\ blend\ mode}}
+\DoxyCodeLine{00099\ \ \ \ \ SDL\_ScaleMode\ scaleMode;\ \ \ \ \textcolor{comment}{//\ The\ texture\ scale\ mode}}
+\DoxyCodeLine{00100\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ color;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Texture\ modulation\ values}}
+\DoxyCodeLine{00101\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___render_view_state}{SDL\_RenderViewState}}\ view;\ \ \ \textcolor{comment}{//\ Target\ texture\ view\ state}}
+\DoxyCodeLine{00102\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___palette}{SDL\_Palette}}\ *public\_palette;}
+\DoxyCodeLine{00103\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture_palette}{SDL\_TexturePalette}}\ *palette;}
+\DoxyCodeLine{00104\ \ \ \ \ Uint32\ palette\_version;}
+\DoxyCodeLine{00105\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *palette\_surface;}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ Support\ for\ formats\ not\ supported\ directly\ by\ the\ renderer}}
+\DoxyCodeLine{00108\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *native;}
+\DoxyCodeLine{00109\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___s_w___y_u_v_texture}{SDL\_SW\_YUVTexture}}\ *yuv;}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ *pixels;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{int}\ pitch;}
+\DoxyCodeLine{00112\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ locked\_rect;}
+\DoxyCodeLine{00113\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *locked\_surface;\ \textcolor{comment}{//\ Locked\ region\ exposed\ as\ a\ SDL\ surface}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ Uint32\ last\_command\_generation;\ \textcolor{comment}{//\ last\ command\ queue\ generation\ this\ texture\ was\ in.}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ SDL\_PropertiesID\ props;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Driver\ specific\ texture\ representation}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *prev;}
+\DoxyCodeLine{00122\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *next;}
+\DoxyCodeLine{00123\ \};}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{comment}{//\ Define\ the\ GPU\ render\ state\ structure}}
+\DoxyCodeLine{00126\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_render_state_uniform_buffer}{SDL\_GPURenderStateUniformBuffer}}}
+\DoxyCodeLine{00127\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ Uint32\ slot\_index;}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{void}\ *data;}
+\DoxyCodeLine{00130\ \ \ \ \ Uint32\ length;}
+\DoxyCodeLine{00131\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_render_state_uniform_buffer}{SDL\_GPURenderStateUniformBuffer}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{comment}{//\ Define\ the\ GPU\ render\ state\ structure}}
+\DoxyCodeLine{00134\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_render_state}{SDL\_GPURenderState}}}
+\DoxyCodeLine{00135\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ Uint32\ last\_command\_generation;\ \textcolor{comment}{//\ last\ command\ queue\ generation\ this\ state\ was\ in.}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ SDL\_GPUShader\ *fragment\_shader;}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_sampler\_bindings;}
+\DoxyCodeLine{00143\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding}{SDL\_GPUTextureSamplerBinding}}\ *sampler\_bindings;}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_storage\_textures;}
+\DoxyCodeLine{00146\ \ \ \ \ SDL\_GPUTexture\ **storage\_textures;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_storage\_buffers;}
+\DoxyCodeLine{00149\ \ \ \ \ SDL\_GPUBuffer\ **storage\_buffers;}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_uniform\_buffers;}
+\DoxyCodeLine{00152\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_render_state_uniform_buffer}{SDL\_GPURenderStateUniformBuffer}}\ *uniform\_buffers;}
+\DoxyCodeLine{00153\ \};}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00156\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ SDL\_RENDERCMD\_NO\_OP,}
+\DoxyCodeLine{00158\ \ \ \ \ SDL\_RENDERCMD\_SETVIEWPORT,}
+\DoxyCodeLine{00159\ \ \ \ \ SDL\_RENDERCMD\_SETCLIPRECT,}
+\DoxyCodeLine{00160\ \ \ \ \ SDL\_RENDERCMD\_SETDRAWCOLOR,}
+\DoxyCodeLine{00161\ \ \ \ \ SDL\_RENDERCMD\_CLEAR,}
+\DoxyCodeLine{00162\ \ \ \ \ SDL\_RENDERCMD\_DRAW\_POINTS,}
+\DoxyCodeLine{00163\ \ \ \ \ SDL\_RENDERCMD\_DRAW\_LINES,}
+\DoxyCodeLine{00164\ \ \ \ \ SDL\_RENDERCMD\_FILL\_RECTS,}
+\DoxyCodeLine{00165\ \ \ \ \ SDL\_RENDERCMD\_COPY,}
+\DoxyCodeLine{00166\ \ \ \ \ SDL\_RENDERCMD\_COPY\_EX,}
+\DoxyCodeLine{00167\ \ \ \ \ SDL\_RENDERCMD\_GEOMETRY}
+\DoxyCodeLine{00168\ \}\ SDL\_RenderCommandType;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}}
+\DoxyCodeLine{00171\ \{}
+\DoxyCodeLine{00172\ \ \ \ \ SDL\_RenderCommandType\ command;}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00174\ \ \ \ \ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ first;}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ rect;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \}\ viewport;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ enabled;}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ rect;}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \}\ cliprect;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ first;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ count;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ color\_scale;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ color;}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_BlendMode\ blend;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_ScaleMode\ texture\_scale\_mode;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_TextureAddressMode\ texture\_address\_mode\_u;}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_TextureAddressMode\ texture\_address\_mode\_v;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_render_state}{SDL\_GPURenderState}}\ *gpu\_render\_state;}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \}\ draw;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ first;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ color\_scale;}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ color;}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \}\ color;}
+\DoxyCodeLine{00204\ \ \ \ \ \}\ data;}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *next;}
+\DoxyCodeLine{00206\ \}\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}};}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___vertex_solid}{SDL\_VertexSolid}}}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ position;}
+\DoxyCodeLine{00211\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ color;}
+\DoxyCodeLine{00212\ \}\ \doxymbox{\hyperlink{struct_s_d_l___vertex_solid}{SDL\_VertexSolid}};}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00215\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ SDL\_RENDERLINEMETHOD\_POINTS,}
+\DoxyCodeLine{00217\ \ \ \ \ SDL\_RENDERLINEMETHOD\_LINES,}
+\DoxyCodeLine{00218\ \ \ \ \ SDL\_RENDERLINEMETHOD\_GEOMETRY,}
+\DoxyCodeLine{00219\ \}\ SDL\_RenderLineMethod;}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \textcolor{comment}{//\ Define\ the\ SDL\ renderer\ structure}}
+\DoxyCodeLine{00222\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}}
+\DoxyCodeLine{00223\ \{}
+\DoxyCodeLine{00224\ \ \ \ \ void\ (*WindowEvent)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___window_event}{SDL\_WindowEvent}}\ *event);}
+\DoxyCodeLine{00225\ \ \ \ \ bool\ (*GetOutputSize)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \textcolor{keywordtype}{int}\ *w,\ \textcolor{keywordtype}{int}\ *h);}
+\DoxyCodeLine{00226\ \ \ \ \ bool\ (*SupportsBlendMode)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ SDL\_BlendMode\ \doxymbox{\hyperlink{struct_s_d_l___renderer_afc6d4e3ca32e963eb746ab7e2953023d}{blendMode}});}
+\DoxyCodeLine{00227\ \ \ \ \ bool\ (*CreateTexture)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,\ SDL\_PropertiesID\ create\_props);}
+\DoxyCodeLine{00228\ \ \ \ \ bool\ (*QueueSetViewport)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd);}
+\DoxyCodeLine{00229\ \ \ \ \ bool\ (*QueueSetDrawColor)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd);}
+\DoxyCodeLine{00230\ \ \ \ \ bool\ (*QueueDrawPoints)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ *points,}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00232\ \ \ \ \ bool\ (*QueueDrawLines)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ *points,}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00234\ \ \ \ \ bool\ (*QueueFillRects)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_rect}{SDL\_FRect}}\ *rects,}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00236\ \ \ \ \ bool\ (*QueueCopy)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_rect}{SDL\_FRect}}\ *srcrect,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_rect}{SDL\_FRect}}\ *dstrect);}
+\DoxyCodeLine{00238\ \ \ \ \ bool\ (*QueueCopyEx)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_rect}{SDL\_FRect}}\ *srcquad,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_rect}{SDL\_FRect}}\ *dstrect,}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ angle,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ *center,\ \textcolor{keyword}{const}\ SDL\_FlipMode\ flip,\ \textcolor{keywordtype}{float}\ scale\_x,\ \textcolor{keywordtype}{float}\ scale\_y);}
+\DoxyCodeLine{00241\ \ \ \ \ bool\ (*QueueGeometry)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *xy,\ \textcolor{keywordtype}{int}\ xy\_stride,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ *\doxymbox{\hyperlink{struct_s_d_l___renderer_a765bdfeae31c00702040e4debd72532d}{color}},\ \textcolor{keywordtype}{int}\ color\_stride,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *uv,\ \textcolor{keywordtype}{int}\ uv\_stride,}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_vertices,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *indices,\ \textcolor{keywordtype}{int}\ num\_indices,\ \textcolor{keywordtype}{int}\ size\_indices,}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ scale\_x,\ \textcolor{keywordtype}{float}\ scale\_y);}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ void\ (*InvalidateCachedState)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00247\ \ \ \ \ bool\ (*RunCommandQueue)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *cmd,\ \textcolor{keywordtype}{void}\ *vertices,\ \textcolor{keywordtype}{size\_t}\ vertsize);}
+\DoxyCodeLine{00248\ \ \ \ \ bool\ (*CreatePalette)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture_palette}{SDL\_TexturePalette}}\ *palette);}
+\DoxyCodeLine{00249\ \ \ \ \ bool\ (*UpdatePalette)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture_palette}{SDL\_TexturePalette}}\ *palette,\ \textcolor{keywordtype}{int}\ ncolors,\ \doxymbox{\hyperlink{struct_s_d_l___color}{SDL\_Color}}\ *colors);}
+\DoxyCodeLine{00250\ \ \ \ \ void\ (*DestroyPalette)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture_palette}{SDL\_TexturePalette}}\ *palette);}
+\DoxyCodeLine{00251\ \ \ \ \ bool\ (*ChangeTexturePalette)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture);}
+\DoxyCodeLine{00252\ \ \ \ \ bool\ (*UpdateTexture)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *pixels,}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ pitch);}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#ifdef\ SDL\_HAVE\_YUV}}
+\DoxyCodeLine{00256\ \ \ \ \ bool\ (*UpdateTextureYUV)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Uint8\ *Yplane,\ \textcolor{keywordtype}{int}\ Ypitch,}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Uint8\ *Uplane,\ \textcolor{keywordtype}{int}\ Upitch,}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Uint8\ *Vplane,\ \textcolor{keywordtype}{int}\ Vpitch);}
+\DoxyCodeLine{00261\ \ \ \ \ bool\ (*UpdateTextureNV)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Uint8\ *Yplane,\ \textcolor{keywordtype}{int}\ Ypitch,}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Uint8\ *UVplane,\ \textcolor{keywordtype}{int}\ UVpitch);}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00266\ \ \ \ \ bool\ (*LockTexture)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture,}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect,\ \textcolor{keywordtype}{void}\ **pixels,\ \textcolor{keywordtype}{int}\ *pitch);}
+\DoxyCodeLine{00268\ \ \ \ \ void\ (*UnlockTexture)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture);}
+\DoxyCodeLine{00269\ \ \ \ \ bool\ (*SetRenderTarget)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture);}
+\DoxyCodeLine{00270\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *(*RenderReadPixels)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{00271\ \ \ \ \ bool\ (*RenderPresent)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00272\ \ \ \ \ void\ (*DestroyTexture)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture);}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ void\ (*DestroyRenderer)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ bool\ (*SetVSync)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \textcolor{keywordtype}{int}\ vsync);}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*GetMetalLayer)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*GetMetalCommandEncoder)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ bool\ (*AddVulkanRenderSemaphores)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ Uint32\ wait\_stage\_mask,\ Sint64\ wait\_semaphore,\ Sint64\ signal\_semaphore);}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#ifdef\ SDL\_PLATFORM\_GDK}}
+\DoxyCodeLine{00284\ \ \ \ \ void\ (*GDKSuspendRenderer)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00285\ \ \ \ \ void\ (*GDKResumeRenderer)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{comment}{//\ The\ current\ renderer\ info}}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00290\ \ \ \ \ SDL\_PixelFormat\ *texture\_formats;}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_texture\_formats;}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordtype}{bool}\ software;}
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keywordtype}{bool}\ npot\_texture\_wrap\_unsupported;}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{comment}{//\ The\ window\ associated\ with\ the\ renderer}}
+\DoxyCodeLine{00296\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window;}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keywordtype}{bool}\ hidden;}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{comment}{//\ Whether\ we\ should\ simulate\ vsync}}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keywordtype}{bool}\ wanted\_vsync;}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordtype}{bool}\ simulate\_vsync;}
+\DoxyCodeLine{00302\ \ \ \ \ Uint64\ simulate\_vsync\_interval\_ns;}
+\DoxyCodeLine{00303\ \ \ \ \ Uint64\ last\_present;}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___render_view_state}{SDL\_RenderViewState}}\ *view;}
+\DoxyCodeLine{00306\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___render_view_state}{SDL\_RenderViewState}}\ main\_view;}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{comment}{//\ The\ window\ pixel\ to\ point\ coordinate\ scale}}
+\DoxyCodeLine{00309\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_point}{SDL\_FPoint}}\ dpi\_scale;}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{//\ The\ method\ of\ drawing\ lines}}
+\DoxyCodeLine{00312\ \ \ \ \ SDL\_RenderLineMethod\ line\_method;}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{comment}{//\ Default\ scale\ mode\ for\ textures\ created\ with\ this\ renderer}}
+\DoxyCodeLine{00315\ \ \ \ \ SDL\_ScaleMode\ scale\_mode;}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{comment}{//\ The\ list\ of\ textures}}
+\DoxyCodeLine{00318\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *textures;}
+\DoxyCodeLine{00319\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *target;}
+\DoxyCodeLine{00320\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *target\_mutex;}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{comment}{//\ The\ list\ of\ palettes}}
+\DoxyCodeLine{00323\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___hash_table}{SDL\_HashTable}}\ *palettes;}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ SDL\_Colorspace\ output\_colorspace;}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keywordtype}{float}\ SDR\_white\_point;}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keywordtype}{float}\ HDR\_headroom;}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{keywordtype}{float}\ desired\_color\_scale;}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keywordtype}{float}\ color\_scale;}
+\DoxyCodeLine{00331\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ \doxymbox{\hyperlink{struct_s_d_l___renderer_a765bdfeae31c00702040e4debd72532d}{color}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00332\ \ \ \ \ SDL\_BlendMode\ \doxymbox{\hyperlink{struct_s_d_l___renderer_afc6d4e3ca32e963eb746ab7e2953023d}{blendMode}};\ }
+\DoxyCodeLine{00333\ \ \ \ \ SDL\_TextureAddressMode\ texture\_address\_mode\_u;}
+\DoxyCodeLine{00334\ \ \ \ \ SDL\_TextureAddressMode\ texture\_address\_mode\_v;}
+\DoxyCodeLine{00335\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_render_state}{SDL\_GPURenderState}}\ *gpu\_render\_state;}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *render\_commands;}
+\DoxyCodeLine{00338\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *render\_commands\_tail;}
+\DoxyCodeLine{00339\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___render_command}{SDL\_RenderCommand}}\ *render\_commands\_pool;}
+\DoxyCodeLine{00340\ \ \ \ \ Uint32\ render\_command\_generation;}
+\DoxyCodeLine{00341\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ last\_queued\_color;}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordtype}{float}\ last\_queued\_color\_scale;}
+\DoxyCodeLine{00343\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ last\_queued\_viewport;}
+\DoxyCodeLine{00344\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ last\_queued\_cliprect;}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{keywordtype}{bool}\ last\_queued\_cliprect\_enabled;}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keywordtype}{bool}\ color\_queued;}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keywordtype}{bool}\ viewport\_queued;}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keywordtype}{bool}\ cliprect\_queued;}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keywordtype}{void}\ *vertex\_data;}
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ vertex\_data\_used;}
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ vertex\_data\_allocation;}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{comment}{//\ Shaped\ window\ support}}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keywordtype}{bool}\ transparent\_window;}
+\DoxyCodeLine{00356\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *shape\_surface;}
+\DoxyCodeLine{00357\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *shape\_texture;}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ SDL\_PropertiesID\ props;}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *debug\_char\_texture\_atlas;}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keywordtype}{bool}\ destroyed;\ \ \ \textcolor{comment}{//\ already\ destroyed\ by\ SDL\_DestroyWindow;\ just\ free\ this\ struct\ in\ SDL\_DestroyRenderer.}}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00367\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *next;}
+\DoxyCodeLine{00368\ \};}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \textcolor{comment}{//\ Define\ the\ SDL\ render\ driver\ structure}}
+\DoxyCodeLine{00371\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}}
+\DoxyCodeLine{00372\ \{}
+\DoxyCodeLine{00373\ \ \ \ \ bool\ (*CreateRenderer)(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00376\ \};}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \textcolor{comment}{//\ Not\ all\ of\ these\ are\ available\ in\ a\ given\ build.\ Use\ \#ifdefs,\ etc.}}
+\DoxyCodeLine{00379\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ D3D\_RenderDriver;}
+\DoxyCodeLine{00380\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ D3D11\_RenderDriver;}
+\DoxyCodeLine{00381\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ D3D12\_RenderDriver;}
+\DoxyCodeLine{00382\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ GL\_RenderDriver;}
+\DoxyCodeLine{00383\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ GLES\_RenderDriver;}
+\DoxyCodeLine{00384\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ GLES2\_RenderDriver;}
+\DoxyCodeLine{00385\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ METAL\_RenderDriver;}
+\DoxyCodeLine{00386\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ NGAGE\_RenderDriver;}
+\DoxyCodeLine{00387\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ VULKAN\_RenderDriver;}
+\DoxyCodeLine{00388\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ PS2\_RenderDriver;}
+\DoxyCodeLine{00389\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ PSP\_RenderDriver;}
+\DoxyCodeLine{00390\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ SW\_RenderDriver;}
+\DoxyCodeLine{00391\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ VITA\_GXM\_RenderDriver;}
+\DoxyCodeLine{00392\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___render_driver}{SDL\_RenderDriver}}\ GPU\_RenderDriver;}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \textcolor{comment}{//\ Clean\ up\ any\ renderers\ at\ shutdown}}
+\DoxyCodeLine{00395\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_QuitRender(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#define\ RENDER\_SAMPLER\_HASHKEY(scale\_mode,\ address\_u,\ address\_v)\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\ \ \ \ (((scale\_mode\ ==\ SDL\_SCALEMODE\_NEAREST)\ <<\ 0)\ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\ \ \ \ \ ((address\_u\ ==\ SDL\_TEXTURE\_ADDRESS\_WRAP)\ <<\ 1)\ |\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\ \ \ \ \ ((address\_v\ ==\ SDL\_TEXTURE\_ADDRESS\_WRAP)\ <<\ 2))}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#define\ RENDER\_SAMPLER\_COUNT\ (((1\ <<\ 0)\ |\ (1\ <<\ 1)\ |\ (1\ <<\ 2))\ +\ 1)}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \textcolor{comment}{//\ Add\ a\ supported\ texture\ format\ to\ a\ renderer}}
+\DoxyCodeLine{00404\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_AddSupportedTextureFormat(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ SDL\_PixelFormat\ format);}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \textcolor{comment}{//\ Setup\ colorspace\ conversion}}
+\DoxyCodeLine{00407\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SetupRendererColorspace(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \textcolor{comment}{//\ Colorspace\ conversion\ functions}}
+\DoxyCodeLine{00410\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_RenderingLinearSpace(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00411\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_ConvertToLinear(\doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ *color);}
+\DoxyCodeLine{00412\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_ConvertFromLinear(\doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ *color);}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \textcolor{comment}{//\ Blend\ mode\ functions}}
+\DoxyCodeLine{00415\ \textcolor{keyword}{extern}\ SDL\_BlendFactor\ SDL\_GetBlendModeSrcColorFactor(SDL\_BlendMode\ blendMode);}
+\DoxyCodeLine{00416\ \textcolor{keyword}{extern}\ SDL\_BlendFactor\ SDL\_GetBlendModeDstColorFactor(SDL\_BlendMode\ blendMode);}
+\DoxyCodeLine{00417\ \textcolor{keyword}{extern}\ SDL\_BlendOperation\ SDL\_GetBlendModeColorOperation(SDL\_BlendMode\ blendMode);}
+\DoxyCodeLine{00418\ \textcolor{keyword}{extern}\ SDL\_BlendFactor\ SDL\_GetBlendModeSrcAlphaFactor(SDL\_BlendMode\ blendMode);}
+\DoxyCodeLine{00419\ \textcolor{keyword}{extern}\ SDL\_BlendFactor\ SDL\_GetBlendModeDstAlphaFactor(SDL\_BlendMode\ blendMode);}
+\DoxyCodeLine{00420\ \textcolor{keyword}{extern}\ SDL\_BlendOperation\ SDL\_GetBlendModeAlphaOperation(SDL\_BlendMode\ blendMode);}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \textcolor{comment}{/*\ drivers\ call\ this\ during\ their\ Queue*()\ methods\ to\ make\ space\ in\ a\ array\ that\ are\ used}}
+\DoxyCodeLine{00423\ \textcolor{comment}{\ \ \ for\ a\ vertex\ buffer\ during\ RunCommandQueue().\ Pointers\ returned\ here\ are\ only\ valid\ until}}
+\DoxyCodeLine{00424\ \textcolor{comment}{\ \ \ the\ next\ call,\ because\ it\ might\ be\ in\ an\ array\ that\ gets\ realloc()'d.\ */}}
+\DoxyCodeLine{00425\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ *SDL\_AllocateRenderVertices(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer,\ \textcolor{keywordtype}{size\_t}\ numbytes,\ \textcolor{keywordtype}{size\_t}\ alignment,\ \textcolor{keywordtype}{size\_t}\ *offset);}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \textcolor{comment}{//\ Let\ the\ video\ subsystem\ destroy\ a\ renderer\ without\ making\ its\ pointer\ invalid.}}
+\DoxyCodeLine{00428\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_DestroyRendererWithoutFreeing(\doxymbox{\hyperlink{struct_s_d_l___renderer}{SDL\_Renderer}}\ *renderer);}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \textcolor{comment}{//\ Ends\ C\ function\ definitions\ when\ using\ C++}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00432\ \}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_sysrender\_h\_}}
+
+\end{DoxyCode}

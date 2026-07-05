@@ -1,0 +1,157 @@
+\doxysection{Tracy\+Print.\+hpp}
+\hypertarget{_tracy_print_8hpp_source}{}\label{_tracy_print_8hpp_source}\index{MonoEngine/thirdparty/tracy/server/TracyPrint.hpp@{MonoEngine/thirdparty/tracy/server/TracyPrint.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYPRINT\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYPRINT\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#if\ (\ defined\ \_MSC\_VER\ \&\&\ \_MSVC\_LANG\ >=\ 201703L\ )\ ||\ \_\_cplusplus\ >=\ 201703L}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#\ \ if\ \_\_has\_include(<charconv>)\ \&\&\ \_\_has\_include(<type\_traits>)}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#\ \ \ \ include\ <charconv>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ \ \ include\ <type\_traits>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ \ \ if\ !defined(\_\_cpp\_lib\_to\_chars)}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ NO\_CHARCONV}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ \ \ endif}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ \ \ define\ NO\_CHARCONV}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ \ define\ NO\_CHARCONV}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#if\ defined\ \_MSC\_VER\ \&\&\ \_MSC\_VER\ <\ 1924}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ \ define\ NO\_CHARCONV}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifdef\ NO\_CHARCONV}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ include\ <stdio.h>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../public/common/TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{char}*\ RealToStringGetBuffer();}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ RealToStringFloating(\ \textcolor{keywordtype}{char}*\ ptr,\ \textcolor{keywordtype}{char}*\ end\ )}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{if}(\ *ptr\ ==\ \textcolor{charliteral}{'-\/'}\ )\ ptr++;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ vbegin\ =\ ptr;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{while}(\ *ptr\ !=\ \textcolor{charliteral}{'\(\backslash\)0'}\ \&\&\ *ptr\ !=\ \textcolor{charliteral}{'.'}\ )\ ptr++;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{auto}\ sz\ =\ end\ -\/\ ptr\ +\ 1;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{while}(\ ptr\ -\/\ vbegin\ >\ 3\ )}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ ptr\ -\/=\ 3;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ memmove(\ ptr+1,\ ptr,\ sz+3\ );}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ *ptr\ =\ \textcolor{charliteral}{','};}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ sz\ +=\ 4;}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordflow}{while}(\ *ptr\ !=\ \textcolor{charliteral}{'\(\backslash\)0'}\ \&\&\ *ptr\ !=\ \textcolor{charliteral}{'.'}\ )\ ptr++;}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{if}(\ *ptr\ ==\ \textcolor{charliteral}{'\(\backslash\)0'}\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{while}(\ *ptr\ !=\ \textcolor{charliteral}{'\(\backslash\)0'}\ )\ ptr++;}
+\DoxyCodeLine{00059\ \ \ \ \ ptr-\/-\/;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordflow}{while}(\ *ptr\ ==\ \textcolor{charliteral}{'0'}\ )\ ptr-\/-\/;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{if}(\ *ptr\ !=\ \textcolor{charliteral}{'.'}\ \&\&\ *ptr\ !=\ \textcolor{charliteral}{','}\ )\ ptr++;}
+\DoxyCodeLine{00062\ \ \ \ \ *ptr\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00063\ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ RealToStringInteger(\ \textcolor{keywordtype}{char}*\ buf,\ \textcolor{keywordtype}{char}*\ end\ )}
+\DoxyCodeLine{00066\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{if}(\ *buf\ ==\ \textcolor{charliteral}{'-\/'}\ )\ buf++;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ end;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{auto}\ sz\ =\ 1;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordflow}{while}(\ ptr\ -\/\ buf\ >\ 3\ )}
+\DoxyCodeLine{00071\ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ ptr\ -\/=\ 3;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ memmove(\ ptr+1,\ ptr,\ sz+3\ );}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ *ptr\ =\ \textcolor{charliteral}{','};}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ sz\ +=\ 4;}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00082\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{char}*\ PrintFloat(\ \textcolor{keywordtype}{char}*\ begin,\ \textcolor{keywordtype}{char}*\ end,\ T\ value,\ \textcolor{keywordtype}{int}\ precision\ )}
+\DoxyCodeLine{00083\ \{}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#ifndef\ NO\_CHARCONV}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ std::to\_chars(\ begin,\ end,\ value,\ std::chars\_format::fixed,\ precision\ ).ptr;}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordflow}{return}\ begin\ +\ sprintf(\ begin,\ \textcolor{stringliteral}{"{}\%.*f"{}},\ precision,\ value\ );}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00089\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00092\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{char}*\ PrintFloat(\ \textcolor{keywordtype}{char}*\ begin,\ \textcolor{keywordtype}{char}*\ end,\ T\ value\ )}
+\DoxyCodeLine{00093\ \{}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#ifndef\ NO\_CHARCONV}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{return}\ std::to\_chars(\ begin,\ end,\ value,\ std::chars\_format::fixed\ ).ptr;}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordflow}{return}\ begin\ +\ sprintf(\ begin,\ \textcolor{stringliteral}{"{}\%f"{}},\ value\ );}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#ifndef\ NO\_CHARCONV}}
+\DoxyCodeLine{00102\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00103\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ RealToString(\ T\ val\ )}
+\DoxyCodeLine{00104\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{auto}\ buf\ =\ detail::RealToStringGetBuffer();}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ std::to\_chars(\ buf,\ buf+64,\ val\ ).ptr;}
+\DoxyCodeLine{00107\ \ \ \ \ *end\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}\ (\ std::is\_integral\_v<T>\ )}
+\DoxyCodeLine{00109\ \ \ \ \ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ detail::RealToStringInteger(\ buf,\ end\ );}
+\DoxyCodeLine{00111\ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00113\ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ detail::RealToStringFloating(\ buf,\ end\ );}
+\DoxyCodeLine{00115\ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordflow}{return}\ buf;}
+\DoxyCodeLine{00117\ \}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00119\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ RealToString(\ \textcolor{keywordtype}{double}\ val\ )}
+\DoxyCodeLine{00120\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{auto}\ buf\ =\ detail::RealToStringGetBuffer();}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ sz\ =\ sprintf(\ buf,\ \textcolor{stringliteral}{"{}\%f"{}},\ val\ );}
+\DoxyCodeLine{00123\ \ \ \ \ detail::RealToStringFloating(\ buf,\ buf+sz\ );}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{return}\ buf;}
+\DoxyCodeLine{00125\ \}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ TimeToString(\ int64\_t\ ns\ );}
+\DoxyCodeLine{00129\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ TimeToStringExact(\ int64\_t\ ns\ );}
+\DoxyCodeLine{00130\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ MemSizeToString(\ int64\_t\ val\ );}
+\DoxyCodeLine{00131\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ LocationToString(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ fn,\ uint32\_t\ \doxymbox{\hyperlink{structtracy_1_1line}{line}}\ );}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ PrintStringPercent(\ \textcolor{keywordtype}{char}*\ buf,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \textcolor{keywordtype}{string},\ \textcolor{keywordtype}{double}\ percent\ )}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ ssz\ =\ strlen(\ \textcolor{keywordtype}{string}\ );}
+\DoxyCodeLine{00136\ \ \ \ \ memcpy(\ buf,\ \textcolor{keywordtype}{string},\ ssz\ );}
+\DoxyCodeLine{00137\ \ \ \ \ memcpy(\ buf+ssz,\ \textcolor{stringliteral}{"{}\ ("{}},\ 2\ );}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ PrintFloat(\ buf+ssz+2,\ buf+128,\ percent,\ 2\ );}
+\DoxyCodeLine{00139\ \ \ \ \ memcpy(\ end,\ \textcolor{stringliteral}{"{}\%)"{}},\ 3\ );}
+\DoxyCodeLine{00140\ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ PrintStringPercent(\ \textcolor{keywordtype}{char}*\ buf,\ \textcolor{keywordtype}{double}\ percent\ )}
+\DoxyCodeLine{00143\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ memcpy(\ buf,\ \textcolor{stringliteral}{"{}("{}},\ 2\ );}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ PrintFloat(\ buf+1,\ buf+64,\ percent,\ 2\ );}
+\DoxyCodeLine{00146\ \ \ \ \ memcpy(\ end,\ \textcolor{stringliteral}{"{}\%)"{}},\ 3\ );}
+\DoxyCodeLine{00147\ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

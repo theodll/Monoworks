@@ -1,0 +1,276 @@
+\doxysection{registry-\/inl.h}
+\hypertarget{registry-inl_8h_source}{}\label{registry-inl_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/details/registry-\/inl.h@{MonoEngine/thirdparty/spdlog/include/spdlog/details/registry-\/inl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/details/registry.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <spdlog/details/periodic\_worker.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <spdlog/logger.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <spdlog/pattern\_formatter.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_DISABLE\_DEFAULT\_LOGGER}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ support\ for\ the\ default\ stdout\ color\ logger}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/wincolor\_sink.h>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/ansicolor\_sink.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ SPDLOG\_DISABLE\_DEFAULT\_LOGGER}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00031\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ SPDLOG\_INLINE\ registry::registry()}
+\DoxyCodeLine{00034\ \ \ \ \ :\ formatter\_(new\ pattern\_formatter())\ \{}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_DISABLE\_DEFAULT\_LOGGER}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ create\ default\ logger\ (ansicolor\_stdout\_sink\_mt\ or\ wincolor\_stdout\_sink\_mt\ in\ windows).}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{auto}\ color\_sink\ =\ std::make\_shared<sinks::wincolor\_stdout\_sink\_mt>();}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{auto}\ color\_sink\ =\ std::make\_shared<sinks::ansicolor\_stdout\_sink\_mt>();}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *default\_logger\_name\ =\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00044\ \ \ \ \ default\_logger\_\ =\ std::make\_shared<logger>(default\_logger\_name,\ std::move(color\_sink));}
+\DoxyCodeLine{00045\ \ \ \ \ loggers\_[default\_logger\_name]\ =\ default\_logger\_;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ SPDLOG\_DISABLE\_DEFAULT\_LOGGER}}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ SPDLOG\_INLINE\ registry::\string~registry()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::register\_logger(std::shared\_ptr<logger>\ new\_logger)\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00054\ \ \ \ \ register\_logger\_(std::move(new\_logger));}
+\DoxyCodeLine{00055\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::register\_or\_replace(std::shared\_ptr<logger>\ new\_logger)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00059\ \ \ \ \ register\_or\_replace\_(std::move(new\_logger));}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::initialize\_logger(std::shared\_ptr<logger>\ new\_logger)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00064\ \ \ \ \ new\_logger-\/>set\_formatter(formatter\_-\/>clone());}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordflow}{if}\ (err\_handler\_)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ new\_logger-\/>set\_error\_handler(err\_handler\_);}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ set\ new\ level\ according\ to\ previously\ configured\ level\ or\ default\ level}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ log\_levels\_.find(new\_logger-\/>name());}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{auto}\ new\_level\ =\ it\ !=\ log\_levels\_.end()\ ?\ it-\/>second\ :\ global\_log\_level\_;}
+\DoxyCodeLine{00073\ \ \ \ \ new\_logger-\/>set\_level(new\_level);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ new\_logger-\/>flush\_on(flush\_level\_);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{if}\ (backtrace\_n\_messages\_\ >\ 0)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ new\_logger-\/>enable\_backtrace(backtrace\_n\_messages\_);}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (automatic\_registration\_)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ register\_logger\_(std::move(new\_logger));}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ registry::get(\textcolor{keyword}{const}\ std::string\ \&logger\_name)\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{auto}\ found\ =\ loggers\_.find(logger\_name);}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ found\ ==\ loggers\_.end()\ ?\ nullptr\ :\ found-\/>second;}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ registry::default\_logger()\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{return}\ default\_logger\_;}
+\DoxyCodeLine{00095\ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{comment}{//\ Return\ raw\ ptr\ to\ the\ default\ logger.}}
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ To\ be\ used\ directly\ by\ the\ spdlog\ default\ api\ (e.g.\ spdlog::info)}}
+\DoxyCodeLine{00099\ \textcolor{comment}{//\ This\ make\ the\ default\ API\ faster,\ but\ cannot\ be\ used\ concurrently\ with\ set\_default\_logger().}}
+\DoxyCodeLine{00100\ \textcolor{comment}{//\ e.g\ do\ not\ call\ set\_default\_logger()\ from\ one\ thread\ while\ calling\ spdlog::info()\ from\ another.}}
+\DoxyCodeLine{00101\ SPDLOG\_INLINE\ \doxymbox{\hyperlink{classlogger}{logger}}\ *registry::get\_default\_raw()\ \{\ \textcolor{keywordflow}{return}\ default\_logger\_.get();\ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{comment}{//\ set\ default\ logger.}}
+\DoxyCodeLine{00104\ \textcolor{comment}{//\ the\ default\ logger\ is\ stored\ in\ default\_logger\_\ (for\ faster\ retrieval)\ and\ in\ the\ loggers\_\ map.}}
+\DoxyCodeLine{00105\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::set\_default\_logger(std::shared\_ptr<logger>\ new\_default\_logger)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_default\_logger\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ loggers\_[new\_default\_logger-\/>name()]\ =\ new\_default\_logger;}
+\DoxyCodeLine{00109\ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \ \ \ \ default\_logger\_\ =\ std::move(new\_default\_logger);}
+\DoxyCodeLine{00111\ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::set\_tp(std::shared\_ptr<thread\_pool>\ tp)\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ std::lock\_guard<std::recursive\_mutex>\ lock(tp\_mutex\_);}
+\DoxyCodeLine{00115\ \ \ \ \ tp\_\ =\ std::move(tp);}
+\DoxyCodeLine{00116\ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ SPDLOG\_INLINE\ std::shared\_ptr<thread\_pool>\ registry::get\_tp()\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ std::lock\_guard<std::recursive\_mutex>\ lock(tp\_mutex\_);}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordflow}{return}\ tp\_;}
+\DoxyCodeLine{00121\ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{comment}{//\ Set\ global\ formatter.\ Each\ sink\ in\ each\ logger\ will\ get\ a\ clone\ of\ this\ object}}
+\DoxyCodeLine{00124\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::set\_formatter(std::unique\_ptr<formatter>\ \doxymbox{\hyperlink{structformatter}{formatter}})\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00126\ \ \ \ \ formatter\_\ =\ std::move(\doxymbox{\hyperlink{structformatter}{formatter}});}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ l.second-\/>set\_formatter(formatter\_-\/>clone());}
+\DoxyCodeLine{00129\ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::enable\_backtrace(\textcolor{keywordtype}{size\_t}\ n\_messages)\ \{}
+\DoxyCodeLine{00133\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00134\ \ \ \ \ backtrace\_n\_messages\_\ =\ n\_messages;}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ l.second-\/>enable\_backtrace(n\_messages);}
+\DoxyCodeLine{00138\ \ \ \ \ \}}
+\DoxyCodeLine{00139\ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::disable\_backtrace()\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00143\ \ \ \ \ backtrace\_n\_messages\_\ =\ 0;}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ l.second-\/>disable\_backtrace();}
+\DoxyCodeLine{00146\ \ \ \ \ \}}
+\DoxyCodeLine{00147\ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::set\_level(level::level\_enum\ log\_level)\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ l.second-\/>set\_level(log\_level);}
+\DoxyCodeLine{00153\ \ \ \ \ \}}
+\DoxyCodeLine{00154\ \ \ \ \ global\_log\_level\_\ =\ log\_level;}
+\DoxyCodeLine{00155\ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::flush\_on(level::level\_enum\ log\_level)\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ l.second-\/>flush\_on(log\_level);}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \ \ flush\_level\_\ =\ log\_level;}
+\DoxyCodeLine{00163\ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::set\_error\_handler(err\_handler\ handler)\ \{}
+\DoxyCodeLine{00166\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ l.second-\/>set\_error\_handler(handler);}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ err\_handler\_\ =\ std::move(handler);}
+\DoxyCodeLine{00171\ \}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::apply\_all(}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ std::shared\_ptr<logger>)>\ \&fun)\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ fun(l.second);}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::flush\_all()\ \{}
+\DoxyCodeLine{00182\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&l\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ l.second-\/>flush();}
+\DoxyCodeLine{00185\ \ \ \ \ \}}
+\DoxyCodeLine{00186\ \}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::drop(\textcolor{keyword}{const}\ std::string\ \&logger\_name)\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{auto}\ is\_default\_logger\ =\ default\_logger\_\ \&\&\ default\_logger\_-\/>name()\ ==\ logger\_name;}
+\DoxyCodeLine{00191\ \ \ \ \ loggers\_.erase(logger\_name);}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_default\_logger)\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ default\_logger\_.reset();}
+\DoxyCodeLine{00194\ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::drop\_all()\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00199\ \ \ \ \ loggers\_.clear();}
+\DoxyCodeLine{00200\ \ \ \ \ default\_logger\_.reset();}
+\DoxyCodeLine{00201\ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \textcolor{comment}{//\ clean\ all\ resources\ and\ threads\ started\ by\ the\ registry}}
+\DoxyCodeLine{00204\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::shutdown()\ \{}
+\DoxyCodeLine{00205\ \ \ \ \ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ std::lock\_guard<std::mutex>\ lock(flusher\_mutex\_);}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ periodic\_flusher\_.reset();}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ drop\_all();}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ std::lock\_guard<std::recursive\_mutex>\ lock(tp\_mutex\_);}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ tp\_.reset();}
+\DoxyCodeLine{00215\ \ \ \ \ \}}
+\DoxyCodeLine{00216\ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ SPDLOG\_INLINE\ std::recursive\_mutex\ \&registry::tp\_mutex()\ \{\ \textcolor{keywordflow}{return}\ tp\_mutex\_;\ \}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::set\_automatic\_registration(\textcolor{keywordtype}{bool}\ automatic\_registration)\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00222\ \ \ \ \ automatic\_registration\_\ =\ automatic\_registration;}
+\DoxyCodeLine{00223\ \}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::set\_levels(log\_levels\ levels,\ level::level\_enum\ *global\_level)\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00227\ \ \ \ \ log\_levels\_\ =\ std::move(levels);}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{auto}\ global\_level\_requested\ =\ global\_level\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00229\ \ \ \ \ global\_log\_level\_\ =\ global\_level\_requested\ ?\ *global\_level\ :\ global\_log\_level\_;}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&\doxymbox{\hyperlink{classlogger}{logger}}\ :\ loggers\_)\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ logger\_entry\ =\ log\_levels\_.find(\doxymbox{\hyperlink{classlogger}{logger}}.first);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (logger\_entry\ !=\ log\_levels\_.end())\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlogger}{logger}}.second-\/>set\_level(logger\_entry-\/>second);}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (global\_level\_requested)\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classlogger}{logger}}.second-\/>set\_level(*global\_level);}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00238\ \ \ \ \ \}}
+\DoxyCodeLine{00239\ \}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ SPDLOG\_INLINE\ registry\ \&registry::instance()\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{static}\ registry\ s\_instance;}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordflow}{return}\ s\_instance;}
+\DoxyCodeLine{00244\ \}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::apply\_logger\_env\_levels(std::shared\_ptr<logger>\ new\_logger)\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(logger\_map\_mutex\_);}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keyword}{auto}\ it\ =\ log\_levels\_.find(new\_logger-\/>name());}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{keyword}{auto}\ new\_level\ =\ it\ !=\ log\_levels\_.end()\ ?\ it-\/>second\ :\ global\_log\_level\_;}
+\DoxyCodeLine{00250\ \ \ \ \ new\_logger-\/>set\_level(new\_level);}
+\DoxyCodeLine{00251\ \}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::throw\_if\_exists\_(\textcolor{keyword}{const}\ std::string\ \&logger\_name)\ \{}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{if}\ (loggers\_.find(logger\_name)\ !=\ loggers\_.end())\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}logger\ with\ name\ '"{}}\ +\ logger\_name\ +\ \textcolor{stringliteral}{"{}'\ already\ exists"{}});}
+\DoxyCodeLine{00256\ \ \ \ \ \}}
+\DoxyCodeLine{00257\ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::register\_logger\_(std::shared\_ptr<logger>\ new\_logger)\ \{}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&logger\_name\ =\ new\_logger-\/>name();}
+\DoxyCodeLine{00261\ \ \ \ \ throw\_if\_exists\_(logger\_name);}
+\DoxyCodeLine{00262\ \ \ \ \ loggers\_[logger\_name]\ =\ std::move(new\_logger);}
+\DoxyCodeLine{00263\ \}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ registry::register\_or\_replace\_(std::shared\_ptr<logger>\ new\_logger)\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ loggers\_[new\_logger-\/>name()]\ =\ std::move(new\_logger);}
+\DoxyCodeLine{00267\ \}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \}\ \ \textcolor{comment}{//\ namespace\ details}}
+\DoxyCodeLine{00270\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

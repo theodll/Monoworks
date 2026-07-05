@@ -1,0 +1,594 @@
+\doxysection{controller\+\_\+constants.\+h}
+\hypertarget{controller__constants_8h_source}{}\label{controller__constants_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/hidapi/steam/controller\_constants.h@{MonoRuntime/extern/sdl/src/joystick/hidapi/steam/controller\_constants.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 2021\ Valve\ Corporation}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ \_CONTROLLER\_CONSTANTS\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ \_CONTROLLER\_CONSTANTS\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}controller\_structs.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ FEATURE\_REPORT\_SIZE\ 64}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ VALVE\_USB\_VID\ \ \ \ \ \ \ 0x28DE}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Frame\ update\ rate\ (in\ ms).}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ FAST\_SCAN\_INTERVAL\ \ 6}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ SLOW\_SCAN\_INTERVAL\ \ 9}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ Contains\ each\ of\ the\ USB\ PIDs\ for\ Valve\ controllers\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{enum}\ ValveControllerPID}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ BASTILLE\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x2202,}
+\DoxyCodeLine{00043\ \ \ \ \ CHELL\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1101,}
+\DoxyCodeLine{00044\ \ \ \ \ D0G\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1102,}
+\DoxyCodeLine{00045\ \ \ \ \ ELI\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1103,}
+\DoxyCodeLine{00046\ \ \ \ \ FREEMAN\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1104,}
+\DoxyCodeLine{00047\ \ \ \ \ D0G\_BLE\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1105,}
+\DoxyCodeLine{00048\ \ \ \ \ D0G\_BLE2\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1106,}
+\DoxyCodeLine{00049\ \ \ \ \ D0GGLE\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1142,}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ JUPITER\_PID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x1205,}
+\DoxyCodeLine{00052\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ This\ enum\ contains\ all\ of\ the\ messages\ exchanged\ between\ the\ host\ and\ the\ target\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00055\ \textcolor{keyword}{enum}\ FeatureReportMessageIDs}
+\DoxyCodeLine{00056\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ ID\_SET\_DIGITAL\_MAPPINGS\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x80,}
+\DoxyCodeLine{00058\ \ \ \ \ ID\_CLEAR\_DIGITAL\_MAPPINGS\ \ \ \ \ \ \ \ \ \ \ \ =\ 0x81,}
+\DoxyCodeLine{00059\ \ \ \ \ ID\_GET\_DIGITAL\_MAPPINGS\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x82,}
+\DoxyCodeLine{00060\ \ \ \ \ ID\_GET\_ATTRIBUTES\_VALUES\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x83,}
+\DoxyCodeLine{00061\ \ \ \ \ ID\_GET\_ATTRIBUTE\_LABEL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x84,}
+\DoxyCodeLine{00062\ \ \ \ \ ID\_SET\_DEFAULT\_DIGITAL\_MAPPINGS\ \ \ \ \ \ =\ 0x85,}
+\DoxyCodeLine{00063\ \ \ \ \ ID\_FACTORY\_RESET\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x86,}
+\DoxyCodeLine{00064\ \ \ \ \ ID\_SET\_SETTINGS\_VALUES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x87,}
+\DoxyCodeLine{00065\ \ \ \ \ ID\_CLEAR\_SETTINGS\_VALUES\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x88,}
+\DoxyCodeLine{00066\ \ \ \ \ ID\_GET\_SETTINGS\_VALUES\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x89,}
+\DoxyCodeLine{00067\ \ \ \ \ ID\_GET\_SETTING\_LABEL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x8A,}
+\DoxyCodeLine{00068\ \ \ \ \ ID\_GET\_SETTINGS\_MAXS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x8B,}
+\DoxyCodeLine{00069\ \ \ \ \ ID\_GET\_SETTINGS\_DEFAULTS\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x8C,}
+\DoxyCodeLine{00070\ \ \ \ \ ID\_SET\_CONTROLLER\_MODE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x8D,}
+\DoxyCodeLine{00071\ \ \ \ \ ID\_LOAD\_DEFAULT\_SETTINGS\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x8E,}
+\DoxyCodeLine{00072\ \ \ \ \ ID\_TRIGGER\_HAPTIC\_PULSE\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x8F,}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ ID\_TURN\_OFF\_CONTROLLER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x9F,}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ ID\_GET\_DEVICE\_INFO\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xA1,}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ ID\_CALIBRATE\_TRACKPADS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xA7,}
+\DoxyCodeLine{00079\ \ \ \ \ ID\_RESERVED\_0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xA8,}
+\DoxyCodeLine{00080\ \ \ \ \ ID\_SET\_SERIAL\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xA9,}
+\DoxyCodeLine{00081\ \ \ \ \ ID\_GET\_TRACKPAD\_CALIBRATION\ \ \ \ \ \ \ \ \ \ =\ 0xAA,}
+\DoxyCodeLine{00082\ \ \ \ \ ID\_GET\_TRACKPAD\_FACTORY\_CALIBRATION\ \ =\ 0xAB,}
+\DoxyCodeLine{00083\ \ \ \ \ ID\_GET\_TRACKPAD\_RAW\_DATA\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xAC,}
+\DoxyCodeLine{00084\ \ \ \ \ ID\_ENABLE\_PAIRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xAD,}
+\DoxyCodeLine{00085\ \ \ \ \ ID\_GET\_STRING\_ATTRIBUTE\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xAE,}
+\DoxyCodeLine{00086\ \ \ \ \ ID\_RADIO\_ERASE\_RECORDS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xAF,}
+\DoxyCodeLine{00087\ \ \ \ \ ID\_RADIO\_WRITE\_RECORD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB0,}
+\DoxyCodeLine{00088\ \ \ \ \ ID\_SET\_DONGLE\_SETTING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB1,}
+\DoxyCodeLine{00089\ \ \ \ \ ID\_DONGLE\_DISCONNECT\_DEVICE\ \ \ \ \ \ \ \ \ \ =\ 0xB2,}
+\DoxyCodeLine{00090\ \ \ \ \ ID\_DONGLE\_COMMIT\_DEVICE\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB3,}
+\DoxyCodeLine{00091\ \ \ \ \ ID\_DONGLE\_GET\_WIRELESS\_STATE\ \ \ \ \ \ \ \ \ =\ 0xB4,}
+\DoxyCodeLine{00092\ \ \ \ \ ID\_CALIBRATE\_GYRO\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB5,}
+\DoxyCodeLine{00093\ \ \ \ \ ID\_PLAY\_AUDIO\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB6,}
+\DoxyCodeLine{00094\ \ \ \ \ ID\_AUDIO\_UPDATE\_START\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB7,}
+\DoxyCodeLine{00095\ \ \ \ \ ID\_AUDIO\_UPDATE\_DATA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB8,}
+\DoxyCodeLine{00096\ \ \ \ \ ID\_AUDIO\_UPDATE\_COMPLETE\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB9,}
+\DoxyCodeLine{00097\ \ \ \ \ ID\_GET\_CHIPID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xBA,}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ ID\_CALIBRATE\_JOYSTICK\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xBF,}
+\DoxyCodeLine{00100\ \ \ \ \ ID\_CALIBRATE\_ANALOG\_TRIGGERS\ \ \ \ \ \ \ \ \ =\ 0xC0,}
+\DoxyCodeLine{00101\ \ \ \ \ ID\_SET\_AUDIO\_MAPPING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xC1,}
+\DoxyCodeLine{00102\ \ \ \ \ ID\_CHECK\_GYRO\_FW\_LOAD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xC2,}
+\DoxyCodeLine{00103\ \ \ \ \ ID\_CALIBRATE\_ANALOG\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xC3,}
+\DoxyCodeLine{00104\ \ \ \ \ ID\_DONGLE\_GET\_CONNECTED\_SLOTS\ \ \ \ \ \ \ \ =\ 0xC4,}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ ID\_RESET\_IMU\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xCE,}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ Deck\ only}}
+\DoxyCodeLine{00109\ \ \ \ \ ID\_TRIGGER\_HAPTIC\_CMD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xEA,}
+\DoxyCodeLine{00110\ \ \ \ \ ID\_TRIGGER\_RUMBLE\_CMD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xEB,}
+\DoxyCodeLine{00111\ \};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{comment}{//\ Enumeration\ of\ all\ wireless\ dongle\ events}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ WirelessEventTypes}
+\DoxyCodeLine{00116\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ WIRELESS\_EVENT\_DISCONNECT\ \ \ =\ 1,}
+\DoxyCodeLine{00118\ \ \ \ \ WIRELESS\_EVENT\_CONNECT\ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00119\ \ \ \ \ WIRELESS\_EVENT\_PAIR\ \ \ \ \ \ \ \ \ =\ 3,}
+\DoxyCodeLine{00120\ \}\ EWirelessEventType;}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{comment}{//\ Enumeration\ of\ generic\ digital\ inputs\ -\/\ not\ all\ of\ these\ will\ be\ supported\ on\ all\ controllers\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00124\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00125\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ IO\_DIGITAL\_BUTTON\_NONE\ =\ -\/1,}
+\DoxyCodeLine{00127\ \ \ \ \ IO\_DIGITAL\_BUTTON\_RIGHT\_TRIGGER,}
+\DoxyCodeLine{00128\ \ \ \ \ IO\_DIGITAL\_BUTTON\_LEFT\_TRIGGER,}
+\DoxyCodeLine{00129\ \ \ \ \ IO\_DIGITAL\_BUTTON\_1,}
+\DoxyCodeLine{00130\ \ \ \ \ IO\_DIGITAL\_BUTTON\_Y=IO\_DIGITAL\_BUTTON\_1,}
+\DoxyCodeLine{00131\ \ \ \ \ IO\_DIGITAL\_BUTTON\_2,}
+\DoxyCodeLine{00132\ \ \ \ \ IO\_DIGITAL\_BUTTON\_B=IO\_DIGITAL\_BUTTON\_2,}
+\DoxyCodeLine{00133\ \ \ \ \ IO\_DIGITAL\_BUTTON\_3,}
+\DoxyCodeLine{00134\ \ \ \ \ IO\_DIGITAL\_BUTTON\_X=IO\_DIGITAL\_BUTTON\_3,}
+\DoxyCodeLine{00135\ \ \ \ \ IO\_DIGITAL\_BUTTON\_4,}
+\DoxyCodeLine{00136\ \ \ \ \ IO\_DIGITAL\_BUTTON\_A=IO\_DIGITAL\_BUTTON\_4,}
+\DoxyCodeLine{00137\ \ \ \ \ IO\_DIGITAL\_BUTTON\_RIGHT\_BUMPER,}
+\DoxyCodeLine{00138\ \ \ \ \ IO\_DIGITAL\_BUTTON\_LEFT\_BUMPER,}
+\DoxyCodeLine{00139\ \ \ \ \ IO\_DIGITAL\_BUTTON\_LEFT\_JOYSTICK\_CLICK,}
+\DoxyCodeLine{00140\ \ \ \ \ IO\_DIGITAL\_BUTTON\_ESCAPE,}
+\DoxyCodeLine{00141\ \ \ \ \ IO\_DIGITAL\_BUTTON\_STEAM,}
+\DoxyCodeLine{00142\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MENU,}
+\DoxyCodeLine{00143\ \ \ \ \ IO\_DIGITAL\_STICK\_UP,}
+\DoxyCodeLine{00144\ \ \ \ \ IO\_DIGITAL\_STICK\_DOWN,}
+\DoxyCodeLine{00145\ \ \ \ \ IO\_DIGITAL\_STICK\_LEFT,}
+\DoxyCodeLine{00146\ \ \ \ \ IO\_DIGITAL\_STICK\_RIGHT,}
+\DoxyCodeLine{00147\ \ \ \ \ IO\_DIGITAL\_TOUCH\_1,}
+\DoxyCodeLine{00148\ \ \ \ \ IO\_DIGITAL\_BUTTON\_UP=IO\_DIGITAL\_TOUCH\_1,}
+\DoxyCodeLine{00149\ \ \ \ \ IO\_DIGITAL\_TOUCH\_2,}
+\DoxyCodeLine{00150\ \ \ \ \ IO\_DIGITAL\_BUTTON\_RIGHT=IO\_DIGITAL\_TOUCH\_2,}
+\DoxyCodeLine{00151\ \ \ \ \ IO\_DIGITAL\_TOUCH\_3,}
+\DoxyCodeLine{00152\ \ \ \ \ IO\_DIGITAL\_BUTTON\_LEFT=IO\_DIGITAL\_TOUCH\_3,}
+\DoxyCodeLine{00153\ \ \ \ \ IO\_DIGITAL\_TOUCH\_4,}
+\DoxyCodeLine{00154\ \ \ \ \ IO\_DIGITAL\_BUTTON\_DOWN=IO\_DIGITAL\_TOUCH\_4,}
+\DoxyCodeLine{00155\ \ \ \ \ IO\_DIGITAL\_BUTTON\_BACK\_LEFT,}
+\DoxyCodeLine{00156\ \ \ \ \ IO\_DIGITAL\_BUTTON\_BACK\_RIGHT,}
+\DoxyCodeLine{00157\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_N,}
+\DoxyCodeLine{00158\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_NE,}
+\DoxyCodeLine{00159\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_E,}
+\DoxyCodeLine{00160\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_SE,}
+\DoxyCodeLine{00161\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_S,}
+\DoxyCodeLine{00162\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_SW,}
+\DoxyCodeLine{00163\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_W,}
+\DoxyCodeLine{00164\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_NW,}
+\DoxyCodeLine{00165\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_N,}
+\DoxyCodeLine{00166\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_NE,}
+\DoxyCodeLine{00167\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_E,}
+\DoxyCodeLine{00168\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_SE,}
+\DoxyCodeLine{00169\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_S,}
+\DoxyCodeLine{00170\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_SW,}
+\DoxyCodeLine{00171\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_W,}
+\DoxyCodeLine{00172\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_NW,}
+\DoxyCodeLine{00173\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_DOUBLE\_TAP,}
+\DoxyCodeLine{00174\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_DOUBLE\_TAP,}
+\DoxyCodeLine{00175\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_OUTER\_RADIUS,}
+\DoxyCodeLine{00176\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_OUTER\_RADIUS,}
+\DoxyCodeLine{00177\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRACKPAD\_CLICK,}
+\DoxyCodeLine{00178\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRACKPAD\_CLICK,}
+\DoxyCodeLine{00179\ \ \ \ \ IO\_DIGITAL\_BATTERY\_LOW,}
+\DoxyCodeLine{00180\ \ \ \ \ IO\_DIGITAL\_LEFT\_TRIGGER\_THRESHOLD,}
+\DoxyCodeLine{00181\ \ \ \ \ IO\_DIGITAL\_RIGHT\_TRIGGER\_THRESHOLD,}
+\DoxyCodeLine{00182\ \ \ \ \ IO\_DIGITAL\_BUTTON\_BACK\_LEFT2,}
+\DoxyCodeLine{00183\ \ \ \ \ IO\_DIGITAL\_BUTTON\_BACK\_RIGHT2,}
+\DoxyCodeLine{00184\ \ \ \ \ IO\_DIGITAL\_BUTTON\_ALWAYS\_ON,}
+\DoxyCodeLine{00185\ \ \ \ \ IO\_DIGITAL\_BUTTON\_ANCILLARY\_1,}
+\DoxyCodeLine{00186\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_0,}
+\DoxyCodeLine{00187\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_1,}
+\DoxyCodeLine{00188\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_2,}
+\DoxyCodeLine{00189\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_3,}
+\DoxyCodeLine{00190\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_4,}
+\DoxyCodeLine{00191\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_5,}
+\DoxyCodeLine{00192\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_6,}
+\DoxyCodeLine{00193\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_7,}
+\DoxyCodeLine{00194\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_1FINGER,}
+\DoxyCodeLine{00195\ \ \ \ \ IO\_DIGITAL\_BUTTON\_MACRO\_2FINGER,}
+\DoxyCodeLine{00196\ \ \ \ \ IO\_DIGITAL\_COUNT}
+\DoxyCodeLine{00197\ \}\ DigitalIO\ ;}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{comment}{//\ Enumeration\ of\ generic\ analog\ inputs\ -\/\ not\ all\ of\ these\ will\ be\ supported\ on\ all\ controllers\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00200\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ }
+\DoxyCodeLine{00201\ \{}
+\DoxyCodeLine{00202\ \ \ \ \ IO\_ANALOG\_LEFT\_STICK\_X,}
+\DoxyCodeLine{00203\ \ \ \ \ IO\_ANALOG\_LEFT\_STICK\_Y,}
+\DoxyCodeLine{00204\ \ \ \ \ IO\_ANALOG\_RIGHT\_STICK\_X,}
+\DoxyCodeLine{00205\ \ \ \ \ IO\_ANALOG\_RIGHT\_STICK\_Y,}
+\DoxyCodeLine{00206\ \ \ \ \ IO\_ANALOG\_LEFT\_TRIGGER,}
+\DoxyCodeLine{00207\ \ \ \ \ IO\_ANALOG\_RIGHT\_TRIGGER,}
+\DoxyCodeLine{00208\ \ \ \ \ IO\_MOUSE1\_X,}
+\DoxyCodeLine{00209\ \ \ \ \ IO\_MOUSE1\_Y,}
+\DoxyCodeLine{00210\ \ \ \ \ IO\_MOUSE1\_Z,}
+\DoxyCodeLine{00211\ \ \ \ \ IO\_ACCEL\_X,}
+\DoxyCodeLine{00212\ \ \ \ \ IO\_ACCEL\_Y,}
+\DoxyCodeLine{00213\ \ \ \ \ IO\_ACCEL\_Z,}
+\DoxyCodeLine{00214\ \ \ \ \ IO\_GYRO\_X,}
+\DoxyCodeLine{00215\ \ \ \ \ IO\_GYRO\_Y,}
+\DoxyCodeLine{00216\ \ \ \ \ IO\_GYRO\_Z,}
+\DoxyCodeLine{00217\ \ \ \ \ IO\_GYRO\_QUAT\_W,}
+\DoxyCodeLine{00218\ \ \ \ \ IO\_GYRO\_QUAT\_X,}
+\DoxyCodeLine{00219\ \ \ \ \ IO\_GYRO\_QUAT\_Y,}
+\DoxyCodeLine{00220\ \ \ \ \ IO\_GYRO\_QUAT\_Z,}
+\DoxyCodeLine{00221\ \ \ \ \ IO\_GYRO\_STEERING\_VEC,}
+\DoxyCodeLine{00222\ \ \ \ \ IO\_RAW\_TRIGGER\_LEFT,}
+\DoxyCodeLine{00223\ \ \ \ \ IO\_RAW\_TRIGGER\_RIGHT,}
+\DoxyCodeLine{00224\ \ \ \ \ IO\_RAW\_JOYSTICK\_X,}
+\DoxyCodeLine{00225\ \ \ \ \ IO\_RAW\_JOYSTICK\_Y,}
+\DoxyCodeLine{00226\ \ \ \ \ IO\_GYRO\_TILT\_VEC,}
+\DoxyCodeLine{00227\ \ \ \ \ IO\_PRESSURE\_LEFT\_PAD,}
+\DoxyCodeLine{00228\ \ \ \ \ IO\_PRESSURE\_RIGHT\_PAD,}
+\DoxyCodeLine{00229\ \ \ \ \ IO\_PRESSURE\_LEFT\_BUMPER,}
+\DoxyCodeLine{00230\ \ \ \ \ IO\_PRESSURE\_RIGHT\_BUMPER,}
+\DoxyCodeLine{00231\ \ \ \ \ IO\_PRESSURE\_LEFT\_GRIP,}
+\DoxyCodeLine{00232\ \ \ \ \ IO\_PRESSURE\_RIGHT\_GRIP,}
+\DoxyCodeLine{00233\ \ \ \ \ IO\_ANALOG\_LEFT\_TRIGGER\_THRESHOLD,}
+\DoxyCodeLine{00234\ \ \ \ \ IO\_ANALOG\_RIGHT\_TRIGGER\_THRESHOLD,}
+\DoxyCodeLine{00235\ \ \ \ \ IO\_PRESSURE\_RIGHT\_PAD\_THRESHOLD,}
+\DoxyCodeLine{00236\ \ \ \ \ IO\_PRESSURE\_LEFT\_PAD\_THRESHOLD,}
+\DoxyCodeLine{00237\ \ \ \ \ IO\_PRESSURE\_RIGHT\_BUMPER\_THRESHOLD,}
+\DoxyCodeLine{00238\ \ \ \ \ IO\_PRESSURE\_LEFT\_BUMPER\_THRESHOLD,}
+\DoxyCodeLine{00239\ \ \ \ \ IO\_PRESSURE\_RIGHT\_GRIP\_THRESHOLD,}
+\DoxyCodeLine{00240\ \ \ \ \ IO\_PRESSURE\_LEFT\_GRIP\_THRESHOLD,}
+\DoxyCodeLine{00241\ \ \ \ \ IO\_PRESSURE\_RIGHT\_PAD\_RAW,}
+\DoxyCodeLine{00242\ \ \ \ \ IO\_PRESSURE\_LEFT\_PAD\_RAW,}
+\DoxyCodeLine{00243\ \ \ \ \ IO\_PRESSURE\_RIGHT\_BUMPER\_RAW,}
+\DoxyCodeLine{00244\ \ \ \ \ IO\_PRESSURE\_LEFT\_BUMPER\_RAW,}
+\DoxyCodeLine{00245\ \ \ \ \ IO\_PRESSURE\_RIGHT\_GRIP\_RAW,}
+\DoxyCodeLine{00246\ \ \ \ \ IO\_PRESSURE\_LEFT\_GRIP\_RAW,}
+\DoxyCodeLine{00247\ \ \ \ \ IO\_PRESSURE\_RIGHT\_GRIP2\_THRESHOLD,}
+\DoxyCodeLine{00248\ \ \ \ \ IO\_PRESSURE\_LEFT\_GRIP2\_THRESHOLD,}
+\DoxyCodeLine{00249\ \ \ \ \ IO\_PRESSURE\_LEFT\_GRIP2,}
+\DoxyCodeLine{00250\ \ \ \ \ IO\_PRESSURE\_RIGHT\_GRIP2,}
+\DoxyCodeLine{00251\ \ \ \ \ IO\_PRESSURE\_RIGHT\_GRIP2\_RAW,}
+\DoxyCodeLine{00252\ \ \ \ \ IO\_PRESSURE\_LEFT\_GRIP2\_RAW,}
+\DoxyCodeLine{00253\ \ \ \ \ IO\_ANALOG\_COUNT}
+\DoxyCodeLine{00254\ \}\ AnalogIO;}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{comment}{//\ Contains\ list\ of\ all\ types\ of\ devices\ that\ the\ controller\ emulates\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00258\ \textcolor{keyword}{enum}\ DeviceTypes}
+\DoxyCodeLine{00259\ \{}
+\DoxyCodeLine{00260\ \ \ \ \ DEVICE\_KEYBOARD,}
+\DoxyCodeLine{00261\ \ \ \ \ DEVICE\_MOUSE,}
+\DoxyCodeLine{00262\ \ \ \ \ DEVICE\_GAMEPAD,}
+\DoxyCodeLine{00263\ \ \ \ \ DEVICE\_MODE\_ADJUST,}
+\DoxyCodeLine{00264\ \ \ \ \ DEVICE\_COUNT}
+\DoxyCodeLine{00265\ \};}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{comment}{//\ Scan\ codes\ for\ HID\ keyboards\ }}
+\DoxyCodeLine{00268\ \textcolor{keyword}{enum}\ HIDKeyboardKeys}
+\DoxyCodeLine{00269\ \{}
+\DoxyCodeLine{00270\ \ \ \ \ KEY\_INVALID,}
+\DoxyCodeLine{00271\ \ \ \ \ KEY\_FIRST\ =\ 0x04,}
+\DoxyCodeLine{00272\ \ \ \ \ KEY\_A\ =\ KEY\_FIRST,\ KEY\_B,\ KEY\_C,\ KEY\_D,\ KEY\_E,\ KEY\_F,\ KEY\_G,\ KEY\_H,\ KEY\_I,\ KEY\_J,\ KEY\_K,\ KEY\_L,\ }
+\DoxyCodeLine{00273\ \ \ \ \ KEY\_M,\ KEY\_N,\ KEY\_O,\ KEY\_P,\ KEY\_Q,\ KEY\_R,\ KEY\_S,\ KEY\_T,\ KEY\_U,\ KEY\_V,\ KEY\_W,\ KEY\_X,\ KEY\_Y,\ KEY\_Z,\ KEY\_1,\ KEY\_2,\ }
+\DoxyCodeLine{00274\ \ \ \ \ KEY\_3,\ KEY\_4,\ KEY\_5,\ KEY\_6,\ KEY\_7,\ KEY\_8,\ KEY\_9,\ KEY\_0,\ KEY\_RETURN,\ KEY\_ESCAPE,\ KEY\_BACKSPACE,\ KEY\_TAB,\ KEY\_SPACE,\ KEY\_DASH,\ KEY\_EQUALS,\ KEY\_LEFT\_BRACKET,}
+\DoxyCodeLine{00275\ \ \ \ \ KEY\_RIGHT\_BRACKET,\ KEY\_BACKSLASH,\ KEY\_UNUSED1,\ KEY\_SEMICOLON,\ KEY\_SINGLE\_QUOTE,\ KEY\_BACK\_TICK,\ KEY\_COMMA,\ KEY\_PERIOD,\ KEY\_FORWARD\_SLASH,\ KEY\_CAPSLOCK,\ KEY\_F1,\ KEY\_F2,\ KEY\_F3,\ KEY\_F4,\ KEY\_F5,\ KEY\_F6,}
+\DoxyCodeLine{00276\ \ \ \ \ KEY\_F7,\ KEY\_F8,\ KEY\_F9,\ KEY\_F10,\ KEY\_F11,\ KEY\_F12,\ KEY\_PRINT\_SCREEN,\ KEY\_SCROLL\_LOCK,\ KEY\_BREAK,\ KEY\_INSERT,\ KEY\_HOME,\ KEY\_PAGE\_UP,\ KEY\_DELETE,\ KEY\_END,\ KEY\_PAGE\_DOWN,\ KEY\_RIGHT\_ARROW,}
+\DoxyCodeLine{00277\ \ \ \ \ KEY\_LEFT\_ARROW,\ KEY\_DOWN\_ARROW,\ KEY\_UP\_ARROW,\ KEY\_NUM\_LOCK,\ KEY\_KEYPAD\_FORWARD\_SLASH,\ KEY\_KEYPAD\_ASTERISK,\ KEY\_KEYPAD\_DASH,\ KEY\_KEYPAD\_PLUS,\ KEY\_KEYPAD\_ENTER,\ KEY\_KEYPAD\_1,\ KEY\_KEYPAD\_2,\ KEY\_KEYPAD\_3,\ KEY\_KEYPAD\_4,\ KEY\_KEYPAD\_5,\ KEY\_KEYPAD\_6,\ KEY\_KEYPAD\_7,}
+\DoxyCodeLine{00278\ \ \ \ \ KEY\_KEYPAD\_8,\ KEY\_KEYPAD\_9,\ KEY\_KEYPAD\_0,\ KEY\_KEYPAD\_PERIOD,}
+\DoxyCodeLine{00279\ \ \ \ \ KEY\_LALT,}
+\DoxyCodeLine{00280\ \ \ \ \ KEY\_LSHIFT,}
+\DoxyCodeLine{00281\ \ \ \ \ KEY\_LWIN,}
+\DoxyCodeLine{00282\ \ \ \ \ KEY\_LCONTROL,}
+\DoxyCodeLine{00283\ \ \ \ \ KEY\_RALT,}
+\DoxyCodeLine{00284\ \ \ \ \ KEY\_RSHIFT,}
+\DoxyCodeLine{00285\ \ \ \ \ KEY\_RWIN,}
+\DoxyCodeLine{00286\ \ \ \ \ KEY\_RCONTROL,}
+\DoxyCodeLine{00287\ \ \ \ \ KEY\_VOLUP,}
+\DoxyCodeLine{00288\ \ \ \ \ KEY\_VOLDOWN,}
+\DoxyCodeLine{00289\ \ \ \ \ KEY\_MUTE,}
+\DoxyCodeLine{00290\ \ \ \ \ KEY\_PLAY,}
+\DoxyCodeLine{00291\ \ \ \ \ KEY\_STOP,}
+\DoxyCodeLine{00292\ \ \ \ \ KEY\_NEXT,}
+\DoxyCodeLine{00293\ \ \ \ \ KEY\_PREV,}
+\DoxyCodeLine{00294\ \ \ \ \ KEY\_LAST\ =\ KEY\_PREV}
+\DoxyCodeLine{00295\ \};}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \textcolor{keyword}{enum}\ ModifierMasks}
+\DoxyCodeLine{00298\ \{}
+\DoxyCodeLine{00299\ \ \ KEY\_LCONTROL\_MASK\ =\ (1<<0),}
+\DoxyCodeLine{00300\ \ \ KEY\_LSHIFT\_MASK\ =\ (1<<1),}
+\DoxyCodeLine{00301\ \ \ KEY\_LALT\_MASK\ =\ (1<<2),}
+\DoxyCodeLine{00302\ \ \ KEY\_LWIN\_MASK\ =\ (1<<3),}
+\DoxyCodeLine{00303\ \ \ KEY\_RCONTROL\_MASK\ =\ (1<<4),}
+\DoxyCodeLine{00304\ \ \ KEY\_RSHIFT\_MASK\ =\ (1<<5),}
+\DoxyCodeLine{00305\ \ \ KEY\_RALT\_MASK\ =\ (1<<6),}
+\DoxyCodeLine{00306\ \ \ KEY\_RWIN\_MASK\ =\ (1<<7)}
+\DoxyCodeLine{00307\ \};}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \textcolor{comment}{//\ Standard\ mouse\ buttons\ as\ specified\ in\ the\ HID\ mouse\ spec}}
+\DoxyCodeLine{00310\ \textcolor{keyword}{enum}\ MouseButtons}
+\DoxyCodeLine{00311\ \{}
+\DoxyCodeLine{00312\ \ \ \ \ MOUSE\_BTN\_LEFT,}
+\DoxyCodeLine{00313\ \ \ \ \ MOUSE\_BTN\_RIGHT,}
+\DoxyCodeLine{00314\ \ \ \ \ MOUSE\_BTN\_MIDDLE,}
+\DoxyCodeLine{00315\ \ \ \ \ MOUSE\_BTN\_BACK,}
+\DoxyCodeLine{00316\ \ \ \ \ MOUSE\_BTN\_FORWARD,}
+\DoxyCodeLine{00317\ \ \ \ \ MOUSE\_SCROLL\_UP,}
+\DoxyCodeLine{00318\ \ \ \ \ MOUSE\_SCROLL\_DOWN,}
+\DoxyCodeLine{00319\ \ \ \ \ MOUSE\_BTN\_COUNT}
+\DoxyCodeLine{00320\ \};}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \textcolor{comment}{//\ Gamepad\ buttons}}
+\DoxyCodeLine{00323\ \textcolor{keyword}{enum}\ GamepadButtons}
+\DoxyCodeLine{00324\ \{}
+\DoxyCodeLine{00325\ \ \ \ \ GAMEPAD\_BTN\_TRIGGER\_LEFT=1,\ }
+\DoxyCodeLine{00326\ \ \ \ \ GAMEPAD\_BTN\_TRIGGER\_RIGHT,}
+\DoxyCodeLine{00327\ \ \ \ \ GAMEPAD\_BTN\_A,}
+\DoxyCodeLine{00328\ \ \ \ \ GAMEPAD\_BTN\_B,}
+\DoxyCodeLine{00329\ \ \ \ \ GAMEPAD\_BTN\_Y,}
+\DoxyCodeLine{00330\ \ \ \ \ GAMEPAD\_BTN\_X,}
+\DoxyCodeLine{00331\ \ \ \ \ GAMEPAD\_BTN\_SHOULDER\_LEFT,}
+\DoxyCodeLine{00332\ \ \ \ \ GAMEPAD\_BTN\_SHOULDER\_RIGHT,}
+\DoxyCodeLine{00333\ \ \ \ \ GAMEPAD\_BTN\_LEFT\_JOYSTICK,}
+\DoxyCodeLine{00334\ \ \ \ \ GAMEPAD\_BTN\_RIGHT\_JOYSTICK,}
+\DoxyCodeLine{00335\ \ \ \ \ GAMEPAD\_BTN\_START,}
+\DoxyCodeLine{00336\ \ \ \ \ GAMEPAD\_BTN\_SELECT,}
+\DoxyCodeLine{00337\ \ \ \ \ GAMEPAD\_BTN\_STEAM,}
+\DoxyCodeLine{00338\ \ \ \ \ GAMEPAD\_BTN\_DPAD\_UP,}
+\DoxyCodeLine{00339\ \ \ \ \ GAMEPAD\_BTN\_DPAD\_DOWN,}
+\DoxyCodeLine{00340\ \ \ \ \ GAMEPAD\_BTN\_DPAD\_LEFT,}
+\DoxyCodeLine{00341\ \ \ \ \ GAMEPAD\_BTN\_DPAD\_RIGHT,}
+\DoxyCodeLine{00342\ \ \ \ \ GAMEPAD\_BTN\_LSTICK\_UP,}
+\DoxyCodeLine{00343\ \ \ \ \ GAMEPAD\_BTN\_LSTICK\_DOWN,}
+\DoxyCodeLine{00344\ \ \ \ \ GAMEPAD\_BTN\_LSTICK\_LEFT,}
+\DoxyCodeLine{00345\ \ \ \ \ GAMEPAD\_BTN\_LSTICK\_RIGHT,}
+\DoxyCodeLine{00346\ \ \ \ \ GAMEPAD\_BTN\_RSTICK\_UP,}
+\DoxyCodeLine{00347\ \ \ \ \ GAMEPAD\_BTN\_RSTICK\_DOWN,}
+\DoxyCodeLine{00348\ \ \ \ \ GAMEPAD\_BTN\_RSTICK\_LEFT,}
+\DoxyCodeLine{00349\ \ \ \ \ GAMEPAD\_BTN\_RSTICK\_RIGHT,}
+\DoxyCodeLine{00350\ \ \ \ \ GAMEPAD\_BTN\_COUNT}
+\DoxyCodeLine{00351\ \};}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{comment}{//\ Mode\ adjust}}
+\DoxyCodeLine{00354\ \textcolor{keyword}{enum}\ ModeAdjustModes}
+\DoxyCodeLine{00355\ \{}
+\DoxyCodeLine{00356\ \ \ \ \ MODE\_ADJUST\_SENSITIVITY=1,}
+\DoxyCodeLine{00357\ \ \ \ \ MODE\_ADJUST\_LEFT\_PAD\_SECONDARY\_MODE,}
+\DoxyCodeLine{00358\ \ \ \ \ MODE\_ADJUST\_RIGHT\_PAD\_SECONDARY\_MODE,}
+\DoxyCodeLine{00359\ \ \ \ \ MODE\_ADJUST\_COUNT}
+\DoxyCodeLine{00360\ \};}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \textcolor{comment}{//\ Read-\/only\ attributes\ of\ controllers\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00363\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00364\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ ATTRIB\_UNIQUE\_ID,}
+\DoxyCodeLine{00366\ \ \ \ \ ATTRIB\_PRODUCT\_ID,}
+\DoxyCodeLine{00367\ \ \ \ \ ATTRIB\_PRODUCT\_REVISION,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ deprecated}}
+\DoxyCodeLine{00368\ \ \ \ \ ATTRIB\_CAPABILITIES\ =\ ATTRIB\_PRODUCT\_REVISION,\ \ \textcolor{comment}{//\ intentional\ aliasing}}
+\DoxyCodeLine{00369\ \ \ \ \ ATTRIB\_FIRMWARE\_VERSION,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ deprecated}}
+\DoxyCodeLine{00370\ \ \ \ \ ATTRIB\_FIRMWARE\_BUILD\_TIME,}
+\DoxyCodeLine{00371\ \ \ \ \ ATTRIB\_RADIO\_FIRMWARE\_BUILD\_TIME,}
+\DoxyCodeLine{00372\ \ \ \ \ ATTRIB\_RADIO\_DEVICE\_ID0,}
+\DoxyCodeLine{00373\ \ \ \ \ ATTRIB\_RADIO\_DEVICE\_ID1,}
+\DoxyCodeLine{00374\ \ \ \ \ ATTRIB\_DONGLE\_FIRMWARE\_BUILD\_TIME,}
+\DoxyCodeLine{00375\ \ \ \ \ ATTRIB\_BOARD\_REVISION,}
+\DoxyCodeLine{00376\ \ \ \ \ ATTRIB\_BOOTLOADER\_BUILD\_TIME,}
+\DoxyCodeLine{00377\ \ \ \ \ ATTRIB\_CONNECTION\_INTERVAL\_IN\_US,}
+\DoxyCodeLine{00378\ \ \ \ \ ATTRIB\_COUNT}
+\DoxyCodeLine{00379\ \}\ ControllerAttributes;}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \textcolor{comment}{//\ Read-\/only\ string\ attributes\ of\ controllers\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00382\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00383\ \{}
+\DoxyCodeLine{00384\ \ \ \ \ ATTRIB\_STR\_BOARD\_SERIAL,}
+\DoxyCodeLine{00385\ \ \ \ \ ATTRIB\_STR\_UNIT\_SERIAL,}
+\DoxyCodeLine{00386\ \ \ \ \ ATTRIB\_STR\_COUNT}
+\DoxyCodeLine{00387\ \}\ ControllerStringAttributes;}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00390\ \{}
+\DoxyCodeLine{00391\ \ \ \ \ STATUS\_CODE\_NORMAL,}
+\DoxyCodeLine{00392\ \ \ \ \ STATUS\_CODE\_CRITICAL\_BATTERY,}
+\DoxyCodeLine{00393\ \ \ \ \ STATUS\_CODE\_GYRO\_INIT\_ERROR,}
+\DoxyCodeLine{00394\ \}\ ControllerStatusEventCodes;}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00397\ \{}
+\DoxyCodeLine{00398\ \ \ \ \ STATUS\_STATE\_LOW\_BATTERY=0,}
+\DoxyCodeLine{00399\ \}\ ControllerStatusStateFlags;}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00402\ \ \ \ \ TRACKPAD\_ABSOLUTE\_MOUSE,}
+\DoxyCodeLine{00403\ \ \ \ \ TRACKPAD\_RELATIVE\_MOUSE,}
+\DoxyCodeLine{00404\ \ \ \ \ TRACKPAD\_DPAD\_FOUR\_WAY\_DISCRETE,}
+\DoxyCodeLine{00405\ \ \ \ \ TRACKPAD\_DPAD\_FOUR\_WAY\_OVERLAP,}
+\DoxyCodeLine{00406\ \ \ \ \ TRACKPAD\_DPAD\_EIGHT\_WAY,}
+\DoxyCodeLine{00407\ \ \ \ \ TRACKPAD\_RADIAL\_MODE,}
+\DoxyCodeLine{00408\ \ \ \ \ TRACKPAD\_ABSOLUTE\_DPAD,}
+\DoxyCodeLine{00409\ \ \ \ \ TRACKPAD\_NONE,}
+\DoxyCodeLine{00410\ \ \ \ \ TRACKPAD\_GESTURE\_KEYBOARD,}
+\DoxyCodeLine{00411\ \ \ \ \ TRACKPAD\_NUM\_MODES}
+\DoxyCodeLine{00412\ \}\ TrackpadDPadMode;}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00415\ \{}
+\DoxyCodeLine{00416\ \ \ \ \ LIZARD\_MODE\_OFF,}
+\DoxyCodeLine{00417\ \ \ \ \ LIZARD\_MODE\_ON,}
+\DoxyCodeLine{00418\ \}\ LizardModeState\_t;}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \textcolor{comment}{//\ Read-\/write\ controller\ settings\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00421\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ }
+\DoxyCodeLine{00422\ \{}
+\DoxyCodeLine{00423\ \ \ \ \ SETTING\_MOUSE\_SENSITIVITY,}
+\DoxyCodeLine{00424\ \ \ \ \ SETTING\_MOUSE\_ACCELERATION,}
+\DoxyCodeLine{00425\ \ \ \ \ SETTING\_TRACKBALL\_ROTATION\_ANGLE,}
+\DoxyCodeLine{00426\ \ \ \ \ SETTING\_HAPTIC\_INTENSITY\_UNUSED,}
+\DoxyCodeLine{00427\ \ \ \ \ SETTING\_LEFT\_GAMEPAD\_STICK\_ENABLED,}
+\DoxyCodeLine{00428\ \ \ \ \ SETTING\_RIGHT\_GAMEPAD\_STICK\_ENABLED,}
+\DoxyCodeLine{00429\ \ \ \ \ SETTING\_USB\_DEBUG\_MODE,}
+\DoxyCodeLine{00430\ \ \ \ \ SETTING\_LEFT\_TRACKPAD\_MODE,}
+\DoxyCodeLine{00431\ \ \ \ \ SETTING\_RIGHT\_TRACKPAD\_MODE,}
+\DoxyCodeLine{00432\ \ \ \ \ SETTING\_LIZARD\_MODE,}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{comment}{//\ 10}}
+\DoxyCodeLine{00435\ \ \ \ \ SETTING\_DPAD\_DEADZONE,}
+\DoxyCodeLine{00436\ \ \ \ \ SETTING\_MINIMUM\_MOMENTUM\_VEL,}
+\DoxyCodeLine{00437\ \ \ \ \ SETTING\_MOMENTUM\_DECAY\_AMOUNT,}
+\DoxyCodeLine{00438\ \ \ \ \ SETTING\_TRACKPAD\_RELATIVE\_MODE\_TICKS\_PER\_PIXEL,}
+\DoxyCodeLine{00439\ \ \ \ \ SETTING\_HAPTIC\_INCREMENT,}
+\DoxyCodeLine{00440\ \ \ \ \ SETTING\_DPAD\_ANGLE\_SIN,}
+\DoxyCodeLine{00441\ \ \ \ \ SETTING\_DPAD\_ANGLE\_COS,}
+\DoxyCodeLine{00442\ \ \ \ \ SETTING\_MOMENTUM\_VERTICAL\_DIVISOR,}
+\DoxyCodeLine{00443\ \ \ \ \ SETTING\_MOMENTUM\_MAXIMUM\_VELOCITY,}
+\DoxyCodeLine{00444\ \ \ \ \ SETTING\_TRACKPAD\_Z\_ON,}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{comment}{//\ 20}}
+\DoxyCodeLine{00447\ \ \ \ \ SETTING\_TRACKPAD\_Z\_OFF,}
+\DoxyCodeLine{00448\ \ \ \ \ SETTING\_SENSITIVITY\_SCALE\_AMOUNT,}
+\DoxyCodeLine{00449\ \ \ \ \ SETTING\_LEFT\_TRACKPAD\_SECONDARY\_MODE,}
+\DoxyCodeLine{00450\ \ \ \ \ SETTING\_RIGHT\_TRACKPAD\_SECONDARY\_MODE,}
+\DoxyCodeLine{00451\ \ \ \ \ SETTING\_SMOOTH\_ABSOLUTE\_MOUSE,}
+\DoxyCodeLine{00452\ \ \ \ \ SETTING\_STEAMBUTTON\_POWEROFF\_TIME,}
+\DoxyCodeLine{00453\ \ \ \ \ SETTING\_UNUSED\_1,}
+\DoxyCodeLine{00454\ \ \ \ \ SETTING\_TRACKPAD\_OUTER\_RADIUS,}
+\DoxyCodeLine{00455\ \ \ \ \ SETTING\_TRACKPAD\_Z\_ON\_LEFT,}
+\DoxyCodeLine{00456\ \ \ \ \ SETTING\_TRACKPAD\_Z\_OFF\_LEFT,}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{comment}{//\ 30}}
+\DoxyCodeLine{00459\ \ \ \ \ SETTING\_TRACKPAD\_OUTER\_SPIN\_VEL,}
+\DoxyCodeLine{00460\ \ \ \ \ SETTING\_TRACKPAD\_OUTER\_SPIN\_RADIUS,}
+\DoxyCodeLine{00461\ \ \ \ \ SETTING\_TRACKPAD\_OUTER\_SPIN\_HORIZONTAL\_ONLY,}
+\DoxyCodeLine{00462\ \ \ \ \ SETTING\_TRACKPAD\_RELATIVE\_MODE\_DEADZONE,}
+\DoxyCodeLine{00463\ \ \ \ \ SETTING\_TRACKPAD\_RELATIVE\_MODE\_MAX\_VEL,}
+\DoxyCodeLine{00464\ \ \ \ \ SETTING\_TRACKPAD\_RELATIVE\_MODE\_INVERT\_Y,}
+\DoxyCodeLine{00465\ \ \ \ \ SETTING\_TRACKPAD\_DOUBLE\_TAP\_BEEP\_ENABLED,}
+\DoxyCodeLine{00466\ \ \ \ \ SETTING\_TRACKPAD\_DOUBLE\_TAP\_BEEP\_PERIOD,}
+\DoxyCodeLine{00467\ \ \ \ \ SETTING\_TRACKPAD\_DOUBLE\_TAP\_BEEP\_COUNT,}
+\DoxyCodeLine{00468\ \ \ \ \ SETTING\_TRACKPAD\_OUTER\_RADIUS\_RELEASE\_ON\_TRANSITION,}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{comment}{//\ 40}}
+\DoxyCodeLine{00471\ \ \ \ \ SETTING\_RADIAL\_MODE\_ANGLE,}
+\DoxyCodeLine{00472\ \ \ \ \ SETTING\_HAPTIC\_INTENSITY\_MOUSE\_MODE,}
+\DoxyCodeLine{00473\ \ \ \ \ SETTING\_LEFT\_DPAD\_REQUIRES\_CLICK,}
+\DoxyCodeLine{00474\ \ \ \ \ SETTING\_RIGHT\_DPAD\_REQUIRES\_CLICK,}
+\DoxyCodeLine{00475\ \ \ \ \ SETTING\_LED\_BASELINE\_BRIGHTNESS,}
+\DoxyCodeLine{00476\ \ \ \ \ SETTING\_LED\_USER\_BRIGHTNESS,}
+\DoxyCodeLine{00477\ \ \ \ \ SETTING\_ENABLE\_RAW\_JOYSTICK,}
+\DoxyCodeLine{00478\ \ \ \ \ SETTING\_ENABLE\_FAST\_SCAN,}
+\DoxyCodeLine{00479\ \ \ \ \ SETTING\_IMU\_MODE,}
+\DoxyCodeLine{00480\ \ \ \ \ SETTING\_WIRELESS\_PACKET\_VERSION,}
+\DoxyCodeLine{00481\ }
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{comment}{//\ 50}}
+\DoxyCodeLine{00483\ \ \ \ \ SETTING\_SLEEP\_INACTIVITY\_TIMEOUT,}
+\DoxyCodeLine{00484\ \ \ \ \ SETTING\_TRACKPAD\_NOISE\_THRESHOLD,}
+\DoxyCodeLine{00485\ \ \ \ \ SETTING\_LEFT\_TRACKPAD\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00486\ \ \ \ \ SETTING\_RIGHT\_TRACKPAD\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00487\ \ \ \ \ SETTING\_LEFT\_BUMPER\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00488\ \ \ \ \ SETTING\_RIGHT\_BUMPER\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00489\ \ \ \ \ SETTING\_LEFT\_GRIP\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00490\ \ \ \ \ SETTING\_RIGHT\_GRIP\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00491\ \ \ \ \ SETTING\_LEFT\_GRIP2\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00492\ \ \ \ \ SETTING\_RIGHT\_GRIP2\_CLICK\_PRESSURE,}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{comment}{//\ 60}}
+\DoxyCodeLine{00495\ \ \ \ \ SETTING\_PRESSURE\_MODE,}
+\DoxyCodeLine{00496\ \ \ \ \ SETTING\_CONTROLLER\_TEST\_MODE,}
+\DoxyCodeLine{00497\ \ \ \ \ SETTING\_TRIGGER\_MODE,}
+\DoxyCodeLine{00498\ \ \ \ \ SETTING\_TRACKPAD\_Z\_THRESHOLD,}
+\DoxyCodeLine{00499\ \ \ \ \ SETTING\_FRAME\_RATE,}
+\DoxyCodeLine{00500\ \ \ \ \ SETTING\_TRACKPAD\_FILT\_CTRL,}
+\DoxyCodeLine{00501\ \ \ \ \ SETTING\_TRACKPAD\_CLIP,}
+\DoxyCodeLine{00502\ \ \ \ \ SETTING\_DEBUG\_OUTPUT\_SELECT,}
+\DoxyCodeLine{00503\ \ \ \ \ SETTING\_TRIGGER\_THRESHOLD\_PERCENT,}
+\DoxyCodeLine{00504\ \ \ \ \ SETTING\_TRACKPAD\_FREQUENCY\_HOPPING,}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{comment}{//\ 70}}
+\DoxyCodeLine{00507\ \ \ \ \ SETTING\_HAPTICS\_ENABLED,}
+\DoxyCodeLine{00508\ \ \ \ \ SETTING\_STEAM\_WATCHDOG\_ENABLE,}
+\DoxyCodeLine{00509\ \ \ \ \ SETTING\_TIMP\_TOUCH\_THRESHOLD\_ON,}
+\DoxyCodeLine{00510\ \ \ \ \ SETTING\_TIMP\_TOUCH\_THRESHOLD\_OFF,}
+\DoxyCodeLine{00511\ \ \ \ \ SETTING\_FREQ\_HOPPING,}
+\DoxyCodeLine{00512\ \ \ \ \ SETTING\_TEST\_CONTROL,}
+\DoxyCodeLine{00513\ \ \ \ \ SETTING\_HAPTIC\_MASTER\_GAIN\_DB,}
+\DoxyCodeLine{00514\ \ \ \ \ SETTING\_THUMB\_TOUCH\_THRESH,}
+\DoxyCodeLine{00515\ \ \ \ \ SETTING\_DEVICE\_POWER\_STATUS,}
+\DoxyCodeLine{00516\ \ \ \ \ SETTING\_HAPTIC\_INTENSITY,}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{comment}{//\ 80}}
+\DoxyCodeLine{00519\ \ \ \ \ SETTING\_STABILIZER\_ENABLED,}
+\DoxyCodeLine{00520\ \ \ \ \ SETTING\_TIMP\_MODE\_MTE,}
+\DoxyCodeLine{00521\ \ \ \ \ SETTING\_COUNT,}
+\DoxyCodeLine{00522\ \ \ \ \ }
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{comment}{//\ This\ is\ a\ special\ setting\ value\ use\ for\ callbacks\ and\ should\ not\ be\ set/get\ explicitly.}}
+\DoxyCodeLine{00524\ \ \ \ \ SETTING\_ALL=0xFF}
+\DoxyCodeLine{00525\ \}\ ControllerSettings;}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00528\ \{}
+\DoxyCodeLine{00529\ \ \ \ \ SETTING\_DEFAULT,}
+\DoxyCodeLine{00530\ \ \ \ \ SETTING\_MIN,}
+\DoxyCodeLine{00531\ \ \ \ \ SETTING\_MAX,}
+\DoxyCodeLine{00532\ \ \ \ \ SETTING\_DEFAULTMINMAXCOUNT}
+\DoxyCodeLine{00533\ \}\ SettingDefaultMinMax;}
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00535\ \textcolor{comment}{//\ Bitmask\ that\ define\ which\ IMU\ features\ to\ enable.}}
+\DoxyCodeLine{00536\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00537\ \{}
+\DoxyCodeLine{00538\ \ \ \ \ SETTING\_GYRO\_MODE\_OFF\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x0000,}
+\DoxyCodeLine{00539\ \ \ \ \ SETTING\_GYRO\_MODE\_STEERING\ \ \ \ \ \ \ \ \ \ =\ 0x0001,}
+\DoxyCodeLine{00540\ \ \ \ \ SETTING\_GYRO\_MODE\_TILT\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x0002,}
+\DoxyCodeLine{00541\ \ \ \ \ SETTING\_GYRO\_MODE\_SEND\_ORIENTATION\ \ =\ 0x0004,}
+\DoxyCodeLine{00542\ \ \ \ \ SETTING\_GYRO\_MODE\_SEND\_RAW\_ACCEL\ \ \ \ =\ 0x0008,}
+\DoxyCodeLine{00543\ \ \ \ \ SETTING\_GYRO\_MODE\_SEND\_RAW\_GYRO\ \ \ \ \ =\ 0x0010,}
+\DoxyCodeLine{00544\ \}\ SettingGyroMode;}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \textcolor{comment}{//\ Bitmask\ for\ haptic\ pulse\ flags}}
+\DoxyCodeLine{00547\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00548\ \{}
+\DoxyCodeLine{00549\ \ \ \ \ HAPTIC\_PULSE\_NORMAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x0000,}
+\DoxyCodeLine{00550\ \ \ \ \ HAPTIC\_PULSE\_HIGH\_PRIORITY\ \ \ \ \ \ \ \ \ \ =\ 0x0001,}
+\DoxyCodeLine{00551\ \ \ \ \ HAPTIC\_PULSE\_VERY\_HIGH\_PRIORITY\ \ \ \ \ =\ 0x0002,}
+\DoxyCodeLine{00552\ \ \ \ \ HAPTIC\_PULSE\_IGNORE\_USER\_PREFS\ \ \ \ \ \ =\ 0x0003,}
+\DoxyCodeLine{00553\ \}\ SettingHapticPulseFlags;}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00555\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00556\ \{}
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{comment}{//\ default,min,max\ in\ this\ array\ in\ that\ order}}
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{keywordtype}{short}\ defaultminmax[SETTING\_DEFAULTMINMAXCOUNT];\ }
+\DoxyCodeLine{00559\ \}\ \doxymbox{\hyperlink{struct_setting_value_range__t}{SettingValueRange\_t}};}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \textcolor{comment}{//\ below\ is\ from\ controller\_constants.c\ which\ should\ be\ compiled\ into\ any\ code\ that\ uses\ this}}
+\DoxyCodeLine{00562\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_setting_value_range__t}{SettingValueRange\_t}}\ g\_DefaultSettingValues[SETTING\_COUNT];}
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00564\ \textcolor{comment}{//\ Read-\/write\ settings\ for\ dongle\ (only\ add\ to\ this\ enum\ and\ never\ change\ the\ order)}}
+\DoxyCodeLine{00565\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ }
+\DoxyCodeLine{00566\ \{}
+\DoxyCodeLine{00567\ \ \ \ \ DONGLE\_SETTING\_MOUSE\_KEYBOARD\_ENABLED,}
+\DoxyCodeLine{00568\ \ \ \ \ DONGLE\_SETTING\_COUNT,}
+\DoxyCodeLine{00569\ \}\ DongleSettings;}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00572\ \{}
+\DoxyCodeLine{00573\ \ \ \ \ AUDIO\_STARTUP\ \ \ \ \ \ \ =\ 0,}
+\DoxyCodeLine{00574\ \ \ \ \ AUDIO\_SHUTDOWN\ \ \ \ \ \ =\ 1,}
+\DoxyCodeLine{00575\ \ \ \ \ AUDIO\_PAIR\ \ \ \ \ \ \ \ \ \ =\ 2,}
+\DoxyCodeLine{00576\ \ \ \ \ AUDIO\_PAIR\_SUCCESS\ \ =\ 3,}
+\DoxyCodeLine{00577\ \ \ \ \ AUDIO\_IDENTIFY\ \ \ \ \ \ =\ 4,}
+\DoxyCodeLine{00578\ \ \ \ \ AUDIO\_LIZARDMODE\ \ \ \ =\ 5,}
+\DoxyCodeLine{00579\ \ \ \ \ AUDIO\_NORMALMODE\ \ \ \ =\ 6,}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ AUDIO\_MAX\_SLOT\ \ \ \ \ \ =\ 15}
+\DoxyCodeLine{00582\ \}\ ControllerAudio;}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00585\ \}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_CONTROLLER\_CONSTANTS\_}}
+
+\end{DoxyCode}

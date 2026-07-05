@@ -1,0 +1,125 @@
+\doxysection{kafka\+\_\+sink.\+h}
+\hypertarget{kafka__sink_8h_source}{}\label{kafka__sink_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/kafka\_sink.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/kafka\_sink.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Custom\ sink\ for\ kafka}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Building\ and\ using\ requires\ librdkafka\ library.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ For\ building\ librdkafka\ library\ check\ the\ url\ below}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ https://github.com/confluentinc/librdkafka}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}spdlog/async.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}spdlog/details/log\_msg.h"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}spdlog/details/null\_mutex.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}spdlog/details/synchronous\_factory.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}spdlog/sinks/base\_sink.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ kafka\ header}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <librdkafka/rdkafkacpp.h>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00025\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{struct\ }kafka\_sink\_config\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ std::string\ server\_addr;}
+\DoxyCodeLine{00029\ \ \ \ \ std::string\ produce\_topic;}
+\DoxyCodeLine{00030\ \ \ \ \ int32\_t\ flush\_timeout\_ms\ =\ 1000;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ kafka\_sink\_config(std::string\ addr,\ std::string\ topic,\ \textcolor{keywordtype}{int}\ flush\_timeout\_ms\ =\ 1000)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ :\ server\_addr\{std::move(addr)\},}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ produce\_topic\{std::move(topic)\},}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ flush\_timeout\_ms(flush\_timeout\_ms)\ \{\}}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }kafka\_sink\ :\ \textcolor{keyword}{public}\ base\_sink<Mutex>\ \{}
+\DoxyCodeLine{00040\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00041\ \ \ \ \ kafka\_sink(\doxymbox{\hyperlink{structsinks_1_1kafka__sink__config}{kafka\_sink\_config}}\ config)}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ :\ config\_\{std::move(config)\}\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ errstr;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ conf\_.reset(RdKafka::Conf::create(RdKafka::Conf::CONF\_GLOBAL));}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ RdKafka::Conf::ConfResult\ confRes\ =}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conf\_-\/>set(\textcolor{stringliteral}{"{}bootstrap.servers"{}},\ config\_.server\_addr,\ errstr);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (confRes\ !=\ RdKafka::Conf::CONF\_OK)\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fmt\_lib::format(\textcolor{stringliteral}{"{}conf\ set\ bootstrap.servers\ failed\ err:\{\}"{}},\ errstr));}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ tconf\_.reset(RdKafka::Conf::create(RdKafka::Conf::CONF\_TOPIC));}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tconf\_\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(fmt\_lib::format(\textcolor{stringliteral}{"{}create\ topic\ config\ failed"{}}));}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ producer\_.reset(RdKafka::Producer::create(conf\_.get(),\ errstr));}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (producer\_\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(fmt\_lib::format(\textcolor{stringliteral}{"{}create\ producer\ failed\ err:\{\}"{}},\ errstr));}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ topic\_.reset(RdKafka::Topic::create(producer\_.get(),\ config\_.produce\_topic,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tconf\_.get(),\ errstr));}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (topic\_\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(fmt\_lib::format(\textcolor{stringliteral}{"{}create\ topic\ failed\ err:\{\}"{}},\ errstr));}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\ \&e)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(fmt\_lib::format(\textcolor{stringliteral}{"{}error\ create\ kafka\ instance:\ \{\}"{}},\ e.what()));}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \string~kafka\_sink()\ \{\ producer\_-\/>flush(config\_.flush\_timeout\_ms);\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ producer\_-\/>produce(topic\_.get(),\ 0,\ RdKafka::Producer::RK\_MSG\_COPY,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{void}\ *)msg.payload.data(),\ msg.payload.size(),\ NULL,\ NULL);}
+\DoxyCodeLine{00078\ \ \ \ \ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ flush\_()\textcolor{keyword}{\ override\ }\{\ producer\_-\/>flush(config\_.flush\_timeout\_ms);\ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00083\ \ \ \ \ \doxymbox{\hyperlink{structsinks_1_1kafka__sink__config}{kafka\_sink\_config}}\ config\_;}
+\DoxyCodeLine{00084\ \ \ \ \ std::unique\_ptr<RdKafka::Producer>\ producer\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00085\ \ \ \ \ std::unique\_ptr<RdKafka::Conf>\ conf\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00086\ \ \ \ \ std::unique\_ptr<RdKafka::Conf>\ tconf\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00087\ \ \ \ \ std::unique\_ptr<RdKafka::Topic>\ topic\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00088\ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{using\ }kafka\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1kafka__sink}{kafka\_sink<std::mutex>}};}
+\DoxyCodeLine{00091\ \textcolor{keyword}{using\ }kafka\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1kafka__sink}{kafka\_sink<details::null\_mutex>}};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00096\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ kafka\_logger\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structsinks_1_1kafka__sink__config}{sinks::kafka\_sink\_config}}\ config)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::kafka\_sink\_mt>(logger\_name,\ config);}
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00102\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ kafka\_logger\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structsinks_1_1kafka__sink__config}{sinks::kafka\_sink\_config}}\ config)\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::kafka\_sink\_st>(logger\_name,\ config);}
+\DoxyCodeLine{00105\ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ async\_factory>}
+\DoxyCodeLine{00108\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ kafka\_logger\_async\_mt(}
+\DoxyCodeLine{00109\ \ \ \ \ std::string\ logger\_name,\ \doxymbox{\hyperlink{structsinks_1_1kafka__sink__config}{sinks::kafka\_sink\_config}}\ config)\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::kafka\_sink\_mt>(logger\_name,\ config);}
+\DoxyCodeLine{00111\ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ async\_factory>}
+\DoxyCodeLine{00114\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ kafka\_logger\_async\_st(}
+\DoxyCodeLine{00115\ \ \ \ \ std::string\ logger\_name,\ \doxymbox{\hyperlink{structsinks_1_1kafka__sink__config}{sinks::kafka\_sink\_config}}\ config)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::kafka\_sink\_st>(logger\_name,\ config);}
+\DoxyCodeLine{00117\ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

@@ -1,0 +1,125 @@
+\doxysection{imgui\+\_\+impl\+\_\+wgpu.\+h}
+\hypertarget{imgui__impl__wgpu_8h_source}{}\label{imgui__impl__wgpu_8h_source}\index{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_wgpu.h@{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_wgpu.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ dear\ imgui:\ Renderer\ for\ WebGPU}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ This\ needs\ to\ be\ used\ along\ with\ a\ Platform\ Binding\ (e.g.\ GLFW,\ SDL2,\ SDL3)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ (Please\ note\ that\ WebGPU\ is\ a\ recent\ API,\ may\ not\ be\ supported\ by\ all\ browser,\ and\ its\ ecosystem\ is\ generally\ a\ mess)}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ When\ targeting\ native\ platforms:}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ \ -\/\ One\ of\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_DAWN,\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGPU\ or\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGVK\ *must*\ be\ provided.}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ When\ targeting\ Emscripten:}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ \ -\/\ We\ now\ defaults\ to\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_DAWN\ and\ requires\ Emscripten\ 4.0.10+,\ which\ correspond\ to\ using\ Emscripten\ '-\/-\/use-\/port=emdawnwebgpu'.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \ -\/\ Emscripten\ <\ 4.0.10\ is\ not\ supported\ anymore\ (old\ '-\/sUSE\_WEBGPU=1'\ option).}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ -\/\ We\ can\ still\ define\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGPU\ to\ use\ Emscripten\ '-\/s\ USE\_WEBGPU=1'\ which\ is\ marked\ as\ obsolete\ by\ Emscripten.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ Add\ \#define\ to\ your\ imconfig.h\ file,\ or\ as\ a\ compilation\ flag\ in\ your\ build\ system.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ This\ requirement\ may\ be\ removed\ once\ WebGPU\ stabilizes\ and\ backends\ converge\ on\ a\ unified\ interface.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\#define\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_DAWN}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\#define\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGPU}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\#define\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGVK}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ Implemented\ features:}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ \ [X]\ Renderer:\ User\ texture\ binding.\ Use\ 'WGPUTextureView'\ as\ ImTextureID.\ Read\ the\ FAQ\ about\ ImTextureID/ImTextureRef!}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Large\ meshes\ support\ (64k+\ vertices)\ even\ with\ 16-\/bit\ indices\ (ImGuiBackendFlags\_RendererHasVtxOffset).}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Expose\ selected\ render\ state\ for\ draw\ callbacks\ to\ use.\ Access\ in\ '(ImGui\_ImplXXXX\_RenderState*)GetPlatformIO().Renderer\_RenderState'.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Texture\ updates\ support\ for\ dynamic\ font\ system\ (ImGuiBackendFlags\_RendererHasTextures).}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ You\ can\ use\ unmodified\ imgui\_impl\_*\ files\ in\ your\ project.\ See\ examples/\ folder\ for\ examples\ of\ using\ this.}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ Prefer\ including\ the\ entire\ imgui/\ repository\ into\ your\ project\ (either\ as\ a\ copy\ or\ as\ a\ submodule),\ and\ only\ build\ the\ backends\ you\ need.}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ Learn\ about\ Dear\ ImGui:}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ -\/\ FAQ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ https://dearimgui.com/faq}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ -\/\ Getting\ Started\ \ \ \ \ \ https://dearimgui.com/getting-\/started}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ -\/\ Documentation\ \ \ \ \ \ \ \ https://dearimgui.com/docs\ (same\ as\ your\ local\ docs/\ folder).}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ -\/\ Introduction,\ links\ and\ more\ at\ the\ top\ of\ imgui.cpp}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}imgui.h"{}}\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ IMGUI\_IMPL\_API}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ IMGUI\_DISABLE}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Setup\ Emscripten\ default\ if\ not\ specified.}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#if\ defined(\_\_EMSCRIPTEN\_\_)\ \&\&\ !defined(IMGUI\_IMPL\_WEBGPU\_BACKEND\_DAWN)\ \&\&\ !defined(IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGPU)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <emscripten/version.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ IMGUI\_IMPL\_WEBGPU\_BACKEND\_DAWN}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <webgpu/webgpu.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#if\ defined(IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGPU)\ \&\&\ !defined(\_\_EMSCRIPTEN\_\_)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <webgpu/wgpu.h>}\ \ \ \ \ \ \ \ \textcolor{comment}{//\ WGPULogLevel}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Initialization\ data,\ for\ ImGui\_ImplWGPU\_Init()}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{struct\ }ImGui\_ImplWGPU\_InitInfo}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ WGPUDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ Device\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NumFramesInFlight\ =\ 3;}
+\DoxyCodeLine{00051\ \ \ \ \ WGPUTextureFormat\ \ \ \ \ \ \ RenderTargetFormat\ =\ WGPUTextureFormat\_Undefined;}
+\DoxyCodeLine{00052\ \ \ \ \ WGPUTextureFormat\ \ \ \ \ \ \ DepthStencilFormat\ =\ WGPUTextureFormat\_Undefined;}
+\DoxyCodeLine{00053\ \ \ \ \ WGPUMultisampleState\ \ \ \ PipelineMultisampleState\ =\ \{\};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ ImGui\_ImplWGPU\_InitInfo()}
+\DoxyCodeLine{00056\ \ \ \ \ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ PipelineMultisampleState.count\ =\ 1;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ PipelineMultisampleState.mask\ =\ UINT32\_MAX;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ PipelineMultisampleState.alphaToCoverageEnabled\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Follow\ "{}Getting\ Started"{}\ link\ and\ check\ examples/\ folder\ to\ learn\ about\ using\ backends!}}
+\DoxyCodeLine{00064\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ ImGui\_ImplWGPU\_Init(\doxymbox{\hyperlink{struct_im_gui___impl_w_g_p_u___init_info}{ImGui\_ImplWGPU\_InitInfo}}*\ init\_info);}
+\DoxyCodeLine{00065\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplWGPU\_Shutdown();}
+\DoxyCodeLine{00066\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplWGPU\_NewFrame();}
+\DoxyCodeLine{00067\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplWGPU\_RenderDrawData(\doxymbox{\hyperlink{struct_im_draw_data}{ImDrawData}}*\ draw\_data,\ WGPURenderPassEncoder\ pass\_encoder);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ Use\ if\ you\ want\ to\ reset\ your\ rendering\ device\ without\ losing\ Dear\ ImGui\ state.}}
+\DoxyCodeLine{00070\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ ImGui\_ImplWGPU\_CreateDeviceObjects();}
+\DoxyCodeLine{00071\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplWGPU\_InvalidateDeviceObjects();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ (Advanced)\ Use\ e.g.\ if\ you\ need\ to\ precisely\ control\ the\ timing\ of\ texture\ updates\ (e.g.\ for\ staged\ rendering),\ by\ setting\ ImDrawData::Textures\ =\ nullptr\ to\ handle\ this\ manually.}}
+\DoxyCodeLine{00074\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplWGPU\_UpdateTexture(\doxymbox{\hyperlink{struct_im_texture_data}{ImTextureData}}*\ tex);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ [BETA]\ Selected\ render\ state\ data\ shared\ with\ callbacks.}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//\ This\ is\ temporarily\ stored\ in\ GetPlatformIO().Renderer\_RenderState\ during\ the\ ImGui\_ImplWGPU\_RenderDrawData()\ call.}}
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ (Please\ open\ an\ issue\ if\ you\ feel\ you\ need\ access\ to\ more\ data)}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_im_gui___impl_w_g_p_u___render_state}{ImGui\_ImplWGPU\_RenderState}}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ WGPUDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Device;}
+\DoxyCodeLine{00082\ \ \ \ \ WGPURenderPassEncoder\ \ \ \ \ \ \ RenderPassEncoder;}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00086\ \textcolor{comment}{//\ Internal\ Helpers}}
+\DoxyCodeLine{00087\ \textcolor{comment}{//\ Those\ are\ currently\ used\ by\ our\ example\ applications.}}
+\DoxyCodeLine{00088\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ (Optional)\ Helper\ to\ wrap\ some\ of\ the\ Dawn/WGPU/Emscripten\ quirks}}
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ ImGui\_ImplWGPU\_IsSurfaceStatusError(WGPUSurfaceGetCurrentTextureStatus\ status);}
+\DoxyCodeLine{00092\ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ ImGui\_ImplWGPU\_IsSurfaceStatusSubOptimal(WGPUSurfaceGetCurrentTextureStatus\ status);\ \ \ \ \textcolor{comment}{//\ Return\ whether\ the\ texture\ is\ suboptimal\ and\ may\ need\ to\ be\ recreated.}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ (Optional)\ Helper\ for\ debugging/logging}}
+\DoxyCodeLine{00095\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ ImGui\_ImplWGPU\_DebugPrintAdapterInfo(\textcolor{keyword}{const}\ WGPUAdapter\&\ adapter);}
+\DoxyCodeLine{00096\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ImGui\_ImplWGPU\_GetBackendTypeName(WGPUBackendType\ type);}
+\DoxyCodeLine{00097\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ImGui\_ImplWGPU\_GetAdapterTypeName(WGPUAdapterType\ type);}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#if\ defined(IMGUI\_IMPL\_WEBGPU\_BACKEND\_DAWN)}}
+\DoxyCodeLine{00099\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ImGui\_ImplWGPU\_GetDeviceLostReasonName(WGPUDeviceLostReason\ type);}
+\DoxyCodeLine{00100\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ImGui\_ImplWGPU\_GetErrorTypeName(WGPUErrorType\ type);}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#elif\ defined(IMGUI\_IMPL\_WEBGPU\_BACKEND\_WGPU)}}
+\DoxyCodeLine{00102\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ImGui\_ImplWGPU\_GetLogLevelName(WGPULogLevel\ level);}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ (Optional)\ Helper\ to\ create\ a\ surface\ on\ macOS/Wayland/X11/Window}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#ifndef\ \_\_EMSCRIPTEN\_\_}}
+\DoxyCodeLine{00107\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_im_gui___impl_w_g_p_u___create_surface_info}{ImGui\_ImplWGPU\_CreateSurfaceInfo}}}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ WGPUInstance\ \ \ \ Instance;}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \ \ \ \ System;\ \ \ \ \ \ \textcolor{comment}{//\ "{}cocoa"{}\ \ \ |\ "{}wayland"{}\ \ \ |\ "{}x11"{}\ \ \ \ \ |\ "{}win32"{}}}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ RawWindow;\ \ \ \textcolor{comment}{//\ NSWindow*\ |\ 0\ \ \ \ \ \ \ \ \ \ \ |\ Window\ \ \ \ |\ HWND}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ RawDisplay;\ \ \textcolor{comment}{//\ 0\ \ \ \ \ \ \ \ \ |\ wl\_display*\ |\ Display*\ \ |\ 0}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ RawSurface;\ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ |\ wl\_surface*\ |\ 0\ \ \ \ \ \ \ \ \ |\ 0}}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ RawInstance;\ \textcolor{comment}{//\ 0\ \ \ \ \ \ \ \ \ |\ 0\ \ \ \ \ \ \ \ \ \ \ |\ 0\ \ \ \ \ \ \ \ \ |\ HINSTANCE}}
+\DoxyCodeLine{00115\ \};}
+\DoxyCodeLine{00116\ WGPUSurface\ ImGui\_ImplWGPU\_CreateWGPUSurfaceHelper(\doxymbox{\hyperlink{struct_im_gui___impl_w_g_p_u___create_surface_info}{ImGui\_ImplWGPU\_CreateSurfaceInfo}}*\ info);}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#ifndef\ \_\_EMSCRIPTEN\_\_}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#ifndef\ IMGUI\_DISABLE}}
+
+\end{DoxyCode}

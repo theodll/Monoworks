@@ -1,0 +1,58 @@
+\doxysection{filenames.\+hpp}
+\hypertarget{filenames_8hpp_source}{}\label{filenames_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/libbacktrace/filenames.hpp@{MonoEngine/thirdparty/tracy/public/libbacktrace/filenames.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ btest.c\ -\/-\/\ Filename\ header\ for\ libbacktrace\ library}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ \ Copyright\ (C)\ 2012-\/2018\ Free\ Software\ Foundation,\ Inc.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ \ Written\ by\ Ian\ Lance\ Taylor,\ Google.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{Redistribution\ and\ use\ in\ source\ and\ binary\ forms,\ with\ or\ without}}
+\DoxyCodeLine{00006\ \textcolor{comment}{modification,\ are\ permitted\ provided\ that\ the\ following\ conditions\ are}}
+\DoxyCodeLine{00007\ \textcolor{comment}{met:}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ \ \ (1)\ Redistributions\ of\ source\ code\ must\ retain\ the\ above\ copyright}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ \ \ (2)\ Redistributions\ in\ binary\ form\ must\ reproduce\ the\ above\ copyright}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ \ \ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer\ in}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ the\ documentation\ and/or\ other\ materials\ provided\ with\ the}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ distribution.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ (3)\ The\ name\ of\ the\ author\ may\ not\ be\ used\ to}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ endorse\ or\ promote\ products\ derived\ from\ this\ software\ without}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ specific\ prior\ written\ permission.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{}}
+\DoxyCodeLine{00021\ \textcolor{comment}{THIS\ SOFTWARE\ IS\ PROVIDED\ BY\ THE\ AUTHOR\ \`{}\`{}AS\ IS''\ AND\ ANY\ EXPRESS\ OR}}
+\DoxyCodeLine{00022\ \textcolor{comment}{IMPLIED\ WARRANTIES,\ INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ THE\ IMPLIED}}
+\DoxyCodeLine{00023\ \textcolor{comment}{WARRANTIES\ OF\ MERCHANTABILITY\ AND\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ ARE}}
+\DoxyCodeLine{00024\ \textcolor{comment}{DISCLAIMED.\ IN\ NO\ EVENT\ SHALL\ THE\ AUTHOR\ BE\ LIABLE\ FOR\ ANY\ DIRECT,}}
+\DoxyCodeLine{00025\ \textcolor{comment}{INDIRECT,\ INCIDENTAL,\ SPECIAL,\ EXEMPLARY,\ OR\ CONSEQUENTIAL\ DAMAGES}}
+\DoxyCodeLine{00026\ \textcolor{comment}{(INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ PROCUREMENT\ OF\ SUBSTITUTE\ GOODS\ OR}}
+\DoxyCodeLine{00027\ \textcolor{comment}{SERVICES;\ LOSS\ OF\ USE,\ DATA,\ OR\ PROFITS;\ OR\ BUSINESS\ INTERRUPTION)}}
+\DoxyCodeLine{00028\ \textcolor{comment}{HOWEVER\ CAUSED\ AND\ ON\ ANY\ THEORY\ OF\ LIABILITY,\ WHETHER\ IN\ CONTRACT,}}
+\DoxyCodeLine{00029\ \textcolor{comment}{STRICT\ LIABILITY,\ OR\ TORT\ (INCLUDING\ NEGLIGENCE\ OR\ OTHERWISE)\ ARISING}}
+\DoxyCodeLine{00030\ \textcolor{comment}{IN\ ANY\ WAY\ OUT\ OF\ THE\ USE\ OF\ THIS\ SOFTWARE,\ EVEN\ IF\ ADVISED\ OF\ THE}}
+\DoxyCodeLine{00031\ \textcolor{comment}{POSSIBILITY\ OF\ SUCH\ DAMAGE.\ \ */}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ GCC\_VERSION}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#\ define\ GCC\_VERSION\ (\_\_GNUC\_\_\ *\ 1000\ +\ \_\_GNUC\_MINOR\_\_)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#if\ (GCC\_VERSION\ <\ 2007)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#\ define\ \_\_attribute\_\_(x)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifndef\ ATTRIBUTE\_UNUSED}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ define\ ATTRIBUTE\_UNUSED\ \_\_attribute\_\_\ ((\_\_unused\_\_))}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#if\ defined(\_\_MSDOS\_\_)\ ||\ defined(\_WIN32)\ ||\ defined(\_\_OS2\_\_)\ ||\ defined\ (\_\_CYGWIN\_\_)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ define\ IS\_DIR\_SEPARATOR(c)\ ((c)\ ==\ '/'\ ||\ (c)\ ==\ '\(\backslash\)\(\backslash\)')}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ define\ HAS\_DRIVE\_SPEC(f)\ ((f)[0]\ !=\ '\(\backslash\)0'\ \&\&\ (f)[1]\ ==\ ':')}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#\ define\ IS\_ABSOLUTE\_PATH(f)\ (IS\_DIR\_SEPARATOR((f)[0])\ ||\ HAS\_DRIVE\_SPEC(f))}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#\ define\ IS\_DIR\_SEPARATOR(c)\ ((c)\ ==\ '/')}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#\ define\ IS\_ABSOLUTE\_PATH(f)\ (IS\_DIR\_SEPARATOR((f)[0]))}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

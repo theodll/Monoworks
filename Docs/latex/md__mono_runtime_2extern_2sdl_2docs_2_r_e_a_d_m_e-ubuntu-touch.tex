@@ -1,0 +1,14 @@
+\chapter{Ubuntu Touch /\+ Lomiri }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch}\index{Ubuntu Touch / Lomiri@{Ubuntu Touch / Lomiri}}
+\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1454}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1454}%
+
+
+Ubuntu Touch being similar to Ubuntu desktop, most features should be supported out-\/of-\/the-\/box with SDL.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1455}{}\doxysection{\texorpdfstring{Developing apps}{Developing apps}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1455}
+Ubuntu Touch apps are developed using \href{https://clickable-ut.dev/}{\texttt{Clickable}}.
+
+Clickable provides an SDL template. It is highly recommended to use the template as a starting point for both new and existing apps.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1456}{}\doxysection{\texorpdfstring{Considerations}{Considerations}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1456}
+Ubuntu Touch is similar to the desktop version of Ubuntu, but presents some differences in behavior. Developers should be wary of the following:\+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1457}{}\doxysubsection{\texorpdfstring{SDL\+\_\+\+Get\+Pref\+Path}{SDL\+\_\+\+Get\+Pref\+Path}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1457}
+The only allowed writable folder is {\ttfamily \texorpdfstring{$\sim$}{\string~}/\+.local/\+share/\+\texorpdfstring{$<$}{<}appname\texorpdfstring{$>$}{>}/\+}. {\ttfamily SDL\+\_\+\+Get\+Pref\+Path} ignores its arguments and will always return that path on Ubuntu Touch. No changes are needed in apps.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1458}{}\doxysubsection{\texorpdfstring{Video driver}{Video driver}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1458}
+Currently, \href{https://github.com/libsdl-org/SDL/issues/12247}{\texttt{a bug}} forces SDL to use the Wayland driver on Ubuntu Touch. No changes are needed in apps.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1459}{}\doxysubsection{\texorpdfstring{Extra functions}{Extra functions}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ubuntu-touch_autotoc_md1459}
+SDL provides {\ttfamily SDL\+\_\+\+Is\+Ubuntu\+Touch()} to differentiate between Ubuntu Touch and regular Unix, which can help if certain platform-\/specific tweaks are needed. 

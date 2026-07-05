@@ -1,0 +1,247 @@
+\doxysection{yuv\+\_\+rgb\+\_\+sse.\+h}
+\hypertarget{yuv__rgb__sse_8h_source}{}\label{yuv__rgb__sse_8h_source}\index{MonoRuntime/extern/sdl/src/video/yuv2rgb/yuv\_rgb\_sse.h@{MonoRuntime/extern/sdl/src/video/yuv2rgb/yuv\_rgb\_sse.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifdef\ SDL\_SSE2\_INTRINSICS}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}yuv\_rgb\_common.h"{}}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ yuv\ to\ rgb,\ sse\ implementation}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ pointers\ must\ be\ 16\ byte\ aligned,\ and\ strides\ must\ be\ divisable\ by\ 16}}
+\DoxyCodeLine{00007\ \textcolor{keywordtype}{void}\ yuv420\_rgb565\_sse(}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keywordtype}{void}\ yuv420\_rgb24\_sse(}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{void}\ yuv420\_rgba\_sse(}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{void}\ yuv420\_bgra\_sse(}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ yuv420\_argb\_sse(}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{void}\ yuv420\_abgr\_sse(}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keywordtype}{void}\ yuv422\_rgb565\_sse(}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{void}\ yuv422\_rgb24\_sse(}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{void}\ yuv422\_rgba\_sse(}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keywordtype}{void}\ yuv422\_bgra\_sse(}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keywordtype}{void}\ yuv422\_argb\_sse(}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keywordtype}{void}\ yuv422\_abgr\_sse(}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keywordtype}{void}\ yuvnv12\_rgb565\_sse(}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{void}\ yuvnv12\_rgb24\_sse(}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keywordtype}{void}\ yuvnv12\_rgba\_sse(}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{keywordtype}{void}\ yuvnv12\_bgra\_sse(}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{void}\ yuvnv12\_argb\_sse(}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{keywordtype}{void}\ yuvnv12\_abgr\_sse(}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{comment}{//\ yuv\ to\ rgb,\ sse\ implementation}}
+\DoxyCodeLine{00116\ \textcolor{comment}{//\ pointers\ do\ not\ need\ to\ be\ 16\ byte\ aligned}}
+\DoxyCodeLine{00117\ \textcolor{keywordtype}{void}\ yuv420\_rgb565\_sseu(}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{void}\ yuv420\_rgb24\_sseu(}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{keywordtype}{void}\ yuv420\_rgba\_sseu(}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{keywordtype}{void}\ yuv420\_bgra\_sseu(}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{keywordtype}{void}\ yuv420\_argb\_sseu(}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{keywordtype}{void}\ yuv420\_abgr\_sseu(}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{keywordtype}{void}\ yuv422\_rgb565\_sseu(}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{keywordtype}{void}\ yuv422\_rgb24\_sseu(}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keywordtype}{void}\ yuv422\_rgba\_sseu(}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{keywordtype}{void}\ yuv422\_bgra\_sseu(}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{keywordtype}{void}\ yuv422\_argb\_sseu(}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{keywordtype}{void}\ yuv422\_abgr\_sseu(}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{keywordtype}{void}\ yuvnv12\_rgb565\_sseu(}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keywordtype}{void}\ yuvnv12\_rgb24\_sseu(}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{keywordtype}{void}\ yuvnv12\_rgba\_sseu(}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{keywordtype}{void}\ yuvnv12\_bgra\_sseu(}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{keywordtype}{void}\ yuvnv12\_argb\_sseu(}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{keywordtype}{void}\ yuvnv12\_abgr\_sseu(}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y,\ \textcolor{keyword}{const}\ uint8\_t\ *u,\ \textcolor{keyword}{const}\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{comment}{//\ rgb\ to\ yuv,\ sse\ implementation}}
+\DoxyCodeLine{00227\ \textcolor{comment}{//\ pointers\ must\ be\ 16\ byte\ aligned,\ and\ strides\ must\ be\ divisible\ by\ 16}}
+\DoxyCodeLine{00228\ \textcolor{keywordtype}{void}\ rgb24\_yuv420\_sse(}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ uint8\_t\ *y,\ uint8\_t\ *u,\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{comment}{//\ rgb\ to\ yuv,\ sse\ implementation}}
+\DoxyCodeLine{00235\ \textcolor{comment}{//\ pointers\ do\ not\ need\ to\ be\ 16\ byte\ aligned}}
+\DoxyCodeLine{00236\ \textcolor{keywordtype}{void}\ rgb24\_yuv420\_sseu(}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ uint32\_t\ width,\ uint32\_t\ height,}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\doxymbox{\hyperlink{structrgb}{rgb}},\ uint32\_t\ rgb\_stride,}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ uint8\_t\ *y,\ uint8\_t\ *u,\ uint8\_t\ *v,\ uint32\_t\ y\_stride,\ uint32\_t\ uv\_stride,}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ YCbCrType\ yuv\_type);}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

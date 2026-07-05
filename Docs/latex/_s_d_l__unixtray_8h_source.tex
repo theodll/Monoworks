@@ -1,0 +1,95 @@
+\doxysection{SDL\+\_\+unixtray.\+h}
+\hypertarget{_s_d_l__unixtray_8h_source}{}\label{_s_d_l__unixtray_8h_source}\index{MonoRuntime/extern/sdl/src/tray/unix/SDL\_unixtray.h@{MonoRuntime/extern/sdl/src/tray/unix/SDL\_unixtray.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_unixtray\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_unixtray\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../../core/linux/SDL\_dbus.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../SDL\_tray\_utils.h"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___tray_driver}{SDL\_TrayDriver}}}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ count;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}\ *(*CreateTray)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___tray_driver}{SDL\_TrayDriver}}\ *,\ SDL\_PropertiesID);}
+\DoxyCodeLine{00037\ \ \ \ \ void\ (*DestroyTray)(\doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}\ *);}
+\DoxyCodeLine{00038\ \ \ \ \ void\ (*UpdateTray)(\doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}\ *);}
+\DoxyCodeLine{00039\ \ \ \ \ void\ (*SetTrayIcon)(\doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}\ *,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *);}
+\DoxyCodeLine{00040\ \ \ \ \ void\ (*SetTrayTooltip)(\doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00041\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}\ *(*CreateTrayMenu)(\doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}\ *);}
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *(*InsertTrayEntryAt)(\doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}\ *,\ int,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ SDL\_TrayEntryFlags);}
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}\ *(*CreateTraySubmenu)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *);}
+\DoxyCodeLine{00044\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}\ *(*GetTraySubmenu)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *);}
+\DoxyCodeLine{00045\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ **(*GetTrayEntries)(\doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00046\ \ \ \ \ void\ (*RemoveTrayEntry)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *);}
+\DoxyCodeLine{00047\ \ \ \ \ void\ (*SetTrayEntryLabel)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *(*GetTrayEntryLabel)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *);}
+\DoxyCodeLine{00049\ \ \ \ \ void\ (*SetTrayEntryChecked)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *,\ bool);}
+\DoxyCodeLine{00050\ \ \ \ \ void\ (*ClickTrayEntry)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *);}
+\DoxyCodeLine{00051\ \ \ \ \ bool\ (*GetTrayEntryChecked)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *);}
+\DoxyCodeLine{00052\ \ \ \ \ void\ (*SetTrayEntryEnabled)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *,\ bool);}
+\DoxyCodeLine{00053\ \ \ \ \ bool\ (*GetTrayEntryEnabled)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *);}
+\DoxyCodeLine{00054\ \ \ \ \ void\ (*SetTrayEntryCallback)(\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *,\ SDL\_TrayCallback,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ void\ (*DestroyDriver)(\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___tray_driver}{SDL\_TrayDriver}}\ *);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;}
+\DoxyCodeLine{00059\ \}\ \doxymbox{\hyperlink{struct_s_d_l___tray_driver}{SDL\_TrayDriver}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}}
+\DoxyCodeLine{00062\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}\ *parent\_tray;}
+\DoxyCodeLine{00064\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}\ *parent\_entry;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___tray_entry}{SDL\_TrayEntry}}}
+\DoxyCodeLine{00070\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}\ *parent;}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;}
+\DoxyCodeLine{00074\ \};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___tray}{SDL\_Tray}}}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_driver}{SDL\_TrayDriver}}\ *driver;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___tray_menu}{SDL\_TrayMenu}}\ *menu;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#ifdef\ SDL\_USE\_LIBDBUS}}
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___tray_driver}{SDL\_TrayDriver}}\ *SDL\_Tray\_CreateDBusDriver(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_unixtray\_h\_}}
+
+\end{DoxyCode}

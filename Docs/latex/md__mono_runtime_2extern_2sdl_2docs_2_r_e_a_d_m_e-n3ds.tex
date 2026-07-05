@@ -1,0 +1,38 @@
+\chapter{Nintendo 3DS }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds}\index{Nintendo 3DS@{Nintendo 3DS}}
+\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds_autotoc_md1417}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds_autotoc_md1417}%
+
+
+SDL port for the Nintendo 3DS \href{https://devkitpro.org/}{\texttt{Homebrew toolchain}} contributed by:\+
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/FtZPetruska}{\texttt{Pierre Wendling}}
+\end{DoxyItemize}
+
+Credits to:\+
+
+
+\begin{DoxyItemize}
+\item The awesome people who ported SDL to other homebrew platforms.
+\item The Devkitpro team for making all the tools necessary to achieve this.
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds_autotoc_md1418}{}\doxysection{\texorpdfstring{Building}{Building}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds_autotoc_md1418}
+To build for the Nintendo 3DS, make sure you have devkit\+ARM and cmake installed and run:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S.\ -\/Bbuild\ -\/DCMAKE\_TOOLCHAIN\_FILE="{}\$DEVKITPRO/cmake/3DS.cmake"{}\ -\/DCMAKE\_BUILD\_TYPE=Release}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+\DoxyCodeLine{cmake\ -\/-\/install\ build}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds_autotoc_md1419}{}\doxysection{\texorpdfstring{Notes}{Notes}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-n3ds_autotoc_md1419}
+
+\begin{DoxyItemize}
+\item Currently only software rendering is supported.
+\item SDL3\+\_\+main should be used to ensure ROMFS is enabled -\/ this is done with {\ttfamily \#include \texorpdfstring{$<$}{<}\doxylink{_s_d_l__main_8h_source}{SDL3/\+\+SDL\+\_\+main.\+h}\texorpdfstring{$>$}{>}} in the source file that contains your main function.
+\item By default, the extra L2 cache and higher clock speeds of the New 2/\+3\+DS lineup are enabled. If you wish to turn it off, use {\ttfamily os\+Set\+Speedup\+Enable(false)} in your main function.
+\item {\ttfamily SDL\+\_\+\+Get\+Base\+Path} returns the romfs root instead of the executable\textquotesingle{}s directory.
+\item The Nintendo 3DS uses a cooperative threading model on a single core, meaning a thread will never yield unless done manually through the {\ttfamily SDL\+\_\+\+Delay} functions, or blocking waits ({\ttfamily SDL\+\_\+\+Lock\+Mutex}, {\ttfamily SDL\+\_\+\+Wait\+Semaphore}, {\ttfamily SDL\+\_\+\+Wait\+Condition}, {\ttfamily SDL\+\_\+\+Wait\+Thread}). To avoid starving other threads, {\ttfamily SDL\+\_\+\+Try\+Wait\+Semaphore} and {\ttfamily SDL\+\_\+\+Wait\+Semaphore\+Timeout} will yield if they fail to acquire the semaphore, see \href{https://github.com/libsdl-org/SDL/pull/6776}{\texttt{https:\+/\+/\+github.\+com/\+libsdl-\/org/\+\+SDL/\+pull/\+6776}} for more information. 
+\end{DoxyItemize}

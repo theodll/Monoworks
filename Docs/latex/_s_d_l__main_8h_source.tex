@@ -1,0 +1,251 @@
+\doxysection{SDL\+\_\+main.\+h}
+\hypertarget{_s_d_l__main_8h_source}{}\label{_s_d_l__main_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_main.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_main.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#ifndef\ SDL\_main\_h\_}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ SDL\_main\_h\_}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_platform\_defines.h>}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_events.h>}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ SDL\_MAIN\_HANDLED\ 1}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ SDL\_MAIN\_USE\_CALLBACKS\ 1}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ SDL\_MAIN\_AVAILABLE}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ SDL\_MAIN\_NEEDED}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#if\ defined(\_\_has\_include)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\ \ \ \ \#if\ \_\_has\_include("{}SDL\_main\_private.h"{})\ \&\&\ \_\_has\_include("{}SDL\_main\_impl\_private.h"{})}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_PLATFORM\_PRIVATE\_MAIN}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#ifndef\ SDL\_MAIN\_HANDLED}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\ \ \ \ \#if\ defined(SDL\_PLATFORM\_PRIVATE\_MAIN)}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Private\ platforms\ may\ have\ their\ own\ ideas\ about\ entry\ points.\ */}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#include\ "{}SDL\_main\_private.h"{}}}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_WIN32)}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ On\ Windows\ SDL\ provides\ WinMain(),\ which\ parses\ the\ command\ line\ and\ passes}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ the\ arguments\ to\ your\ main\ function.}}
+\DoxyCodeLine{00155\ \textcolor{comment}{}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ If\ you\ provide\ your\ own\ WinMain(),\ you\ may\ define\ SDL\_MAIN\_HANDLED}}
+\DoxyCodeLine{00157\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_AVAILABLE}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_GDK)}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ On\ GDK,\ SDL\ provides\ a\ main\ function\ that\ initializes\ the\ game\ runtime.}}
+\DoxyCodeLine{00162\ \textcolor{comment}{}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ If\ you\ prefer\ to\ write\ your\ own\ WinMain-\/function\ instead\ of\ having\ SDL}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ provide\ one\ that\ calls\ your\ main()\ function,}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_HANDLED\ before\ \#include'ing\ SDL\_main.h}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ and\ call\ the\ SDL\_RunApp\ function\ from\ your\ entry\ point.}}
+\DoxyCodeLine{00167\ \textcolor{comment}{\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_NEEDED}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_IOS)\ ||\ defined(SDL\_PLATFORM\_TVOS)}}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ On\ iOS\ and\ tvOS\ SDL\ provides\ a\ main\ function\ that\ creates\ an\ application\ delegate\ and\ starts\ the\ application\ run\ loop.}}
+\DoxyCodeLine{00172\ \textcolor{comment}{}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ To\ use\ it,\ just\ \#include\ <SDL3/SDL\_main.h>\ in\ the\ source\ file\ that\ contains\ your\ main()\ function.}}
+\DoxyCodeLine{00174\ \textcolor{comment}{}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ See\ src/video/uikit/SDL\_uikitappdelegate.m\ for\ more\ details.}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_NEEDED}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ On\ Android\ SDL\ provides\ a\ Java\ class\ in\ SDLActivity.java\ that\ is\ the}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ main\ activity\ entry\ point.}}
+\DoxyCodeLine{00182\ \textcolor{comment}{}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ See\ docs/README-\/android.md\ for\ more\ details\ on\ extending\ that\ class.}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_NEEDED}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ As\ this\ is\ launched\ from\ Java,\ the\ real\ entry\ point\ (main()\ function)}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ is\ outside\ of\ the\ the\ binary\ built\ from\ this\ code.}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ This\ define\ makes\ sure\ that,\ unlike\ on\ other\ platforms,\ SDL\_main.h}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ and\ SDL\_main\_impl.h\ export\ an\ \`{}SDL\_main()`\ function\ (to\ be\ called}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ from\ Java),\ but\ don't\ implement\ a\ native\ \`{}int\ main(int\ argc,\ char*\ argv[])`}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ or\ similar.}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_EXPORTED}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_EMSCRIPTEN)}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ On\ Emscripten,\ SDL\ provides\ a\ main\ function\ that\ converts\ URL}}
+\DoxyCodeLine{00198\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ parameters\ that\ start\ with\ "{}SDL\_"{}\ to\ environment\ variables,\ so}}
+\DoxyCodeLine{00199\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ they\ can\ be\ used\ as\ SDL\ hints,\ etc.}}
+\DoxyCodeLine{00200\ \textcolor{comment}{}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ This\ is\ 100\%\ optional,\ so\ if\ you\ don't\ want\ this\ to\ happen,\ you\ may}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ define\ SDL\_MAIN\_HANDLED}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_AVAILABLE}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_PSP)}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ On\ PSP\ SDL\ provides\ a\ main\ function\ that\ sets\ the\ module\ info,}}
+\DoxyCodeLine{00208\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ activates\ the\ GPU\ and\ starts\ the\ thread\ required\ to\ be\ able\ to\ exit}}
+\DoxyCodeLine{00209\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ the\ software.}}
+\DoxyCodeLine{00210\ \textcolor{comment}{}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ If\ you\ provide\ this\ yourself,\ you\ may\ define\ SDL\_MAIN\_HANDLED}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_AVAILABLE}}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_PS2)}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_AVAILABLE}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_PS2\_SKIP\_IOP\_RESET()\ \(\backslash\)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ void\ reset\_IOP();\ \(\backslash\)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ void\ reset\_IOP()\ \{\}}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_DOS)}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ On\ DOS,\ SDL\ provides\ a\ main\ function\ that\ sets\ up\ memory}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ page\ locking\ (code,\ data,\ stack\ are\ locked,\ future}}
+\DoxyCodeLine{00226\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ malloc\ calls\ are\ not\ locked),\ and\ sets\ up\ the\ "{}fat\ DS"{}}}
+\DoxyCodeLine{00227\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ trick,\ so\ we\ can\ use\ C\ pointers\ from\ protected\ mode\ that}}
+\DoxyCodeLine{00228\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ access\ conventional\ memory.\ SDL\ \_requires\_\ the\ "{}fat\ DS"{}}}
+\DoxyCodeLine{00229\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ trick!}}
+\DoxyCodeLine{00230\ \textcolor{comment}{}}
+\DoxyCodeLine{00231\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ If\ you\ provide\ this\ yourself,\ you\ may\ define\ SDL\_MAIN\_HANDLED}}
+\DoxyCodeLine{00232\ \textcolor{comment}{\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_AVAILABLE}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\ \ \ \ \#elif\ defined(SDL\_PLATFORM\_3DS)}}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ On\ N3DS,\ SDL\ provides\ a\ main\ function\ that\ sets\ up\ the\ screens}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ and\ storage.}}
+\DoxyCodeLine{00239\ \textcolor{comment}{}}
+\DoxyCodeLine{00240\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ If\ you\ provide\ this\ yourself,\ you\ may\ define\ SDL\_MAIN\_HANDLED}}
+\DoxyCodeLine{00241\ \textcolor{comment}{\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#define\ SDL\_MAIN\_AVAILABLE}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_MAIN\_HANDLED\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ SDLMAIN\_DECLSPEC}}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#elif\ defined(SDL\_MAIN\_EXPORTED)}}
+\DoxyCodeLine{00267\ \textcolor{comment}{/*\ We\ need\ to\ export\ SDL\_main\ so\ it\ can\ be\ launched\ from\ external\ code,}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ \ \ like\ SDLActivity.java\ on\ Android\ */}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ SDLMAIN\_DECLSPEC\ \ \ \ SDL\_DECLSPEC}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00271\ \textcolor{comment}{/*\ usually\ this\ is\ empty\ */}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#define\ SDLMAIN\_DECLSPEC}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_WIKI\_DOCUMENTATION\_SECTION\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#if\ defined(SDL\_MAIN\_NEEDED)\ ||\ defined(SDL\_MAIN\_AVAILABLE)\ ||\ defined(SDL\_MAIN\_USE\_CALLBACKS)}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#define\ main\ SDL\_main}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_init.h>}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00282\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ You\ can\ (optionally!)\ define\ SDL\_MAIN\_USE\_CALLBACKS\ before\ including}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ SDL\_main.h,\ and\ then\ your\ application\ will\ \_not\_\ have\ a\ standard}}
+\DoxyCodeLine{00288\ \textcolor{comment}{\ *\ "{}main"{}\ entry\ point.\ Instead,\ it\ will\ operate\ as\ a\ collection\ of}}
+\DoxyCodeLine{00289\ \textcolor{comment}{\ *\ functions\ that\ are\ called\ as\ necessary\ by\ the\ system.\ On\ some}}
+\DoxyCodeLine{00290\ \textcolor{comment}{\ *\ platforms,\ this\ is\ just\ a\ layer\ where\ SDL\ drives\ your\ program}}
+\DoxyCodeLine{00291\ \textcolor{comment}{\ *\ instead\ of\ your\ program\ driving\ SDL,\ on\ other\ platforms\ this\ might}}
+\DoxyCodeLine{00292\ \textcolor{comment}{\ *\ hook\ into\ the\ OS\ to\ manage\ the\ lifecycle.\ Programs\ on\ most\ platforms}}
+\DoxyCodeLine{00293\ \textcolor{comment}{\ *\ can\ use\ whichever\ approach\ they\ prefer,\ but\ the\ decision\ boils\ down}}
+\DoxyCodeLine{00294\ \textcolor{comment}{\ *\ to:}}
+\DoxyCodeLine{00295\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00296\ \textcolor{comment}{\ *\ -\/\ Using\ a\ standard\ "{}main"{}\ function:\ this\ works\ like\ it\ always\ has\ for}}
+\DoxyCodeLine{00297\ \textcolor{comment}{\ *\ \ \ the\ past\ 50+\ years\ in\ C\ programming,\ and\ your\ app\ is\ in\ control.}}
+\DoxyCodeLine{00298\ \textcolor{comment}{\ *\ -\/\ Using\ the\ callback\ functions:\ this\ might\ clean\ up\ some\ code,}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ *\ \ \ avoid\ some\ \#ifdef\ blocks\ in\ your\ program\ for\ some\ platforms,\ be\ more}}
+\DoxyCodeLine{00300\ \textcolor{comment}{\ *\ \ \ resource-\/friendly\ to\ the\ system,\ and\ possibly\ be\ the\ primary\ way\ to}}
+\DoxyCodeLine{00301\ \textcolor{comment}{\ *\ \ \ access\ some\ future\ platforms\ (but\ none\ require\ this\ at\ the\ moment).}}
+\DoxyCodeLine{00302\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ *\ This\ is\ up\ to\ the\ app;\ both\ approaches\ are\ considered\ valid\ and\ supported}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ *\ ways\ to\ write\ SDL\ apps.}}
+\DoxyCodeLine{00305\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00306\ \textcolor{comment}{\ *\ If\ using\ the\ callbacks,\ don't\ define\ a\ "{}main"{}\ function.\ Instead,\ implement}}
+\DoxyCodeLine{00307\ \textcolor{comment}{\ *\ the\ functions\ listed\ below\ in\ your\ program.}}
+\DoxyCodeLine{00308\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#ifdef\ SDL\_MAIN\_USE\_CALLBACKS}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00358\ \textcolor{keyword}{extern}\ SDLMAIN\_DECLSPEC\ SDL\_AppResult\ SDLCALL\ SDL\_AppInit(\textcolor{keywordtype}{void}\ **appstate,\ \textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ *argv[]);}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00409\ \textcolor{keyword}{extern}\ SDLMAIN\_DECLSPEC\ SDL\_AppResult\ SDLCALL\ SDL\_AppIterate(\textcolor{keywordtype}{void}\ *appstate);}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00458\ \textcolor{keyword}{extern}\ SDLMAIN\_DECLSPEC\ SDL\_AppResult\ SDLCALL\ SDL\_AppEvent(\textcolor{keywordtype}{void}\ *appstate,\ \doxymbox{\hyperlink{union_s_d_l___event}{SDL\_Event}}\ *event);}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00496\ \textcolor{keyword}{extern}\ SDLMAIN\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_AppQuit(\textcolor{keywordtype}{void}\ *appstate,\ SDL\_AppResult\ result);}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{/*\ SDL\_MAIN\_USE\_CALLBACKS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00512\ \textcolor{keyword}{typedef}\ int\ (SDLCALL\ *SDL\_main\_func)(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ *argv[]);}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00545\ \textcolor{keyword}{extern}\ SDLMAIN\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_main(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ *argv[]);}
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00562\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetMainReady(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00595\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_RunApp(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ *argv[],\ SDL\_main\_func\ mainFunction,\ \textcolor{keywordtype}{void}\ *reserved);}
+\DoxyCodeLine{00596\ }
+\DoxyCodeLine{00622\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_EnterAppMainCallbacks(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ *argv[],\ SDL\_AppInit\_func\ appinit,\ SDL\_AppIterate\_func\ appiter,\ SDL\_AppEvent\_func\ appevent,\ SDL\_AppQuit\_func\ appquit);}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)}}
+\DoxyCodeLine{00626\ }
+\DoxyCodeLine{00654\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RegisterApp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ Uint32\ style,\ \textcolor{keywordtype}{void}\ *hInst);}
+\DoxyCodeLine{00655\ }
+\DoxyCodeLine{00673\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UnregisterApp(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00674\ }
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ defined(SDL\_PLATFORM\_WINDOWS)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00703\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GDKSuspendComplete(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00706\ \}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00708\ }
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00710\ }
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#if\ !defined(SDL\_MAIN\_HANDLED)\ \&\&\ !defined(SDL\_MAIN\_NOIMPL)}}
+\DoxyCodeLine{00712\ \ \ \ \ \textcolor{comment}{/*\ include\ header-\/only\ SDL\_main\ implementations\ */}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\ \ \ \ \#if\ defined(SDL\_MAIN\_USE\_CALLBACKS)\ ||\ defined(SDL\_MAIN\_NEEDED)\ ||\ defined(SDL\_MAIN\_AVAILABLE)}}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ platforms\ which\ main\ (-\/equivalent)\ can\ be\ implemented\ in\ plain\ C\ */}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#include\ <SDL3/SDL\_main\_impl.h>}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_main\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

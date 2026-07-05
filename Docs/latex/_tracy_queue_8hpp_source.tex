@@ -1,0 +1,1104 @@
+\doxysection{Tracy\+Queue.\+hpp}
+\hypertarget{_tracy_queue_8hpp_source}{}\label{_tracy_queue_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/common/TracyQueue.hpp@{MonoEngine/thirdparty/tracy/public/common/TracyQueue.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYQUEUE\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYQUEUE\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}TracyTaggedUserlandAddress.hpp"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{enum\ class}\ QueueType\ :\ uint8\_t}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ ZoneText,}
+\DoxyCodeLine{00015\ \ \ \ \ ZoneName,}
+\DoxyCodeLine{00016\ \ \ \ \ Message,}
+\DoxyCodeLine{00017\ \ \ \ \ MessageColor,}
+\DoxyCodeLine{00018\ \ \ \ \ MessageCallstack,}
+\DoxyCodeLine{00019\ \ \ \ \ MessageColorCallstack,}
+\DoxyCodeLine{00020\ \ \ \ \ MessageAppInfo,}
+\DoxyCodeLine{00021\ \ \ \ \ ZoneBeginAllocSrcLoc,}
+\DoxyCodeLine{00022\ \ \ \ \ ZoneBeginAllocSrcLocCallstack,}
+\DoxyCodeLine{00023\ \ \ \ \ CallstackSerial,}
+\DoxyCodeLine{00024\ \ \ \ \ Callstack,}
+\DoxyCodeLine{00025\ \ \ \ \ CallstackAlloc,}
+\DoxyCodeLine{00026\ \ \ \ \ CallstackSample,}
+\DoxyCodeLine{00027\ \ \ \ \ CallstackSample32,}
+\DoxyCodeLine{00028\ \ \ \ \ CallstackSample16,}
+\DoxyCodeLine{00029\ \ \ \ \ CallstackSampleContextSwitch,}
+\DoxyCodeLine{00030\ \ \ \ \ CallstackSampleContextSwitch32,}
+\DoxyCodeLine{00031\ \ \ \ \ CallstackSampleContextSwitch16,}
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_frame_image}{FrameImage}},}
+\DoxyCodeLine{00033\ \ \ \ \ ZoneBegin,}
+\DoxyCodeLine{00034\ \ \ \ \ ZoneBegin32,}
+\DoxyCodeLine{00035\ \ \ \ \ ZoneBegin16,}
+\DoxyCodeLine{00036\ \ \ \ \ ZoneBeginCallstack,}
+\DoxyCodeLine{00037\ \ \ \ \ ZoneBeginCallstack32,}
+\DoxyCodeLine{00038\ \ \ \ \ ZoneBeginCallstack16,}
+\DoxyCodeLine{00039\ \ \ \ \ ZoneEnd,}
+\DoxyCodeLine{00040\ \ \ \ \ ZoneEnd32,}
+\DoxyCodeLine{00041\ \ \ \ \ ZoneEnd16,}
+\DoxyCodeLine{00042\ \ \ \ \ LockWait,}
+\DoxyCodeLine{00043\ \ \ \ \ LockObtain,}
+\DoxyCodeLine{00044\ \ \ \ \ LockRelease,}
+\DoxyCodeLine{00045\ \ \ \ \ LockSharedWait,}
+\DoxyCodeLine{00046\ \ \ \ \ LockSharedObtain,}
+\DoxyCodeLine{00047\ \ \ \ \ LockSharedRelease,}
+\DoxyCodeLine{00048\ \ \ \ \ LockName,}
+\DoxyCodeLine{00049\ \ \ \ \ MemAlloc,}
+\DoxyCodeLine{00050\ \ \ \ \ MemAllocNamed,}
+\DoxyCodeLine{00051\ \ \ \ \ MemFree,}
+\DoxyCodeLine{00052\ \ \ \ \ MemFreeNamed,}
+\DoxyCodeLine{00053\ \ \ \ \ MemAllocCallstack,}
+\DoxyCodeLine{00054\ \ \ \ \ MemAllocCallstackNamed,}
+\DoxyCodeLine{00055\ \ \ \ \ MemFreeCallstack,}
+\DoxyCodeLine{00056\ \ \ \ \ MemFreeCallstackNamed,}
+\DoxyCodeLine{00057\ \ \ \ \ MemDiscard,}
+\DoxyCodeLine{00058\ \ \ \ \ MemDiscardCallstack,}
+\DoxyCodeLine{00059\ \ \ \ \ GpuZoneBegin,}
+\DoxyCodeLine{00060\ \ \ \ \ GpuZoneBeginCallstack,}
+\DoxyCodeLine{00061\ \ \ \ \ GpuZoneBeginAllocSrcLoc,}
+\DoxyCodeLine{00062\ \ \ \ \ GpuZoneBeginAllocSrcLocCallstack,}
+\DoxyCodeLine{00063\ \ \ \ \ GpuZoneEnd,}
+\DoxyCodeLine{00064\ \ \ \ \ GpuZoneBeginSerial,}
+\DoxyCodeLine{00065\ \ \ \ \ GpuZoneBeginCallstackSerial,}
+\DoxyCodeLine{00066\ \ \ \ \ GpuZoneBeginAllocSrcLocSerial,}
+\DoxyCodeLine{00067\ \ \ \ \ GpuZoneBeginAllocSrcLocCallstackSerial,}
+\DoxyCodeLine{00068\ \ \ \ \ GpuZoneEndSerial,}
+\DoxyCodeLine{00069\ \ \ \ \ PlotDataInt,}
+\DoxyCodeLine{00070\ \ \ \ \ PlotDataFloat,}
+\DoxyCodeLine{00071\ \ \ \ \ PlotDataDouble,}
+\DoxyCodeLine{00072\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_context_switch}{ContextSwitch}},}
+\DoxyCodeLine{00073\ \ \ \ \ ThreadWakeup,}
+\DoxyCodeLine{00074\ \ \ \ \ GpuTime,}
+\DoxyCodeLine{00075\ \ \ \ \ GpuContextName,}
+\DoxyCodeLine{00076\ \ \ \ \ GpuAnnotationName,}
+\DoxyCodeLine{00077\ \ \ \ \ CallstackFrameSize,}
+\DoxyCodeLine{00078\ \ \ \ \ SymbolInformation,}
+\DoxyCodeLine{00079\ \ \ \ \ ExternalNameMetadata,}
+\DoxyCodeLine{00080\ \ \ \ \ SymbolCodeMetadata,}
+\DoxyCodeLine{00081\ \ \ \ \ SourceCodeMetadata,}
+\DoxyCodeLine{00082\ \ \ \ \ FiberEnter,}
+\DoxyCodeLine{00083\ \ \ \ \ FiberLeave,}
+\DoxyCodeLine{00084\ \ \ \ \ SectionEnter,}
+\DoxyCodeLine{00085\ \ \ \ \ SectionLeave,}
+\DoxyCodeLine{00086\ \ \ \ \ Terminate,}
+\DoxyCodeLine{00087\ \ \ \ \ KeepAlive,}
+\DoxyCodeLine{00088\ \ \ \ \ ThreadContext,}
+\DoxyCodeLine{00089\ \ \ \ \ GpuCalibration,}
+\DoxyCodeLine{00090\ \ \ \ \ GpuTimeSync,}
+\DoxyCodeLine{00091\ \ \ \ \ Crash,}
+\DoxyCodeLine{00092\ \ \ \ \ CrashReport,}
+\DoxyCodeLine{00093\ \ \ \ \ ZoneValidation,}
+\DoxyCodeLine{00094\ \ \ \ \ ZoneColor,}
+\DoxyCodeLine{00095\ \ \ \ \ ZoneValue,}
+\DoxyCodeLine{00096\ \ \ \ \ FrameMarkMsg,}
+\DoxyCodeLine{00097\ \ \ \ \ FrameMarkMsgStart,}
+\DoxyCodeLine{00098\ \ \ \ \ FrameMarkMsgEnd,}
+\DoxyCodeLine{00099\ \ \ \ \ FrameVsync,}
+\DoxyCodeLine{00100\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_source_location}{SourceLocation}},}
+\DoxyCodeLine{00101\ \ \ \ \ LockAnnounce,}
+\DoxyCodeLine{00102\ \ \ \ \ LockTerminate,}
+\DoxyCodeLine{00103\ \ \ \ \ LockMark,}
+\DoxyCodeLine{00104\ \ \ \ \ MessageLiteral,}
+\DoxyCodeLine{00105\ \ \ \ \ MessageLiteralColor,}
+\DoxyCodeLine{00106\ \ \ \ \ MessageLiteralCallstack,}
+\DoxyCodeLine{00107\ \ \ \ \ MessageLiteralColorCallstack,}
+\DoxyCodeLine{00108\ \ \ \ \ GpuNewContext,}
+\DoxyCodeLine{00109\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_callstack_frame}{CallstackFrame}},}
+\DoxyCodeLine{00110\ \ \ \ \ SysTimeReport,}
+\DoxyCodeLine{00111\ \ \ \ \ SysPowerReport,}
+\DoxyCodeLine{00112\ \ \ \ \ TidToPid,}
+\DoxyCodeLine{00113\ \ \ \ \ HwSampleCpuCycle,}
+\DoxyCodeLine{00114\ \ \ \ \ HwSampleInstructionRetired,}
+\DoxyCodeLine{00115\ \ \ \ \ HwSampleCacheReference,}
+\DoxyCodeLine{00116\ \ \ \ \ HwSampleCacheMiss,}
+\DoxyCodeLine{00117\ \ \ \ \ HwSampleBranchRetired,}
+\DoxyCodeLine{00118\ \ \ \ \ HwSampleBranchMiss,}
+\DoxyCodeLine{00119\ \ \ \ \ PlotConfig,}
+\DoxyCodeLine{00120\ \ \ \ \ ParamSetup,}
+\DoxyCodeLine{00121\ \ \ \ \ AckServerQueryNoop,}
+\DoxyCodeLine{00122\ \ \ \ \ AckSourceCodeNotAvailable,}
+\DoxyCodeLine{00123\ \ \ \ \ AckSymbolCodeNotAvailable,}
+\DoxyCodeLine{00124\ \ \ \ \ CpuTopology,}
+\DoxyCodeLine{00125\ \ \ \ \ SingleStringData,}
+\DoxyCodeLine{00126\ \ \ \ \ SecondStringData,}
+\DoxyCodeLine{00127\ \ \ \ \ SingleStringData8,}
+\DoxyCodeLine{00128\ \ \ \ \ SecondStringData8,}
+\DoxyCodeLine{00129\ \ \ \ \ MemNamePayload,}
+\DoxyCodeLine{00130\ \ \ \ \ ThreadGroupHint,}
+\DoxyCodeLine{00131\ \ \ \ \ GpuZoneAnnotation,}
+\DoxyCodeLine{00132\ \ \ \ \ StringData,}
+\DoxyCodeLine{00133\ \ \ \ \ ThreadName,}
+\DoxyCodeLine{00134\ \ \ \ \ PlotName,}
+\DoxyCodeLine{00135\ \ \ \ \ SourceLocationPayload,}
+\DoxyCodeLine{00136\ \ \ \ \ CallstackPayload,}
+\DoxyCodeLine{00137\ \ \ \ \ CallstackAllocPayload,}
+\DoxyCodeLine{00138\ \ \ \ \ FrameName,}
+\DoxyCodeLine{00139\ \ \ \ \ FrameImageData,}
+\DoxyCodeLine{00140\ \ \ \ \ ExternalName,}
+\DoxyCodeLine{00141\ \ \ \ \ ExternalThreadName,}
+\DoxyCodeLine{00142\ \ \ \ \ SymbolCode,}
+\DoxyCodeLine{00143\ \ \ \ \ SourceCode,}
+\DoxyCodeLine{00144\ \ \ \ \ FiberName,}
+\DoxyCodeLine{00145\ \ \ \ \ NUM\_TYPES}
+\DoxyCodeLine{00146\ \};}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#pragma\ pack(\ push,\ 1\ )}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_thread_context}{QueueThreadContext}}}
+\DoxyCodeLine{00151\ \{}
+\DoxyCodeLine{00152\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00153\ \};}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin_lean}{QueueZoneBeginLean}}}
+\DoxyCodeLine{00156\ \{}
+\DoxyCodeLine{00157\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00158\ \};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin}{QueueZoneBegin}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin_lean}{QueueZoneBeginLean}}}
+\DoxyCodeLine{00161\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ uint64\_t\ srcloc;\ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00163\ \};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin_thread}{QueueZoneBeginThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin}{QueueZoneBegin}}}
+\DoxyCodeLine{00166\ \{}
+\DoxyCodeLine{00167\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00168\ \};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin32}{QueueZoneBegin32}}}
+\DoxyCodeLine{00171\ \{}
+\DoxyCodeLine{00172\ \ \ \ \ uint32\_t\ time;}
+\DoxyCodeLine{00173\ \ \ \ \ uint64\_t\ srcloc;}
+\DoxyCodeLine{00174\ \};}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin16}{QueueZoneBegin16}}}
+\DoxyCodeLine{00177\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ uint16\_t\ time;}
+\DoxyCodeLine{00179\ \ \ \ \ uint64\_t\ srcloc;}
+\DoxyCodeLine{00180\ \};}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_end}{QueueZoneEnd}}}
+\DoxyCodeLine{00183\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00185\ \};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_end32}{QueueZoneEnd32}}}
+\DoxyCodeLine{00188\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ uint32\_t\ time;}
+\DoxyCodeLine{00190\ \};}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_end16}{QueueZoneEnd16}}}
+\DoxyCodeLine{00193\ \{}
+\DoxyCodeLine{00194\ \ \ \ \ uint16\_t\ time;}
+\DoxyCodeLine{00195\ \};}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_end_thread}{QueueZoneEndThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end}{QueueZoneEnd}}}
+\DoxyCodeLine{00198\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00200\ \};}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_validation}{QueueZoneValidation}}}
+\DoxyCodeLine{00203\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00205\ \};}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_validation_thread}{QueueZoneValidationThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_validation}{QueueZoneValidation}}}
+\DoxyCodeLine{00208\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00210\ \};}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_color}{QueueZoneColor}}}
+\DoxyCodeLine{00213\ \{}
+\DoxyCodeLine{00214\ \ \ \ \ uint8\_t\ b;}
+\DoxyCodeLine{00215\ \ \ \ \ uint8\_t\ g;}
+\DoxyCodeLine{00216\ \ \ \ \ uint8\_t\ r;}
+\DoxyCodeLine{00217\ \};}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_color_thread}{QueueZoneColorThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_color}{QueueZoneColor}}}
+\DoxyCodeLine{00220\ \{}
+\DoxyCodeLine{00221\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00222\ \};}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_value}{QueueZoneValue}}}
+\DoxyCodeLine{00225\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ uint64\_t\ value;}
+\DoxyCodeLine{00227\ \};}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_value_thread}{QueueZoneValueThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_value}{QueueZoneValue}}}
+\DoxyCodeLine{00230\ \{}
+\DoxyCodeLine{00231\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00232\ \};}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}}
+\DoxyCodeLine{00235\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00237\ \};}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_frame_mark}{QueueFrameMark}}}
+\DoxyCodeLine{00240\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00242\ \ \ \ \ uint64\_t\ name;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00243\ \};}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_frame_vsync}{QueueFrameVsync}}}
+\DoxyCodeLine{00246\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00248\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00249\ \};}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_frame_image}{QueueFrameImage}}}
+\DoxyCodeLine{00252\ \{}
+\DoxyCodeLine{00253\ \ \ \ \ uint32\_t\ frame;}
+\DoxyCodeLine{00254\ \ \ \ \ uint16\_t\ w;}
+\DoxyCodeLine{00255\ \ \ \ \ uint16\_t\ h;}
+\DoxyCodeLine{00256\ \ \ \ \ uint8\_t\ flip;}
+\DoxyCodeLine{00257\ \};}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_frame_image_fat}{QueueFrameImageFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_image}{QueueFrameImage}}}
+\DoxyCodeLine{00260\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ uint64\_t\ image;\ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00262\ \};}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_source_location}{QueueSourceLocation}}}
+\DoxyCodeLine{00265\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ uint64\_t\ name;}
+\DoxyCodeLine{00267\ \ \ \ \ uint64\_t\ function;\ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00268\ \ \ \ \ uint64\_t\ file;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00269\ \ \ \ \ uint32\_t\ line;}
+\DoxyCodeLine{00270\ \ \ \ \ uint8\_t\ b;}
+\DoxyCodeLine{00271\ \ \ \ \ uint8\_t\ g;}
+\DoxyCodeLine{00272\ \ \ \ \ uint8\_t\ r;}
+\DoxyCodeLine{00273\ \};}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_text_fat}{QueueZoneTextFat}}}
+\DoxyCodeLine{00276\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ uint64\_t\ text;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00278\ \ \ \ \ uint16\_t\ size;}
+\DoxyCodeLine{00279\ \};}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_zone_text_fat_thread}{QueueZoneTextFatThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_text_fat}{QueueZoneTextFat}}}
+\DoxyCodeLine{00282\ \{}
+\DoxyCodeLine{00283\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00284\ \};}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{keyword}{enum\ class}\ LockType\ :\ uint8\_t}
+\DoxyCodeLine{00287\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_lockable}{Lockable}},}
+\DoxyCodeLine{00289\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_shared_lockable}{SharedLockable}}}
+\DoxyCodeLine{00290\ \};}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_announce}{QueueLockAnnounce}}}
+\DoxyCodeLine{00293\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00295\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00296\ \ \ \ \ uint64\_t\ lckloc;\ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00297\ \ \ \ \ LockType\ type;}
+\DoxyCodeLine{00298\ \};}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_fiber_enter}{QueueFiberEnter}}}
+\DoxyCodeLine{00301\ \{}
+\DoxyCodeLine{00302\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00303\ \ \ \ \ uint64\_t\ fiber;\ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00304\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00305\ \ \ \ \ int32\_t\ groupHint;}
+\DoxyCodeLine{00306\ \};}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_fiber_leave}{QueueFiberLeave}}}
+\DoxyCodeLine{00309\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00311\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00312\ \};}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_section_enter}{QueueSectionEnter}}}
+\DoxyCodeLine{00315\ \{}
+\DoxyCodeLine{00316\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00317\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00318\ \};}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_section_enter_fat}{QueueSectionEnterFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_section_enter}{QueueSectionEnter}}}
+\DoxyCodeLine{00321\ \{}
+\DoxyCodeLine{00322\ \ \ \ \ uint64\_t\ text;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00323\ \ \ \ \ uint16\_t\ size;}
+\DoxyCodeLine{00324\ \};}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_section_leave}{QueueSectionLeave}}}
+\DoxyCodeLine{00327\ \{}
+\DoxyCodeLine{00328\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00329\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00330\ \};}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_terminate}{QueueLockTerminate}}}
+\DoxyCodeLine{00333\ \{}
+\DoxyCodeLine{00334\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00335\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00336\ \};}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_wait}{QueueLockWait}}}
+\DoxyCodeLine{00339\ \{}
+\DoxyCodeLine{00340\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00341\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00342\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00343\ \};}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_obtain}{QueueLockObtain}}}
+\DoxyCodeLine{00346\ \{}
+\DoxyCodeLine{00347\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00348\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00349\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00350\ \};}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_release}{QueueLockRelease}}}
+\DoxyCodeLine{00353\ \{}
+\DoxyCodeLine{00354\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00355\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00356\ \};}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_release_shared}{QueueLockReleaseShared}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_release}{QueueLockRelease}}}
+\DoxyCodeLine{00359\ \{}
+\DoxyCodeLine{00360\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00361\ \};}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_mark}{QueueLockMark}}}
+\DoxyCodeLine{00364\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00366\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00367\ \ \ \ \ uint64\_t\ srcloc;\ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00368\ \};}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_name}{QueueLockName}}}
+\DoxyCodeLine{00371\ \{}
+\DoxyCodeLine{00372\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00373\ \};}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_lock_name_fat}{QueueLockNameFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_name}{QueueLockName}}}
+\DoxyCodeLine{00376\ \{}
+\DoxyCodeLine{00377\ \ \ \ \ uint64\_t\ name;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00378\ \ \ \ \ uint16\_t\ size;}
+\DoxyCodeLine{00379\ \};}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_base}{QueuePlotDataBase}}}
+\DoxyCodeLine{00382\ \{}
+\DoxyCodeLine{00383\ \ \ \ \ uint64\_t\ name;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00384\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00385\ \};}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_int}{QueuePlotDataInt}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_base}{QueuePlotDataBase}}}
+\DoxyCodeLine{00388\ \{}
+\DoxyCodeLine{00389\ \ \ \ \ int64\_t\ val;}
+\DoxyCodeLine{00390\ \};}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_float}{QueuePlotDataFloat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_base}{QueuePlotDataBase}}}
+\DoxyCodeLine{00393\ \{}
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keywordtype}{float}\ val;}
+\DoxyCodeLine{00395\ \};}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_double}{QueuePlotDataDouble}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_base}{QueuePlotDataBase}}}
+\DoxyCodeLine{00398\ \{}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keywordtype}{double}\ val;}
+\DoxyCodeLine{00400\ \};}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{keyword}{enum\ class}\ MessageSourceType\ :\ uint8\_t}
+\DoxyCodeLine{00403\ \{}
+\DoxyCodeLine{00404\ \ \ \ \ User,}
+\DoxyCodeLine{00405\ \ \ \ \ Tracy,}
+\DoxyCodeLine{00406\ \ \ \ \ COUNT}
+\DoxyCodeLine{00407\ \};}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \textcolor{keyword}{enum\ class}\ MessageSeverity\ :\ uint8\_t}
+\DoxyCodeLine{00410\ \{}
+\DoxyCodeLine{00411\ \ \ \ \ Trace,\ \ \ \textcolor{comment}{//\ Broadly\ track\ variable\ states\ and\ events\ in\ the\ software\ program.}}
+\DoxyCodeLine{00412\ \ \ \ \ Debug,\ \ \ \textcolor{comment}{//\ Describes\ variable\ states\ and\ details\ about\ specific\ internal\ events\ in\ the\ software,\ that\ are\ useful\ for\ investigations.}}
+\DoxyCodeLine{00413\ \ \ \ \ Info,\ \ \ \ \textcolor{comment}{//\ Describes\ normal\ events,\ which\ inform\ on\ the\ expected\ progress\ and\ state\ of\ your\ software.}}
+\DoxyCodeLine{00414\ \ \ \ \ Warning,\ \textcolor{comment}{//\ Describes\ potentially\ dangerous\ situations\ caused\ by\ unexpected\ events\ and\ states.}}
+\DoxyCodeLine{00415\ \ \ \ \ Error,\ \ \ \textcolor{comment}{//\ Describes\ the\ occurrence\ of\ unexpected\ behavior.\ Does\ not\ interrupt\ the\ execution\ of\ the\ software.}}
+\DoxyCodeLine{00416\ \ \ \ \ Fatal,\ \ \ \textcolor{comment}{//\ Describes\ a\ critical\ event\ that\ will\ lead\ to\ a\ software\ failure/crash.}}
+\DoxyCodeLine{00417\ \ \ \ \ COUNT}
+\DoxyCodeLine{00418\ \};}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ tracy\_force\_inline\ uint8\_t\ MakeMessageMetadata(MessageSourceType\ source,\ MessageSeverity\ severity)}
+\DoxyCodeLine{00421\ \{}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keyword}{static\_assert}(\ (uint8\_t)MessageSourceType::COUNT\ <\ (\ 1\ <<\ 4\ ),\ \textcolor{stringliteral}{"{}We\ use\ 4\ bits\ for\ the\ messages\ source."{}}\ );}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keyword}{static\_assert}(\ (uint8\_t)MessageSeverity::COUNT\ <\ (\ 1\ <<\ 4\ ),\ \textcolor{stringliteral}{"{}We\ use\ 4\ bits\ for\ the\ messages\ severity."{}}\ );}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{keywordflow}{return}\ (\ (uint8\_t)severity\ )\ <<\ 4\ |\ (uint8\_t)source;}
+\DoxyCodeLine{00425\ \}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ tracy\_force\_inline\ MessageSourceType\ MessageSourceFromMetadata(uint8\_t\ metadata)}
+\DoxyCodeLine{00428\ \{}
+\DoxyCodeLine{00429\ \ \ \ \ assert(\ (\ metadata\ \&\ 0x0F\ )\ <\ (uint8\_t)MessageSourceType::COUNT\ );}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keywordflow}{return}\ (MessageSourceType)(\ metadata\ \&\ 0x0F\ );}
+\DoxyCodeLine{00431\ \}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ tracy\_force\_inline\ MessageSeverity\ MessageSeverityFromMetadata(uint8\_t\ metadata)}
+\DoxyCodeLine{00434\ \{}
+\DoxyCodeLine{00435\ \ \ \ \ assert(\ (\ (\ metadata\ \&\ 0xF0\ )\ >>\ 4\ )\ <\ (uint8\_t)MessageSeverity::COUNT\ );}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keywordflow}{return}\ (MessageSeverity)(\ (\ metadata\ \&\ 0xF0\ )\ >>\ 4\ );}
+\DoxyCodeLine{00437\ \}}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \textcolor{comment}{//\ QueueMessage*Metadata\ and\ QueMessageLiteral*\ are\ the\ only\ structures\ sent\ over\ the\ wire}}
+\DoxyCodeLine{00440\ \textcolor{comment}{//\ All\ other\ variants\ are\ used\ only\ internally\ to\ dispatch\ from\ the\ thread\ to\ the\ profiler\ and\ interpreted\ by\ Profiler::Dequeue}}
+\DoxyCodeLine{00441\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message}{QueueMessage}}}
+\DoxyCodeLine{00442\ \{}
+\DoxyCodeLine{00443\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00444\ \};}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_color}{QueueMessageColor}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message}{QueueMessage}}}
+\DoxyCodeLine{00447\ \{}
+\DoxyCodeLine{00448\ \ \ \ \ uint8\_t\ b;}
+\DoxyCodeLine{00449\ \ \ \ \ uint8\_t\ g;}
+\DoxyCodeLine{00450\ \ \ \ \ uint8\_t\ r;}
+\DoxyCodeLine{00451\ \};}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00453\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_metadata}{QueueMessageMetadata}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message}{QueueMessage}}}
+\DoxyCodeLine{00454\ \{}
+\DoxyCodeLine{00455\ \ \ \ \ uint8\_t\ metadata;}
+\DoxyCodeLine{00456\ \};}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_color_metadata}{QueueMessageColorMetadata}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color}{QueueMessageColor}}}
+\DoxyCodeLine{00459\ \{}
+\DoxyCodeLine{00460\ \ \ \ \ uint8\_t\ metadata;}
+\DoxyCodeLine{00461\ \};}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00463\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_literal}{QueueMessageLiteral}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message}{QueueMessage}}}
+\DoxyCodeLine{00464\ \{}
+\DoxyCodeLine{00465\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_tagged_userland_address}{TaggedUserlandAddress}}\ textAndMetadata;\ \ \ \ \ \ \textcolor{comment}{//\ ptr\ +\ log\ level/channels}}
+\DoxyCodeLine{00466\ \};}
+\DoxyCodeLine{00467\ }
+\DoxyCodeLine{00468\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_literal_thread}{QueueMessageLiteralThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_literal}{QueueMessageLiteral}}}
+\DoxyCodeLine{00469\ \{}
+\DoxyCodeLine{00470\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00471\ \};}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_color_literal}{QueueMessageColorLiteral}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color}{QueueMessageColor}}}
+\DoxyCodeLine{00474\ \{}
+\DoxyCodeLine{00475\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_tagged_userland_address}{TaggedUserlandAddress}}\ textAndMetadata;\ \ \ \ \ \ \textcolor{comment}{//\ ptr\ +\ log\ level/channels}}
+\DoxyCodeLine{00476\ \};}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_color_literal_thread}{QueueMessageColorLiteralThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_literal}{QueueMessageColorLiteral}}}
+\DoxyCodeLine{00479\ \{}
+\DoxyCodeLine{00480\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00481\ \};}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_fat}{QueueMessageFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message}{QueueMessage}}}
+\DoxyCodeLine{00484\ \{}
+\DoxyCodeLine{00485\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_tagged_userland_address}{TaggedUserlandAddress}}\ textAndMetadata;\ \ \ \ \ \ \textcolor{comment}{//\ ptr\ +\ log\ level/channels}}
+\DoxyCodeLine{00486\ \ \ \ \ uint16\_t\ size;}
+\DoxyCodeLine{00487\ \};}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_fat_thread}{QueueMessageFatThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_fat}{QueueMessageFat}}}
+\DoxyCodeLine{00490\ \{}
+\DoxyCodeLine{00491\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00492\ \};}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_color_fat}{QueueMessageColorFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color}{QueueMessageColor}}}
+\DoxyCodeLine{00495\ \{}
+\DoxyCodeLine{00496\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_tagged_userland_address}{TaggedUserlandAddress}}\ textAndMetadata;\ \ \ \ \ \ \textcolor{comment}{//\ ptr\ +\ log\ level/channels}}
+\DoxyCodeLine{00497\ \ \ \ \ uint16\_t\ size;}
+\DoxyCodeLine{00498\ \};}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_message_color_fat_thread}{QueueMessageColorFatThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_fat}{QueueMessageColorFat}}}
+\DoxyCodeLine{00501\ \{}
+\DoxyCodeLine{00502\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00503\ \};}
+\DoxyCodeLine{00504\ }
+\DoxyCodeLine{00505\ \textcolor{comment}{//\ Don't\ change\ order,\ only\ add\ new\ entries\ at\ the\ end,\ this\ is\ also\ used\ on\ trace\ dumps!}}
+\DoxyCodeLine{00506\ \textcolor{keyword}{enum\ class}\ GpuContextType\ :\ uint8\_t}
+\DoxyCodeLine{00507\ \{}
+\DoxyCodeLine{00508\ \ \ \ \ Invalid,}
+\DoxyCodeLine{00509\ \ \ \ \ OpenGl,}
+\DoxyCodeLine{00510\ \ \ \ \ Vulkan,}
+\DoxyCodeLine{00511\ \ \ \ \ OpenCL,}
+\DoxyCodeLine{00512\ \ \ \ \ Direct3D12,}
+\DoxyCodeLine{00513\ \ \ \ \ Direct3D11,}
+\DoxyCodeLine{00514\ \ \ \ \ Metal,}
+\DoxyCodeLine{00515\ \ \ \ \ Custom,}
+\DoxyCodeLine{00516\ \ \ \ \ CUDA,}
+\DoxyCodeLine{00517\ \ \ \ \ Rocprof,}
+\DoxyCodeLine{00518\ \ \ \ \ WebGPU}
+\DoxyCodeLine{00519\ \};}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \textcolor{keyword}{enum}\ GpuContextFlags\ :\ uint8\_t}
+\DoxyCodeLine{00522\ \{}
+\DoxyCodeLine{00523\ \ \ \ \ GpuContextCalibration\ \ \ =\ 1\ <<\ 0}
+\DoxyCodeLine{00524\ \};}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_new_context}{QueueGpuNewContext}}}
+\DoxyCodeLine{00527\ \{}
+\DoxyCodeLine{00528\ \ \ \ \ int64\_t\ cpuTime;}
+\DoxyCodeLine{00529\ \ \ \ \ int64\_t\ gpuTime;}
+\DoxyCodeLine{00530\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00531\ \ \ \ \ \textcolor{keywordtype}{float}\ period;}
+\DoxyCodeLine{00532\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00533\ \ \ \ \ GpuContextFlags\ flags;}
+\DoxyCodeLine{00534\ \ \ \ \ GpuContextType\ type;}
+\DoxyCodeLine{00535\ \};}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin_lean}{QueueGpuZoneBeginLean}}}
+\DoxyCodeLine{00538\ \{}
+\DoxyCodeLine{00539\ \ \ \ \ int64\_t\ cpuTime;}
+\DoxyCodeLine{00540\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00541\ \ \ \ \ uint16\_t\ queryId;}
+\DoxyCodeLine{00542\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00543\ \};}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00545\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin}{QueueGpuZoneBegin}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin_lean}{QueueGpuZoneBeginLean}}}
+\DoxyCodeLine{00546\ \{}
+\DoxyCodeLine{00547\ \ \ \ \ uint64\_t\ srcloc;}
+\DoxyCodeLine{00548\ \};}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_end}{QueueGpuZoneEnd}}}
+\DoxyCodeLine{00551\ \{}
+\DoxyCodeLine{00552\ \ \ \ \ int64\_t\ cpuTime;}
+\DoxyCodeLine{00553\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00554\ \ \ \ \ uint16\_t\ queryId;}
+\DoxyCodeLine{00555\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00556\ \};}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_annotation}{QueueGpuZoneAnnotation}}}
+\DoxyCodeLine{00559\ \{}
+\DoxyCodeLine{00560\ \ \ \ \ int64\_t\ noteId;}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keywordtype}{double}\ value;}
+\DoxyCodeLine{00562\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00563\ \ \ \ \ uint16\_t\ queryId;}
+\DoxyCodeLine{00564\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00565\ \};}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_time}{QueueGpuTime}}}
+\DoxyCodeLine{00568\ \{}
+\DoxyCodeLine{00569\ \ \ \ \ int64\_t\ gpuTime;}
+\DoxyCodeLine{00570\ \ \ \ \ uint16\_t\ queryId;}
+\DoxyCodeLine{00571\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00572\ \};}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_calibration}{QueueGpuCalibration}}}
+\DoxyCodeLine{00575\ \{}
+\DoxyCodeLine{00576\ \ \ \ \ int64\_t\ gpuTime;}
+\DoxyCodeLine{00577\ \ \ \ \ int64\_t\ cpuTime;}
+\DoxyCodeLine{00578\ \ \ \ \ int64\_t\ cpuDelta;}
+\DoxyCodeLine{00579\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00580\ \};}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_time_sync}{QueueGpuTimeSync}}}
+\DoxyCodeLine{00583\ \{}
+\DoxyCodeLine{00584\ \ \ \ \ int64\_t\ gpuTime;}
+\DoxyCodeLine{00585\ \ \ \ \ int64\_t\ cpuTime;}
+\DoxyCodeLine{00586\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00587\ \};}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_context_name}{QueueGpuContextName}}}
+\DoxyCodeLine{00590\ \{}
+\DoxyCodeLine{00591\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00592\ \};}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00594\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_context_name_fat}{QueueGpuContextNameFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_context_name}{QueueGpuContextName}}}
+\DoxyCodeLine{00595\ \{}
+\DoxyCodeLine{00596\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00597\ \ \ \ \ uint16\_t\ size;}
+\DoxyCodeLine{00598\ \};}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_annotation_name}{QueueGpuAnnotationName}}}
+\DoxyCodeLine{00601\ \{}
+\DoxyCodeLine{00602\ \ \ \ \ int64\_t\ noteId;}
+\DoxyCodeLine{00603\ \ \ \ \ uint8\_t\ context;}
+\DoxyCodeLine{00604\ \};}
+\DoxyCodeLine{00605\ }
+\DoxyCodeLine{00606\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_gpu_annotation_name_fat}{QueueGpuAnnotationNameFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_annotation_name}{QueueGpuAnnotationName}}}
+\DoxyCodeLine{00607\ \{}
+\DoxyCodeLine{00608\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00609\ \ \ \ \ uint16\_t\ size;}
+\DoxyCodeLine{00610\ \};}
+\DoxyCodeLine{00611\ }
+\DoxyCodeLine{00612\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_mem_name_payload}{QueueMemNamePayload}}}
+\DoxyCodeLine{00613\ \{}
+\DoxyCodeLine{00614\ \ \ \ \ uint64\_t\ name;}
+\DoxyCodeLine{00615\ \};}
+\DoxyCodeLine{00616\ }
+\DoxyCodeLine{00617\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_thread_group_hint}{QueueThreadGroupHint}}}
+\DoxyCodeLine{00618\ \{}
+\DoxyCodeLine{00619\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00620\ \ \ \ \ int32\_t\ groupHint;}
+\DoxyCodeLine{00621\ \};}
+\DoxyCodeLine{00622\ }
+\DoxyCodeLine{00623\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_mem_alloc}{QueueMemAlloc}}}
+\DoxyCodeLine{00624\ \{}
+\DoxyCodeLine{00625\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00626\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00627\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00628\ \ \ \ \ \textcolor{keywordtype}{char}\ size[6];}
+\DoxyCodeLine{00629\ \};}
+\DoxyCodeLine{00630\ }
+\DoxyCodeLine{00631\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_mem_free}{QueueMemFree}}}
+\DoxyCodeLine{00632\ \{}
+\DoxyCodeLine{00633\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00634\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00635\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00636\ \};}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_mem_discard}{QueueMemDiscard}}}
+\DoxyCodeLine{00639\ \{}
+\DoxyCodeLine{00640\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00641\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00642\ \ \ \ \ uint64\_t\ name;}
+\DoxyCodeLine{00643\ \};}
+\DoxyCodeLine{00644\ }
+\DoxyCodeLine{00645\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_fat}{QueueCallstackFat}}}
+\DoxyCodeLine{00646\ \{}
+\DoxyCodeLine{00647\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00648\ \};}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00650\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_fat_thread}{QueueCallstackFatThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_fat}{QueueCallstackFat}}}
+\DoxyCodeLine{00651\ \{}
+\DoxyCodeLine{00652\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00653\ \};}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00655\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_alloc_fat}{QueueCallstackAllocFat}}}
+\DoxyCodeLine{00656\ \{}
+\DoxyCodeLine{00657\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00658\ \ \ \ \ uint64\_t\ nativePtr;}
+\DoxyCodeLine{00659\ \};}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00661\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_alloc_fat_thread}{QueueCallstackAllocFatThread}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_alloc_fat}{QueueCallstackAllocFat}}}
+\DoxyCodeLine{00662\ \{}
+\DoxyCodeLine{00663\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00664\ \};}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00666\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample}{QueueCallstackSample}}}
+\DoxyCodeLine{00667\ \{}
+\DoxyCodeLine{00668\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00669\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00670\ \};}
+\DoxyCodeLine{00671\ }
+\DoxyCodeLine{00672\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample_fat}{QueueCallstackSampleFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample}{QueueCallstackSample}}}
+\DoxyCodeLine{00673\ \{}
+\DoxyCodeLine{00674\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00675\ \};}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample32}{QueueCallstackSample32}}}
+\DoxyCodeLine{00678\ \{}
+\DoxyCodeLine{00679\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00680\ \ \ \ \ uint32\_t\ time;}
+\DoxyCodeLine{00681\ \};}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample16}{QueueCallstackSample16}}}
+\DoxyCodeLine{00684\ \{}
+\DoxyCodeLine{00685\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00686\ \ \ \ \ uint16\_t\ time;}
+\DoxyCodeLine{00687\ \};}
+\DoxyCodeLine{00688\ }
+\DoxyCodeLine{00689\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame_size}{QueueCallstackFrameSize}}}
+\DoxyCodeLine{00690\ \{}
+\DoxyCodeLine{00691\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00692\ \ \ \ \ uint8\_t\ size;}
+\DoxyCodeLine{00693\ \};}
+\DoxyCodeLine{00694\ }
+\DoxyCodeLine{00695\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame_size_fat}{QueueCallstackFrameSizeFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame_size}{QueueCallstackFrameSize}}}
+\DoxyCodeLine{00696\ \{}
+\DoxyCodeLine{00697\ \ \ \ \ uint64\_t\ data;}
+\DoxyCodeLine{00698\ \ \ \ \ uint64\_t\ imageName;}
+\DoxyCodeLine{00699\ \};}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame}{QueueCallstackFrame}}}
+\DoxyCodeLine{00702\ \{}
+\DoxyCodeLine{00703\ \ \ \ \ uint32\_t\ line;}
+\DoxyCodeLine{00704\ \ \ \ \ uint64\_t\ symAddr;}
+\DoxyCodeLine{00705\ \ \ \ \ uint32\_t\ symLen;}
+\DoxyCodeLine{00706\ \};}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_symbol_information}{QueueSymbolInformation}}}
+\DoxyCodeLine{00709\ \{}
+\DoxyCodeLine{00710\ \ \ \ \ uint32\_t\ line;}
+\DoxyCodeLine{00711\ \ \ \ \ uint64\_t\ symAddr;}
+\DoxyCodeLine{00712\ \};}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00714\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_symbol_information_fat}{QueueSymbolInformationFat}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1_queue_symbol_information}{QueueSymbolInformation}}}
+\DoxyCodeLine{00715\ \{}
+\DoxyCodeLine{00716\ \ \ \ \ uint64\_t\ fileString;}
+\DoxyCodeLine{00717\ \ \ \ \ uint8\_t\ needFree;}
+\DoxyCodeLine{00718\ \};}
+\DoxyCodeLine{00719\ }
+\DoxyCodeLine{00720\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_crash_report}{QueueCrashReport}}}
+\DoxyCodeLine{00721\ \{}
+\DoxyCodeLine{00722\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00723\ \ \ \ \ uint64\_t\ text;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00724\ \};}
+\DoxyCodeLine{00725\ }
+\DoxyCodeLine{00726\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_crash_report_thread}{QueueCrashReportThread}}}
+\DoxyCodeLine{00727\ \{}
+\DoxyCodeLine{00728\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00729\ \};}
+\DoxyCodeLine{00730\ }
+\DoxyCodeLine{00731\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_sys_time}{QueueSysTime}}}
+\DoxyCodeLine{00732\ \{}
+\DoxyCodeLine{00733\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{keywordtype}{float}\ sysTime;}
+\DoxyCodeLine{00735\ \};}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_sys_power}{QueueSysPower}}}
+\DoxyCodeLine{00738\ \{}
+\DoxyCodeLine{00739\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00740\ \ \ \ \ uint64\_t\ delta;}
+\DoxyCodeLine{00741\ \ \ \ \ uint64\_t\ name;\ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00742\ \};}
+\DoxyCodeLine{00743\ }
+\DoxyCodeLine{00744\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_context_switch}{QueueContextSwitch}}}
+\DoxyCodeLine{00745\ \{}
+\DoxyCodeLine{00746\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00747\ \ \ \ \ uint32\_t\ oldThread;}
+\DoxyCodeLine{00748\ \ \ \ \ uint32\_t\ newThread;}
+\DoxyCodeLine{00749\ \ \ \ \ uint8\_t\ cpu;}
+\DoxyCodeLine{00750\ \ \ \ \ uint8\_t\ oldThreadWaitReason;}
+\DoxyCodeLine{00751\ \ \ \ \ uint8\_t\ oldThreadState;}
+\DoxyCodeLine{00752\ \ \ \ \ uint8\_t\ previousCState;}
+\DoxyCodeLine{00753\ \ \ \ \ int8\_t\ newThreadPriority;}
+\DoxyCodeLine{00754\ \ \ \ \ int8\_t\ oldThreadPriority;}
+\DoxyCodeLine{00755\ \};}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_thread_wakeup}{QueueThreadWakeup}}}
+\DoxyCodeLine{00758\ \{}
+\DoxyCodeLine{00759\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00760\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00761\ \ \ \ \ uint8\_t\ cpu;}
+\DoxyCodeLine{00762\ \ \ \ \ int8\_t\ adjustReason;}
+\DoxyCodeLine{00763\ \ \ \ \ int8\_t\ adjustIncrement;}
+\DoxyCodeLine{00764\ \};}
+\DoxyCodeLine{00765\ }
+\DoxyCodeLine{00766\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_tid_to_pid}{QueueTidToPid}}}
+\DoxyCodeLine{00767\ \{}
+\DoxyCodeLine{00768\ \ \ \ \ uint64\_t\ tid;}
+\DoxyCodeLine{00769\ \ \ \ \ uint64\_t\ pid;}
+\DoxyCodeLine{00770\ \};}
+\DoxyCodeLine{00771\ }
+\DoxyCodeLine{00772\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}}
+\DoxyCodeLine{00773\ \{}
+\DoxyCodeLine{00774\ \ \ \ \ uint64\_t\ ip;}
+\DoxyCodeLine{00775\ \ \ \ \ int64\_t\ time;}
+\DoxyCodeLine{00776\ \};}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \textcolor{keyword}{enum\ class}\ PlotFormatType\ :\ uint8\_t}
+\DoxyCodeLine{00779\ \{}
+\DoxyCodeLine{00780\ \ \ \ \ Number,}
+\DoxyCodeLine{00781\ \ \ \ \ Memory,}
+\DoxyCodeLine{00782\ \ \ \ \ Percentage}
+\DoxyCodeLine{00783\ \};}
+\DoxyCodeLine{00784\ }
+\DoxyCodeLine{00785\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_plot_config}{QueuePlotConfig}}}
+\DoxyCodeLine{00786\ \{}
+\DoxyCodeLine{00787\ \ \ \ \ uint64\_t\ name;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00788\ \ \ \ \ uint8\_t\ type;}
+\DoxyCodeLine{00789\ \ \ \ \ uint8\_t\ step;}
+\DoxyCodeLine{00790\ \ \ \ \ uint8\_t\ fill;}
+\DoxyCodeLine{00791\ \ \ \ \ uint32\_t\ color;}
+\DoxyCodeLine{00792\ \};}
+\DoxyCodeLine{00793\ }
+\DoxyCodeLine{00794\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_param_setup}{QueueParamSetup}}}
+\DoxyCodeLine{00795\ \{}
+\DoxyCodeLine{00796\ \ \ \ \ uint32\_t\ idx;}
+\DoxyCodeLine{00797\ \ \ \ \ uint64\_t\ name;\ \ \ \ \ \ \textcolor{comment}{//\ ptr}}
+\DoxyCodeLine{00798\ \ \ \ \ uint8\_t\ type;}
+\DoxyCodeLine{00799\ \ \ \ \ int32\_t\ val;}
+\DoxyCodeLine{00800\ \};}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00802\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_source_code_not_available}{QueueSourceCodeNotAvailable}}}
+\DoxyCodeLine{00803\ \{}
+\DoxyCodeLine{00804\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00805\ \};}
+\DoxyCodeLine{00806\ }
+\DoxyCodeLine{00807\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_cpu_topology}{QueueCpuTopology}}}
+\DoxyCodeLine{00808\ \{}
+\DoxyCodeLine{00809\ \ \ \ \ uint32\_t\ package;}
+\DoxyCodeLine{00810\ \ \ \ \ uint32\_t\ die;}
+\DoxyCodeLine{00811\ \ \ \ \ uint32\_t\ core;}
+\DoxyCodeLine{00812\ \ \ \ \ uint32\_t\ thread;}
+\DoxyCodeLine{00813\ \};}
+\DoxyCodeLine{00814\ }
+\DoxyCodeLine{00815\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_external_name_metadata}{QueueExternalNameMetadata}}}
+\DoxyCodeLine{00816\ \{}
+\DoxyCodeLine{00817\ \ \ \ \ uint64\_t\ thread;}
+\DoxyCodeLine{00818\ \ \ \ \ uint64\_t\ name;}
+\DoxyCodeLine{00819\ \ \ \ \ uint64\_t\ threadName;}
+\DoxyCodeLine{00820\ \};}
+\DoxyCodeLine{00821\ }
+\DoxyCodeLine{00822\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_symbol_code_metadata}{QueueSymbolCodeMetadata}}}
+\DoxyCodeLine{00823\ \{}
+\DoxyCodeLine{00824\ \ \ \ \ uint64\_t\ symbol;}
+\DoxyCodeLine{00825\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00826\ \ \ \ \ uint32\_t\ size;}
+\DoxyCodeLine{00827\ \};}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_source_code_metadata}{QueueSourceCodeMetadata}}}
+\DoxyCodeLine{00830\ \{}
+\DoxyCodeLine{00831\ \ \ \ \ uint64\_t\ ptr;}
+\DoxyCodeLine{00832\ \ \ \ \ uint32\_t\ size;}
+\DoxyCodeLine{00833\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00834\ \};}
+\DoxyCodeLine{00835\ }
+\DoxyCodeLine{00836\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}}
+\DoxyCodeLine{00837\ \{}
+\DoxyCodeLine{00838\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00839\ \ \ \ \ \{}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ QueueType\ type;}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ uint8\_t\ idx;}
+\DoxyCodeLine{00842\ \ \ \ \ \};}
+\DoxyCodeLine{00843\ \};}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00845\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_queue_item}{QueueItem}}}
+\DoxyCodeLine{00846\ \{}
+\DoxyCodeLine{00847\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ hdr;}
+\DoxyCodeLine{00848\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00849\ \ \ \ \ \{}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_thread_context}{QueueThreadContext}}\ threadCtx;}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin}{QueueZoneBegin}}\ zoneBegin;}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin_lean}{QueueZoneBeginLean}}\ zoneBeginLean;}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin_thread}{QueueZoneBeginThread}}\ zoneBeginThread;}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin32}{QueueZoneBegin32}}\ zoneBegin32;}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin16}{QueueZoneBegin16}}\ zoneBegin16;}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end}{QueueZoneEnd}}\ zoneEnd;}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end32}{QueueZoneEnd32}}\ zoneEnd32;}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end16}{QueueZoneEnd16}}\ zoneEnd16;}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end_thread}{QueueZoneEndThread}}\ zoneEndThread;}
+\DoxyCodeLine{00860\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_validation}{QueueZoneValidation}}\ zoneValidation;}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_validation_thread}{QueueZoneValidationThread}}\ zoneValidationThread;}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_color}{QueueZoneColor}}\ zoneColor;}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_color_thread}{QueueZoneColorThread}}\ zoneColorThread;}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_value}{QueueZoneValue}}\ zoneValue;}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_value_thread}{QueueZoneValueThread}}\ zoneValueThread;}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ stringTransfer;}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_mark}{QueueFrameMark}}\ frameMark;}
+\DoxyCodeLine{00868\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_vsync}{QueueFrameVsync}}\ frameVsync;}
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_image}{QueueFrameImage}}\ frameImage;}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_image_fat}{QueueFrameImageFat}}\ frameImageFat;}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_source_location}{QueueSourceLocation}}\ srcloc;}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_text_fat}{QueueZoneTextFat}}\ zoneTextFat;}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_text_fat_thread}{QueueZoneTextFatThread}}\ zoneTextFatThread;}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_announce}{QueueLockAnnounce}}\ lockAnnounce;}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_terminate}{QueueLockTerminate}}\ lockTerminate;}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_wait}{QueueLockWait}}\ lockWait;}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_obtain}{QueueLockObtain}}\ lockObtain;}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_release}{QueueLockRelease}}\ lockRelease;}
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_release_shared}{QueueLockReleaseShared}}\ lockReleaseShared;}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_mark}{QueueLockMark}}\ lockMark;}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_name}{QueueLockName}}\ lockName;}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_name_fat}{QueueLockNameFat}}\ lockNameFat;}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_int}{QueuePlotDataInt}}\ plotDataInt;}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_float}{QueuePlotDataFloat}}\ plotDataFloat;}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_double}{QueuePlotDataDouble}}\ plotDataDouble;}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message}{QueueMessage}}\ message;}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_metadata}{QueueMessageMetadata}}\ messageMetadata;}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color}{QueueMessageColor}}\ messageColor;}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_metadata}{QueueMessageColorMetadata}}\ messageColorMetadata;}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_literal}{QueueMessageLiteral}}\ messageLiteral;}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_literal_thread}{QueueMessageLiteralThread}}\ messageLiteralThread;}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_literal}{QueueMessageColorLiteral}}\ messageColorLiteral;}
+\DoxyCodeLine{00893\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_literal_thread}{QueueMessageColorLiteralThread}}\ messageColorLiteralThread;}
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_fat}{QueueMessageFat}}\ messageFat;}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_fat_thread}{QueueMessageFatThread}}\ messageFatThread;}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_fat}{QueueMessageColorFat}}\ messageColorFat;}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_fat_thread}{QueueMessageColorFatThread}}\ messageColorFatThread;}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_new_context}{QueueGpuNewContext}}\ gpuNewContext;}
+\DoxyCodeLine{00899\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin}{QueueGpuZoneBegin}}\ gpuZoneBegin;}
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin_lean}{QueueGpuZoneBeginLean}}\ gpuZoneBeginLean;}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_end}{QueueGpuZoneEnd}}\ gpuZoneEnd;}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_time}{QueueGpuTime}}\ gpuTime;}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_calibration}{QueueGpuCalibration}}\ gpuCalibration;}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_time_sync}{QueueGpuTimeSync}}\ gpuTimeSync;}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_context_name}{QueueGpuContextName}}\ gpuContextName;}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_context_name_fat}{QueueGpuContextNameFat}}\ gpuContextNameFat;}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_annotation_name}{QueueGpuAnnotationName}}\ gpuAnnotationName;}
+\DoxyCodeLine{00908\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_annotation_name_fat}{QueueGpuAnnotationNameFat}}\ gpuAnnotationNameFat;}
+\DoxyCodeLine{00909\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_alloc}{QueueMemAlloc}}\ memAlloc;}
+\DoxyCodeLine{00910\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_free}{QueueMemFree}}\ memFree;}
+\DoxyCodeLine{00911\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_discard}{QueueMemDiscard}}\ memDiscard;}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_name_payload}{QueueMemNamePayload}}\ memName;}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_thread_group_hint}{QueueThreadGroupHint}}\ threadGroupHint;}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_fat}{QueueCallstackFat}}\ callstackFat;}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_fat_thread}{QueueCallstackFatThread}}\ callstackFatThread;}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_alloc_fat}{QueueCallstackAllocFat}}\ callstackAllocFat;}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_alloc_fat_thread}{QueueCallstackAllocFatThread}}\ callstackAllocFatThread;}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample}{QueueCallstackSample}}\ callstackSample;}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample_fat}{QueueCallstackSampleFat}}\ callstackSampleFat;}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample32}{QueueCallstackSample32}}\ callstackSample32;}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample16}{QueueCallstackSample16}}\ callstackSample16;}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame_size}{QueueCallstackFrameSize}}\ callstackFrameSize;}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame_size_fat}{QueueCallstackFrameSizeFat}}\ callstackFrameSizeFat;}
+\DoxyCodeLine{00924\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame}{QueueCallstackFrame}}\ callstackFrame;}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_symbol_information}{QueueSymbolInformation}}\ symbolInformation;}
+\DoxyCodeLine{00926\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_symbol_information_fat}{QueueSymbolInformationFat}}\ symbolInformationFat;}
+\DoxyCodeLine{00927\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_crash_report}{QueueCrashReport}}\ crashReport;}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_crash_report_thread}{QueueCrashReportThread}}\ crashReportThread;}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_sys_time}{QueueSysTime}}\ sysTime;}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_sys_power}{QueueSysPower}}\ sysPower;}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_context_switch}{QueueContextSwitch}}\ contextSwitch;}
+\DoxyCodeLine{00932\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_thread_wakeup}{QueueThreadWakeup}}\ threadWakeup;}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_tid_to_pid}{QueueTidToPid}}\ tidToPid;}
+\DoxyCodeLine{00934\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}\ hwSample;}
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_config}{QueuePlotConfig}}\ plotConfig;}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_param_setup}{QueueParamSetup}}\ paramSetup;}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_cpu_topology}{QueueCpuTopology}}\ cpuTopology;}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_external_name_metadata}{QueueExternalNameMetadata}}\ externalNameMetadata;}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_symbol_code_metadata}{QueueSymbolCodeMetadata}}\ symbolCodeMetadata;}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_source_code_metadata}{QueueSourceCodeMetadata}}\ sourceCodeMetadata;}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_source_code_not_available}{QueueSourceCodeNotAvailable}}\ sourceCodeNotAvailable;}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_fiber_enter}{QueueFiberEnter}}\ fiberEnter;}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_fiber_leave}{QueueFiberLeave}}\ fiberLeave;}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_section_enter}{QueueSectionEnter}}\ sectionEnter;}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_section_enter_fat}{QueueSectionEnterFat}}\ sectionEnterFat;}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_section_leave}{QueueSectionLeave}}\ sectionLeave;}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_annotation}{QueueGpuZoneAnnotation}}\ zoneAnnotation;}
+\DoxyCodeLine{00948\ \ \ \ \ \};}
+\DoxyCodeLine{00949\ \};}
+\DoxyCodeLine{00950\ \textcolor{preprocessor}{\#pragma\ pack(\ pop\ )}}
+\DoxyCodeLine{00951\ }
+\DoxyCodeLine{00952\ }
+\DoxyCodeLine{00953\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ QueueItemSize\ =\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_item}{QueueItem}}\ );}
+\DoxyCodeLine{00954\ }
+\DoxyCodeLine{00955\ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ QueueDataSize[]\ =\ \{}
+\DoxyCodeLine{00956\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ zone\ text}}
+\DoxyCodeLine{00957\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ zone\ name}}
+\DoxyCodeLine{00958\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_metadata}{QueueMessageMetadata}}\ ),\ \ \ \ \ \textcolor{comment}{//\ Message}}
+\DoxyCodeLine{00959\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_metadata}{QueueMessageColorMetadata}}\ ),\textcolor{comment}{//\ MessageColor}}
+\DoxyCodeLine{00960\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_metadata}{QueueMessageMetadata}}\ ),\ \ \ \ \ \textcolor{comment}{//\ MessageCallstack}}
+\DoxyCodeLine{00961\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_metadata}{QueueMessageColorMetadata}}\ ),\textcolor{comment}{//\ MessageColorCallstack}}
+\DoxyCodeLine{00962\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message}{QueueMessage}}\ ),\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ app\ info}}
+\DoxyCodeLine{00963\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin_lean}{QueueZoneBeginLean}}\ ),\ \ \ \textcolor{comment}{//\ allocated\ source\ location}}
+\DoxyCodeLine{00964\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin_lean}{QueueZoneBeginLean}}\ ),\ \ \ \textcolor{comment}{//\ allocated\ source\ location,\ callstack}}
+\DoxyCodeLine{00965\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ callstack\ memory}}
+\DoxyCodeLine{00966\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{00967\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ callstack\ alloc}}
+\DoxyCodeLine{00968\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample}{QueueCallstackSample}}\ ),}
+\DoxyCodeLine{00969\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample32}{QueueCallstackSample32}}\ ),}
+\DoxyCodeLine{00970\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample16}{QueueCallstackSample16}}\ ),}
+\DoxyCodeLine{00971\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample}{QueueCallstackSample}}\ ),\ \ \ \textcolor{comment}{//\ context\ switch}}
+\DoxyCodeLine{00972\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample32}{QueueCallstackSample32}}\ ),\ \textcolor{comment}{//\ context\ switch}}
+\DoxyCodeLine{00973\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_sample16}{QueueCallstackSample16}}\ ),\ \textcolor{comment}{//\ context\ switch}}
+\DoxyCodeLine{00974\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_image}{QueueFrameImage}}\ ),}
+\DoxyCodeLine{00975\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin}{QueueZoneBegin}}\ ),}
+\DoxyCodeLine{00976\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin32}{QueueZoneBegin32}}\ ),}
+\DoxyCodeLine{00977\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin16}{QueueZoneBegin16}}\ ),}
+\DoxyCodeLine{00978\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin}{QueueZoneBegin}}\ ),\ \ \ \ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{00979\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin32}{QueueZoneBegin32}}\ ),\ \ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{00980\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_begin16}{QueueZoneBegin16}}\ ),\ \ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{00981\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end}{QueueZoneEnd}}\ ),}
+\DoxyCodeLine{00982\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end32}{QueueZoneEnd32}}\ ),}
+\DoxyCodeLine{00983\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_end16}{QueueZoneEnd16}}\ ),}
+\DoxyCodeLine{00984\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_wait}{QueueLockWait}}\ ),}
+\DoxyCodeLine{00985\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_obtain}{QueueLockObtain}}\ ),}
+\DoxyCodeLine{00986\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_release}{QueueLockRelease}}\ ),}
+\DoxyCodeLine{00987\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_wait}{QueueLockWait}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ shared}}
+\DoxyCodeLine{00988\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_obtain}{QueueLockObtain}}\ ),\ \ \ \ \ \ \textcolor{comment}{//\ shared}}
+\DoxyCodeLine{00989\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_release_shared}{QueueLockReleaseShared}}\ ),}
+\DoxyCodeLine{00990\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_name}{QueueLockName}}\ ),}
+\DoxyCodeLine{00991\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_alloc}{QueueMemAlloc}}\ ),}
+\DoxyCodeLine{00992\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_alloc}{QueueMemAlloc}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ named}}
+\DoxyCodeLine{00993\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_free}{QueueMemFree}}\ ),}
+\DoxyCodeLine{00994\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_free}{QueueMemFree}}\ ),\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ named}}
+\DoxyCodeLine{00995\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_alloc}{QueueMemAlloc}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{00996\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_alloc}{QueueMemAlloc}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ callstack,\ named}}
+\DoxyCodeLine{00997\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_free}{QueueMemFree}}\ ),\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{00998\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_free}{QueueMemFree}}\ ),\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ callstack,\ named}}
+\DoxyCodeLine{00999\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_discard}{QueueMemDiscard}}\ ),}
+\DoxyCodeLine{01000\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_discard}{QueueMemDiscard}}\ ),\ \ \ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{01001\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin}{QueueGpuZoneBegin}}\ ),}
+\DoxyCodeLine{01002\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin}{QueueGpuZoneBegin}}\ ),\ \ \ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{01003\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin_lean}{QueueGpuZoneBeginLean}}\ ),\textcolor{comment}{//\ allocated\ source\ location}}
+\DoxyCodeLine{01004\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin_lean}{QueueGpuZoneBeginLean}}\ ),\textcolor{comment}{//\ allocated\ source\ location,\ callstack}}
+\DoxyCodeLine{01005\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_end}{QueueGpuZoneEnd}}\ ),}
+\DoxyCodeLine{01006\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin}{QueueGpuZoneBegin}}\ ),\ \ \ \ \textcolor{comment}{//\ serial}}
+\DoxyCodeLine{01007\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin}{QueueGpuZoneBegin}}\ ),\ \ \ \ \textcolor{comment}{//\ serial,\ callstack}}
+\DoxyCodeLine{01008\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin_lean}{QueueGpuZoneBeginLean}}\ ),\textcolor{comment}{//\ serial,\ allocated\ source\ location}}
+\DoxyCodeLine{01009\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_begin_lean}{QueueGpuZoneBeginLean}}\ ),\textcolor{comment}{//\ serial,\ allocated\ source\ location,\ callstack}}
+\DoxyCodeLine{01010\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_end}{QueueGpuZoneEnd}}\ ),\ \ \ \ \ \ \textcolor{comment}{//\ serial}}
+\DoxyCodeLine{01011\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_int}{QueuePlotDataInt}}\ ),}
+\DoxyCodeLine{01012\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_float}{QueuePlotDataFloat}}\ ),}
+\DoxyCodeLine{01013\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_data_double}{QueuePlotDataDouble}}\ ),}
+\DoxyCodeLine{01014\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_context_switch}{QueueContextSwitch}}\ ),}
+\DoxyCodeLine{01015\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_thread_wakeup}{QueueThreadWakeup}}\ ),}
+\DoxyCodeLine{01016\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_time}{QueueGpuTime}}\ ),}
+\DoxyCodeLine{01017\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_context_name}{QueueGpuContextName}}\ ),}
+\DoxyCodeLine{01018\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_annotation_name}{QueueGpuAnnotationName}}\ ),}
+\DoxyCodeLine{01019\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame_size}{QueueCallstackFrameSize}}\ ),}
+\DoxyCodeLine{01020\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_symbol_information}{QueueSymbolInformation}}\ ),}
+\DoxyCodeLine{01021\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ExternalNameMetadata\ -\/\ not\ for\ wire\ transfer}}
+\DoxyCodeLine{01022\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SymbolCodeMetadata\ -\/\ not\ for\ wire\ transfer}}
+\DoxyCodeLine{01023\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ SourceCodeMetadata\ -\/\ not\ for\ wire\ transfer}}
+\DoxyCodeLine{01024\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_fiber_enter}{QueueFiberEnter}}\ ),}
+\DoxyCodeLine{01025\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_fiber_leave}{QueueFiberLeave}}\ ),}
+\DoxyCodeLine{01026\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_section_enter}{QueueSectionEnter}}\ ),}
+\DoxyCodeLine{01027\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_section_leave}{QueueSectionLeave}}\ ),}
+\DoxyCodeLine{01028\ \ \ \ \ \textcolor{comment}{//\ above\ items\ must\ be\ first}}
+\DoxyCodeLine{01029\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ terminate}}
+\DoxyCodeLine{01030\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ keep\ alive}}
+\DoxyCodeLine{01031\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_thread_context}{QueueThreadContext}}\ ),}
+\DoxyCodeLine{01032\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_calibration}{QueueGpuCalibration}}\ ),}
+\DoxyCodeLine{01033\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_time_sync}{QueueGpuTimeSync}}\ ),}
+\DoxyCodeLine{01034\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ crash}}
+\DoxyCodeLine{01035\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_crash_report}{QueueCrashReport}}\ ),}
+\DoxyCodeLine{01036\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_validation}{QueueZoneValidation}}\ ),}
+\DoxyCodeLine{01037\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_color}{QueueZoneColor}}\ ),}
+\DoxyCodeLine{01038\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_zone_value}{QueueZoneValue}}\ ),}
+\DoxyCodeLine{01039\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_mark}{QueueFrameMark}}\ ),\ \ \ \ \ \ \ \textcolor{comment}{//\ continuous\ frames}}
+\DoxyCodeLine{01040\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_mark}{QueueFrameMark}}\ ),\ \ \ \ \ \ \ \textcolor{comment}{//\ start}}
+\DoxyCodeLine{01041\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_mark}{QueueFrameMark}}\ ),\ \ \ \ \ \ \ \textcolor{comment}{//\ end}}
+\DoxyCodeLine{01042\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_frame_vsync}{QueueFrameVsync}}\ ),}
+\DoxyCodeLine{01043\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_source_location}{QueueSourceLocation}}\ ),}
+\DoxyCodeLine{01044\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_announce}{QueueLockAnnounce}}\ ),}
+\DoxyCodeLine{01045\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_terminate}{QueueLockTerminate}}\ ),}
+\DoxyCodeLine{01046\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_lock_mark}{QueueLockMark}}\ ),}
+\DoxyCodeLine{01047\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_literal}{QueueMessageLiteral}}\ ),}
+\DoxyCodeLine{01048\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_literal}{QueueMessageColorLiteral}}\ ),}
+\DoxyCodeLine{01049\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_literal}{QueueMessageLiteral}}\ ),\ \ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{01050\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_message_color_literal}{QueueMessageColorLiteral}}\ ),\ \textcolor{comment}{//\ callstack}}
+\DoxyCodeLine{01051\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_new_context}{QueueGpuNewContext}}\ ),}
+\DoxyCodeLine{01052\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_callstack_frame}{QueueCallstackFrame}}\ ),}
+\DoxyCodeLine{01053\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_sys_time}{QueueSysTime}}\ ),}
+\DoxyCodeLine{01054\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_sys_power}{QueueSysPower}}\ ),}
+\DoxyCodeLine{01055\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_tid_to_pid}{QueueTidToPid}}\ ),}
+\DoxyCodeLine{01056\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ cpu\ cycle}}
+\DoxyCodeLine{01057\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ instruction\ retired}}
+\DoxyCodeLine{01058\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ cache\ reference}}
+\DoxyCodeLine{01059\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ cache\ miss}}
+\DoxyCodeLine{01060\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ branch\ retired}}
+\DoxyCodeLine{01061\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_hw_sample}{QueueHwSample}}\ ),\ \ \ \ \ \ \ \ \textcolor{comment}{//\ branch\ miss}}
+\DoxyCodeLine{01062\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_plot_config}{QueuePlotConfig}}\ ),}
+\DoxyCodeLine{01063\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_param_setup}{QueueParamSetup}}\ ),}
+\DoxyCodeLine{01064\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ server\ query\ acknowledgement}}
+\DoxyCodeLine{01065\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_source_code_not_available}{QueueSourceCodeNotAvailable}}\ ),}
+\DoxyCodeLine{01066\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ symbol\ code\ not\ available}}
+\DoxyCodeLine{01067\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_cpu_topology}{QueueCpuTopology}}\ ),}
+\DoxyCodeLine{01068\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ single\ string\ data}}
+\DoxyCodeLine{01069\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ second\ string\ data}}
+\DoxyCodeLine{01070\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ single\ string\ data,\ 8\ bit\ length}}
+\DoxyCodeLine{01071\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ ),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ second\ string\ data,\ 8\ bit\ length}}
+\DoxyCodeLine{01072\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_mem_name_payload}{QueueMemNamePayload}}\ ),}
+\DoxyCodeLine{01073\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_thread_group_hint}{QueueThreadGroupHint}}\ ),}
+\DoxyCodeLine{01074\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_gpu_zone_annotation}{QueueGpuZoneAnnotation}}\ ),\ \textcolor{comment}{//\ GPU\ zone\ annotation}}
+\DoxyCodeLine{01075\ \ \ \ \ \textcolor{comment}{//\ keep\ all\ QueueStringTransfer\ below}}
+\DoxyCodeLine{01076\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ string\ data}}
+\DoxyCodeLine{01077\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ thread\ name}}
+\DoxyCodeLine{01078\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ plot\ name}}
+\DoxyCodeLine{01079\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ allocated\ source\ location\ payload}}
+\DoxyCodeLine{01080\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ callstack\ payload}}
+\DoxyCodeLine{01081\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ callstack\ alloc\ payload}}
+\DoxyCodeLine{01082\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ frame\ name}}
+\DoxyCodeLine{01083\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ frame\ image\ data}}
+\DoxyCodeLine{01084\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ external\ name}}
+\DoxyCodeLine{01085\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ external\ thread\ name}}
+\DoxyCodeLine{01086\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ symbol\ code}}
+\DoxyCodeLine{01087\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ source\ code}}
+\DoxyCodeLine{01088\ \ \ \ \ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_header}{QueueHeader}}\ )\ +\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{structtracy_1_1_queue_string_transfer}{QueueStringTransfer}}\ ),\ \ \textcolor{comment}{//\ fiber\ name}}
+\DoxyCodeLine{01089\ \};}
+\DoxyCodeLine{01090\ }
+\DoxyCodeLine{01091\ \textcolor{keyword}{static\_assert}(\ QueueItemSize\ ==\ 32,\ \textcolor{stringliteral}{"{}Queue\ item\ size\ not\ 32\ bytes"{}}\ );}
+\DoxyCodeLine{01092\ \textcolor{keyword}{static\_assert}(\ \textcolor{keyword}{sizeof}(\ QueueDataSize\ )\ /\ \textcolor{keyword}{sizeof}(\ size\_t\ )\ ==\ (uint8\_t)QueueType::NUM\_TYPES,\ \textcolor{stringliteral}{"{}QueueDataSize\ mismatch"{}}\ );}
+\DoxyCodeLine{01093\ \textcolor{keyword}{static\_assert}(\ \textcolor{keyword}{sizeof}(\ \textcolor{keywordtype}{void}*\ )\ <=\ \textcolor{keyword}{sizeof}(\ uint64\_t\ ),\ \textcolor{stringliteral}{"{}Pointer\ size\ >\ 8\ bytes"{}}\ );}
+\DoxyCodeLine{01094\ \textcolor{keyword}{static\_assert}(\ \textcolor{keyword}{sizeof}(\ \textcolor{keywordtype}{void}*\ )\ ==\ \textcolor{keyword}{sizeof}(\ uintptr\_t\ ),\ \textcolor{stringliteral}{"{}Pointer\ size\ !=\ uintptr\_t"{}}\ );}
+\DoxyCodeLine{01095\ }
+\DoxyCodeLine{01096\ \}}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

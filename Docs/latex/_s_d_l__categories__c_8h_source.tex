@@ -1,0 +1,78 @@
+\doxysection{SDL\+\_\+categories\+\_\+c.\+h}
+\hypertarget{_s_d_l__categories__c_8h_source}{}\label{_s_d_l__categories__c_8h_source}\index{MonoRuntime/extern/sdl/src/events/SDL\_categories\_c.h@{MonoRuntime/extern/sdl/src/events/SDL\_categories\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_categories\_c\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_categories\_c\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_EventCategory}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ SDL\_EVENTCATEGORY\_UNKNOWN,}
+\DoxyCodeLine{00029\ \ \ \ \ SDL\_EVENTCATEGORY\_SYSTEM,}
+\DoxyCodeLine{00030\ \ \ \ \ SDL\_EVENTCATEGORY\_DISPLAY,}
+\DoxyCodeLine{00031\ \ \ \ \ SDL\_EVENTCATEGORY\_WINDOW,}
+\DoxyCodeLine{00032\ \ \ \ \ SDL\_EVENTCATEGORY\_KDEVICE,}
+\DoxyCodeLine{00033\ \ \ \ \ SDL\_EVENTCATEGORY\_KEY,}
+\DoxyCodeLine{00034\ \ \ \ \ SDL\_EVENTCATEGORY\_EDIT,}
+\DoxyCodeLine{00035\ \ \ \ \ SDL\_EVENTCATEGORY\_EDIT\_CANDIDATES,}
+\DoxyCodeLine{00036\ \ \ \ \ SDL\_EVENTCATEGORY\_TEXT,}
+\DoxyCodeLine{00037\ \ \ \ \ SDL\_EVENTCATEGORY\_MDEVICE,}
+\DoxyCodeLine{00038\ \ \ \ \ SDL\_EVENTCATEGORY\_MOTION,}
+\DoxyCodeLine{00039\ \ \ \ \ SDL\_EVENTCATEGORY\_BUTTON,}
+\DoxyCodeLine{00040\ \ \ \ \ SDL\_EVENTCATEGORY\_WHEEL,}
+\DoxyCodeLine{00041\ \ \ \ \ SDL\_EVENTCATEGORY\_JDEVICE,}
+\DoxyCodeLine{00042\ \ \ \ \ SDL\_EVENTCATEGORY\_JAXIS,}
+\DoxyCodeLine{00043\ \ \ \ \ SDL\_EVENTCATEGORY\_JBALL,}
+\DoxyCodeLine{00044\ \ \ \ \ SDL\_EVENTCATEGORY\_JHAT,}
+\DoxyCodeLine{00045\ \ \ \ \ SDL\_EVENTCATEGORY\_JBUTTON,}
+\DoxyCodeLine{00046\ \ \ \ \ SDL\_EVENTCATEGORY\_JBATTERY,}
+\DoxyCodeLine{00047\ \ \ \ \ SDL\_EVENTCATEGORY\_GDEVICE,}
+\DoxyCodeLine{00048\ \ \ \ \ SDL\_EVENTCATEGORY\_GAXIS,}
+\DoxyCodeLine{00049\ \ \ \ \ SDL\_EVENTCATEGORY\_GBUTTON,}
+\DoxyCodeLine{00050\ \ \ \ \ SDL\_EVENTCATEGORY\_GTOUCHPAD,}
+\DoxyCodeLine{00051\ \ \ \ \ SDL\_EVENTCATEGORY\_GSENSOR,}
+\DoxyCodeLine{00052\ \ \ \ \ SDL\_EVENTCATEGORY\_GCAPSENSE,}
+\DoxyCodeLine{00053\ \ \ \ \ SDL\_EVENTCATEGORY\_ADEVICE,}
+\DoxyCodeLine{00054\ \ \ \ \ SDL\_EVENTCATEGORY\_CDEVICE,}
+\DoxyCodeLine{00055\ \ \ \ \ SDL\_EVENTCATEGORY\_SENSOR,}
+\DoxyCodeLine{00056\ \ \ \ \ SDL\_EVENTCATEGORY\_QUIT,}
+\DoxyCodeLine{00057\ \ \ \ \ SDL\_EVENTCATEGORY\_USER,}
+\DoxyCodeLine{00058\ \ \ \ \ SDL\_EVENTCATEGORY\_TFINGER,}
+\DoxyCodeLine{00059\ \ \ \ \ SDL\_EVENTCATEGORY\_PPROXIMITY,}
+\DoxyCodeLine{00060\ \ \ \ \ SDL\_EVENTCATEGORY\_PTOUCH,}
+\DoxyCodeLine{00061\ \ \ \ \ SDL\_EVENTCATEGORY\_PMOTION,}
+\DoxyCodeLine{00062\ \ \ \ \ SDL\_EVENTCATEGORY\_PBUTTON,}
+\DoxyCodeLine{00063\ \ \ \ \ SDL\_EVENTCATEGORY\_PAXIS,}
+\DoxyCodeLine{00064\ \ \ \ \ SDL\_EVENTCATEGORY\_DROP,}
+\DoxyCodeLine{00065\ \ \ \ \ SDL\_EVENTCATEGORY\_CLIPBOARD,}
+\DoxyCodeLine{00066\ \ \ \ \ SDL\_EVENTCATEGORY\_RENDER,}
+\DoxyCodeLine{00067\ \ \ \ \ SDL\_EVENTCATEGORY\_NOTIFICATION,}
+\DoxyCodeLine{00068\ \}\ SDL\_EventCategory;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{extern}\ SDL\_EventCategory\ SDL\_GetEventCategory(Uint32\ type);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_categories\_c\_h\_}}
+
+\end{DoxyCode}

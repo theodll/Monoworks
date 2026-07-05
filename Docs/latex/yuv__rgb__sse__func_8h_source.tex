@@ -1,0 +1,535 @@
+\doxysection{yuv\+\_\+rgb\+\_\+sse\+\_\+func.\+h}
+\hypertarget{yuv__rgb__sse__func_8h_source}{}\label{yuv__rgb__sse__func_8h_source}\index{MonoRuntime/extern/sdl/src/video/yuv2rgb/yuv\_rgb\_sse\_func.h@{MonoRuntime/extern/sdl/src/video/yuv2rgb/yuv\_rgb\_sse\_func.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ 2016\ Adrien\ Descamps}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ BSD\ 3-\/Clause\ License}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*\ You\ need\ to\ define\ the\ following\ macros\ before\ including\ this\ file:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ \ \ SSE\_FUNCTION\_NAME}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ \ \ STD\_FUNCTION\_NAME}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ \ \ YUV\_FORMAT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ \ \ \ RGB\_FORMAT}}
+\DoxyCodeLine{00009\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00010\ \textcolor{comment}{/*\ You\ may\ define\ the\ following\ macro,\ which\ affects\ generated\ code:}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ \ \ SSE\_ALIGNED}}
+\DoxyCodeLine{00012\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifdef\ SSE\_ALIGNED}}
+\DoxyCodeLine{00015\ \textcolor{comment}{/*\ Unaligned\ instructions\ seem\ faster,\ even\ on\ aligned\ data?\ */}}
+\DoxyCodeLine{00016\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\#define\ LOAD\_SI128\ \_mm\_load\_si128}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\#define\ SAVE\_SI128\ \_mm\_stream\_si128}}
+\DoxyCodeLine{00019\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ LOAD\_SI128\ \_mm\_loadu\_si128}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ SAVE\_SI128\ \_mm\_storeu\_si128}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ LOAD\_SI128\ \_mm\_loadu\_si128}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SAVE\_SI128\ \_mm\_storeu\_si128}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ UV2RGB\_16(U,V,R1,G1,B1,R2,G2,B2)\ \(\backslash\)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \ \ r\_tmp\ =\ \_mm\_mullo\_epi16(V,\ \_mm\_set1\_epi16(param-\/>v\_r\_factor));\ \(\backslash\)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\ \ \ \ g\_tmp\ =\ \_mm\_add\_epi16(\ \(\backslash\)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_mm\_mullo\_epi16(U,\ \_mm\_set1\_epi16(param-\/>u\_g\_factor)),\ \(\backslash\)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_mm\_mullo\_epi16(V,\ \_mm\_set1\_epi16(param-\/>v\_g\_factor)));\ \(\backslash\)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\ \ \ \ b\_tmp\ =\ \_mm\_mullo\_epi16(U,\ \_mm\_set1\_epi16(param-\/>u\_b\_factor));\ \(\backslash\)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ R1\ =\ \_mm\_unpacklo\_epi16(r\_tmp,\ r\_tmp);\ \(\backslash\)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\ \ \ \ G1\ =\ \_mm\_unpacklo\_epi16(g\_tmp,\ g\_tmp);\ \(\backslash\)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\ \ \ \ B1\ =\ \_mm\_unpacklo\_epi16(b\_tmp,\ b\_tmp);\ \(\backslash\)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ R2\ =\ \_mm\_unpackhi\_epi16(r\_tmp,\ r\_tmp);\ \(\backslash\)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ G2\ =\ \_mm\_unpackhi\_epi16(g\_tmp,\ g\_tmp);\ \(\backslash\)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\ \ \ \ B2\ =\ \_mm\_unpackhi\_epi16(b\_tmp,\ b\_tmp);\ \(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ ADD\_Y2RGB\_16(Y1,Y2,R1,G1,B1,R2,G2,B2)\ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ Y1\ =\ \_mm\_mullo\_epi16(\_mm\_sub\_epi16(Y1,\ \_mm\_set1\_epi16(param-\/>y\_shift)),\ \_mm\_set1\_epi16(param-\/>y\_factor));\ \(\backslash\)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ Y2\ =\ \_mm\_mullo\_epi16(\_mm\_sub\_epi16(Y2,\ \_mm\_set1\_epi16(param-\/>y\_shift)),\ \_mm\_set1\_epi16(param-\/>y\_factor));\ \(\backslash\)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\ \ \ \ R1\ =\ \_mm\_srai\_epi16(\_mm\_add\_epi16(R1,\ Y1),\ PRECISION);\ \(\backslash\)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ \ \ G1\ =\ \_mm\_srai\_epi16(\_mm\_add\_epi16(G1,\ Y1),\ PRECISION);\ \(\backslash\)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\ \ \ \ B1\ =\ \_mm\_srai\_epi16(\_mm\_add\_epi16(B1,\ Y1),\ PRECISION);\ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ R2\ =\ \_mm\_srai\_epi16(\_mm\_add\_epi16(R2,\ Y2),\ PRECISION);\ \(\backslash\)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ G2\ =\ \_mm\_srai\_epi16(\_mm\_add\_epi16(G2,\ Y2),\ PRECISION);\ \(\backslash\)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ B2\ =\ \_mm\_srai\_epi16(\_mm\_add\_epi16(B2,\ Y2),\ PRECISION);\ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ PACK\_RGB565\_32(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4)\ \(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ red\_mask,\ tmp1,\ tmp2,\ tmp3,\ tmp4;\ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ red\_mask\ =\ \_mm\_set1\_epi16((unsigned\ short)0xF800);\ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ RGB1\ =\ \_mm\_and\_si128(\_mm\_unpacklo\_epi8(\_mm\_setzero\_si128(),\ R1),\ red\_mask);\ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ RGB2\ =\ \_mm\_and\_si128(\_mm\_unpackhi\_epi8(\_mm\_setzero\_si128(),\ R1),\ red\_mask);\ \(\backslash\)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ RGB3\ =\ \_mm\_and\_si128(\_mm\_unpacklo\_epi8(\_mm\_setzero\_si128(),\ R2),\ red\_mask);\ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ RGB4\ =\ \_mm\_and\_si128(\_mm\_unpackhi\_epi8(\_mm\_setzero\_si128(),\ R2),\ red\_mask);\ \(\backslash\)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ \ tmp1\ =\ \_mm\_slli\_epi16(\_mm\_srli\_epi16(\_mm\_unpacklo\_epi8(G1,\ \_mm\_setzero\_si128()),\ 2),\ 5);\ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ tmp2\ =\ \_mm\_slli\_epi16(\_mm\_srli\_epi16(\_mm\_unpackhi\_epi8(G1,\ \_mm\_setzero\_si128()),\ 2),\ 5);\ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ tmp3\ =\ \_mm\_slli\_epi16(\_mm\_srli\_epi16(\_mm\_unpacklo\_epi8(G2,\ \_mm\_setzero\_si128()),\ 2),\ 5);\ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ tmp4\ =\ \_mm\_slli\_epi16(\_mm\_srli\_epi16(\_mm\_unpackhi\_epi8(G2,\ \_mm\_setzero\_si128()),\ 2),\ 5);\ \(\backslash\)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \ RGB1\ =\ \_mm\_or\_si128(RGB1,\ tmp1);\ \(\backslash\)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ RGB2\ =\ \_mm\_or\_si128(RGB2,\ tmp2);\ \(\backslash\)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ RGB3\ =\ \_mm\_or\_si128(RGB3,\ tmp3);\ \(\backslash\)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\ \ \ \ RGB4\ =\ \_mm\_or\_si128(RGB4,\ tmp4);\ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ tmp1\ =\ \_mm\_srli\_epi16(\_mm\_unpacklo\_epi8(B1,\ \_mm\_setzero\_si128()),\ 3);\ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ tmp2\ =\ \_mm\_srli\_epi16(\_mm\_unpackhi\_epi8(B1,\ \_mm\_setzero\_si128()),\ 3);\ \(\backslash\)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ tmp3\ =\ \_mm\_srli\_epi16(\_mm\_unpacklo\_epi8(B2,\ \_mm\_setzero\_si128()),\ 3);\ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ \ \ tmp4\ =\ \_mm\_srli\_epi16(\_mm\_unpackhi\_epi8(B2,\ \_mm\_setzero\_si128()),\ 3);\ \(\backslash\)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ RGB1\ =\ \_mm\_or\_si128(RGB1,\ tmp1);\ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ \ \ RGB2\ =\ \_mm\_or\_si128(RGB2,\ tmp2);\ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ RGB3\ =\ \_mm\_or\_si128(RGB3,\ tmp3);\ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ RGB4\ =\ \_mm\_or\_si128(RGB4,\ tmp4);\ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ PACK\_RGB24\_32\_STEP1(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{RGB1\ =\ \_mm\_packus\_epi16(\_mm\_and\_si128(R1,\_mm\_set1\_epi16(0xFF)),\ \_mm\_and\_si128(R2,\_mm\_set1\_epi16(0xFF)));\ \(\backslash\)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{RGB2\ =\ \_mm\_packus\_epi16(\_mm\_and\_si128(G1,\_mm\_set1\_epi16(0xFF)),\ \_mm\_and\_si128(G2,\_mm\_set1\_epi16(0xFF)));\ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{RGB3\ =\ \_mm\_packus\_epi16(\_mm\_and\_si128(B1,\_mm\_set1\_epi16(0xFF)),\ \_mm\_and\_si128(B2,\_mm\_set1\_epi16(0xFF)));\ \(\backslash\)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{RGB4\ =\ \_mm\_packus\_epi16(\_mm\_srli\_epi16(R1,8),\ \_mm\_srli\_epi16(R2,8));\ \(\backslash\)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{RGB5\ =\ \_mm\_packus\_epi16(\_mm\_srli\_epi16(G1,8),\ \_mm\_srli\_epi16(G2,8));\ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{RGB6\ =\ \_mm\_packus\_epi16(\_mm\_srli\_epi16(B1,8),\ \_mm\_srli\_epi16(B2,8));\ \(\backslash\)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ PACK\_RGB24\_32\_STEP2(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{R1\ =\ \_mm\_packus\_epi16(\_mm\_and\_si128(RGB1,\_mm\_set1\_epi16(0xFF)),\ \_mm\_and\_si128(RGB2,\_mm\_set1\_epi16(0xFF)));\ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{R2\ =\ \_mm\_packus\_epi16(\_mm\_and\_si128(RGB3,\_mm\_set1\_epi16(0xFF)),\ \_mm\_and\_si128(RGB4,\_mm\_set1\_epi16(0xFF)));\ \(\backslash\)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{G1\ =\ \_mm\_packus\_epi16(\_mm\_and\_si128(RGB5,\_mm\_set1\_epi16(0xFF)),\ \_mm\_and\_si128(RGB6,\_mm\_set1\_epi16(0xFF)));\ \(\backslash\)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{G2\ =\ \_mm\_packus\_epi16(\_mm\_srli\_epi16(RGB1,8),\ \_mm\_srli\_epi16(RGB2,8));\ \(\backslash\)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{B1\ =\ \_mm\_packus\_epi16(\_mm\_srli\_epi16(RGB3,8),\ \_mm\_srli\_epi16(RGB4,8));\ \(\backslash\)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{B2\ =\ \_mm\_packus\_epi16(\_mm\_srli\_epi16(RGB5,8),\ \_mm\_srli\_epi16(RGB6,8));\ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ PACK\_RGB24\_32(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{PACK\_RGB24\_32\_STEP1(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{PACK\_RGB24\_32\_STEP2(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{PACK\_RGB24\_32\_STEP1(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{PACK\_RGB24\_32\_STEP2(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{PACK\_RGB24\_32\_STEP1(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6)\ \(\backslash\)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ PACK\_RGBA\_32(R1,\ R2,\ G1,\ G2,\ B1,\ B2,\ A1,\ A2,\ RGB1,\ RGB2,\ RGB3,\ RGB4,\ RGB5,\ RGB6,\ RGB7,\ RGB8)\ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ lo\_ab,\ hi\_ab,\ lo\_gr,\ hi\_gr;\ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\ \ \ \ lo\_ab\ =\ \_mm\_unpacklo\_epi8(\ A1,\ B1\ );\ \(\backslash\)}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\ \ \ \ hi\_ab\ =\ \_mm\_unpackhi\_epi8(\ A1,\ B1\ );\ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ lo\_gr\ =\ \_mm\_unpacklo\_epi8(\ G1,\ R1\ );\ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ \ \ hi\_gr\ =\ \_mm\_unpackhi\_epi8(\ G1,\ R1\ );\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ RGB1\ =\ \_mm\_unpacklo\_epi16(\ lo\_ab,\ lo\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ RGB2\ =\ \_mm\_unpackhi\_epi16(\ lo\_ab,\ lo\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\ \ \ \ RGB3\ =\ \_mm\_unpacklo\_epi16(\ hi\_ab,\ hi\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\ \ \ \ RGB4\ =\ \_mm\_unpackhi\_epi16(\ hi\_ab,\ hi\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\ \ \ \ lo\_ab\ =\ \_mm\_unpacklo\_epi8(\ A2,\ B2\ );\ \(\backslash\)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\ \ \ \ hi\_ab\ =\ \_mm\_unpackhi\_epi8(\ A2,\ B2\ );\ \(\backslash\)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\ \ \ \ lo\_gr\ =\ \_mm\_unpacklo\_epi8(\ G2,\ R2\ );\ \(\backslash\)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\ \ \ \ hi\_gr\ =\ \_mm\_unpackhi\_epi8(\ G2,\ R2\ );\ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ \ \ RGB5\ =\ \_mm\_unpacklo\_epi16(\ lo\_ab,\ lo\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\ \ \ \ RGB6\ =\ \_mm\_unpackhi\_epi16(\ lo\_ab,\ lo\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\ \ \ \ RGB7\ =\ \_mm\_unpacklo\_epi16(\ hi\_ab,\ hi\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\ \ \ \ RGB8\ =\ \_mm\_unpackhi\_epi16(\ hi\_ab,\ hi\_gr\ );\ \(\backslash\)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#if\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGB565}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ PACK\_PIXEL\ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8;\ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGB565\_32(r\_8\_11,\ r\_8\_12,\ g\_8\_11,\ g\_8\_12,\ b\_8\_11,\ b\_8\_12,\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4)\ \(\backslash\)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGB565\_32(r\_8\_21,\ r\_8\_22,\ g\_8\_21,\ g\_8\_22,\ b\_8\_21,\ b\_8\_22,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8)\ \(\backslash\)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGB24}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ PACK\_PIXEL\ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6;\ \(\backslash\)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_7,\ rgb\_8,\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12;\ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGB24\_32(r\_8\_11,\ r\_8\_12,\ g\_8\_11,\ g\_8\_12,\ b\_8\_11,\ b\_8\_12,\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6)\ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGB24\_32(r\_8\_21,\ r\_8\_22,\ g\_8\_21,\ g\_8\_22,\ b\_8\_21,\ b\_8\_22,\ rgb\_7,\ rgb\_8,\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12)\ \(\backslash\)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGBA}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ PACK\_PIXEL\ \(\backslash\)}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8;\ \(\backslash\)}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16;\ \(\backslash\)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ a\ =\ \_mm\_set1\_epi8((unsigned\ char)0xFF);\ \(\backslash\)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(r\_8\_11,\ r\_8\_12,\ g\_8\_11,\ g\_8\_12,\ b\_8\_11,\ b\_8\_12,\ a,\ a,\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8)\ \(\backslash\)}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(r\_8\_21,\ r\_8\_22,\ g\_8\_21,\ g\_8\_22,\ b\_8\_21,\ b\_8\_22,\ a,\ a,\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16)\ \(\backslash\)}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_BGRA}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ PACK\_PIXEL\ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8;\ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16;\ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ a\ =\ \_mm\_set1\_epi8((unsigned\ char)0xFF);\ \(\backslash\)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(b\_8\_11,\ b\_8\_12,\ g\_8\_11,\ g\_8\_12,\ r\_8\_11,\ r\_8\_12,\ a,\ a,\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8)\ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(b\_8\_21,\ b\_8\_22,\ g\_8\_21,\ g\_8\_22,\ r\_8\_21,\ r\_8\_22,\ a,\ a,\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16)\ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_ARGB}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ PACK\_PIXEL\ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8;\ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16;\ \(\backslash\)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ a\ =\ \_mm\_set1\_epi8((unsigned\ char)0xFF);\ \(\backslash\)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(a,\ a,\ r\_8\_11,\ r\_8\_12,\ g\_8\_11,\ g\_8\_12,\ b\_8\_11,\ b\_8\_12,\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8)\ \(\backslash\)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(a,\ a,\ r\_8\_21,\ r\_8\_22,\ g\_8\_21,\ g\_8\_22,\ b\_8\_21,\ b\_8\_22,\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16)\ \(\backslash\)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_ABGR}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ PACK\_PIXEL\ \(\backslash\)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8;\ \(\backslash\)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16;\ \(\backslash\)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ a\ =\ \_mm\_set1\_epi8((unsigned\ char)0xFF);\ \(\backslash\)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(a,\ a,\ b\_8\_11,\ b\_8\_12,\ g\_8\_11,\ g\_8\_12,\ r\_8\_11,\ r\_8\_12,\ rgb\_1,\ rgb\_2,\ rgb\_3,\ rgb\_4,\ rgb\_5,\ rgb\_6,\ rgb\_7,\ rgb\_8)\ \(\backslash\)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\ \ \ \ PACK\_RGBA\_32(a,\ a,\ b\_8\_21,\ b\_8\_22,\ g\_8\_21,\ g\_8\_22,\ r\_8\_21,\ r\_8\_22,\ rgb\_9,\ rgb\_10,\ rgb\_11,\ rgb\_12,\ rgb\_13,\ rgb\_14,\ rgb\_15,\ rgb\_16)\ \(\backslash\)}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#error\ PACK\_PIXEL\ unimplemented}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#if\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGB565}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ SAVE\_LINE1\ \(\backslash\)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1),\ rgb\_1);\ \(\backslash\)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+16),\ rgb\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+32),\ rgb\_3);\ \(\backslash\)}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+48),\ rgb\_4);\ \(\backslash\)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ SAVE\_LINE2\ \(\backslash\)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2),\ rgb\_5);\ \(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+16),\ rgb\_6);\ \(\backslash\)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+32),\ rgb\_7);\ \(\backslash\)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+48),\ rgb\_8);\ \(\backslash\)}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGB24}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ SAVE\_LINE1\ \(\backslash\)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1),\ rgb\_1);\ \(\backslash\)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+16),\ rgb\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+32),\ rgb\_3);\ \(\backslash\)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+48),\ rgb\_4);\ \(\backslash\)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+64),\ rgb\_5);\ \(\backslash\)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+80),\ rgb\_6);\ \(\backslash\)}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ SAVE\_LINE2\ \(\backslash\)}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2),\ rgb\_7);\ \(\backslash\)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+16),\ rgb\_8);\ \(\backslash\)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+32),\ rgb\_9);\ \(\backslash\)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+48),\ rgb\_10);\ \(\backslash\)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+64),\ rgb\_11);\ \(\backslash\)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+80),\ rgb\_12);\ \(\backslash\)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGBA\ ||\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_BGRA\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\ \ \ \ \ \ RGB\_FORMAT\ ==\ RGB\_FORMAT\_ARGB\ ||\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_ABGR}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ SAVE\_LINE1\ \(\backslash\)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1),\ rgb\_1);\ \(\backslash\)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+16),\ rgb\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+32),\ rgb\_3);\ \(\backslash\)}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+48),\ rgb\_4);\ \(\backslash\)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+64),\ rgb\_5);\ \(\backslash\)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+80),\ rgb\_6);\ \(\backslash\)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+96),\ rgb\_7);\ \(\backslash\)}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr1+112),\ rgb\_8);\ \(\backslash\)}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ SAVE\_LINE2\ \(\backslash\)}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2),\ rgb\_9);\ \(\backslash\)}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+16),\ rgb\_10);\ \(\backslash\)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+32),\ rgb\_11);\ \(\backslash\)}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+48),\ rgb\_12);\ \(\backslash\)}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+64),\ rgb\_13);\ \(\backslash\)}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+80),\ rgb\_14);\ \(\backslash\)}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+96),\ rgb\_15);\ \(\backslash\)}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\ \ \ \ SAVE\_SI128((\_\_m128i*)(rgb\_ptr2+112),\ rgb\_16);\ \(\backslash\)}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#error\ SAVE\_LINE\ unimplemented}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#if\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_420}}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ READ\_Y(y\_ptr)\ \(\backslash\)}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\ \ \ \ y\ =\ LOAD\_SI128((const\ \_\_m128i*)(y\_ptr));\ \(\backslash\)}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ READ\_UV\ \(\backslash\)}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\ \ \ \ u\ =\ LOAD\_SI128((const\ \_\_m128i*)(u\_ptr));\ \(\backslash\)}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\ \ \ \ v\ =\ LOAD\_SI128((const\ \_\_m128i*)(v\_ptr));\ \(\backslash\)}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#elif\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_422}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ READ\_Y(y\_ptr)\ \(\backslash\)}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ y1,\ y2;\ \(\backslash\)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\ \ \ \ y1\ =\ \_mm\_srli\_epi16(\_mm\_slli\_epi16(LOAD\_SI128((const\ \_\_m128i*)(y\_ptr)),\ 8),\ 8);\ \(\backslash\)}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\ \ \ \ y2\ =\ \_mm\_srli\_epi16(\_mm\_slli\_epi16(LOAD\_SI128((const\ \_\_m128i*)(y\_ptr+16)),\ 8),\ 8);\ \(\backslash\)}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\ \ \ \ y\ =\ \_mm\_packus\_epi16(y1,\ y2);\ \(\backslash\)}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ READ\_UV\ \(\backslash\)}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ u1,\ u2,\ u3,\ u4,\ v1,\ v2,\ v3,\ v4;\ \(\backslash\)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\ \ \ \ u1\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(u\_ptr)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\ \ \ \ u2\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(u\_ptr+16)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\ \ \ \ u3\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(u\_ptr+32)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\ \ \ \ u4\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(u\_ptr+48)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\ \ \ \ u\ =\ \_mm\_packus\_epi16(\_mm\_packs\_epi32(u1,\ u2),\ \_mm\_packs\_epi32(u3,\ u4));\ \(\backslash\)}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\ \ \ \ v1\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(v\_ptr)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\ \ \ \ v2\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(v\_ptr+16)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\ \ \ \ v3\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(v\_ptr+32)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\ \ \ \ v4\ =\ \_mm\_srli\_epi32(\_mm\_slli\_epi32(LOAD\_SI128((const\ \_\_m128i*)(v\_ptr+48)),\ 24),\ 24);\ \(\backslash\)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ \ \ v\ =\ \_mm\_packus\_epi16(\_mm\_packs\_epi32(v1,\ v2),\ \_mm\_packs\_epi32(v3,\ v4));\ \(\backslash\)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#elif\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_NV12}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#define\ READ\_Y(y\_ptr)\ \(\backslash\)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ y\ =\ LOAD\_SI128((const\ \_\_m128i*)(y\_ptr));\ \(\backslash\)}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#define\ READ\_UV\ \(\backslash\)}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\{\ \(\backslash\)}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ u1,\ u2,\ v1,\ v2;\ \(\backslash\)}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\ \ \ \ u1\ =\ \_mm\_srli\_epi16(\_mm\_slli\_epi16(LOAD\_SI128((const\ \_\_m128i*)(u\_ptr)),\ 8),\ 8);\ \(\backslash\)}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\ \ \ \ u2\ =\ \_mm\_srli\_epi16(\_mm\_slli\_epi16(LOAD\_SI128((const\ \_\_m128i*)(u\_ptr+16)),\ 8),\ 8);\ \(\backslash\)}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\ \ \ \ u\ =\ \_mm\_packus\_epi16(u1,\ u2);\ \(\backslash\)}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\ \ \ \ v1\ =\ \_mm\_srli\_epi16(\_mm\_slli\_epi16(LOAD\_SI128((const\ \_\_m128i*)(v\_ptr)),\ 8),\ 8);\ \(\backslash\)}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\ \ \ \ v2\ =\ \_mm\_srli\_epi16(\_mm\_slli\_epi16(LOAD\_SI128((const\ \_\_m128i*)(v\_ptr+16)),\ 8),\ 8);\ \(\backslash\)}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\ \ \ \ v\ =\ \_mm\_packus\_epi16(v1,\ v2);\ \(\backslash\)}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#error\ READ\_UV\ unimplemented}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#define\ YUV2RGB\_32\ \(\backslash\)}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ r\_tmp,\ g\_tmp,\ b\_tmp;\ \(\backslash\)}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ r\_16\_1,\ g\_16\_1,\ b\_16\_1,\ r\_16\_2,\ g\_16\_2,\ b\_16\_2;\ \(\backslash\)}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ r\_uv\_16\_1,\ g\_uv\_16\_1,\ b\_uv\_16\_1,\ r\_uv\_16\_2,\ g\_uv\_16\_2,\ b\_uv\_16\_2;\ \(\backslash\)}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ y\_16\_1,\ y\_16\_2;\ \(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ y,\ u,\ v,\ u\_16,\ v\_16;\ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ r\_8\_11,\ g\_8\_11,\ b\_8\_11,\ r\_8\_21,\ g\_8\_21,\ b\_8\_21;\ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \ \ \_\_m128i\ r\_8\_12,\ g\_8\_12,\ b\_8\_12,\ r\_8\_22,\ g\_8\_22,\ b\_8\_22;\ \(\backslash\)}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ READ\_UV\ \(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ \ \ }\textcolor{comment}{/*\ process\ first\ 16\ pixels\ of\ first\ line\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\ \ \ \ u\_16\ =\ \_mm\_unpacklo\_epi8(u,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\ \ \ \ v\_16\ =\ \_mm\_unpacklo\_epi8(v,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\ \ \ \ u\_16\ =\ \_mm\_add\_epi16(u\_16,\ \_mm\_set1\_epi16(-\/128));\ \(\backslash\)}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\ \ \ \ v\_16\ =\ \_mm\_add\_epi16(v\_16,\ \_mm\_set1\_epi16(-\/128));\ \(\backslash\)}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \ \ UV2RGB\_16(u\_16,\ v\_16,\ r\_16\_1,\ g\_16\_1,\ b\_16\_1,\ r\_16\_2,\ g\_16\_2,\ b\_16\_2)\ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ r\_uv\_16\_1=r\_16\_1;\ g\_uv\_16\_1=g\_16\_1;\ b\_uv\_16\_1=b\_16\_1;\ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ r\_uv\_16\_2=r\_16\_2;\ g\_uv\_16\_2=g\_16\_2;\ b\_uv\_16\_2=b\_16\_2;\ \(\backslash\)}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \ \ \ READ\_Y(y\_ptr1)\ \(\backslash\)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\ \ \ \ y\_16\_1\ =\ \_mm\_unpacklo\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\ \ \ \ y\_16\_2\ =\ \_mm\_unpackhi\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\ \ \ \ ADD\_Y2RGB\_16(y\_16\_1,\ y\_16\_2,\ r\_16\_1,\ g\_16\_1,\ b\_16\_1,\ r\_16\_2,\ g\_16\_2,\ b\_16\_2)\ \(\backslash\)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\ \ \ \ r\_8\_11\ =\ \_mm\_packus\_epi16(r\_16\_1,\ r\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\ \ \ \ g\_8\_11\ =\ \_mm\_packus\_epi16(g\_16\_1,\ g\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\ \ \ \ b\_8\_11\ =\ \_mm\_packus\_epi16(b\_16\_1,\ b\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\ \ \ \ }\textcolor{comment}{/*\ process\ first\ 16\ pixels\ of\ second\ line\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\ \ \ \ r\_16\_1=r\_uv\_16\_1;\ g\_16\_1=g\_uv\_16\_1;\ b\_16\_1=b\_uv\_16\_1;\ \(\backslash\)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\ \ \ \ r\_16\_2=r\_uv\_16\_2;\ g\_16\_2=g\_uv\_16\_2;\ b\_16\_2=b\_uv\_16\_2;\ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ \ \ \ READ\_Y(y\_ptr2)\ \(\backslash\)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\ \ \ \ y\_16\_1\ =\ \_mm\_unpacklo\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\ \ \ \ y\_16\_2\ =\ \_mm\_unpackhi\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ \ ADD\_Y2RGB\_16(y\_16\_1,\ y\_16\_2,\ r\_16\_1,\ g\_16\_1,\ b\_16\_1,\ r\_16\_2,\ g\_16\_2,\ b\_16\_2)\ \(\backslash\)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ \ \ r\_8\_21\ =\ \_mm\_packus\_epi16(r\_16\_1,\ r\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \ \ g\_8\_21\ =\ \_mm\_packus\_epi16(g\_16\_1,\ g\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \ \ \ b\_8\_21\ =\ \_mm\_packus\_epi16(b\_16\_1,\ b\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\ \ \ \ }\textcolor{comment}{/*\ process\ last\ 16\ pixels\ of\ first\ line\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\ \ \ \ u\_16\ =\ \_mm\_unpackhi\_epi8(u,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\ \ \ \ v\_16\ =\ \_mm\_unpackhi\_epi8(v,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\ \ \ \ u\_16\ =\ \_mm\_add\_epi16(u\_16,\ \_mm\_set1\_epi16(-\/128));\ \(\backslash\)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\ \ \ \ v\_16\ =\ \_mm\_add\_epi16(v\_16,\ \_mm\_set1\_epi16(-\/128));\ \(\backslash\)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\ \ \ \ UV2RGB\_16(u\_16,\ v\_16,\ r\_16\_1,\ g\_16\_1,\ b\_16\_1,\ r\_16\_2,\ g\_16\_2,\ b\_16\_2)\ \(\backslash\)}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\ \ \ \ r\_uv\_16\_1=r\_16\_1;\ g\_uv\_16\_1=g\_16\_1;\ b\_uv\_16\_1=b\_16\_1;\ \(\backslash\)}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\ \ \ \ r\_uv\_16\_2=r\_16\_2;\ g\_uv\_16\_2=g\_16\_2;\ b\_uv\_16\_2=b\_16\_2;\ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\ \ \ \ READ\_Y(y\_ptr1+16*y\_pixel\_stride)\ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\ \ \ \ y\_16\_1\ =\ \_mm\_unpacklo\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\ \ \ \ y\_16\_2\ =\ \_mm\_unpackhi\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\ \ \ \ ADD\_Y2RGB\_16(y\_16\_1,\ y\_16\_2,\ r\_16\_1,\ g\_16\_1,\ b\_16\_1,\ r\_16\_2,\ g\_16\_2,\ b\_16\_2)\ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\ \ \ \ r\_8\_12\ =\ \_mm\_packus\_epi16(r\_16\_1,\ r\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\ \ \ \ g\_8\_12\ =\ \_mm\_packus\_epi16(g\_16\_1,\ g\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\ \ \ \ b\_8\_12\ =\ \_mm\_packus\_epi16(b\_16\_1,\ b\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\ \ \ \ }\textcolor{comment}{/*\ process\ last\ 16\ pixels\ of\ second\ line\ */}\textcolor{preprocessor}{\(\backslash\)}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\ \ \ \ r\_16\_1=r\_uv\_16\_1;\ g\_16\_1=g\_uv\_16\_1;\ b\_16\_1=b\_uv\_16\_1;\ \(\backslash\)}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\ \ \ \ r\_16\_2=r\_uv\_16\_2;\ g\_16\_2=g\_uv\_16\_2;\ b\_16\_2=b\_uv\_16\_2;\ \(\backslash\)}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\ \ \ \ READ\_Y(y\_ptr2+16*y\_pixel\_stride)\ \(\backslash\)}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\ \ \ \ y\_16\_1\ =\ \_mm\_unpacklo\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\ \ \ \ y\_16\_2\ =\ \_mm\_unpackhi\_epi8(y,\ \_mm\_setzero\_si128());\ \(\backslash\)}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\ \ \ \ ADD\_Y2RGB\_16(y\_16\_1,\ y\_16\_2,\ r\_16\_1,\ g\_16\_1,\ b\_16\_1,\ r\_16\_2,\ g\_16\_2,\ b\_16\_2)\ \(\backslash\)}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\ \ \ \ r\_8\_22\ =\ \_mm\_packus\_epi16(r\_16\_1,\ r\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\ \ \ \ g\_8\_22\ =\ \_mm\_packus\_epi16(g\_16\_1,\ g\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\ \ \ \ b\_8\_22\ =\ \_mm\_packus\_epi16(b\_16\_1,\ b\_16\_2);\ \(\backslash\)}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ \textcolor{keywordtype}{void}\ SDL\_TARGETING(\textcolor{stringliteral}{"{}sse2"{}})\ SSE\_FUNCTION\_NAME(uint32\_t\ width,\ uint32\_t\ height,\ }
+\DoxyCodeLine{00386\ \ \ \ \ const\ uint8\_t\ *Y,\ const\ uint8\_t\ *U,\ const\ uint8\_t\ *V,\ uint32\_t\ Y\_stride,\ uint32\_t\ UV\_stride,\ }
+\DoxyCodeLine{00387\ \ \ \ \ uint8\_t\ *RGB,\ uint32\_t\ RGB\_stride,\ }
+\DoxyCodeLine{00388\ \ \ \ \ YCbCrType\ yuv\_type)}
+\DoxyCodeLine{00389\ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_y_u_v2_r_g_b_param}{YUV2RGBParam}}\ *\textcolor{keyword}{const}\ param\ =\ \&(YUV2RGB[yuv\_type]);}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#if\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_420}}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ y\_pixel\_stride\ =\ 1;}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_pixel\_stride\ =\ 1;}
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_x\_sample\_interval\ =\ 2;}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_y\_sample\_interval\ =\ 2;}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#elif\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_422}}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ y\_pixel\_stride\ =\ 2;}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_pixel\_stride\ =\ 4;}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_x\_sample\_interval\ =\ 2;}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_y\_sample\_interval\ =\ 1;}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#elif\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_NV12}}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ y\_pixel\_stride\ =\ 1;}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_pixel\_stride\ =\ 2;}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_x\_sample\_interval\ =\ 2;}
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ uv\_y\_sample\_interval\ =\ 2;}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#if\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGB565}}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ rgb\_pixel\_stride\ =\ 2;}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGB24}}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ rgb\_pixel\_stride\ =\ 3;}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#elif\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_RGBA\ ||\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_BGRA\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\ \ \ \ \ \ RGB\_FORMAT\ ==\ RGB\_FORMAT\_ARGB\ ||\ RGB\_FORMAT\ ==\ RGB\_FORMAT\_ABGR}}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ rgb\_pixel\_stride\ =\ 4;}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#error\ Unknown\ RGB\ pixel\ size}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#if\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_NV12}}
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{comment}{/*\ For\ NV12\ formats\ (where\ U/V\ are\ interleaved)}}
+\DoxyCodeLine{00420\ \textcolor{comment}{\ \ \ \ \ *\ SSE\ READ\_UV\ does\ an\ invalid\ read\ access\ at\ the\ very\ last\ pixel.}}
+\DoxyCodeLine{00421\ \textcolor{comment}{\ \ \ \ \ *\ As\ a\ workaround.\ Make\ sure\ not\ to\ decode\ the\ last\ column\ using\ assembly\ but\ with\ STD\ fallback\ path.}}
+\DoxyCodeLine{00422\ \textcolor{comment}{\ \ \ \ \ *\ see\ https://github.com/libsdl-\/org/SDL/issues/4841}}
+\DoxyCodeLine{00423\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ fix\_read\_nv12\ =\ ((width\ \&\ 31)\ ==\ 0);}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ fix\_read\_nv12\ =\ 0;}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#if\ YUV\_FORMAT\ ==\ YUV\_FORMAT\_422}}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{comment}{/*\ Avoid\ invalid\ read\ on\ last\ line\ */}}
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ fix\_read\_422\ =\ 1;}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ fix\_read\_422\ =\ 0;}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keywordflow}{if}\ (width\ >=\ 32)\ \{}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ uint32\_t\ xpos,\ ypos;}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(ypos=0;\ ypos<(height-\/(uv\_y\_sample\_interval-\/1))\ -\/\ fix\_read\_422;\ ypos+=uv\_y\_sample\_interval)}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y\_ptr1=Y+ypos*Y\_stride,}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *y\_ptr2=Y+(ypos+1)*Y\_stride,}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *u\_ptr=U+(ypos/uv\_y\_sample\_interval)*UV\_stride,}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *v\_ptr=V+(ypos/uv\_y\_sample\_interval)*UV\_stride;}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *rgb\_ptr1=RGB+ypos*RGB\_stride,}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *rgb\_ptr2=RGB+(ypos+1)*RGB\_stride;}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(xpos=0;\ xpos<(width-\/31)\ -\/\ fix\_read\_nv12;\ xpos+=32)}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ YUV2RGB\_32}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PACK\_PIXEL}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SAVE\_LINE1}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (uv\_y\_sample\_interval\ >\ 1)}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SAVE\_LINE2}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y\_ptr1+=32*y\_pixel\_stride;}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ y\_ptr2+=32*y\_pixel\_stride;}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ u\_ptr+=32*uv\_pixel\_stride/uv\_x\_sample\_interval;}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\_ptr+=32*uv\_pixel\_stride/uv\_x\_sample\_interval;}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rgb\_ptr1+=32*rgb\_pixel\_stride;}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rgb\_ptr2+=32*rgb\_pixel\_stride;}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fix\_read\_422)\ \{}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y\_ptr=Y+ypos*Y\_stride,}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *u\_ptr=U+(ypos/uv\_y\_sample\_interval)*UV\_stride,}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *v\_ptr=V+(ypos/uv\_y\_sample\_interval)*UV\_stride;}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *rgb\_ptr=RGB+ypos*RGB\_stride;}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ STD\_FUNCTION\_NAME(width,\ 1,\ y\_ptr,\ u\_ptr,\ v\_ptr,\ Y\_stride,\ UV\_stride,\ rgb\_ptr,\ RGB\_stride,\ yuv\_type);}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ ypos\ +=\ uv\_y\_sample\_interval;}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Catch\ the\ last\ line,\ if\ needed\ */}}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (uv\_y\_sample\_interval\ ==\ 2\ \&\&\ ypos\ ==\ (height-\/1))}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y\_ptr=Y+ypos*Y\_stride,}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *u\_ptr=U+(ypos/uv\_y\_sample\_interval)*UV\_stride,}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *v\_ptr=V+(ypos/uv\_y\_sample\_interval)*UV\_stride;}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *rgb\_ptr=RGB+ypos*RGB\_stride;}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ STD\_FUNCTION\_NAME(width,\ 1,\ y\_ptr,\ u\_ptr,\ v\_ptr,\ Y\_stride,\ UV\_stride,\ rgb\_ptr,\ RGB\_stride,\ yuv\_type);}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00490\ \ \ \ \ \}}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{comment}{/*\ Catch\ the\ right\ column,\ if\ needed\ */}}
+\DoxyCodeLine{00493\ \ \ \ \ \{}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ uint32\_t\ converted\ =\ (width\ \&\ \string~31);}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fix\_read\_nv12)\ \{}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ converted\ -\/=\ 32;}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (converted\ !=\ width)}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint8\_t\ *y\_ptr=Y+converted*y\_pixel\_stride,}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *u\_ptr=U+converted*uv\_pixel\_stride/uv\_x\_sample\_interval,}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *v\_ptr=V+converted*uv\_pixel\_stride/uv\_x\_sample\_interval;}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *rgb\_ptr=RGB+converted*rgb\_pixel\_stride;}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \ \ \ \ STD\_FUNCTION\_NAME(width-\/converted,\ height,\ y\_ptr,\ u\_ptr,\ v\_ptr,\ Y\_stride,\ UV\_stride,\ rgb\_ptr,\ RGB\_stride,\ yuv\_type);}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00508\ \ \ \ \ \}}
+\DoxyCodeLine{00509\ \}}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\#undef\ SSE\_FUNCTION\_NAME}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#undef\ STD\_FUNCTION\_NAME}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#undef\ YUV\_FORMAT}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\#undef\ RGB\_FORMAT}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\#undef\ SSE\_ALIGNED}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#undef\ LOAD\_SI128}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\#undef\ SAVE\_SI128}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#undef\ UV2RGB\_16}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#undef\ ADD\_Y2RGB\_16}}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#undef\ PACK\_RGB24\_32\_STEP1}}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\#undef\ PACK\_RGB24\_32\_STEP2}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#undef\ PACK\_RGB24\_32}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\#undef\ PACK\_RGBA\_32}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#undef\ PACK\_PIXEL}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#undef\ SAVE\_LINE1}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#undef\ SAVE\_LINE2}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#undef\ READ\_Y}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#undef\ READ\_UV}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#undef\ YUV2RGB\_32}}
+
+\end{DoxyCode}

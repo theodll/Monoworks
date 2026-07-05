@@ -1,0 +1,65 @@
+\doxysection{SDL\+\_\+\+Gamepad\+Binding Struct Reference}
+\hypertarget{struct_s_d_l___gamepad_binding}{}\label{struct_s_d_l___gamepad_binding}\index{SDL\_GamepadBinding@{SDL\_GamepadBinding}}
+
+
+{\ttfamily \+\#include $<$SDL\+\_\+gamepad.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_s_d_l___gamepad_binding_a1461c0c5975c13190965eddcc3af9dc3}\label{struct_s_d_l___gamepad_binding_a1461c0c5975c13190965eddcc3af9dc3} 
+SDL\+\_\+\+Gamepad\+Binding\+Type {\bfseries input\+\_\+type}
+\item 
+\Hypertarget{struct_s_d_l___gamepad_binding_a78f1e615e663373bf59bb8c7a6a2628a}\label{struct_s_d_l___gamepad_binding_a78f1e615e663373bf59bb8c7a6a2628a} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>int {\bfseries button}\\
+\>struct \{\\
+\>\>int {\bfseries axis}\\
+\>\>int {\bfseries axis\_min}\\
+\>\>int {\bfseries axis\_max}\\
+\>\} {\bfseries axis}\\
+\>struct \{\\
+\>\>int {\bfseries hat}\\
+\>\>int {\bfseries hat\_mask}\\
+\>\} {\bfseries hat}\\
+\} {\bfseries input}\\
+
+\end{tabbing}\item 
+\Hypertarget{struct_s_d_l___gamepad_binding_a7dd631e06f99a1361a34dce536a0cdd6}\label{struct_s_d_l___gamepad_binding_a7dd631e06f99a1361a34dce536a0cdd6} 
+SDL\+\_\+\+Gamepad\+Binding\+Type {\bfseries output\+\_\+type}
+\item 
+\Hypertarget{struct_s_d_l___gamepad_binding_a33b2e2be616474e0aac6f905d876195d}\label{struct_s_d_l___gamepad_binding_a33b2e2be616474e0aac6f905d876195d} 
+\begin{tabbing}
+xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=xx\=\kill
+union \{\\
+\>SDL\_GamepadButton {\bfseries button}\\
+\>struct \{\\
+\>\>SDL\_GamepadAxis {\bfseries axis}\\
+\>\>int {\bfseries axis\_min}\\
+\>\>int {\bfseries axis\_max}\\
+\>\} {\bfseries axis}\\
+\} {\bfseries output}\\
+
+\end{tabbing}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A mapping between one joystick input to a gamepad control.
+
+A gamepad has a collection of several bindings, to say, for example, when joystick button number 5 is pressed, that should be treated like the gamepad\textquotesingle{}s "{}start"{} button.
+
+SDL has these bindings built-\/in for many popular controllers, and can add more with a simple text string. Those strings are parsed into a collection of these structs to make it easier to operate on the data.
+
+\begin{DoxySince}{Since}
+This struct is available since SDL 3.\+2.\+0.
+\end{DoxySince}
+\begin{DoxySeeAlso}{See also}
+SDL\+\_\+\+Get\+Gamepad\+Bindings 
+\end{DoxySeeAlso}
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Runtime/\+extern/\+sdl/\+include/\+\+SDL3/\+SDL\+\_\+gamepad.\+h\end{DoxyCompactItemize}

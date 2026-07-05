@@ -1,0 +1,52 @@
+\chapter{Touch }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch}\index{Touch@{Touch}}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch_autotoc_md1451}{}\doxysection{\texorpdfstring{System Specific Notes}{System Specific Notes}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch_autotoc_md1451}
+Linux:\+ The linux touch system is currently based off event streams, and proc/\+bus/\+devices. The active user must be given permissions to read /\+dev/\+input/\+\+TOUCHDEVICE, where TOUCHDEVICE is the event stream for your device. Currently only Wacom tablets are supported. If you have an unsupported tablet contact me at \href{mailto:jim.tla+sdl_touch@gmail.com}{\texttt{jim.\+tla+sdl\+\_\+touch@gmail.\+com}} and I will help you get support for it.
+
+Mac:\+ The Mac and i\+Phone APIs are pretty. If your touch device supports them then you\textquotesingle{}ll be fine. If it doesn\textquotesingle{}t, then there isn\textquotesingle{}t much we can do.
+
+i\+Phone:\+ Works out of box.
+
+Windows:\+ Unfortunately there is no windows support as of yet. Support for Windows 7 is planned, but we currently have no way to test. If you have a Windows 7 WM\+\_\+\+TOUCH supported device, and are willing to help test please contact me at \href{mailto:jim.tla+sdl_touch@gmail.com}{\texttt{jim.\+tla+sdl\+\_\+touch@gmail.\+com}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch_autotoc_md1452}{}\doxysection{\texorpdfstring{Events}{Events}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch_autotoc_md1452}
+SDL\+\_\+\+EVENT\+\_\+\+FINGER\+\_\+\+DOWN:\+ Sent when a finger (or stylus) is placed on a touch device. Fields:\+
+\begin{DoxyItemize}
+\item event.\+tfinger.\+touch\+Id -\/ the Id of the touch device.
+\item event.\+tfinger.\+finger\+Id -\/ the Id of the finger which just went down.
+\item event.\+tfinger.\+x -\/ the x coordinate of the touch (0..1)
+\item event.\+tfinger.\+y -\/ the y coordinate of the touch (0..1)
+\item event.\+tfinger.\+pressure -\/ the pressure of the touch (0..1)
+\end{DoxyItemize}
+
+SDL\+\_\+\+EVENT\+\_\+\+FINGER\+\_\+\+MOTION:\+ Sent when a finger (or stylus) is moved on the touch device. Fields:\+ Same as SDL\+\_\+\+EVENT\+\_\+\+FINGER\+\_\+\+DOWN but with additional:\+
+\begin{DoxyItemize}
+\item event.\+tfinger.\+dx -\/ change in x coordinate during this motion event.
+\item event.\+tfinger.\+dy -\/ change in y coordinate during this motion event.
+\end{DoxyItemize}
+
+SDL\+\_\+\+EVENT\+\_\+\+FINGER\+\_\+\+UP:\+ Sent when a finger (or stylus) is lifted from the touch device. Fields:\+ Same as SDL\+\_\+\+EVENT\+\_\+\+FINGER\+\_\+\+DOWN.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch_autotoc_md1453}{}\doxysection{\texorpdfstring{Functions}{Functions}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-touch_autotoc_md1453}
+SDL provides the ability to access the underlying \doxylink{struct_s_d_l___finger}{SDL\+\_\+\+Finger} structures. These structures should {\itshape never} be modified.
+
+The following functions are included from \doxylink{_s_d_l__touch_8h_source}{SDL\+\_\+touch.\+h}
+
+Devices are tracked by instance ID, of type SDL\+\_\+\+Touch\+ID.
+
+To get a list of available device SDL\+\_\+\+Touch\+ID values, call SDL\+\_\+\+Get\+Touch\+Devices(). This returns an array of device IDs, terminated by a zero ID. Optionally, you can get a count of IDs by passing a non-\/\+NULL int\texorpdfstring{$\ast$}{*} to SDL\+\_\+\+Get\+Touch\+Devices() if you\textquotesingle{}d rather not iterate the whole array to get this number.
+
+A SDL\+\_\+\+Touch\+ID may be used to get pointers to \doxylink{struct_s_d_l___finger}{SDL\+\_\+\+Finger}.
+
+SDL\+\_\+\+Get\+Num\+Touch\+Fingers(touch\+ID) may be used to get the number of fingers currently down on the device.
+
+The most common reason to access \doxylink{struct_s_d_l___finger}{SDL\+\_\+\+Finger} is to query the fingers outside the event. In most cases accessing the fingers is using the event. This would be accomplished by code like the following:\+ \begin{DoxyVerb}  float x = event.tfinger.x;
+  float y = event.tfinger.y;
+\end{DoxyVerb}
+
+
+To get a \doxylink{struct_s_d_l___finger}{SDL\+\_\+\+Finger}, call SDL\+\_\+\+Get\+Touch\+Finger(\+SDL\+\_\+\+Touch\+ID touch\+ID, int index), where touch\+ID is a SDL\+\_\+\+Touch\+ID, and index is the requested finger. This returns a \doxylink{struct_s_d_l___finger}{SDL\+\_\+\+Finger} \texorpdfstring{$\ast$}{*}, or NULL if the finger does not exist, or has been removed. A \doxylink{struct_s_d_l___finger}{SDL\+\_\+\+Finger} is guaranteed to be persistent for the duration of a touch, but it will be de-\/allocated as soon as the finger is removed. This occurs when the SDL\+\_\+\+EVENT\+\_\+\+FINGER\+\_\+\+UP event is {\itshape added} to the event queue, and thus {\itshape before} the SDL\+\_\+\+EVENT\+\_\+\+FINGER\+\_\+\+UP event is polled. As a result, be very careful to check for NULL return values.
+
+A \doxylink{struct_s_d_l___finger}{SDL\+\_\+\+Finger} has the following fields:\+
+\begin{DoxyItemize}
+\item x, y:\+ The current coordinates of the touch.
+\item pressure:\+ The pressure of the touch.
+\end{DoxyItemize}
+
+Please direct questions/\+comments to:\+ \href{mailto:jim.tla+sdl_touch@gmail.com}{\texttt{jim.\+tla+sdl\+\_\+touch@gmail.\+com}} (original author, API was changed since) 

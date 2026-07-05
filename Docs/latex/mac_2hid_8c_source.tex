@@ -1,0 +1,1618 @@
+\doxysection{hid.\+c}
+\hypertarget{mac_2hid_8c_source}{}\label{mac_2hid_8c_source}\index{MonoRuntime/extern/sdl/src/hidapi/mac/hid.c@{MonoRuntime/extern/sdl/src/hidapi/mac/hid.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*******************************************************}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ HIDAPI\ -\/\ Multi-\/Platform\ library\ for}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ communication\ with\ HID\ devices.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ Alan\ Ott}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ Signal\ 11\ Software}}
+\DoxyCodeLine{00007\ \textcolor{comment}{}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ libusb/hidapi\ Team}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ Copyright\ 2022,\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ At\ the\ discretion\ of\ the\ user\ of\ this\ library,}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ this\ software\ may\ be\ licensed\ under\ the\ terms\ of\ the}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ GNU\ General\ Public\ License\ v3,\ a\ BSD-\/Style\ license,\ or\ the}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ original\ HIDAPI\ license\ as\ outlined\ in\ the\ LICENSE.txt,}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ LICENSE-\/gpl3.txt,\ LICENSE-\/bsd.txt,\ and\ LICENSE-\/orig.txt}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ files\ located\ at\ the\ root\ of\ the\ source\ distribution.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ These\ files\ may\ also\ be\ found\ in\ the\ public\ source}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ code\ repository\ located\ at:}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ \ \ \ \ \ \ https://github.com/libusb/hidapi\ .}}
+\DoxyCodeLine{00021\ \textcolor{comment}{********************************************************/}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{/*\ See\ Apple\ Technical\ Note\ TN2187\ for\ details\ on\ IOHidManager.\ */}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <IOKit/hid/IOHIDManager.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <IOKit/hid/IOHIDKeys.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <IOKit/IOKitLib.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <IOKit/usb/USBSpec.h>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <CoreFoundation/CoreFoundation.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <mach/mach\_error.h>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ <wchar.h>}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <locale.h>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <pthread.h>}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <sys/time.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <dlfcn.h>}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{hidapi__darwin_8h}{hidapi\_darwin.h}}"{}}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ Barrier\ implementation\ because\ Mac\ OSX\ doesn't\ have\ pthread\_barrier.}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ \ \ It\ also\ doesn't\ have\ clock\_gettime().\ So\ much\ for\ POSIX\ and\ SUSv2.}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ \ \ This\ implementation\ came\ from\ Brent\ Priddy\ and\ was\ posted\ on}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ \ \ StackOverflow.\ It\ is\ used\ with\ his\ permission.\ */}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ pthread\_barrierattr\_t;}
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structpthread__barrier}{pthread\_barrier}}\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ pthread\_mutex\_t\ mutex;}
+\DoxyCodeLine{00048\ \ \ \ \ pthread\_cond\_t\ cond;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{int}\ count;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ trip\_count;}
+\DoxyCodeLine{00051\ \}\ pthread\_barrier\_t;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ pthread\_barrier\_init(pthread\_barrier\_t\ *barrier,\ \textcolor{keyword}{const}\ pthread\_barrierattr\_t\ *attr,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ count)}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ (void)\ attr;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordflow}{if}\ (count\ ==\ 0)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ errno\ =\ EINVAL;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordflow}{if}\ (pthread\_mutex\_init(\&barrier-\/>mutex,\ 0)\ <\ 0)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{if}\ (pthread\_cond\_init(\&barrier-\/>cond,\ 0)\ <\ 0)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ pthread\_mutex\_destroy(\&barrier-\/>mutex);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \ \ \ \ barrier-\/>trip\_count\ =\ count;}
+\DoxyCodeLine{00070\ \ \ \ \ barrier-\/>count\ =\ 0;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ pthread\_barrier\_destroy(pthread\_barrier\_t\ *barrier)}
+\DoxyCodeLine{00076\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ pthread\_cond\_destroy(\&barrier-\/>cond);}
+\DoxyCodeLine{00078\ \ \ \ \ pthread\_mutex\_destroy(\&barrier-\/>mutex);}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00080\ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ pthread\_barrier\_wait(pthread\_barrier\_t\ *barrier)}
+\DoxyCodeLine{00083\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ pthread\_mutex\_lock(\&barrier-\/>mutex);}
+\DoxyCodeLine{00085\ \ \ \ \ ++(barrier-\/>count);}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{if}\ (barrier-\/>count\ >=\ barrier-\/>trip\_count)\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ barrier-\/>count\ =\ 0;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ pthread\_mutex\_unlock(\&barrier-\/>mutex);}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ pthread\_cond\_broadcast(\&barrier-\/>cond);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ pthread\_cond\_wait(\&barrier-\/>cond,\ \&(barrier-\/>mutex));}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (barrier-\/>count\ !=\ 0);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ pthread\_mutex\_unlock(\&barrier-\/>mutex);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ return\_data(hid\_device\ *dev,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{/*\ Linked\ List\ of\ input\ reports\ received\ from\ the\ device.\ */}}
+\DoxyCodeLine{00106\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__report}{input\_report}}\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ uint8\_t\ *data;}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len;}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{struct\ }input\_report\ *next;}
+\DoxyCodeLine{00110\ \};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{static}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__api__version}{hid\_api\_version}}\ api\_version\ =\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ .major\ =\ \doxymbox{\hyperlink{group___a_p_i_ga18c2d93881cb81d8bbfe6f745853ee35}{HID\_API\_VERSION\_MAJOR}},}
+\DoxyCodeLine{00114\ \ \ \ \ .minor\ =\ \doxymbox{\hyperlink{group___a_p_i_gadea0ff99909e90630d71c3083ee7e1c5}{HID\_API\_VERSION\_MINOR}},}
+\DoxyCodeLine{00115\ \ \ \ \ .patch\ =\ \doxymbox{\hyperlink{group___a_p_i_ga1d5251509ebfa4179e477c5cd79a6d23}{HID\_API\_VERSION\_PATCH}}}
+\DoxyCodeLine{00116\ \};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{comment}{/*\ -\/\ Run\ context\ -\/\ */}}
+\DoxyCodeLine{00119\ \textcolor{keyword}{static}\ \ IOHIDManagerRef\ hid\_mgr\ =\ 0x0;}
+\DoxyCodeLine{00120\ \textcolor{keyword}{static}\ \ \textcolor{keywordtype}{int}\ is\_macos\_10\_10\_or\_greater\ =\ 0;}
+\DoxyCodeLine{00121\ \textcolor{keyword}{static}\ \ IOOptionBits\ device\_open\_options\ =\ 0;}
+\DoxyCodeLine{00122\ \textcolor{keyword}{static}\ \ \textcolor{keywordtype}{wchar\_t}\ *last\_global\_error\_str\ =\ NULL;}
+\DoxyCodeLine{00123\ \textcolor{comment}{/*\ -\/-\/-\/\ */}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keyword}{struct\ }hid\_device\_\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ IOHIDDeviceRef\ device\_handle;}
+\DoxyCodeLine{00127\ \ \ \ \ IOOptionBits\ open\_options;}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordtype}{int}\ blocking;}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{int}\ disconnected;}
+\DoxyCodeLine{00130\ \ \ \ \ CFStringRef\ run\_loop\_mode;}
+\DoxyCodeLine{00131\ \ \ \ \ CFRunLoopRef\ run\_loop;}
+\DoxyCodeLine{00132\ \ \ \ \ CFRunLoopSourceRef\ source;}
+\DoxyCodeLine{00133\ \ \ \ \ uint8\_t\ *input\_report\_buf;}
+\DoxyCodeLine{00134\ \ \ \ \ CFIndex\ max\_input\_report\_len;}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{struct\ }input\_report\ *input\_reports;}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{struct\ }hid\_device\_info*\ device\_info;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ pthread\_t\ thread;}
+\DoxyCodeLine{00139\ \ \ \ \ pthread\_mutex\_t\ mutex;\ \textcolor{comment}{/*\ Protects\ input\_reports\ */}}
+\DoxyCodeLine{00140\ \ \ \ \ pthread\_cond\_t\ condition;}
+\DoxyCodeLine{00141\ \ \ \ \ pthread\_barrier\_t\ barrier;\ \textcolor{comment}{/*\ Ensures\ correct\ startup\ sequence\ */}}
+\DoxyCodeLine{00142\ \ \ \ \ pthread\_barrier\_t\ shutdown\_barrier;\ \textcolor{comment}{/*\ Ensures\ correct\ shutdown\ sequence\ */}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{int}\ shutdown\_thread;}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ *last\_error\_str;}
+\DoxyCodeLine{00145\ \};}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{keyword}{static}\ hid\_device\ *new\_hid\_device(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00148\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ hid\_device\ *dev\ =\ (hid\_device*)\ calloc(1,\ \textcolor{keyword}{sizeof}(hid\_device));}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev\ ==\ NULL)\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00152\ \ \ \ \ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ dev-\/>device\_handle\ =\ NULL;}
+\DoxyCodeLine{00155\ \ \ \ \ dev-\/>open\_options\ =\ device\_open\_options;}
+\DoxyCodeLine{00156\ \ \ \ \ dev-\/>blocking\ =\ 1;}
+\DoxyCodeLine{00157\ \ \ \ \ dev-\/>disconnected\ =\ 0;}
+\DoxyCodeLine{00158\ \ \ \ \ dev-\/>run\_loop\_mode\ =\ NULL;}
+\DoxyCodeLine{00159\ \ \ \ \ dev-\/>run\_loop\ =\ NULL;}
+\DoxyCodeLine{00160\ \ \ \ \ dev-\/>source\ =\ NULL;}
+\DoxyCodeLine{00161\ \ \ \ \ dev-\/>input\_report\_buf\ =\ NULL;}
+\DoxyCodeLine{00162\ \ \ \ \ dev-\/>input\_reports\ =\ NULL;}
+\DoxyCodeLine{00163\ \ \ \ \ dev-\/>device\_info\ =\ NULL;}
+\DoxyCodeLine{00164\ \ \ \ \ dev-\/>shutdown\_thread\ =\ 0;}
+\DoxyCodeLine{00165\ \ \ \ \ dev-\/>last\_error\_str\ =\ NULL;}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{comment}{/*\ Thread\ objects\ */}}
+\DoxyCodeLine{00168\ \ \ \ \ pthread\_mutex\_init(\&dev-\/>mutex,\ NULL);}
+\DoxyCodeLine{00169\ \ \ \ \ pthread\_cond\_init(\&dev-\/>condition,\ NULL);}
+\DoxyCodeLine{00170\ \ \ \ \ pthread\_barrier\_init(\&dev-\/>barrier,\ NULL,\ 2);}
+\DoxyCodeLine{00171\ \ \ \ \ pthread\_barrier\_init(\&dev-\/>shutdown\_barrier,\ NULL,\ 2);}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordflow}{return}\ dev;}
+\DoxyCodeLine{00174\ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ free\_hid\_device(hid\_device\ *dev)}
+\DoxyCodeLine{00177\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordflow}{if}\ (!dev)}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{comment}{/*\ Delete\ any\ input\ reports\ still\ left\ over.\ */}}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__report}{input\_report}}\ *rpt\ =\ dev-\/>input\_reports;}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordflow}{while}\ (rpt)\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__report}{input\_report}}\ *next\ =\ rpt-\/>next;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ free(rpt-\/>data);}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ free(rpt);}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ rpt\ =\ next;}
+\DoxyCodeLine{00188\ \ \ \ \ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{/*\ Free\ the\ string\ and\ the\ report\ buffer.\ The\ check\ for\ NULL}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ \ \ \ \ \ \ is\ necessary\ here\ as\ CFRelease()\ doesn't\ handle\ NULL\ like}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ \ \ \ \ \ \ free()\ and\ others\ do.\ */}}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>run\_loop\_mode)}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ CFRelease(dev-\/>run\_loop\_mode);}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>source)}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ CFRelease(dev-\/>source);}
+\DoxyCodeLine{00197\ \ \ \ \ free(dev-\/>input\_report\_buf);}
+\DoxyCodeLine{00198\ \ \ \ \ \doxymbox{\hyperlink{group___a_p_i_gafc2d2adf71db3784b783b9a554527aa4}{hid\_free\_enumeration}}(dev-\/>device\_info);}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{comment}{/*\ Clean\ up\ the\ thread\ objects\ */}}
+\DoxyCodeLine{00201\ \ \ \ \ pthread\_barrier\_destroy(\&dev-\/>shutdown\_barrier);}
+\DoxyCodeLine{00202\ \ \ \ \ pthread\_barrier\_destroy(\&dev-\/>barrier);}
+\DoxyCodeLine{00203\ \ \ \ \ pthread\_cond\_destroy(\&dev-\/>condition);}
+\DoxyCodeLine{00204\ \ \ \ \ pthread\_mutex\_destroy(\&dev-\/>mutex);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{/*\ Free\ the\ structure\ itself.\ */}}
+\DoxyCodeLine{00207\ \ \ \ \ free(dev);}
+\DoxyCodeLine{00208\ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#ifndef\ HIDAPI\_USING\_SDL\_RUNTIME}}
+\DoxyCodeLine{00212\ \textcolor{comment}{/*\ The\ caller\ must\ free\ the\ returned\ string\ with\ free().\ */}}
+\DoxyCodeLine{00213\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{wchar\_t}\ *utf8\_to\_wchar\_t(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *utf8)}
+\DoxyCodeLine{00214\ \{}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ *ret\ =\ NULL;}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keywordflow}{if}\ (utf8)\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ wlen\ =\ mbstowcs(NULL,\ utf8,\ 0);}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((\textcolor{keywordtype}{size\_t})\ -\/1\ ==\ wlen)\ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ wcsdup(L\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ ret\ =\ (\textcolor{keywordtype}{wchar\_t}*)\ calloc(wlen+1,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{wchar\_t}));}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ ==\ NULL)\ \{}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ as\ much\ as\ we\ can\ do\ at\ this\ point\ */}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ mbstowcs(ret,\ utf8,\ wlen+1);}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ ret[wlen]\ =\ 0x0000;}
+\DoxyCodeLine{00229\ \ \ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00232\ \}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{comment}{/*\ Makes\ a\ copy\ of\ the\ given\ error\ message\ (and\ decoded\ according\ to\ the}}
+\DoxyCodeLine{00237\ \textcolor{comment}{\ *\ currently\ locale)\ into\ the\ wide\ string\ pointer\ pointed\ by\ error\_str.}}
+\DoxyCodeLine{00238\ \textcolor{comment}{\ *\ The\ last\ stored\ error\ string\ is\ freed.}}
+\DoxyCodeLine{00239\ \textcolor{comment}{\ *\ Use\ register\_error\_str(NULL)\ to\ free\ the\ error\ message\ completely.\ */}}
+\DoxyCodeLine{00240\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ register\_error\_str(\textcolor{keywordtype}{wchar\_t}\ **error\_str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg)}
+\DoxyCodeLine{00241\ \{}
+\DoxyCodeLine{00242\ \ \ \ \ free(*error\_str);}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#ifdef\ HIDAPI\_USING\_SDL\_RUNTIME}}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{comment}{/*\ Thread-\/safe\ error\ handling\ */}}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keywordflow}{if}\ (msg)\ \{}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ SDL\_SetError(\textcolor{stringliteral}{"{}\%s"{}},\ msg);}
+\DoxyCodeLine{00247\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ SDL\_ClearError();}
+\DoxyCodeLine{00249\ \ \ \ \ \}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00251\ \ \ \ \ *error\_str\ =\ utf8\_to\_wchar\_t(msg);}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00253\ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{comment}{/*\ Similar\ to\ register\_error\_str,\ but\ allows\ passing\ a\ format\ string\ with\ va\_list\ args\ into\ this\ function.\ */}}
+\DoxyCodeLine{00256\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ register\_error\_str\_vformat(\textcolor{keywordtype}{wchar\_t}\ **error\_str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ va\_list\ args)}
+\DoxyCodeLine{00257\ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keywordtype}{char}\ msg[1024];}
+\DoxyCodeLine{00259\ \ \ \ \ vsnprintf(msg,\ \textcolor{keyword}{sizeof}(msg),\ format,\ args);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ register\_error\_str(error\_str,\ msg);}
+\DoxyCodeLine{00262\ \}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{comment}{/*\ Set\ the\ last\ global\ error\ to\ be\ reported\ by\ hid\_error(NULL).}}
+\DoxyCodeLine{00265\ \textcolor{comment}{\ *\ The\ given\ error\ message\ will\ be\ copied\ (and\ decoded\ according\ to\ the}}
+\DoxyCodeLine{00266\ \textcolor{comment}{\ *\ currently\ locale,\ so\ do\ not\ pass\ in\ string\ constants).}}
+\DoxyCodeLine{00267\ \textcolor{comment}{\ *\ The\ last\ stored\ global\ error\ message\ is\ freed.}}
+\DoxyCodeLine{00268\ \textcolor{comment}{\ *\ Use\ register\_global\_error(NULL)\ to\ indicate\ "{}no\ error"{}.\ */}}
+\DoxyCodeLine{00269\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ register\_global\_error(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg)}
+\DoxyCodeLine{00270\ \{}
+\DoxyCodeLine{00271\ \ \ \ \ register\_error\_str(\&last\_global\_error\_str,\ msg);}
+\DoxyCodeLine{00272\ \}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \textcolor{comment}{/*\ Similar\ to\ register\_global\_error,\ but\ allows\ passing\ a\ format\ string\ into\ this\ function.\ */}}
+\DoxyCodeLine{00275\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ register\_global\_error\_format(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{00276\ \{}
+\DoxyCodeLine{00277\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{00278\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{00279\ \ \ \ \ register\_error\_str\_vformat(\&last\_global\_error\_str,\ format,\ args);}
+\DoxyCodeLine{00280\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{00281\ \}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \textcolor{comment}{/*\ Set\ the\ last\ error\ for\ a\ device\ to\ be\ reported\ by\ hid\_error(dev).}}
+\DoxyCodeLine{00284\ \textcolor{comment}{\ *\ The\ given\ error\ message\ will\ be\ copied\ (and\ decoded\ according\ to\ the}}
+\DoxyCodeLine{00285\ \textcolor{comment}{\ *\ currently\ locale,\ so\ do\ not\ pass\ in\ string\ constants).}}
+\DoxyCodeLine{00286\ \textcolor{comment}{\ *\ The\ last\ stored\ device\ error\ message\ is\ freed.}}
+\DoxyCodeLine{00287\ \textcolor{comment}{\ *\ Use\ register\_device\_error(dev,\ NULL)\ to\ indicate\ "{}no\ error"{}.\ */}}
+\DoxyCodeLine{00288\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ register\_device\_error(hid\_device\ *dev,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg)}
+\DoxyCodeLine{00289\ \{}
+\DoxyCodeLine{00290\ \ \ \ \ register\_error\_str(\&dev-\/>last\_error\_str,\ msg);}
+\DoxyCodeLine{00291\ \}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{comment}{/*\ Similar\ to\ register\_device\_error,\ but\ you\ can\ pass\ a\ format\ string\ into\ this\ function.\ */}}
+\DoxyCodeLine{00294\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ register\_device\_error\_format(hid\_device\ *dev,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *format,\ ...)}
+\DoxyCodeLine{00295\ \{}
+\DoxyCodeLine{00296\ \ \ \ \ va\_list\ args;}
+\DoxyCodeLine{00297\ \ \ \ \ va\_start(args,\ format);}
+\DoxyCodeLine{00298\ \ \ \ \ register\_error\_str\_vformat(\&dev-\/>last\_error\_str,\ format,\ args);}
+\DoxyCodeLine{00299\ \ \ \ \ va\_end(args);}
+\DoxyCodeLine{00300\ \}}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \textcolor{keyword}{static}\ CFArrayRef\ get\_array\_property(IOHIDDeviceRef\ device,\ CFStringRef\ key)}
+\DoxyCodeLine{00304\ \{}
+\DoxyCodeLine{00305\ \ \ \ \ CFTypeRef\ ref\ =\ IOHIDDeviceGetProperty(device,\ key);}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keywordflow}{if}\ (ref\ !=\ NULL\ \&\&\ CFGetTypeID(ref)\ ==\ CFArrayGetTypeID())\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (CFArrayRef)ref;}
+\DoxyCodeLine{00308\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00310\ \ \ \ \ \}}
+\DoxyCodeLine{00311\ \}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \textcolor{keyword}{static}\ int32\_t\ get\_int\_property(IOHIDDeviceRef\ device,\ CFStringRef\ key)}
+\DoxyCodeLine{00314\ \{}
+\DoxyCodeLine{00315\ \ \ \ \ CFTypeRef\ ref;}
+\DoxyCodeLine{00316\ \ \ \ \ int32\_t\ value\ =\ 0;}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ ref\ =\ IOHIDDeviceGetProperty(device,\ key);}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keywordflow}{if}\ (ref)\ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CFGetTypeID(ref)\ ==\ CFNumberGetTypeID())\ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ CFNumberGetValue((CFNumberRef)\ ref,\ kCFNumberSInt32Type,\ \&value);}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value;}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \ \ \ \ \}}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00326\ \}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ try\_get\_int\_property(IOHIDDeviceRef\ device,\ CFStringRef\ key,\ int32\_t\ *out\_val)}
+\DoxyCodeLine{00329\ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keywordtype}{bool}\ result\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00331\ \ \ \ \ CFTypeRef\ ref;}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \ \ \ \ ref\ =\ IOHIDDeviceGetProperty(device,\ key);}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordflow}{if}\ (ref)\ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CFGetTypeID(ref)\ ==\ CFNumberGetTypeID())\ \{}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ CFNumberGetValue((CFNumberRef)\ ref,\ kCFNumberSInt32Type,\ out\_val);}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00338\ \ \ \ \ \}}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00340\ \}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ try\_get\_ioregistry\_int\_property(io\_service\_t\ service,\ CFStringRef\ property,\ int32\_t\ *out\_val)}
+\DoxyCodeLine{00343\ \{}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keywordtype}{bool}\ result\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00345\ \ \ \ \ CFTypeRef\ ref\ =\ IORegistryEntryCreateCFProperty(service,\ property,\ kCFAllocatorDefault,\ 0);}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keywordflow}{if}\ (ref)\ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CFGetTypeID(ref)\ ==\ CFNumberGetTypeID())\ \{}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ CFNumberGetValue(ref,\ kCFNumberSInt32Type,\ out\_val);}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ CFRelease(ref);}
+\DoxyCodeLine{00353\ \ \ \ \ \}}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00356\ \}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \textcolor{keyword}{static}\ CFArrayRef\ get\_usage\_pairs(IOHIDDeviceRef\ device)}
+\DoxyCodeLine{00359\ \{}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_array\_property(device,\ CFSTR(kIOHIDDeviceUsagePairsKey));}
+\DoxyCodeLine{00361\ \}}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00363\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ get\_vendor\_id(IOHIDDeviceRef\ device)}
+\DoxyCodeLine{00364\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_int\_property(device,\ CFSTR(kIOHIDVendorIDKey));}
+\DoxyCodeLine{00366\ \}}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ get\_product\_id(IOHIDDeviceRef\ device)}
+\DoxyCodeLine{00369\ \{}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_int\_property(device,\ CFSTR(kIOHIDProductIDKey));}
+\DoxyCodeLine{00371\ \}}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \textcolor{keyword}{static}\ int32\_t\ get\_max\_report\_length(IOHIDDeviceRef\ device)}
+\DoxyCodeLine{00374\ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_int\_property(device,\ CFSTR(kIOHIDMaxInputReportSizeKey));}
+\DoxyCodeLine{00376\ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ get\_string\_property(IOHIDDeviceRef\ device,\ CFStringRef\ prop,\ \textcolor{keywordtype}{wchar\_t}\ *buf,\ \textcolor{keywordtype}{size\_t}\ len)}
+\DoxyCodeLine{00379\ \{}
+\DoxyCodeLine{00380\ \ \ \ \ CFStringRef\ str;}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordflow}{if}\ (!len)}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ \ \ \ \ str\ =\ (CFStringRef)\ IOHIDDeviceGetProperty(device,\ prop);}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ buf[0]\ =\ 0;}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keywordflow}{if}\ (str\ \&\&\ CFGetTypeID(str)\ ==\ CFStringGetTypeID())\ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ CFIndex\ str\_len\ =\ CFStringGetLength(str);}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ CFRange\ range;}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ CFIndex\ used\_buf\_len;}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ CFIndex\ chars\_copied;}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ len\ -\/-\/;}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ range.location\ =\ 0;}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ range.length\ =\ ((size\_t)\ str\_len\ >\ len)?\ len:\ (size\_t)\ str\_len;}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ chars\_copied\ =\ CFStringGetBytes(str,}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ range,}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ kCFStringEncodingUTF32LE,}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{char})\ \textcolor{charliteral}{'?'},}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ FALSE,}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ (UInt8*)buf,}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ len\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{wchar\_t}),}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \&used\_buf\_len);}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (chars\_copied\ <=\ 0)}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ buf[0]\ =\ 0;}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ buf[chars\_copied]\ =\ 0;}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00414\ \ \ \ \ \}}
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \}}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ get\_serial\_number(IOHIDDeviceRef\ device,\ \textcolor{keywordtype}{wchar\_t}\ *buf,\ \textcolor{keywordtype}{size\_t}\ len)}
+\DoxyCodeLine{00421\ \{}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_string\_property(device,\ CFSTR(kIOHIDSerialNumberKey),\ buf,\ len);}
+\DoxyCodeLine{00423\ \}}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ get\_manufacturer\_string(IOHIDDeviceRef\ device,\ \textcolor{keywordtype}{wchar\_t}\ *buf,\ \textcolor{keywordtype}{size\_t}\ len)}
+\DoxyCodeLine{00426\ \{}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_string\_property(device,\ CFSTR(kIOHIDManufacturerKey),\ buf,\ len);}
+\DoxyCodeLine{00428\ \}}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ get\_product\_string(IOHIDDeviceRef\ device,\ \textcolor{keywordtype}{wchar\_t}\ *buf,\ \textcolor{keywordtype}{size\_t}\ len)}
+\DoxyCodeLine{00431\ \{}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_string\_property(device,\ CFSTR(kIOHIDProductKey),\ buf,\ len);}
+\DoxyCodeLine{00433\ \}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{comment}{/*\ Implementation\ of\ wcsdup()\ for\ Mac.\ */}}
+\DoxyCodeLine{00437\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{wchar\_t}\ *dup\_wcs(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *s)}
+\DoxyCodeLine{00438\ \{}
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len\ =\ wcslen(s);}
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ *ret\ =\ (\textcolor{keywordtype}{wchar\_t}*)\ malloc((len+1)*\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{wchar\_t}));}
+\DoxyCodeLine{00441\ \ \ \ \ wcscpy(ret,\ s);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00444\ \}}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{comment}{/*\ Initialize\ the\ IOHIDManager.\ Return\ 0\ for\ success\ and\ -\/1\ for\ failure.\ */}}
+\DoxyCodeLine{00447\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ init\_hid\_manager(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00448\ \{}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{comment}{/*\ Initialize\ all\ the\ HID\ Manager\ Objects\ */}}
+\DoxyCodeLine{00450\ \ \ \ \ hid\_mgr\ =\ IOHIDManagerCreate(kCFAllocatorDefault,\ kIOHIDOptionsTypeNone);}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keywordflow}{if}\ (hid\_mgr)\ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ IOHIDManagerSetDeviceMatching(hid\_mgr,\ NULL);}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ IOHIDManagerScheduleWithRunLoop(hid\_mgr,\ CFRunLoopGetCurrent(),\ kCFRunLoopDefaultMode);}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00455\ \ \ \ \ \}}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ register\_global\_error(\textcolor{stringliteral}{"{}Failed\ to\ create\ IOHIDManager"{}});}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00459\ \}}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__api__version}{hid\_api\_version}}*\ \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\_API\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_gaea589e58403a465361a347c0754a3da2}{hid\_version}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00462\ \{}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{keywordflow}{return}\ \&api\_version;}
+\DoxyCodeLine{00464\ \}}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\_API\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_gacbceccb9fd443fd7cb164dee029fbf64}{hid\_version\_str}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00467\ \{}
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group___a_p_i_gacba3a91088b7e54857626be97c47fdb9}{HID\_API\_VERSION\_STR}};}
+\DoxyCodeLine{00469\ \}}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \textcolor{comment}{/*\ Initialize\ the\ IOHIDManager\ if\ necessary.\ This\ is\ the\ public\ function,\ and}}
+\DoxyCodeLine{00472\ \textcolor{comment}{\ \ \ it\ is\ safe\ to\ call\ this\ function\ repeatedly.\ Return\ 0\ for\ success\ and\ -\/1}}
+\DoxyCodeLine{00473\ \textcolor{comment}{\ \ \ for\ failure.\ */}}
+\DoxyCodeLine{00474\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_ga142ffc1b0b7a7fa412d3862b2a17164b}{hid\_init}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00475\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ register\_global\_error(NULL);}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keywordflow}{if}\ (!hid\_mgr)\ \{}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ is\_macos\_10\_10\_or\_greater\ =\ (kCFCoreFoundationVersionNumber\ >=\ 1151.16);\ \textcolor{comment}{/*\ kCFCoreFoundationVersionNumber10\_10\ */}}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group___a_p_i_gad47c7f431dd41631d59398f33c4fda00}{hid\_darwin\_set\_open\_exclusive}}(1);\ \textcolor{comment}{/*\ Backward\ compatibility\ */}}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ init\_hid\_manager();}
+\DoxyCodeLine{00482\ \ \ \ \ \}}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{comment}{/*\ Already\ initialized.\ */}}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00486\ \}}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_gacf5da9ce37132eba69fc259f17f13023}{hid\_exit}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00489\ \{}
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{keywordflow}{if}\ (hid\_mgr)\ \{}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Close\ the\ HID\ manager.\ */}}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ IOHIDManagerClose(hid\_mgr,\ kIOHIDOptionsTypeNone);}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ CFRelease(hid\_mgr);}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ hid\_mgr\ =\ NULL;}
+\DoxyCodeLine{00495\ \ \ \ \ \}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{comment}{/*\ Free\ global\ error\ message\ */}}
+\DoxyCodeLine{00498\ \ \ \ \ register\_global\_error(NULL);}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00501\ \}}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ process\_pending\_events(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{00504\ \ \ \ \ SInt32\ res;}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ res\ =\ CFRunLoopRunInMode(kCFRunLoopDefaultMode,\ 0.001,\ FALSE);}
+\DoxyCodeLine{00507\ \ \ \ \ \}\ \textcolor{keywordflow}{while}(res\ !=\ kCFRunLoopRunFinished\ \&\&\ res\ !=\ kCFRunLoopRunTimedOut);}
+\DoxyCodeLine{00508\ \}}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00510\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ read\_usb\_interface\_from\_hid\_service\_parent(io\_service\_t\ hid\_service)}
+\DoxyCodeLine{00511\ \{}
+\DoxyCodeLine{00512\ \ \ \ \ int32\_t\ result\ =\ -\/1;}
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{keywordtype}{bool}\ success\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00514\ \ \ \ \ io\_registry\_entry\_t\ current\ =\ IO\_OBJECT\_NULL;}
+\DoxyCodeLine{00515\ \ \ \ \ kern\_return\_t\ res;}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keywordtype}{int}\ parent\_number\ =\ 0;}
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \ \ res\ =\ IORegistryEntryGetParentEntry(hid\_service,\ kIOServicePlane,\ \&current);}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{keywordflow}{while}\ (KERN\_SUCCESS\ ==\ res}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Only\ search\ up\ to\ 3\ parent\ entries.}}
+\DoxyCodeLine{00521\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ *\ With\ the\ default\ driver\ -\/\ the\ parent-\/of-\/interest\ supposed\ to\ be\ the\ first\ one,}}
+\DoxyCodeLine{00522\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ *\ but\ lets\ assume\ some\ custom\ drivers\ or\ so,\ with\ deeper\ tree.\ */}}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \&\&\ parent\_number\ <\ 3)\ \{}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ io\_registry\_entry\_t\ parent\ =\ IO\_OBJECT\_NULL;}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ int32\_t\ interface\_number\ =\ -\/1;}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ parent\_number++;}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ success\ =\ try\_get\_ioregistry\_int\_property(current,\ CFSTR(kUSBInterfaceNumber),\ \&interface\_number);}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (success)\ \{}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ interface\_number;}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ res\ =\ IORegistryEntryGetParentEntry(current,\ kIOServicePlane,\ \&parent);}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (parent)\ \{}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ IOObjectRelease(current);}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ current\ =\ parent;}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \ \ \ \ \}}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00542\ \ \ \ \ \textcolor{keywordflow}{if}\ (current)\ \{}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ IOObjectRelease(current);}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ current\ =\ IO\_OBJECT\_NULL;}
+\DoxyCodeLine{00545\ \ \ \ \ \}}
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00548\ \}}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\#ifdef\ HIDAPI\_IGNORE\_DEVICE}}
+\DoxyCodeLine{00551\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{group___a_p_i_ga15cb543842973ca41daa21feaec534ce}{hid\_bus\_type}}\ get\_bus\_type(IOHIDDeviceRef\ dev)}
+\DoxyCodeLine{00552\ \{}
+\DoxyCodeLine{00553\ \ \ \ \ \doxymbox{\hyperlink{group___a_p_i_ga15cb543842973ca41daa21feaec534ce}{hid\_bus\_type}}\ bus\_type\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534ceacab9ef7570aa48c13a99b28c61ae918e}{HID\_API\_BUS\_UNKNOWN}};}
+\DoxyCodeLine{00554\ }
+\DoxyCodeLine{00555\ \ \ \ \ CFTypeRef\ transport\_prop\ =\ IOHIDDeviceGetProperty(dev,\ CFSTR(kIOHIDTransportKey));}
+\DoxyCodeLine{00556\ }
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{keywordflow}{if}\ (transport\_prop\ !=\ NULL\ \&\&\ CFGetTypeID(transport\_prop)\ ==\ CFStringGetTypeID())\ \{}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CFStringCompare((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportUSBValue),\ 0)\ ==\ kCFCompareEqualTo)\ \{}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ bus\_type\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cea77e86719dfaeabc96759f6cff3a5ca8d}{HID\_API\_BUS\_USB}};}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (CFStringHasPrefix((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportBluetoothValue)))\ \{}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ bus\_type\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cead412c6f0da75b302b713af3a6394a0d4}{HID\_API\_BUS\_BLUETOOTH}};}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (CFStringCompare((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportI2CValue),\ 0)\ ==\ kCFCompareEqualTo)\ \{}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \ \ \ \ bus\_type\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534ceafdf48944998bb760c6995402eea306a0}{HID\_API\_BUS\_I2C}};}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \ \textcolor{keywordflow}{if}\ (CFStringCompare((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportSPIValue),\ 0)\ ==\ kCFCompareEqualTo)\ \{}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ bus\_type\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cea092944e74cc9fe695c08f9e149dcbb38}{HID\_API\_BUS\_SPI}};}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00567\ \ \ \ \ \}}
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keywordflow}{return}\ bus\_type;}
+\DoxyCodeLine{00569\ \}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ HIDAPI\_IGNORE\_DEVICE\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \textcolor{keyword}{static}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *create\_device\_info\_with\_usage(IOHIDDeviceRef\ dev,\ int32\_t\ \doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}},\ int32\_t\ usage)}
+\DoxyCodeLine{00573\ \{}
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ dev\_vid;}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ dev\_pid;}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ dev\_version;}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{keywordtype}{int}\ BUF\_LEN\ =\ 256;}
+\DoxyCodeLine{00578\ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ buf[BUF\_LEN];}
+\DoxyCodeLine{00579\ \ \ \ \ CFTypeRef\ transport\_prop;}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *cur\_dev;}
+\DoxyCodeLine{00582\ \ \ \ \ io\_service\_t\ hid\_service;}
+\DoxyCodeLine{00583\ \ \ \ \ kern\_return\_t\ res;}
+\DoxyCodeLine{00584\ \ \ \ \ uint64\_t\ entry\_id\ =\ 0;}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev\ ==\ NULL)\ \{}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00588\ \ \ \ \ \}}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \ \ \ \ cur\_dev\ =\ (\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *)calloc(1,\ \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}));}
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_dev\ ==\ NULL)\ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00593\ \ \ \ \ \}}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \ \ \ \ dev\_vid\ =\ get\_vendor\_id(dev);}
+\DoxyCodeLine{00596\ \ \ \ \ dev\_pid\ =\ get\_product\_id(dev);}
+\DoxyCodeLine{00597\ \ \ \ \ dev\_version\ =\ get\_int\_property(dev,\ CFSTR(kIOHIDVersionNumberKey));}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\#ifdef\ HIDAPI\_IGNORE\_DEVICE}}
+\DoxyCodeLine{00600\ \ \ \ \ \textcolor{comment}{/*\ See\ if\ there\ are\ any\ devices\ we\ should\ skip\ in\ enumeration\ */}}
+\DoxyCodeLine{00601\ \ \ \ \ \textcolor{keywordflow}{if}\ (HIDAPI\_IGNORE\_DEVICE(get\_bus\_type(dev),\ dev\_vid,\ dev\_pid,\ \doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}},\ usage,\ \textcolor{keyword}{false},\ \textcolor{keyword}{false}))\ \{}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ free(cur\_dev);}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00604\ \ \ \ \ \}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00606\ }
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\#ifdef\ HIDAPI\_USING\_SDL\_RUNTIME}}
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{keywordflow}{if}\ (SDL\_IsJoystickSteamVirtualGamepad(dev\_vid,\ dev\_pid,\ dev\_version))\ \{}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (IOHIDDeviceGetProperty(dev,\ CFSTR(kIOHIDVirtualHIDevice))\ !=\ kCFBooleanTrue)\ \{}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ This\ is\ a\ real\ Xbox\ 360\ controller,\ adjust\ the\ version\ so\ it's\ not\ detected\ as\ a\ Steam\ virtual\ gamepad\ */}}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ dev\_version\ =\ 1;}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00613\ \ \ \ \ \}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}}\ =\ \doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}};}
+\DoxyCodeLine{00617\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a47f8011d58bcddd67f1403d6d3b4cab6}{usage}}\ =\ usage;}
+\DoxyCodeLine{00618\ }
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{comment}{/*\ Fill\ out\ the\ record\ */}}
+\DoxyCodeLine{00620\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a2bfebc240baf3bdaf03965816e11f149}{next}}\ =\ NULL;}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{comment}{/*\ Fill\ in\ the\ path\ (as\ a\ unique\ ID\ of\ the\ service\ entry)\ */}}
+\DoxyCodeLine{00623\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}}\ =\ NULL;}
+\DoxyCodeLine{00624\ \ \ \ \ hid\_service\ =\ IOHIDDeviceGetService(dev);}
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{keywordflow}{if}\ (hid\_service\ !=\ MACH\_PORT\_NULL)\ \{}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ res\ =\ IORegistryEntryGetRegistryEntryID(hid\_service,\ \&entry\_id);}
+\DoxyCodeLine{00627\ \ \ \ \ \}}
+\DoxyCodeLine{00628\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ res\ =\ KERN\_INVALID\_ARGUMENT;}
+\DoxyCodeLine{00630\ \ \ \ \ \}}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ ==\ KERN\_SUCCESS)\ \{}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ max\ value\ of\ entry\_id(uint64\_t)\ is\ 18446744073709551615\ which\ is\ 20\ characters\ long,}}
+\DoxyCodeLine{00634\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ so\ for\ (max)\ "{}path"{}\ string\ 'DevSrvsID:18446744073709551615'\ we\ would\ need}}
+\DoxyCodeLine{00635\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ 9+1+20+1=31\ bytes\ buffer,\ but\ allocate\ 32\ for\ simple\ alignment\ */}}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ path\_len\ =\ 32;}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}}\ =\ calloc(1,\ path\_len);}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}}\ !=\ NULL)\ \{}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ snprintf(cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}},\ path\_len,\ \textcolor{stringliteral}{"{}DevSrvsID:\%llu"{}},\ entry\_id);}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00641\ \ \ \ \ \}}
+\DoxyCodeLine{00642\ }
+\DoxyCodeLine{00643\ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}}\ ==\ NULL)\ \{}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ for\ whatever\ reason,\ trying\ to\ keep\ it\ a\ non-\/NULL\ string\ */}}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}}\ =\ strdup(\textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00646\ \ \ \ \ \}}
+\DoxyCodeLine{00647\ }
+\DoxyCodeLine{00648\ \ \ \ \ \textcolor{comment}{/*\ Serial\ Number\ */}}
+\DoxyCodeLine{00649\ \ \ \ \ get\_serial\_number(dev,\ buf,\ BUF\_LEN);}
+\DoxyCodeLine{00650\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a80756cea367e1566f966438984b75faf}{serial\_number}}\ =\ dup\_wcs(buf);}
+\DoxyCodeLine{00651\ }
+\DoxyCodeLine{00652\ \ \ \ \ \textcolor{comment}{/*\ Manufacturer\ and\ Product\ strings\ */}}
+\DoxyCodeLine{00653\ \ \ \ \ get\_manufacturer\_string(dev,\ buf,\ BUF\_LEN);}
+\DoxyCodeLine{00654\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a484eebf746220cd2910954cc861759b7}{manufacturer\_string}}\ =\ dup\_wcs(buf);}
+\DoxyCodeLine{00655\ \ \ \ \ get\_product\_string(dev,\ buf,\ BUF\_LEN);}
+\DoxyCodeLine{00656\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_aceee256b4f7cd7fdd9fa5d556f49d221}{product\_string}}\ =\ dup\_wcs(buf);}
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{comment}{/*\ VID/PID\ */}}
+\DoxyCodeLine{00659\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}}\ =\ dev\_vid;}
+\DoxyCodeLine{00660\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}}\ =\ dev\_pid;}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{comment}{/*\ Release\ Number\ */}}
+\DoxyCodeLine{00663\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6a832d25260f7ec17ef008e53e50e1d0}{release\_number}}\ =\ dev\_version;}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{comment}{/*\ Interface\ Number.}}
+\DoxyCodeLine{00666\ \textcolor{comment}{\ \ \ \ \ *\ We\ can\ only\ retrieve\ the\ interface\ number\ for\ USB\ HID\ devices.}}
+\DoxyCodeLine{00667\ \textcolor{comment}{\ \ \ \ \ *\ See\ below\ */}}
+\DoxyCodeLine{00668\ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a9163d8d5d7db8dc47bddfaf876e17547}{interface\_number}}\ =\ -\/1;}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00670\ \ \ \ \ \textcolor{comment}{/*\ Bus\ Type\ */}}
+\DoxyCodeLine{00671\ \ \ \ \ transport\_prop\ =\ IOHIDDeviceGetProperty(dev,\ CFSTR(kIOHIDTransportKey));}
+\DoxyCodeLine{00672\ }
+\DoxyCodeLine{00673\ \ \ \ \ \textcolor{keywordflow}{if}\ (transport\_prop\ !=\ NULL\ \&\&\ CFGetTypeID(transport\_prop)\ ==\ CFStringGetTypeID())\ \{}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CFStringCompare((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportUSBValue),\ 0)\ ==\ kCFCompareEqualTo)\ \{}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \doxymbox{\hyperlink{structhid__device__info_a9163d8d5d7db8dc47bddfaf876e17547}{interface\_number}}\ =\ -\/1;}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_afa3c7d42a0892d9f1f25976709cf5aa2}{bus\_type}}\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cea77e86719dfaeabc96759f6cff3a5ca8d}{HID\_API\_BUS\_USB}};}
+\DoxyCodeLine{00677\ }
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ A\ IOHIDDeviceRef\ used\ to\ have\ this\ simple\ property,}}
+\DoxyCodeLine{00679\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ *\ until\ macOS\ 13.3\ -\/\ we\ will\ try\ to\ use\ it.\ */}}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (try\_get\_int\_property(dev,\ CFSTR(kUSBInterfaceNumber),\ \&\doxymbox{\hyperlink{structhid__device__info_a9163d8d5d7db8dc47bddfaf876e17547}{interface\_number}}))\ \{}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a9163d8d5d7db8dc47bddfaf876e17547}{interface\_number}}\ =\ \doxymbox{\hyperlink{structhid__device__info_a9163d8d5d7db8dc47bddfaf876e17547}{interface\_number}};}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Otherwise\ fallback\ to\ io\_service\_t\ property.}}
+\DoxyCodeLine{00684\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ (of\ one\ of\ the\ parent\ services).\ */}}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a9163d8d5d7db8dc47bddfaf876e17547}{interface\_number}}\ =\ read\_usb\_interface\_from\_hid\_service\_parent(hid\_service);}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ If\ the\ above\ doesn't\ work\ -\/}}
+\DoxyCodeLine{00688\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ no\ (known)\ fallback\ exists\ at\ this\ point.\ */}}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00690\ }
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Match\ "{}Bluetooth"{},\ "{}BluetoothLowEnergy"{}\ and\ "{}Bluetooth\ Low\ Energy"{}\ strings\ */}}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (CFStringHasPrefix((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportBluetoothValue)))\ \{}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_afa3c7d42a0892d9f1f25976709cf5aa2}{bus\_type}}\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cead412c6f0da75b302b713af3a6394a0d4}{HID\_API\_BUS\_BLUETOOTH}};}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (CFStringCompare((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportI2CValue),\ 0)\ ==\ kCFCompareEqualTo)\ \{}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_afa3c7d42a0892d9f1f25976709cf5aa2}{bus\_type}}\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534ceafdf48944998bb760c6995402eea306a0}{HID\_API\_BUS\_I2C}};}
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \ \textcolor{keywordflow}{if}\ (CFStringCompare((CFStringRef)transport\_prop,\ CFSTR(kIOHIDTransportSPIValue),\ 0)\ ==\ kCFCompareEqualTo)\ \{}
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_afa3c7d42a0892d9f1f25976709cf5aa2}{bus\_type}}\ =\ \doxymbox{\hyperlink{group___a_p_i_gga15cb543842973ca41daa21feaec534cea092944e74cc9fe695c08f9e149dcbb38}{HID\_API\_BUS\_SPI}};}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00699\ \ \ \ \ \}}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{keywordflow}{return}\ cur\_dev;}
+\DoxyCodeLine{00702\ \}}
+\DoxyCodeLine{00703\ }
+\DoxyCodeLine{00704\ \textcolor{keyword}{static}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *create\_device\_info(IOHIDDeviceRef\ device)}
+\DoxyCodeLine{00705\ \{}
+\DoxyCodeLine{00706\ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ primary\_usage\_page\ =\ get\_int\_property(device,\ CFSTR(kIOHIDPrimaryUsagePageKey));}
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{keyword}{const}\ int32\_t\ primary\_usage\ =\ get\_int\_property(device,\ CFSTR(kIOHIDPrimaryUsageKey));}
+\DoxyCodeLine{00708\ }
+\DoxyCodeLine{00709\ \ \ \ \ \textcolor{comment}{/*\ Primary\ should\ always\ be\ first,\ to\ match\ previous\ behavior.\ */}}
+\DoxyCodeLine{00710\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *root\ =\ create\_device\_info\_with\_usage(device,\ primary\_usage\_page,\ primary\_usage);}
+\DoxyCodeLine{00711\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *cur\ =\ root;}
+\DoxyCodeLine{00712\ }
+\DoxyCodeLine{00713\ \ \ \ \ CFArrayRef\ usage\_pairs\ =\ get\_usage\_pairs(device);}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{keywordflow}{if}\ (usage\_pairs\ !=\ NULL)\ \{}
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *next\ =\ NULL;}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (CFIndex\ i\ =\ 0;\ i\ <\ CFArrayGetCount(usage\_pairs);\ i++)\ \{}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \ \ \ \ CFTypeRef\ dict\ =\ CFArrayGetValueAtIndex(usage\_pairs,\ i);}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (CFGetTypeID(dict)\ !=\ CFDictionaryGetTypeID())\ \{}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ CFTypeRef\ usage\_page\_ref,\ usage\_ref;}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ int32\_t\ \doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}},\ usage;}
+\DoxyCodeLine{00725\ }
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!CFDictionaryGetValueIfPresent((CFDictionaryRef)dict,\ CFSTR(kIOHIDDeviceUsagePageKey),\ \&usage\_page\_ref)\ ||}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !CFDictionaryGetValueIfPresent((CFDictionaryRef)dict,\ CFSTR(kIOHIDDeviceUsageKey),\ \&usage\_ref)\ ||}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CFGetTypeID(usage\_page\_ref)\ !=\ CFNumberGetTypeID()\ ||}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CFGetTypeID(usage\_ref)\ !=\ CFNumberGetTypeID()\ ||}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !CFNumberGetValue((CFNumberRef)usage\_page\_ref,\ kCFNumberSInt32Type,\ \&\doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}})\ ||}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !CFNumberGetValue((CFNumberRef)usage\_ref,\ kCFNumberSInt32Type,\ \&usage))\ \{}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}}\ ==\ primary\_usage\_page\ \&\&\ usage\ ==\ primary\_usage)}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};\ \textcolor{comment}{/*\ Already\ added.\ */}}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ next\ =\ create\_device\_info\_with\_usage(device,\ \doxymbox{\hyperlink{structhid__device__info_ab811117f8084ce2036815bdd33b16b3b}{usage\_page}},\ usage);}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur)\ \{}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (next\ !=\ NULL)\ \{}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cur-\/>\doxymbox{\hyperlink{structhid__device__info_a2bfebc240baf3bdaf03965816e11f149}{next}}\ =\ next;}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cur\ =\ next;}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ root\ =\ cur\ =\ next;}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00747\ \ \ \ \ \}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \ \ \ \ \textcolor{keywordflow}{return}\ root;}
+\DoxyCodeLine{00750\ \}}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00752\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ \ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ *\doxymbox{\hyperlink{group___a_p_i_gaae7d1c3e90835556ddc73fabe3a9ca9d}{hid\_enumerate}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}})}
+\DoxyCodeLine{00753\ \{}
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *root\ =\ NULL;\ \textcolor{comment}{/*\ return\ object\ */}}
+\DoxyCodeLine{00755\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *cur\_dev\ =\ NULL;}
+\DoxyCodeLine{00756\ \ \ \ \ CFIndex\ num\_devices;}
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \ \ \ \ \textcolor{comment}{/*\ Set\ up\ the\ HID\ Manager\ if\ it\ hasn't\ been\ done\ */}}
+\DoxyCodeLine{00760\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group___a_p_i_ga142ffc1b0b7a7fa412d3862b2a17164b}{hid\_init}}()\ <\ 0)\ \{}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00762\ \ \ \ \ \}}
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{comment}{/*\ register\_global\_error:\ global\ error\ is\ set/reset\ by\ hid\_init\ */}}
+\DoxyCodeLine{00764\ }
+\DoxyCodeLine{00765\ \ \ \ \ \textcolor{comment}{/*\ give\ the\ IOHIDManager\ a\ chance\ to\ update\ itself\ */}}
+\DoxyCodeLine{00766\ \ \ \ \ process\_pending\_events();}
+\DoxyCodeLine{00767\ }
+\DoxyCodeLine{00768\ \ \ \ \ \textcolor{comment}{/*\ Get\ a\ list\ of\ the\ Devices\ */}}
+\DoxyCodeLine{00769\ \ \ \ \ CFMutableDictionaryRef\ matching\ =\ NULL;}
+\DoxyCodeLine{00770\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}}\ !=\ 0\ ||\ \doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}}\ !=\ 0)\ \{}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ matching\ =\ CFDictionaryCreateMutable(kCFAllocatorDefault,\ kIOHIDOptionsTypeNone,\ \&kCFTypeDictionaryKeyCallBacks,\ \&kCFTypeDictionaryValueCallBacks);}
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (matching\ \&\&\ \doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}}\ !=\ 0)\ \{}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ CFNumberRef\ v\ =\ CFNumberCreate(kCFAllocatorDefault,\ kCFNumberShortType,\ \&\doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}});}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \ \ \ \ CFDictionarySetValue(matching,\ CFSTR(kIOHIDVendorIDKey),\ v);}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ CFRelease(v);}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00778\ }
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (matching\ \&\&\ \doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}}\ !=\ 0)\ \{}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ CFNumberRef\ p\ =\ CFNumberCreate(kCFAllocatorDefault,\ kCFNumberShortType,\ \&\doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}});}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ CFDictionarySetValue(matching,\ CFSTR(kIOHIDProductIDKey),\ p);}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ CFRelease(p);}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00784\ \ \ \ \ \}}
+\DoxyCodeLine{00785\ \ \ \ \ IOHIDManagerSetDeviceMatching(hid\_mgr,\ matching);}
+\DoxyCodeLine{00786\ \ \ \ \ \textcolor{keywordflow}{if}\ (matching\ !=\ NULL)\ \{}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ CFRelease(matching);}
+\DoxyCodeLine{00788\ \ \ \ \ \}}
+\DoxyCodeLine{00789\ }
+\DoxyCodeLine{00790\ \ \ \ \ CFSetRef\ device\_set\ =\ IOHIDManagerCopyDevices(hid\_mgr);}
+\DoxyCodeLine{00791\ }
+\DoxyCodeLine{00792\ \ \ \ \ IOHIDDeviceRef\ *device\_array\ =\ NULL;}
+\DoxyCodeLine{00793\ }
+\DoxyCodeLine{00794\ \ \ \ \ \textcolor{keywordflow}{if}\ (device\_set\ !=\ NULL)\ \{}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Convert\ the\ list\ into\ a\ C\ array\ so\ we\ can\ iterate\ easily.\ */}}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ num\_devices\ =\ CFSetGetCount(device\_set);}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ device\_array\ =\ (IOHIDDeviceRef*)\ calloc(num\_devices,\ \textcolor{keyword}{sizeof}(IOHIDDeviceRef));}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ CFSetGetValues(device\_set,\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ **)\ device\_array);}
+\DoxyCodeLine{00799\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ num\_devices\ =\ 0;}
+\DoxyCodeLine{00801\ \ \ \ \ \}}
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00803\ \ \ \ \ \textcolor{comment}{/*\ Iterate\ over\ each\ device,\ making\ an\ entry\ for\ it.\ */}}
+\DoxyCodeLine{00804\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0;\ i\ <\ num\_devices;\ i++)\ \{}
+\DoxyCodeLine{00805\ }
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ IOHIDDeviceRef\ dev\ =\ device\_array[i];}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!dev)\ \{}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00810\ }
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *tmp\ =\ create\_device\_info(dev);}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tmp\ ==\ NULL)\ \{}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00814\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00815\ }
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_dev)\ \{}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a2bfebc240baf3bdaf03965816e11f149}{next}}\ =\ tmp;}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ root\ =\ tmp;}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ cur\_dev\ =\ tmp;}
+\DoxyCodeLine{00823\ }
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ move\ the\ pointer\ to\ the\ tail\ of\ returned\ list\ */}}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a2bfebc240baf3bdaf03965816e11f149}{next}}\ !=\ NULL)\ \{}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev\ =\ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a2bfebc240baf3bdaf03965816e11f149}{next}};}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00828\ \ \ \ \ \}}
+\DoxyCodeLine{00829\ }
+\DoxyCodeLine{00830\ \ \ \ \ free(device\_array);}
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{keywordflow}{if}\ (device\_set\ !=\ NULL)}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ CFRelease(device\_set);}
+\DoxyCodeLine{00833\ }
+\DoxyCodeLine{00834\ \ \ \ \ \textcolor{keywordflow}{if}\ (root\ ==\ NULL)\ \{}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}}\ ==\ 0\ \&\&\ \doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}}\ ==\ 0)\ \{}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \ \ \ \ register\_global\_error(\textcolor{stringliteral}{"{}No\ HID\ devices\ found\ in\ the\ system."{}});}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \ \ \ \ register\_global\_error(\textcolor{stringliteral}{"{}No\ HID\ devices\ with\ requested\ VID/PID\ found\ in\ the\ system."{}});}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00840\ \ \ \ \ \}}
+\DoxyCodeLine{00841\ }
+\DoxyCodeLine{00842\ \ \ \ \ \textcolor{keywordflow}{return}\ root;}
+\DoxyCodeLine{00843\ \}}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00845\ \textcolor{keywordtype}{void}\ \ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_gafc2d2adf71db3784b783b9a554527aa4}{hid\_free\_enumeration}}(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *devs)}
+\DoxyCodeLine{00846\ \{}
+\DoxyCodeLine{00847\ \ \ \ \ \textcolor{comment}{/*\ This\ function\ is\ identical\ to\ the\ Linux\ version.\ Platform\ independent.\ */}}
+\DoxyCodeLine{00848\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *d\ =\ devs;}
+\DoxyCodeLine{00849\ \ \ \ \ \textcolor{keywordflow}{while}\ (d)\ \{}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *next\ =\ d-\/>\doxymbox{\hyperlink{structhid__device__info_a2bfebc240baf3bdaf03965816e11f149}{next}};}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ free(d-\/>path);}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ free(d-\/>serial\_number);}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ free(d-\/>manufacturer\_string);}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ free(d-\/>product\_string);}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ free(d);}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ d\ =\ next;}
+\DoxyCodeLine{00857\ \ \ \ \ \}}
+\DoxyCodeLine{00858\ \}}
+\DoxyCodeLine{00859\ }
+\DoxyCodeLine{00860\ hid\_device\ *\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_ga6946f7e2f5d225d69308611db1e31ede}{hid\_open}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}},\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{short}\ \doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *\doxymbox{\hyperlink{structhid__device__info_a80756cea367e1566f966438984b75faf}{serial\_number}})}
+\DoxyCodeLine{00861\ \{}
+\DoxyCodeLine{00862\ \ \ \ \ \textcolor{comment}{/*\ This\ function\ is\ identical\ to\ the\ Linux\ version.\ Platform\ independent.\ */}}
+\DoxyCodeLine{00863\ }
+\DoxyCodeLine{00864\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *devs,\ *cur\_dev;}
+\DoxyCodeLine{00865\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path\_to\_open\ =\ NULL;}
+\DoxyCodeLine{00866\ \ \ \ \ hid\_device\ *\ handle\ =\ NULL;}
+\DoxyCodeLine{00867\ }
+\DoxyCodeLine{00868\ \ \ \ \ \textcolor{comment}{/*\ register\_global\_error:\ global\ error\ is\ reset\ by\ hid\_enumerate/hid\_init\ */}}
+\DoxyCodeLine{00869\ \ \ \ \ devs\ =\ \doxymbox{\hyperlink{group___a_p_i_gaae7d1c3e90835556ddc73fabe3a9ca9d}{hid\_enumerate}}(\doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}},\ \doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}});}
+\DoxyCodeLine{00870\ \ \ \ \ \textcolor{keywordflow}{if}\ (devs\ ==\ NULL)\ \{}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ register\_global\_error:\ global\ error\ is\ already\ set\ by\ hid\_enumerate\ */}}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{00873\ \ \ \ \ \}}
+\DoxyCodeLine{00874\ }
+\DoxyCodeLine{00875\ \ \ \ \ cur\_dev\ =\ devs;}
+\DoxyCodeLine{00876\ \ \ \ \ \textcolor{keywordflow}{while}\ (cur\_dev)\ \{}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}}\ ==\ \doxymbox{\hyperlink{structhid__device__info_a5037a3914e0bd8a3f821d1be9376c709}{vendor\_id}}\ \&\&}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ \ \ \ \ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}}\ ==\ \doxymbox{\hyperlink{structhid__device__info_a04595915457b4374492edb1fdb62d65d}{product\_id}})\ \{}
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{structhid__device__info_a80756cea367e1566f966438984b75faf}{serial\_number}})\ \{}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wcscmp(\doxymbox{\hyperlink{structhid__device__info_a80756cea367e1566f966438984b75faf}{serial\_number}},\ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a80756cea367e1566f966438984b75faf}{serial\_number}})\ ==\ 0)\ \{}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ path\_to\_open\ =\ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}};}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ path\_to\_open\ =\ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a6384b5bf4d9583598e5f5a889f240921}{path}};}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ cur\_dev\ =\ cur\_dev-\/>\doxymbox{\hyperlink{structhid__device__info_a2bfebc240baf3bdaf03965816e11f149}{next}};}
+\DoxyCodeLine{00891\ \ \ \ \ \}}
+\DoxyCodeLine{00892\ }
+\DoxyCodeLine{00893\ \ \ \ \ \textcolor{keywordflow}{if}\ (path\_to\_open)\ \{}
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ handle\ =\ \doxymbox{\hyperlink{group___a_p_i_ga954ecb58b5dfb4a6ef6be3dcd520e42f}{hid\_open\_path}}(path\_to\_open);}
+\DoxyCodeLine{00895\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ register\_global\_error(\textcolor{stringliteral}{"{}Device\ with\ requested\ VID/PID/(SerialNumber)\ not\ found"{}});}
+\DoxyCodeLine{00897\ \ \ \ \ \}}
+\DoxyCodeLine{00898\ }
+\DoxyCodeLine{00899\ \ \ \ \ \doxymbox{\hyperlink{group___a_p_i_gafc2d2adf71db3784b783b9a554527aa4}{hid\_free\_enumeration}}(devs);}
+\DoxyCodeLine{00900\ }
+\DoxyCodeLine{00901\ \ \ \ \ \textcolor{keywordflow}{return}\ handle;}
+\DoxyCodeLine{00902\ \}}
+\DoxyCodeLine{00903\ }
+\DoxyCodeLine{00904\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hid\_device\_removal\_callback(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{classcontext}{context}},\ IOReturn\ result,}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *sender)}
+\DoxyCodeLine{00906\ \{}
+\DoxyCodeLine{00907\ \ \ \ \ (void)\ result;}
+\DoxyCodeLine{00908\ \ \ \ \ (void)\ sender;}
+\DoxyCodeLine{00909\ }
+\DoxyCodeLine{00910\ \ \ \ \ \textcolor{comment}{/*\ Stop\ the\ Run\ Loop\ for\ this\ device.\ */}}
+\DoxyCodeLine{00911\ \ \ \ \ hid\_device\ *d\ =\ (hid\_device*)\ \doxymbox{\hyperlink{classcontext}{context}};}
+\DoxyCodeLine{00912\ }
+\DoxyCodeLine{00913\ \ \ \ \ d-\/>disconnected\ =\ 1;}
+\DoxyCodeLine{00914\ \ \ \ \ CFRunLoopStop(d-\/>run\_loop);}
+\DoxyCodeLine{00915\ \}}
+\DoxyCodeLine{00916\ }
+\DoxyCodeLine{00917\ \textcolor{comment}{/*\ The\ Run\ Loop\ calls\ this\ function\ for\ each\ input\ report\ received.}}
+\DoxyCodeLine{00918\ \textcolor{comment}{\ \ \ This\ function\ puts\ the\ data\ into\ a\ linked\ list\ to\ be\ picked\ up\ by}}
+\DoxyCodeLine{00919\ \textcolor{comment}{\ \ \ hid\_read().\ */}}
+\DoxyCodeLine{00920\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ hid\_report\_callback(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{classcontext}{context}},\ IOReturn\ result,\ \textcolor{keywordtype}{void}\ *sender,}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ IOHIDReportType\ report\_type,\ uint32\_t\ report\_id,}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint8\_t\ *report,\ CFIndex\ report\_length)}
+\DoxyCodeLine{00923\ \{}
+\DoxyCodeLine{00924\ \ \ \ \ (void)\ result;}
+\DoxyCodeLine{00925\ \ \ \ \ (void)\ sender;}
+\DoxyCodeLine{00926\ \ \ \ \ (void)\ report\_type;}
+\DoxyCodeLine{00927\ \ \ \ \ (void)\ report\_id;}
+\DoxyCodeLine{00928\ }
+\DoxyCodeLine{00929\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__report}{input\_report}}\ *rpt;}
+\DoxyCodeLine{00930\ \ \ \ \ hid\_device\ *dev\ =\ (hid\_device*)\ \doxymbox{\hyperlink{classcontext}{context}};}
+\DoxyCodeLine{00931\ }
+\DoxyCodeLine{00932\ \ \ \ \ \textcolor{comment}{/*\ Make\ a\ new\ Input\ Report\ object\ */}}
+\DoxyCodeLine{00933\ \ \ \ \ rpt\ =\ (\textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__report}{input\_report}}*)\ calloc(1,\ \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structinput__report}{input\_report}}));}
+\DoxyCodeLine{00934\ \ \ \ \ rpt-\/>data\ =\ (uint8\_t*)\ calloc(1,\ report\_length);}
+\DoxyCodeLine{00935\ \ \ \ \ memcpy(rpt-\/>data,\ report,\ report\_length);}
+\DoxyCodeLine{00936\ \ \ \ \ rpt-\/>len\ =\ report\_length;}
+\DoxyCodeLine{00937\ \ \ \ \ rpt-\/>next\ =\ NULL;}
+\DoxyCodeLine{00938\ }
+\DoxyCodeLine{00939\ \ \ \ \ \textcolor{comment}{/*\ Lock\ this\ section\ */}}
+\DoxyCodeLine{00940\ \ \ \ \ pthread\_mutex\_lock(\&dev-\/>mutex);}
+\DoxyCodeLine{00941\ }
+\DoxyCodeLine{00942\ \ \ \ \ \textcolor{comment}{/*\ Attach\ the\ new\ report\ object\ to\ the\ end\ of\ the\ list.\ */}}
+\DoxyCodeLine{00943\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>input\_reports\ ==\ NULL)\ \{}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ The\ list\ is\ empty.\ Put\ it\ at\ the\ root.\ */}}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ dev-\/>input\_reports\ =\ rpt;}
+\DoxyCodeLine{00946\ \ \ \ \ \}}
+\DoxyCodeLine{00947\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Find\ the\ end\ of\ the\ list\ and\ attach.\ */}}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__report}{input\_report}}\ *cur\ =\ dev-\/>input\_reports;}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_queued\ =\ 0;}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (cur-\/>next\ !=\ NULL)\ \{}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ cur\ =\ cur-\/>next;}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ num\_queued++;}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ cur-\/>next\ =\ rpt;}
+\DoxyCodeLine{00956\ }
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Pop\ one\ off\ if\ we've\ reached\ 30\ in\ the\ queue.\ This}}
+\DoxyCodeLine{00958\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ way\ we\ don't\ grow\ forever\ if\ the\ user\ never\ reads}}
+\DoxyCodeLine{00959\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ anything\ from\ the\ device.\ */}}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_queued\ >\ 30)\ \{}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \ \ return\_data(dev,\ NULL,\ 0);}
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00963\ \ \ \ \ \}}
+\DoxyCodeLine{00964\ }
+\DoxyCodeLine{00965\ \ \ \ \ \textcolor{comment}{/*\ Signal\ a\ waiting\ thread\ that\ there\ is\ data.\ */}}
+\DoxyCodeLine{00966\ \ \ \ \ pthread\_cond\_signal(\&dev-\/>condition);}
+\DoxyCodeLine{00967\ }
+\DoxyCodeLine{00968\ \ \ \ \ \textcolor{comment}{/*\ Unlock\ */}}
+\DoxyCodeLine{00969\ \ \ \ \ pthread\_mutex\_unlock(\&dev-\/>mutex);}
+\DoxyCodeLine{00970\ }
+\DoxyCodeLine{00971\ \}}
+\DoxyCodeLine{00972\ }
+\DoxyCodeLine{00973\ \textcolor{comment}{/*\ This\ gets\ called\ when\ the\ read\_thread's\ run\ loop\ gets\ signaled\ by}}
+\DoxyCodeLine{00974\ \textcolor{comment}{\ \ \ hid\_close(),\ and\ serves\ to\ stop\ the\ read\_thread's\ run\ loop.\ */}}
+\DoxyCodeLine{00975\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ perform\_signal\_callback(\textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{classcontext}{context}})}
+\DoxyCodeLine{00976\ \{}
+\DoxyCodeLine{00977\ \ \ \ \ hid\_device\ *dev\ =\ (hid\_device*)\ \doxymbox{\hyperlink{classcontext}{context}};}
+\DoxyCodeLine{00978\ \ \ \ \ CFRunLoopStop(dev-\/>run\_loop);\ \textcolor{comment}{/*TODO:\ CFRunLoopGetCurrent()*/}}
+\DoxyCodeLine{00979\ \}}
+\DoxyCodeLine{00980\ }
+\DoxyCodeLine{00981\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ *read\_thread(\textcolor{keywordtype}{void}\ *param)}
+\DoxyCodeLine{00982\ \{}
+\DoxyCodeLine{00983\ \ \ \ \ hid\_device\ *dev\ =\ (hid\_device*)\ param;}
+\DoxyCodeLine{00984\ \ \ \ \ SInt32\ code;}
+\DoxyCodeLine{00985\ }
+\DoxyCodeLine{00986\ \ \ \ \ \textcolor{comment}{/*\ Move\ the\ device's\ run\ loop\ to\ this\ thread.\ */}}
+\DoxyCodeLine{00987\ \ \ \ \ IOHIDDeviceScheduleWithRunLoop(dev-\/>device\_handle,\ CFRunLoopGetCurrent(),\ dev-\/>run\_loop\_mode);}
+\DoxyCodeLine{00988\ }
+\DoxyCodeLine{00989\ \ \ \ \ \textcolor{comment}{/*\ Create\ the\ RunLoopSource\ which\ is\ used\ to\ signal\ the}}
+\DoxyCodeLine{00990\ \textcolor{comment}{\ \ \ \ \ \ \ event\ loop\ to\ stop\ when\ hid\_close()\ is\ called.\ */}}
+\DoxyCodeLine{00991\ \ \ \ \ CFRunLoopSourceContext\ ctx;}
+\DoxyCodeLine{00992\ \ \ \ \ memset(\&ctx,\ 0,\ \textcolor{keyword}{sizeof}(ctx));}
+\DoxyCodeLine{00993\ \ \ \ \ ctx.version\ =\ 0;}
+\DoxyCodeLine{00994\ \ \ \ \ ctx.info\ =\ dev;}
+\DoxyCodeLine{00995\ \ \ \ \ ctx.perform\ =\ \&perform\_signal\_callback;}
+\DoxyCodeLine{00996\ \ \ \ \ dev-\/>source\ =\ CFRunLoopSourceCreate(kCFAllocatorDefault,\ 0\textcolor{comment}{/*order*/},\ \&ctx);}
+\DoxyCodeLine{00997\ \ \ \ \ CFRunLoopAddSource(CFRunLoopGetCurrent(),\ dev-\/>source,\ dev-\/>run\_loop\_mode);}
+\DoxyCodeLine{00998\ }
+\DoxyCodeLine{00999\ \ \ \ \ \textcolor{comment}{/*\ Store\ off\ the\ Run\ Loop\ so\ it\ can\ be\ stopped\ from\ hid\_close()}}
+\DoxyCodeLine{01000\ \textcolor{comment}{\ \ \ \ \ \ \ and\ on\ device\ disconnection.\ */}}
+\DoxyCodeLine{01001\ \ \ \ \ dev-\/>run\_loop\ =\ CFRunLoopGetCurrent();}
+\DoxyCodeLine{01002\ }
+\DoxyCodeLine{01003\ \ \ \ \ \textcolor{comment}{/*\ Notify\ the\ main\ thread\ that\ the\ read\ thread\ is\ up\ and\ running.\ */}}
+\DoxyCodeLine{01004\ \ \ \ \ pthread\_barrier\_wait(\&dev-\/>barrier);}
+\DoxyCodeLine{01005\ }
+\DoxyCodeLine{01006\ \ \ \ \ \textcolor{comment}{/*\ Run\ the\ Event\ Loop.\ CFRunLoopRunInMode()\ will\ dispatch\ HID\ input}}
+\DoxyCodeLine{01007\ \textcolor{comment}{\ \ \ \ \ \ \ reports\ into\ the\ hid\_report\_callback().\ */}}
+\DoxyCodeLine{01008\ \ \ \ \ \textcolor{keywordflow}{while}\ (!dev-\/>shutdown\_thread\ \&\&\ !dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ code\ =\ CFRunLoopRunInMode(dev-\/>run\_loop\_mode,\ 1000\textcolor{comment}{/*sec*/},\ FALSE);}
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Return\ if\ the\ device\ has\ been\ disconnected\ */}}
+\DoxyCodeLine{01011\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (code\ ==\ kCFRunLoopRunFinished\ ||\ code\ ==\ kCFRunLoopRunStopped)\ \{}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \ \ \ \ dev-\/>disconnected\ =\ 1;}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01014\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01015\ }
+\DoxyCodeLine{01016\ }
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Break\ if\ The\ Run\ Loop\ returns\ Finished\ or\ Stopped.\ */}}
+\DoxyCodeLine{01018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (code\ !=\ kCFRunLoopRunTimedOut\ \&\&}
+\DoxyCodeLine{01019\ \ \ \ \ \ \ \ \ \ \ \ \ code\ !=\ kCFRunLoopRunHandledSource)\ \{}
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ There\ was\ some\ kind\ of\ error.\ Setting}}
+\DoxyCodeLine{01021\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shutdown\ seems\ to\ make\ sense,\ but}}
+\DoxyCodeLine{01022\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ there\ may\ be\ something\ else\ more\ appropriate\ */}}
+\DoxyCodeLine{01023\ \ \ \ \ \ \ \ \ \ \ \ \ dev-\/>shutdown\_thread\ =\ 1;}
+\DoxyCodeLine{01024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01026\ \ \ \ \ \}}
+\DoxyCodeLine{01027\ }
+\DoxyCodeLine{01028\ \ \ \ \ \textcolor{comment}{/*\ Now\ that\ the\ read\ thread\ is\ stopping,\ Wake\ any\ threads\ which\ are}}
+\DoxyCodeLine{01029\ \textcolor{comment}{\ \ \ \ \ \ \ waiting\ on\ data\ (in\ hid\_read\_timeout()).\ Do\ this\ under\ a\ mutex\ to}}
+\DoxyCodeLine{01030\ \textcolor{comment}{\ \ \ \ \ \ \ make\ sure\ that\ a\ thread\ which\ is\ about\ to\ go\ to\ sleep\ waiting\ on}}
+\DoxyCodeLine{01031\ \textcolor{comment}{\ \ \ \ \ \ \ the\ condition\ actually\ will\ go\ to\ sleep\ before\ the\ condition\ is}}
+\DoxyCodeLine{01032\ \textcolor{comment}{\ \ \ \ \ \ \ signaled.\ */}}
+\DoxyCodeLine{01033\ \ \ \ \ pthread\_mutex\_lock(\&dev-\/>mutex);}
+\DoxyCodeLine{01034\ \ \ \ \ pthread\_cond\_broadcast(\&dev-\/>condition);}
+\DoxyCodeLine{01035\ \ \ \ \ pthread\_mutex\_unlock(\&dev-\/>mutex);}
+\DoxyCodeLine{01036\ }
+\DoxyCodeLine{01037\ \ \ \ \ \textcolor{comment}{/*\ Wait\ here\ until\ hid\_close()\ is\ called\ and\ makes\ it\ past}}
+\DoxyCodeLine{01038\ \textcolor{comment}{\ \ \ \ \ \ \ the\ call\ to\ CFRunLoopWakeUp().\ This\ thread\ still\ needs\ to}}
+\DoxyCodeLine{01039\ \textcolor{comment}{\ \ \ \ \ \ \ be\ valid\ when\ that\ function\ is\ called\ on\ the\ other\ thread.\ */}}
+\DoxyCodeLine{01040\ \ \ \ \ pthread\_barrier\_wait(\&dev-\/>shutdown\_barrier);}
+\DoxyCodeLine{01041\ }
+\DoxyCodeLine{01042\ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{01043\ \}}
+\DoxyCodeLine{01044\ }
+\DoxyCodeLine{01045\ \textcolor{comment}{/*\ \(\backslash\)p\ path\ must\ be\ one\ of:}}
+\DoxyCodeLine{01046\ \textcolor{comment}{\ \ \ \ \ -\/\ in\ format\ 'DevSrvsID:<RegistryEntryID>'\ (as\ returned\ by\ hid\_enumerate);}}
+\DoxyCodeLine{01047\ \textcolor{comment}{\ \ \ \ \ -\/\ a\ valid\ path\ to\ an\ IOHIDDevice\ in\ the\ IOService\ plane\ (as\ returned\ by\ IORegistryEntryGetPath,}}
+\DoxyCodeLine{01048\ \textcolor{comment}{\ \ \ \ \ \ \ e.g.:\ "{}IOService:/AppleACPIPlatformExpert/PCI0@0/AppleACPIPCI/EHC1@1D,7/AppleUSBEHCI/PLAYSTATION(R)3\ Controller@fd120000/IOUSBInterface@0/IOUSBHIDDriver"{});}}
+\DoxyCodeLine{01049\ \textcolor{comment}{\ \ \ Second\ format\ is\ for\ compatibility\ with\ paths\ accepted\ by\ older\ versions\ of\ HIDAPI.}}
+\DoxyCodeLine{01050\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01051\ \textcolor{keyword}{static}\ io\_registry\_entry\_t\ hid\_open\_service\_registry\_from\_path(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path)}
+\DoxyCodeLine{01052\ \{}
+\DoxyCodeLine{01053\ \ \ \ \ \textcolor{keywordflow}{if}\ (path\ ==\ NULL)}
+\DoxyCodeLine{01054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ MACH\_PORT\_NULL;}
+\DoxyCodeLine{01055\ }
+\DoxyCodeLine{01056\ \ \ \ \ \textcolor{comment}{/*\ Get\ the\ IORegistry\ entry\ for\ the\ given\ path\ */}}
+\DoxyCodeLine{01057\ \ \ \ \ \textcolor{keywordflow}{if}\ (strncmp(\textcolor{stringliteral}{"{}DevSrvsID:"{}},\ path,\ 10)\ ==\ 0)\ \{}
+\DoxyCodeLine{01058\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *endptr;}
+\DoxyCodeLine{01059\ \ \ \ \ \ \ \ \ uint64\_t\ entry\_id\ =\ strtoull(path\ +\ 10,\ \&endptr,\ 10);}
+\DoxyCodeLine{01060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (*endptr\ ==\ \textcolor{charliteral}{'\(\backslash\)0'})\ \{}
+\DoxyCodeLine{01061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IOServiceGetMatchingService((mach\_port\_t)\ 0,\ IORegistryEntryIDMatching(entry\_id));}
+\DoxyCodeLine{01062\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01063\ \ \ \ \ \}}
+\DoxyCodeLine{01064\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01065\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Fallback\ to\ older\ format\ of\ the\ path\ */}}
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IORegistryEntryFromPath((mach\_port\_t)\ 0,\ path);}
+\DoxyCodeLine{01067\ \ \ \ \ \}}
+\DoxyCodeLine{01068\ }
+\DoxyCodeLine{01069\ \ \ \ \ \textcolor{keywordflow}{return}\ MACH\_PORT\_NULL;}
+\DoxyCodeLine{01070\ \}}
+\DoxyCodeLine{01071\ }
+\DoxyCodeLine{01072\ hid\_device\ *\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_ga954ecb58b5dfb4a6ef6be3dcd520e42f}{hid\_open\_path}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path)}
+\DoxyCodeLine{01073\ \{}
+\DoxyCodeLine{01074\ \ \ \ \ hid\_device\ *dev\ =\ NULL;}
+\DoxyCodeLine{01075\ \ \ \ \ io\_registry\_entry\_t\ entry\ =\ MACH\_PORT\_NULL;}
+\DoxyCodeLine{01076\ \ \ \ \ IOReturn\ ret\ =\ kIOReturnInvalid;}
+\DoxyCodeLine{01077\ \ \ \ \ \textcolor{keywordtype}{char}\ str[32];}
+\DoxyCodeLine{01078\ }
+\DoxyCodeLine{01079\ \ \ \ \ \textcolor{comment}{/*\ Set\ up\ the\ HID\ Manager\ if\ it\ hasn't\ been\ done\ */}}
+\DoxyCodeLine{01080\ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group___a_p_i_ga142ffc1b0b7a7fa412d3862b2a17164b}{hid\_init}}()\ <\ 0)\ \{}
+\DoxyCodeLine{01081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{01082\ \ \ \ \ \}}
+\DoxyCodeLine{01083\ \ \ \ \ \textcolor{comment}{/*\ register\_global\_error:\ global\ error\ is\ set/reset\ by\ hid\_init\ */}}
+\DoxyCodeLine{01084\ }
+\DoxyCodeLine{01085\ \ \ \ \ dev\ =\ new\_hid\_device();}
+\DoxyCodeLine{01086\ \ \ \ \ \textcolor{keywordflow}{if}\ (!dev)\ \{}
+\DoxyCodeLine{01087\ \ \ \ \ \ \ \ \ register\_global\_error(\textcolor{stringliteral}{"{}Couldn't\ allocate\ memory"{}});}
+\DoxyCodeLine{01088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{01089\ \ \ \ \ \}}
+\DoxyCodeLine{01090\ }
+\DoxyCodeLine{01091\ \ \ \ \ \textcolor{comment}{/*\ Get\ the\ IORegistry\ entry\ for\ the\ given\ path\ */}}
+\DoxyCodeLine{01092\ \ \ \ \ entry\ =\ hid\_open\_service\_registry\_from\_path(path);}
+\DoxyCodeLine{01093\ \ \ \ \ \textcolor{keywordflow}{if}\ (entry\ ==\ MACH\_PORT\_NULL)\ \{}
+\DoxyCodeLine{01094\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Path\ wasn't\ valid\ (maybe\ device\ was\ removed?)\ */}}
+\DoxyCodeLine{01095\ \ \ \ \ \ \ \ \ register\_global\_error(\textcolor{stringliteral}{"{}hid\_open\_path:\ device\ mach\ entry\ not\ found\ with\ the\ given\ path"{}});}
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ return\_error;}
+\DoxyCodeLine{01097\ \ \ \ \ \}}
+\DoxyCodeLine{01098\ }
+\DoxyCodeLine{01099\ \ \ \ \ \textcolor{comment}{/*\ Create\ an\ IOHIDDevice\ for\ the\ entry\ */}}
+\DoxyCodeLine{01100\ \ \ \ \ dev-\/>device\_handle\ =\ IOHIDDeviceCreate(kCFAllocatorDefault,\ entry);}
+\DoxyCodeLine{01101\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>device\_handle\ ==\ NULL)\ \{}
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Error\ creating\ the\ HID\ device\ */}}
+\DoxyCodeLine{01103\ \ \ \ \ \ \ \ \ register\_global\_error(\textcolor{stringliteral}{"{}hid\_open\_path:\ failed\ to\ create\ IOHIDDevice\ from\ the\ mach\ entry"{}});}
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ return\_error;}
+\DoxyCodeLine{01105\ \ \ \ \ \}}
+\DoxyCodeLine{01106\ }
+\DoxyCodeLine{01107\ \ \ \ \ \textcolor{comment}{/*\ Open\ the\ IOHIDDevice\ */}}
+\DoxyCodeLine{01108\ \ \ \ \ ret\ =\ IOHIDDeviceOpen(dev-\/>device\_handle,\ dev-\/>open\_options);}
+\DoxyCodeLine{01109\ \ \ \ \ \textcolor{keywordflow}{if}\ (ret\ !=\ kIOReturnSuccess)\ \{}
+\DoxyCodeLine{01110\ \ \ \ \ \ \ \ \ register\_global\_error\_format(\textcolor{stringliteral}{"{}hid\_open\_path:\ failed\ to\ open\ IOHIDDevice\ from\ mach\ entry:\ (0x\%08X)\ \%s"{}},\ ret,\ mach\_error\_string(ret));}
+\DoxyCodeLine{01111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ return\_error;}
+\DoxyCodeLine{01112\ \ \ \ \ \}}
+\DoxyCodeLine{01113\ }
+\DoxyCodeLine{01114\ \ \ \ \ \textcolor{comment}{/*\ Create\ the\ buffers\ for\ receiving\ data\ */}}
+\DoxyCodeLine{01115\ \ \ \ \ dev-\/>max\_input\_report\_len\ =\ (CFIndex)\ get\_max\_report\_length(dev-\/>device\_handle);}
+\DoxyCodeLine{01116\ \ \ \ \ dev-\/>input\_report\_buf\ =\ (uint8\_t*)\ calloc(dev-\/>max\_input\_report\_len,\ \textcolor{keyword}{sizeof}(uint8\_t));}
+\DoxyCodeLine{01117\ }
+\DoxyCodeLine{01118\ \ \ \ \ \textcolor{comment}{/*\ Create\ the\ Run\ Loop\ Mode\ for\ this\ device.}}
+\DoxyCodeLine{01119\ \textcolor{comment}{\ \ \ \ \ \ \ printing\ the\ reference\ seems\ to\ work.\ */}}
+\DoxyCodeLine{01120\ \ \ \ \ snprintf(str,\ \textcolor{keyword}{sizeof}(str),\ \textcolor{stringliteral}{"{}HIDAPI\_\%p"{}},\ (\textcolor{keywordtype}{void}*)\ dev-\/>device\_handle);}
+\DoxyCodeLine{01121\ \ \ \ \ dev-\/>run\_loop\_mode\ =}
+\DoxyCodeLine{01122\ \ \ \ \ \ \ \ \ CFStringCreateWithCString(NULL,\ str,\ kCFStringEncodingASCII);}
+\DoxyCodeLine{01123\ }
+\DoxyCodeLine{01124\ \ \ \ \ \textcolor{comment}{/*\ Attach\ the\ device\ to\ a\ Run\ Loop\ */}}
+\DoxyCodeLine{01125\ \ \ \ \ IOHIDDeviceRegisterInputReportCallback(}
+\DoxyCodeLine{01126\ \ \ \ \ \ \ \ \ dev-\/>device\_handle,\ dev-\/>input\_report\_buf,\ dev-\/>max\_input\_report\_len,}
+\DoxyCodeLine{01127\ \ \ \ \ \ \ \ \ \&hid\_report\_callback,\ dev);}
+\DoxyCodeLine{01128\ \ \ \ \ IOHIDDeviceRegisterRemovalCallback(dev-\/>device\_handle,\ hid\_device\_removal\_callback,\ dev);}
+\DoxyCodeLine{01129\ }
+\DoxyCodeLine{01130\ \ \ \ \ \textcolor{comment}{/*\ Start\ the\ read\ thread\ */}}
+\DoxyCodeLine{01131\ \ \ \ \ pthread\_create(\&dev-\/>thread,\ NULL,\ read\_thread,\ dev);}
+\DoxyCodeLine{01132\ }
+\DoxyCodeLine{01133\ \ \ \ \ \textcolor{comment}{/*\ Wait\ here\ for\ the\ read\ thread\ to\ be\ initialized.\ */}}
+\DoxyCodeLine{01134\ \ \ \ \ pthread\_barrier\_wait(\&dev-\/>barrier);}
+\DoxyCodeLine{01135\ }
+\DoxyCodeLine{01136\ \ \ \ \ IOObjectRelease(entry);}
+\DoxyCodeLine{01137\ \ \ \ \ \textcolor{keywordflow}{return}\ dev;}
+\DoxyCodeLine{01138\ }
+\DoxyCodeLine{01139\ return\_error:}
+\DoxyCodeLine{01140\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>device\_handle\ !=\ NULL)}
+\DoxyCodeLine{01141\ \ \ \ \ \ \ \ \ CFRelease(dev-\/>device\_handle);}
+\DoxyCodeLine{01142\ }
+\DoxyCodeLine{01143\ \ \ \ \ \textcolor{keywordflow}{if}\ (entry\ !=\ MACH\_PORT\_NULL)}
+\DoxyCodeLine{01144\ \ \ \ \ \ \ \ \ IOObjectRelease(entry);}
+\DoxyCodeLine{01145\ }
+\DoxyCodeLine{01146\ \ \ \ \ free\_hid\_device(dev);}
+\DoxyCodeLine{01147\ \ \ \ \ \textcolor{keywordflow}{return}\ NULL;}
+\DoxyCodeLine{01148\ \}}
+\DoxyCodeLine{01149\ }
+\DoxyCodeLine{01150\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ set\_report(hid\_device\ *dev,\ IOHIDReportType\ type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01151\ \{}
+\DoxyCodeLine{01152\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pass\_through\_magic\ =\ \textcolor{stringliteral}{"{}MAGIC0"{}};}
+\DoxyCodeLine{01153\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pass\_through\_magic\_length\ =\ strlen(pass\_through\_magic);}
+\DoxyCodeLine{01154\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data\_to\_send\ =\ data;}
+\DoxyCodeLine{01155\ \ \ \ \ CFIndex\ length\_to\_send\ =\ length;}
+\DoxyCodeLine{01156\ \ \ \ \ IOReturn\ res;}
+\DoxyCodeLine{01157\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ report\_id;}
+\DoxyCodeLine{01158\ }
+\DoxyCodeLine{01159\ \ \ \ \ register\_device\_error(dev,\ NULL);}
+\DoxyCodeLine{01160\ }
+\DoxyCodeLine{01161\ \ \ \ \ \textcolor{keywordflow}{if}\ (!data\ ||\ (length\ ==\ 0))\ \{}
+\DoxyCodeLine{01162\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ strerror(EINVAL));}
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01164\ \ \ \ \ \}}
+\DoxyCodeLine{01165\ }
+\DoxyCodeLine{01166\ \ \ \ \ report\_id\ =\ data[0];}
+\DoxyCodeLine{01167\ }
+\DoxyCodeLine{01168\ \ \ \ \ \textcolor{keywordflow}{if}\ (report\_id\ ==\ 0x0)\ \{}
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Not\ using\ numbered\ Reports.}}
+\DoxyCodeLine{01170\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ Don't\ send\ the\ report\ number.\ */}}
+\DoxyCodeLine{01171\ \ \ \ \ \ \ \ \ data\_to\_send\ =\ data+1;}
+\DoxyCodeLine{01172\ \ \ \ \ \ \ \ \ length\_to\_send\ =\ length-\/1;}
+\DoxyCodeLine{01173\ \ \ \ \ \}}
+\DoxyCodeLine{01174\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (length\ >\ 6\ \&\&\ memcmp(data,\ pass\_through\_magic,\ pass\_through\_magic\_length)\ ==\ 0)\ \{}
+\DoxyCodeLine{01175\ \ \ \ \ \ \ \ \ report\_id\ =\ data[pass\_through\_magic\_length];}
+\DoxyCodeLine{01176\ \ \ \ \ \ \ \ \ data\_to\_send\ =\ data+pass\_through\_magic\_length;}
+\DoxyCodeLine{01177\ \ \ \ \ \ \ \ \ length\_to\_send\ =\ length-\/pass\_through\_magic\_length;}
+\DoxyCodeLine{01178\ \ \ \ \ \}}
+\DoxyCodeLine{01179\ }
+\DoxyCodeLine{01180\ \ \ \ \ \textcolor{comment}{/*\ Avoid\ crash\ if\ the\ device\ has\ been\ unplugged.\ */}}
+\DoxyCodeLine{01181\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01182\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Device\ is\ disconnected"{}});}
+\DoxyCodeLine{01183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01184\ \ \ \ \ \}}
+\DoxyCodeLine{01185\ }
+\DoxyCodeLine{01186\ \ \ \ \ res\ =\ IOHIDDeviceSetReport(dev-\/>device\_handle,}
+\DoxyCodeLine{01187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type,}
+\DoxyCodeLine{01188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ report\_id,}
+\DoxyCodeLine{01189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ data\_to\_send,\ length\_to\_send);}
+\DoxyCodeLine{01190\ }
+\DoxyCodeLine{01191\ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ !=\ kIOReturnSuccess)\ \{}
+\DoxyCodeLine{01192\ \ \ \ \ \ \ \ \ register\_device\_error\_format(dev,\ \textcolor{stringliteral}{"{}IOHIDDeviceSetReport\ failed:\ (0x\%08X)\ \%s"{}},\ res,\ mach\_error\_string(res));}
+\DoxyCodeLine{01193\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01194\ \ \ \ \ \}}
+\DoxyCodeLine{01195\ }
+\DoxyCodeLine{01196\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})\ length;}
+\DoxyCodeLine{01197\ \}}
+\DoxyCodeLine{01198\ }
+\DoxyCodeLine{01199\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ get\_report(hid\_device\ *dev,\ IOHIDReportType\ type,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01200\ \{}
+\DoxyCodeLine{01201\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *report\ =\ data;}
+\DoxyCodeLine{01202\ \ \ \ \ CFIndex\ report\_length\ =\ length;}
+\DoxyCodeLine{01203\ \ \ \ \ IOReturn\ res\ =\ kIOReturnSuccess;}
+\DoxyCodeLine{01204\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ report\_id\ =\ data[0];}
+\DoxyCodeLine{01205\ }
+\DoxyCodeLine{01206\ \ \ \ \ register\_device\_error(dev,\ NULL);}
+\DoxyCodeLine{01207\ }
+\DoxyCodeLine{01208\ \ \ \ \ \textcolor{keywordflow}{if}\ (report\_id\ ==\ 0x0)\ \{}
+\DoxyCodeLine{01209\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Not\ using\ numbered\ Reports.}}
+\DoxyCodeLine{01210\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ Don't\ send\ the\ report\ number.\ */}}
+\DoxyCodeLine{01211\ \ \ \ \ \ \ \ \ report\ =\ data+1;}
+\DoxyCodeLine{01212\ \ \ \ \ \ \ \ \ report\_length\ =\ length-\/1;}
+\DoxyCodeLine{01213\ \ \ \ \ \}}
+\DoxyCodeLine{01214\ }
+\DoxyCodeLine{01215\ \ \ \ \ \textcolor{comment}{/*\ Avoid\ crash\ if\ the\ device\ has\ been\ unplugged.\ */}}
+\DoxyCodeLine{01216\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01217\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Device\ is\ disconnected"{}});}
+\DoxyCodeLine{01218\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01219\ \ \ \ \ \}}
+\DoxyCodeLine{01220\ }
+\DoxyCodeLine{01221\ \ \ \ \ res\ =\ IOHIDDeviceGetReport(dev-\/>device\_handle,}
+\DoxyCodeLine{01222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type,}
+\DoxyCodeLine{01223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ report\_id,}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ report,\ \&report\_length);}
+\DoxyCodeLine{01225\ }
+\DoxyCodeLine{01226\ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ !=\ kIOReturnSuccess)\ \{}
+\DoxyCodeLine{01227\ \ \ \ \ \ \ \ \ register\_device\_error\_format(dev,\ \textcolor{stringliteral}{"{}IOHIDDeviceGetReport\ failed:\ (0x\%08X)\ \%s"{}},\ res,\ mach\_error\_string(res));}
+\DoxyCodeLine{01228\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01229\ \ \ \ \ \}}
+\DoxyCodeLine{01230\ }
+\DoxyCodeLine{01231\ \ \ \ \ \textcolor{keywordflow}{if}\ (report\_id\ ==\ 0x0)\ \{\ \textcolor{comment}{/*\ 0\ report\ number\ still\ present\ at\ the\ beginning\ */}}
+\DoxyCodeLine{01232\ \ \ \ \ \ \ \ \ report\_length++;}
+\DoxyCodeLine{01233\ \ \ \ \ \}}
+\DoxyCodeLine{01234\ }
+\DoxyCodeLine{01235\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})\ report\_length;}
+\DoxyCodeLine{01236\ \}}
+\DoxyCodeLine{01237\ }
+\DoxyCodeLine{01238\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_gaa691d2c469b9654128196bf7ef8edd9d}{hid\_write}}(hid\_device\ *dev,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01239\ \{}
+\DoxyCodeLine{01240\ \ \ \ \ \textcolor{keywordflow}{return}\ set\_report(dev,\ kIOHIDReportTypeOutput,\ data,\ length);}
+\DoxyCodeLine{01241\ \}}
+\DoxyCodeLine{01242\ }
+\DoxyCodeLine{01243\ \textcolor{comment}{/*\ Helper\ function,\ so\ that\ this\ isn't\ duplicated\ in\ hid\_read().\ */}}
+\DoxyCodeLine{01244\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ return\_data(hid\_device\ *dev,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01245\ \{}
+\DoxyCodeLine{01246\ \ \ \ \ \textcolor{comment}{/*\ Copy\ the\ data\ out\ of\ the\ linked\ list\ item\ (rpt)\ into\ the}}
+\DoxyCodeLine{01247\ \textcolor{comment}{\ \ \ \ \ \ \ return\ buffer\ (data),\ and\ delete\ the\ liked\ list\ item.\ */}}
+\DoxyCodeLine{01248\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__report}{input\_report}}\ *rpt\ =\ dev-\/>input\_reports;}
+\DoxyCodeLine{01249\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len\ =\ (length\ <\ rpt-\/>len)?\ length:\ rpt-\/>len;}
+\DoxyCodeLine{01250\ \ \ \ \ \textcolor{keywordflow}{if}\ (data\ !=\ NULL)\ \{}
+\DoxyCodeLine{01251\ \ \ \ \ \ \ \ \ memcpy(data,\ rpt-\/>data,\ len);}
+\DoxyCodeLine{01252\ \ \ \ \ \}}
+\DoxyCodeLine{01253\ \ \ \ \ dev-\/>input\_reports\ =\ rpt-\/>next;}
+\DoxyCodeLine{01254\ \ \ \ \ free(rpt-\/>data);}
+\DoxyCodeLine{01255\ \ \ \ \ free(rpt);}
+\DoxyCodeLine{01256\ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})\ len;}
+\DoxyCodeLine{01257\ \}}
+\DoxyCodeLine{01258\ }
+\DoxyCodeLine{01259\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ cond\_wait(hid\_device\ *dev,\ pthread\_cond\_t\ *cond,\ pthread\_mutex\_t\ *mutex)}
+\DoxyCodeLine{01260\ \{}
+\DoxyCodeLine{01261\ \ \ \ \ \textcolor{keywordflow}{while}\ (!dev-\/>input\_reports)\ \{}
+\DoxyCodeLine{01262\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ res\ =\ pthread\_cond\_wait(cond,\ mutex);}
+\DoxyCodeLine{01263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ !=\ 0)}
+\DoxyCodeLine{01264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01265\ }
+\DoxyCodeLine{01266\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ A\ res\ of\ 0\ means\ we\ may\ have\ been\ signaled\ or\ it\ may}}
+\DoxyCodeLine{01267\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ be\ a\ spurious\ wakeup.\ Check\ to\ see\ that\ there's\ actually}}
+\DoxyCodeLine{01268\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ data\ in\ the\ queue\ before\ returning,\ and\ if\ not,\ go\ back}}
+\DoxyCodeLine{01269\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ to\ sleep.\ See\ the\ pthread\_cond\_timedwait()\ man\ page\ for}}
+\DoxyCodeLine{01270\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ details.\ */}}
+\DoxyCodeLine{01271\ }
+\DoxyCodeLine{01272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>shutdown\_thread\ ||\ dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01274\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01275\ \ \ \ \ \}}
+\DoxyCodeLine{01276\ }
+\DoxyCodeLine{01277\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01278\ \}}
+\DoxyCodeLine{01279\ }
+\DoxyCodeLine{01280\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{int}\ cond\_timedwait(hid\_device\ *dev,\ pthread\_cond\_t\ *cond,\ pthread\_mutex\_t\ *mutex,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ timespec\ *abstime)}
+\DoxyCodeLine{01281\ \{}
+\DoxyCodeLine{01282\ \ \ \ \ \textcolor{keywordflow}{while}\ (!dev-\/>input\_reports)\ \{}
+\DoxyCodeLine{01283\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ res\ =\ pthread\_cond\_timedwait(cond,\ mutex,\ abstime);}
+\DoxyCodeLine{01284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ !=\ 0)}
+\DoxyCodeLine{01285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{01286\ }
+\DoxyCodeLine{01287\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ A\ res\ of\ 0\ means\ we\ may\ have\ been\ signaled\ or\ it\ may}}
+\DoxyCodeLine{01288\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ be\ a\ spurious\ wakeup.\ Check\ to\ see\ that\ there's\ actually}}
+\DoxyCodeLine{01289\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ data\ in\ the\ queue\ before\ returning,\ and\ if\ not,\ go\ back}}
+\DoxyCodeLine{01290\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ to\ sleep.\ See\ the\ pthread\_cond\_timedwait()\ man\ page\ for}}
+\DoxyCodeLine{01291\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ details.\ */}}
+\DoxyCodeLine{01292\ }
+\DoxyCodeLine{01293\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>shutdown\_thread\ ||\ dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01294\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01295\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01296\ \ \ \ \ \}}
+\DoxyCodeLine{01297\ }
+\DoxyCodeLine{01298\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01299\ }
+\DoxyCodeLine{01300\ \}}
+\DoxyCodeLine{01301\ }
+\DoxyCodeLine{01302\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_gaa5c9ed5aa290688ffac03343989ad75a}{hid\_read\_timeout}}(hid\_device\ *dev,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length,\ \textcolor{keywordtype}{int}\ milliseconds)}
+\DoxyCodeLine{01303\ \{}
+\DoxyCodeLine{01304\ \ \ \ \ \textcolor{keywordtype}{int}\ bytes\_read\ =\ -\/1;}
+\DoxyCodeLine{01305\ }
+\DoxyCodeLine{01306\ \ \ \ \ \textcolor{comment}{/*\ Lock\ the\ access\ to\ the\ report\ list.\ */}}
+\DoxyCodeLine{01307\ \ \ \ \ pthread\_mutex\_lock(\&dev-\/>mutex);}
+\DoxyCodeLine{01308\ }
+\DoxyCodeLine{01309\ \ \ \ \ \textcolor{comment}{/*\ There's\ an\ input\ report\ queued\ up.\ Return\ it.\ */}}
+\DoxyCodeLine{01310\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>input\_reports)\ \{}
+\DoxyCodeLine{01311\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Return\ the\ first\ one\ */}}
+\DoxyCodeLine{01312\ \ \ \ \ \ \ \ \ bytes\_read\ =\ return\_data(dev,\ data,\ length);}
+\DoxyCodeLine{01313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ ret;}
+\DoxyCodeLine{01314\ \ \ \ \ \}}
+\DoxyCodeLine{01315\ }
+\DoxyCodeLine{01316\ \ \ \ \ \textcolor{comment}{/*\ Return\ if\ the\ device\ has\ been\ disconnected.\ */}}
+\DoxyCodeLine{01317\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01318\ \ \ \ \ \ \ \ \ bytes\_read\ =\ -\/1;}
+\DoxyCodeLine{01319\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}hid\_read\_timeout:\ device\ disconnected"{}});}
+\DoxyCodeLine{01320\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ ret;}
+\DoxyCodeLine{01321\ \ \ \ \ \}}
+\DoxyCodeLine{01322\ }
+\DoxyCodeLine{01323\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>shutdown\_thread)\ \{}
+\DoxyCodeLine{01324\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ This\ means\ the\ device\ has\ been\ closed\ (or\ there}}
+\DoxyCodeLine{01325\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ has\ been\ an\ error.\ An\ error\ code\ of\ -\/1\ should}}
+\DoxyCodeLine{01326\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ be\ returned.\ */}}
+\DoxyCodeLine{01327\ \ \ \ \ \ \ \ \ bytes\_read\ =\ -\/1;}
+\DoxyCodeLine{01328\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}hid\_read\_timeout:\ thread\ shutdown"{}});}
+\DoxyCodeLine{01329\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ ret;}
+\DoxyCodeLine{01330\ \ \ \ \ \}}
+\DoxyCodeLine{01331\ }
+\DoxyCodeLine{01332\ \ \ \ \ \textcolor{comment}{/*\ There\ is\ no\ data.\ Go\ to\ sleep\ and\ wait\ for\ data.\ */}}
+\DoxyCodeLine{01333\ }
+\DoxyCodeLine{01334\ \ \ \ \ \textcolor{keywordflow}{if}\ (milliseconds\ ==\ -\/1)\ \{}
+\DoxyCodeLine{01335\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Blocking\ */}}
+\DoxyCodeLine{01336\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ res;}
+\DoxyCodeLine{01337\ \ \ \ \ \ \ \ \ res\ =\ cond\_wait(dev,\ \&dev-\/>condition,\ \&dev-\/>mutex);}
+\DoxyCodeLine{01338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ ==\ 0)}
+\DoxyCodeLine{01339\ \ \ \ \ \ \ \ \ \ \ \ \ bytes\_read\ =\ return\_data(dev,\ data,\ length);}
+\DoxyCodeLine{01340\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01341\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ There\ was\ an\ error,\ or\ a\ device\ disconnection.\ */}}
+\DoxyCodeLine{01342\ \ \ \ \ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}hid\_read\_timeout:\ error\ waiting\ for\ more\ data"{}});}
+\DoxyCodeLine{01343\ \ \ \ \ \ \ \ \ \ \ \ \ bytes\_read\ =\ -\/1;}
+\DoxyCodeLine{01344\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01345\ \ \ \ \ \}}
+\DoxyCodeLine{01346\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (milliseconds\ >\ 0)\ \{}
+\DoxyCodeLine{01347\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Non-\/blocking,\ but\ called\ with\ timeout.\ */}}
+\DoxyCodeLine{01348\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ res;}
+\DoxyCodeLine{01349\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }timespec\ ts;}
+\DoxyCodeLine{01350\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }timeval\ tv;}
+\DoxyCodeLine{01351\ \ \ \ \ \ \ \ \ gettimeofday(\&tv,\ NULL);}
+\DoxyCodeLine{01352\ \ \ \ \ \ \ \ \ TIMEVAL\_TO\_TIMESPEC(\&tv,\ \&ts);}
+\DoxyCodeLine{01353\ \ \ \ \ \ \ \ \ ts.tv\_sec\ +=\ milliseconds\ /\ 1000;}
+\DoxyCodeLine{01354\ \ \ \ \ \ \ \ \ ts.tv\_nsec\ +=\ (milliseconds\ \%\ 1000)\ *\ 1000000;}
+\DoxyCodeLine{01355\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ts.tv\_nsec\ >=\ 1000000000L)\ \{}
+\DoxyCodeLine{01356\ \ \ \ \ \ \ \ \ \ \ \ \ ts.tv\_sec++;}
+\DoxyCodeLine{01357\ \ \ \ \ \ \ \ \ \ \ \ \ ts.tv\_nsec\ -\/=\ 1000000000L;}
+\DoxyCodeLine{01358\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01359\ }
+\DoxyCodeLine{01360\ \ \ \ \ \ \ \ \ res\ =\ cond\_timedwait(dev,\ \&dev-\/>condition,\ \&dev-\/>mutex,\ \&ts);}
+\DoxyCodeLine{01361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ ==\ 0)\ \{}
+\DoxyCodeLine{01362\ \ \ \ \ \ \ \ \ \ \ \ \ bytes\_read\ =\ return\_data(dev,\ data,\ length);}
+\DoxyCodeLine{01363\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (res\ ==\ ETIMEDOUT)\ \{}
+\DoxyCodeLine{01364\ \ \ \ \ \ \ \ \ \ \ \ \ bytes\_read\ =\ 0;}
+\DoxyCodeLine{01365\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01366\ \ \ \ \ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}hid\_read\_timeout:\ \ error\ waiting\ for\ more\ data"{}});}
+\DoxyCodeLine{01367\ \ \ \ \ \ \ \ \ \ \ \ \ bytes\_read\ =\ -\/1;}
+\DoxyCodeLine{01368\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01369\ \ \ \ \ \}}
+\DoxyCodeLine{01370\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01371\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ Purely\ non-\/blocking\ */}}
+\DoxyCodeLine{01372\ \ \ \ \ \ \ \ \ bytes\_read\ =\ 0;}
+\DoxyCodeLine{01373\ \ \ \ \ \}}
+\DoxyCodeLine{01374\ }
+\DoxyCodeLine{01375\ ret:}
+\DoxyCodeLine{01376\ \ \ \ \ \textcolor{comment}{/*\ Unlock\ */}}
+\DoxyCodeLine{01377\ \ \ \ \ pthread\_mutex\_unlock(\&dev-\/>mutex);}
+\DoxyCodeLine{01378\ \ \ \ \ \textcolor{keywordflow}{return}\ bytes\_read;}
+\DoxyCodeLine{01379\ \}}
+\DoxyCodeLine{01380\ }
+\DoxyCodeLine{01381\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_ga2224269e8cd7c789f9fd4864a73f8c95}{hid\_read}}(hid\_device\ *dev,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01382\ \{}
+\DoxyCodeLine{01383\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group___a_p_i_gaa5c9ed5aa290688ffac03343989ad75a}{hid\_read\_timeout}}(dev,\ data,\ length,\ (dev-\/>blocking)?\ -\/1:\ 0);}
+\DoxyCodeLine{01384\ \}}
+\DoxyCodeLine{01385\ }
+\DoxyCodeLine{01386\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_ga0e9af0d8ed72f5610e9297c90b08e242}{hid\_set\_nonblocking}}(hid\_device\ *dev,\ \textcolor{keywordtype}{int}\ nonblock)}
+\DoxyCodeLine{01387\ \{}
+\DoxyCodeLine{01388\ \ \ \ \ \textcolor{comment}{/*\ All\ Nonblocking\ operation\ is\ handled\ by\ the\ library.\ */}}
+\DoxyCodeLine{01389\ \ \ \ \ dev-\/>blocking\ =\ !nonblock;}
+\DoxyCodeLine{01390\ }
+\DoxyCodeLine{01391\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01392\ \}}
+\DoxyCodeLine{01393\ }
+\DoxyCodeLine{01394\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_gae99a9ddbb5d9b03fddf40fb4a492cbec}{hid\_send\_feature\_report}}(hid\_device\ *dev,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01395\ \{}
+\DoxyCodeLine{01396\ \ \ \ \ \textcolor{keywordflow}{return}\ set\_report(dev,\ kIOHIDReportTypeFeature,\ data,\ length);}
+\DoxyCodeLine{01397\ \}}
+\DoxyCodeLine{01398\ }
+\DoxyCodeLine{01399\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_gaa537a4b3c49d638c6ec9dedc08c44601}{hid\_get\_feature\_report}}(hid\_device\ *dev,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01400\ \{}
+\DoxyCodeLine{01401\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_report(dev,\ kIOHIDReportTypeFeature,\ data,\ length);}
+\DoxyCodeLine{01402\ \}}
+\DoxyCodeLine{01403\ }
+\DoxyCodeLine{01404\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\_API\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga27ac7d92ea3a8ac58b1d8d865bd0264b}{hid\_get\_input\_report}}(hid\_device\ *dev,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *data,\ \textcolor{keywordtype}{size\_t}\ length)}
+\DoxyCodeLine{01405\ \{}
+\DoxyCodeLine{01406\ \ \ \ \ \textcolor{keywordflow}{return}\ get\_report(dev,\ kIOHIDReportTypeInput,\ data,\ length);}
+\DoxyCodeLine{01407\ \}}
+\DoxyCodeLine{01408\ }
+\DoxyCodeLine{01409\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \doxymbox{\hyperlink{group___a_p_i_ga8d478a5986439ffb838fb1f1ba6ba5ec}{hid\_close}}(hid\_device\ *dev)}
+\DoxyCodeLine{01410\ \{}
+\DoxyCodeLine{01411\ \ \ \ \ \textcolor{keywordflow}{if}\ (!dev)}
+\DoxyCodeLine{01412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01413\ }
+\DoxyCodeLine{01414\ \ \ \ \ \textcolor{comment}{/*\ Disconnect\ the\ report\ callback\ before\ close.}}
+\DoxyCodeLine{01415\ \textcolor{comment}{\ \ \ \ \ \ \ See\ comment\ below.}}
+\DoxyCodeLine{01416\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{01417\ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_macos\_10\_10\_or\_greater\ ||\ !dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01418\ \ \ \ \ \ \ \ \ IOHIDDeviceRegisterInputReportCallback(}
+\DoxyCodeLine{01419\ \ \ \ \ \ \ \ \ \ \ \ \ dev-\/>device\_handle,\ dev-\/>input\_report\_buf,\ dev-\/>max\_input\_report\_len,}
+\DoxyCodeLine{01420\ \ \ \ \ \ \ \ \ \ \ \ \ NULL,\ dev);}
+\DoxyCodeLine{01421\ \ \ \ \ \ \ \ \ IOHIDDeviceRegisterRemovalCallback(dev-\/>device\_handle,\ NULL,\ dev);}
+\DoxyCodeLine{01422\ \ \ \ \ \ \ \ \ IOHIDDeviceUnscheduleFromRunLoop(dev-\/>device\_handle,\ dev-\/>run\_loop,\ dev-\/>run\_loop\_mode);}
+\DoxyCodeLine{01423\ \ \ \ \ \ \ \ \ IOHIDDeviceScheduleWithRunLoop(dev-\/>device\_handle,\ CFRunLoopGetMain(),\ kCFRunLoopDefaultMode);}
+\DoxyCodeLine{01424\ \ \ \ \ \}}
+\DoxyCodeLine{01425\ }
+\DoxyCodeLine{01426\ \ \ \ \ \textcolor{comment}{/*\ Cause\ read\_thread()\ to\ stop.\ */}}
+\DoxyCodeLine{01427\ \ \ \ \ dev-\/>shutdown\_thread\ =\ 1;}
+\DoxyCodeLine{01428\ }
+\DoxyCodeLine{01429\ \ \ \ \ \textcolor{comment}{/*\ Wake\ up\ the\ run\ thread's\ event\ loop\ so\ that\ the\ thread\ can\ exit.\ */}}
+\DoxyCodeLine{01430\ \ \ \ \ CFRunLoopSourceSignal(dev-\/>source);}
+\DoxyCodeLine{01431\ \ \ \ \ CFRunLoopWakeUp(dev-\/>run\_loop);}
+\DoxyCodeLine{01432\ }
+\DoxyCodeLine{01433\ \ \ \ \ \textcolor{comment}{/*\ Notify\ the\ read\ thread\ that\ it\ can\ shut\ down\ now.\ */}}
+\DoxyCodeLine{01434\ \ \ \ \ pthread\_barrier\_wait(\&dev-\/>shutdown\_barrier);}
+\DoxyCodeLine{01435\ }
+\DoxyCodeLine{01436\ \ \ \ \ \textcolor{comment}{/*\ Wait\ for\ read\_thread()\ to\ end.\ */}}
+\DoxyCodeLine{01437\ \ \ \ \ pthread\_join(dev-\/>thread,\ NULL);}
+\DoxyCodeLine{01438\ }
+\DoxyCodeLine{01439\ \ \ \ \ \textcolor{comment}{/*\ Close\ the\ OS\ handle\ to\ the\ device,\ but\ only\ if\ it's\ not}}
+\DoxyCodeLine{01440\ \textcolor{comment}{\ \ \ \ \ \ \ been\ unplugged.\ If\ it's\ been\ unplugged,\ then\ calling}}
+\DoxyCodeLine{01441\ \textcolor{comment}{\ \ \ \ \ \ \ IOHIDDeviceClose()\ will\ crash.}}
+\DoxyCodeLine{01442\ \textcolor{comment}{}}
+\DoxyCodeLine{01443\ \textcolor{comment}{\ \ \ \ \ \ \ UPD:\ The\ crash\ part\ was\ true\ in/until\ some\ version\ of\ macOS.}}
+\DoxyCodeLine{01444\ \textcolor{comment}{\ \ \ \ \ \ \ Starting\ with\ macOS\ 10.15,\ there\ is\ an\ opposite\ effect\ in\ some\ environments:}}
+\DoxyCodeLine{01445\ \textcolor{comment}{\ \ \ \ \ \ \ crash\ happens\ if\ IOHIDDeviceClose()\ is\ not\ called.}}
+\DoxyCodeLine{01446\ \textcolor{comment}{\ \ \ \ \ \ \ Not\ leaking\ a\ resource\ in\ all\ tested\ environments.}}
+\DoxyCodeLine{01447\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{01448\ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_macos\_10\_10\_or\_greater\ ||\ !dev-\/>disconnected)\ \{}
+\DoxyCodeLine{01449\ \ \ \ \ \ \ \ \ IOHIDDeviceClose(dev-\/>device\_handle,\ dev-\/>open\_options);}
+\DoxyCodeLine{01450\ \ \ \ \ \}}
+\DoxyCodeLine{01451\ }
+\DoxyCodeLine{01452\ \ \ \ \ \textcolor{comment}{/*\ Clear\ out\ the\ queue\ of\ received\ reports.\ */}}
+\DoxyCodeLine{01453\ \ \ \ \ pthread\_mutex\_lock(\&dev-\/>mutex);}
+\DoxyCodeLine{01454\ \ \ \ \ \textcolor{keywordflow}{while}\ (dev-\/>input\_reports)\ \{}
+\DoxyCodeLine{01455\ \ \ \ \ \ \ \ \ return\_data(dev,\ NULL,\ 0);}
+\DoxyCodeLine{01456\ \ \ \ \ \}}
+\DoxyCodeLine{01457\ \ \ \ \ pthread\_mutex\_unlock(\&dev-\/>mutex);}
+\DoxyCodeLine{01458\ \ \ \ \ CFRelease(dev-\/>device\_handle);}
+\DoxyCodeLine{01459\ }
+\DoxyCodeLine{01460\ \ \ \ \ free\_hid\_device(dev);}
+\DoxyCodeLine{01461\ \}}
+\DoxyCodeLine{01462\ }
+\DoxyCodeLine{01463\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga702f45b42d85599eedd602c05661fde5}{hid\_get\_manufacturer\_string}}(hid\_device\ *dev,\ \textcolor{keywordtype}{wchar\_t}\ *\textcolor{keywordtype}{string},\ \textcolor{keywordtype}{size\_t}\ maxlen)}
+\DoxyCodeLine{01464\ \{}
+\DoxyCodeLine{01465\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\textcolor{keywordtype}{string}\ ||\ !maxlen)}
+\DoxyCodeLine{01466\ \ \ \ \ \{}
+\DoxyCodeLine{01467\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Zero\ buffer/length"{}});}
+\DoxyCodeLine{01468\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01469\ \ \ \ \ \}}
+\DoxyCodeLine{01470\ }
+\DoxyCodeLine{01471\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *info\ =\ \doxymbox{\hyperlink{group___a_p_i_ga2d8b34ae8cfdd4f4d132814d5b70c128}{hid\_get\_device\_info}}(dev);}
+\DoxyCodeLine{01472\ \ \ \ \ \textcolor{keywordflow}{if}\ (!info)}
+\DoxyCodeLine{01473\ \ \ \ \ \{}
+\DoxyCodeLine{01474\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hid\_get\_device\_info\ will\ have\ set\ an\ error\ already}}
+\DoxyCodeLine{01475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01476\ \ \ \ \ \}}
+\DoxyCodeLine{01477\ }
+\DoxyCodeLine{01478\ \ \ \ \ wcsncpy(\textcolor{keywordtype}{string},\ info-\/>manufacturer\_string,\ maxlen);}
+\DoxyCodeLine{01479\ \ \ \ \ \textcolor{keywordtype}{string}[maxlen\ -\/\ 1]\ =\ L\textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{01480\ }
+\DoxyCodeLine{01481\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01482\ \}}
+\DoxyCodeLine{01483\ }
+\DoxyCodeLine{01484\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga648feb765c5e0da3e821ee84aeab9d99}{hid\_get\_product\_string}}(hid\_device\ *dev,\ \textcolor{keywordtype}{wchar\_t}\ *\textcolor{keywordtype}{string},\ \textcolor{keywordtype}{size\_t}\ maxlen)}
+\DoxyCodeLine{01485\ \{}
+\DoxyCodeLine{01486\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\textcolor{keywordtype}{string}\ ||\ !maxlen)\ \{}
+\DoxyCodeLine{01487\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Zero\ buffer/length"{}});}
+\DoxyCodeLine{01488\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01489\ \ \ \ \ \}}
+\DoxyCodeLine{01490\ }
+\DoxyCodeLine{01491\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *info\ =\ \doxymbox{\hyperlink{group___a_p_i_ga2d8b34ae8cfdd4f4d132814d5b70c128}{hid\_get\_device\_info}}(dev);}
+\DoxyCodeLine{01492\ \ \ \ \ \textcolor{keywordflow}{if}\ (!info)\ \{}
+\DoxyCodeLine{01493\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hid\_get\_device\_info\ will\ have\ set\ an\ error\ already}}
+\DoxyCodeLine{01494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01495\ \ \ \ \ \}}
+\DoxyCodeLine{01496\ }
+\DoxyCodeLine{01497\ \ \ \ \ wcsncpy(\textcolor{keywordtype}{string},\ info-\/>product\_string,\ maxlen);}
+\DoxyCodeLine{01498\ \ \ \ \ \textcolor{keywordtype}{string}[maxlen\ -\/\ 1]\ =\ L\textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{01499\ }
+\DoxyCodeLine{01500\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01501\ \}}
+\DoxyCodeLine{01502\ }
+\DoxyCodeLine{01503\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga3442db3ece59fe248b0625a4c8fca617}{hid\_get\_serial\_number\_string}}(hid\_device\ *dev,\ \textcolor{keywordtype}{wchar\_t}\ *\textcolor{keywordtype}{string},\ \textcolor{keywordtype}{size\_t}\ maxlen)}
+\DoxyCodeLine{01504\ \{}
+\DoxyCodeLine{01505\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\textcolor{keywordtype}{string}\ ||\ !maxlen)\ \{}
+\DoxyCodeLine{01506\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Zero\ buffer/length"{}});}
+\DoxyCodeLine{01507\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01508\ \ \ \ \ \}}
+\DoxyCodeLine{01509\ }
+\DoxyCodeLine{01510\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *info\ =\ \doxymbox{\hyperlink{group___a_p_i_ga2d8b34ae8cfdd4f4d132814d5b70c128}{hid\_get\_device\_info}}(dev);}
+\DoxyCodeLine{01511\ \ \ \ \ \textcolor{keywordflow}{if}\ (!info)\ \{}
+\DoxyCodeLine{01512\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ hid\_get\_device\_info\ will\ have\ set\ an\ error\ already}}
+\DoxyCodeLine{01513\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01514\ \ \ \ \ \}}
+\DoxyCodeLine{01515\ }
+\DoxyCodeLine{01516\ \ \ \ \ wcsncpy(\textcolor{keywordtype}{string},\ info-\/>serial\_number,\ maxlen);}
+\DoxyCodeLine{01517\ \ \ \ \ \textcolor{keywordtype}{string}[maxlen\ -\/\ 1]\ =\ L\textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{01518\ }
+\DoxyCodeLine{01519\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01520\ \}}
+\DoxyCodeLine{01521\ }
+\DoxyCodeLine{01522\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__device__info}{hid\_device\_info}}\ *\doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\_API\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga2d8b34ae8cfdd4f4d132814d5b70c128}{hid\_get\_device\_info}}(hid\_device\ *dev)\ \{}
+\DoxyCodeLine{01523\ \ \ \ \ \textcolor{keywordflow}{if}\ (!dev-\/>device\_info)\ \{}
+\DoxyCodeLine{01524\ \ \ \ \ \ \ \ \ dev-\/>device\_info\ =\ create\_device\_info(dev-\/>device\_handle);}
+\DoxyCodeLine{01525\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!dev-\/>device\_info)\ \{}
+\DoxyCodeLine{01526\ \ \ \ \ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Failed\ to\ create\ hid\_device\_info"{}});}
+\DoxyCodeLine{01527\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01528\ \ \ \ \ \}}
+\DoxyCodeLine{01529\ }
+\DoxyCodeLine{01530\ \ \ \ \ \textcolor{keywordflow}{return}\ dev-\/>device\_info;}
+\DoxyCodeLine{01531\ \}}
+\DoxyCodeLine{01532\ }
+\DoxyCodeLine{01533\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga18546669554746d0f292ca5e23372e06}{hid\_get\_indexed\_string}}(hid\_device\ *dev,\ \textcolor{keywordtype}{int}\ string\_index,\ \textcolor{keywordtype}{wchar\_t}\ *\textcolor{keywordtype}{string},\ \textcolor{keywordtype}{size\_t}\ maxlen)}
+\DoxyCodeLine{01534\ \{}
+\DoxyCodeLine{01535\ \ \ \ \ (void)\ dev;}
+\DoxyCodeLine{01536\ \ \ \ \ (void)\ string\_index;}
+\DoxyCodeLine{01537\ \ \ \ \ (void)\ \textcolor{keywordtype}{string};}
+\DoxyCodeLine{01538\ \ \ \ \ (void)\ maxlen;}
+\DoxyCodeLine{01539\ }
+\DoxyCodeLine{01540\ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}hid\_get\_indexed\_string:\ not\ available\ on\ this\ platform"{}});}
+\DoxyCodeLine{01541\ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01542\ \}}
+\DoxyCodeLine{01543\ }
+\DoxyCodeLine{01544\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga9aea6df2f4dcee01aa8c654f71374a9e}{hid\_darwin\_get\_location\_id}}(hid\_device\ *dev,\ uint32\_t\ *location\_id)}
+\DoxyCodeLine{01545\ \{}
+\DoxyCodeLine{01546\ \ \ \ \ \textcolor{keywordtype}{int}\ res\ =\ get\_int\_property(dev-\/>device\_handle,\ CFSTR(kIOHIDLocationIDKey));}
+\DoxyCodeLine{01547\ \ \ \ \ \textcolor{keywordflow}{if}\ (res\ !=\ 0)\ \{}
+\DoxyCodeLine{01548\ \ \ \ \ \ \ \ \ *location\_id\ =\ (uint32\_t)\ res;}
+\DoxyCodeLine{01549\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01550\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01551\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Failed\ to\ get\ IOHIDLocationID\ property"{}});}
+\DoxyCodeLine{01552\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01553\ \ \ \ \ \}}
+\DoxyCodeLine{01554\ \}}
+\DoxyCodeLine{01555\ }
+\DoxyCodeLine{01556\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_gad47c7f431dd41631d59398f33c4fda00}{hid\_darwin\_set\_open\_exclusive}}(\textcolor{keywordtype}{int}\ open\_exclusive)}
+\DoxyCodeLine{01557\ \{}
+\DoxyCodeLine{01558\ \ \ \ \ device\_open\_options\ =\ (open\_exclusive\ ==\ 0)\ ?\ kIOHIDOptionsTypeNone\ :\ kIOHIDOptionsTypeSeizeDevice;}
+\DoxyCodeLine{01559\ \}}
+\DoxyCodeLine{01560\ }
+\DoxyCodeLine{01561\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_ga024fd25be0f780686bf545bc3b74ae24}{hid\_darwin\_get\_open\_exclusive}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{01562\ \{}
+\DoxyCodeLine{01563\ \ \ \ \ \textcolor{keywordflow}{return}\ (device\_open\_options\ ==\ kIOHIDOptionsTypeSeizeDevice)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{01564\ \}}
+\DoxyCodeLine{01565\ }
+\DoxyCodeLine{01566\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_gaf0b64afc92e9af0aa384033726475b83}{hid\_darwin\_is\_device\_open\_exclusive}}(hid\_device\ *dev)}
+\DoxyCodeLine{01567\ \{}
+\DoxyCodeLine{01568\ \ \ \ \ \textcolor{keywordflow}{if}\ (!dev)}
+\DoxyCodeLine{01569\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01570\ }
+\DoxyCodeLine{01571\ \ \ \ \ \textcolor{keywordflow}{return}\ (dev-\/>open\_options\ ==\ kIOHIDOptionsTypeSeizeDevice)\ ?\ 1\ :\ 0;}
+\DoxyCodeLine{01572\ \}}
+\DoxyCodeLine{01573\ }
+\DoxyCodeLine{01574\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\_API\_EXPORT\_CALL}}\ \doxymbox{\hyperlink{group___a_p_i_gaaa8bc561909c1c6b413f1fcdc16333ef}{hid\_get\_report\_descriptor}}(hid\_device\ *dev,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *buf,\ \textcolor{keywordtype}{size\_t}\ buf\_size)}
+\DoxyCodeLine{01575\ \{}
+\DoxyCodeLine{01576\ \ \ \ \ CFTypeRef\ ref\ =\ IOHIDDeviceGetProperty(dev-\/>device\_handle,\ CFSTR(kIOHIDReportDescriptorKey));}
+\DoxyCodeLine{01577\ \ \ \ \ \textcolor{keywordflow}{if}\ (ref\ !=\ NULL\ \&\&\ CFGetTypeID(ref)\ ==\ CFDataGetTypeID())\ \{}
+\DoxyCodeLine{01578\ \ \ \ \ \ \ \ \ CFDataRef\ report\_descriptor\ =\ (CFDataRef)\ ref;}
+\DoxyCodeLine{01579\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ UInt8\ *descriptor\_buf\ =\ CFDataGetBytePtr(report\_descriptor);}
+\DoxyCodeLine{01580\ \ \ \ \ \ \ \ \ CFIndex\ descriptor\_buf\_len\ =\ CFDataGetLength(report\_descriptor);}
+\DoxyCodeLine{01581\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ copy\_len\ =\ (size\_t)\ descriptor\_buf\_len;}
+\DoxyCodeLine{01582\ }
+\DoxyCodeLine{01583\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (descriptor\_buf\ ==\ NULL\ ||\ descriptor\_buf\_len\ <\ 0)\ \{}
+\DoxyCodeLine{01584\ \ \ \ \ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Zero\ buffer/length"{}});}
+\DoxyCodeLine{01585\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01586\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01587\ }
+\DoxyCodeLine{01588\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (buf\_size\ <\ copy\_len)\ \{}
+\DoxyCodeLine{01589\ \ \ \ \ \ \ \ \ \ \ \ \ copy\_len\ =\ buf\_size;}
+\DoxyCodeLine{01590\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01591\ }
+\DoxyCodeLine{01592\ \ \ \ \ \ \ \ \ memcpy(buf,\ descriptor\_buf,\ copy\_len);}
+\DoxyCodeLine{01593\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})copy\_len;}
+\DoxyCodeLine{01594\ \ \ \ \ \}}
+\DoxyCodeLine{01595\ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01596\ \ \ \ \ \ \ \ \ register\_device\_error(dev,\ \textcolor{stringliteral}{"{}Failed\ to\ get\ kIOHIDReportDescriptorKey\ property"{}});}
+\DoxyCodeLine{01597\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{01598\ \ \ \ \ \}}
+\DoxyCodeLine{01599\ \}}
+\DoxyCodeLine{01600\ }
+\DoxyCodeLine{01601\ \doxymbox{\hyperlink{hidapi_8h_aa60150016800ccb88fdf140e8553ae13}{HID\_API\_EXPORT}}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *\ \doxymbox{\hyperlink{hidapi_8h_af140a25716604e86096670a505a58ee0}{HID\_API\_CALL}}\ \ \doxymbox{\hyperlink{group___a_p_i_gabdb1e88a803bab198333a3c5f131b12e}{hid\_error}}(hid\_device\ *dev)}
+\DoxyCodeLine{01602\ \{}
+\DoxyCodeLine{01603\ \ \ \ \ \textcolor{keywordflow}{if}\ (dev)\ \{}
+\DoxyCodeLine{01604\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dev-\/>last\_error\_str\ ==\ NULL)}
+\DoxyCodeLine{01605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}Success"{}};}
+\DoxyCodeLine{01606\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dev-\/>last\_error\_str;}
+\DoxyCodeLine{01607\ \ \ \ \ \}}
+\DoxyCodeLine{01608\ }
+\DoxyCodeLine{01609\ \ \ \ \ \textcolor{keywordflow}{if}\ (last\_global\_error\_str\ ==\ NULL)}
+\DoxyCodeLine{01610\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ L\textcolor{stringliteral}{"{}Success"{}};}
+\DoxyCodeLine{01611\ \ \ \ \ \textcolor{keywordflow}{return}\ last\_global\_error\_str;}
+\DoxyCodeLine{01612\ \}}
+
+\end{DoxyCode}

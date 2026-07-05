@@ -1,0 +1,135 @@
+\doxysection{SDL\+\_\+keyboard.\+h}
+\hypertarget{_s_d_l__keyboard_8h_source}{}\label{_s_d_l__keyboard_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_keyboard.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_keyboard.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ SDL\_keyboard\_h\_}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ SDL\_keyboard\_h\_}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_keycode.h>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_rect.h>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_scancode.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_video.h>}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00045\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_KeyboardID;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{/*\ Function\ prototypes\ */}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_HasKeyboard(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_KeyboardID\ *\ SDLCALL\ SDL\_GetKeyboards(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetKeyboardNameForID(SDL\_KeyboardID\ instance\_id);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_GetKeyboardFocus(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00159\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ *\ SDLCALL\ SDL\_GetKeyboardState(\textcolor{keywordtype}{int}\ *numkeys);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00172\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ResetKeyboard(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00186\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_Keymod\ SDLCALL\ SDL\_GetModState(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00207\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetModState(SDL\_Keymod\ modstate);}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00231\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_Keycode\ SDLCALL\ SDL\_GetKeyFromScancode(SDL\_Scancode\ scancode,\ SDL\_Keymod\ modstate,\ \textcolor{keywordtype}{bool}\ key\_event);}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00252\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_Scancode\ SDLCALL\ SDL\_GetScancodeFromKey(SDL\_Keycode\ key,\ SDL\_Keymod\ *modstate);}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00270\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetScancodeName(SDL\_Scancode\ scancode,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetScancodeName(SDL\_Scancode\ scancode);}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00313\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_Scancode\ SDLCALL\ SDL\_GetScancodeFromName(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00314\ }
+\DoxyCodeLine{00333\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetKeyName(SDL\_Keycode\ key);}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00350\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_Keycode\ SDLCALL\ SDL\_GetKeyFromName(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00378\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_StartTextInput(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00391\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_TextInputType}
+\DoxyCodeLine{00392\ \{}
+\DoxyCodeLine{00393\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_TEXT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00394\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_TEXT\_NAME,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00395\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_TEXT\_EMAIL,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00396\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_TEXT\_USERNAME,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00397\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_TEXT\_PASSWORD\_HIDDEN,\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00398\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_TEXT\_PASSWORD\_VISIBLE,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00399\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_NUMBER,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00400\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_NUMBER\_PASSWORD\_HIDDEN,\ \ \ \ \ \ }
+\DoxyCodeLine{00401\ \ \ \ \ SDL\_TEXTINPUT\_TYPE\_NUMBER\_PASSWORD\_VISIBLE\ \ \ \ \ \ }
+\DoxyCodeLine{00402\ \}\ SDL\_TextInputType;}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00415\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_Capitalization}
+\DoxyCodeLine{00416\ \{}
+\DoxyCodeLine{00417\ \ \ \ \ SDL\_CAPITALIZE\_NONE,\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00418\ \ \ \ \ SDL\_CAPITALIZE\_SENTENCES,\ \ \ }
+\DoxyCodeLine{00419\ \ \ \ \ SDL\_CAPITALIZE\_WORDS,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00420\ \ \ \ \ SDL\_CAPITALIZE\_LETTERS\ \ \ \ \ \ }
+\DoxyCodeLine{00421\ \}\ SDL\_Capitalization;}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00481\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_StartTextInputWithProperties(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_TYPE\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.textinput.type"{}}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_CAPITALIZATION\_NUMBER\ \ \ \ \ \ \ \ "{}SDL.textinput.capitalization"{}}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_AUTOCORRECT\_BOOLEAN\ \ \ \ \ \ \ \ \ \ "{}SDL.textinput.autocorrect"{}}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_MULTILINE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.textinput.multiline"{}}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_TITLE\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.textinput.title"{}}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_PLACEHOLDER\_STRING\ \ \ \ \ \ \ \ \ \ \ "{}SDL.textinput.placeholder"{}}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_DEFAULT\_TEXT\_STRING\ \ \ \ \ \ \ \ \ \ "{}SDL.textinput.default\_text"{}}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_MAX\_LENGTH\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.textinput.max\_length"{}}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_TEXTINPUT\_ANDROID\_INPUTTYPE\_NUMBER\ \ \ \ \ "{}SDL.textinput.android.inputtype"{}}}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00505\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_TextInputActive(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00523\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_StopTextInput(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00524\ }
+\DoxyCodeLine{00539\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ClearComposition(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00562\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetTextInputArea(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect,\ \textcolor{keywordtype}{int}\ cursor);}
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00583\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetTextInputArea(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect,\ \textcolor{keywordtype}{int}\ *cursor);}
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00598\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_HasScreenKeyboardSupport(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00612\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ScreenKeyboardShown(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00616\ \}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_keyboard\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

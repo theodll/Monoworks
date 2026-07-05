@@ -1,0 +1,32 @@
+\doxysection{config.\+h}
+\hypertarget{public_2libbacktrace_2_config_8h_source}{}\label{public_2libbacktrace_2_config_8h_source}\index{MonoEngine/thirdparty/tracy/public/libbacktrace/config.h@{MonoEngine/thirdparty/tracy/public/libbacktrace/config.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ <limits.h>}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#if\ defined(\_\_linux\_\_)\ \&\&\ !defined(\_\_GLIBC\_\_)\ \&\&\ !defined(\_\_WORDSIZE)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ include\ \_\_WORDSIZE\ headers\ for\ musl}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#\ \ include\ <bits/reg.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#if\ \_\_WORDSIZE\ ==\ 64}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ define\ BACKTRACE\_ELF\_SIZE\ 64}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#\ \ define\ BACKTRACE\_ELF\_SIZE\ 32}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ HAVE\_DLFCN\_H\ 1}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ HAVE\_FCNTL\ 1}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ HAVE\_INTTYPES\_H\ 1}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ HAVE\_LSTAT\ 1}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ HAVE\_READLINK\ 1}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ HAVE\_DL\_ITERATE\_PHDR\ 1}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ HAVE\_ATOMIC\_FUNCTIONS\ 1}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ HAVE\_DECL\_STRNLEN\ 1}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ \ define\ HAVE\_MACH\_O\_DYLD\_H\ 1}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#elif\ defined\ BSD}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ \ define\ HAVE\_KERN\_PROC\ 1}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#\ \ define\ HAVE\_KERN\_PROC\_ARGS\ 1}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

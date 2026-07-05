@@ -1,0 +1,159 @@
+\doxysection{systemd\+\_\+namespace\+\_\+sink.\+h}
+\hypertarget{systemd__namespace__sink_8h_source}{}\label{systemd__namespace__sink_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/systemd\_namespace\_sink.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/systemd\_namespace\_sink.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <spdlog/details/null\_mutex.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <spdlog/details/os.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/details/synchronous\_factory.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/base\_sink.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <unistd.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <systemd/sd-\/journal.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <systemd/sd-\/daemon.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }systemd\_namespace\_sink\ :\ \textcolor{keyword}{public}\ base\_sink<Mutex>\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{explicit}\ systemd\_namespace\_sink(std::string\ ident,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ name\_space,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_formatting)}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ :\ enable\_formatting\_\{enable\_formatting\}\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ stream\_fd\ =\ -\/1;}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (name\_space.empty())\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ stream\_fd\ =\ ::sd\_journal\_stream\_fd(ident.c\_str(),\ LOG\_INFO,\ 1);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ stream\_fd\ =\ ::sd\_journal\_stream\_fd\_with\_namespace(name\_space.c\_str(),\ ident.c\_str(),}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOG\_INFO,\ 1);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stream\_fd\ <\ 0)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Failed\ opening\ systemd\ journal\ stream\ to\ namespace\ '"{}}\ +\ name\_space\ +\ \textcolor{stringliteral}{"{}'"{}},}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/stream\_fd);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ journal\_\ =\ ::fdopen(stream\_fd,\ \textcolor{stringliteral}{"{}w"{}});}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (journal\_\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Capture\ errno\ from\ the\ failed\ fdopen()\ instead\ of\ close()\ (in\ case\ that\ fails\ too)}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ saved\_errno\ =\ errno;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ ::close(stream\_fd);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Failed\ opening\ systemd\ journal\ stream\ to\ namespace\ '"{}}\ +\ name\_space\ +\ \textcolor{stringliteral}{"{}'"{}},}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ saved\_errno);}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Use\ line\ buffering\ which\ matches\ with\ journald's\ line-\/oriented\ protocol}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (::setvbuf(journal\_,\ \textcolor{keyword}{nullptr},\ \_IOLBF,\ 0)\ !=\ 0)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Capture\ errno\ from\ the\ failed\ setvbuf()\ instead\ of\ close()\ (in\ case\ that\ fails\ too)}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ saved\_errno\ =\ errno;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ ::close(stream\_fd);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Failed\ setting\ line\ buffering\ mode\ for\ systemd\ journal\ stream\ to\ namespace\ '"{}}\ +}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ name\_space\ +\ \textcolor{stringliteral}{"{}'"{}},}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ saved\_errno);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \string~systemd\_namespace\_sink()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (journal\_\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ ::fclose(journal\_);}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ journal\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ systemd\_namespace\_sink(\textcolor{keyword}{const}\ systemd\_namespace\_sink\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00072\ \ \ \ \ systemd\_namespace\_sink\ \&operator=(\textcolor{keyword}{const}\ systemd\_namespace\_sink\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00075\ \ \ \ \ FILE\ *journal\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_formatting\_\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{using\ }level\_prefix\_array\ =\ std::array<string\_view\_t,\ 7>;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ level\_prefix\_array\ level\_prefixes\_\ =\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \{\textcolor{comment}{/*\ spdlog::level::trace\ \ \ \ \ \ */}\ SD\_DEBUG,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ spdlog::level::debug\ \ \ \ \ \ */}\ SD\_DEBUG,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ spdlog::level::info\ \ \ \ \ \ \ */}\ SD\_INFO,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ spdlog::level::warn\ \ \ \ \ \ \ */}\ SD\_WARNING,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ spdlog::level::err\ \ \ \ \ \ \ \ */}\ SD\_ERR,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ spdlog::level::critical\ \ \ */}\ SD\_CRIT,}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ spdlog::level::off\ \ \ \ \ \ \ \ */}\ SD\_INFO\}\};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{void}\ sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ string\_view\_t\ payload;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ memory\_buf\_t\ formatted;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (enable\_formatting\_)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ base\_sink<Mutex>::formatter\_-\/>format(msg,\ formatted);}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ payload\ =\ string\_view\_t(formatted.data(),\ formatted.size());}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ payload\ =\ msg.payload;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Journal\ stream\ is\ line-\/oriented;\ if\ there's\ newlines\ in\ the\ payload,\ send\ each}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ newline-\/delimited\ piece\ separately\ as\ its\ own\ message.}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pos\ =\ 0;}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (pos\ <\ payload.size())\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nl\_pos\ =\ payload.find(\textcolor{charliteral}{'\(\backslash\)n'},\ pos);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ end\ =\ (nl\_pos\ ==\ string\_view\_t::npos)\ ?\ payload.size()\ :\ nl\_pos\ +\ 1;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ string\_view\_t\ one\_message\ =\ payload.substr(pos,\ end\ -\/\ pos);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Write\ log\ level\ prefix}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \&prefix\ =}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level\_prefixes\_.at(\textcolor{keyword}{static\_cast<}level\_prefix\_array::size\_type\textcolor{keyword}{>}(msg.level));}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ write\_or\_throw\_(prefix.data(),\ prefix.size());}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Write\ the\ message}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ write\_or\_throw\_(one\_message.data(),\ one\_message.size());}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Append\ newline\ if\ the\ message\ didn't\ have\ one}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (nl\_pos\ ==\ string\_view\_t::npos)\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ write\_or\_throw\_(\textcolor{stringliteral}{"{}\(\backslash\)n"{}},\ 1);}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ pos\ =\ end;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{void}\ flush\_()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (journal\_\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (::fflush(journal\_)\ !=\ 0)\ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}Failed\ flush\ to\ systemd\ journal"{}},\ errno);}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{void}\ write\_or\_throw\_(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ \textcolor{keywordtype}{size\_t}\ n)\ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (journal\_\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!details::os::fwrite\_bytes(data,\ n,\ journal\_))\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}Failed\ writing\ to\ systemd\ journal"{}},\ errno);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \}}
+\DoxyCodeLine{00136\ \};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{using\ }systemd\_namespace\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1systemd__namespace__sink}{systemd\_namespace\_sink<std::mutex>}};}
+\DoxyCodeLine{00139\ \textcolor{keyword}{using\ }systemd\_namespace\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1systemd__namespace__sink}{systemd\_namespace\_sink<details::null\_mutex>}};}
+\DoxyCodeLine{00140\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00143\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ systemd\_namespace\_logger\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&ident,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&name\_space,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_formatting)\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::systemd\_namespace\_sink\_mt>(}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ logger\_name,\ ident,\ name\_space,\ enable\_formatting);}
+\DoxyCodeLine{00149\ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00152\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ systemd\_namespace\_logger\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&ident,}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&name\_space,}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_formatting)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::systemd\_namespace\_sink\_st>(}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ logger\_name,\ ident,\ name\_space,\ enable\_formatting);}
+\DoxyCodeLine{00158\ \}}
+\DoxyCodeLine{00159\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

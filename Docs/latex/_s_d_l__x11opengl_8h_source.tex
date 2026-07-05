@@ -1,0 +1,103 @@
+\doxysection{SDL\+\_\+x11opengl.\+h}
+\hypertarget{_s_d_l__x11opengl_8h_source}{}\label{_s_d_l__x11opengl_8h_source}\index{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11opengl.h@{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11opengl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_x11opengl\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_x11opengl\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL\_GLX}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_opengl.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <GL/glx.h>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ void\ (*\_\_GLXextFuncPtr)(void);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GLSwapIntervalTearBehavior}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ SDL\_SWAPINTERVALTEAR\_UNTESTED,}
+\DoxyCodeLine{00035\ \ \ \ \ SDL\_SWAPINTERVALTEAR\_UNKNOWN,}
+\DoxyCodeLine{00036\ \ \ \ \ SDL\_SWAPINTERVALTEAR\_MESA,}
+\DoxyCodeLine{00037\ \ \ \ \ SDL\_SWAPINTERVALTEAR\_NVIDIA}
+\DoxyCodeLine{00038\ \}\ SDL\_GLSwapIntervalTearBehavior;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_l_driver_data}{SDL\_GLDriverData}}}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ errorBase,\ eventBase;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_GLX\_EXT\_visual\_rating;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_GLX\_EXT\_visual\_info;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_GLX\_EXT\_swap\_control\_tear;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_GLX\_ARB\_context\_flush\_control;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_GLX\_ARB\_create\_context\_robustness;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_GLX\_ARB\_create\_context\_no\_error;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_GLX\_ARB\_framebuffer\_sRGB;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{/*\ Max\ version\ of\ OpenGL\ ES\ context\ that\ can\ be\ created\ if\ the}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ \ \ \ \ \ \ implementation\ supports\ GLX\_EXT\_create\_context\_es2\_profile.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ \ \ \ \ \ \ major\ =\ minor\ =\ 0\ when\ unsupported.}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ major;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ minor;}
+\DoxyCodeLine{00060\ \ \ \ \ \}\ es\_profile\_max\_supported\_version;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ SDL\_GLSwapIntervalTearBehavior\ swap\_interval\_tear\_behavior;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ Bool\ (*glXQueryExtension)(Display\ *,\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00065\ \ \ \ \ \_\_GLXextFuncPtr\ (*glXGetProcAddress)(\textcolor{keyword}{const}\ GLubyte\ *);}
+\DoxyCodeLine{00066\ \ \ \ \ XVisualInfo\ *(*glXChooseVisual)(Display\ *,\ int,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00067\ \ \ \ \ GLXContext\ (*glXCreateContext)(Display\ *,\ XVisualInfo\ *,\ GLXContext,\ Bool);}
+\DoxyCodeLine{00068\ \ \ \ \ GLXContext\ (*glXCreateContextAttribsARB)(Display\ *,\ GLXFBConfig,\ GLXContext,\ Bool,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00069\ \ \ \ \ GLXFBConfig\ *(*glXChooseFBConfig)(Display\ *,\ int,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *,\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00070\ \ \ \ \ XVisualInfo\ *(*glXGetVisualFromFBConfig)(Display\ *,\ GLXFBConfig);}
+\DoxyCodeLine{00071\ \ \ \ \ void\ (*glXDestroyContext)(Display\ *,\ GLXContext);}
+\DoxyCodeLine{00072\ \ \ \ \ Bool\ (*glXMakeCurrent)(Display\ *,\ GLXDrawable,\ GLXContext);}
+\DoxyCodeLine{00073\ \ \ \ \ void\ (*glXSwapBuffers)(Display\ *,\ GLXDrawable);}
+\DoxyCodeLine{00074\ \ \ \ \ void\ (*glXQueryDrawable)(Display\ *,\ GLXDrawable,\ int,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *);}
+\DoxyCodeLine{00075\ \ \ \ \ void\ (*glXSwapIntervalEXT)(Display\ *,\ GLXDrawable,\ int);}
+\DoxyCodeLine{00076\ \ \ \ \ int\ (*glXSwapIntervalSGI)(int);}
+\DoxyCodeLine{00077\ \ \ \ \ int\ (*glXSwapIntervalMESA)(int);}
+\DoxyCodeLine{00078\ \ \ \ \ int\ (*glXGetSwapIntervalMESA)(void);}
+\DoxyCodeLine{00079\ \};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{//\ OpenGL\ functions}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GL\_LoadLibrary(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00083\ \textcolor{keyword}{extern}\ SDL\_FunctionPointer\ X11\_GL\_GetProcAddress(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *proc);}
+\DoxyCodeLine{00084\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11\_GL\_UnloadLibrary(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00085\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GL\_UseEGL(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ XVisualInfo\ *X11\_GL\_GetVisual(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ Display\ *display,\ \textcolor{keywordtype}{int}\ screen,\ \textcolor{keywordtype}{bool}\ transparent);}
+\DoxyCodeLine{00087\ \textcolor{keyword}{extern}\ SDL\_GLContext\ X11\_GL\_CreateContext(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00088\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GL\_MakeCurrent(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{00090\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GL\_SetSwapInterval(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ interval);}
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GL\_GetSwapInterval(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ *interval);}
+\DoxyCodeLine{00092\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GL\_SwapWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00093\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GL\_DestroyContext(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_OPENGL\_GLX}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_x11opengl\_h\_}}
+
+\end{DoxyCode}

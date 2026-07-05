@@ -1,0 +1,211 @@
+\doxysection{Tracy\+Source\+View.\+hpp}
+\hypertarget{_tracy_source_view_8hpp_source}{}\label{_tracy_source_view_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracySourceView.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracySourceView.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYSOURCEVIEW\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYSOURCEVIEW\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <tuple>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}tracy\_robin\_hood.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}TracyCharUtil.hpp"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}TracyDecayValue.hpp"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}TracyDisassembly.hpp"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}TracySourceContents.hpp"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}TracySourceTokenizer.hpp"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}../public/common/TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}../public/common/TracyProtocol.hpp"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_im_font}{ImFont}};}
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_im_vec2}{ImVec2}};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_view}{View}};}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}};}
+\DoxyCodeLine{00025\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_callstack_frame_data}{CallstackFrameData}};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }SourceView}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{enum\ class}\ CostType}
+\DoxyCodeLine{00031\ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ SampleCount,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ Cycles,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ SlowBranches,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ SlowCache,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ Retirements,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ BranchesTaken,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ BranchMiss,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ CacheAccess,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ CacheMiss}
+\DoxyCodeLine{00041\ \ \ \ \ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ReadBit\ \ =\ 0x100;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ WriteBit\ =\ 0x200;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ ReuseBit\ =\ 0x400;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ RegMask\ \ =\ 0x0FF;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ FlagMask\ =\ 0xF00;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ DisplaySource,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ DisplayAsm,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ DisplayMixed}
+\DoxyCodeLine{00055\ \ \ \ \ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{struct\ }History}
+\DoxyCodeLine{00058\ \ \ \ \ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ fileName;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ int64\_t\ line;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ uint64\_t\ baseAddr;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ uint64\_t\ symAddr;}
+\DoxyCodeLine{00063\ \ \ \ \ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00066\ \ \ \ \ SourceView();}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCpuId(\ uint32\_t\ cpuid\ );}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{void}\ OpenSource(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ fileName,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker\ );}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ OpenSymbol(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ fileName,\ \textcolor{keywordtype}{int}\ line,\ uint64\_t\ baseAddr,\ uint64\_t\ symAddr,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ \textcolor{keywordtype}{bool}\ updateHistory\ =\ \textcolor{keyword}{true}\ );}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{void}\ Render(\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{bool}\ SwitchTo(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ fileName,\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ CalcInlineStats(\ \textcolor{keywordtype}{bool}\ val\ )\ \{\ m\_calcInlineStats\ =\ val;\ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsSymbolView()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !m\_asm.empty();\ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ ParseSource(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ fileName,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{bool}\ Disassemble(\ uint64\_t\ symAddr,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker\ );}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectViewMode();}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ RenderSimpleSourceView();}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{void}\ RenderSymbolView(\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ RenderSymbolSourceView(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat_data}{AddrStatData}}\&\ as,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ \textcolor{keywordtype}{bool}\ hasInlines\ );}
+\DoxyCodeLine{00089\ \ \ \ \ uint64\_t\ RenderSymbolAsmView(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat_data}{AddrStatData}}\&\ as,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{void}\ RenderLine(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_tokenizer_1_1_line}{Tokenizer::Line}}\&\ line,\ \textcolor{keywordtype}{int}\ lineNum,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat}{AddrStat}}\&\ ipcnt,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat_data}{AddrStatData}}\&\ as,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}*\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}*\ view\ );}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{void}\ RenderAsmLine(\ \doxymbox{\hyperlink{structtracy_1_1_asm_line}{AsmLine}}\&\ line,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat}{AddrStat}}\&\ ipcnt,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat_data}{AddrStatData}}\&\ as,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ uint64\_t\&\ jumpOut,\ \textcolor{keywordtype}{int}\ maxAddrLen,\ \textcolor{keywordtype}{int}\ maxAddrLenRel,\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ RenderHwLinePart(\ \textcolor{keywordtype}{size\_t}\ cycles,\ \textcolor{keywordtype}{size\_t}\ retired,\ \textcolor{keywordtype}{size\_t}\ branchRetired,\ \textcolor{keywordtype}{size\_t}\ branchMiss,\ \textcolor{keywordtype}{size\_t}\ cacheRef,\ \textcolor{keywordtype}{size\_t}\ cacheMiss,\ \textcolor{keywordtype}{size\_t}\ branchRel,\ \textcolor{keywordtype}{size\_t}\ branchRelMax,\ \textcolor{keywordtype}{size\_t}\ cacheRel,\ \textcolor{keywordtype}{size\_t}\ cacheRelMax,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\&\ ts\ );}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectLine(\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}*\ worker,\ \textcolor{keywordtype}{bool}\ updateAsmLine\ =\ \textcolor{keyword}{true},\ uint64\_t\ targetAddr\ =\ 0,\ \textcolor{keywordtype}{bool}\ changeAsmLine\ =\ \textcolor{keyword}{true}\ );}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectAsmLines(\ uint32\_t\ file,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keywordtype}{bool}\ updateAsmLine\ =\ \textcolor{keyword}{true},\ uint64\_t\ targetAddr\ =\ 0,\ \textcolor{keywordtype}{bool}\ changeAsmLine\ =\ \textcolor{keyword}{true}\ );}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectAsmLinesHover(\ uint32\_t\ file,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker\ );}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ GatherIpHwStats(\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat_data}{AddrStatData}}\&\ as,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ CostType\ cost\ );}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ GatherChildStats(\ uint64\_t\ baseAddr,\ unordered\_flat\_map<uint64\_t,\ uint32\_t>\&\ vec,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keywordtype}{bool}\ limitView,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ uint32\_t\ CountAsmIpStats(\ uint64\_t\ baseAddr,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keywordtype}{bool}\ limitView,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ CountHwStats(\ \doxymbox{\hyperlink{structtracy_1_1_addr_stat_data}{AddrStatData}}\&\ as,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ SelectMicroArchitecture(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ moniker\ );}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{void}\ ResetAsm();}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{void}\ FollowRead(\ \textcolor{keywordtype}{size\_t}\ line,\ RegsX86\ reg,\ \textcolor{keywordtype}{size\_t}\ limit\ );}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ FollowWrite(\ \textcolor{keywordtype}{size\_t}\ line,\ RegsX86\ reg,\ \textcolor{keywordtype}{size\_t}\ limit\ );}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ CheckRead(\ \textcolor{keywordtype}{size\_t}\ line,\ RegsX86\ reg,\ \textcolor{keywordtype}{size\_t}\ limit\ );}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{void}\ CheckWrite(\ \textcolor{keywordtype}{size\_t}\ line,\ RegsX86\ reg,\ \textcolor{keywordtype}{size\_t}\ limit\ );}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsInContext(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ uint64\_t\ addr\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<uint64\_t>*\ GetAddressesForLocation(\ uint32\_t\ fileStringIdx,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker\ );}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{float}\ CalcJumpSeparation(\ \textcolor{keywordtype}{float}\ scale\ );}
+\DoxyCodeLine{00117\ \ \ \ \ std::tuple<size\_t,\ size\_t>\ GetJumpRange(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_asm_jump_data}{AsmJumpData}}\&\ jump\ );}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{void}\ AttachRangeToLlm(\ \textcolor{keywordtype}{size\_t}\ start,\ \textcolor{keywordtype}{size\_t}\ stop,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view\ );}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#ifndef\ TRACY\_NO\_FILESELECTOR}}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ Save(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keywordtype}{size\_t}\ start\ =\ 0,\ \textcolor{keywordtype}{size\_t}\ stop\ =\ std::numeric\_limits<size\_t>::max()\ );}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ SetFont();}
+\DoxyCodeLine{00126\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ UnsetFont();}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ uint64\_t\ m\_symAddr;}
+\DoxyCodeLine{00129\ \ \ \ \ uint64\_t\ m\_baseAddr;}
+\DoxyCodeLine{00130\ \ \ \ \ uint64\_t\ m\_targetAddr;}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_targetLine;}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_selectedLine;}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_asmSelected;}
+\DoxyCodeLine{00134\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_decay_value}{DecayValue<int>}}\ m\_hoveredLine;}
+\DoxyCodeLine{00135\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_decay_value}{DecayValue<uint32\_t>}}\ m\_hoveredSource;}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_displayMode;}
+\DoxyCodeLine{00137\ \ \ \ \ uint32\_t\ m\_codeLen;}
+\DoxyCodeLine{00138\ \ \ \ \ int32\_t\ m\_disasmFail;}
+\DoxyCodeLine{00139\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_decay_value}{DecayValue<uint64\_t>}}\ m\_highlightAddr;}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_asmCountBase;}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_asmRelative;}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_asmBytes;}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_asmShowSourceLocation;}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_calcInlineStats;}
+\DoxyCodeLine{00145\ \ \ \ \ uint8\_t\ m\_maxAsmBytes;}
+\DoxyCodeLine{00146\ \ \ \ \ uint64\_t\ m\_jumpPopupAddr;}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_callstack_frame_data}{CallstackFrameData}}*\ m\_localCallstackPopup;}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_hwSamples,\ m\_hwSamplesRelative;}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_childCalls;}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_childCallList;}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_propagateInlines;}
+\DoxyCodeLine{00152\ \ \ \ \ CostType\ m\_cost;}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_source_contents}{SourceContents}}\ m\_source;}
+\DoxyCodeLine{00155\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_source_contents}{SourceContents}}\ m\_sourceTooltip;}
+\DoxyCodeLine{00156\ \ \ \ \ std::vector<AsmLine>\ m\_asm;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ unordered\_flat\_map<uint64\_t,\ uint32\_t>\ m\_locMap;}
+\DoxyCodeLine{00159\ \ \ \ \ unordered\_flat\_map<uint64\_t,\ AsmJumpData>\ m\_jumpTable;}
+\DoxyCodeLine{00160\ \ \ \ \ unordered\_flat\_set<uint64\_t>\ m\_jumpOut;}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ m\_maxJumpLevel;}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_showJumps;}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ unordered\_flat\_map<uint64\_t,\ std::vector<uint64\_t>>\ m\_locationAddress;}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_locAddrIsProp;}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ unordered\_flat\_map<uint32\_t,\ uint32\_t>\ m\_sourceFiles;}
+\DoxyCodeLine{00168\ \ \ \ \ unordered\_flat\_set<uint64\_t>\ m\_selectedAddresses;}
+\DoxyCodeLine{00169\ \ \ \ \ unordered\_flat\_set<uint64\_t>\ m\_selectedAddressesHover;}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ uint32\_t\ m\_maxLine;}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_maxMnemonicLen;}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_maxOperandLen;}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ unordered\_flat\_map<const\ char*,\ int,\ charutil::Hasher,\ charutil::Comparator>\ m\_microArchOpMap;}
+\DoxyCodeLine{00176\ \ \ \ \ CpuArchitecture\ m\_cpuArch;}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_selMicroArch;}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_idxMicroArch,\ m\_profileMicroArch;}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ unordered\_flat\_set<uint32\_t>\ m\_asmSampleSelect;}
+\DoxyCodeLine{00181\ \ \ \ \ unordered\_flat\_set<uint32\_t>\ m\_srcSampleSelect;}
+\DoxyCodeLine{00182\ \ \ \ \ int32\_t\ m\_asmGroupSelect\ =\ -\/1;}
+\DoxyCodeLine{00183\ \ \ \ \ int32\_t\ m\_srcGroupSelect\ =\ -\/1;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_srcWidth;}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_asmWidth;}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_jumpOffset;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00190\ \ \ \ \ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ uint32\_t\ file\ =\ 0;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ uint32\_t\ line\ =\ 0;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ sel;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ std::vector<uint64\_t>\ target;}
+\DoxyCodeLine{00195\ \ \ \ \ \}\ m\_asmTarget;}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ std::vector<History>\ m\_history;}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ m\_historyCursor\ =\ 0;}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_childCallHeight\ =\ 0;}
+\DoxyCodeLine{00201\ \};}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

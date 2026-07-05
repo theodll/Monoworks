@@ -1,0 +1,278 @@
+\doxysection{Tracy.\+hpp}
+\hypertarget{_tracy_8hpp_source}{}\label{_tracy_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/tracy/Tracy.hpp@{MonoEngine/thirdparty/tracy/public/tracy/Tracy.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACY\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACY\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}../common/TracyColor.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}../common/TracySystem.hpp"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifndef\ TracyFunction}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ define\ TracyFunction\ \_\_FUNCTION\_\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ TracyFile}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ define\ TracyFile\ \_\_FILE\_\_}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifndef\ TracyLine}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ \ define\ TracyLine\ TracyConcat(\_\_LINE\_\_,U)\ }\textcolor{comment}{//\ MSVC\ Edit\ and\ continue\ \_\_LINE\_\_\ is\ non-\/constant.\ See\ https://developercommunity.visualstudio.com/t/-\/line-\/cannot-\/be-\/used-\/as-\/an-\/argument-\/for-\/constexpr/195665}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ TracyParamTypeInt\ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ TracyParamTypeBool\ \ \ \ \ \ 1}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ TracyParamTypeTrigger\ \ \ 2}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#ifndef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ TracyNoop}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ ZoneNamed(x,y)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ ZoneNamedN(x,y,z)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ ZoneNamedC(x,y,z)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ ZoneNamedNC(x,y,z,w)}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ ZoneTransient(x,y)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ ZoneTransientN(x,y,z)}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ ZoneScoped}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ ZoneScopedN(x)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ ZoneScopedC(x)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ ZoneScopedNC(x,y)}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ ZoneText(x,y)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ ZoneTextV(x,y,z)}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ ZoneTextF(x,...)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ ZoneTextVF(x,y,...)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ ZoneName(x,y)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ ZoneNameV(x,y,z)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ ZoneNameF(x,...)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ ZoneNameVF(x,y,...)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ ZoneColor(x)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ ZoneColorV(x,y)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ ZoneValue(x)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ ZoneValueV(x,y)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ ZoneIsActive\ false}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ ZoneIsActiveV(x)\ false}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ FrameMark}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ FrameMarkNamed(x)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ FrameMarkStart(x)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ FrameMarkEnd(x)}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ FrameImage(x,y,z,w,a)}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ TracyLockable(\ type,\ varname\ )\ type\ varname}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ TracyLockableN(\ type,\ varname,\ desc\ )\ type\ varname}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ TracySharedLockable(\ type,\ varname\ )\ type\ varname}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ TracySharedLockableN(\ type,\ varname,\ desc\ )\ type\ varname}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ LockableBase(\ type\ )\ type}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ SharedLockableBase(\ type\ )\ type}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ LockMark(x)\ (void)x}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ LockableName(x,y,z)}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ TracyPlot(x,y)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ TracyPlotConfig(x,y,z,w,a)}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ TracyMessage(x,y)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ TracyMessageL(x)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ TracyMessageC(x,y,z)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ TracyMessageLC(x,y)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ TracyAppInfo(x,y)}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ TracyAlloc(x,y)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ TracyFree(x)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ TracyMemoryDiscard(x)}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ TracyAllocN(x,y,z)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ TracyFreeN(x,y)}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ ZoneNamedS(x,y,z)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ ZoneNamedNS(x,y,z,w)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ ZoneNamedCS(x,y,z,w)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ ZoneNamedNCS(x,y,z,w,a)}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ ZoneTransientS(x,y,z)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ ZoneTransientNS(x,y,z,w)}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ ZoneScopedS(x)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ ZoneScopedNS(x,y)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ ZoneScopedCS(x,y)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ ZoneScopedNCS(x,y,z)}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ TracyAllocS(x,y,z)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ TracyFreeS(x,y)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ TracyMemoryDiscardS(x,y)}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ TracyAllocNS(x,y,z,w)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ TracyFreeNS(x,y,z)}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ TracyMessageS(x,y,z)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ TracyMessageLS(x,y)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ TracyMessageCS(x,y,z,w)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ TracyMessageLCS(x,y,z)}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ TracySourceCallbackRegister(x,y)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ TracyParameterRegister(x,y)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ TracyParameterSetup(x,y,z,w)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ TracyIsConnected\ false}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ TracyIsStarted\ false}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ TracySetProgramName(x)}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ TracySectionEnter(x,\ ...)\ 0}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ TracySectionLeave(x)}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ TracyFiberEnter(x)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ TracyFiberEnterHint(x,y)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ TracyFiberLeave}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#include\ "{}../client/TracyLock.hpp"{}}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#include\ "{}../client/TracyProfiler.hpp"{}}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#include\ "{}../client/TracyScoped.hpp"{}}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#ifndef\ TRACY\_CALLSTACK}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ TRACY\_CALLSTACK\ 0}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ TracyNoop\ tracy::ProfilerAvailable()}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ ZoneNamed(\ varname,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ nullptr,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ )}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ ZoneNamedN(\ varname,\ name,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ )}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ ZoneNamedC(\ varname,\ color,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ nullptr,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ )}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ ZoneNamedNC(\ varname,\ name,\ color,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ )}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ ZoneTransient(\ varname,\ active\ )\ tracy::ScopedZone\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ nullptr,\ 0,\ TRACY\_CALLSTACK,\ active\ )}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ ZoneTransientN(\ varname,\ name,\ active\ )\ tracy::ScopedZone\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ TRACY\_CALLSTACK,\ active\ )}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ ZoneTransientNC(\ varname,\ name,\ color,\ active\ )\ tracy::ScopedZone\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ color,\ TRACY\_CALLSTACK,\ active\ )}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#if\ defined(TRACY\_ALLOW\_SHADOW\_WARNING)}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ \#define\ SuppressVarShadowWarning(Expr)\ Expr}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#elif\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ \ \ \#define\ SuppressVarShadowWarning(Expr)\ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}clang\ diagnostic\ push"{})\ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}clang\ diagnostic\ ignored\ \(\backslash\)"{}-\/Wshadow\(\backslash\)"{}"{})\ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ Expr;\ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}clang\ diagnostic\ pop"{})}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \#define\ SuppressVarShadowWarning(Expr)\ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}GCC\ diagnostic\ push"{})\ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}GCC\ diagnostic\ ignored\ \(\backslash\)"{}-\/Wshadow\(\backslash\)"{}"{})\ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ Expr;\ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}GCC\ diagnostic\ pop"{})}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)\ }}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\ \ \ \ \#define\ SuppressVarShadowWarning(Expr)\ \(\backslash\)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}warning(push)"{})\ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}warning(disable\ :\ 4456)"{})\ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ Expr;\ \(\backslash\)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_Pragma("{}warning(pop)"{})}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\ \ \ \ \#define\ SuppressVarShadowWarning(Expr)\ Expr}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ ZoneScoped\ SuppressVarShadowWarning(\ ZoneNamed(\ \_\_\_tracy\_scoped\_zone,\ true\ )\ )}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ ZoneScopedN(\ name\ )\ SuppressVarShadowWarning(\ ZoneNamedN(\ \_\_\_tracy\_scoped\_zone,\ name,\ true\ )\ )}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ ZoneScopedC(\ color\ )\ SuppressVarShadowWarning(\ ZoneNamedC(\ \_\_\_tracy\_scoped\_zone,\ color,\ true\ )\ )}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ ZoneScopedNC(\ name,\ color\ )\ SuppressVarShadowWarning(\ ZoneNamedNC(\ \_\_\_tracy\_scoped\_zone,\ name,\ color,\ true\ )\ )}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ ZoneText(\ txt,\ size\ )\ \_\_\_tracy\_scoped\_zone.Text(\ txt,\ size\ )}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ ZoneTextV(\ varname,\ txt,\ size\ )\ varname.Text(\ txt,\ size\ )}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ ZoneTextF(\ fmt,\ ...\ )\ \_\_\_tracy\_scoped\_zone.TextFmt(\ fmt,\ \#\#\_\_VA\_ARGS\_\_\ )}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ ZoneTextVF(\ varname,\ fmt,\ ...\ )\ varname.TextFmt(\ fmt,\ \#\#\_\_VA\_ARGS\_\_\ )}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#define\ ZoneName(\ txt,\ size\ )\ \_\_\_tracy\_scoped\_zone.Name(\ txt,\ size\ )}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ ZoneNameV(\ varname,\ txt,\ size\ )\ varname.Name(\ txt,\ size\ )}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#define\ ZoneNameF(\ fmt,\ ...\ )\ \_\_\_tracy\_scoped\_zone.NameFmt(\ fmt,\ \#\#\_\_VA\_ARGS\_\_\ )}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ ZoneNameVF(\ varname,\ fmt,\ ...\ )\ varname.NameFmt(\ fmt,\ \#\#\_\_VA\_ARGS\_\_\ )}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ ZoneColor(\ color\ )\ \_\_\_tracy\_scoped\_zone.Color(\ color\ )}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ ZoneColorV(\ varname,\ color\ )\ varname.Color(\ color\ )}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ ZoneValue(\ value\ )\ \_\_\_tracy\_scoped\_zone.Value(\ value\ )}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ ZoneValueV(\ varname,\ value\ )\ varname.Value(\ value\ )}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ ZoneIsActive\ \_\_\_tracy\_scoped\_zone.IsActive()}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ ZoneIsActiveV(\ varname\ )\ varname.IsActive()}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#define\ FrameMark\ tracy::Profiler::SendFrameMark(\ nullptr\ )}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#define\ FrameMarkNamed(\ name\ )\ tracy::Profiler::SendFrameMark(\ name\ )}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#define\ FrameMarkStart(\ name\ )\ tracy::Profiler::SendFrameMark(\ name,\ tracy::QueueType::FrameMarkMsgStart\ )}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ FrameMarkEnd(\ name\ )\ tracy::Profiler::SendFrameMark(\ name,\ tracy::QueueType::FrameMarkMsgEnd\ )}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ FrameImage(\ image,\ width,\ height,\ offset,\ flip\ )\ tracy::Profiler::SendFrameImage(\ image,\ width,\ height,\ offset,\ flip\ )}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ TracyLockable(\ type,\ varname\ )\ tracy::Lockable<type>\ varname\ \{\ []\ ()\ -\/>\ const\ tracy::SourceLocationData*\ \{\ static\ constexpr\ tracy::SourceLocationData\ srcloc\ \{\ nullptr,\ \#type\ "{}\ "{}\ \#varname,\ TracyFile,\ TracyLine,\ 0\ \};\ return\ \&srcloc;\ \}()\ \}}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ TracyLockableN(\ type,\ varname,\ desc\ )\ tracy::Lockable<type>\ varname\ \{\ []\ ()\ -\/>\ const\ tracy::SourceLocationData*\ \{\ static\ constexpr\ tracy::SourceLocationData\ srcloc\ \{\ nullptr,\ desc,\ TracyFile,\ TracyLine,\ 0\ \};\ return\ \&srcloc;\ \}()\ \}}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#define\ TracySharedLockable(\ type,\ varname\ )\ tracy::SharedLockable<type>\ varname\ \{\ []\ ()\ -\/>\ const\ tracy::SourceLocationData*\ \{\ static\ constexpr\ tracy::SourceLocationData\ srcloc\ \{\ nullptr,\ \#type\ "{}\ "{}\ \#varname,\ TracyFile,\ TracyLine,\ 0\ \};\ return\ \&srcloc;\ \}()\ \}}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ TracySharedLockableN(\ type,\ varname,\ desc\ )\ tracy::SharedLockable<type>\ varname\ \{\ []\ ()\ -\/>\ const\ tracy::SourceLocationData*\ \{\ static\ constexpr\ tracy::SourceLocationData\ srcloc\ \{\ nullptr,\ desc,\ TracyFile,\ TracyLine,\ 0\ \};\ return\ \&srcloc;\ \}()\ \}}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ LockableBase(\ type\ )\ tracy::Lockable<type>}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ SharedLockableBase(\ type\ )\ tracy::SharedLockable<type>}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ LockMark(\ varname\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_lock\_location\_,TracyLine)\ \{\ nullptr,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ varname.Mark(\ \&TracyConcat(\_\_tracy\_lock\_location\_,TracyLine)\ )}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ LockableName(\ varname,\ txt,\ size\ )\ varname.CustomName(\ txt,\ size\ )}}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ TracyPlot(\ name,\ val\ )\ tracy::Profiler::PlotData(\ name,\ val\ )}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ TracyPlotConfig(\ name,\ type,\ step,\ fill,\ color\ )\ tracy::Profiler::ConfigurePlot(\ name,\ type,\ step,\ fill,\ color\ )}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ TracyAppInfo(\ txt,\ size\ )\ tracy::Profiler::MessageAppInfo(\ txt,\ size\ )}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ TracyLogString(\ severity,\ color,\ depth,\ ...\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ severity,\ color,\ depth,\ \_\_VA\_ARGS\_\_\ )}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ TracyMessage(\ txt,\ size\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ 0,\ TRACY\_CALLSTACK,\ size,\ txt\ )}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ TracyMessageL(\ txt\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ 0,\ TRACY\_CALLSTACK,\ txt\ )}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ TracyMessageC(\ txt,\ size,\ color\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ color,\ TRACY\_CALLSTACK,\ size,\ txt\ )}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ TracyMessageLC(\ txt,\ color\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ color,\ TRACY\_CALLSTACK,\ txt\ )}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ TracyAlloc(\ ptr,\ size\ )\ tracy::Profiler::MemAllocCallstack(\ ptr,\ size,\ TRACY\_CALLSTACK\ )}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ TracyFree(\ ptr\ )\ tracy::Profiler::MemFreeCallstack(\ ptr,\ TRACY\_CALLSTACK\ )}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ TracyAllocN(\ ptr,\ size,\ name\ )\ tracy::Profiler::MemAllocCallstackNamed(\ ptr,\ size,\ TRACY\_CALLSTACK,\ name\ )}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ TracyFreeN(\ ptr,\ name\ )\ tracy::Profiler::MemFreeCallstackNamed(\ ptr,\ TRACY\_CALLSTACK,\ name\ )}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ TracyMemoryDiscard(\ name\ )\ tracy::Profiler::MemDiscardCallstack(\ name,\ TRACY\_CALLSTACK\ )}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ ZoneNamedS(\ varname,\ depth,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ nullptr,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ depth,\ active\ )}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ ZoneNamedNS(\ varname,\ name,\ depth,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ depth,\ active\ )}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ ZoneNamedCS(\ varname,\ color,\ depth,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ nullptr,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ depth,\ active\ )}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ ZoneNamedNCS(\ varname,\ name,\ color,\ depth,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::ScopedZone\ varname(\ \&TracyConcat(\_\_tracy\_source\_location,TracyLine),\ depth,\ active\ )}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ ZoneTransientS(\ varname,\ depth,\ active\ )\ tracy::ScopedZone\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ nullptr,\ 0,\ depth,\ active\ )}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ ZoneTransientNS(\ varname,\ name,\ depth,\ active\ )\ tracy::ScopedZone\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ depth,\ active\ )}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ ZoneScopedS(\ depth\ )\ ZoneNamedS(\ \_\_\_tracy\_scoped\_zone,\ depth,\ true\ )}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ ZoneScopedNS(\ name,\ depth\ )\ ZoneNamedNS(\ \_\_\_tracy\_scoped\_zone,\ name,\ depth,\ true\ )}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ ZoneScopedCS(\ color,\ depth\ )\ ZoneNamedCS(\ \_\_\_tracy\_scoped\_zone,\ color,\ depth,\ true\ )}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ ZoneScopedNCS(\ name,\ color,\ depth\ )\ ZoneNamedNCS(\ \_\_\_tracy\_scoped\_zone,\ name,\ color,\ depth,\ true\ )}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ TracyAllocS(\ ptr,\ size,\ depth\ )\ tracy::Profiler::MemAllocCallstack(\ ptr,\ size,\ depth\ )}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ TracyFreeS(\ ptr,\ depth\ )\ tracy::Profiler::MemFreeCallstack(\ ptr,\ depth\ )}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ TracyAllocNS(\ ptr,\ size,\ depth,\ name\ )\ tracy::Profiler::MemAllocCallstackNamed(\ ptr,\ size,\ depth,\ name\ )}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ TracyFreeNS(\ ptr,\ depth,\ name\ )\ tracy::Profiler::MemFreeCallstackNamed(\ ptr,\ depth,\ name\ )}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#define\ TracyMemoryDiscardS(\ name,\ depth\ )\ tracy::Profiler::MemDiscardCallstack(\ name,\ depth\ )}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ TracyMessageS(\ txt,\ size,\ depth\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ 0,\ depth,\ size,\ txt\ )}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ TracyMessageLS(\ txt,\ depth\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ 0,\ depth,\ txt\ )}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ TracyMessageCS(\ txt,\ size,\ color,\ depth\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ color,\ depth,\ size,\ txt\ )}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ TracyMessageLCS(\ txt,\ color,\ depth\ )\ tracy::Profiler::LogString(\ tracy::MessageSourceType::User,\ tracy::MessageSeverity::Info,\ color,\ depth,\ txt\ )}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ TracySourceCallbackRegister(\ cb,\ data\ )\ tracy::Profiler::SourceCallbackRegister(\ cb,\ data\ )}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ TracyParameterRegister(\ cb,\ data\ )\ tracy::Profiler::ParameterRegister(\ cb,\ data\ )}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ TracyParameterSetup(\ idx,\ name,\ type,\ val\ )\ tracy::Profiler::ParameterSetup(\ idx,\ name,\ type,\ val\ )}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ TracyIsConnected\ tracy::GetProfiler().IsConnected()}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ TracySetProgramName(\ name\ )\ tracy::GetProfiler().SetProgramName(\ name\ )}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ TracySectionEnter(\ fmt,\ ...\ )\ tracy::Profiler::SectionEnter(\ fmt,\ \#\#\_\_VA\_ARGS\_\_\ )}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ TracySectionLeave(\ id\ )\ tracy::Profiler::SectionLeave(\ id\ )}}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#ifdef\ TRACY\_FIBERS}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#\ \ define\ TracyFiberEnter(\ fiber\ )\ tracy::Profiler::EnterFiber(\ fiber,\ 0\ )}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#\ \ define\ TracyFiberEnterHint(\ fiber,\ groupHint\ )\ tracy::Profiler::EnterFiber(\ fiber,\ groupHint\ )}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#\ \ define\ TracyFiberLeave\ tracy::Profiler::LeaveFiber()}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

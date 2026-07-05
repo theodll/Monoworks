@@ -1,0 +1,97 @@
+\doxysection{SDL\+\_\+vulkan\+\_\+internal.\+h}
+\hypertarget{_s_d_l__vulkan__internal_8h_source}{}\label{_s_d_l__vulkan__internal_8h_source}\index{MonoRuntime/extern/sdl/src/video/SDL\_vulkan\_internal.h@{MonoRuntime/extern/sdl/src/video/SDL\_vulkan\_internal.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifndef\ SDL\_vulkan\_internal\_h\_}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ SDL\_vulkan\_internal\_h\_}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_VULKAN}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_ANDROID}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_ANDROID\_KHR}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_COCOA}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_METAL\_EXT}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_MACOS\_MVK}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_UIKIT}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_METAL\_EXT}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_IOS\_MVK}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_WAYLAND}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_WAYLAND\_KHR}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ "{}wayland/SDL\_waylanddyn.h"{}}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_WINDOWS}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_WIN32\_KHR}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ "{}../core/windows/SDL\_windows.h"{}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_XLIB\_KHR}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ VK\_USE\_PLATFORM\_XCB\_KHR}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ "{}./khronos/vulkan/vulkan.h"{}}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_vulkan.h>}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *SDL\_Vulkan\_GetResultString(VkResult\ result);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_vk_extension_properties}{VkExtensionProperties}}\ *SDL\_Vulkan\_CreateInstanceExtensionsList(}
+\DoxyCodeLine{00059\ \ \ \ \ PFN\_vkEnumerateInstanceExtensionProperties\ vkEnumerateInstanceExtensionProperties,}
+\DoxyCodeLine{00060\ \ \ \ \ Uint32\ *extensionCount);\ \textcolor{comment}{//\ free\ returned\ list\ with\ SDL\_free}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{/*\ Create\ a\ surface\ directly\ from\ a\ display\ connected\ to\ a\ physical\ device}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ using\ the\ DisplayKHR\ extension.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ *\ This\ needs\ to\ be\ passed\ an\ instance\ that\ was\ created\ with\ the\ VK\_KHR\_DISPLAY\_EXTENSION\_NAME}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ *\ extension.\ */}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_Vulkan\_Display\_CreateSurface(\textcolor{keywordtype}{void}\ *vkGetInstanceProcAddr,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkInstance\ instance,}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}\ *allocator,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkSurfaceKHR\ *surface);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{/*\ Platform\ independent\ base\ function\ for\ destroying\ the\ Vulkan\ surface.\ Unlike\ surface}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ *\ creation,\ surface\ destruction\ doesn't\ require\ platform\ specific\ extensions\ like}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ VK\_KHR\_wayland\_surface,\ VK\_KHR\_android\_surface\ or\ VK\_EXT\_metal\_surface.\ The\ only}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ necessary\ extension\ is\ cross\ platform\ VK\_KHR\_surface,\ which\ is\ a\ dependency\ to\ all}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ *\ WSI\ platform\ extensions,\ so\ we\ can\ handle\ surface\ destruction\ in\ an\ platform-\/independent}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ *\ manner.\ */}}
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_Vulkan\_DestroySurface\_Internal(\textcolor{keywordtype}{void}\ *vkGetInstanceProcAddr,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkInstance\ instance,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkSurfaceKHR\ surface,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}\ *allocator);}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ No\ SDL\ Vulkan\ support,\ just\ include\ the\ header\ for\ typedefs}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_vulkan.h>}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{typedef}\ void\ (*PFN\_vkGetInstanceProcAddr)(void);}
+\DoxyCodeLine{00087\ \textcolor{keyword}{typedef}\ int\ (*PFN\_vkEnumerateInstanceExtensionProperties)(void);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_VULKAN}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_vulkan\_internal\_h\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,103 @@
+\doxysection{basic\+\_\+string\+\_\+view\texorpdfstring{$<$}{<} Char \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classbasic__string__view}{}\label{classbasic__string__view}\index{basic\_string\_view$<$ Char $>$@{basic\_string\_view$<$ Char $>$}}
+
+
+{\ttfamily \+\#include $<$base.\+h$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classbasic__string__view_a642a12b7517f31a50e530a3e14055346}\label{classbasic__string__view_a642a12b7517f31a50e530a3e14055346} 
+using {\bfseries value\+\_\+type} = Char
+\item 
+\Hypertarget{classbasic__string__view_a189f7ce44196f7d075873653a06f4464}\label{classbasic__string__view_a189f7ce44196f7d075873653a06f4464} 
+using {\bfseries iterator} = const Char\texorpdfstring{$\ast$}{*}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classbasic__string__view_aae708273ca864680a424c10441799605}\label{classbasic__string__view_aae708273ca864680a424c10441799605} 
+constexpr {\bfseries basic\+\_\+string\+\_\+view} (const Char \texorpdfstring{$\ast$}{*}s, size\+\_\+t count) noexcept
+\begin{DoxyCompactList}\small\item\em Constructs a string view object from a C string and a size. \end{DoxyCompactList}\item 
+\Hypertarget{classbasic__string__view_a2c4b2032f79f78c8fd5477ce6281f15f}\label{classbasic__string__view_a2c4b2032f79f78c8fd5477ce6281f15f} 
+constexpr {\bfseries basic\+\_\+string\+\_\+view} (nullptr\+\_\+t)=delete
+\item 
+\Hypertarget{classbasic__string__view_ac33dd8c4bd4745b749a26cc6b363cd82}\label{classbasic__string__view_ac33dd8c4bd4745b749a26cc6b363cd82} 
+FMT\+\_\+\+CONSTEXPR20 {\bfseries basic\+\_\+string\+\_\+view} (const Char \texorpdfstring{$\ast$}{*}s)
+\begin{DoxyCompactList}\small\item\em Constructs a string view object from a C string. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename S, FMT\+\_\+\+ENABLE\+\_\+\+IF(\doxymbox{\hyperlink{structdetail_1_1is__std__string__like}{detail::\+is\+\_\+std\+\_\+string\+\_\+like}}$<$ S $>$::\+value \&\&std::\+is\+\_\+same$<$ typename S::\+value\+\_\+type, Char $>$::\+value)$>$ }\\FMT\+\_\+\+CONSTEXPR \doxymbox{\hyperlink{classbasic__string__view_a2f1d654bab449755061a67f3c99538a5}{basic\+\_\+string\+\_\+view}} (const S \&s) noexcept
+\item 
+\Hypertarget{classbasic__string__view_a39cdfe061dc6d64a3adc230b62d8a026}\label{classbasic__string__view_a39cdfe061dc6d64a3adc230b62d8a026} 
+constexpr auto {\bfseries data} () const noexcept -\/$>$ const Char \texorpdfstring{$\ast$}{*}
+\begin{DoxyCompactList}\small\item\em Returns a pointer to the string data. \end{DoxyCompactList}\item 
+\Hypertarget{classbasic__string__view_a216bbe1b012b590698d7bb4e96d1af3f}\label{classbasic__string__view_a216bbe1b012b590698d7bb4e96d1af3f} 
+constexpr auto {\bfseries size} () const noexcept -\/$>$ size\+\_\+t
+\begin{DoxyCompactList}\small\item\em Returns the string size. \end{DoxyCompactList}\item 
+\Hypertarget{classbasic__string__view_a50d08a55660173ee8f89dee436207da3}\label{classbasic__string__view_a50d08a55660173ee8f89dee436207da3} 
+constexpr auto {\bfseries begin} () const noexcept -\/$>$ iterator
+\item 
+\Hypertarget{classbasic__string__view_a12fc892d9a99adbf90ed0e9c88f87a02}\label{classbasic__string__view_a12fc892d9a99adbf90ed0e9c88f87a02} 
+constexpr auto {\bfseries end} () const noexcept -\/$>$ iterator
+\item 
+\Hypertarget{classbasic__string__view_aa38d3ea1dc892e4d05b6a2c7e4c9a2cb}\label{classbasic__string__view_aa38d3ea1dc892e4d05b6a2c7e4c9a2cb} 
+constexpr auto {\bfseries operator\+[$\,$]\+} (size\+\_\+t pos) const noexcept -\/$>$ const Char \&
+\item 
+\Hypertarget{classbasic__string__view_a8de4c45bed55d29d742976df2a571799}\label{classbasic__string__view_a8de4c45bed55d29d742976df2a571799} 
+FMT\+\_\+\+CONSTEXPR void {\bfseries remove\+\_\+prefix} (size\+\_\+t n) noexcept
+\item 
+\Hypertarget{classbasic__string__view_ad0c58e4e8b709381c19ac6a60da0ac6a}\label{classbasic__string__view_ad0c58e4e8b709381c19ac6a60da0ac6a} 
+FMT\+\_\+\+CONSTEXPR auto {\bfseries starts\+\_\+with} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}}$<$ Char $>$ sv) const noexcept -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_a50919981e514e409fa15da6cfd912acd}\label{classbasic__string__view_a50919981e514e409fa15da6cfd912acd} 
+FMT\+\_\+\+CONSTEXPR auto {\bfseries starts\+\_\+with} (Char c) const noexcept -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_a7e89adc4f9196ff4482fec5bf38df1e8}\label{classbasic__string__view_a7e89adc4f9196ff4482fec5bf38df1e8} 
+FMT\+\_\+\+CONSTEXPR auto {\bfseries starts\+\_\+with} (const Char \texorpdfstring{$\ast$}{*}s) const -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_afed8b08c04dc30d5d42d71a0357f8d61}\label{classbasic__string__view_afed8b08c04dc30d5d42d71a0357f8d61} 
+FMT\+\_\+\+CONSTEXPR auto {\bfseries compare} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} other) const -\/$>$ int
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classbasic__string__view_a9365aeedc493269da8f8b9e0561080bf}\label{classbasic__string__view_a9365aeedc493269da8f8b9e0561080bf} 
+FMT\+\_\+\+CONSTEXPR friend auto {\bfseries operator==} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} lhs, \doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} rhs) -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_aa1c98cde00b9ef678bb175b93cda7c7d}\label{classbasic__string__view_aa1c98cde00b9ef678bb175b93cda7c7d} 
+auto {\bfseries operator!=} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} lhs, \doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} rhs) -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_a51adcef1fd00934691bef6390f616033}\label{classbasic__string__view_a51adcef1fd00934691bef6390f616033} 
+auto {\bfseries operator$<$} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} lhs, \doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} rhs) -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_a87886a2f7dc700e1d33dd409970f96bb}\label{classbasic__string__view_a87886a2f7dc700e1d33dd409970f96bb} 
+auto {\bfseries operator$<$=} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} lhs, \doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} rhs) -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_a47eae4dfe3f6619699dfa51c24cef7d8}\label{classbasic__string__view_a47eae4dfe3f6619699dfa51c24cef7d8} 
+auto {\bfseries operator$>$} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} lhs, \doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} rhs) -\/$>$ bool
+\item 
+\Hypertarget{classbasic__string__view_adf0af0ec8d20a1a9278802148ae20be8}\label{classbasic__string__view_adf0af0ec8d20a1a9278802148ae20be8} 
+auto {\bfseries operator$>$=} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} lhs, \doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}} rhs) -\/$>$ bool
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Char$>$\newline
+class basic\+\_\+string\+\_\+view$<$ Char $>$}
+An implementation of {\ttfamily std::\+basic\+\_\+string\+\_\+view} for pre-\/\+C++17. It provides a subset of the API. {\ttfamily fmt::\+basic\+\_\+string\+\_\+view} is used for format strings even if {\ttfamily std::\+basic\+\_\+string\+\_\+view} is available to prevent issues when a library is compiled with a different {\ttfamily -\/std} option than the client code (which is not recommended). 
+
+\label{classbasic__string__view_doc-constructors}
+\Hypertarget{classbasic__string__view_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classbasic__string__view_a2f1d654bab449755061a67f3c99538a5}\index{basic\_string\_view$<$ Char $>$@{basic\_string\_view$<$ Char $>$}!basic\_string\_view@{basic\_string\_view}}
+\index{basic\_string\_view@{basic\_string\_view}!basic\_string\_view$<$ Char $>$@{basic\_string\_view$<$ Char $>$}}
+\doxysubsubsection{\texorpdfstring{basic\_string\_view()}{basic\_string\_view()}}
+{\footnotesize\ttfamily \label{classbasic__string__view_a2f1d654bab449755061a67f3c99538a5} 
+template$<$typename Char$>$ \\
+template$<$typename S, FMT\+\_\+\+ENABLE\+\_\+\+IF(\doxymbox{\hyperlink{structdetail_1_1is__std__string__like}{detail::\+is\+\_\+std\+\_\+string\+\_\+like}}$<$ S $>$::\+value \&\&std::\+is\+\_\+same$<$ typename S::\+value\+\_\+type, Char $>$::\+value)$>$ \\
+FMT\+\_\+\+CONSTEXPR \doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}}$<$ Char $>$::\+basic\+\_\+string\+\_\+view (\begin{DoxyParamCaption}\item[{const S \&}]{s}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [noexcept]}}
+
+Constructs a string view from a {\ttfamily std::\+basic\+\_\+string} or a {\ttfamily std::\+basic\+\_\+string\+\_\+view} object. 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Engine/\+thirdparty/\+spdlog/\+include/\+spdlog/\+fmt/\+bundled/\+base.\+h\end{DoxyCompactItemize}

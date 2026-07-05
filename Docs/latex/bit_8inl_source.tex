@@ -1,0 +1,93 @@
+\doxysection{bit.\+inl}
+\hypertarget{bit_8inl_source}{}\label{bit_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/bit.inl@{MonoEngine/thirdparty/glm/glm/gtx/bit.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{comment}{//\ highestBitValue}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00009\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genIUType\ \doxymbox{\hyperlink{group__gtx__bit_ga0dcc8fe7c3d3ad60dea409281efa3d05}{highestBitValue}}(genIUType\ Value)}
+\DoxyCodeLine{00010\ \ \ \ \ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ genIUType\ tmp\ =\ Value;}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ genIUType\ result\ =\ genIUType(0);}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(tmp)}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ result\ =\ (tmp\ \&\ (\string~tmp\ +\ 1));\ \textcolor{comment}{//\ grab\ lowest\ bit}}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ tmp\ \&=\ \string~result;\ \textcolor{comment}{//\ clear\ lowest\ bit}}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00022\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__bit_ga0dcc8fe7c3d3ad60dea409281efa3d05}{highestBitValue}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00023\ \ \ \ \ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__gtx__bit_ga0dcc8fe7c3d3ad60dea409281efa3d05}{highestBitValue}},\ v);}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ lowestBitValue}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genIUType>}
+\DoxyCodeLine{00031\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genIUType\ \doxymbox{\hyperlink{group__gtx__bit_ga2ff6568089f3a9b67f5c30918855fc6f}{lowestBitValue}}(genIUType\ Value)}
+\DoxyCodeLine{00032\ \ \ \ \ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (Value\ \&\ (\string~Value\ +\ 1));}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00037\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vec<L,\ T,\ Q>\ lowestBitValue(vec<L,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::functor1<vec,\ L,\ T,\ T,\ Q>::call(lowestBitValue,\ v);}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ powerOfTwoAbove}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00046\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \doxymbox{\hyperlink{group__gtx__bit_gac3d48ed0ca5e1f2ed4bfa0d9830ade7c}{powerOfTwoAbove}}(genType\ value)}
+\DoxyCodeLine{00047\ \ \ \ \ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__ext__scalar__integer_gadf491730354aa7da67fbe23d4d688763}{isPowerOfTwo}}(value)\ ?\ value\ :\ \doxymbox{\hyperlink{group__gtx__bit_ga0dcc8fe7c3d3ad60dea409281efa3d05}{highestBitValue}}(value)\ <<\ 1;}
+\DoxyCodeLine{00049\ \ \ \ \ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00052\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__bit_gac3d48ed0ca5e1f2ed4bfa0d9830ade7c}{powerOfTwoAbove}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00053\ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__gtx__bit_gac3d48ed0ca5e1f2ed4bfa0d9830ade7c}{powerOfTwoAbove}},\ v);}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ powerOfTwoBelow}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00061\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ powerOfTwoBelow(genType\ value)}
+\DoxyCodeLine{00062\ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ isPowerOfTwo(value)\ ?\ value\ :\ highestBitValue(value);}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00067\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__bit_ga238c43b77a03e95994f6aae978fdc581}{powerOfTwoBelow}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00068\ \ \ \ \ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__gtx__bit_ga238c43b77a03e95994f6aae978fdc581}{powerOfTwoBelow}},\ v);}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{//\ powerOfTwoNearest}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00076\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ powerOfTwoNearest(genType\ value)}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(isPowerOfTwo(value))}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ prev\ =\ highestBitValue(value);}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ genType\ \textcolor{keyword}{const}\ next\ =\ prev\ <<\ 1;}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (next\ -\/\ value)\ <\ (value\ -\/\ prev)\ ?\ next\ :\ prev;}
+\DoxyCodeLine{00084\ \ \ \ \ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00087\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__bit_gaffc52fa00d900040b3509fd158da0f62}{powerOfTwoNearest}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00088\ \ \ \ \ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__gtx__bit_gaffc52fa00d900040b3509fd158da0f62}{powerOfTwoNearest}},\ v);}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

@@ -1,0 +1,74 @@
+\doxysection{SDL\+\_\+coreaudio.\+h}
+\hypertarget{_s_d_l__coreaudio_8h_source}{}\label{_s_d_l__coreaudio_8h_source}\index{MonoRuntime/extern/sdl/src/audio/coreaudio/SDL\_coreaudio.h@{MonoRuntime/extern/sdl/src/audio/coreaudio/SDL\_coreaudio.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_coreaudio\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_coreaudio\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysaudio.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#ifndef\ SDL\_PLATFORM\_IOS}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ MACOSX\_COREAUDIO}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#ifdef\ MACOSX\_COREAUDIO}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <CoreAudio/CoreAudio.h>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#import\ <AVFoundation/AVFoundation.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#import\ <UIKit/UIApplication.h>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <AudioToolbox/AudioToolbox.h>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <AudioUnit/AudioUnit.h>}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ Things\ named\ "{}Master"{}\ were\ renamed\ to\ "{}Main"{}\ in\ macOS\ 12.0's\ SDK.}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#ifdef\ MACOSX\_COREAUDIO}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <AvailabilityMacros.h>}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#ifndef\ MAC\_OS\_VERSION\_12\_0}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ kAudioObjectPropertyElementMain\ kAudioObjectPropertyElementMaster}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___private_audio_data}{SDL\_PrivateAudioData}}}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ SDL\_Thread\ *thread;}
+\DoxyCodeLine{00053\ \ \ \ \ AudioQueueRef\ audioQueue;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{int}\ numAudioBuffers;}
+\DoxyCodeLine{00055\ \ \ \ \ AudioQueueBufferRef\ *audioBuffer;}
+\DoxyCodeLine{00056\ \ \ \ \ AudioQueueBufferRef\ current\_buffer;}
+\DoxyCodeLine{00057\ \ \ \ \ AudioStreamBasicDescription\ strdesc;}
+\DoxyCodeLine{00058\ \ \ \ \ SDL\_Semaphore\ *ready\_semaphore;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{char}\ *thread\_error;}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#ifdef\ MACOSX\_COREAUDIO}}
+\DoxyCodeLine{00061\ \ \ \ \ AudioDeviceID\ deviceID;}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{bool}\ interrupted;}
+\DoxyCodeLine{00064\ \ \ \ \ CFTypeRef\ interruption\_listener;}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_coreaudio\_h\_}}
+
+\end{DoxyCode}

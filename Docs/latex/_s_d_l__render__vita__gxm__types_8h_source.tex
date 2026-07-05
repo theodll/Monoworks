@@ -1,0 +1,220 @@
+\doxysection{SDL\+\_\+render\+\_\+vita\+\_\+gxm\+\_\+types.\+h}
+\hypertarget{_s_d_l__render__vita__gxm__types_8h_source}{}\label{_s_d_l__render__vita__gxm__types_8h_source}\index{MonoRuntime/extern/sdl/src/render/vitagxm/SDL\_render\_vita\_gxm\_types.h@{MonoRuntime/extern/sdl/src/render/vitagxm/SDL\_render\_vita\_gxm\_types.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_RENDER\_VITA\_GXM\_TYPES\_H}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_RENDER\_VITA\_GXM\_TYPES\_H}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysrender.h"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <psp2/kernel/processmgr.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ <psp2/appmgr.h>}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ <psp2/display.h>}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ <psp2/gxm.h>}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ <psp2/types.h>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <psp2/kernel/sysmem.h>}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <psp2/kernel/clib.h>}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_SCREEN\_WIDTH\ \ 960}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_SCREEN\_HEIGHT\ 544}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_SCREEN\_STRIDE\ 960}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_COLOR\_FORMAT\ SCE\_GXM\_COLOR\_FORMAT\_A8B8G8R8}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_PIXEL\_FORMAT\ SCE\_DISPLAY\_PIXELFORMAT\_A8B8G8R8}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_BUFFERS\ \ \ \ \ \ \ 3}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_PENDING\_SWAPS\ 2}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ VITA\_GXM\_POOL\_SIZE\ \ \ \ \ 2\ *\ 1024\ *\ 1024}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ *address;}
+\DoxyCodeLine{00053\ \ \ \ \ Uint8\ wait\_vblank;}
+\DoxyCodeLine{00054\ \}\ \doxymbox{\hyperlink{struct_v_i_t_a___g_x_m___display_data}{VITA\_GXM\_DisplayData}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structclear__vertex}{clear\_vertex}}}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00060\ \}\ \doxymbox{\hyperlink{structclear__vertex}{clear\_vertex}};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structcolor__vertex}{color\_vertex}}}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00066\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ color;}
+\DoxyCodeLine{00067\ \}\ \doxymbox{\hyperlink{structcolor__vertex}{color\_vertex}};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtexture__vertex}{texture\_vertex}}}
+\DoxyCodeLine{00070\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{float}\ u;}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{float}\ v;}
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ color;}
+\DoxyCodeLine{00076\ \}\ \doxymbox{\hyperlink{structtexture__vertex}{texture\_vertex}};}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structgxm__texture}{gxm\_texture}}}
+\DoxyCodeLine{00079\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ SceGxmTexture\ gxm\_tex;}
+\DoxyCodeLine{00081\ \ \ \ \ SceUID\ data\_UID;}
+\DoxyCodeLine{00082\ \ \ \ \ SceGxmRenderTarget\ *gxm\_rendertarget;}
+\DoxyCodeLine{00083\ \ \ \ \ SceGxmColorSurface\ gxm\_colorsurface;}
+\DoxyCodeLine{00084\ \ \ \ \ SceGxmDepthStencilSurface\ gxm\_depthstencil;}
+\DoxyCodeLine{00085\ \ \ \ \ SceUID\ depth\_UID;}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{bool}\ cdram;}
+\DoxyCodeLine{00087\ \}\ \doxymbox{\hyperlink{structgxm__texture}{gxm\_texture}};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structfragment__programs}{fragment\_programs}}}
+\DoxyCodeLine{00090\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ SceGxmFragmentProgram\ *color;}
+\DoxyCodeLine{00092\ \ \ \ \ SceGxmFragmentProgram\ *texture;}
+\DoxyCodeLine{00093\ \}\ \doxymbox{\hyperlink{structfragment__programs}{fragment\_programs}};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structblend__fragment__programs}{blend\_fragment\_programs}}}
+\DoxyCodeLine{00096\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{structfragment__programs}{fragment\_programs}}\ blend\_mode\_none;}
+\DoxyCodeLine{00098\ \ \ \ \ \doxymbox{\hyperlink{structfragment__programs}{fragment\_programs}}\ blend\_mode\_blend;}
+\DoxyCodeLine{00099\ \ \ \ \ \doxymbox{\hyperlink{structfragment__programs}{fragment\_programs}}\ blend\_mode\_add;}
+\DoxyCodeLine{00100\ \ \ \ \ \doxymbox{\hyperlink{structfragment__programs}{fragment\_programs}}\ blend\_mode\_mod;}
+\DoxyCodeLine{00101\ \ \ \ \ \doxymbox{\hyperlink{structfragment__programs}{fragment\_programs}}\ blend\_mode\_mul;}
+\DoxyCodeLine{00102\ \}\ \doxymbox{\hyperlink{structblend__fragment__programs}{blend\_fragment\_programs}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00105\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ viewport;}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{bool}\ viewport\_dirty;}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{bool}\ viewport\_is\_set;}
+\DoxyCodeLine{00109\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *texture;}
+\DoxyCodeLine{00110\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___texture}{SDL\_Texture}}\ *target;}
+\DoxyCodeLine{00111\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ color;}
+\DoxyCodeLine{00112\ \ \ \ \ SceGxmFragmentProgram\ *fragment\_program;}
+\DoxyCodeLine{00113\ \ \ \ \ SceGxmVertexProgram\ *vertex\_program;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{int}\ last\_command;}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{bool}\ cliprect\_enabled\_dirty;}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{bool}\ cliprect\_enabled;}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{bool}\ cliprect\_dirty;}
+\DoxyCodeLine{00119\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ cliprect;}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{bool}\ texturing;}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{int}\ drawablew;}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{int}\ drawableh;}
+\DoxyCodeLine{00123\ \}\ \doxymbox{\hyperlink{structgxm__drawstate__cache}{gxm\_drawstate\_cache}};}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00126\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{bool}\ initialized;}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordtype}{bool}\ drawing;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ psm;}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ bpp;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{int}\ currentBlendMode;}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \doxymbox{\hyperlink{struct_v_i_t_a___g_x_m___display_data}{VITA\_GXM\_DisplayData}}\ displayData;}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ SceUID\ vdmRingBufferUid;}
+\DoxyCodeLine{00138\ \ \ \ \ SceUID\ vertexRingBufferUid;}
+\DoxyCodeLine{00139\ \ \ \ \ SceUID\ fragmentRingBufferUid;}
+\DoxyCodeLine{00140\ \ \ \ \ SceUID\ fragmentUsseRingBufferUid;}
+\DoxyCodeLine{00141\ \ \ \ \ SceGxmContextParams\ contextParams;}
+\DoxyCodeLine{00142\ \ \ \ \ SceGxmContext\ *gxm\_context;}
+\DoxyCodeLine{00143\ \ \ \ \ SceGxmRenderTarget\ *renderTarget;}
+\DoxyCodeLine{00144\ \ \ \ \ SceUID\ displayBufferUid[VITA\_GXM\_BUFFERS];}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{void}\ *displayBufferData[VITA\_GXM\_BUFFERS];}
+\DoxyCodeLine{00146\ \ \ \ \ SceGxmColorSurface\ displaySurface[VITA\_GXM\_BUFFERS];}
+\DoxyCodeLine{00147\ \ \ \ \ SceGxmSyncObject\ *displayBufferSync[VITA\_GXM\_BUFFERS];}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ SceUID\ depthBufferUid;}
+\DoxyCodeLine{00150\ \ \ \ \ SceUID\ stencilBufferUid;}
+\DoxyCodeLine{00151\ \ \ \ \ SceGxmDepthStencilSurface\ depthSurface;}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{void}\ *depthBufferData;}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{void}\ *stencilBufferData;}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ backBufferIndex;}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ frontBufferIndex;}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{void}\ *pool\_addr[2];}
+\DoxyCodeLine{00159\ \ \ \ \ SceUID\ poolUid[2];}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ pool\_index;}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ current\_pool;}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{float}\ ortho\_matrix[4\ *\ 4];}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ SceGxmVertexProgram\ *colorVertexProgram;}
+\DoxyCodeLine{00166\ \ \ \ \ SceGxmFragmentProgram\ *colorFragmentProgram;}
+\DoxyCodeLine{00167\ \ \ \ \ SceGxmVertexProgram\ *textureVertexProgram;}
+\DoxyCodeLine{00168\ \ \ \ \ SceGxmFragmentProgram\ *textureFragmentProgram;}
+\DoxyCodeLine{00169\ \ \ \ \ SceGxmProgramParameter\ *clearClearColorParam;}
+\DoxyCodeLine{00170\ \ \ \ \ SceGxmProgramParameter\ *colorWvpParam;}
+\DoxyCodeLine{00171\ \ \ \ \ SceGxmProgramParameter\ *textureWvpParam;}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ SceGxmShaderPatcher\ *shaderPatcher;}
+\DoxyCodeLine{00174\ \ \ \ \ SceGxmVertexProgram\ *clearVertexProgram;}
+\DoxyCodeLine{00175\ \ \ \ \ SceGxmFragmentProgram\ *clearFragmentProgram;}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ SceGxmShaderPatcherId\ clearVertexProgramId;}
+\DoxyCodeLine{00178\ \ \ \ \ SceGxmShaderPatcherId\ clearFragmentProgramId;}
+\DoxyCodeLine{00179\ \ \ \ \ SceGxmShaderPatcherId\ colorVertexProgramId;}
+\DoxyCodeLine{00180\ \ \ \ \ SceGxmShaderPatcherId\ colorFragmentProgramId;}
+\DoxyCodeLine{00181\ \ \ \ \ SceGxmShaderPatcherId\ textureVertexProgramId;}
+\DoxyCodeLine{00182\ \ \ \ \ SceGxmShaderPatcherId\ textureFragmentProgramId;}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ SceUID\ patcherBufferUid;}
+\DoxyCodeLine{00185\ \ \ \ \ SceUID\ patcherVertexUsseUid;}
+\DoxyCodeLine{00186\ \ \ \ \ SceUID\ patcherFragmentUsseUid;}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ SceUID\ clearVerticesUid;}
+\DoxyCodeLine{00189\ \ \ \ \ SceUID\ linearIndicesUid;}
+\DoxyCodeLine{00190\ \ \ \ \ \doxymbox{\hyperlink{structclear__vertex}{clear\_vertex}}\ *clearVertices;}
+\DoxyCodeLine{00191\ \ \ \ \ uint16\_t\ *linearIndices;}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ \ \ \ \ \doxymbox{\hyperlink{structblend__fragment__programs}{blend\_fragment\_programs}}\ blendFragmentPrograms;}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \doxymbox{\hyperlink{structgxm__drawstate__cache}{gxm\_drawstate\_cache}}\ drawstate;}
+\DoxyCodeLine{00196\ \ \ \ \ SceClibMspace\ texturePool;}
+\DoxyCodeLine{00197\ \ \ \ \ SceUID\ texturePoolUID;}
+\DoxyCodeLine{00198\ \}\ \doxymbox{\hyperlink{struct_v_i_t_a___g_x_m___render_data}{VITA\_GXM\_RenderData}};}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00201\ \{}
+\DoxyCodeLine{00202\ \ \ \ \ \doxymbox{\hyperlink{structgxm__texture}{gxm\_texture}}\ *tex;}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ pitch;}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ w;}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ h;}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keywordtype}{float}\ wscale;}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordtype}{bool}\ yuv;}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordtype}{bool}\ nv12;}
+\DoxyCodeLine{00209\ \ \ \ \ SDL\_ScaleMode\ scale\_mode;}
+\DoxyCodeLine{00210\ \ \ \ \ SDL\_TextureAddressMode\ address\_mode\_u;}
+\DoxyCodeLine{00211\ \ \ \ \ SDL\_TextureAddressMode\ address\_mode\_v;}
+\DoxyCodeLine{00212\ \}\ \doxymbox{\hyperlink{struct_v_i_t_a___g_x_m___texture_data}{VITA\_GXM\_TextureData}};}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_RENDER\_VITA\_GXM\_TYPES\_H}}
+
+\end{DoxyCode}

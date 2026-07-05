@@ -1,0 +1,36 @@
+\doxysection{compute\+\_\+vector\+\_\+relational.\+hpp}
+\hypertarget{compute__vector__relational_8hpp_source}{}\label{compute__vector__relational_8hpp_source}\index{MonoEngine/thirdparty/glm/glm/detail/compute\_vector\_relational.hpp@{MonoEngine/thirdparty/glm/glm/detail/compute\_vector\_relational.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{comment}{//\#include\ "{}compute\_common.hpp"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}setup.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keywordtype}{bool}\ isFloat>}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__equal}{compute\_equal}}}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ call(T\ a,\ T\ b)}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a\ ==\ b;}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00017\ \ \ \ \ \};}
+\DoxyCodeLine{00018\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ template\ <typename\ T>}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ \ \ struct\ compute\_equal<T,\ true>}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ static\ bool\ call(T\ a,\ T\ b)}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ return\ detail::compute\_abs<T,\ std::numeric\_limits<T>::is\_signed>::call(b\ -\/\ a)\ <=\ static\_cast<T>(0);}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ //return\ std::memcmp(\&a,\ \&b,\ sizeof(T))\ ==\ 0;}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ \ \};}}
+\DoxyCodeLine{00028\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00029\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00030\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

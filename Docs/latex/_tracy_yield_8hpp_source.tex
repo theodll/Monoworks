@@ -1,0 +1,34 @@
+\doxysection{Tracy\+Yield.\+hpp}
+\hypertarget{_tracy_yield_8hpp_source}{}\label{_tracy_yield_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/common/TracyYield.hpp@{MonoEngine/thirdparty/tracy/public/common/TracyYield.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYYIELD\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYYIELD\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#if\ defined\ \_\_SSE2\_\_\ ||\ defined\ \_M\_AMD64\ ||\ (defined\ \_M\_IX86\_FP\ \&\&\ \_M\_IX86\_FP\ ==\ 2)}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#\ \ include\ <emmintrin.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ include\ <thread>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ YieldThread()}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#if\ defined\ \_\_SSE2\_\_\ ||\ defined\ \_M\_AMD64\ ||\ (defined\ \_M\_IX86\_FP\ \&\&\ \_M\_IX86\_FP\ ==\ 2)}}
+\DoxyCodeLine{00018\ \ \ \ \ \_mm\_pause();}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#elif\ defined\ \_\_aarch64\_\_}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{asm}\ \textcolor{keyword}{volatile}(\ \textcolor{stringliteral}{"{}isb"{}}\ :\ :\ );}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00022\ \ \ \ \ std::this\_thread::yield();}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

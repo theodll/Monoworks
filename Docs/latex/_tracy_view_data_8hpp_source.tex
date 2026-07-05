@@ -1,0 +1,107 @@
+\doxysection{Tracy\+View\+Data.\+hpp}
+\hypertarget{_tracy_view_data_8hpp_source}{}\label{_tracy_view_data_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyViewData.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyViewData.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYVIEWDATA\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYVIEWDATA\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <regex>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}TracyUtility.hpp"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_range}{Range}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{void}\ StartFrame()\ \{\ hiMin\ =\ hiMax\ =\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ int64\_t\ min\ =\ 0;}
+\DoxyCodeLine{00017\ \ \ \ \ int64\_t\ max\ =\ 0;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{bool}\ active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{bool}\ hiMin\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{bool}\ hiMax\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ modMin\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{bool}\ modMax\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00023\ \};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_range_slim}{RangeSlim}}}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_range}{Range}}\&\ other\ )\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ other.active\ ==\ active\ \&\&\ other.min\ ==\ min\ \&\&\ other.max\ ==\ max;\ \}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator!=(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_range}{Range}}\&\ other\ )\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !(*\textcolor{keyword}{this}\ ==\ other);\ \}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ operator=(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_range}{Range}}\&\ other\ )\ \{\ active\ =\ other.active;\ min\ =\ other.min;\ max\ =\ other.max;\ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ int64\_t\ min,\ max;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{bool}\ active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00033\ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_range_entry}{RangeEntry}}}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_range}{Range}}*\ range;}
+\DoxyCodeLine{00038\ \ \ \ \ uint32\_t\ color;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name;}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{enum\ class}\ RangeId}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ FindZone,}
+\DoxyCodeLine{00045\ \ \ \ \ Statistics,}
+\DoxyCodeLine{00046\ \ \ \ \ FlameGraph,}
+\DoxyCodeLine{00047\ \ \ \ \ WaitStacks,}
+\DoxyCodeLine{00048\ \ \ \ \ Memory,}
+\DoxyCodeLine{00049\ \ \ \ \ FrameStatistics,}
+\DoxyCodeLine{00050\ \ \ \ \ NUM}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_view_data}{ViewData}}}
+\DoxyCodeLine{00055\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ int64\_t\ zvStart\ =\ 0;}
+\DoxyCodeLine{00057\ \ \ \ \ int64\_t\ zvEnd\ =\ 0;}
+\DoxyCodeLine{00058\ \ \ \ \ int32\_t\ frameScale\ =\ 0;}
+\DoxyCodeLine{00059\ \ \ \ \ int32\_t\ frameStart\ =\ 0;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ uint8\_t\ drawGpuZones\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00062\ \ \ \ \ uint8\_t\ drawZones\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00063\ \ \ \ \ uint8\_t\ drawLocks\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00064\ \ \ \ \ uint8\_t\ drawPlots\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00065\ \ \ \ \ uint8\_t\ onlyContendedLocks\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00066\ \ \ \ \ uint8\_t\ drawEmptyLabels\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00067\ \ \ \ \ uint8\_t\ drawFrameTargets\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00068\ \ \ \ \ uint8\_t\ drawContextSwitches\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00069\ \ \ \ \ uint8\_t\ darkenContextSwitches\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00070\ \ \ \ \ uint8\_t\ drawCpuData\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00071\ \ \ \ \ uint8\_t\ drawCpuUsageGraph\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00072\ \ \ \ \ uint8\_t\ drawSamples\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00073\ \ \ \ \ uint8\_t\ dynamicColors\ =\ 1;}
+\DoxyCodeLine{00074\ \ \ \ \ uint8\_t\ inheritParentColors\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00075\ \ \ \ \ uint8\_t\ forceColors\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00076\ \ \ \ \ uint8\_t\ ghostZones\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00077\ \ \ \ \ ShortenName\ shortenName\ =\ ShortenName::NoSpaceAndNormalize;}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ uint32\_t\ frameTarget\ =\ 60;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ uint32\_t\ plotHeight\ =\ 100;}
+\DoxyCodeLine{00082\ \};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_annotation}{Annotation}}}
+\DoxyCodeLine{00085\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ std::string\ text;}
+\DoxyCodeLine{00087\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1_range}{Range}}\ range;}
+\DoxyCodeLine{00088\ \ \ \ \ uint32\_t\ color;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{bool}\ visible\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00090\ \};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_source_regex}{SourceRegex}}}
+\DoxyCodeLine{00093\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ std::string\ pattern;}
+\DoxyCodeLine{00095\ \ \ \ \ std::string\ target;}
+\DoxyCodeLine{00096\ \ \ \ \ std::regex\ regex;}
+\DoxyCodeLine{00097\ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

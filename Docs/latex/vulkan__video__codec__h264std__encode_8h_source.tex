@@ -1,0 +1,153 @@
+\doxysection{vulkan\+\_\+video\+\_\+codec\+\_\+h264std\+\_\+encode.\+h}
+\hypertarget{vulkan__video__codec__h264std__encode_8h_source}{}\label{vulkan__video__codec__h264std__encode_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vk\_video/vulkan\_video\_codec\_h264std\_encode.h@{MonoRuntime/extern/sdl/src/video/khronos/vk\_video/vulkan\_video\_codec\_h264std\_encode.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_VIDEO\_CODEC\_H264STD\_ENCODE\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VULKAN\_VIDEO\_CODEC\_H264STD\_ENCODE\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ 2015-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ Vulkan\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ vulkan\_video\_codec\_h264std\_encode\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ vulkan\_video\_codec\_h264std\_encode\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}vulkan\_video\_codec\_h264std.h"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_H264\_ENCODE\_API\_VERSION\_1\_0\_0\ VK\_MAKE\_VIDEO\_STD\_VERSION(1,\ 0,\ 0)}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_H264\_ENCODE\_SPEC\_VERSION\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_H264\_ENCODE\_API\_VERSION\_1\_0\_0}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_H264\_ENCODE\_EXTENSION\_NAME\ "{}VK\_STD\_vulkan\_video\_codec\_h264\_encode"{}}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_weight_table_flags}{StdVideoEncodeH264WeightTableFlags}}\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ uint32\_t\ \ \ \ luma\_weight\_l0\_flag;}
+\DoxyCodeLine{00032\ \ \ \ \ uint32\_t\ \ \ \ chroma\_weight\_l0\_flag;}
+\DoxyCodeLine{00033\ \ \ \ \ uint32\_t\ \ \ \ luma\_weight\_l1\_flag;}
+\DoxyCodeLine{00034\ \ \ \ \ uint32\_t\ \ \ \ chroma\_weight\_l1\_flag;}
+\DoxyCodeLine{00035\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_weight_table_flags}{StdVideoEncodeH264WeightTableFlags}};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_weight_table}{StdVideoEncodeH264WeightTable}}\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_encode_h264_weight_table_flags}{StdVideoEncodeH264WeightTableFlags}}\ \ \ \ flags;}
+\DoxyCodeLine{00039\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ luma\_log2\_weight\_denom;}
+\DoxyCodeLine{00040\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_log2\_weight\_denom;}
+\DoxyCodeLine{00041\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ luma\_weight\_l0[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF];}
+\DoxyCodeLine{00042\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ luma\_offset\_l0[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF];}
+\DoxyCodeLine{00043\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_weight\_l0[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF][STD\_VIDEO\_H264\_MAX\_CHROMA\_PLANES];}
+\DoxyCodeLine{00044\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_offset\_l0[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF][STD\_VIDEO\_H264\_MAX\_CHROMA\_PLANES];}
+\DoxyCodeLine{00045\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ luma\_weight\_l1[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF];}
+\DoxyCodeLine{00046\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ luma\_offset\_l1[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF];}
+\DoxyCodeLine{00047\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_weight\_l1[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF][STD\_VIDEO\_H264\_MAX\_CHROMA\_PLANES];}
+\DoxyCodeLine{00048\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_offset\_l1[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF][STD\_VIDEO\_H264\_MAX\_CHROMA\_PLANES];}
+\DoxyCodeLine{00049\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_weight_table}{StdVideoEncodeH264WeightTable}};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_slice_header_flags}{StdVideoEncodeH264SliceHeaderFlags}}\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ uint32\_t\ \ \ \ direct\_spatial\_mv\_pred\_flag\ :\ 1;}
+\DoxyCodeLine{00053\ \ \ \ \ uint32\_t\ \ \ \ num\_ref\_idx\_active\_override\_flag\ :\ 1;}
+\DoxyCodeLine{00054\ \ \ \ \ uint32\_t\ \ \ \ reserved\ :\ 30;}
+\DoxyCodeLine{00055\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_slice_header_flags}{StdVideoEncodeH264SliceHeaderFlags}};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_picture_info_flags}{StdVideoEncodeH264PictureInfoFlags}}\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ uint32\_t\ \ \ \ IdrPicFlag\ :\ 1;}
+\DoxyCodeLine{00059\ \ \ \ \ uint32\_t\ \ \ \ is\_reference\ :\ 1;}
+\DoxyCodeLine{00060\ \ \ \ \ uint32\_t\ \ \ \ no\_output\_of\_prior\_pics\_flag\ :\ 1;}
+\DoxyCodeLine{00061\ \ \ \ \ uint32\_t\ \ \ \ long\_term\_reference\_flag\ :\ 1;}
+\DoxyCodeLine{00062\ \ \ \ \ uint32\_t\ \ \ \ adaptive\_ref\_pic\_marking\_mode\_flag\ :\ 1;}
+\DoxyCodeLine{00063\ \ \ \ \ uint32\_t\ \ \ \ reserved\ :\ 27;}
+\DoxyCodeLine{00064\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_picture_info_flags}{StdVideoEncodeH264PictureInfoFlags}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_reference_info_flags}{StdVideoEncodeH264ReferenceInfoFlags}}\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ uint32\_t\ \ \ \ used\_for\_long\_term\_reference\ :\ 1;}
+\DoxyCodeLine{00068\ \ \ \ \ uint32\_t\ \ \ \ reserved\ :\ 31;}
+\DoxyCodeLine{00069\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_reference_info_flags}{StdVideoEncodeH264ReferenceInfoFlags}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_reference_lists_info_flags}{StdVideoEncodeH264ReferenceListsInfoFlags}}\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ uint32\_t\ \ \ \ ref\_pic\_list\_modification\_flag\_l0\ :\ 1;}
+\DoxyCodeLine{00073\ \ \ \ \ uint32\_t\ \ \ \ ref\_pic\_list\_modification\_flag\_l1\ :\ 1;}
+\DoxyCodeLine{00074\ \ \ \ \ uint32\_t\ \ \ \ reserved\ :\ 30;}
+\DoxyCodeLine{00075\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_reference_lists_info_flags}{StdVideoEncodeH264ReferenceListsInfoFlags}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_ref_list_mod_entry}{StdVideoEncodeH264RefListModEntry}}\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ StdVideoH264ModificationOfPicNumsIdc\ \ \ \ modification\_of\_pic\_nums\_idc;}
+\DoxyCodeLine{00079\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ abs\_diff\_pic\_num\_minus1;}
+\DoxyCodeLine{00080\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ long\_term\_pic\_num;}
+\DoxyCodeLine{00081\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_ref_list_mod_entry}{StdVideoEncodeH264RefListModEntry}};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_ref_pic_marking_entry}{StdVideoEncodeH264RefPicMarkingEntry}}\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ StdVideoH264MemMgmtControlOp\ \ \ \ memory\_management\_control\_operation;}
+\DoxyCodeLine{00085\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ difference\_of\_pic\_nums\_minus1;}
+\DoxyCodeLine{00086\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ long\_term\_pic\_num;}
+\DoxyCodeLine{00087\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ long\_term\_frame\_idx;}
+\DoxyCodeLine{00088\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_long\_term\_frame\_idx\_plus1;}
+\DoxyCodeLine{00089\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_ref_pic_marking_entry}{StdVideoEncodeH264RefPicMarkingEntry}};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_reference_lists_info}{StdVideoEncodeH264ReferenceListsInfo}}\ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_encode_h264_reference_lists_info_flags}{StdVideoEncodeH264ReferenceListsInfoFlags}}\ \ \ \ \ \ flags;}
+\DoxyCodeLine{00093\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_ref\_idx\_l0\_active\_minus1;}
+\DoxyCodeLine{00094\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_ref\_idx\_l1\_active\_minus1;}
+\DoxyCodeLine{00095\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RefPicList0[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF];}
+\DoxyCodeLine{00096\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RefPicList1[STD\_VIDEO\_H264\_MAX\_NUM\_LIST\_REF];}
+\DoxyCodeLine{00097\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ refList0ModOpCount;}
+\DoxyCodeLine{00098\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ refList1ModOpCount;}
+\DoxyCodeLine{00099\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ refPicMarkingOpCount;}
+\DoxyCodeLine{00100\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1[7];}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_ref_list_mod_entry}{StdVideoEncodeH264RefListModEntry}}*\ \ \ \ \ \ \ pRefList0ModOperations;}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_ref_list_mod_entry}{StdVideoEncodeH264RefListModEntry}}*\ \ \ \ \ \ \ pRefList1ModOperations;}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_ref_pic_marking_entry}{StdVideoEncodeH264RefPicMarkingEntry}}*\ \ \ \ pRefPicMarkingOperations;}
+\DoxyCodeLine{00104\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_reference_lists_info}{StdVideoEncodeH264ReferenceListsInfo}};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_picture_info}{StdVideoEncodeH264PictureInfo}}\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_encode_h264_picture_info_flags}{StdVideoEncodeH264PictureInfoFlags}}\ \ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00108\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ seq\_parameter\_set\_id;}
+\DoxyCodeLine{00109\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pic\_parameter\_set\_id;}
+\DoxyCodeLine{00110\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ idr\_pic\_id;}
+\DoxyCodeLine{00111\ \ \ \ \ StdVideoH264PictureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ primary\_pic\_type;}
+\DoxyCodeLine{00112\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ frame\_num;}
+\DoxyCodeLine{00113\ \ \ \ \ int32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PicOrderCnt;}
+\DoxyCodeLine{00114\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temporal\_id;}
+\DoxyCodeLine{00115\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1[3];}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_reference_lists_info}{StdVideoEncodeH264ReferenceListsInfo}}*\ \ \ \ pRefLists;}
+\DoxyCodeLine{00117\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_picture_info}{StdVideoEncodeH264PictureInfo}};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_reference_info}{StdVideoEncodeH264ReferenceInfo}}\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_encode_h264_reference_info_flags}{StdVideoEncodeH264ReferenceInfoFlags}}\ \ \ \ flags;}
+\DoxyCodeLine{00121\ \ \ \ \ StdVideoH264PictureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ primary\_pic\_type;}
+\DoxyCodeLine{00122\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FrameNum;}
+\DoxyCodeLine{00123\ \ \ \ \ int32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ PicOrderCnt;}
+\DoxyCodeLine{00124\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ long\_term\_pic\_num;}
+\DoxyCodeLine{00125\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ long\_term\_frame\_idx;}
+\DoxyCodeLine{00126\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temporal\_id;}
+\DoxyCodeLine{00127\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_reference_info}{StdVideoEncodeH264ReferenceInfo}};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_encode_h264_slice_header}{StdVideoEncodeH264SliceHeader}}\ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_encode_h264_slice_header_flags}{StdVideoEncodeH264SliceHeaderFlags}}\ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00131\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ first\_mb\_in\_slice;}
+\DoxyCodeLine{00132\ \ \ \ \ StdVideoH264SliceType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ slice\_type;}
+\DoxyCodeLine{00133\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ slice\_alpha\_c0\_offset\_div2;}
+\DoxyCodeLine{00134\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ slice\_beta\_offset\_div2;}
+\DoxyCodeLine{00135\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ slice\_qp\_delta;}
+\DoxyCodeLine{00136\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1;}
+\DoxyCodeLine{00137\ \ \ \ \ StdVideoH264CabacInitIdc\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cabac\_init\_idc;}
+\DoxyCodeLine{00138\ \ \ \ \ StdVideoH264DisableDeblockingFilterIdc\ \ \ \ disable\_deblocking\_filter\_idc;}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_weight_table}{StdVideoEncodeH264WeightTable}}*\ \ \ \ \ \ pWeightTable;}
+\DoxyCodeLine{00140\ \}\ \doxymbox{\hyperlink{struct_std_video_encode_h264_slice_header}{StdVideoEncodeH264SliceHeader}};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00144\ \}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

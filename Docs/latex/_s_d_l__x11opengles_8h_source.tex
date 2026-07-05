@@ -1,0 +1,62 @@
+\doxysection{SDL\+\_\+x11opengles.\+h}
+\hypertarget{_s_d_l__x11opengles_8h_source}{}\label{_s_d_l__x11opengles_8h_source}\index{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11opengles.h@{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11opengles.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_x11opengles\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_x11opengles\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL\_EGL}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysvideo.h"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../SDL\_egl\_c.h"{}}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___private_g_l_e_s_data}{SDL\_PrivateGLESData}}}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ 1401\ If\ the\ struct-\/declaration-\/list\ contains\ no\ named\ members,\ the\ behavior\ is\ undefined.}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ warning:\ empty\ struct\ has\ size\ 0\ in\ C,\ size\ 1\ in\ C++\ [-\/Wc++-\/compat]}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{int}\ dummy;}
+\DoxyCodeLine{00036\ \}\ \doxymbox{\hyperlink{struct_s_d_l___private_g_l_e_s_data}{SDL\_PrivateGLESData}};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ OpenGLES\ functions}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ X11\_GLES\_GetAttribute\ \ \ \ SDL\_EGL\_GetAttribute}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ X11\_GLES\_GetProcAddress\ \ SDL\_EGL\_GetProcAddressInternal}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ X11\_GLES\_UnloadLibrary\ \ \ SDL\_EGL\_UnloadLibrary}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ X11\_GLES\_SetSwapInterval\ SDL\_EGL\_SetSwapInterval}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ X11\_GLES\_GetSwapInterval\ SDL\_EGL\_GetSwapInterval}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ X11\_GLES\_DestroyContext\ \ \ SDL\_EGL\_DestroyContext}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GLES\_LoadLibrary(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00047\ \textcolor{keyword}{extern}\ XVisualInfo\ *X11\_GLES\_GetVisual(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ Display\ *display,\ \textcolor{keywordtype}{int}\ screen,\ \textcolor{keywordtype}{bool}\ transparent);}
+\DoxyCodeLine{00048\ \textcolor{keyword}{extern}\ SDL\_GLContext\ X11\_GLES\_CreateContext(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00049\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GLES\_SwapWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00050\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11\_GLES\_MakeCurrent(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ SDL\_EGLSurface\ X11\_GLES\_GetEGLSurface(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11\_GLES\_SetDefaultProfileConfig(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_OPENGL\_EGL}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_x11opengles\_h\_}}
+
+\end{DoxyCode}

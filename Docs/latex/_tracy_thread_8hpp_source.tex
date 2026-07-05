@@ -1,0 +1,100 @@
+\doxysection{Tracy\+Thread.\+hpp}
+\hypertarget{_tracy_thread_8hpp_source}{}\label{_tracy_thread_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/client/TracyThread.hpp@{MonoEngine/thirdparty/tracy/public/client/TracyThread.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYTHREAD\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYTHREAD\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#if\ defined\ \_WIN32}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#\ \ include\ <windows.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ include\ <pthread.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#ifdef\ TRACY\_MANUAL\_LIFETIME}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ include\ "{}../common/TracyAlloc.hpp"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#ifdef\ TRACY\_MANUAL\_LIFETIME}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{extern}\ \textcolor{keyword}{thread\_local}\ \textcolor{keywordtype}{bool}\ RpThreadInitDone;}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_thread_exit_handler}{ThreadExitHandler}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_thread_exit_handler}{\string~ThreadExitHandler}}()}
+\DoxyCodeLine{00025\ \ \ \ \ \{}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ TRACY\_MANUAL\_LIFETIME}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#\ \ if\ defined\ TRACY\_HAS\_CUSTOM\_ALLOCATOR}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ PlatformAllocatorThreadFinalize();}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ \ elif\ defined\ TRACY\_USE\_RPMALLOC}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ rpmalloc\_thread\_finalize(\ 1\ );}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ RpThreadInitDone\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ \ \ \ \ \}}
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#if\ defined\ \_WIN32}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_thread}{Thread}}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_thread}{Thread}}(\ \textcolor{keywordtype}{void}(*func)(\ \textcolor{keywordtype}{void}*\ ptr\ ),\ \textcolor{keywordtype}{void}*\ ptr\ )}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ :\ m\_func(\ func\ )}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ ,\ m\_ptr(\ ptr\ )}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ ,\ m\_hnd(\ CreateThread(\ nullptr,\ 0,\ Launch,\ this,\ 0,\ nullptr\ )\ )}
+\DoxyCodeLine{00046\ \ \ \ \ \{\}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \string~Thread()}
+\DoxyCodeLine{00049\ \ \ \ \ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ WaitForSingleObject(\ m\_hnd,\ INFINITE\ );}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ CloseHandle(\ m\_hnd\ );}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ HANDLE\ Handle()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_hnd;\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{static}\ DWORD\ WINAPI\ Launch(\ \textcolor{keywordtype}{void}*\ ptr\ )\ \{\ ((Thread*)ptr)-\/>m\_func(\ ((Thread*)ptr)-\/>m\_ptr\ );\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ void(*m\_func)(\ \textcolor{keywordtype}{void}*\ ptr\ );}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}*\ m\_ptr;}
+\DoxyCodeLine{00061\ \ \ \ \ HANDLE\ m\_hnd;}
+\DoxyCodeLine{00062\ \};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{class\ }Thread}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00069\ \ \ \ \ Thread(\ \textcolor{keywordtype}{void}(*func)(\ \textcolor{keywordtype}{void}*\ ptr\ ),\ \textcolor{keywordtype}{void}*\ ptr\ )}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ :\ m\_func(\ func\ )}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ ,\ m\_ptr(\ ptr\ )}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ pthread\_create(\ \&m\_thread,\ \textcolor{keyword}{nullptr},\ Launch,\ \textcolor{keyword}{this}\ );}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \string~Thread()}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ pthread\_join(\ m\_thread,\ \textcolor{keyword}{nullptr}\ );}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ pthread\_t\ Handle()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_thread;\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}*\ Launch(\ \textcolor{keywordtype}{void}*\ ptr\ )\ \{\ ((Thread*)ptr)-\/>m\_func(\ ((Thread*)ptr)-\/>m\_ptr\ );\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00085\ \ \ \ \ void(*m\_func)(\ \textcolor{keywordtype}{void}*\ ptr\ );}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{void}*\ m\_ptr;}
+\DoxyCodeLine{00087\ \ \ \ \ pthread\_t\ m\_thread;}
+\DoxyCodeLine{00088\ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

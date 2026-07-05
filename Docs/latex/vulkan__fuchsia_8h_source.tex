@@ -1,0 +1,288 @@
+\doxysection{vulkan\+\_\+fuchsia.\+h}
+\hypertarget{vulkan__fuchsia_8h_source}{}\label{vulkan__fuchsia_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_fuchsia.h@{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_fuchsia.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_FUCHSIA\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VULKAN\_FUCHSIA\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ 2015-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ Vulkan\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ VK\_FUCHSIA\_imagepipe\_surface\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_imagepipe\_surface\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_IMAGEPIPE\_SURFACE\_SPEC\_VERSION\ 1}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_IMAGEPIPE\_SURFACE\_EXTENSION\_NAME\ "{}VK\_FUCHSIA\_imagepipe\_surface"{}}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ VkFlags\ VkImagePipeSurfaceCreateFlagsFUCHSIA;}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_image_pipe_surface_create_info_f_u_c_h_s_i_a}{VkImagePipeSurfaceCreateInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00030\ \ \ \ \ VkImagePipeSurfaceCreateFlagsFUCHSIA\ \ \ \ flags;}
+\DoxyCodeLine{00031\ \ \ \ \ zx\_handle\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ imagePipeHandle;}
+\DoxyCodeLine{00032\ \}\ \doxymbox{\hyperlink{struct_vk_image_pipe_surface_create_info_f_u_c_h_s_i_a}{VkImagePipeSurfaceCreateInfoFUCHSIA}};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkCreateImagePipeSurfaceFUCHSIA)(VkInstance\ instance,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_image_pipe_surface_create_info_f_u_c_h_s_i_a}{VkImagePipeSurfaceCreateInfoFUCHSIA}}*\ pCreateInfo,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ pAllocator,\ VkSurfaceKHR*\ pSurface);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00038\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkCreateImagePipeSurfaceFUCHSIA(}
+\DoxyCodeLine{00039\ \ \ \ \ VkInstance\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ instance,}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_image_pipe_surface_create_info_f_u_c_h_s_i_a}{VkImagePipeSurfaceCreateInfoFUCHSIA}}*\ \ pCreateInfo,}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pAllocator,}
+\DoxyCodeLine{00042\ \ \ \ \ VkSurfaceKHR*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSurface);}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ VK\_FUCHSIA\_external\_memory\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_external\_memory\ 1}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_EXTERNAL\_MEMORY\_SPEC\_VERSION\ 1}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_EXTERNAL\_MEMORY\_EXTENSION\_NAME\ "{}VK\_FUCHSIA\_external\_memory"{}}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_memory_zircon_handle_info_f_u_c_h_s_i_a}{VkImportMemoryZirconHandleInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00054\ \ \ \ \ VkExternalMemoryHandleTypeFlagBits\ \ \ \ handleType;}
+\DoxyCodeLine{00055\ \ \ \ \ zx\_handle\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ handle;}
+\DoxyCodeLine{00056\ \}\ \doxymbox{\hyperlink{struct_vk_import_memory_zircon_handle_info_f_u_c_h_s_i_a}{VkImportMemoryZirconHandleInfoFUCHSIA}};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_memory_zircon_handle_properties_f_u_c_h_s_i_a}{VkMemoryZirconHandlePropertiesFUCHSIA}}\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00061\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ memoryTypeBits;}
+\DoxyCodeLine{00062\ \}\ \doxymbox{\hyperlink{struct_vk_memory_zircon_handle_properties_f_u_c_h_s_i_a}{VkMemoryZirconHandlePropertiesFUCHSIA}};}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_memory_get_zircon_handle_info_f_u_c_h_s_i_a}{VkMemoryGetZirconHandleInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00067\ \ \ \ \ VkDeviceMemory\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memory;}
+\DoxyCodeLine{00068\ \ \ \ \ VkExternalMemoryHandleTypeFlagBits\ \ \ \ handleType;}
+\DoxyCodeLine{00069\ \}\ \doxymbox{\hyperlink{struct_vk_memory_get_zircon_handle_info_f_u_c_h_s_i_a}{VkMemoryGetZirconHandleInfoFUCHSIA}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetMemoryZirconHandleFUCHSIA)(VkDevice\ device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_memory_get_zircon_handle_info_f_u_c_h_s_i_a}{VkMemoryGetZirconHandleInfoFUCHSIA}}*\ pGetZirconHandleInfo,\ zx\_handle\_t*\ pZirconHandle);}
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetMemoryZirconHandlePropertiesFUCHSIA)(VkDevice\ device,\ VkExternalMemoryHandleTypeFlagBits\ handleType,\ zx\_handle\_t\ zirconHandle,\ \doxymbox{\hyperlink{struct_vk_memory_zircon_handle_properties_f_u_c_h_s_i_a}{VkMemoryZirconHandlePropertiesFUCHSIA}}*\ pMemoryZirconHandleProperties);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00076\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetMemoryZirconHandleFUCHSIA(}
+\DoxyCodeLine{00077\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_memory_get_zircon_handle_info_f_u_c_h_s_i_a}{VkMemoryGetZirconHandleInfoFUCHSIA}}*\ \ \ pGetZirconHandleInfo,}
+\DoxyCodeLine{00079\ \ \ \ \ zx\_handle\_t*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pZirconHandle);}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00083\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetMemoryZirconHandlePropertiesFUCHSIA(}
+\DoxyCodeLine{00084\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00085\ \ \ \ \ VkExternalMemoryHandleTypeFlagBits\ \ \ \ \ \ \ \ \ \ handleType,}
+\DoxyCodeLine{00086\ \ \ \ \ zx\_handle\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ zirconHandle,}
+\DoxyCodeLine{00087\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_memory_zircon_handle_properties_f_u_c_h_s_i_a}{VkMemoryZirconHandlePropertiesFUCHSIA}}*\ \ \ \ \ \ pMemoryZirconHandleProperties);}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{comment}{//\ VK\_FUCHSIA\_external\_semaphore\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_external\_semaphore\ 1}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_EXTERNAL\_SEMAPHORE\_SPEC\_VERSION\ 1}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_EXTERNAL\_SEMAPHORE\_EXTENSION\_NAME\ "{}VK\_FUCHSIA\_external\_semaphore"{}}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_semaphore_zircon_handle_info_f_u_c_h_s_i_a}{VkImportSemaphoreZirconHandleInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00099\ \ \ \ \ VkSemaphore\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ semaphore;}
+\DoxyCodeLine{00100\ \ \ \ \ VkSemaphoreImportFlags\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00101\ \ \ \ \ VkExternalSemaphoreHandleTypeFlagBits\ \ \ \ handleType;}
+\DoxyCodeLine{00102\ \ \ \ \ zx\_handle\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ zirconHandle;}
+\DoxyCodeLine{00103\ \}\ \doxymbox{\hyperlink{struct_vk_import_semaphore_zircon_handle_info_f_u_c_h_s_i_a}{VkImportSemaphoreZirconHandleInfoFUCHSIA}};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_semaphore_get_zircon_handle_info_f_u_c_h_s_i_a}{VkSemaphoreGetZirconHandleInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00108\ \ \ \ \ VkSemaphore\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ semaphore;}
+\DoxyCodeLine{00109\ \ \ \ \ VkExternalSemaphoreHandleTypeFlagBits\ \ \ \ handleType;}
+\DoxyCodeLine{00110\ \}\ \doxymbox{\hyperlink{struct_vk_semaphore_get_zircon_handle_info_f_u_c_h_s_i_a}{VkSemaphoreGetZirconHandleInfoFUCHSIA}};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkImportSemaphoreZirconHandleFUCHSIA)(VkDevice\ device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_import_semaphore_zircon_handle_info_f_u_c_h_s_i_a}{VkImportSemaphoreZirconHandleInfoFUCHSIA}}*\ pImportSemaphoreZirconHandleInfo);}
+\DoxyCodeLine{00113\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetSemaphoreZirconHandleFUCHSIA)(VkDevice\ device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_semaphore_get_zircon_handle_info_f_u_c_h_s_i_a}{VkSemaphoreGetZirconHandleInfoFUCHSIA}}*\ pGetZirconHandleInfo,\ zx\_handle\_t*\ pZirconHandle);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00117\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkImportSemaphoreZirconHandleFUCHSIA(}
+\DoxyCodeLine{00118\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_import_semaphore_zircon_handle_info_f_u_c_h_s_i_a}{VkImportSemaphoreZirconHandleInfoFUCHSIA}}*\ pImportSemaphoreZirconHandleInfo);}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00123\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetSemaphoreZirconHandleFUCHSIA(}
+\DoxyCodeLine{00124\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_semaphore_get_zircon_handle_info_f_u_c_h_s_i_a}{VkSemaphoreGetZirconHandleInfoFUCHSIA}}*\ pGetZirconHandleInfo,}
+\DoxyCodeLine{00126\ \ \ \ \ zx\_handle\_t*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pZirconHandle);}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ VK\_FUCHSIA\_buffer\_collection\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_buffer\_collection\ 1}}
+\DoxyCodeLine{00133\ VK\_DEFINE\_NON\_DISPATCHABLE\_HANDLE(VkBufferCollectionFUCHSIA)}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_BUFFER\_COLLECTION\_SPEC\_VERSION\ 2}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ VK\_FUCHSIA\_BUFFER\_COLLECTION\_EXTENSION\_NAME\ "{}VK\_FUCHSIA\_buffer\_collection"{}}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{typedef}\ VkFlags\ VkImageFormatConstraintsFlagsFUCHSIA;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ VkImageConstraintsInfoFlagBitsFUCHSIA\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ VK\_IMAGE\_CONSTRAINTS\_INFO\_CPU\_READ\_RARELY\_FUCHSIA\ =\ 0x00000001,}
+\DoxyCodeLine{00140\ \ \ \ \ VK\_IMAGE\_CONSTRAINTS\_INFO\_CPU\_READ\_OFTEN\_FUCHSIA\ =\ 0x00000002,}
+\DoxyCodeLine{00141\ \ \ \ \ VK\_IMAGE\_CONSTRAINTS\_INFO\_CPU\_WRITE\_RARELY\_FUCHSIA\ =\ 0x00000004,}
+\DoxyCodeLine{00142\ \ \ \ \ VK\_IMAGE\_CONSTRAINTS\_INFO\_CPU\_WRITE\_OFTEN\_FUCHSIA\ =\ 0x00000008,}
+\DoxyCodeLine{00143\ \ \ \ \ VK\_IMAGE\_CONSTRAINTS\_INFO\_PROTECTED\_OPTIONAL\_FUCHSIA\ =\ 0x00000010,}
+\DoxyCodeLine{00144\ \ \ \ \ VK\_IMAGE\_CONSTRAINTS\_INFO\_FLAG\_BITS\_MAX\_ENUM\_FUCHSIA\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00145\ \}\ VkImageConstraintsInfoFlagBitsFUCHSIA;}
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ VkFlags\ VkImageConstraintsInfoFlagsFUCHSIA;}
+\DoxyCodeLine{00147\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_buffer_collection_create_info_f_u_c_h_s_i_a}{VkBufferCollectionCreateInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00148\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00150\ \ \ \ \ zx\_handle\_t\ \ \ \ \ \ \ \ collectionToken;}
+\DoxyCodeLine{00151\ \}\ \doxymbox{\hyperlink{struct_vk_buffer_collection_create_info_f_u_c_h_s_i_a}{VkBufferCollectionCreateInfoFUCHSIA}};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_memory_buffer_collection_f_u_c_h_s_i_a}{VkImportMemoryBufferCollectionFUCHSIA}}\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00156\ \ \ \ \ VkBufferCollectionFUCHSIA\ \ \ \ collection;}
+\DoxyCodeLine{00157\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index;}
+\DoxyCodeLine{00158\ \}\ \doxymbox{\hyperlink{struct_vk_import_memory_buffer_collection_f_u_c_h_s_i_a}{VkImportMemoryBufferCollectionFUCHSIA}};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_buffer_collection_image_create_info_f_u_c_h_s_i_a}{VkBufferCollectionImageCreateInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00163\ \ \ \ \ VkBufferCollectionFUCHSIA\ \ \ \ collection;}
+\DoxyCodeLine{00164\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index;}
+\DoxyCodeLine{00165\ \}\ \doxymbox{\hyperlink{struct_vk_buffer_collection_image_create_info_f_u_c_h_s_i_a}{VkBufferCollectionImageCreateInfoFUCHSIA}};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_buffer_collection_constraints_info_f_u_c_h_s_i_a}{VkBufferCollectionConstraintsInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00170\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ minBufferCount;}
+\DoxyCodeLine{00171\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ maxBufferCount;}
+\DoxyCodeLine{00172\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ minBufferCountForCamping;}
+\DoxyCodeLine{00173\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ minBufferCountForDedicatedSlack;}
+\DoxyCodeLine{00174\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ minBufferCountForSharedSlack;}
+\DoxyCodeLine{00175\ \}\ \doxymbox{\hyperlink{struct_vk_buffer_collection_constraints_info_f_u_c_h_s_i_a}{VkBufferCollectionConstraintsInfoFUCHSIA}};}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_buffer_constraints_info_f_u_c_h_s_i_a}{VkBufferConstraintsInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00178\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00180\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_buffer_create_info}{VkBufferCreateInfo}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ createInfo;}
+\DoxyCodeLine{00181\ \ \ \ \ VkFormatFeatureFlags\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ requiredFormatFeatures;}
+\DoxyCodeLine{00182\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_buffer_collection_constraints_info_f_u_c_h_s_i_a}{VkBufferCollectionConstraintsInfoFUCHSIA}}\ \ \ \ bufferCollectionConstraints;}
+\DoxyCodeLine{00183\ \}\ \doxymbox{\hyperlink{struct_vk_buffer_constraints_info_f_u_c_h_s_i_a}{VkBufferConstraintsInfoFUCHSIA}};}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_buffer_collection_buffer_create_info_f_u_c_h_s_i_a}{VkBufferCollectionBufferCreateInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00188\ \ \ \ \ VkBufferCollectionFUCHSIA\ \ \ \ collection;}
+\DoxyCodeLine{00189\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index;}
+\DoxyCodeLine{00190\ \}\ \doxymbox{\hyperlink{struct_vk_buffer_collection_buffer_create_info_f_u_c_h_s_i_a}{VkBufferCollectionBufferCreateInfoFUCHSIA}};}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_sysmem_color_space_f_u_c_h_s_i_a}{VkSysmemColorSpaceFUCHSIA}}\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00195\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ colorSpace;}
+\DoxyCodeLine{00196\ \}\ \doxymbox{\hyperlink{struct_vk_sysmem_color_space_f_u_c_h_s_i_a}{VkSysmemColorSpaceFUCHSIA}};}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_buffer_collection_properties_f_u_c_h_s_i_a}{VkBufferCollectionPropertiesFUCHSIA}}\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00201\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memoryTypeBits;}
+\DoxyCodeLine{00202\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bufferCount;}
+\DoxyCodeLine{00203\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ createInfoIndex;}
+\DoxyCodeLine{00204\ \ \ \ \ uint64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sysmemPixelFormat;}
+\DoxyCodeLine{00205\ \ \ \ \ VkFormatFeatureFlags\ \ \ \ \ \ \ \ \ \ \ \ \ formatFeatures;}
+\DoxyCodeLine{00206\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_sysmem_color_space_f_u_c_h_s_i_a}{VkSysmemColorSpaceFUCHSIA}}\ \ \ \ \ \ \ \ sysmemColorSpaceIndex;}
+\DoxyCodeLine{00207\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_component_mapping}{VkComponentMapping}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ samplerYcbcrConversionComponents;}
+\DoxyCodeLine{00208\ \ \ \ \ VkSamplerYcbcrModelConversion\ \ \ \ suggestedYcbcrModel;}
+\DoxyCodeLine{00209\ \ \ \ \ VkSamplerYcbcrRange\ \ \ \ \ \ \ \ \ \ \ \ \ \ suggestedYcbcrRange;}
+\DoxyCodeLine{00210\ \ \ \ \ VkChromaLocation\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suggestedXChromaOffset;}
+\DoxyCodeLine{00211\ \ \ \ \ VkChromaLocation\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suggestedYChromaOffset;}
+\DoxyCodeLine{00212\ \}\ \doxymbox{\hyperlink{struct_vk_buffer_collection_properties_f_u_c_h_s_i_a}{VkBufferCollectionPropertiesFUCHSIA}};}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_image_format_constraints_info_f_u_c_h_s_i_a}{VkImageFormatConstraintsInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00215\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00217\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_image_create_info}{VkImageCreateInfo}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ imageCreateInfo;}
+\DoxyCodeLine{00218\ \ \ \ \ VkFormatFeatureFlags\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ requiredFormatFeatures;}
+\DoxyCodeLine{00219\ \ \ \ \ VkImageFormatConstraintsFlagsFUCHSIA\ \ \ \ flags;}
+\DoxyCodeLine{00220\ \ \ \ \ uint64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sysmemPixelFormat;}
+\DoxyCodeLine{00221\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ colorSpaceCount;}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_sysmem_color_space_f_u_c_h_s_i_a}{VkSysmemColorSpaceFUCHSIA}}*\ \ \ \ \ \ \ \ pColorSpaces;}
+\DoxyCodeLine{00223\ \}\ \doxymbox{\hyperlink{struct_vk_image_format_constraints_info_f_u_c_h_s_i_a}{VkImageFormatConstraintsInfoFUCHSIA}};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_image_constraints_info_f_u_c_h_s_i_a}{VkImageConstraintsInfoFUCHSIA}}\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00228\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ formatConstraintsCount;}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_image_format_constraints_info_f_u_c_h_s_i_a}{VkImageFormatConstraintsInfoFUCHSIA}}*\ \ \ \ pFormatConstraints;}
+\DoxyCodeLine{00230\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_buffer_collection_constraints_info_f_u_c_h_s_i_a}{VkBufferCollectionConstraintsInfoFUCHSIA}}\ \ \ \ \ \ bufferCollectionConstraints;}
+\DoxyCodeLine{00231\ \ \ \ \ VkImageConstraintsInfoFlagsFUCHSIA\ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00232\ \}\ \doxymbox{\hyperlink{struct_vk_image_constraints_info_f_u_c_h_s_i_a}{VkImageConstraintsInfoFUCHSIA}};}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkCreateBufferCollectionFUCHSIA)(VkDevice\ device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_buffer_collection_create_info_f_u_c_h_s_i_a}{VkBufferCollectionCreateInfoFUCHSIA}}*\ pCreateInfo,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ pAllocator,\ VkBufferCollectionFUCHSIA*\ pCollection);}
+\DoxyCodeLine{00235\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkSetBufferCollectionImageConstraintsFUCHSIA)(VkDevice\ device,\ VkBufferCollectionFUCHSIA\ collection,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_image_constraints_info_f_u_c_h_s_i_a}{VkImageConstraintsInfoFUCHSIA}}*\ pImageConstraintsInfo);}
+\DoxyCodeLine{00236\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkSetBufferCollectionBufferConstraintsFUCHSIA)(VkDevice\ device,\ VkBufferCollectionFUCHSIA\ collection,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_buffer_constraints_info_f_u_c_h_s_i_a}{VkBufferConstraintsInfoFUCHSIA}}*\ pBufferConstraintsInfo);}
+\DoxyCodeLine{00237\ \textcolor{keyword}{typedef}\ void\ (VKAPI\_PTR\ *PFN\_vkDestroyBufferCollectionFUCHSIA)(VkDevice\ device,\ VkBufferCollectionFUCHSIA\ collection,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ pAllocator);}
+\DoxyCodeLine{00238\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetBufferCollectionPropertiesFUCHSIA)(VkDevice\ device,\ VkBufferCollectionFUCHSIA\ collection,\ \doxymbox{\hyperlink{struct_vk_buffer_collection_properties_f_u_c_h_s_i_a}{VkBufferCollectionPropertiesFUCHSIA}}*\ pProperties);}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00242\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkCreateBufferCollectionFUCHSIA(}
+\DoxyCodeLine{00243\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_buffer_collection_create_info_f_u_c_h_s_i_a}{VkBufferCollectionCreateInfoFUCHSIA}}*\ \ pCreateInfo,}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pAllocator,}
+\DoxyCodeLine{00246\ \ \ \ \ VkBufferCollectionFUCHSIA*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pCollection);}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00250\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkSetBufferCollectionImageConstraintsFUCHSIA(}
+\DoxyCodeLine{00251\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00252\ \ \ \ \ VkBufferCollectionFUCHSIA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collection,}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_image_constraints_info_f_u_c_h_s_i_a}{VkImageConstraintsInfoFUCHSIA}}*\ \ \ \ \ \ \ \ pImageConstraintsInfo);}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00257\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkSetBufferCollectionBufferConstraintsFUCHSIA(}
+\DoxyCodeLine{00258\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00259\ \ \ \ \ VkBufferCollectionFUCHSIA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collection,}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_buffer_constraints_info_f_u_c_h_s_i_a}{VkBufferConstraintsInfoFUCHSIA}}*\ \ \ \ \ \ \ pBufferConstraintsInfo);}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00264\ VKAPI\_ATTR\ \textcolor{keywordtype}{void}\ VKAPI\_CALL\ vkDestroyBufferCollectionFUCHSIA(}
+\DoxyCodeLine{00265\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00266\ \ \ \ \ VkBufferCollectionFUCHSIA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collection,}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pAllocator);}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00271\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetBufferCollectionPropertiesFUCHSIA(}
+\DoxyCodeLine{00272\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00273\ \ \ \ \ VkBufferCollectionFUCHSIA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collection,}
+\DoxyCodeLine{00274\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_buffer_collection_properties_f_u_c_h_s_i_a}{VkBufferCollectionPropertiesFUCHSIA}}*\ \ \ \ \ \ \ \ pProperties);}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00279\ \}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

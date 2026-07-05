@@ -1,0 +1,79 @@
+\doxysection{Custom\+Platform.\+h}
+\hypertarget{_custom_platform_8h_source}{}\label{_custom_platform_8h_source}\index{MonoEngine/thirdparty/tracy/examples/CustomPlatform/CustomPlatform.h@{MonoEngine/thirdparty/tracy/examples/CustomPlatform/CustomPlatform.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Template\ platform\ header\ for\ unsupported\ targets.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copy\ into\ your\ project,\ fill\ in\ the\ sections\ you\ need,\ and\ point\ Tracy\ at}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ it\ via\ -\/DTRACY\_PLATFORM\_HEADER="{}\(\backslash\)"{}my\_platform.h\(\backslash\)"{}"{}.\ Provide\ the}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ implementations\ in\ any\ TU\ linked\ into\ your\ final\ binary\ (see}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ CustomPlatform.cpp).}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Use\ this\ only\ for\ the\ TRACY\_HAS\_CUSTOM\_*\ hooks\ and\ matching\ Platform*}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ declarations\ —\ don't\ set\ unrelated\ TRACY\_*\ options\ here.\ Some\ are\ checked}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ before\ this\ header\ is\ included,\ so\ the\ result\ would\ depend\ on\ which\ TU}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ consulted\ them;\ set\ those\ at\ the\ build\ system\ level\ instead.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ For\ platform-\/specific\ features\ without\ a\ custom\ hook\ (call\ stacks,}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ context\ switches,\ crash\ handling,\ system\ tracing,\ etc.),\ disable\ them\ at}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ the\ build\ system\ level\ with\ the\ matching\ TRACY\_NO\_*\ macro.}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#ifndef\ \_\_MY\_TRACY\_PLATFORM\_H\_\_}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ \_\_MY\_TRACY\_PLATFORM\_H\_\_}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ -\/-\/-\/\ Thread\ id\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Required\ if\ defaults\ in\ TracySystem.cpp\ \ do\ not\ matches\ your\ platform.}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Note\ pthread\_self()\ is\ NOT\ suitable,\ it\ returns\ a\ library\ handle,\ not\ a\ kernel\ id.}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\#define\ TRACY\_HAS\_CUSTOM\_THREAD\_ID}}
+\DoxyCodeLine{00031\ uint32\_t\ PlatformGetThreadId();}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ -\/-\/-\/\ User\ info\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ Identifies\ the\ machine\ and\ user\ in\ the\ trace\ header.\ Return\ placeholder}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ strings\ (e.g.\ "{}(?)"{})\ from\ any\ of\ these\ if\ your\ platform\ has\ no\ equivalent}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ notion.}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\#define\ TRACY\_HAS\_CUSTOM\_USER\_INFO}}
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ PlatformGetHostname(\ \textcolor{keywordtype}{char}*\ buf,\ \textcolor{keywordtype}{size\_t}\ size\ );}
+\DoxyCodeLine{00041\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ PlatformGetUserLogin();}
+\DoxyCodeLine{00042\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ PlatformGetUserFullName();}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ -\/-\/-\/\ Safe\ memory\ copy\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ Tracy\ uses\ this\ to\ snapshot\ potentially-\/unmapped\ memory\ during\ sampling.}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ Must\ not\ crash\ on\ unreadable\ input\ —\ return\ false\ instead.\ Plain\ memcpy()}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ is\ NOT\ a\ valid\ implementation.}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//\#define\ TRACY\_HAS\_CUSTOM\_SAFE\_COPY}}
+\DoxyCodeLine{00051\ \textcolor{keywordtype}{bool}\ PlatformSafeMemcpy(\ \textcolor{keywordtype}{void}*\ dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ src,\ \textcolor{keywordtype}{size\_t}\ size\ );}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ -\/-\/-\/\ Allocator\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00055\ \textcolor{comment}{//}}
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ Replaces\ Tracy's\ internal\ allocator.\ Drop\ in\ the\ system\ allocator,\ an}}
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ in-\/house\ one,\ or\ any\ third-\/party\ allocator\ you\ like.\ Malloc/Free/Realloc}}
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ must\ be\ thread-\/safe;\ ThreadInit\ is\ an\ optional\ prime,\ not\ a\ precondition.}}
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ Finalize\ must\ also\ tear\ down\ the\ calling\ thread's\ per-\/thread\ state,\ the}}
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ way\ rpmalloc\_finalize()\ does\ —\ Tracy\ does\ not\ call\ ThreadFinalize\ for\ the}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ shutdown\ thread\ before\ Finalize.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\#define\ TRACY\_HAS\_CUSTOM\_ALLOCATOR}}
+\DoxyCodeLine{00063\ \textcolor{keywordtype}{void}*\ PlatformMalloc(\ \textcolor{keywordtype}{size\_t}\ size\ );}
+\DoxyCodeLine{00064\ \textcolor{keywordtype}{void}\ \ PlatformFree(\ \textcolor{keywordtype}{void}*\ ptr\ );}
+\DoxyCodeLine{00065\ \textcolor{keywordtype}{void}*\ PlatformRealloc(\ \textcolor{keywordtype}{void}*\ ptr,\ \textcolor{keywordtype}{size\_t}\ size\ );}
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{void}\ \ PlatformAllocatorInit();}
+\DoxyCodeLine{00067\ \textcolor{keywordtype}{void}\ \ PlatformAllocatorThreadInit();}
+\DoxyCodeLine{00068\ \textcolor{keywordtype}{void}\ \ PlatformAllocatorFinalize();}
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{void}\ \ PlatformAllocatorThreadFinalize();}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

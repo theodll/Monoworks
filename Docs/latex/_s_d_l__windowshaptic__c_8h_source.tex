@@ -1,0 +1,93 @@
+\doxysection{SDL\+\_\+windowshaptic\+\_\+c.\+h}
+\hypertarget{_s_d_l__windowshaptic__c_8h_source}{}\label{_s_d_l__windowshaptic__c_8h_source}\index{MonoRuntime/extern/sdl/src/haptic/windows/SDL\_windowshaptic\_c.h@{MonoRuntime/extern/sdl/src/haptic/windows/SDL\_windowshaptic\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_windowshaptic\_c\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_windowshaptic\_c\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../SDL\_syshaptic.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../../core/windows/SDL\_directx.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../../core/windows/SDL\_xinput.h"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ *\ Haptic\ system\ hardware\ data.}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00038\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhaptic__hwdata}{haptic\_hwdata}}}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#ifdef\ SDL\_HAPTIC\_DINPUT}}
+\DoxyCodeLine{00041\ \ \ \ \ LPDIRECTINPUTDEVICE8\ device;}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ \ \ \ \ DWORD\ axes[3];\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Axes\ to\ use.}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_joystick;\ \textcolor{comment}{//\ Device\ is\ loaded\ as\ joystick.}}
+\DoxyCodeLine{00045\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___thread}{SDL\_Thread}}\ *thread;}
+\DoxyCodeLine{00046\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *mutex;}
+\DoxyCodeLine{00047\ \ \ \ \ Uint64\ stopTicks;}
+\DoxyCodeLine{00048\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ stopThread;}
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ *\ Haptic\ system\ effect\ data.}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#ifdef\ SDL\_HAPTIC\_DINPUT}}
+\DoxyCodeLine{00055\ \textcolor{keyword}{struct\ }haptic\_hweffect}
+\DoxyCodeLine{00056\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ DIEFFECT\ effect;}
+\DoxyCodeLine{00058\ \ \ \ \ LPDIRECTINPUTEFFECT\ ref;}
+\DoxyCodeLine{00059\ \};}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ *\ List\ of\ available\ haptic\ devices.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l__hapticlist__item}{SDL\_hapticlist\_item}}}
+\DoxyCodeLine{00066\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ SDL\_HapticID\ instance\_id;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic;}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#ifdef\ SDL\_HAPTIC\_DINPUT}}
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{struct_d_i_d_e_v_i_c_e_i_n_s_t_a_n_c_e}{DIDEVICEINSTANCE}}\ instance;}
+\DoxyCodeLine{00072\ \ \ \ \ DIDEVCAPS\ capabilities;}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l__hapticlist__item}{SDL\_hapticlist\_item}}\ *next;}
+\DoxyCodeLine{00075\ \}\ \doxymbox{\hyperlink{struct_s_d_l__hapticlist__item}{SDL\_hapticlist\_item}};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l__hapticlist__item}{SDL\_hapticlist\_item}}\ *SDL\_hapticlist;}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_AddHapticDevice(\doxymbox{\hyperlink{struct_s_d_l__hapticlist__item}{SDL\_hapticlist\_item}}\ *item);}
+\DoxyCodeLine{00080\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_RemoveHapticDevice(\doxymbox{\hyperlink{struct_s_d_l__hapticlist__item}{SDL\_hapticlist\_item}}\ *prev,\ \doxymbox{\hyperlink{struct_s_d_l__hapticlist__item}{SDL\_hapticlist\_item}}\ *item);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{//\ Ends\ C\ function\ definitions\ when\ using\ C++}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00084\ \}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_windowshaptic\_c\_h\_}}
+
+\end{DoxyCode}

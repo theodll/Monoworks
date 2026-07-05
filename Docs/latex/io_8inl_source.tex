@@ -1,0 +1,458 @@
+\doxysection{io.\+inl}
+\hypertarget{io_8inl_source}{}\label{io_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/io.inl@{MonoEngine/thirdparty/glm/glm/gtx/io.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <iomanip>}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::fixed,\ std::setfill<>,\ std::setprecision,\ std::right,\ std::setw}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <ostream>}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::basic\_ostream<>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{matrix__access_8hpp}{../gtc/matrix\_access.hpp}}"{}}\ \textcolor{comment}{//\ glm::col,\ glm::row}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{type__trait_8hpp}{../gtx/type\_trait.hpp}}"{}}\ \ \ \ \textcolor{comment}{//\ glm::type<>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ \ pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ \ pragma\ clang\ diagnostic\ ignored\ "{}-\/Wpadded"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ \ pragma\ clang\ diagnostic\ ignored\ "{}-\/Wshorten-\/64-\/to-\/32"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ \ pragma\ clang\ diagnostic\ ignored\ "{}-\/Wglobal-\/constructors"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }io}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy>}
+\DoxyCodeLine{00020\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ format\_punct<CTy>::format\_punct(\textcolor{keywordtype}{size\_t}\ a)}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ :\ std::locale::facet(a)}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ ,\ formatted(true)}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ ,\ \doxymbox{\hyperlink{structglm_1_1io_1_1precision}{precision}}(3)}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ ,\ \doxymbox{\hyperlink{structglm_1_1io_1_1width}{width}}(1\ +\ 4\ +\ 1\ +\ \doxymbox{\hyperlink{structglm_1_1io_1_1precision}{precision}})}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ ,\ separator(\textcolor{stringliteral}{','})}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ ,\ delim\_left(\textcolor{stringliteral}{'['})}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ ,\ delim\_right(\textcolor{stringliteral}{']'})}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ ,\ space(\textcolor{stringliteral}{'\ '})}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ ,\ newline(\textcolor{stringliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ ,\ \doxymbox{\hyperlink{structglm_1_1io_1_1order}{order}}(column\_major)}
+\DoxyCodeLine{00031\ \ \ \ \ \{\}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy>}
+\DoxyCodeLine{00034\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ format\_punct<CTy>::format\_punct(format\_punct\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ :\ std::locale::facet(0)}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ ,\ formatted(a.formatted)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ ,\ precision(a.precision)}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ ,\ width(a.width)}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ ,\ separator(a.separator)}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ ,\ delim\_left(a.delim\_left)}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ ,\ delim\_right(a.delim\_right)}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ ,\ space(a.space)}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ ,\ newline(a.newline)}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ ,\ order(a.order)}
+\DoxyCodeLine{00045\ \ \ \ \ \{\}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy>\ std::locale::id\ format\_punct<CTy>::id;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00050\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ basic\_state\_saver<CTy,\ CTr>::basic\_state\_saver(std::basic\_ios<CTy,\ CTr>\&\ a)}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ :\ state\_(a)}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ ,\ flags\_(a.flags())}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ ,\ precision\_(a.precision())}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ ,\ width\_(a.width())}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ ,\ fill\_(a.fill())}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ ,\ locale\_(a.getloc())}
+\DoxyCodeLine{00057\ \ \ \ \ \{\}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00060\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ basic\_state\_saver<CTy,\ CTr>::\string~basic\_state\_saver()}
+\DoxyCodeLine{00061\ \ \ \ \ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ state\_.imbue(locale\_);}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ state\_.fill(fill\_);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ state\_.width(width\_);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ state\_.precision(precision\_);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ state\_.flags(flags\_);}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00070\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ basic\_format\_saver<CTy,\ CTr>::basic\_format\_saver(std::basic\_ios<CTy,\ CTr>\&\ a)}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ :\ bss\_(a)}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ a.imbue(std::locale(a.getloc(),\ \textcolor{keyword}{new}\ format\_punct<CTy>(get\_facet<format\_punct<CTy>\ >(a))));}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00077\ \ \ \ \ GLM\_FUNC\_QUALIFIER}
+\DoxyCodeLine{00078\ \ \ \ \ basic\_format\_saver<CTy,\ CTr>::\string~basic\_format\_saver()}
+\DoxyCodeLine{00079\ \ \ \ \ \{\}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ precision::precision(\textcolor{keywordtype}{unsigned}\ a)}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ :\ value(a)}
+\DoxyCodeLine{00083\ \ \ \ \ \{\}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ width::width(\textcolor{keywordtype}{unsigned}\ a)}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ :\ value(a)}
+\DoxyCodeLine{00087\ \ \ \ \ \{\}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy>}
+\DoxyCodeLine{00090\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ delimeter<CTy>::delimeter(CTy\ a,\ CTy\ b,\ CTy\ c)}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ :\ value()}
+\DoxyCodeLine{00092\ \ \ \ \ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ value[0]\ =\ a;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ value[1]\ =\ b;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ value[2]\ =\ c;}
+\DoxyCodeLine{00096\ \ \ \ \ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ order::order(order\_type\ a)}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ :\ value(a)}
+\DoxyCodeLine{00100\ \ \ \ \ \{\}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ FTy,\ \textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00103\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ FTy\ \textcolor{keyword}{const}\&\ get\_facet(std::basic\_ios<CTy,\ CTr>\&\ ios)}
+\DoxyCodeLine{00104\ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!std::has\_facet<FTy>(ios.getloc()))}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ ios.imbue(std::locale(ios.getloc(),\ \textcolor{keyword}{new}\ FTy));}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::use\_facet<FTy>(ios.getloc());}
+\DoxyCodeLine{00109\ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00112\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ios<CTy,\ CTr>\&\ formatted(std::basic\_ios<CTy,\ CTr>\&\ ios)}
+\DoxyCodeLine{00113\ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const\_cast<}format\_punct<CTy>\&\textcolor{keyword}{>}(get\_facet<format\_punct<CTy>\ >(ios)).formatted\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ios;}
+\DoxyCodeLine{00116\ \ \ \ \ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00119\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ios<CTy,\ CTr>\&\ unformatted(std::basic\_ios<CTy,\ CTr>\&\ ios)}
+\DoxyCodeLine{00120\ \ \ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const\_cast<}format\_punct<CTy>\&\textcolor{keyword}{>}(get\_facet<format\_punct<CTy>\ >(ios)).formatted\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ios;}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00126\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,\ CTr>\&\ operator<<(std::basic\_ostream<CTy,\ CTr>\&\ os,\ precision\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00127\ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const\_cast<}format\_punct<CTy>\&\textcolor{keyword}{>}(get\_facet<format\_punct<CTy>\ >(os)).precision\ =\ a.value;}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00130\ \ \ \ \ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00133\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,\ CTr>\&\ operator<<(std::basic\_ostream<CTy,\ CTr>\&\ os,\ width\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00134\ \ \ \ \ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const\_cast<}format\_punct<CTy>\&\textcolor{keyword}{>}(get\_facet<format\_punct<CTy>\ >(os)).width\ =\ a.value;}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00140\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \ std::basic\_ostream<CTy,\ CTr>\&\ operator<<(std::basic\_ostream<CTy,\ CTr>\&\ os,\ delimeter<CTy>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00141\ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ format\_punct<CTy>\ \&\ fmt(\textcolor{keyword}{const\_cast<}format\_punct<CTy>\&\textcolor{keyword}{>}(get\_facet<format\_punct<CTy>\ >(os)));}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ fmt.delim\_left\ \ =\ a.value[0];}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ fmt.delim\_right\ =\ a.value[1];}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ fmt.separator\ \ \ =\ a.value[2];}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00149\ \ \ \ \ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr>}
+\DoxyCodeLine{00152\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,\ CTr>\&\ operator<<(std::basic\_ostream<CTy,\ CTr>\&\ os,\ order\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00153\ \ \ \ \ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const\_cast<}format\_punct<CTy>\&\textcolor{keyword}{>}(get\_facet<format\_punct<CTy>\ >(os)).order\ =\ a.value;}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00156\ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \}\ \textcolor{comment}{//\ namespace\ io}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedetail}{detail}}}
+\DoxyCodeLine{00160\ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ V>}
+\DoxyCodeLine{00162\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,\ CTr>\&}
+\DoxyCodeLine{00163\ \ \ \ \ print\_vector\_on(std::basic\_ostream<CTy,\ CTr>\&\ os,\ V\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00164\ \ \ \ \ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::basic\_ostream<CTy,\ CTr>::sentry\ \textcolor{keyword}{const}\ cerberus(os);}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cerberus)}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ io::format\_punct<CTy>\ \textcolor{keyword}{const}\&\ fmt(io::get\_facet<io::format\_punct<CTy>\ >(os));}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ length\_t\ \textcolor{keyword}{const}\&\ components(type<V>::components);}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fmt.formatted)}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ io::basic\_state\_saver<CTy>\ \textcolor{keyword}{const}\ bss(os);}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ std::fixed\ <<\ std::right\ <<\ std::setprecision(static\_cast<std::streamsize>(fmt.precision))\ <<\ std::setfill(fmt.space)\ <<\ fmt.delim\_left;}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i(0);\ i\ <\ components;\ ++i)}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ std::setw(static\_cast<int>(fmt.width))\ <<\ a[i];}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(components-\/1\ !=\ i)}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.separator;}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.delim\_right;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i(0);\ i\ <\ components;\ ++i)}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ a[i];}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(components-\/1\ !=\ i)}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.space;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00201\ \ \ \ \ \}}
+\DoxyCodeLine{00202\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00205\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ qua<T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00206\ \ \ \ \ \{}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_vector\_on(os,\ a);}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00211\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00212\ \ \ \ \ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_vector\_on(os,\ a);}
+\DoxyCodeLine{00214\ \ \ \ \ \}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00217\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ vec<2,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00218\ \ \ \ \ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_vector\_on(os,\ a);}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00223\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ vec<3,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00224\ \ \ \ \ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_vector\_on(os,\ a);}
+\DoxyCodeLine{00226\ \ \ \ \ \}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00229\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00230\ \ \ \ \ \{}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_vector\_on(os,\ a);}
+\DoxyCodeLine{00232\ \ \ \ \ \}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedetail}{detail}}}
+\DoxyCodeLine{00235\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{template}<length\_t,\ length\_t,\ \textcolor{keyword}{typename},\ qualifier>\ \textcolor{keyword}{class\ }M,\ length\_t\ C,\ length\_t\ R,\ \textcolor{keyword}{typename}\ T,\ \doxymbox{\hyperlink{namespaceglm_a36ed105b07c7746804d7fdc7cc90ff25}{qualifier}}\ Q>}
+\DoxyCodeLine{00237\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,\ CTr>\&\ print\_matrix\_on(std::basic\_ostream<CTy,\ CTr>\&\ os,\ M<C,\ R,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00238\ \ \ \ \ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::basic\_ostream<CTy,CTr>::sentry\ \textcolor{keyword}{const}\ cerberus(os);}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cerberus)}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ io::format\_punct<CTy>\ \textcolor{keyword}{const}\&\ fmt(io::get\_facet<io::format\_punct<CTy>\ >(os));}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ length\_t\ \textcolor{keyword}{const}\&\ cols(type<M<C,\ R,\ T,\ Q>\ >::cols);}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ length\_t\ \textcolor{keyword}{const}\&\ rows(type<M<C,\ R,\ T,\ Q>\ >::rows);}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fmt.formatted)}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.newline\ <<\ fmt.delim\_left;}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(fmt.order)}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ io::column\_major:}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i(0);\ i\ <\ rows;\ ++i)}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (0\ !=\ i)}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.space;}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ row(a,\ i);}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(rows-\/1\ !=\ i)}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.newline;}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ io::row\_major:}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i(0);\ i\ <\ cols;\ ++i)}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(0\ !=\ i)}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.space;}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ column(a,\ i);}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cols-\/1\ !=\ i)}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.newline;}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.delim\_right;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (fmt.order)}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ io::column\_major:}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i(0);\ i\ <\ cols;\ ++i)}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ column(a,\ i);}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cols\ -\/\ 1\ !=\ i)}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.space;}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ io::row\_major:}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (length\_t\ i(0);\ i\ <\ rows;\ ++i)}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ row(a,\ i);}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rows-\/1\ !=\ i)}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.space;}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00319\ \ \ \ \ \}}
+\DoxyCodeLine{00320\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00323\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<2,\ 2,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00324\ \ \ \ \ \{}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00326\ \ \ \ \ \}}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00329\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<2,\ 3,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00330\ \ \ \ \ \{}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00332\ \ \ \ \ \}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00335\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<2,\ 4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00336\ \ \ \ \ \{}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00338\ \ \ \ \ \}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00341\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<3,\ 2,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00342\ \ \ \ \ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00344\ \ \ \ \ \}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00347\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<3,\ 3,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00348\ \ \ \ \ \{}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00350\ \ \ \ \ \}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00353\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\ \&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<3,\ 4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00354\ \ \ \ \ \{}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00356\ \ \ \ \ \}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00359\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\ \&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<4,\ 2,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00360\ \ \ \ \ \{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00365\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\ \&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<4,\ 3,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00366\ \ \ \ \ \{}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00368\ \ \ \ \ \}}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00371\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,CTr>\ \&\ operator<<(std::basic\_ostream<CTy,CTr>\&\ os,\ mat<4,\ 4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00372\ \ \ \ \ \{}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_on(os,\ a);}
+\DoxyCodeLine{00374\ \ \ \ \ \}}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedetail}{detail}}}
+\DoxyCodeLine{00377\ \{}
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{template}<length\_t,\ length\_t,\ \textcolor{keyword}{typename},\ qualifier>\ \textcolor{keyword}{class\ }M,\ length\_t\ C,\ length\_t\ R,\ \textcolor{keyword}{typename}\ T,\ \doxymbox{\hyperlink{namespaceglm_a36ed105b07c7746804d7fdc7cc90ff25}{qualifier}}\ Q>}
+\DoxyCodeLine{00379\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,\ CTr>\&\ print\_matrix\_pair\_on(std::basic\_ostream<CTy,\ CTr>\&\ os,\ std::pair<M<C,\ R,\ T,\ Q>\ \textcolor{keyword}{const},\ M<C,\ R,\ T,\ Q>\ \textcolor{keyword}{const}>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00380\ \ \ \ \ \{}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ std::basic\_ostream<CTy,CTr>::sentry\ \textcolor{keyword}{const}\ cerberus(os);}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cerberus)}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ io::format\_punct<CTy>\ \textcolor{keyword}{const}\&\ fmt(io::get\_facet<io::format\_punct<CTy>\ >(os));}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ M<C,\ R,\ T,\ Q>\ \textcolor{keyword}{const}\&\ ml(a.first);}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ M<C,\ R,\ T,\ Q>\ \textcolor{keyword}{const}\&\ mr(a.second);}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ length\_t\ \textcolor{keyword}{const}\&\ cols(type<M<C,\ R,\ T,\ Q>\ >::cols);}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ length\_t\ \textcolor{keyword}{const}\&\ rows(type<M<C,\ R,\ T,\ Q>\ >::rows);}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fmt.formatted)}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.newline\ <<\ fmt.delim\_left;}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}(fmt.order)}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ io::column\_major:}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i(0);\ i\ <\ rows;\ ++i)}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(0\ !=\ i)}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.space;}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ row(ml,\ i)\ <<\ ((rows-\/1\ !=\ i)\ ?\ fmt.space\ :\ fmt.delim\_right)\ <<\ fmt.space\ <<\ ((0\ !=\ i)\ ?\ fmt.space\ :\ fmt.delim\_left)\ <<\ row(mr,\ i);}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(rows-\/1\ !=\ i)}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.newline;}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ io::row\_major:}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ i(0);\ i\ <\ cols;\ ++i)}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(0\ !=\ i)}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.space;}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ column(ml,\ i)\ <<\ ((cols-\/1\ !=\ i)\ ?\ fmt.space\ :\ fmt.delim\_right)\ <<\ fmt.space\ <<\ ((0\ !=\ i)\ ?\ fmt.space\ :\ fmt.delim\_left)\ <<\ column(mr,\ i);}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cols-\/1\ !=\ i)}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.newline;}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ fmt.delim\_right;}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ ml\ <<\ fmt.space\ <<\ mr;}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00437\ \ \ \ \ \}}
+\DoxyCodeLine{00438\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ CTy,\ \textcolor{keyword}{typename}\ CTr,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00441\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ std::basic\_ostream<CTy,\ CTr>\&\ operator<<(}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ std::basic\_ostream<CTy,\ CTr>\ \&\ os,}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ std::pair<mat<4,\ 4,\ T,\ Q>\ \textcolor{keyword}{const},}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ mat<4,\ 4,\ T,\ Q>\ \textcolor{keyword}{const}>\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00445\ \ \ \ \ \{}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::print\_matrix\_pair\_on(os,\ a);}
+\DoxyCodeLine{00447\ \ \ \ \ \}}
+\DoxyCodeLine{00448\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#if\ GLM\_COMPILER\ \&\ GLM\_COMPILER\_CLANG}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#\ \ \ pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00453\ }
+
+\end{DoxyCode}

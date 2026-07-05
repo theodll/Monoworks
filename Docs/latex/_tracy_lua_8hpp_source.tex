@@ -1,0 +1,500 @@
+\doxysection{Tracy\+Lua.\+hpp}
+\hypertarget{_tracy_lua_8hpp_source}{}\label{_tracy_lua_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/tracy/TracyLua.hpp@{MonoEngine/thirdparty/tracy/public/tracy/TracyLua.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYLUA\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYLUA\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Include\ this\ file\ after\ you\ include\ lua\ headers.}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ noop(\ lua\_State*\ L\ )\ \{\ \textcolor{keywordflow}{return}\ 0;\ \}}
+\DoxyCodeLine{00016\ \}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ LuaRegister(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ lua\_newtable(\ L\ );}
+\DoxyCodeLine{00021\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00022\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBegin"{}}\ );}
+\DoxyCodeLine{00023\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00024\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginN"{}}\ );}
+\DoxyCodeLine{00025\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00026\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginS"{}}\ );}
+\DoxyCodeLine{00027\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00028\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginNS"{}}\ );}
+\DoxyCodeLine{00029\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00030\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneEnd"{}}\ );}
+\DoxyCodeLine{00031\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00032\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneText"{}}\ );}
+\DoxyCodeLine{00033\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00034\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneName"{}}\ );}
+\DoxyCodeLine{00035\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::noop\ );}
+\DoxyCodeLine{00036\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}Message"{}}\ );}
+\DoxyCodeLine{00037\ \ \ \ \ lua\_setglobal(\ L,\ \textcolor{stringliteral}{"{}tracy"{}}\ );}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{char}*\ FindEnd(\ \textcolor{keywordtype}{char}*\ ptr\ )}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ cnt\ =\ 1;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{while}(\ cnt\ !=\ 0\ )}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ *ptr\ ==\ \textcolor{charliteral}{'('}\ )\ cnt++;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ *ptr\ ==\ \textcolor{charliteral}{')'}\ )\ cnt-\/-\/;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ ptr++;}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{return}\ ptr;}
+\DoxyCodeLine{00050\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ LuaRemove(\ \textcolor{keywordtype}{char}*\ script\ )}
+\DoxyCodeLine{00053\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{while}(\ *script\ )}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ strncmp(\ script,\ \textcolor{stringliteral}{"{}tracy."{}},\ 6\ )\ ==\ 0\ )}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 6,\ \textcolor{stringliteral}{"{}Zone"{}},\ 4\ )\ ==\ 0\ )}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 10,\ \textcolor{stringliteral}{"{}End()"{}},\ 5\ )\ ==\ 0\ )}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ 15\ );}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ +=\ 15;}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 10,\ \textcolor{stringliteral}{"{}Begin()"{}},\ 7\ )\ ==\ 0\ )}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ 17\ );}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ +=\ 17;}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 10,\ \textcolor{stringliteral}{"{}Text("{}},\ 5\ )\ ==\ 0\ )}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ FindEnd(\ script\ +\ 15\ );}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ end\ -\/\ script\ );}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ =\ end;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 10,\ \textcolor{stringliteral}{"{}Name("{}},\ 5\ )\ ==\ 0\ )}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ FindEnd(\ script\ +\ 15\ );}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ end\ -\/\ script\ );}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ =\ end;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 10,\ \textcolor{stringliteral}{"{}BeginN("{}},\ 7\ )\ ==\ 0\ )}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ FindEnd(\ script\ +\ 17\ );}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ end\ -\/\ script\ );}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ =\ end;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 10,\ \textcolor{stringliteral}{"{}BeginS("{}},\ 7\ )\ ==\ 0\ )}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ FindEnd(\ script\ +\ 17\ );}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ end\ -\/\ script\ );}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ =\ end;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 10,\ \textcolor{stringliteral}{"{}BeginNS("{}},\ 8\ )\ ==\ 0\ )}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ FindEnd(\ script\ +\ 18\ );}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ end\ -\/\ script\ );}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ =\ end;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ +=\ 10;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ strncmp(\ script\ +\ 6,\ \textcolor{stringliteral}{"{}Message("{}},\ 8\ )\ ==\ 0\ )}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ end\ =\ FindEnd(\ script\ +\ 14\ );}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ script,\ \textcolor{charliteral}{'\ '},\ end\ -\/\ script\ );}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ =\ end;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ script\ +=\ 6;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ script++;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00120\ \ \ \ \ \}}
+\DoxyCodeLine{00121\ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ LuaHook(\ lua\_State*\ L,\ lua\_Debug*\ ar\ )\ \{\}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#include\ "{}../common/TracyColor.hpp"{}}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlign.hpp"{}}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#include\ "{}../common/TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#include\ "{}../common/TracySystem.hpp"{}}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#include\ "{}../client/TracyProfiler.hpp"{}}}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00139\ \{}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00142\ TRACY\_API\ LuaZoneState\&\ GetLuaZoneState();}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00146\ \{}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ LuaShortenSrc(\ \textcolor{keywordtype}{char}*\ dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ src\ )}
+\DoxyCodeLine{00149\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ l\ =\ std::min(\ (\textcolor{keywordtype}{size\_t})255,\ strlen(\ src\ )\ );}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordflow}{for}(\ \textcolor{keywordtype}{size\_t}\ i=0;\ i<l;\ i++\ )}
+\DoxyCodeLine{00152\ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ src[i]\ ==\ \textcolor{charliteral}{'\(\backslash\)n'}\ )\ dst[i]\ =\ \textcolor{charliteral}{'\ '};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ dst[i]\ =\ src[i];}
+\DoxyCodeLine{00155\ \ \ \ \ \}}
+\DoxyCodeLine{00156\ \ \ \ \ dst[l]\ =\ 0;}
+\DoxyCodeLine{00157\ \}}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#ifdef\ TRACY\_HAS\_CALLSTACK}}
+\DoxyCodeLine{00160\ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ SendLuaCallstack(\ lua\_State*\ L,\ uint32\_t\ depth\ )}
+\DoxyCodeLine{00161\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ assert(\ depth\ <=\ 64\ );}
+\DoxyCodeLine{00163\ \ \ \ \ lua\_Debug\ dbg[64];}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ func[64];}
+\DoxyCodeLine{00165\ \ \ \ \ uint32\_t\ fsz[64];}
+\DoxyCodeLine{00166\ \ \ \ \ uint32\_t\ ssz[64];}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ uint8\_t\ cnt;}
+\DoxyCodeLine{00169\ \ \ \ \ uint16\_t\ spaceNeeded\ =\ \textcolor{keyword}{sizeof}(\ cnt\ );}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordflow}{for}(\ cnt=0;\ cnt<depth;\ cnt++\ )}
+\DoxyCodeLine{00171\ \ \ \ \ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ lua\_getstack(\ L,\ cnt+1,\ dbg+cnt\ )\ ==\ 0\ )\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ lua\_getinfo(\ L,\ \textcolor{stringliteral}{"{}Snl"{}},\ dbg+cnt\ );}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ func[cnt]\ =\ dbg[cnt].name\ ?\ dbg[cnt].name\ :\ dbg[cnt].short\_src;}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ fsz[cnt]\ =\ uint32\_t(\ strlen(\ func[cnt]\ )\ );}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ ssz[cnt]\ =\ uint32\_t(\ strlen(\ dbg[cnt].source\ )\ );}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ spaceNeeded\ +=\ fsz[cnt]\ +\ ssz[cnt];}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \ \ \ \ spaceNeeded\ +=\ cnt\ *\ (\ 4\ +\ 2\ +\ 2\ );\ \ \ \ \ \textcolor{comment}{//\ source\ line,\ function\ string\ length,\ source\ string\ length}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ spaceNeeded\ +\ 2\ );}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{auto}\ dst\ =\ ptr;}
+\DoxyCodeLine{00183\ \ \ \ \ memcpy(\ dst,\ \&spaceNeeded,\ 2\ );\ dst\ +=\ 2;}
+\DoxyCodeLine{00184\ \ \ \ \ memcpy(\ dst,\ \&cnt,\ 1\ );\ dst++;}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordflow}{for}(\ uint8\_t\ i=0;\ i<cnt;\ i++\ )}
+\DoxyCodeLine{00186\ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ line\ =\ dbg[i].currentline;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ memcpy(\ dst,\ \&line,\ 4\ );\ dst\ +=\ 4;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ assert(\ fsz[i]\ <=\ (std::numeric\_limits<uint16\_t>::max)()\ );}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ memcpy(\ dst,\ fsz+i,\ 2\ );\ dst\ +=\ 2;}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ memcpy(\ dst,\ func[i],\ fsz[i]\ );\ dst\ +=\ fsz[i];}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ assert(\ ssz[i]\ <=\ (std::numeric\_limits<uint16\_t>::max)()\ );}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ memcpy(\ dst,\ ssz+i,\ 2\ );\ dst\ +=\ 2;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ memcpy(\ dst,\ dbg[i].source,\ ssz[i]\ ),\ dst\ +=\ ssz[i];}
+\DoxyCodeLine{00195\ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \ \ assert(\ dst\ -\/\ ptr\ ==\ spaceNeeded\ +\ 2\ );}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ TracyQueuePrepare(\ QueueType::CallstackAlloc\ );}
+\DoxyCodeLine{00199\ \ \ \ \ MemWrite(\ \&item-\/>callstackAllocFat.ptr,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00200\ \ \ \ \ MemWrite(\ \&item-\/>callstackAllocFat.nativePtr,\ (uint64\_t)Callstack(\ depth\ )\ );}
+\DoxyCodeLine{00201\ \ \ \ \ TracyQueueCommit(\ callstackAllocFatThread\ );}
+\DoxyCodeLine{00202\ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaZoneBeginS(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00205\ \{}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ zoneCnt\ =\ GetLuaZoneState().counter++;}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordflow}{if}(\ zoneCnt\ !=\ 0\ \&\&\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00209\ \ \ \ \ GetLuaZoneState().active\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_CALLSTACK\ \&\&\ TRACY\_CALLSTACK\ >\ 0}}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ depth\ =\ TRACY\_CALLSTACK;}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ depth\ =\ uint32\_t(\ lua\_tointeger(\ L,\ 1\ )\ );}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00218\ \ \ \ \ assert(\ depth\ >\ 0\ );\ \textcolor{comment}{//\ Would\ crash\ later\ anyway,\ this\ is\ not\ allowed}}
+\DoxyCodeLine{00219\ \ \ \ \ SendLuaCallstack(\ L,\ depth\ );}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ lua\_Debug\ dbg;}
+\DoxyCodeLine{00222\ \ \ \ \ lua\_getstack(\ L,\ 1,\ \&dbg\ );}
+\DoxyCodeLine{00223\ \ \ \ \ lua\_getinfo(\ L,\ \textcolor{stringliteral}{"{}Snl"{}},\ \&dbg\ );}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keywordtype}{char}\ src[256];}
+\DoxyCodeLine{00225\ \ \ \ \ LuaShortenSrc(\ src,\ dbg.source\ );}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ dbg.currentline,\ src,\ dbg.name\ ?\ dbg.name\ :\ dbg.short\_src\ );}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneBeginAllocSrcLocCallstack\ );}
+\DoxyCodeLine{00229\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00230\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.srcloc,\ srcloc\ );}
+\DoxyCodeLine{00231\ \ \ \ \ TracyQueueCommit(\ zoneBeginThread\ );}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00234\ \}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaZoneBeginNS(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00237\ \{}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ zoneCnt\ =\ GetLuaZoneState().counter++;}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keywordflow}{if}(\ zoneCnt\ !=\ 0\ \&\&\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00241\ \ \ \ \ GetLuaZoneState().active\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_CALLSTACK\ \&\&\ TRACY\_CALLSTACK\ >\ 0}}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ depth\ =\ TRACY\_CALLSTACK;}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ depth\ =\ uint32\_t(\ lua\_tointeger(\ L,\ 2\ )\ );}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00250\ \ \ \ \ assert(\ depth\ >\ 0\ );\ \textcolor{comment}{//\ Would\ crash\ later\ anyway,\ this\ is\ not\ allowed}}
+\DoxyCodeLine{00251\ \ \ \ \ SendLuaCallstack(\ L,\ depth\ );}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \ \ \ \ lua\_Debug\ dbg;}
+\DoxyCodeLine{00254\ \ \ \ \ lua\_getstack(\ L,\ 1,\ \&dbg\ );}
+\DoxyCodeLine{00255\ \ \ \ \ lua\_getinfo(\ L,\ \textcolor{stringliteral}{"{}Snl"{}},\ \&dbg\ );}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nsz;}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keywordtype}{char}\ src[256];}
+\DoxyCodeLine{00258\ \ \ \ \ LuaShortenSrc(\ src,\ dbg.source\ );}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ name\ =\ lua\_tolstring(\ L,\ 1,\ \&nsz\ );}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ dbg.currentline,\ src,\ dbg.name\ ?\ dbg.name\ :\ dbg.short\_src,\ name,\ nsz\ );}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneBeginAllocSrcLocCallstack\ );}
+\DoxyCodeLine{00263\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00264\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.srcloc,\ srcloc\ );}
+\DoxyCodeLine{00265\ \ \ \ \ TracyQueueCommit(\ zoneBeginThread\ );}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00268\ \}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaZoneBegin(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00272\ \{}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CALLSTACK\ \&\&\ defined\ TRACY\_CALLSTACK\ \&\&\ TRACY\_CALLSTACK\ >\ 0}}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{keywordflow}{return}\ LuaZoneBeginS(\ L\ );}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ zoneCnt\ =\ GetLuaZoneState().counter++;}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keywordflow}{if}(\ zoneCnt\ !=\ 0\ \&\&\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00279\ \ \ \ \ GetLuaZoneState().active\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ lua\_Debug\ dbg;}
+\DoxyCodeLine{00284\ \ \ \ \ lua\_getstack(\ L,\ 1,\ \&dbg\ );}
+\DoxyCodeLine{00285\ \ \ \ \ lua\_getinfo(\ L,\ \textcolor{stringliteral}{"{}Snl"{}},\ \&dbg\ );}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordtype}{char}\ src[256];}
+\DoxyCodeLine{00287\ \ \ \ \ LuaShortenSrc(\ src,\ dbg.source\ );}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ dbg.currentline,\ src,\ dbg.name\ ?\ dbg.name\ :\ dbg.short\_src\ );}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneBeginAllocSrcLoc\ );}
+\DoxyCodeLine{00291\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00292\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.srcloc,\ srcloc\ );}
+\DoxyCodeLine{00293\ \ \ \ \ TracyQueueCommit(\ zoneBeginThread\ );}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00296\ \}}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaZoneBeginN(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00299\ \{}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CALLSTACK\ \&\&\ defined\ TRACY\_CALLSTACK\ \&\&\ TRACY\_CALLSTACK\ >\ 0}}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordflow}{return}\ LuaZoneBeginNS(\ L\ );}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ zoneCnt\ =\ GetLuaZoneState().counter++;}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keywordflow}{if}(\ zoneCnt\ !=\ 0\ \&\&\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00306\ \ \ \ \ GetLuaZoneState().active\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ lua\_Debug\ dbg;}
+\DoxyCodeLine{00311\ \ \ \ \ lua\_getstack(\ L,\ 1,\ \&dbg\ );}
+\DoxyCodeLine{00312\ \ \ \ \ lua\_getinfo(\ L,\ \textcolor{stringliteral}{"{}Snl"{}},\ \&dbg\ );}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ nsz;}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keywordtype}{char}\ src[256];}
+\DoxyCodeLine{00315\ \ \ \ \ LuaShortenSrc(\ src,\ dbg.source\ );}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ name\ =\ lua\_tolstring(\ L,\ 1,\ \&nsz\ );}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ dbg.currentline,\ src,\ dbg.name\ ?\ dbg.name\ :\ dbg.short\_src,\ name,\ nsz\ );}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneBeginAllocSrcLoc\ );}
+\DoxyCodeLine{00320\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00321\ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.srcloc,\ srcloc\ );}
+\DoxyCodeLine{00322\ \ \ \ \ TracyQueueCommit(\ zoneBeginThread\ );}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00325\ \}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaZoneEnd(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00328\ \{}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00330\ \ \ \ \ assert(\ GetLuaZoneState().counter\ !=\ 0\ );}
+\DoxyCodeLine{00331\ \ \ \ \ GetLuaZoneState().counter-\/-\/;}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00334\ \ \ \ \ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ GetLuaZoneState().active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00337\ \ \ \ \ \}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneEnd\ );}
+\DoxyCodeLine{00341\ \ \ \ \ MemWrite(\ \&item-\/>zoneEnd.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00342\ \ \ \ \ TracyQueueCommit(\ zoneEndThread\ );}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00344\ \}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaZoneText(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00347\ \{}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00351\ \ \ \ \ \{}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ GetLuaZoneState().active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00354\ \ \ \ \ \}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keyword}{auto}\ txt\ =\ lua\_tostring(\ L,\ 1\ );}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ size\ =\ strlen(\ txt\ );}
+\DoxyCodeLine{00359\ \ \ \ \ assert(\ size\ <\ (std::numeric\_limits<uint16\_t>::max)()\ );}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ size\ );}
+\DoxyCodeLine{00362\ \ \ \ \ memcpy(\ ptr,\ txt,\ size\ );}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneText\ );}
+\DoxyCodeLine{00365\ \ \ \ \ MemWrite(\ \&item-\/>zoneTextFat.text,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00366\ \ \ \ \ MemWrite(\ \&item-\/>zoneTextFat.size,\ (uint16\_t)size\ );}
+\DoxyCodeLine{00367\ \ \ \ \ TracyQueueCommit(\ zoneTextFatThread\ );}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00369\ \}}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaZoneName(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00372\ \{}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00376\ \ \ \ \ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ GetLuaZoneState().active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00379\ \ \ \ \ \}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keyword}{auto}\ txt\ =\ lua\_tostring(\ L,\ 1\ );}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ size\ =\ strlen(\ txt\ );}
+\DoxyCodeLine{00384\ \ \ \ \ assert(\ size\ <\ (std::numeric\_limits<uint16\_t>::max)()\ );}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ size\ );}
+\DoxyCodeLine{00387\ \ \ \ \ memcpy(\ ptr,\ txt,\ size\ );}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneName\ );}
+\DoxyCodeLine{00390\ \ \ \ \ MemWrite(\ \&item-\/>zoneTextFat.text,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00391\ \ \ \ \ MemWrite(\ \&item-\/>zoneTextFat.size,\ (uint16\_t)size\ );}
+\DoxyCodeLine{00392\ \ \ \ \ TracyQueueCommit(\ zoneTextFatThread\ );}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00394\ \}}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{int}\ LuaMessage(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00397\ \{}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{auto}\ txt\ =\ lua\_tostring(\ L,\ 1\ );}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ size\ =\ strlen(\ txt\ );}
+\DoxyCodeLine{00404\ \ \ \ \ assert(\ size\ <\ (std::numeric\_limits<uint16\_t>::max)()\ );}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ size\ );}
+\DoxyCodeLine{00407\ \ \ \ \ memcpy(\ ptr,\ txt,\ size\ );}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \ \ \ \ TaggedUserlandAddress\ taggedPtr\{\ (uint64\_t)ptr,\ MakeMessageMetadata(\ MessageSourceType::User,\ MessageSeverity::Info\ )\ \};}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00411\ \ \ \ \ TracyQueuePrepare(\ QueueType::Message\ );}
+\DoxyCodeLine{00412\ \ \ \ \ MemWrite(\ \&item-\/>messageFat.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00413\ \ \ \ \ MemWrite(\ \&item-\/>messageFat.textAndMetadata,\ taggedPtr\ );}
+\DoxyCodeLine{00414\ \ \ \ \ MemWrite(\ \&item-\/>messageFat.size,\ (uint16\_t)size\ );}
+\DoxyCodeLine{00415\ \ \ \ \ TracyQueueCommit(\ messageFatThread\ );}
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00417\ \}}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ LuaRegister(\ lua\_State*\ L\ )}
+\DoxyCodeLine{00422\ \{}
+\DoxyCodeLine{00423\ \ \ \ \ lua\_newtable(\ L\ );}
+\DoxyCodeLine{00424\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneBegin\ );}
+\DoxyCodeLine{00425\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBegin"{}}\ );}
+\DoxyCodeLine{00426\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneBeginN\ );}
+\DoxyCodeLine{00427\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginN"{}}\ );}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#ifdef\ TRACY\_HAS\_CALLSTACK}}
+\DoxyCodeLine{00429\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneBeginS\ );}
+\DoxyCodeLine{00430\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginS"{}}\ );}
+\DoxyCodeLine{00431\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneBeginNS\ );}
+\DoxyCodeLine{00432\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginNS"{}}\ );}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00434\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneBegin\ );}
+\DoxyCodeLine{00435\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginS"{}}\ );}
+\DoxyCodeLine{00436\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneBeginN\ );}
+\DoxyCodeLine{00437\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneBeginNS"{}}\ );}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00439\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneEnd\ );}
+\DoxyCodeLine{00440\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneEnd"{}}\ );}
+\DoxyCodeLine{00441\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneText\ );}
+\DoxyCodeLine{00442\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneText"{}}\ );}
+\DoxyCodeLine{00443\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaZoneName\ );}
+\DoxyCodeLine{00444\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}ZoneName"{}}\ );}
+\DoxyCodeLine{00445\ \ \ \ \ lua\_pushcfunction(\ L,\ detail::LuaMessage\ );}
+\DoxyCodeLine{00446\ \ \ \ \ lua\_setfield(\ L,\ -\/2,\ \textcolor{stringliteral}{"{}Message"{}}\ );}
+\DoxyCodeLine{00447\ \ \ \ \ lua\_setglobal(\ L,\ \textcolor{stringliteral}{"{}tracy"{}}\ );}
+\DoxyCodeLine{00448\ \}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ LuaRemove(\ \textcolor{keywordtype}{char}*\ script\ )\ \{\}}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ LuaHook(\ lua\_State*\ L,\ lua\_Debug*\ ar\ )}
+\DoxyCodeLine{00453\ \{}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keywordflow}{if}\ (\ ar-\/>event\ ==\ LUA\_HOOKCALL\ )}
+\DoxyCodeLine{00455\ \ \ \ \ \{}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ zoneCnt\ =\ GetLuaZoneState().counter++;}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ zoneCnt\ !=\ 0\ \&\&\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ GetLuaZoneState().active\ =\ GetProfiler().IsConnected();}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ lua\_getinfo(\ L,\ \textcolor{stringliteral}{"{}Snl"{}},\ ar\ );}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ src[256];}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ detail::LuaShortenSrc(\ src,\ ar-\/>short\_src\ );}
+\DoxyCodeLine{00466\ }
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ ar-\/>currentline,\ src,\ ar-\/>name\ ?\ ar-\/>name\ :\ ar-\/>short\_src\ );}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneBeginAllocSrcLoc\ );}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>zoneBegin.srcloc,\ srcloc\ );}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ TracyQueueCommit(\ zoneBeginThread\ );}
+\DoxyCodeLine{00472\ \ \ \ \ \}}
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (ar-\/>event\ ==\ LUA\_HOOKRET)\ \{}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ assert(\ GetLuaZoneState().counter\ !=\ 0\ );}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ GetLuaZoneState().counter-\/-\/;}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ !GetLuaZoneState().active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ GetLuaZoneState().active\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ TracyQueuePrepare(\ QueueType::ZoneEnd\ );}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>zoneEnd.time,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ TracyQueueCommit(\ zoneEndThread\ );}
+\DoxyCodeLine{00487\ \ \ \ \ \}}
+\DoxyCodeLine{00488\ \}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \}}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

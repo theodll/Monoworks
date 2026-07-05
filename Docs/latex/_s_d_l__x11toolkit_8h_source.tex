@@ -1,0 +1,277 @@
+\doxysection{SDL\+\_\+x11toolkit.\+h}
+\hypertarget{_s_d_l__x11toolkit_8h_source}{}\label{_s_d_l__x11toolkit_8h_source}\index{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11toolkit.h@{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11toolkit.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_x11toolkit\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_x11toolkit\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../../SDL\_list.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}SDL\_x11video.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}SDL\_x11dyn.h"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}SDL\_x11settings.h"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}SDL\_x11toolkit.h"{}}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}xsettings-\/client.h"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#ifdef\ HAVE\_FRIBIDI\_H}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}../../core/unix/SDL\_fribidi.h"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#ifdef\ HAVE\_LIBTHAI\_H}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}../../core/unix/SDL\_libthai.h"{}}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ Various\ predefined\ paddings\ */}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ SDL\_TOOLKIT\_X11\_ELEMENT\_PADDING\ 4}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ SDL\_TOOLKIT\_X11\_ELEMENT\_PADDING\_2\ 12}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ SDL\_TOOLKIT\_X11\_ELEMENT\_PADDING\_3\ 8}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ SDL\_TOOLKIT\_X11\_ELEMENT\_PADDING\_4\ 16}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ SDL\_TOOLKIT\_X11\_ELEMENT\_PADDING\_5\ 3}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_ToolkitChildModeX11}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ SDL\_TOOLKIT\_WINDOW\_MODE\_X11\_DIALOG,}
+\DoxyCodeLine{00051\ \ \ \ \ SDL\_TOOLKIT\_WINDOW\_MODE\_X11\_CHILD,\ \textcolor{comment}{/*\ For\ embedding\ into\ a\ normal\ SDL\_Window\ */}}
+\DoxyCodeLine{00052\ \ \ \ \ SDL\_TOOLKIT\_WINDOW\_MODE\_X11\_MENU,}
+\DoxyCodeLine{00053\ \ \ \ \ SDL\_TOOLKIT\_WINDOW\_MODE\_X11\_TOOLTIP}
+\DoxyCodeLine{00054\ \}\ SDL\_ToolkitWindowModeX11;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_ToolkitThaiEncodingX11}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ SDL\_TOOLKIT\_THAI\_ENCODING\_X11\_NONE,}
+\DoxyCodeLine{00059\ \ \ \ \ SDL\_TOOLKIT\_THAI\_ENCODING\_X11\_TIS,\ \textcolor{comment}{/*\ -\/0\ */}}
+\DoxyCodeLine{00060\ \ \ \ \ SDL\_TOOLKIT\_THAI\_ENCODING\_X11\_TIS\_WIN,\ \textcolor{comment}{/*\ -\/2\ */}}
+\DoxyCodeLine{00061\ \ \ \ \ SDL\_TOOLKIT\_THAI\_ENCODING\_X11\_TIS\_MAC,\ \textcolor{comment}{/*\ -\/1\ */}}
+\DoxyCodeLine{00062\ \ \ \ \ SDL\_TOOLKIT\_THAI\_ENCODING\_X11\_8859,}
+\DoxyCodeLine{00063\ \ \ \ \ SDL\_TOOLKIT\_THAI\_ENCODING\_X11\_UNICODE}
+\DoxyCodeLine{00064\ \}\ SDL\_ToolkitThaiEncodingX11;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_ToolkitThaiFontX11}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ SDL\_TOOLKIT\_THAI\_FONT\_X11\_OFFSET,}
+\DoxyCodeLine{00069\ \ \ \ \ SDL\_TOOLKIT\_THAI\_FONT\_X11\_CELL}
+\DoxyCodeLine{00070\ \}\ SDL\_ToolkitThaiFontX11;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_ToolkitWindowX11}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{/*\ Locale\ */}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{char}\ *origlocale;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{/*\ Mode\ */}}
+\DoxyCodeLine{00078\ \ \ \ \ SDL\_ToolkitWindowModeX11\ mode;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{/*\ Display\ */}}
+\DoxyCodeLine{00081\ \ \ \ \ Display\ *display;}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{int}\ screen;}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{bool}\ display\_close;}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{/*\ Parent\ */}}
+\DoxyCodeLine{00086\ \ \ \ \ SDL\_VideoDevice\ *parent\_device;}
+\DoxyCodeLine{00087\ \ \ \ \ SDL\_Window\ *parent;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitWindowX11\ *tk\_parent;}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{/*\ Window\ */}}
+\DoxyCodeLine{00091\ \ \ \ \ Window\ window;}
+\DoxyCodeLine{00092\ \ \ \ \ Drawable\ drawable;}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#ifndef\ NO\_SHARED\_MEMORY}}
+\DoxyCodeLine{00094\ \ \ \ \ XImage\ *image;}
+\DoxyCodeLine{00095\ \ \ \ \ XShmSegmentInfo\ shm\_info;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{int}\ shm\_bytes\_per\_line;}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{/*\ Visuals\ and\ drawing\ */}}
+\DoxyCodeLine{00100\ \ \ \ \ Visual\ *visual;}
+\DoxyCodeLine{00101\ \ \ \ \ XVisualInfo\ vi;}
+\DoxyCodeLine{00102\ \ \ \ \ Colormap\ cmap;}
+\DoxyCodeLine{00103\ \ \ \ \ GC\ ctx;}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{int}\ depth;}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{bool}\ pixmap;}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{/*\ X11\ extensions\ */}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XDBE}}
+\DoxyCodeLine{00109\ \ \ \ \ XdbeBackBuffer\ buf;}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{bool}\ xdbe;\ \textcolor{comment}{//\ Whether\ Xdbe\ is\ present\ or\ not}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XRANDR}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{bool}\ xrandr;\ \textcolor{comment}{//\ Whether\ Xrandr\ is\ present\ or\ not}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#ifndef\ NO\_SHARED\_MEMORY}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{bool}\ shm;}
+\DoxyCodeLine{00117\ \ \ \ \ Bool\ shm\_pixmap;}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{bool}\ utf8;}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{/*\ Atoms\ */}}
+\DoxyCodeLine{00121\ \ \ \ \ Atom\ wm\_protocols;}
+\DoxyCodeLine{00122\ \ \ \ \ Atom\ wm\_delete\_message;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{comment}{/*\ Window\ and\ pixmap\ sizes\ */}}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{int}\ window\_width;\ \ \textcolor{comment}{//\ Window\ width.}}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{int}\ window\_height;\ \textcolor{comment}{//\ Window\ height.}}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{int}\ pixmap\_width;}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordtype}{int}\ pixmap\_height;}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{int}\ window\_x;}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{int}\ window\_y;}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{/*\ XSettings\ and\ scaling\ */}}
+\DoxyCodeLine{00133\ \ \ \ \ XSettingsClient\ *xsettings;}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{bool}\ xsettings\_first\_time;}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{int}\ iscale;}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{float}\ scale;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{comment}{/*\ Font\ */}}
+\DoxyCodeLine{00139\ \ \ \ \ XFontSet\ font\_set;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ UTF-\/8\ systems}}
+\DoxyCodeLine{00140\ \ \ \ \ XFontStruct\ *font\_struct;\ \textcolor{comment}{//\ Latin1\ (ASCII)\ fallback.}}
+\DoxyCodeLine{00141\ \ \ \ \ SDL\_ToolkitThaiEncodingX11\ thai\_encoding;}
+\DoxyCodeLine{00142\ \ \ \ \ SDL\_ToolkitThaiFontX11\ thai\_font;}
+\DoxyCodeLine{00143\ \ \ \ \ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{comment}{/*\ Control\ colors\ */}}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{const}\ SDL\_MessageBoxColor\ *color\_hints;}
+\DoxyCodeLine{00146\ \ \ \ \ XColor\ xcolor[SDL\_MESSAGEBOX\_COLOR\_COUNT];}
+\DoxyCodeLine{00147\ \ \ \ \ XColor\ xcolor\_bevel\_l1;}
+\DoxyCodeLine{00148\ \ \ \ \ XColor\ xcolor\_bevel\_l2;}
+\DoxyCodeLine{00149\ \ \ \ \ XColor\ xcolor\_bevel\_d;}
+\DoxyCodeLine{00150\ \ \ \ \ XColor\ xcolor\_pressed;}
+\DoxyCodeLine{00151\ \ \ \ \ XColor\ xcolor\_disabled\_text;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{comment}{/*\ Control\ list\ */}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_focus;}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *focused\_control;}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *fiddled\_control;}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ **controls;}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ controls\_sz;}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ **dyn\_controls;}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ dyn\_controls\_sz;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{/*\ User\ callbacks\ */}}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{void}\ *cb\_data;}
+\DoxyCodeLine{00164\ \ \ \ \ void\ (*cb\_on\_scale\_change)(\textcolor{keyword}{struct\ }SDL\_ToolkitWindowX11\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{/*\ Popup\ windows\ */}}
+\DoxyCodeLine{00167\ \ \ \ \ SDL\_ListNode\ *popup\_windows;}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{/*\ Event\ loop\ */}}
+\DoxyCodeLine{00170\ \ \ \ \ XEvent\ *e;}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *previous\_control;}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *key\_control\_esc;}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *key\_control\_enter;}
+\DoxyCodeLine{00174\ \ \ \ \ KeySym\ last\_key\_pressed;}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordtype}{int}\ ev\_i;}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keywordtype}{float}\ ev\_scale;}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordtype}{float}\ ev\_iscale;}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordtype}{bool}\ draw;}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordtype}{bool}\ close;}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keywordtype}{long}\ event\_mask;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#ifdef\ HAVE\_FRIBIDI\_H}}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{comment}{/*\ BIDI\ engine\ */}}
+\DoxyCodeLine{00184\ \ \ \ \ SDL\_FriBidi\ *fribidi;}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{bool}\ do\_shaping;}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#ifdef\ HAVE\_LIBTHAI\_H}}
+\DoxyCodeLine{00189\ \ \ \ \ SDL\_LibThai\ *th;}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keywordtype}{bool}\ flip\_interface;}
+\DoxyCodeLine{00193\ \}\ SDL\_ToolkitWindowX11;}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_ToolkitControlStateX11}
+\DoxyCodeLine{00196\ \{}
+\DoxyCodeLine{00197\ \ \ \ \ SDL\_TOOLKIT\_CONTROL\_STATE\_X11\_NORMAL,}
+\DoxyCodeLine{00198\ \ \ \ \ SDL\_TOOLKIT\_CONTROL\_STATE\_X11\_HOVER,}
+\DoxyCodeLine{00199\ \ \ \ \ SDL\_TOOLKIT\_CONTROL\_STATE\_X11\_PRESSED,\ \textcolor{comment}{/*\ Key/Button\ Up\ */}}
+\DoxyCodeLine{00200\ \ \ \ \ SDL\_TOOLKIT\_CONTROL\_STATE\_X11\_PRESSED\_HELD,\ \textcolor{comment}{/*\ Key/Button\ Down\ */}}
+\DoxyCodeLine{00201\ \ \ \ \ SDL\_TOOLKIT\_CONTROL\_STATE\_X11\_DISABLED}
+\DoxyCodeLine{00202\ \}\ SDL\_ToolkitControlStateX11;}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_ToolkitControlX11}
+\DoxyCodeLine{00205\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ SDL\_ToolkitWindowX11\ *window;}
+\DoxyCodeLine{00207\ \ \ \ \ SDL\_ToolkitControlStateX11\ state;}
+\DoxyCodeLine{00208\ \ \ \ \ SDL\_Rect\ rect;}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordtype}{bool}\ selected;}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordtype}{bool}\ dynamic;}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_default\_enter;}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_default\_esc;}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keywordtype}{bool}\ do\_size;}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{comment}{/*\ User\ data\ */}}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordtype}{void}\ *data;}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{/*\ Virtual\ functions\ */}}
+\DoxyCodeLine{00219\ \ \ \ \ void\ (*func\_draw)(\textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *);}
+\DoxyCodeLine{00220\ \ \ \ \ void\ (*func\_calc\_size)(\textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *);}
+\DoxyCodeLine{00221\ \ \ \ \ void\ (*func\_on\_scale\_change)(\textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *);}
+\DoxyCodeLine{00222\ \ \ \ \ void\ (*func\_on\_state\_change)(\textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *);}
+\DoxyCodeLine{00223\ \ \ \ \ void\ (*func\_free)(\textcolor{keyword}{struct\ }SDL\_ToolkitControlX11\ *);}
+\DoxyCodeLine{00224\ \}\ SDL\_ToolkitControlX11;}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_ToolkitMenuItemX11}
+\DoxyCodeLine{00227\ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *utf8;}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordtype}{bool}\ checkbox;}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordtype}{bool}\ checked;}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordtype}{bool}\ disabled;}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{void}\ *cb\_data;}
+\DoxyCodeLine{00233\ \ \ \ \ void\ (*cb)(\textcolor{keyword}{struct\ }SDL\_ToolkitMenuItemX11\ *,\ \textcolor{keywordtype}{void}\ *);}
+\DoxyCodeLine{00234\ \ \ \ \ SDL\_ListNode\ *sub\_menu;}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{comment}{/*\ Internal\ use\ */}}
+\DoxyCodeLine{00237\ \ \ \ \ SDL\_Rect\ utf8\_rect;}
+\DoxyCodeLine{00238\ \ \ \ \ SDL\_Rect\ hover\_rect;}
+\DoxyCodeLine{00239\ \ \ \ \ SDL\_Rect\ check\_rect;}
+\DoxyCodeLine{00240\ \ \ \ \ SDL\_ToolkitControlStateX11\ state;}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keywordtype}{int}\ arrow\_x;}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordtype}{int}\ arrow\_y;}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{keywordtype}{bool}\ reverse\_arrows;}
+\DoxyCodeLine{00244\ \}\ SDL\_ToolkitMenuItemX11;}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \textcolor{comment}{/*\ WINDOW\ FUNCTIONS\ */}}
+\DoxyCodeLine{00247\ \textcolor{keyword}{extern}\ SDL\_ToolkitWindowX11\ *X11Toolkit\_CreateWindowStruct(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *parent,\ SDL\_ToolkitWindowX11\ *tkparent,\ SDL\_ToolkitWindowModeX11\ mode,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_color}{SDL\_MessageBoxColor}}\ *colorhints,\ \textcolor{keywordtype}{bool}\ create\_new\_display);}
+\DoxyCodeLine{00248\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11Toolkit\_CreateWindowRes(SDL\_ToolkitWindowX11\ *data,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ \textcolor{keywordtype}{int}\ cx,\ \textcolor{keywordtype}{int}\ cy,\ \textcolor{keywordtype}{char}\ *title);}
+\DoxyCodeLine{00249\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11Toolkit\_DoWindowEventLoop(SDL\_ToolkitWindowX11\ *data);}
+\DoxyCodeLine{00250\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11Toolkit\_ResizeWindow(SDL\_ToolkitWindowX11\ *data,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h);}
+\DoxyCodeLine{00251\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11Toolkit\_DestroyWindow(SDL\_ToolkitWindowX11\ *data);}
+\DoxyCodeLine{00252\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11Toolkit\_SignalWindowClose(SDL\_ToolkitWindowX11\ *data);}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{comment}{/*\ GENERIC\ CONTROL\ FUNCTIONS\ */}}
+\DoxyCodeLine{00255\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ X11Toolkit\_NotifyControlOfSizeChange(SDL\_ToolkitControlX11\ *control);}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{comment}{/*\ ICON\ CONTROL\ FUNCTIONS\ */}}
+\DoxyCodeLine{00258\ \textcolor{keyword}{extern}\ SDL\_ToolkitControlX11\ *X11Toolkit\_CreateIconControl(SDL\_ToolkitWindowX11\ *window,\ SDL\_MessageBoxFlags\ flags);}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{comment}{/*\ LABEL\ CONTROL\ FUNCTIONS\ */}}
+\DoxyCodeLine{00261\ \textcolor{keyword}{extern}\ SDL\_ToolkitControlX11\ *X11Toolkit\_CreateLabelControl(SDL\_ToolkitWindowX11\ *window,\ \textcolor{keywordtype}{char}\ *utf8);}
+\DoxyCodeLine{00262\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ X11Toolkit\_GetLabelControlFirstLineHeight(SDL\_ToolkitControlX11\ *control);}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00264\ \textcolor{comment}{/*\ BUTTON\ CONTROL\ FUNCTIONS\ */}}
+\DoxyCodeLine{00265\ \textcolor{keyword}{extern}\ SDL\_ToolkitControlX11\ *X11Toolkit\_CreateButtonControl(SDL\_ToolkitWindowX11\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_button_data}{SDL\_MessageBoxButtonData}}\ *data);}
+\DoxyCodeLine{00266\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11Toolkit\_RegisterCallbackForButtonControl(SDL\_ToolkitControlX11\ *control,\ \textcolor{keywordtype}{void}\ *data,\ \textcolor{keywordtype}{void}\ (*cb)(\textcolor{keyword}{struct}\ SDL\_ToolkitControlX11\ *,\ \textcolor{keywordtype}{void}\ *));}
+\DoxyCodeLine{00267\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_button_data}{SDL\_MessageBoxButtonData}}\ *X11Toolkit\_GetButtonControlData(SDL\_ToolkitControlX11\ *control);}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_DRIVER\_X11}}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_x11toolkit\_h\_}}
+
+\end{DoxyCode}

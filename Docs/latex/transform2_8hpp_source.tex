@@ -1,0 +1,63 @@
+\doxysection{transform2.\+hpp}
+\hypertarget{transform2_8hpp_source}{}\label{transform2_8hpp_source}\index{MonoEngine/thirdparty/glm/glm/gtx/transform2.hpp@{MonoEngine/thirdparty/glm/glm/gtx/transform2.hpp}}
+\doxymbox{\hyperlink{transform2_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Dependency:}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{glm_8hpp}{../glm.hpp}}"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{transform_8hpp}{../gtx/transform.hpp}}"{}}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#ifndef\ GLM\_ENABLE\_EXPERIMENTAL}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ \ error\ "{}GLM:\ GLM\_GTX\_transform2\ is\ an\ experimental\ extension\ and\ may\ change\ in\ the\ future.\ Use\ \#define\ GLM\_ENABLE\_EXPERIMENTAL\ before\ including\ it,\ if\ you\ really\ want\ to\ use\ it."{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#elif\ GLM\_MESSAGES\ ==\ GLM\_ENABLE\ \&\&\ !defined(GLM\_EXT\_INCLUDED)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ \ pragma\ message("{}GLM:\ GLM\_GTX\_transform2\ extension\ included"{})}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00034\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_gaf2bdb7a551159848d643437766d8a201}{shearX2D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ T\ y);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00039\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_ga6fe5f159911a1a1d5d8e70ad387972ab}{shearY2D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ T\ x);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00044\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_gae6a501ee950a9c3437bb0364e4ff0ad6}{shearX3D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ T\ y,\ T\ z);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00049\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_gab351594f265fabee8f6c12cdffef78dd}{shearY3D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ T\ x,\ T\ z);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00054\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_gaa19d0f7560aa007fbeff5e515ba5c066}{shearZ3D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ T\ x,\ T\ y);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//template<typename\ T>\ GLM\_FUNC\_QUALIFIER\ mat<4,\ 4,\ T,\ Q>\ shear(const\ mat<4,\ 4,\ T,\ Q>\ \&\ m,\ shearPlane,\ planePoint,\ angle)}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ Identity\ +\ tan(angle)\ *\ cross(Normal,\ OnPlaneVector)\ \ \ \ \ 0}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ -\/\ dot(PointOnPlane,\ normal)\ *\ OnPlaneVector\ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00063\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_gafa50dd07c1ea15eca32f512e0d438c12}{reflect2D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ normal,\ T\ distance);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00068\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_ga890a5b36a6e1acc02570481e991889eb}{reflect3D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ normal,\ T\ distance);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00073\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_ga468bd38fd8e3999a4c38f13f52712ada}{proj2D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ normal);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00078\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_ga54be8b39a58f85ff667fd9aaa881a1e6}{proj3D}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\ \&\ m,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ normal);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00083\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_gad9a3e611fee11d78e7d027f50288f0eb}{scaleBias}}(T\ \doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}},\ T\ bias);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00088\ \ \ \ \ GLM\_FUNC\_DECL\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__transform2_gad9a3e611fee11d78e7d027f50288f0eb}{scaleBias}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ m,\ T\ \doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}},\ T\ bias);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00091\ \}\textcolor{comment}{//\ namespace\ glm}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#include\ "{}transform2.inl"{}}}
+
+\end{DoxyCode}

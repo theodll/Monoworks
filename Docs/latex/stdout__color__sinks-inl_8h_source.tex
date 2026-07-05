@@ -1,0 +1,44 @@
+\doxysection{stdout\+\_\+color\+\_\+sinks-\/inl.h}
+\hypertarget{stdout__color__sinks-inl_8h_source}{}\label{stdout__color__sinks-inl_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/stdout\_color\_sinks-\/inl.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/stdout\_color\_sinks-\/inl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/stdout\_color\_sinks.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <spdlog/logger.h>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory>}
+\DoxyCodeLine{00016\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ stdout\_color\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_mode\ mode)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::stdout\_color\_sink\_mt>(logger\_name,\ mode);}
+\DoxyCodeLine{00019\ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory>}
+\DoxyCodeLine{00022\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ stdout\_color\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_mode\ mode)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::stdout\_color\_sink\_st>(logger\_name,\ mode);}
+\DoxyCodeLine{00025\ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory>}
+\DoxyCodeLine{00028\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ stderr\_color\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_mode\ mode)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::stderr\_color\_sink\_mt>(logger\_name,\ mode);}
+\DoxyCodeLine{00031\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory>}
+\DoxyCodeLine{00034\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ stderr\_color\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_mode\ mode)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::stderr\_color\_sink\_st>(logger\_name,\ mode);}
+\DoxyCodeLine{00037\ \}}
+\DoxyCodeLine{00038\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

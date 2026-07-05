@@ -1,0 +1,589 @@
+\doxysection{color.\+h}
+\hypertarget{color_8h_source}{}\label{color_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/fmt/bundled/color.h@{MonoEngine/thirdparty/spdlog/include/spdlog/fmt/bundled/color.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Formatting\ library\ for\ C++\ -\/\ color\ support}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (c)\ 2018\ -\/\ present,\ Victor\ Zverovich\ and\ fmt\ contributors}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ All\ rights\ reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ For\ the\ license\ information\ refer\ to\ format.h.}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ FMT\_COLOR\_H\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ FMT\_COLOR\_H\_}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}format.h"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ FMT\_BEGIN\_NAMESPACE}
+\DoxyCodeLine{00014\ FMT\_BEGIN\_EXPORT}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{enum\ class}\ color\ :\ uint32\_t\ \{}
+\DoxyCodeLine{00017\ \ \ alice\_blue\ =\ 0xF0F8FF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(240,248,255)}}
+\DoxyCodeLine{00018\ \ \ antique\_white\ =\ 0xFAEBD7,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(250,235,215)}}
+\DoxyCodeLine{00019\ \ \ aqua\ =\ 0x00FFFF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,255,255)}}
+\DoxyCodeLine{00020\ \ \ aquamarine\ =\ 0x7FFFD4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(127,255,212)}}
+\DoxyCodeLine{00021\ \ \ azure\ =\ 0xF0FFFF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(240,255,255)}}
+\DoxyCodeLine{00022\ \ \ beige\ =\ 0xF5F5DC,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(245,245,220)}}
+\DoxyCodeLine{00023\ \ \ bisque\ =\ 0xFFE4C4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,228,196)}}
+\DoxyCodeLine{00024\ \ \ black\ =\ 0x000000,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,0,0)}}
+\DoxyCodeLine{00025\ \ \ blanched\_almond\ =\ 0xFFEBCD,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,235,205)}}
+\DoxyCodeLine{00026\ \ \ blue\ =\ 0x0000FF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,0,255)}}
+\DoxyCodeLine{00027\ \ \ blue\_violet\ =\ 0x8A2BE2,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(138,43,226)}}
+\DoxyCodeLine{00028\ \ \ brown\ =\ 0xA52A2A,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(165,42,42)}}
+\DoxyCodeLine{00029\ \ \ burly\_wood\ =\ 0xDEB887,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(222,184,135)}}
+\DoxyCodeLine{00030\ \ \ cadet\_blue\ =\ 0x5F9EA0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(95,158,160)}}
+\DoxyCodeLine{00031\ \ \ chartreuse\ =\ 0x7FFF00,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(127,255,0)}}
+\DoxyCodeLine{00032\ \ \ chocolate\ =\ 0xD2691E,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(210,105,30)}}
+\DoxyCodeLine{00033\ \ \ coral\ =\ 0xFF7F50,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,127,80)}}
+\DoxyCodeLine{00034\ \ \ cornflower\_blue\ =\ 0x6495ED,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(100,149,237)}}
+\DoxyCodeLine{00035\ \ \ cornsilk\ =\ 0xFFF8DC,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,248,220)}}
+\DoxyCodeLine{00036\ \ \ crimson\ =\ 0xDC143C,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(220,20,60)}}
+\DoxyCodeLine{00037\ \ \ cyan\ =\ 0x00FFFF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,255,255)}}
+\DoxyCodeLine{00038\ \ \ dark\_blue\ =\ 0x00008B,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,0,139)}}
+\DoxyCodeLine{00039\ \ \ dark\_cyan\ =\ 0x008B8B,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,139,139)}}
+\DoxyCodeLine{00040\ \ \ dark\_golden\_rod\ =\ 0xB8860B,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(184,134,11)}}
+\DoxyCodeLine{00041\ \ \ dark\_gray\ =\ 0xA9A9A9,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(169,169,169)}}
+\DoxyCodeLine{00042\ \ \ dark\_green\ =\ 0x006400,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,100,0)}}
+\DoxyCodeLine{00043\ \ \ dark\_khaki\ =\ 0xBDB76B,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(189,183,107)}}
+\DoxyCodeLine{00044\ \ \ dark\_magenta\ =\ 0x8B008B,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(139,0,139)}}
+\DoxyCodeLine{00045\ \ \ dark\_olive\_green\ =\ 0x556B2F,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(85,107,47)}}
+\DoxyCodeLine{00046\ \ \ dark\_orange\ =\ 0xFF8C00,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,140,0)}}
+\DoxyCodeLine{00047\ \ \ dark\_orchid\ =\ 0x9932CC,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(153,50,204)}}
+\DoxyCodeLine{00048\ \ \ dark\_red\ =\ 0x8B0000,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(139,0,0)}}
+\DoxyCodeLine{00049\ \ \ dark\_salmon\ =\ 0xE9967A,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(233,150,122)}}
+\DoxyCodeLine{00050\ \ \ dark\_sea\_green\ =\ 0x8FBC8F,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(143,188,143)}}
+\DoxyCodeLine{00051\ \ \ dark\_slate\_blue\ =\ 0x483D8B,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(72,61,139)}}
+\DoxyCodeLine{00052\ \ \ dark\_slate\_gray\ =\ 0x2F4F4F,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(47,79,79)}}
+\DoxyCodeLine{00053\ \ \ dark\_turquoise\ =\ 0x00CED1,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,206,209)}}
+\DoxyCodeLine{00054\ \ \ dark\_violet\ =\ 0x9400D3,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(148,0,211)}}
+\DoxyCodeLine{00055\ \ \ deep\_pink\ =\ 0xFF1493,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,20,147)}}
+\DoxyCodeLine{00056\ \ \ deep\_sky\_blue\ =\ 0x00BFFF,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,191,255)}}
+\DoxyCodeLine{00057\ \ \ dim\_gray\ =\ 0x696969,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(105,105,105)}}
+\DoxyCodeLine{00058\ \ \ dodger\_blue\ =\ 0x1E90FF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(30,144,255)}}
+\DoxyCodeLine{00059\ \ \ fire\_brick\ =\ 0xB22222,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(178,34,34)}}
+\DoxyCodeLine{00060\ \ \ floral\_white\ =\ 0xFFFAF0,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,250,240)}}
+\DoxyCodeLine{00061\ \ \ forest\_green\ =\ 0x228B22,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(34,139,34)}}
+\DoxyCodeLine{00062\ \ \ fuchsia\ =\ 0xFF00FF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,0,255)}}
+\DoxyCodeLine{00063\ \ \ gainsboro\ =\ 0xDCDCDC,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(220,220,220)}}
+\DoxyCodeLine{00064\ \ \ ghost\_white\ =\ 0xF8F8FF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(248,248,255)}}
+\DoxyCodeLine{00065\ \ \ gold\ =\ 0xFFD700,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,215,0)}}
+\DoxyCodeLine{00066\ \ \ golden\_rod\ =\ 0xDAA520,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(218,165,32)}}
+\DoxyCodeLine{00067\ \ \ gray\ =\ 0x808080,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(128,128,128)}}
+\DoxyCodeLine{00068\ \ \ green\ =\ 0x008000,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,128,0)}}
+\DoxyCodeLine{00069\ \ \ green\_yellow\ =\ 0xADFF2F,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(173,255,47)}}
+\DoxyCodeLine{00070\ \ \ honey\_dew\ =\ 0xF0FFF0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(240,255,240)}}
+\DoxyCodeLine{00071\ \ \ hot\_pink\ =\ 0xFF69B4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,105,180)}}
+\DoxyCodeLine{00072\ \ \ indian\_red\ =\ 0xCD5C5C,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(205,92,92)}}
+\DoxyCodeLine{00073\ \ \ indigo\ =\ 0x4B0082,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(75,0,130)}}
+\DoxyCodeLine{00074\ \ \ ivory\ =\ 0xFFFFF0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,255,240)}}
+\DoxyCodeLine{00075\ \ \ khaki\ =\ 0xF0E68C,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(240,230,140)}}
+\DoxyCodeLine{00076\ \ \ lavender\ =\ 0xE6E6FA,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(230,230,250)}}
+\DoxyCodeLine{00077\ \ \ lavender\_blush\ =\ 0xFFF0F5,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,240,245)}}
+\DoxyCodeLine{00078\ \ \ lawn\_green\ =\ 0x7CFC00,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(124,252,0)}}
+\DoxyCodeLine{00079\ \ \ lemon\_chiffon\ =\ 0xFFFACD,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,250,205)}}
+\DoxyCodeLine{00080\ \ \ light\_blue\ =\ 0xADD8E6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(173,216,230)}}
+\DoxyCodeLine{00081\ \ \ light\_coral\ =\ 0xF08080,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(240,128,128)}}
+\DoxyCodeLine{00082\ \ \ light\_cyan\ =\ 0xE0FFFF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(224,255,255)}}
+\DoxyCodeLine{00083\ \ \ light\_golden\_rod\_yellow\ =\ 0xFAFAD2,\ \ \textcolor{comment}{//\ rgb(250,250,210)}}
+\DoxyCodeLine{00084\ \ \ light\_gray\ =\ 0xD3D3D3,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(211,211,211)}}
+\DoxyCodeLine{00085\ \ \ light\_green\ =\ 0x90EE90,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(144,238,144)}}
+\DoxyCodeLine{00086\ \ \ light\_pink\ =\ 0xFFB6C1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,182,193)}}
+\DoxyCodeLine{00087\ \ \ light\_salmon\ =\ 0xFFA07A,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,160,122)}}
+\DoxyCodeLine{00088\ \ \ light\_sea\_green\ =\ 0x20B2AA,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(32,178,170)}}
+\DoxyCodeLine{00089\ \ \ light\_sky\_blue\ =\ 0x87CEFA,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(135,206,250)}}
+\DoxyCodeLine{00090\ \ \ light\_slate\_gray\ =\ 0x778899,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(119,136,153)}}
+\DoxyCodeLine{00091\ \ \ light\_steel\_blue\ =\ 0xB0C4DE,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(176,196,222)}}
+\DoxyCodeLine{00092\ \ \ light\_yellow\ =\ 0xFFFFE0,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,255,224)}}
+\DoxyCodeLine{00093\ \ \ lime\ =\ 0x00FF00,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,255,0)}}
+\DoxyCodeLine{00094\ \ \ lime\_green\ =\ 0x32CD32,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(50,205,50)}}
+\DoxyCodeLine{00095\ \ \ linen\ =\ 0xFAF0E6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(250,240,230)}}
+\DoxyCodeLine{00096\ \ \ magenta\ =\ 0xFF00FF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,0,255)}}
+\DoxyCodeLine{00097\ \ \ maroon\ =\ 0x800000,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(128,0,0)}}
+\DoxyCodeLine{00098\ \ \ medium\_aquamarine\ =\ 0x66CDAA,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(102,205,170)}}
+\DoxyCodeLine{00099\ \ \ medium\_blue\ =\ 0x0000CD,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,0,205)}}
+\DoxyCodeLine{00100\ \ \ medium\_orchid\ =\ 0xBA55D3,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(186,85,211)}}
+\DoxyCodeLine{00101\ \ \ medium\_purple\ =\ 0x9370DB,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(147,112,219)}}
+\DoxyCodeLine{00102\ \ \ medium\_sea\_green\ =\ 0x3CB371,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(60,179,113)}}
+\DoxyCodeLine{00103\ \ \ medium\_slate\_blue\ =\ 0x7B68EE,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(123,104,238)}}
+\DoxyCodeLine{00104\ \ \ medium\_spring\_green\ =\ 0x00FA9A,\ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,250,154)}}
+\DoxyCodeLine{00105\ \ \ medium\_turquoise\ =\ 0x48D1CC,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(72,209,204)}}
+\DoxyCodeLine{00106\ \ \ medium\_violet\_red\ =\ 0xC71585,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(199,21,133)}}
+\DoxyCodeLine{00107\ \ \ midnight\_blue\ =\ 0x191970,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(25,25,112)}}
+\DoxyCodeLine{00108\ \ \ mint\_cream\ =\ 0xF5FFFA,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(245,255,250)}}
+\DoxyCodeLine{00109\ \ \ misty\_rose\ =\ 0xFFE4E1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,228,225)}}
+\DoxyCodeLine{00110\ \ \ moccasin\ =\ 0xFFE4B5,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,228,181)}}
+\DoxyCodeLine{00111\ \ \ navajo\_white\ =\ 0xFFDEAD,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,222,173)}}
+\DoxyCodeLine{00112\ \ \ navy\ =\ 0x000080,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,0,128)}}
+\DoxyCodeLine{00113\ \ \ old\_lace\ =\ 0xFDF5E6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(253,245,230)}}
+\DoxyCodeLine{00114\ \ \ olive\ =\ 0x808000,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(128,128,0)}}
+\DoxyCodeLine{00115\ \ \ olive\_drab\ =\ 0x6B8E23,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(107,142,35)}}
+\DoxyCodeLine{00116\ \ \ orange\ =\ 0xFFA500,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,165,0)}}
+\DoxyCodeLine{00117\ \ \ orange\_red\ =\ 0xFF4500,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,69,0)}}
+\DoxyCodeLine{00118\ \ \ orchid\ =\ 0xDA70D6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(218,112,214)}}
+\DoxyCodeLine{00119\ \ \ pale\_golden\_rod\ =\ 0xEEE8AA,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(238,232,170)}}
+\DoxyCodeLine{00120\ \ \ pale\_green\ =\ 0x98FB98,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(152,251,152)}}
+\DoxyCodeLine{00121\ \ \ pale\_turquoise\ =\ 0xAFEEEE,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(175,238,238)}}
+\DoxyCodeLine{00122\ \ \ pale\_violet\_red\ =\ 0xDB7093,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(219,112,147)}}
+\DoxyCodeLine{00123\ \ \ papaya\_whip\ =\ 0xFFEFD5,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,239,213)}}
+\DoxyCodeLine{00124\ \ \ peach\_puff\ =\ 0xFFDAB9,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,218,185)}}
+\DoxyCodeLine{00125\ \ \ peru\ =\ 0xCD853F,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(205,133,63)}}
+\DoxyCodeLine{00126\ \ \ pink\ =\ 0xFFC0CB,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,192,203)}}
+\DoxyCodeLine{00127\ \ \ plum\ =\ 0xDDA0DD,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(221,160,221)}}
+\DoxyCodeLine{00128\ \ \ powder\_blue\ =\ 0xB0E0E6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(176,224,230)}}
+\DoxyCodeLine{00129\ \ \ purple\ =\ 0x800080,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(128,0,128)}}
+\DoxyCodeLine{00130\ \ \ rebecca\_purple\ =\ 0x663399,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(102,51,153)}}
+\DoxyCodeLine{00131\ \ \ red\ =\ 0xFF0000,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,0,0)}}
+\DoxyCodeLine{00132\ \ \ rosy\_brown\ =\ 0xBC8F8F,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(188,143,143)}}
+\DoxyCodeLine{00133\ \ \ royal\_blue\ =\ 0x4169E1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(65,105,225)}}
+\DoxyCodeLine{00134\ \ \ saddle\_brown\ =\ 0x8B4513,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(139,69,19)}}
+\DoxyCodeLine{00135\ \ \ salmon\ =\ 0xFA8072,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(250,128,114)}}
+\DoxyCodeLine{00136\ \ \ sandy\_brown\ =\ 0xF4A460,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(244,164,96)}}
+\DoxyCodeLine{00137\ \ \ sea\_green\ =\ 0x2E8B57,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(46,139,87)}}
+\DoxyCodeLine{00138\ \ \ sea\_shell\ =\ 0xFFF5EE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,245,238)}}
+\DoxyCodeLine{00139\ \ \ sienna\ =\ 0xA0522D,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(160,82,45)}}
+\DoxyCodeLine{00140\ \ \ silver\ =\ 0xC0C0C0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(192,192,192)}}
+\DoxyCodeLine{00141\ \ \ sky\_blue\ =\ 0x87CEEB,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(135,206,235)}}
+\DoxyCodeLine{00142\ \ \ slate\_blue\ =\ 0x6A5ACD,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(106,90,205)}}
+\DoxyCodeLine{00143\ \ \ slate\_gray\ =\ 0x708090,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(112,128,144)}}
+\DoxyCodeLine{00144\ \ \ snow\ =\ 0xFFFAFA,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,250,250)}}
+\DoxyCodeLine{00145\ \ \ spring\_green\ =\ 0x00FF7F,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,255,127)}}
+\DoxyCodeLine{00146\ \ \ steel\_blue\ =\ 0x4682B4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(70,130,180)}}
+\DoxyCodeLine{00147\ \ \ tan\ =\ 0xD2B48C,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(210,180,140)}}
+\DoxyCodeLine{00148\ \ \ teal\ =\ 0x008080,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(0,128,128)}}
+\DoxyCodeLine{00149\ \ \ thistle\ =\ 0xD8BFD8,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(216,191,216)}}
+\DoxyCodeLine{00150\ \ \ tomato\ =\ 0xFF6347,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,99,71)}}
+\DoxyCodeLine{00151\ \ \ turquoise\ =\ 0x40E0D0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(64,224,208)}}
+\DoxyCodeLine{00152\ \ \ violet\ =\ 0xEE82EE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(238,130,238)}}
+\DoxyCodeLine{00153\ \ \ wheat\ =\ 0xF5DEB3,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(245,222,179)}}
+\DoxyCodeLine{00154\ \ \ white\ =\ 0xFFFFFF,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,255,255)}}
+\DoxyCodeLine{00155\ \ \ white\_smoke\ =\ 0xF5F5F5,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(245,245,245)}}
+\DoxyCodeLine{00156\ \ \ yellow\ =\ 0xFFFF00,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(255,255,0)}}
+\DoxyCodeLine{00157\ \ \ yellow\_green\ =\ 0x9ACD32\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rgb(154,205,50)}}
+\DoxyCodeLine{00158\ \};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ enum\ class\ color}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{enum\ class}\ terminal\_color\ :\ uint8\_t\ \{}
+\DoxyCodeLine{00161\ \ \ black\ =\ 30,}
+\DoxyCodeLine{00162\ \ \ red,}
+\DoxyCodeLine{00163\ \ \ green,}
+\DoxyCodeLine{00164\ \ \ yellow,}
+\DoxyCodeLine{00165\ \ \ blue,}
+\DoxyCodeLine{00166\ \ \ magenta,}
+\DoxyCodeLine{00167\ \ \ cyan,}
+\DoxyCodeLine{00168\ \ \ white,}
+\DoxyCodeLine{00169\ \ \ bright\_black\ =\ 90,}
+\DoxyCodeLine{00170\ \ \ bright\_red,}
+\DoxyCodeLine{00171\ \ \ bright\_green,}
+\DoxyCodeLine{00172\ \ \ bright\_yellow,}
+\DoxyCodeLine{00173\ \ \ bright\_blue,}
+\DoxyCodeLine{00174\ \ \ bright\_magenta,}
+\DoxyCodeLine{00175\ \ \ bright\_cyan,}
+\DoxyCodeLine{00176\ \ \ bright\_white}
+\DoxyCodeLine{00177\ \};}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{keyword}{enum\ class}\ emphasis\ :\ uint8\_t\ \{}
+\DoxyCodeLine{00180\ \ \ bold\ =\ 1,}
+\DoxyCodeLine{00181\ \ \ faint\ =\ 1\ <<\ 1,}
+\DoxyCodeLine{00182\ \ \ italic\ =\ 1\ <<\ 2,}
+\DoxyCodeLine{00183\ \ \ underline\ =\ 1\ <<\ 3,}
+\DoxyCodeLine{00184\ \ \ blink\ =\ 1\ <<\ 4,}
+\DoxyCodeLine{00185\ \ \ reverse\ =\ 1\ <<\ 5,}
+\DoxyCodeLine{00186\ \ \ conceal\ =\ 1\ <<\ 6,}
+\DoxyCodeLine{00187\ \ \ strikethrough\ =\ 1\ <<\ 7,}
+\DoxyCodeLine{00188\ \};}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \textcolor{comment}{//\ rgb\ is\ a\ struct\ for\ red,\ green\ and\ blue\ colors.}}
+\DoxyCodeLine{00191\ \textcolor{comment}{//\ Using\ the\ name\ "{}rgb"{}\ makes\ some\ editors\ show\ the\ color\ in\ a\ tooltip.}}
+\DoxyCodeLine{00192\ \textcolor{keyword}{struct\ }rgb\ \{}
+\DoxyCodeLine{00193\ \ \ \textcolor{keyword}{constexpr}\ rgb()\ :\ r(0),\ g(0),\ b(0)\ \{\}}
+\DoxyCodeLine{00194\ \ \ \textcolor{keyword}{constexpr}\ rgb(uint8\_t\ r\_,\ uint8\_t\ g\_,\ uint8\_t\ b\_)\ :\ r(r\_),\ g(g\_),\ b(b\_)\ \{\}}
+\DoxyCodeLine{00195\ \ \ \textcolor{keyword}{constexpr}\ rgb(uint32\_t\ hex)}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ :\ r((hex\ >>\ 16)\ \&\ 0xFF),\ g((hex\ >>\ 8)\ \&\ 0xFF),\ b(hex\ \&\ 0xFF)\ \{\}}
+\DoxyCodeLine{00197\ \ \ \textcolor{keyword}{constexpr}\ rgb(color\ hex)}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ :\ r((uint32\_t(hex)\ >>\ 16)\ \&\ 0xFF),}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ g((uint32\_t(hex)\ >>\ 8)\ \&\ 0xFF),}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ b(uint32\_t(hex)\ \&\ 0xFF)\ \{\}}
+\DoxyCodeLine{00201\ \ \ uint8\_t\ r;}
+\DoxyCodeLine{00202\ \ \ uint8\_t\ g;}
+\DoxyCodeLine{00203\ \ \ uint8\_t\ b;}
+\DoxyCodeLine{00204\ \};}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedetail}{detail}}\ \{}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{comment}{//\ A\ bit-\/packed\ variant\ of\ an\ RGB\ color,\ a\ terminal\ color,\ or\ unset\ color.}}
+\DoxyCodeLine{00209\ \textcolor{comment}{//\ see\ text\_style\ for\ the\ bit-\/packing\ scheme.}}
+\DoxyCodeLine{00210\ \textcolor{keyword}{struct\ }color\_type\ \{}
+\DoxyCodeLine{00211\ \ \ \textcolor{keyword}{constexpr}\ color\_type()\ \textcolor{keyword}{noexcept}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00212\ \ \ \textcolor{keyword}{constexpr}\ color\_type(color\ rgb\_color)\ noexcept}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ :\ value\_(\textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(rgb\_color)\ |\ (1\ <<\ 24))\ \{\}}
+\DoxyCodeLine{00214\ \ \ \textcolor{keyword}{constexpr}\ color\_type(\doxymbox{\hyperlink{structrgb}{rgb}}\ rgb\_color)\ noexcept}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ :\ color\_type(\textcolor{keyword}{static\_cast<}color\textcolor{keyword}{>}(}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(rgb\_color.r)\ <<\ 16)\ |}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ (\textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(rgb\_color.g)\ <<\ 8)\ |\ rgb\_color.b))\ \{\}}
+\DoxyCodeLine{00218\ \ \ \textcolor{keyword}{constexpr}\ color\_type(terminal\_color\ term\_color)\ noexcept}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ :\ value\_(\textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(term\_color)\ |\ (3\ <<\ 24))\ \{\}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ is\_terminal\_color()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keywordflow}{return}\ (value\_\ \&\ (1\ <<\ 25))\ !=\ 0;}
+\DoxyCodeLine{00223\ \ \ \}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \textcolor{keyword}{constexpr}\ \textcolor{keyword}{auto}\ value()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ uint32\_t\ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordflow}{return}\ value\_\ \&\ 0xFFFFFF;}
+\DoxyCodeLine{00227\ \ \ \}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \textcolor{keyword}{constexpr}\ color\_type(uint32\_t\ value)\ noexcept\ :\ value\_(value)\ \{\}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ uint32\_t\ value\_\ =\ 0;}
+\DoxyCodeLine{00232\ \};}
+\DoxyCodeLine{00233\ \}\ \ \textcolor{comment}{//\ namespace\ detail}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00236\ \textcolor{keyword}{class\ }text\_style\ \{}
+\DoxyCodeLine{00237\ \ \ \textcolor{comment}{//\ The\ information\ is\ packed\ as\ follows:}}
+\DoxyCodeLine{00238\ \ \ \textcolor{comment}{//\ ┌──┐}}
+\DoxyCodeLine{00239\ \ \ \textcolor{comment}{//\ │\ 0│─┐}}
+\DoxyCodeLine{00240\ \ \ \textcolor{comment}{//\ │..│\ ├──\ foreground\ color\ value}}
+\DoxyCodeLine{00241\ \ \ \textcolor{comment}{//\ │23│─┘}}
+\DoxyCodeLine{00242\ \ \ \textcolor{comment}{//\ ├──┤}}
+\DoxyCodeLine{00243\ \ \ \textcolor{comment}{//\ │24│─┬──\ discriminator\ for\ the\ above\ value.\ 00\ if\ unset,\ 01\ if\ it's}}
+\DoxyCodeLine{00244\ \ \ \textcolor{comment}{//\ │25│─┘\ \ \ an\ RGB\ color,\ or\ 11\ if\ it's\ a\ terminal\ color\ (10\ is\ unused)}}
+\DoxyCodeLine{00245\ \ \ \textcolor{comment}{//\ ├──┤}}
+\DoxyCodeLine{00246\ \ \ \textcolor{comment}{//\ │26│────\ overflow\ bit,\ always\ zero\ (see\ below)}}
+\DoxyCodeLine{00247\ \ \ \textcolor{comment}{//\ ├──┤}}
+\DoxyCodeLine{00248\ \ \ \textcolor{comment}{//\ │27│─┐}}
+\DoxyCodeLine{00249\ \ \ \textcolor{comment}{//\ │..│\ │}}
+\DoxyCodeLine{00250\ \ \ \textcolor{comment}{//\ │50│\ │}}
+\DoxyCodeLine{00251\ \ \ \textcolor{comment}{//\ ├──┤\ │}}
+\DoxyCodeLine{00252\ \ \ \textcolor{comment}{//\ │51│\ ├──\ background\ color\ (same\ format\ as\ the\ foreground\ color)}}
+\DoxyCodeLine{00253\ \ \ \textcolor{comment}{//\ │52│\ │}}
+\DoxyCodeLine{00254\ \ \ \textcolor{comment}{//\ ├──┤\ │}}
+\DoxyCodeLine{00255\ \ \ \textcolor{comment}{//\ │53│─┘}}
+\DoxyCodeLine{00256\ \ \ \textcolor{comment}{//\ ├──┤}}
+\DoxyCodeLine{00257\ \ \ \textcolor{comment}{//\ │54│─┐}}
+\DoxyCodeLine{00258\ \ \ \textcolor{comment}{//\ │..│\ ├──\ emphases}}
+\DoxyCodeLine{00259\ \ \ \textcolor{comment}{//\ │61│─┘}}
+\DoxyCodeLine{00260\ \ \ \textcolor{comment}{//\ ├──┤}}
+\DoxyCodeLine{00261\ \ \ \textcolor{comment}{//\ │62│─┬──\ unused}}
+\DoxyCodeLine{00262\ \ \ \textcolor{comment}{//\ │63│─┘}}
+\DoxyCodeLine{00263\ \ \ \textcolor{comment}{//\ └──┘}}
+\DoxyCodeLine{00264\ \ \ \textcolor{comment}{//\ The\ overflow\ bits\ are\ there\ to\ make\ operator|=\ efficient.}}
+\DoxyCodeLine{00265\ \ \ \textcolor{comment}{//\ When\ ORing,\ we\ must\ throw\ if,\ for\ either\ the\ foreground\ or\ background,}}
+\DoxyCodeLine{00266\ \ \ \textcolor{comment}{//\ one\ style\ specifies\ a\ terminal\ color\ and\ the\ other\ specifies\ any\ color}}
+\DoxyCodeLine{00267\ \ \ \textcolor{comment}{//\ (terminal\ or\ RGB);\ in\ other\ words,\ if\ one\ discriminator\ is\ 11\ and\ the}}
+\DoxyCodeLine{00268\ \ \ \textcolor{comment}{//\ other\ is\ 11\ or\ 01.}}
+\DoxyCodeLine{00269\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00270\ \ \ \textcolor{comment}{//\ We\ do\ that\ check\ by\ adding\ the\ styles.\ Consider\ what\ adding\ does\ to\ each}}
+\DoxyCodeLine{00271\ \ \ \textcolor{comment}{//\ possible\ pair\ of\ discriminators:}}
+\DoxyCodeLine{00272\ \ \ \textcolor{comment}{//\ \ \ \ 00\ +\ 00\ =\ 000}}
+\DoxyCodeLine{00273\ \ \ \textcolor{comment}{//\ \ \ \ 01\ +\ 00\ =\ 001}}
+\DoxyCodeLine{00274\ \ \ \textcolor{comment}{//\ \ \ \ 11\ +\ 00\ =\ 011}}
+\DoxyCodeLine{00275\ \ \ \textcolor{comment}{//\ \ \ \ 01\ +\ 01\ =\ 010}}
+\DoxyCodeLine{00276\ \ \ \textcolor{comment}{//\ \ \ \ 11\ +\ 01\ =\ 100\ (!!)}}
+\DoxyCodeLine{00277\ \ \ \textcolor{comment}{//\ \ \ \ 11\ +\ 11\ =\ 110\ (!!)}}
+\DoxyCodeLine{00278\ \ \ \textcolor{comment}{//\ In\ the\ last\ two\ cases,\ the\ ones\ we\ want\ to\ catch,\ the\ third\ bit——the}}
+\DoxyCodeLine{00279\ \ \ \textcolor{comment}{//\ overflow\ bit——is\ set.\ Bingo.}}
+\DoxyCodeLine{00280\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00281\ \ \ \textcolor{comment}{//\ We\ must\ take\ into\ account\ the\ possible\ carry\ bit\ from\ the\ bits}}
+\DoxyCodeLine{00282\ \ \ \textcolor{comment}{//\ before\ the\ discriminator.\ The\ only\ potentially\ problematic\ case\ is}}
+\DoxyCodeLine{00283\ \ \ \textcolor{comment}{//\ 11\ +\ 00\ =\ 011\ (a\ carry\ bit\ would\ make\ it\ 100,\ not\ good!),\ but\ a\ carry}}
+\DoxyCodeLine{00284\ \ \ \textcolor{comment}{//\ bit\ is\ impossible\ in\ that\ case,\ because\ 00\ (unset\ color)\ means\ the}}
+\DoxyCodeLine{00285\ \ \ \textcolor{comment}{//\ 24\ bits\ that\ precede\ the\ discriminator\ are\ all\ zero.}}
+\DoxyCodeLine{00286\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00287\ \ \ \textcolor{comment}{//\ This\ test\ can\ be\ applied\ to\ both\ colors\ simultaneously.}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00290\ \ \ FMT\_CONSTEXPR\ text\_style(emphasis\ em\ =\ emphasis())\ noexcept}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ :\ style\_(\textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(em)\ <<\ 54)\ \{\}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ operator|=(text\_style\ rhs)\ -\/>\ text\_style\&\ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keywordflow}{if}\ (((style\_\ +\ rhs.style\_)\ \&\ ((1ULL\ <<\ 26)\ |\ (1ULL\ <<\ 53)))\ !=\ 0)}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ report\_error(\textcolor{stringliteral}{"{}can't\ OR\ a\ terminal\ color"{}});}
+\DoxyCodeLine{00296\ \ \ \ \ style\_\ |=\ rhs.style\_;}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00298\ \ \ \}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \ \ \textcolor{keyword}{friend}\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ operator|(text\_style\ lhs,\ text\_style\ rhs)}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ -\/>\ text\_style\ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordflow}{return}\ lhs\ |=\ rhs;}
+\DoxyCodeLine{00303\ \ \ \}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ operator==(text\_style\ rhs)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keywordflow}{return}\ style\_\ ==\ rhs.style\_;}
+\DoxyCodeLine{00307\ \ \ \}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ operator!=(text\_style\ rhs)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordflow}{return}\ !(*\textcolor{keyword}{this}\ ==\ rhs);}
+\DoxyCodeLine{00311\ \ \ \}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ has\_foreground()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keywordflow}{return}\ (style\_\ \&\ (1\ <<\ 24))\ !=\ 0;}
+\DoxyCodeLine{00315\ \ \ \}}
+\DoxyCodeLine{00316\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ has\_background()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keywordflow}{return}\ (style\_\ \&\ (1ULL\ <<\ 51))\ !=\ 0;}
+\DoxyCodeLine{00318\ \ \ \}}
+\DoxyCodeLine{00319\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ has\_emphasis()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keywordflow}{return}\ (style\_\ >>\ 54)\ !=\ 0;}
+\DoxyCodeLine{00321\ \ \ \}}
+\DoxyCodeLine{00322\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ get\_foreground()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \doxymbox{\hyperlink{structdetail_1_1color__type}{detail::color\_type}}\ \{}
+\DoxyCodeLine{00323\ \ \ \ \ FMT\_ASSERT(has\_foreground(),\ \textcolor{stringliteral}{"{}no\ foreground\ specified\ for\ this\ style"{}});}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keywordflow}{return}\ style\_\ \&\ 0x3FFFFFF;}
+\DoxyCodeLine{00325\ \ \ \}}
+\DoxyCodeLine{00326\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ get\_background()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \doxymbox{\hyperlink{structdetail_1_1color__type}{detail::color\_type}}\ \{}
+\DoxyCodeLine{00327\ \ \ \ \ FMT\_ASSERT(has\_background(),\ \textcolor{stringliteral}{"{}no\ background\ specified\ for\ this\ style"{}});}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keywordflow}{return}\ (style\_\ >>\ 27)\ \&\ 0x3FFFFFF;}
+\DoxyCodeLine{00329\ \ \ \}}
+\DoxyCodeLine{00330\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ get\_emphasis()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ emphasis\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ FMT\_ASSERT(has\_emphasis(),\ \textcolor{stringliteral}{"{}no\ emphasis\ specified\ for\ this\ style"{}});}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}emphasis\textcolor{keyword}{>}(style\_\ >>\ 54);}
+\DoxyCodeLine{00333\ \ \ \}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00336\ \ \ FMT\_CONSTEXPR\ text\_style(uint64\_t\ style)\ noexcept\ :\ style\_(style)\ \{\}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \textcolor{keyword}{friend}\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ \doxymbox{\hyperlink{classtext__style_a87e158c25ff715075e0054cb1769961b}{fg}}(\doxymbox{\hyperlink{structdetail_1_1color__type}{detail::color\_type}}\ foreground)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ -\/>\ text\_style;}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \textcolor{keyword}{friend}\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ \doxymbox{\hyperlink{classtext__style_ae85aa6f7e0b7a5f146778c0c92c70921}{bg}}(\doxymbox{\hyperlink{structdetail_1_1color__type}{detail::color\_type}}\ background)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ -\/>\ text\_style;}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ uint64\_t\ style\_\ =\ 0;}
+\DoxyCodeLine{00345\ \};}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00348\ FMT\_CONSTEXPR\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ \doxymbox{\hyperlink{classtext__style_a87e158c25ff715075e0054cb1769961b}{fg}}(\doxymbox{\hyperlink{structdetail_1_1color__type}{detail::color\_type}}\ foreground)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00349\ \ \ \ \ -\/>\ text\_style\ \{}
+\DoxyCodeLine{00350\ \ \ \textcolor{keywordflow}{return}\ foreground.value\_;}
+\DoxyCodeLine{00351\ \}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00354\ FMT\_CONSTEXPR\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ \doxymbox{\hyperlink{classtext__style_ae85aa6f7e0b7a5f146778c0c92c70921}{bg}}(\doxymbox{\hyperlink{structdetail_1_1color__type}{detail::color\_type}}\ background)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00355\ \ \ \ \ -\/>\ text\_style\ \{}
+\DoxyCodeLine{00356\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(background.value\_)\ <<\ 27;}
+\DoxyCodeLine{00357\ \}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ FMT\_CONSTEXPR\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ operator|(emphasis\ lhs,\ emphasis\ rhs)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00360\ \ \ \ \ -\/>\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ \{}
+\DoxyCodeLine{00361\ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classtext__style}{text\_style}}(lhs)\ |\ rhs;}
+\DoxyCodeLine{00362\ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedetail}{detail}}\ \{}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Char>\ \textcolor{keyword}{struct\ }ansi\_color\_escape\ \{}
+\DoxyCodeLine{00367\ \ \ FMT\_CONSTEXPR\ ansi\_color\_escape(\doxymbox{\hyperlink{structdetail_1_1color__type}{color\_type}}\ text\_color,}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ esc)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{comment}{//\ If\ we\ have\ a\ terminal\ color,\ we\ need\ to\ output\ another\ escape\ code}}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{comment}{//\ sequence.}}
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{keywordflow}{if}\ (text\_color.is\_terminal\_color())\ \{}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_background\ =\ esc\ ==\ string\_view(\textcolor{stringliteral}{"{}\(\backslash\)x1b[48;2;"{}});}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ uint32\_t\ \doxymbox{\hyperlink{classdetail_1_1value}{value}}\ =\ text\_color.value();}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \textcolor{comment}{//\ Background\ ASCII\ codes\ are\ the\ same\ as\ the\ foreground\ ones\ but\ with}}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \textcolor{comment}{//\ 10\ more.}}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_background)\ \doxymbox{\hyperlink{classdetail_1_1value}{value}}\ +=\ 10u;}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{stringliteral}{'\(\backslash\)x1b'});}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'['});}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{classdetail_1_1value}{value}}\ >=\ 100u)\ \{}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'1'});}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdetail_1_1value}{value}}\ \%=\ 100u;}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'0'}\ +\ \doxymbox{\hyperlink{classdetail_1_1value}{value}}\ /\ 10u);}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'0'}\ +\ \doxymbox{\hyperlink{classdetail_1_1value}{value}}\ \%\ 10u);}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'m'});}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00390\ \ \ \ \ \}}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 7;\ i++)\ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ buffer[i]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(esc[i]);}
+\DoxyCodeLine{00394\ \ \ \ \ \}}
+\DoxyCodeLine{00395\ \ \ \ \ \doxymbox{\hyperlink{structrgb}{rgb}}\ color(text\_color.value());}
+\DoxyCodeLine{00396\ \ \ \ \ to\_esc(color.r,\ buffer\ +\ 7,\ \textcolor{charliteral}{';'});}
+\DoxyCodeLine{00397\ \ \ \ \ to\_esc(color.g,\ buffer\ +\ 11,\ \textcolor{charliteral}{';'});}
+\DoxyCodeLine{00398\ \ \ \ \ to\_esc(color.b,\ buffer\ +\ 15,\ \textcolor{charliteral}{'m'});}
+\DoxyCodeLine{00399\ \ \ \ \ size\ =\ 19;}
+\DoxyCodeLine{00400\ \ \ \}}
+\DoxyCodeLine{00401\ \ \ FMT\_CONSTEXPR\ ansi\_color\_escape(emphasis\ em)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00402\ \ \ \ \ uint8\_t\ em\_codes[num\_emphases]\ =\ \{\};}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::bold))\ em\_codes[0]\ =\ 1;}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::faint))\ em\_codes[1]\ =\ 2;}
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::italic))\ em\_codes[2]\ =\ 3;}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::underline))\ em\_codes[3]\ =\ 4;}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::blink))\ em\_codes[4]\ =\ 5;}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::reverse))\ em\_codes[5]\ =\ 7;}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::conceal))\ em\_codes[6]\ =\ 8;}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_emphasis(em,\ emphasis::strikethrough))\ em\_codes[7]\ =\ 9;}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{stringliteral}{'\(\backslash\)x1b'});}
+\DoxyCodeLine{00413\ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'['});}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ num\_emphases;\ ++i)\ \{}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!em\_codes[i])\ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'0'}\ +\ em\_codes[i]);}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ buffer[size++]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{';'});}
+\DoxyCodeLine{00419\ \ \ \ \ \}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \ \ \ \ buffer[size\ -\/\ 1]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'m'});}
+\DoxyCodeLine{00422\ \ \ \}}
+\DoxyCodeLine{00423\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{operator}\ \textcolor{keyword}{const}\ Char*()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ buffer;\ \}}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ begin()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keyword}{const}\ Char*\ \{\ \textcolor{keywordflow}{return}\ buffer;\ \}}
+\DoxyCodeLine{00426\ \ \ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ end()\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keyword}{const}\ Char*\ \{}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{keywordflow}{return}\ buffer\ +\ size;}
+\DoxyCodeLine{00428\ \ \ \}}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00431\ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ num\_emphases\ =\ 8;}
+\DoxyCodeLine{00432\ \ \ Char\ buffer[7u\ +\ 4u\ *\ num\_emphases]\ =\ \{\};}
+\DoxyCodeLine{00433\ \ \ \textcolor{keywordtype}{size\_t}\ size\ =\ 0;}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \ \ \textcolor{keyword}{static}\ FMT\_CONSTEXPR\ \textcolor{keywordtype}{void}\ to\_esc(uint8\_t\ c,\ Char*\ out,}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ delimiter)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00437\ \ \ \ \ out[0]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'0'}\ +\ c\ /\ 100);}
+\DoxyCodeLine{00438\ \ \ \ \ out[1]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'0'}\ +\ c\ /\ 10\ \%\ 10);}
+\DoxyCodeLine{00439\ \ \ \ \ out[2]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(\textcolor{charliteral}{'0'}\ +\ c\ \%\ 10);}
+\DoxyCodeLine{00440\ \ \ \ \ out[3]\ =\ \textcolor{keyword}{static\_cast<}Char\textcolor{keyword}{>}(delimiter);}
+\DoxyCodeLine{00441\ \ \ \}}
+\DoxyCodeLine{00442\ \ \ \textcolor{keyword}{static}\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ has\_emphasis(emphasis\ em,\ emphasis\ mask)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ -\/>\ \textcolor{keywordtype}{bool}\ \{}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(em)\ \&\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(mask);}
+\DoxyCodeLine{00445\ \ \ \}}
+\DoxyCodeLine{00446\ \};}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Char>}
+\DoxyCodeLine{00449\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ make\_foreground\_color(\doxymbox{\hyperlink{structdetail_1_1color__type}{color\_type}}\ foreground)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00450\ \ \ \ \ -\/>\ \doxymbox{\hyperlink{structdetail_1_1ansi__color__escape}{ansi\_color\_escape<Char>}}\ \{}
+\DoxyCodeLine{00451\ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structdetail_1_1ansi__color__escape}{ansi\_color\_escape<Char>}}(foreground,\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[38;2;"{}});}
+\DoxyCodeLine{00452\ \}}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Char>}
+\DoxyCodeLine{00455\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ make\_background\_color(color\_type\ background)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00456\ \ \ \ \ -\/>\ ansi\_color\_escape<Char>\ \{}
+\DoxyCodeLine{00457\ \ \ \textcolor{keywordflow}{return}\ ansi\_color\_escape<Char>(background,\ \textcolor{stringliteral}{"{}\(\backslash\)x1b[48;2;"{}});}
+\DoxyCodeLine{00458\ \}}
+\DoxyCodeLine{00459\ }
+\DoxyCodeLine{00460\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Char>}
+\DoxyCodeLine{00461\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ make\_emphasis(emphasis\ em)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00462\ \ \ \ \ -\/>\ \doxymbox{\hyperlink{structdetail_1_1ansi__color__escape}{ansi\_color\_escape<Char>}}\ \{}
+\DoxyCodeLine{00463\ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structdetail_1_1ansi__color__escape}{ansi\_color\_escape<Char>}}(em);}
+\DoxyCodeLine{00464\ \}}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Char>\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ reset\_color(\doxymbox{\hyperlink{classdetail_1_1buffer}{buffer<Char>}}\&\ \doxymbox{\hyperlink{classdetail_1_1buffer}{buffer}})\ \{}
+\DoxyCodeLine{00467\ \ \ \textcolor{keyword}{auto}\ reset\_color\ =\ string\_view(\textcolor{stringliteral}{"{}\(\backslash\)x1b[0m"{}});}
+\DoxyCodeLine{00468\ \ \ \doxymbox{\hyperlink{classdetail_1_1buffer}{buffer}}.\doxymbox{\hyperlink{classdetail_1_1buffer_a28f51acf32e61f37558f6c7b8d200c05}{append}}(reset\_color.begin(),\ reset\_color.end());}
+\DoxyCodeLine{00469\ \}}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }styled\_arg\ :\ \doxymbox{\hyperlink{structdetail_1_1view}{view}}\ \{}
+\DoxyCodeLine{00472\ \ \ \textcolor{keyword}{const}\ T\&\ value;}
+\DoxyCodeLine{00473\ \ \ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ style;}
+\DoxyCodeLine{00474\ \ \ styled\_arg(\textcolor{keyword}{const}\ T\&\ v,\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ s)\ :\ value(v),\ style(s)\ \{\}}
+\DoxyCodeLine{00475\ \};}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Char>}
+\DoxyCodeLine{00478\ \textcolor{keywordtype}{void}\ vformat\_to(\doxymbox{\hyperlink{classdetail_1_1buffer}{buffer<Char>}}\&\ buf,\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ \doxymbox{\hyperlink{classbasic__string__view}{basic\_string\_view<Char>}}\ fmt,}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classbasic__format__args}{basic\_format\_args}}<buffered\_context<Char>>\ args)\ \{}
+\DoxyCodeLine{00480\ \ \ \textcolor{keywordflow}{if}\ (ts.has\_emphasis())\ \{}
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{keyword}{auto}\ emphasis\ =\ make\_emphasis<Char>(ts.get\_emphasis());}
+\DoxyCodeLine{00482\ \ \ \ \ buf.append(emphasis.begin(),\ emphasis.end());}
+\DoxyCodeLine{00483\ \ \ \}}
+\DoxyCodeLine{00484\ \ \ \textcolor{keywordflow}{if}\ (ts.has\_foreground())\ \{}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{keyword}{auto}\ foreground\ =\ make\_foreground\_color<Char>(ts.get\_foreground());}
+\DoxyCodeLine{00486\ \ \ \ \ buf.append(foreground.begin(),\ foreground.end());}
+\DoxyCodeLine{00487\ \ \ \}}
+\DoxyCodeLine{00488\ \ \ \textcolor{keywordflow}{if}\ (ts.has\_background())\ \{}
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{keyword}{auto}\ background\ =\ make\_background\_color<Char>(ts.get\_background());}
+\DoxyCodeLine{00490\ \ \ \ \ buf.append(background.begin(),\ background.end());}
+\DoxyCodeLine{00491\ \ \ \}}
+\DoxyCodeLine{00492\ \ \ vformat\_to(buf,\ fmt,\ args);}
+\DoxyCodeLine{00493\ \ \ \textcolor{keywordflow}{if}\ (ts\ !=\ text\_style())\ reset\_color<Char>(buf);}
+\DoxyCodeLine{00494\ \}}
+\DoxyCodeLine{00495\ \}\ \ \textcolor{comment}{//\ namespace\ detail}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ vprint(FILE*\ f,\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ string\_view\ fmt,\ format\_args\ args)\ \{}
+\DoxyCodeLine{00498\ \ \ \textcolor{keyword}{auto}\ buf\ =\ memory\_buffer();}
+\DoxyCodeLine{00499\ \ \ detail::vformat\_to(buf,\ ts,\ fmt,\ args);}
+\DoxyCodeLine{00500\ \ \ print(f,\ FMT\_STRING(\textcolor{stringliteral}{"{}\{\}"{}}),\ string\_view(buf.begin(),\ buf.size()));}
+\DoxyCodeLine{00501\ \}}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00512\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ T>}
+\DoxyCodeLine{00513\ \textcolor{keywordtype}{void}\ print(FILE*\ f,\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ format\_string<T...>\ fmt,\ T\&\&...\ args)\ \{}
+\DoxyCodeLine{00514\ \ \ vprint(f,\ ts,\ fmt.str,\ vargs<T...>\{\{args...\}\});}
+\DoxyCodeLine{00515\ \}}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00526\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ T>}
+\DoxyCodeLine{00527\ \textcolor{keywordtype}{void}\ print(\doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ format\_string<T...>\ fmt,\ T\&\&...\ args)\ \{}
+\DoxyCodeLine{00528\ \ \ \textcolor{keywordflow}{return}\ print(stdout,\ ts,\ fmt,\ std::forward<T>(args)...);}
+\DoxyCodeLine{00529\ \}}
+\DoxyCodeLine{00530\ }
+\DoxyCodeLine{00531\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ vformat(\doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ string\_view\ fmt,\ format\_args\ args)}
+\DoxyCodeLine{00532\ \ \ \ \ -\/>\ std::string\ \{}
+\DoxyCodeLine{00533\ \ \ \textcolor{keyword}{auto}\ buf\ =\ memory\_buffer();}
+\DoxyCodeLine{00534\ \ \ detail::vformat\_to(buf,\ ts,\ fmt,\ args);}
+\DoxyCodeLine{00535\ \ \ \textcolor{keywordflow}{return}\ fmt::to\_string(buf);}
+\DoxyCodeLine{00536\ \}}
+\DoxyCodeLine{00537\ }
+\DoxyCodeLine{00550\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}...\ T>}
+\DoxyCodeLine{00551\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ format(\doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ format\_string<T...>\ fmt,\ T\&\&...\ args)}
+\DoxyCodeLine{00552\ \ \ \ \ -\/>\ std::string\ \{}
+\DoxyCodeLine{00553\ \ \ \textcolor{keywordflow}{return}\ fmt::vformat(ts,\ fmt.str,\ vargs<T...>\{\{args...\}\});}
+\DoxyCodeLine{00554\ \}}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00557\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ OutputIt,}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ FMT\_ENABLE\_IF(\doxymbox{\hyperlink{structdetail_1_1is__output__iterator}{detail::is\_output\_iterator<OutputIt,\ char>::value}})>}
+\DoxyCodeLine{00559\ \textcolor{keyword}{auto}\ vformat\_to(OutputIt\ out,\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ string\_view\ fmt,\ format\_args\ args)}
+\DoxyCodeLine{00560\ \ \ \ \ -\/>\ OutputIt\ \{}
+\DoxyCodeLine{00561\ \ \ \textcolor{keyword}{auto}\&\&\ buf\ =\ detail::get\_buffer<char>(out);}
+\DoxyCodeLine{00562\ \ \ detail::vformat\_to(buf,\ ts,\ fmt,\ args);}
+\DoxyCodeLine{00563\ \ \ \textcolor{keywordflow}{return}\ detail::get\_iterator(buf,\ out);}
+\DoxyCodeLine{00564\ \}}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00576\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ OutputIt,\ \textcolor{keyword}{typename}...\ T,}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ FMT\_ENABLE\_IF(\doxymbox{\hyperlink{structdetail_1_1is__output__iterator}{detail::is\_output\_iterator<OutputIt,\ char>::value}})>}
+\DoxyCodeLine{00578\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ format\_to(OutputIt\ out,\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts,\ format\_string<T...>\ fmt,}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ T\&\&...\ args)\ -\/>\ OutputIt\ \{}
+\DoxyCodeLine{00580\ \ \ \textcolor{keywordflow}{return}\ vformat\_to(out,\ ts,\ fmt.str,\ vargs<T...>\{\{args...\}\});}
+\DoxyCodeLine{00581\ \}}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Char>}
+\DoxyCodeLine{00584\ \textcolor{keyword}{struct\ }formatter<\doxymbox{\hyperlink{namespacedetail}{detail}}::styled\_arg<T>,\ Char>\ :\ formatter<T,\ Char>\ \{}
+\DoxyCodeLine{00585\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ FormatContext>}
+\DoxyCodeLine{00586\ \ \ \textcolor{keyword}{auto}\ format(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetail_1_1styled__arg}{detail::styled\_arg<T>}}\&\ arg,\ FormatContext\&\ ctx)\ \textcolor{keyword}{const}}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ -\/>\ \textcolor{keyword}{decltype}(ctx.out())\ \{}
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ ts\ =\ arg.style;}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{auto}\ out\ =\ ctx.out();}
+\DoxyCodeLine{00590\ }
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_style\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{keywordflow}{if}\ (ts.has\_emphasis())\ \{}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ has\_style\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ emphasis\ =\ detail::make\_emphasis<Char>(ts.get\_emphasis());}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ out\ =\ detail::copy<Char>(emphasis.begin(),\ emphasis.end(),\ out);}
+\DoxyCodeLine{00596\ \ \ \ \ \}}
+\DoxyCodeLine{00597\ \ \ \ \ \textcolor{keywordflow}{if}\ (ts.has\_foreground())\ \{}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ has\_style\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ foreground\ =}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ detail::make\_foreground\_color<Char>(ts.get\_foreground());}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ out\ =\ detail::copy<Char>(foreground.begin(),\ foreground.end(),\ out);}
+\DoxyCodeLine{00602\ \ \ \ \ \}}
+\DoxyCodeLine{00603\ \ \ \ \ \textcolor{keywordflow}{if}\ (ts.has\_background())\ \{}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ has\_style\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ background\ =}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ detail::make\_background\_color<Char>(ts.get\_background());}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ out\ =\ detail::copy<Char>(background.begin(),\ background.end(),\ out);}
+\DoxyCodeLine{00608\ \ \ \ \ \}}
+\DoxyCodeLine{00609\ \ \ \ \ out\ =\ formatter<T,\ Char>::format(arg.value,\ ctx);}
+\DoxyCodeLine{00610\ \ \ \ \ \textcolor{keywordflow}{if}\ (has\_style)\ \{}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \textcolor{keyword}{auto}\ reset\_color\ =\ string\_view(\textcolor{stringliteral}{"{}\(\backslash\)x1b[0m"{}});}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ out\ =\ detail::copy<Char>(reset\_color.begin(),\ reset\_color.end(),\ out);}
+\DoxyCodeLine{00613\ \ \ \ \ \}}
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{keywordflow}{return}\ out;}
+\DoxyCodeLine{00615\ \ \ \}}
+\DoxyCodeLine{00616\ \};}
+\DoxyCodeLine{00617\ }
+\DoxyCodeLine{00628\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00629\ FMT\_CONSTEXPR\ \textcolor{keyword}{auto}\ styled(\textcolor{keyword}{const}\ T\&\ value,\ \doxymbox{\hyperlink{classtext__style}{text\_style}}\ ts)}
+\DoxyCodeLine{00630\ \ \ \ \ -\/>\ \doxymbox{\hyperlink{structdetail_1_1styled__arg}{detail::styled\_arg<remove\_cvref\_t<T>}}>\ \{}
+\DoxyCodeLine{00631\ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structdetail_1_1styled__arg}{detail::styled\_arg<remove\_cvref\_t<T>}}>\{value,\ ts\};}
+\DoxyCodeLine{00632\ \}}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ FMT\_END\_EXPORT}
+\DoxyCodeLine{00635\ FMT\_END\_NAMESPACE}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ FMT\_COLOR\_H\_}}
+
+\end{DoxyCode}

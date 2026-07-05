@@ -1,0 +1,119 @@
+\doxysection{default\+\_\+cursor.\+h}
+\hypertarget{default__cursor_8h_source}{}\label{default__cursor_8h_source}\index{MonoRuntime/extern/sdl/src/events/default\_cursor.h@{MonoRuntime/extern/sdl/src/events/default\_cursor.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *\ *}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ Default\ cursor\ -\/\ it\ happens\ to\ be\ the\ Mac\ cursor,\ but\ could\ be\ anything\ \ \ */}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ DEFAULT\_CWIDTH\ \ 16}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ DEFAULT\_CHEIGHT\ 16}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ DEFAULT\_CHOTX\ \ \ 0}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ DEFAULT\_CHOTY\ \ \ 0}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ Added\ a\ real\ MacOS\ cursor,\ at\ the\ request\ of\ Luc-\/Olivier\ de\ Charrière}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ USE\_MACOS\_CURSOR}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifdef\ USE\_MACOS\_CURSOR}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ default\_cdata[]\ =\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ 0x00,\ 0x00,}
+\DoxyCodeLine{00037\ \ \ \ \ 0x40,\ 0x00,}
+\DoxyCodeLine{00038\ \ \ \ \ 0x60,\ 0x00,}
+\DoxyCodeLine{00039\ \ \ \ \ 0x70,\ 0x00,}
+\DoxyCodeLine{00040\ \ \ \ \ 0x78,\ 0x00,}
+\DoxyCodeLine{00041\ \ \ \ \ 0x7C,\ 0x00,}
+\DoxyCodeLine{00042\ \ \ \ \ 0x7E,\ 0x00,}
+\DoxyCodeLine{00043\ \ \ \ \ 0x7F,\ 0x00,}
+\DoxyCodeLine{00044\ \ \ \ \ 0x7F,\ 0x80,}
+\DoxyCodeLine{00045\ \ \ \ \ 0x7C,\ 0x00,}
+\DoxyCodeLine{00046\ \ \ \ \ 0x6C,\ 0x00,}
+\DoxyCodeLine{00047\ \ \ \ \ 0x46,\ 0x00,}
+\DoxyCodeLine{00048\ \ \ \ \ 0x06,\ 0x00,}
+\DoxyCodeLine{00049\ \ \ \ \ 0x03,\ 0x00,}
+\DoxyCodeLine{00050\ \ \ \ \ 0x03,\ 0x00,}
+\DoxyCodeLine{00051\ \ \ \ \ 0x00,\ 0x00}
+\DoxyCodeLine{00052\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ default\_cmask[]\ =\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ 0xC0,\ 0x00,}
+\DoxyCodeLine{00056\ \ \ \ \ 0xE0,\ 0x00,}
+\DoxyCodeLine{00057\ \ \ \ \ 0xF0,\ 0x00,}
+\DoxyCodeLine{00058\ \ \ \ \ 0xF8,\ 0x00,}
+\DoxyCodeLine{00059\ \ \ \ \ 0xFC,\ 0x00,}
+\DoxyCodeLine{00060\ \ \ \ \ 0xFE,\ 0x00,}
+\DoxyCodeLine{00061\ \ \ \ \ 0xFF,\ 0x00,}
+\DoxyCodeLine{00062\ \ \ \ \ 0xFF,\ 0x80,}
+\DoxyCodeLine{00063\ \ \ \ \ 0xFF,\ 0xC0,}
+\DoxyCodeLine{00064\ \ \ \ \ 0xFF,\ 0xE0,}
+\DoxyCodeLine{00065\ \ \ \ \ 0xFE,\ 0x00,}
+\DoxyCodeLine{00066\ \ \ \ \ 0xEF,\ 0x00,}
+\DoxyCodeLine{00067\ \ \ \ \ 0xCF,\ 0x00,}
+\DoxyCodeLine{00068\ \ \ \ \ 0x87,\ 0x80,}
+\DoxyCodeLine{00069\ \ \ \ \ 0x07,\ 0x80,}
+\DoxyCodeLine{00070\ \ \ \ \ 0x03,\ 0x00}
+\DoxyCodeLine{00071\ \};}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ default\_cdata[]\ =\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ 0x00,\ 0x00,}
+\DoxyCodeLine{00077\ \ \ \ \ 0x40,\ 0x00,}
+\DoxyCodeLine{00078\ \ \ \ \ 0x60,\ 0x00,}
+\DoxyCodeLine{00079\ \ \ \ \ 0x70,\ 0x00,}
+\DoxyCodeLine{00080\ \ \ \ \ 0x78,\ 0x00,}
+\DoxyCodeLine{00081\ \ \ \ \ 0x7C,\ 0x00,}
+\DoxyCodeLine{00082\ \ \ \ \ 0x7E,\ 0x00,}
+\DoxyCodeLine{00083\ \ \ \ \ 0x7F,\ 0x00,}
+\DoxyCodeLine{00084\ \ \ \ \ 0x7F,\ 0x80,}
+\DoxyCodeLine{00085\ \ \ \ \ 0x7C,\ 0x00,}
+\DoxyCodeLine{00086\ \ \ \ \ 0x6C,\ 0x00,}
+\DoxyCodeLine{00087\ \ \ \ \ 0x46,\ 0x00,}
+\DoxyCodeLine{00088\ \ \ \ \ 0x06,\ 0x00,}
+\DoxyCodeLine{00089\ \ \ \ \ 0x03,\ 0x00,}
+\DoxyCodeLine{00090\ \ \ \ \ 0x03,\ 0x00,}
+\DoxyCodeLine{00091\ \ \ \ \ 0x00,\ 0x00}
+\DoxyCodeLine{00092\ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ default\_cmask[]\ =\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ 0x40,\ 0x00,}
+\DoxyCodeLine{00096\ \ \ \ \ 0xE0,\ 0x00,}
+\DoxyCodeLine{00097\ \ \ \ \ 0xF0,\ 0x00,}
+\DoxyCodeLine{00098\ \ \ \ \ 0xF8,\ 0x00,}
+\DoxyCodeLine{00099\ \ \ \ \ 0xFC,\ 0x00,}
+\DoxyCodeLine{00100\ \ \ \ \ 0xFE,\ 0x00,}
+\DoxyCodeLine{00101\ \ \ \ \ 0xFF,\ 0x00,}
+\DoxyCodeLine{00102\ \ \ \ \ 0xFF,\ 0x80,}
+\DoxyCodeLine{00103\ \ \ \ \ 0xFF,\ 0xC0,}
+\DoxyCodeLine{00104\ \ \ \ \ 0xFF,\ 0x80,}
+\DoxyCodeLine{00105\ \ \ \ \ 0xFE,\ 0x00,}
+\DoxyCodeLine{00106\ \ \ \ \ 0xEF,\ 0x00,}
+\DoxyCodeLine{00107\ \ \ \ \ 0x4F,\ 0x00,}
+\DoxyCodeLine{00108\ \ \ \ \ 0x07,\ 0x80,}
+\DoxyCodeLine{00109\ \ \ \ \ 0x07,\ 0x80,}
+\DoxyCodeLine{00110\ \ \ \ \ 0x03,\ 0x00}
+\DoxyCodeLine{00111\ \};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ USE\_MACOS\_CURSOR}}
+
+\end{DoxyCode}

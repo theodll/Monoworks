@@ -1,0 +1,63 @@
+\doxysection{Tracy\+ETW\+\_\+compat.\+h}
+\hypertarget{_tracy_e_t_w__compat_8h_source}{}\label{_tracy_e_t_w__compat_8h_source}\index{MonoEngine/thirdparty/tracy/public/client/windows/TracyETW\_compat.h@{MonoEngine/thirdparty/tracy/public/client/windows/TracyETW\_compat.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACY\_ETW\_COMPAT\_H\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACY\_ETW\_COMPAT\_H\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Compatibility\ definitions\ for\ older\ Windows\ SDKs\ and\ MinGW-\/w64\ which\ lacks\ some\ ETW\ types}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ present\ in\ Microsoft's\ Windows\ SDK}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#ifdef\ \_\_MINGW32\_\_}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ CONTROLTRACE\_ID\ -\/\ ETW\ trace\ session\ handle\ type}}
+\DoxyCodeLine{00010\ \textcolor{keyword}{typedef}\ ULONG64\ CONTROLTRACE\_ID;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ PROCESSTRACE\_HANDLE\ -\/\ ETW\ process\ trace\ handle\ type}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ MinGW\ defines\ INVALID\_PROCESSTRACE\_HANDLE\ but\ not\ the\ type\ itself}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#ifndef\ PROCESSTRACE\_HANDLE}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ PROCESSTRACE\_HANDLE\ TRACEHANDLE}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ EVENT\_FILTER\_EVENT\_ID\ struct\ for\ event\ filtering}}
+\DoxyCodeLine{00019\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\_EVENT\_FILTER\_EVENT\_ID\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ BOOLEAN\ FilterIn;}
+\DoxyCodeLine{00021\ \ \ \ \ UCHAR\ Reserved;}
+\DoxyCodeLine{00022\ \ \ \ \ USHORT\ Count;}
+\DoxyCodeLine{00023\ \ \ \ \ USHORT\ Events[ANYSIZE\_ARRAY];}
+\DoxyCodeLine{00024\ \}\ EVENT\_FILTER\_EVENT\_ID,\ *PEVENT\_FILTER\_EVENT\_ID;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Event\ filter\ type\ constants}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ EVENT\_FILTER\_TYPE\_EVENT\_ID\ (0x80000200)\ }\textcolor{comment}{//\ Event\ IDs.}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Enable\ property\ constants}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ EVENT\_ENABLE\_PROPERTY\_IGNORE\_KEYWORD\_0\ (0x00000010)}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ System\ provider\ GUIDs}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ MinGW's\ DEFINE\_GUID\ only\ declares\ the\ GUID,\ we\ need\ to\ define\ it\ with\ actual\ storage}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Using\ GUID\ format:\ \{l,\ w1,\ w2,\ d1,\ d2,\ d3,\ d4,\ d5,\ d6,\ d7,\ d8\}\ where\ d1-\/d8\ are\ bytes}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ GUID\ SystemProcessProviderGuid\ =\ \{\ 0x151f55dc,\ 0x467d,\ 0x471f,\ \{\ 0x83,\ 0xb5,\ 0x5f,\ 0x88,\ 0x9d,\ 0x46,\ 0xff,\ 0x66\ \}\ \};}
+\DoxyCodeLine{00036\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ GUID\ SystemProfileProviderGuid\ =\ \{\ 0xbfeb0324,\ 0x1cee,\ 0x496f,\ \{\ 0xa4,\ 0x9,\ 0x2a,\ 0xc2,\ 0xb4,\ 0x8a,\ 0x63,\ 0x22\ \}\ \};}
+\DoxyCodeLine{00037\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ GUID\ SystemSchedulerProviderGuid\ =\ \{\ 0x599a2a76,\ 0x4d91,\ 0x4910,\ \{\ 0x9a,\ 0xc7,\ 0x7d,\ 0x33,\ 0xf2,\ 0xe9,\ 0x7a,\ 0x6c\ \}\ \};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ System\ provider\ keyword\ constants}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ SYSTEM\_PROCESS\_KW\_THREAD\ (0x0000000000000800)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ SYSTEM\_SCHEDULER\_KW\_DISPATCHER\ (0x0000000000000002)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ SYSTEM\_SCHEDULER\_KW\_CONTEXT\_SWITCH\ (0x0000000000000200)}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ \_\_MINGW32\_\_}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Backcompat\ with\ older\ sdk\ versions}}
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ SDK\ 10.0.26100\ introduced\ those\ two\ and\ marked\ TRACEHANDLE\ obsolete}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ SDK\ 10.0.26100\ is\ the\ first\ one\ to\ define\ NTDDI\_VERSION\ and\ WDK\_NTDDI\_VERSION\ to\ NTDDI\_WIN11\_GE,\ while\ older\ ones\ will\ have\ lower\ versions\ and\ NTDDI\_WIN11\_GE\ undefined.}}
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ Just\ in\ case\ we\ check\ both\ definition\ and\ value.}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#if\ !(defined\ NTDDI\_WIN11\_GE\ \&\&\ WDK\_NTDDI\_VERSION\ >=\ NTDDI\_WIN11\_GE)}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ ULONG64\ PROCESSTRACE\_HANDLE;}
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ ULONG64\ CONTROLTRACE\_ID;}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_MINGW32\_\_}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_\_TRACY\_ETW\_COMPAT\_H\_\_}}
+
+\end{DoxyCode}

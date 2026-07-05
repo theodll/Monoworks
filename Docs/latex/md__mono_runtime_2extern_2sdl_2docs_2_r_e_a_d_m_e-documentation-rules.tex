@@ -1,0 +1,231 @@
+\chapter{Rules for documentation }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules}\index{Rules for documentation@{Rules for documentation}}
+\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1251}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1251}%
+
+
+These are the rules for the care and feeding of wikiheaders.\+pl.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1252}{}\doxysection{\texorpdfstring{No style guide}{No style guide}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1252}
+When adding or editing documentation, we don\textquotesingle{}t (currently) have a style guide for what it should read like, so try to make it consistent with the rest of the existing text. It generally should read more like technical reference manuals and not sound conversational in tone.
+
+Most of these rules are about how to make sure the documentation works on a {\itshape technical} level, as scripts need to parse it, and there are a few simple rules we need to obey to cooperate with those scripts.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1253}{}\doxysection{\texorpdfstring{The wiki and headers share the same text.}{The wiki and headers share the same text.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1253}
+There is a massive Perl script ({\ttfamily build-\/scripts/\+wikiheaders.\+pl}, hereafter referred to as "{}wikiheaders"{}) that can read both the wiki and the public headers, and move changes in one across to the other.
+
+If you prefer to use the wiki, go ahead and edit there. If you prefer to use your own text editor, or command line tools to batch-\/process text, etc, you can \href{https://github.com/libsdl-org/sdlwiki}{\texttt{clone the wiki as a git repo}} and work locally.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1254}{}\doxysection{\texorpdfstring{Don\textquotesingle{}t taunt wikiheaders.}{Don\textquotesingle{}t taunt wikiheaders.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1254}
+The script isn\textquotesingle{}t magic; it\textquotesingle{}s a massive pile of Regular Expressions and not a full C or markdown parser. While it isn\textquotesingle{}t {\itshape fragile}, if you try to do clever things, you might confuse it. This is to the benefit of documentation, though, where we would rather you not do surprising things.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1255}{}\doxysection{\texorpdfstring{UTF-\/8 only!}{UTF-\/8 only!}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1255}
+All text must be UTF-\/8 encoded. The wiki will refuse to update files that are malformed.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1256}{}\doxysection{\texorpdfstring{We {\itshape sort of} write in Doxygen format.}{We {\itshape sort of} write in Doxygen format.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1256}
+To document a symbol, we use something that looks like Doxygen (and Javadoc) standard comment format:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_DoSomething(\textcolor{keywordtype}{int}\ frozzlevel,\ \textcolor{keywordtype}{int}\ color);}
+
+\end{DoxyCode}
+
+
+Note the {\ttfamily /\+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}} at the start of the comment. That\textquotesingle{}s a "{}\+Doxygen-\/style"{} comment, and wikiheaders will treat this differently than a comment with one {\ttfamily \texorpdfstring{$\ast$}{*}}, as this signifies that this is not just a comment, but {\itshape documentation}.
+
+These comments {\itshape must} start in the first column of the line, or wikiheaders will ignore them, even with the "{}/\+\texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}"{} start (we should improve the script someday to handle this, but currently this is a requirement).
+
+We do {\itshape not} parse every magic Doxygen tag, and we don\textquotesingle{}t parse them in {\ttfamily @param} format. The goal here was to mostly coexist with people that might want to run Doxygen on the SDL headers, not to build Doxygen from scratch. That being said, compatibility with Doxygen is not a hard requirement here.
+
+wikiheaders uses these specific tags to turn this comment into a (hopefully) well-\/formatted wiki page, and also can generate manpages and books in La\+TeX format from it!
+
+Text markup in the headers is {\itshape always} done in Markdown format! But less is more:\+ try not to markup text more than necessary.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1257}{}\doxysection{\texorpdfstring{Doxygen tags we support:\+}{Doxygen tags we support:\+}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1257}
+
+\begin{DoxyItemize}
+\item {\ttfamily \textbackslash{}brief one-\/line description} (Not required, and wikiheaders will remove tag).
+\item {\ttfamily \textbackslash{}param varname description} (One for each function/\+macro parameter)
+\item {\ttfamily \textbackslash{}returns description} (One for each function, don\textquotesingle{}t use on {\ttfamily void} returns).
+\item {\ttfamily \textbackslash{}sa} (each of these get tucked into a "{}\+See Also"{} section on the wiki)
+\item {\ttfamily \textbackslash{}since This function is available since SDL 3.\+0.\+0.} (one per Doxygen comment)
+\item {\ttfamily \textbackslash{}threadsafety description} (one per function/\+macro).
+\item {\ttfamily \textbackslash{}deprecated description} (one per symbol, if symbol is deprecated!)
+\end{DoxyItemize}
+
+Other Doxygen things might exist in the headers, but they aren\textquotesingle{}t understood by wikiheaders.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1258}{}\doxysection{\texorpdfstring{Use Markdown.}{Use Markdown.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1258}
+The wiki also supports Media\+Wiki format, but we are transitioning away from it. The headers always use Markdown. If you\textquotesingle{}re editing the wiki from a git clone, just make .md files and the wiki will know what to do with them.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1259}{}\doxysection{\texorpdfstring{Most things in the headers can be documented.}{Most things in the headers can be documented.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1259}
+wikiheaders understands functions, typedefs, structs/\+unions/\+enums, {\ttfamily \#defines} ... basically most of what makes up a C header. Just slap a Doxygen-\/style comment in front of most things and it\textquotesingle{}ll work.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1260}{}\doxysection{\texorpdfstring{Defines right below typedefs and functions bind.}{Defines right below typedefs and functions bind.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1260}
+Any {\ttfamily \#define} directly below a function or non-\/struct/\+union/\+enum typedef is considered part of that declaration. This happens to work well with how our headers work, as these defines tend to be bitflags and such that are related to that symbol.
+
+wikiheaders will include those defines in the syntax section of the wiki page, and generate stub pages for each define that simply says "{}please refer to (\+The Actual Symbol You Care About)"{} with a link. It will also pull in any blank lines and most preprocessor directives for the syntax text, too.
+
+Sometimes an unrelated define, by itself, just happens to be right below one of these symbols in the header. The easiest way to deal with this is either to document that define with a Doxygen-\/style comment, if it makes sense to do so, or just add a normal C comment right above it if not, so wikiheaders doesn\textquotesingle{}t bind it to the previous symbol.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1261}{}\doxysection{\texorpdfstring{Don\textquotesingle{}t document the {\ttfamily SDL\+\_\+test\texorpdfstring{$\ast$}{*}.h} headers.}{Don\textquotesingle{}t document the {\ttfamily SDL\+\_\+test\texorpdfstring{$\ast$}{*}.h} headers.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1261}
+These are in the public headers but they aren\textquotesingle{}t really considered public APIs. They live in a separate library that doesn\textquotesingle{}t, or at least probably shouldn\textquotesingle{}t, ship to end users. As such, we don\textquotesingle{}t want it documented on the wiki.
+
+For now, we do this by not having any Doxygen-\/style comments in these files. Please keep it that way! If you want to document these headers, just don\textquotesingle{}t use the magic two-\/{\ttfamily \texorpdfstring{$\ast$}{*}} comment.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1262}{}\doxysection{\texorpdfstring{The first line is the summary.}{The first line is the summary.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1262}
+The first line of a piece of documentation is meant to be a succinct description. This is what Doxygen would call the {\ttfamily \textbackslash{}brief} tag. wikiheaders will split this text out until the first period (end of sentence!), and when word wrapping, shuffle the overflow into a new paragraph below it.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1263}{}\doxysection{\texorpdfstring{Split paragraphs with a blank line.}{Split paragraphs with a blank line.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1263}
+And don\textquotesingle{}t indent them at all (indenting in Markdown is treated as preformatted text).
+
+wikiheaders will wordwrap header comments so they fit in 80 columns, so if you don\textquotesingle{}t leave a blank line between paragraphs, they will smush into a single block of text when wordwrapping.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1264}{}\doxysection{\texorpdfstring{Lists must be the start of a new paragraph.}{Lists must be the start of a new paragraph.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1264}
+If you write this:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Here\ is\ some\ text\ without\ a\ blank\ line}
+\DoxyCodeLine{before\ an\ unordered\ list!}
+\DoxyCodeLine{-\/\ item\ a}
+\DoxyCodeLine{-\/\ item\ b}
+\DoxyCodeLine{-\/\ item\ c}
+
+\end{DoxyCode}
+
+
+...then wikiheaders will word wrap this as a single paragraph, mangling the list.
+
+Put a blank line before the list, and everything will format and wrap correctly.
+
+This is a limitation of wikiheaders. Don\textquotesingle{}t get bit by it!\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1265}{}\doxysection{\texorpdfstring{Don\textquotesingle{}t worry about word wrapping.}{Don\textquotesingle{}t worry about word wrapping.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1265}
+If you don\textquotesingle{}t word-\/wrap your header edits perfectly (and you won\textquotesingle{}t, I promise), wikiheaders will send your change to the wiki, and then to make things match, send it right back to the headers with correct word wrapping. Since this happens right after you push your changes, you might as well just write however you like and assume the system will clean it up for you.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1266}{}\doxysection{\texorpdfstring{Things that start with {\ttfamily SDL\+\_\+} will automatically become wiki links.}{Things that start with {\ttfamily SDL\+\_\+} will automatically become wiki links.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1266}
+wikiheaders knows to turn these into links to other pages, so if you reference an SDL symbol in the header documentation, you don\textquotesingle{}t need to link to it. You can optionally wrap the symbol in backticks, and wikiheaders will know to link the backticked thing. It will not generate links in three-\/backtick code/\+preformatted blocks.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1267}{}\doxysection{\texorpdfstring{URLs will automatically become links.}{URLs will automatically become links.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1267}
+You can use Markdown\textquotesingle{}s {\ttfamily \+[link markup format]\+(\href{https://example.com/}{\texttt{https:\+/\+/\+example.\+com/\+}})}, but sometimes it\textquotesingle{}s clearer to list bare URLs; the URL will be visible on the wiki page, but also clickable to follow the link. This is up to your judgment on a case-\/by-\/case basis.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1268}{}\doxysection{\texorpdfstring{Hide stuff from wikiheaders.}{Hide stuff from wikiheaders.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1268}
+If all else fails, you can block off pieces of the header with this magic line (whitespace is ignored):\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifndef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+
+\end{DoxyCode}
+
+
+Everything between this line and the next {\ttfamily \#endif} will just be skipped by wikiheaders. Note that wikiheaders is not a C preprocessor! Don\textquotesingle{}t try to nest conditionals or use {\ttfamily !defined}.
+
+Just block off sections if you need to. And:\+ you almost never need to.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1269}{}\doxysection{\texorpdfstring{Hide stuff from the compiler.}{Hide stuff from the compiler.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1269}
+If you need to put something that\textquotesingle{}s only of interest to wikiheaders, the convention is to put it in a block like this:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+
+\end{DoxyCode}
+
+
+Generally this is used when there\textquotesingle{}s a collection of preprocessor conditionals to define the same symbol differently in different circumstances. You put that symbol in this block with some reasonable generic version {\itshape and the Doxygen-\/style comment}. Because wikiheaders doesn\textquotesingle{}t care about this preprocessor magic, and the C compiler can be as fancy as it wants, this is strictly a useful convention.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1270}{}\doxysection{\texorpdfstring{Struct/\+union/\+enum typedefs must have the name on the first line.}{Struct/\+union/\+enum typedefs must have the name on the first line.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1270}
+This is because wikiheaders is not a full C parser. Don\textquotesingle{}t write this:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordtype}{int}\ a;}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordtype}{int}\ b;}
+\DoxyCodeLine{\}\ SDL\_MyStruct;}
+
+\end{DoxyCode}
+
+
+...make sure the name is at the start, too:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_MyStruct}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordtype}{int}\ a;}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordtype}{int}\ b;}
+\DoxyCodeLine{\}\ SDL\_MyStruct;}
+
+\end{DoxyCode}
+
+
+wikiheaders will complain loudly if you don\textquotesingle{}t do this, and exit with an error message.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1271}{}\doxysection{\texorpdfstring{Don\textquotesingle{}t repeat type names in {\ttfamily \textbackslash{}param} and {\ttfamily \textbackslash{}returns} sections.}{Don\textquotesingle{}t repeat type names in {\ttfamily \textbackslash{}param} and {\ttfamily \textbackslash{}returns} sections.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1271}
+Wikiheaders will explicitly mention the datatype for each parameter and the return value, linking to the datatype\textquotesingle{}s wikipage. Users reading the headers can see the types in the function signature right below the documentation comment. So don\textquotesingle{}t mention the type a second time in the documentation if possible. It looks cluttered and repetitive to do so.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1272}{}\doxysection{\texorpdfstring{Keep {\ttfamily \textbackslash{}param} and {\ttfamily \textbackslash{}returns} sections short.}{Keep {\ttfamily \textbackslash{}param} and {\ttfamily \textbackslash{}returns} sections short.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1272}
+These strings end up in a table that we don\textquotesingle{}t want to be bulky. Try to keep these to one sentence/\+phrase where possible. If you need more detail--even extremely common details, like "{}you need to free the returned pointer"{}--put that information in the general Remarks section, where you can be as verbose as you like.
+
+(One exception for SDL:\+ the return value almost always notes that on error, you should call SDL\+\_\+\+Get\+Error() to get more information. The documentation is so saturated with this that it\textquotesingle{}s just the standard now.)
+
+Convention at the moment is that pointer params that are permitted to be NULL, which is somewhat uncommon, end with terse "{}\+May be NULL."{} sentence at the end, and pointers that must be non-\/\+NULL (most of them) say nothing. This is fine.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1273}{}\doxysection{\texorpdfstring{Code examples go in the wiki.}{Code examples go in the wiki.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1273}
+We don\textquotesingle{}t want the headers cluttered up with code examples. These live on the wiki pages, and wikiheaders knows to not bridge them back to the headers.
+
+Put them in a {\ttfamily \#\# Code Examples} section, and make sure to wrap them in a three-\/backtick-\/c section for formatting purposes. Only write code in C, please.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1274}{}\doxysection{\texorpdfstring{Do you {\itshape need} a code example?}{Do you {\itshape need} a code example?}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1274}
+Most code examples aren\textquotesingle{}t actually useful. If your code example is just {\ttfamily SDL\+\_\+\+Create\+Window("{}Hello SDL"{}, 640, 480, 0);} then just delete it; if all you\textquotesingle{}re showing is how to call a function in C, it\textquotesingle{}s not a useful code example. Not all functions need an example. One with complex setup or usage details might, though!\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1275}{}\doxysection{\texorpdfstring{Code examples are compiled by Git\+Hub Actions.}{Code examples are compiled by Git\+Hub Actions.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1275}
+On each change to the wiki, there is a script that pulls out all the code examples into discrete C files and attempts to compile them, and complains if they don\textquotesingle{}t work.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1276}{}\doxysection{\texorpdfstring{Unrecognized sections are left alone in the wiki.}{Unrecognized sections are left alone in the wiki.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1276}
+A wiki section that starts with {\ttfamily \#\# Section Name} (or {\ttfamily == Section Name ==} in Media\+Wiki format) that isn\textquotesingle{}t one of the recognized names will be left alone by wikiheaders. Recognized sections might get overwritten with new content from the headers, but the wiki file will not have other sections cleaned out (this is how Code Examples remain wiki only, for example). You can use this to add Wiki-\/specific text, or stuff that doesn\textquotesingle{}t make sense in a header, or would merely clutter it up.
+
+A possibly-\/incomplete list of sections that will be overwritten by changes to the headers:\+
+
+
+\begin{DoxyItemize}
+\item The page title line, and the "{}brief"{} one-\/sentence description section.
+\item "{}\+Deprecated"{}
+\item "{}\+Header File"{}
+\item "{}\+Syntax"{}
+\item "{}\+Function Parameters"{}
+\item "{}\+Macro Parameters"{}
+\item "{}\+Fields"{}
+\item "{}\+Values"{}
+\item "{}\+Return Value"{}
+\item "{}\+Remarks"{}
+\item "{}\+Thread Safety"{}
+\item "{}\+Version"{}
+\item "{}\+See Also"{}
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1277}{}\doxysection{\texorpdfstring{Unrecognized sections are removed from the headers!}{Unrecognized sections are removed from the headers!}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1277}
+If you add Doxygen with a {\ttfamily \#\#} ({\ttfamily \#\#\#}, etc) section header, it\textquotesingle{}ll migrate to the wiki and be {\itshape removed} from the headers. Generally the correct thing to do is {\itshape never use section headers in the Doxygen}.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1278}{}\doxysection{\texorpdfstring{wikiheaders will reorder standard sections.}{wikiheaders will reorder standard sections.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1278}
+The standard sections are always kept in a consistent order by wikiheaders, both in the headers and the wiki. If they\textquotesingle{}re placed in a non-\/standard order, wikiheaders will reorder them.
+
+For sections that aren\textquotesingle{}t standard, wikiheaders will place them at the end of the wiki page, in the order they were seen when it loaded the page for processing.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1279}{}\doxysection{\texorpdfstring{It\textquotesingle{}s okay to repeat yourself.}{It\textquotesingle{}s okay to repeat yourself.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1279}
+Each individual piece of documentation becomes a separate page on the wiki, so small repeated details can just exist in different pieces of documentation. If it\textquotesingle{}s complicated, it\textquotesingle{}s not unreasonable to say "{}\+Please refer to \+SDL\+\_\+\+Some\+Other\+Function for more details"{} ... wiki users can click right through, header users can search for the function name.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1280}{}\doxysection{\texorpdfstring{The docs directory is bridged to the wiki, too.}{The docs directory is bridged to the wiki, too.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1280}
+You might be reading this document on the wiki! Any {\ttfamily README-\/\texorpdfstring{$\ast$}{*}.md} files in the docs directory are bridged to the wiki, so {\ttfamily docs/\+\+README-\/linux.\+md} lands at \href{https://wiki.libsdl.org/SDL3/README-linux}{\texttt{https:\+/\+/\+wiki.\+libsdl.\+org/\+\+SDL3/\+\+README-\/linux}} ...these are just copied directly without any further processing by wikiheaders, and changes go in both directions.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1281}{}\doxysection{\texorpdfstring{The wiki can have its own pages, too.}{The wiki can have its own pages, too.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1281}
+If a page name isn\textquotesingle{}t a symbol that wikiheaders sees in the headers, or a README in the source\textquotesingle{}s {\ttfamily docs} directory, or a few other exceptions, it\textquotesingle{}ll assume it\textquotesingle{}s an unrelated wiki page and leave it alone. So feel free to write any wiki-\/only pages that make sense and not worry about it junking up the headers!\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1282}{}\doxysection{\texorpdfstring{Wiki categories are (mostly) managed automatically.}{Wiki categories are (mostly) managed automatically.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1282}
+The wiki will see this pattern as the last thing on a page and treat it as a list of categories that page belongs to:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/-\/-\/}
+\DoxyCodeLine{[CategoryStuff](CategoryStuff),\ [CategoryWhatever](CategoryWhatever)}
+
+\end{DoxyCode}
+
+
+You can use this to simply tag a page as part of a category, and the user can click directly to see other pages in that category. The wiki will automatically manage a {\ttfamily Category\texorpdfstring{$\ast$}{*}} pages that list any tagged pages.
+
+You {\itshape should not} add tags to the public headers. They don\textquotesingle{}t mean anything there. wikiheaders will add a few tags that make sense when generating wiki content from the header files, and it will preserve other tags already present on the page, so if you want to add extra categories to something, tag it on the wiki itself.
+
+The wiki uses some magic HTML comment tags to decide how to list items on Category pages and let other content live on the page as well. You can see an example of this in action at:\+
+
+\href{https://raw.githubusercontent.com/libsdl-org/sdlwiki/main/SDL3/CategoryEvents.md}{\texttt{https:\+/\+/\+raw.\+githubusercontent.\+com/\+libsdl-\/org/\+sdlwiki/\+main/\+\+SDL3/\+\+Category\+Events.\+md}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1283}{}\doxysection{\texorpdfstring{Categorizing the headers.}{Categorizing the headers.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1283}
+To put a symbol in a specific category, we use three approaches in SDL:\+
+
+
+\begin{DoxyItemize}
+\item Things in the {\ttfamily SDL\+\_\+test\texorpdfstring{$\ast$}{*}.h} headers aren\textquotesingle{}t categorized at all (and you shouldn\textquotesingle{}t document them!)
+\item Most files are categorized by header name:\+ we strip off the leading {\ttfamily SDL\+\_\+} and capitalize the first letter of what\textquotesingle{}s left. So everything in \doxylink{_s_d_l__audio_8h_source}{SDL\+\_\+audio.\+h} is in the "{}\+Audio"{} category, everything in \doxylink{_s_d_l__video_8h_source}{SDL\+\_\+video.\+h} is in the "{}\+Video"{} category, etc.
+\item If wikiheaders sees a comment like this on a line by itself... 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{/*\ WIKI\ CATEGORY:\ Blah\ */}}
+
+\end{DoxyCode}
+ ...then all symbols below that will land in the "{}\+Blah"{} category. We use this at the top of a few headers where the simple chop-\/off-\/\+SDL\+\_\+-\/and-\/captialize-\/the-\/first-\/letter trick doesn\textquotesingle{}t work well, but one could theoretically use this for headers that have some overlap in category.
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1284}{}\doxysection{\texorpdfstring{Category documentation lives in headers.}{Category documentation lives in headers.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1284}
+To document a category (text that lives before the item lists on a wiki category page), you have to follow a simple rule:\+
+
+The {\itshape first} Doxygen-\/style comment in a header must start with:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{/**}
+\DoxyCodeLine{\ *\ \#\ CategoryABC}
+
+\end{DoxyCode}
+
+
+If these conditions aren\textquotesingle{}t met, wikiheaders will assume that documentation belongs to whatever is below it instead of the Category.
+
+The text of this comment will be added to the appropriate wiki Category page, at the top, replacing everything in the file until it sees a line that starts with an HTML comment ({\ttfamily \texorpdfstring{$<$}{<}!-\/-\/}), or a line that starts with {\ttfamily -\/-\/-\/-\/}. Everything after that in the wiki file will be preserved.
+
+Likewise, when bridging {\itshape back} to the headers, if wikiheaders sees one of these comments, it\textquotesingle{}ll copy the top section of the Category page back into the comment.
+
+Beyond stripping the initial {\ttfamily  \texorpdfstring{$\ast$}{*} } portion off each line, these comments are treated as pure Markdown. They don\textquotesingle{}t support any Doxygen tags like {\ttfamily \textbackslash{}sa} or {\ttfamily \textbackslash{}since}.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1285}{}\doxysection{\texorpdfstring{Enum/\+struct versioning}{Enum/\+struct versioning}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-documentation-rules_autotoc_md1285}
+If you have an enum or struct, it\textquotesingle{}ll list its {\ttfamily \textbackslash{}since} field as the first SDL release it was available in. However, we might later add new values to an enum or fields to a struct. These lines, arriving in a newer version, should have a note about that, like this one on SDL\+\_\+\+SCALEMODE\+\_\+\+PIXELART:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_ScaleMode}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ SDL\_SCALEMODE\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{\ \ \ \ SDL\_SCALEMODE\_NEAREST,\ \ }
+\DoxyCodeLine{\ \ \ \ SDL\_SCALEMODE\_LINEAR,\ \ \ }
+\DoxyCodeLine{\ \ \ \ SDL\_SCALEMODE\_PIXELART\ \ }
+\DoxyCodeLine{\}\ SDL\_ScaleMode;}
+
+\end{DoxyCode}
+ 

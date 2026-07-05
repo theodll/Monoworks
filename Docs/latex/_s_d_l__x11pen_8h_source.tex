@@ -1,0 +1,81 @@
+\doxysection{SDL\+\_\+x11pen.\+h}
+\hypertarget{_s_d_l__x11pen_8h_source}{}\label{_s_d_l__x11pen_8h_source}\index{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11pen.h@{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11pen.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../../SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_x11pen\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_x11pen\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Pressure-\/sensitive\ pen\ support\ for\ X11.}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}SDL\_x11video.h"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../../events/SDL\_pen\_c.h"{}}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ Prep\ pen\ support\ (never\ fails;\ pens\ simply\ won't\ be\ added\ if\ there's\ a\ problem).}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11\_InitPen(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Clean\ up\ pen\ support.}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11\_QuitPen(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XINPUT2}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ Forward\ definition\ for\ SDL\_x11video.h}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ SDL\_X11\_PEN\_AXIS\_VALUATOR\_MISSING\ -\/1}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }X11\_PenHandle}
+\DoxyCodeLine{00045\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ SDL\_PenID\ pen;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_eraser;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{int}\ x11\_deviceid;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{int}\ valuator\_for\_axis[SDL\_PEN\_AXIS\_COUNT];}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{float}\ slider\_bias;\ \ \ \ \ \ \textcolor{comment}{//\ shift\ value\ to\ add\ to\ PEN\_AXIS\_SLIDER\ (before\ normalisation)}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{float}\ rotation\_bias;\ \ \ \ \textcolor{comment}{//\ rotation\ to\ add\ to\ PEN\_AXIS\_ROTATION\ \ (after\ normalisation)}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{float}\ axis\_min[SDL\_PEN\_AXIS\_COUNT];}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{float}\ axis\_max[SDL\_PEN\_AXIS\_COUNT];}
+\DoxyCodeLine{00054\ \}\ X11\_PenHandle;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ Converts\ XINPUT2\ valuators\ into\ pen\ axis\ information,\ including\ normalisation.}}
+\DoxyCodeLine{00057\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11\_PenAxesFromValuators(\textcolor{keyword}{const}\ X11\_PenHandle\ *pen,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\ *input\_values,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ *mask,\ \textcolor{keywordtype}{int}\ mask\_len,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ axis\_values[SDL\_PEN\_AXIS\_COUNT]);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Add\ a\ pen\ (if\ this\ function's\ further\ checks\ validate\ it).}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{extern}\ X11\_PenHandle\ *X11\_MaybeAddPenByDeviceID(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ deviceid);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ Remove\ a\ pen.\ It's\ okay\ if\ deviceid\ is\ bogus\ or\ not\ a\ pen,\ we'll\ check\ it.}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11\_RemovePenByDeviceID(\textcolor{keywordtype}{int}\ deviceid);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ Map\ X11\ device\ ID\ to\ pen\ ID.}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{extern}\ X11\_PenHandle\ *X11\_FindPenByDeviceID(\textcolor{keywordtype}{int}\ deviceid);}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ Notify\ that\ the\ pen\ has\ entered/left\ proximity}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ X11\_NotifyPenProximityChange(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ deviceid);}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_DRIVER\_X11\_XINPUT2}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_x11pen\_h\_}}
+
+\end{DoxyCode}

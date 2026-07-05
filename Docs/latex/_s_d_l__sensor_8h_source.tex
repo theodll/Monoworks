@@ -1,0 +1,103 @@
+\doxysection{SDL\+\_\+sensor.\+h}
+\hypertarget{_s_d_l__sensor_8h_source}{}\label{_s_d_l__sensor_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_sensor.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_sensor.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#ifndef\ SDL\_sensor\_h\_}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ SDL\_sensor\_h\_}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00042\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00044\ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00046\ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ \doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_SensorID;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ SDL\_STANDARD\_GRAVITY\ \ \ \ 9.80665f}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00132\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_SensorType}
+\DoxyCodeLine{00133\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ SDL\_SENSOR\_INVALID\ =\ -\/1,\ \ \ \ }
+\DoxyCodeLine{00135\ \ \ \ \ SDL\_SENSOR\_UNKNOWN,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00136\ \ \ \ \ SDL\_SENSOR\_ACCEL,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00137\ \ \ \ \ SDL\_SENSOR\_GYRO,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00138\ \ \ \ \ SDL\_SENSOR\_ACCEL\_L,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00139\ \ \ \ \ SDL\_SENSOR\_GYRO\_L,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00140\ \ \ \ \ SDL\_SENSOR\_ACCEL\_R,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00141\ \ \ \ \ SDL\_SENSOR\_GYRO\_R,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00142\ \ \ \ \ SDL\_SENSOR\_COUNT}
+\DoxyCodeLine{00143\ \}\ SDL\_SensorType;}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{comment}{/*\ Function\ prototypes\ */}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00159\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_SensorID\ *\ SDLCALL\ SDL\_GetSensors(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00171\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetSensorNameForID(SDL\_SensorID\ instance\_id);}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_SensorType\ SDLCALL\ SDL\_GetSensorTypeForID(SDL\_SensorID\ instance\_id);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00197\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetSensorNonPortableTypeForID(SDL\_SensorID\ instance\_id);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *\ SDLCALL\ SDL\_OpenSensor(SDL\_SensorID\ instance\_id);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00219\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *\ SDLCALL\ SDL\_GetSensorFromID(SDL\_SensorID\ instance\_id);}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00230\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetSensorProperties(\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *sensor);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00241\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetSensorName(\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *sensor);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00252\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_SensorType\ SDLCALL\ SDL\_GetSensorType(\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *sensor);}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00262\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetSensorNonPortableType(\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *sensor);}
+\DoxyCodeLine{00263\ }
+\DoxyCodeLine{00273\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_SensorID\ SDLCALL\ SDL\_GetSensorID(\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *sensor);}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00288\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetSensorData(\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *sensor,\ \textcolor{keywordtype}{float}\ *data,\ \textcolor{keywordtype}{int}\ num\_values);}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00297\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_CloseSensor(\doxymbox{\hyperlink{struct_s_d_l___sensor}{SDL\_Sensor}}\ *sensor);}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00310\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UpdateSensors(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00315\ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}}
+\DoxyCodeLine{00316\ \}}
+\DoxyCodeLine{00317\ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_sensor\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

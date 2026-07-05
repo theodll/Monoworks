@@ -1,0 +1,56 @@
+\doxysection{details::\+thread\+\_\+pool Class Reference}
+\hypertarget{classdetails_1_1thread__pool}{}\label{classdetails_1_1thread__pool}\index{details::thread\_pool@{details::thread\_pool}}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetails_1_1thread__pool_a1f53f2128492f619a081354b06832e57}\label{classdetails_1_1thread__pool_a1f53f2128492f619a081354b06832e57} 
+using {\bfseries item\+\_\+type} = \doxymbox{\hyperlink{structdetails_1_1async__msg}{async\+\_\+msg}}
+\item 
+\Hypertarget{classdetails_1_1thread__pool_aecc0acf903e44e242b04165ba68d0b5c}\label{classdetails_1_1thread__pool_aecc0acf903e44e242b04165ba68d0b5c} 
+using {\bfseries q\+\_\+type} = \doxymbox{\hyperlink{classdetails_1_1mpmc__blocking__queue}{details::\+mpmc\+\_\+blocking\+\_\+queue}}$<$item\+\_\+type$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classdetails_1_1thread__pool_ad0696244f4aab5e4db671ceb496e5c53}\label{classdetails_1_1thread__pool_ad0696244f4aab5e4db671ceb496e5c53} 
+{\bfseries thread\+\_\+pool} (size\+\_\+t q\+\_\+max\+\_\+items, size\+\_\+t threads\+\_\+n, std::\+function$<$ void()$>$ on\+\_\+thread\+\_\+start, std::\+function$<$ void()$>$ on\+\_\+thread\+\_\+stop)
+\item 
+\Hypertarget{classdetails_1_1thread__pool_ac67647e9bdb5e9b9af23fa66807daa35}\label{classdetails_1_1thread__pool_ac67647e9bdb5e9b9af23fa66807daa35} 
+{\bfseries thread\+\_\+pool} (size\+\_\+t q\+\_\+max\+\_\+items, size\+\_\+t threads\+\_\+n, std::\+function$<$ void()$>$ on\+\_\+thread\+\_\+start)
+\item 
+\Hypertarget{classdetails_1_1thread__pool_ac4ab0cace51806278ac09539f9287616}\label{classdetails_1_1thread__pool_ac4ab0cace51806278ac09539f9287616} 
+{\bfseries thread\+\_\+pool} (size\+\_\+t q\+\_\+max\+\_\+items, size\+\_\+t threads\+\_\+n)
+\item 
+\Hypertarget{classdetails_1_1thread__pool_a2e0ce94b56fdd8c2e12b3fc9df4cc94f}\label{classdetails_1_1thread__pool_a2e0ce94b56fdd8c2e12b3fc9df4cc94f} 
+{\bfseries thread\+\_\+pool} (const thread\+\_\+pool \&)=delete
+\item 
+\Hypertarget{classdetails_1_1thread__pool_a953144cc69b8b6dc7e203e12138a3e2c}\label{classdetails_1_1thread__pool_a953144cc69b8b6dc7e203e12138a3e2c} 
+thread\+\_\+pool \& {\bfseries operator=} (thread\+\_\+pool \&\&)=delete
+\item 
+\Hypertarget{classdetails_1_1thread__pool_afb97c7612209c055b2849299d218da38}\label{classdetails_1_1thread__pool_afb97c7612209c055b2849299d218da38} 
+void {\bfseries post\+\_\+log} (async\+\_\+logger\+\_\+ptr \&\&worker\+\_\+ptr, const \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::\+log\+\_\+msg}} \&msg, async\+\_\+overflow\+\_\+policy overflow\+\_\+policy)
+\item 
+\Hypertarget{classdetails_1_1thread__pool_a989a5044ef3aca72938033564583b0c9}\label{classdetails_1_1thread__pool_a989a5044ef3aca72938033564583b0c9} 
+void {\bfseries post\+\_\+flush} (async\+\_\+logger\+\_\+ptr \&\&worker\+\_\+ptr, async\+\_\+overflow\+\_\+policy overflow\+\_\+policy)
+\item 
+\Hypertarget{classdetails_1_1thread__pool_adbe4853cf04428d33025ccb39ef23a73}\label{classdetails_1_1thread__pool_adbe4853cf04428d33025ccb39ef23a73} 
+size\+\_\+t {\bfseries overrun\+\_\+counter} ()
+\item 
+\Hypertarget{classdetails_1_1thread__pool_a9451572c570dcb799ccc0bb1afb70fdb}\label{classdetails_1_1thread__pool_a9451572c570dcb799ccc0bb1afb70fdb} 
+void {\bfseries reset\+\_\+overrun\+\_\+counter} ()
+\item 
+\Hypertarget{classdetails_1_1thread__pool_ae7cdf2e949ab0125a4d3c83e25c8718f}\label{classdetails_1_1thread__pool_ae7cdf2e949ab0125a4d3c83e25c8718f} 
+size\+\_\+t {\bfseries discard\+\_\+counter} ()
+\item 
+\Hypertarget{classdetails_1_1thread__pool_a8306429ee59da606b206755df66bfb85}\label{classdetails_1_1thread__pool_a8306429ee59da606b206755df66bfb85} 
+void {\bfseries reset\+\_\+discard\+\_\+counter} ()
+\item 
+\Hypertarget{classdetails_1_1thread__pool_ab00cef886813816c39a856b81102a710}\label{classdetails_1_1thread__pool_ab00cef886813816c39a856b81102a710} 
+size\+\_\+t {\bfseries queue\+\_\+size} ()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Engine/\+thirdparty/\+spdlog/\+include/\+spdlog/\+details/\+thread\+\_\+pool.\+h\item 
+Mono\+Engine/\+thirdparty/\+spdlog/\+include/\+spdlog/\+details/\+thread\+\_\+pool-\/inl.\+h\end{DoxyCompactItemize}

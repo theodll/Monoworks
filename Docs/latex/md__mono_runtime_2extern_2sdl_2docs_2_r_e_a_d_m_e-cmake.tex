@@ -1,0 +1,333 @@
+\chapter{CMake }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake}\index{CMake@{CMake}}
+\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1209}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1209}%
+
+
+\href{https://www.cmake.org/}{\texttt{www.\+cmake.\+org}}
+
+The CMake build system is supported with the following environments:\+
+
+
+\begin{DoxyItemize}
+\item Android
+\item Emscripten
+\item Free\+BSD
+\item Haiku
+\item Linux
+\item mac\+OS, i\+OS, tv\+OS, and vision\+OS with support for XCode
+\item Microsoft Visual Studio
+\item Min\+GW and Msys
+\item Net\+BSD
+\item Nintendo 3DS
+\item Play\+Station 2
+\item Play\+Station Portable
+\item Play\+Station Vita
+\item RISC OS
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1210}{}\doxysection{\texorpdfstring{Building SDL on Windows}{Building SDL on Windows}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1210}
+Assuming you\textquotesingle{}re in the SDL source directory, building and installing to C:\+/\+\+SDL can be done with:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/-\/config\ RelWithDebInfo}
+\DoxyCodeLine{cmake\ -\/-\/install\ build\ -\/-\/config\ RelWithDebInfo\ -\/-\/prefix\ C:/SDL}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1211}{}\doxysection{\texorpdfstring{Building SDL on UNIX}{Building SDL on UNIX}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1211}
+SDL will build with very few dependencies, but for full functionality you should install the packages detailed in \doxysectlink{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-linux}{README-\/linux.md}{0}.
+
+Assuming you\textquotesingle{}re in the SDL source directory, building and installing to /\+usr/\+local can be done with:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+\DoxyCodeLine{sudo\ cmake\ -\/-\/install\ build\ -\/-\/prefix\ /usr/local}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1212}{}\doxysection{\texorpdfstring{Building SDL on mac\+OS}{Building SDL on mac\+OS}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1212}
+Assuming you\textquotesingle{}re in the SDL source directory, building and installing to \texorpdfstring{$\sim$}{\string~}/\+\+SDL can be done with:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build\ -\/DSDL\_FRAMEWORK=ON\ -\/DCMAKE\_OSX\_ARCHITECTURES="{}arm64;x86\_64"{}}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+\DoxyCodeLine{cmake\ -\/-\/install\ build\ -\/-\/prefix\ \string~/SDL}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1213}{}\doxysection{\texorpdfstring{Building SDL tests}{Building SDL tests}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1213}
+You can build the SDL test programs by adding {\ttfamily -\/DSDL\+\_\+\+TESTS=ON} to the first cmake command above:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build\ -\/DSDL\_TESTS=ON}
+
+\end{DoxyCode}
+ and then building normally. The test programs will be built and can be run from {\ttfamily build/\+test/\+}.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1214}{}\doxysection{\texorpdfstring{Building SDL examples}{Building SDL examples}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1214}
+You can build the SDL example programs by adding {\ttfamily -\/DSDL\+\_\+\+EXAMPLES=ON} to the first cmake command above:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S\ .\ -\/B\ build\ -\/DSDL\_EXAMPLES=ON}
+
+\end{DoxyCode}
+ and then building normally. The example programs will be built and can be run from {\ttfamily build/\+examples/\+}.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1215}{}\doxysection{\texorpdfstring{Including SDL in your project}{Including SDL in your project}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1215}
+SDL can be included in your project in 2 major ways:\+
+\begin{DoxyItemize}
+\item using a system SDL library, provided by your (UNIX) distribution or a package manager
+\item using a vendored SDL library:\+ this is SDL copied or symlinked in a subfolder.
+\end{DoxyItemize}
+
+The following CMake script supports both, depending on the value of {\ttfamily MYGAME\+\_\+\+VENDORED}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\_minimum\_required(VERSION\ 3.5)}
+\DoxyCodeLine{project(mygame)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Create\ an\ option\ to\ switch\ between\ a\ system\ sdl\ library\ and\ a\ vendored\ SDL\ library}
+\DoxyCodeLine{option(MYGAME\_VENDORED\ "{}Use\ vendored\ libraries"{}\ OFF)}
+\DoxyCodeLine{}
+\DoxyCodeLine{if(MYGAME\_VENDORED)}
+\DoxyCodeLine{\ \ \ \ \#\ This\ assumes\ you\ have\ added\ SDL\ as\ a\ submodule\ in\ vendored/SDL}
+\DoxyCodeLine{\ \ \ \ add\_subdirectory(vendored/SDL\ EXCLUDE\_FROM\_ALL)}
+\DoxyCodeLine{else()}
+\DoxyCodeLine{\ \ \ \ \#\ 1.\ Look\ for\ a\ SDL3\ package,}
+\DoxyCodeLine{\ \ \ \ \#\ 2.\ look\ for\ the\ SDL3-\/shared\ component,\ and}
+\DoxyCodeLine{\ \ \ \ \#\ 3.\ fail\ if\ the\ shared\ component\ cannot\ be\ found.}
+\DoxyCodeLine{\ \ \ \ find\_package(SDL3\ REQUIRED\ CONFIG\ REQUIRED\ COMPONENTS\ SDL3-\/shared)}
+\DoxyCodeLine{endif()}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Create\ your\ game\ executable\ target\ as\ usual}
+\DoxyCodeLine{add\_executable(mygame\ WIN32\ mygame.c)}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\ Link\ to\ the\ actual\ SDL3\ library.}
+\DoxyCodeLine{target\_link\_libraries(mygame\ PRIVATE\ SDL3::SDL3)}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1216}{}\doxysubsection{\texorpdfstring{A system SDL library}{A system SDL library}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1216}
+For CMake to find SDL, it must be installed in \href{https://cmake.org/cmake/help/latest/command/find_package.html\#config-mode-search-procedure}{\texttt{a default location CMake is looking for}}.
+
+The following components are available, to be used as an argument of {\ttfamily find\+\_\+package}.
+
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Component name  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Description  \\
+SDL3-\/shared  &The SDL3 shared library, available through the {\ttfamily SDL3::\+\+SDL3-\/shared} target  \\
+SDL3-\/static  &The SDL3 static library, available through the {\ttfamily SDL3::\+\+SDL3-\/static} target  \\
+SDL3\+\_\+test  &The SDL3\+\_\+test static library, available through the {\ttfamily SDL3::\+\+SDL3\+\_\+test} target  \\
+SDL3  &The SDL3 library, available through the {\ttfamily SDL3::\+\+SDL3} target. This is an alias of {\ttfamily SDL3::\+\+SDL3-\/shared} or {\ttfamily SDL3::\+\+SDL3-\/static}. This component is always available.  \\
+Headers  &The SDL3 headers, available through the {\ttfamily SDL3::\+\+Headers} target. This component is always available.  \\
+\end{DoxyTable}
+
+
+SDL\textquotesingle{}s CMake support guarantees a {\ttfamily SDL3::\+\+SDL3} target. Neither {\ttfamily SDL3::\+\+SDL3-\/shared} nor {\ttfamily SDL3::\+\+SDL3-\/static} are guaranteed to exist.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1217}{}\doxysubsection{\texorpdfstring{Using a vendored SDL}{Using a vendored SDL}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1217}
+This only requires a copy of SDL in a subdirectory + {\ttfamily add\+\_\+subdirectory}. Alternatively, use \href{https://cmake.org/cmake/help/latest/module/FetchContent.html}{\texttt{Fetch\+Content}}. Depending on the configuration, the same targets as a system SDL package are available.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1218}{}\doxysection{\texorpdfstring{CMake configuration options}{CMake configuration options}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1218}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1219}{}\doxysubsection{\texorpdfstring{Build optimized library}{Build optimized library}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1219}
+By default, CMake provides 4 build types:\+ {\ttfamily Debug}, {\ttfamily Release}, {\ttfamily Rel\+With\+Deb\+Info} and {\ttfamily Min\+Size\+Rel}. The main difference(s) between these are the optimization options and the generation of debug info. To configure SDL as an optimized {\ttfamily Release} library, configure SDL with:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/SDL\ -\/DCMAKE\_BUILD\_TYPE=Release}
+
+\end{DoxyCode}
+ To build it, run:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/-\/build\ .\ -\/-\/config\ Release}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1220}{}\doxysubsection{\texorpdfstring{Shared or static}{Shared or static}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1220}
+By default, only a dynamic (=shared) SDL library is built and installed. The options {\ttfamily -\/DSDL\+\_\+\+SHARED=} and {\ttfamily -\/DSDL\+\_\+\+STATIC=} accept boolean values to change this.
+
+Exceptions exist:\+
+\begin{DoxyItemize}
+\item some platforms don\textquotesingle{}t support dynamic libraries, so only {\ttfamily -\/DSDL\+\_\+\+STATIC=ON} makes sense.
+\item a static Apple framework is not supported
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1221}{}\doxysubsection{\texorpdfstring{Man pages}{Man pages}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1221}
+Configuring with {\ttfamily -\/DSDL\+\_\+\+INSTALL\+\_\+\+DOCS=TRUE} installs man pages.
+
+We recommend package managers of unix distributions to install SDL3\textquotesingle{}s man pages. This adds an extra build-\/time dependency on Perl.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1222}{}\doxysubsection{\texorpdfstring{Pass custom compile options to the compiler}{Pass custom compile options to the compiler}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1222}
+
+\begin{DoxyItemize}
+\item Use \href{https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_FLAGS.html}{\texttt{{\ttfamily CMAKE\+\_\+\texorpdfstring{$<$}{<}LANG\texorpdfstring{$>$}{>}\+\_\+\+FLAGS}}} to pass extra flags to the compiler.
+\item Use \href{https://cmake.org/cmake/help/latest/variable/CMAKE_EXE_LINKER_FLAGS.html}{\texttt{{\ttfamily CMAKE\+\_\+\+EXE\+\_\+\+LINKER\+\_\+\+FLAGS}}} to pass extra option to the linker for executables.
+\item Use \href{https://cmake.org/cmake/help/latest/variable/CMAKE_SHARED_LINKER_FLAGS.html}{\texttt{{\ttfamily CMAKE\+\_\+\+SHARED\+\_\+\+LINKER\+\_\+\+FLAGS}}} to pass extra options to the linker for shared libraries.
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1223}{}\doxysubsubsection{\texorpdfstring{Compile Options Examples}{Compile Options Examples}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1223}
+
+\begin{DoxyItemize}
+\item build a SDL library optimized for (more) modern x64 microprocessor architectures.
+
+With gcc or clang:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_C\_FLAGS="{}-\/march=x86-\/64-\/v3"{}\ -\/DCMAKE\_CXX\_FLAGS="{}-\/march=x86-\/64-\/v3"{}}
+
+\end{DoxyCode}
+ With Visual C:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ ..\ -\/DCMAKE\_C\_FLAGS="{}/ARCH:AVX2"{}\ -\/DCMAKE\_CXX\_FLAGS="{}/ARCH:AVX2"{}}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1224}{}\doxysubsection{\texorpdfstring{Apple}{Apple}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1224}
+CMake documentation for cross building for Apple:\+ \href{https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html\#cross-compiling-for-ios-tvos-visionos-or-watchos}{\texttt{link}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1225}{}\doxysubsubsection{\texorpdfstring{i\+OS/\+tv\+OS/\+vision\+OS}{i\+OS/\+tv\+OS/\+vision\+OS}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1225}
+CMake 3.\+14+ natively includes support for i\+OS, tv\+OS and watch\+OS. vision\+OS requires CMake 3.\+28+. SDL binaries may be built using Xcode or Make, possibly among other build-\/systems.
+
+When using a compatible version of CMake, it should be possible to:\+
+
+
+\begin{DoxyItemize}
+\item build SDL dylibs, both static and dynamic dylibs
+\item build SDL frameworks, only shared
+\item build SDL test apps
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1226}{}\doxysubsubsection{\texorpdfstring{Frameworks}{Frameworks}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1226}
+Configure with {\ttfamily -\/DSDL\+\_\+\+FRAMEWORK=ON} to build a SDL framework instead of a dylib shared library. Only shared frameworks are supported, no static ones.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1227}{}\doxysubsubsection{\texorpdfstring{Platforms}{Platforms}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1227}
+Use {\ttfamily -\/DCMAKE\+\_\+\+SYSTEM\+\_\+\+NAME=\texorpdfstring{$<$}{<}value\texorpdfstring{$>$}{>}} to configure the platform. CMake can target only one platform at a time.
+
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Apple platform  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}{\ttfamily CMAKE\+\_\+\+SYSTEM\+\_\+\+NAME} value  \\
+mac\+OS (Mac\+OS X)  &{\ttfamily Darwin}  \\
+i\+OS  &{\ttfamily i\+OS}  \\
+tv\+OS  &{\ttfamily tv\+OS}  \\
+vision\+OS  &{\ttfamily vision\+OS}  \\
+watch\+OS  &{\ttfamily watch\+OS}  \\
+\end{DoxyTable}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1228}{}\doxysubsubsection{\texorpdfstring{Universal binaries}{Universal binaries}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1228}
+A universal binaries, can be built by configuring CMake with {\ttfamily -\/DCMAKE\+\_\+\+OSX\+\_\+\+ARCHITECTURES=\texorpdfstring{$<$}{<}semicolon-\/separated list of CPU architectures\texorpdfstring{$>$}{>}}.
+
+For example {\ttfamily -\/DCMAKE\+\_\+\+OSX\+\_\+\+ARCHITECTURES="{}arm64;x86\+\_\+64"{}} will build binaries that run on both Intel cpus and Apple silicon.
+
+SDL supports following Apple architectures:\+
+
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Platform  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}{\ttfamily CMAKE\+\_\+\+OSX\+\_\+\+ARCHITECTURES} value  \\
+64-\/bit ARM (Apple Silicon)  &{\ttfamily arm64}  \\
+x86\+\_\+64  &{\ttfamily x86\+\_\+64}  \\
+32-\/bit ARM  &{\ttfamily armv7s}  \\
+\end{DoxyTable}
+
+
+CMake documentation:\+ \href{https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_ARCHITECTURES.html}{\texttt{link}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1229}{}\doxysubsubsection{\texorpdfstring{Simulators and/\+or non-\/default mac\+OS platform SDK}{Simulators and/\+or non-\/default mac\+OS platform SDK}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1229}
+Use {\ttfamily -\/DCMAKE\+\_\+\+OSX\+\_\+\+SYSROOT=\texorpdfstring{$<$}{<}value\texorpdfstring{$>$}{>}} to configure a different platform SDK. The value can be either the name of the SDK, or a full path to the sdk (e.\+g. {\ttfamily /\+full/\+path/\+to/\+i\+Phone\+OS.sdk}).
+
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}SDK  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}{\ttfamily CMAKE\+\_\+\+OSX\+\_\+\+SYSROOT} value  \\
+iphone  &{\ttfamily iphoneos}  \\
+iphonesimulator  &{\ttfamily iphonesimulator}  \\
+apple\+TV  &{\ttfamily appletvos}  \\
+apple\+TV simulator  &{\ttfamily appletvsimulator}  \\
+vision\+OS  &{\ttfamily xr}  \\
+vision\+OS simulator  &{\ttfamily xrsimulator}  \\
+watch\+OS  &{\ttfamily watchos}  \\
+watch\+OS simulator  &{\ttfamily watchsimulator}  \\
+\end{DoxyTable}
+
+
+Append with a version number to target a specific SDK revision:\+ e.\+g. {\ttfamily iphoneos12.\+4}, {\ttfamily appletvos12.\+4}.
+
+CMake documentation:\+ \href{https://cmake.org/cmake/help/latest/variable/CMAKE_OSX_SYSROOT.html}{\texttt{link}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1230}{}\doxysubsubsection{\texorpdfstring{Apple Examples}{Apple Examples}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1230}
+
+\begin{DoxyItemize}
+\item for mac\+OS, building a dylib and/\+or static library for x86\+\_\+64 and arm64:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ cmake\ \string~/sdl\ -\/DCMAKE\_SYSTEM\_NAME=Darwin\ -\/DCMAKE\_OSX\_ARCHITECTURES="{}x86\_64;arm64"{}\ -\/DCMAKE\_OSX\_DEPLOYMENT\_TARGET=10.11}
+\DoxyCodeLine{}
+\DoxyCodeLine{-\/\ for\ macOS,\ building\ an\ universal\ framework\ for\ x86\_64\ and\ arm64:}
+
+\end{DoxyCode}
+ bash cmake \texorpdfstring{$\sim$}{\string~}/\+sdl -\/DSDL\+\_\+\+FRAMEWORK=ON -\/DCMAKE\+\_\+\+SYSTEM\+\_\+\+NAME=Darwin -\/DCMAKE\+\_\+\+OSX\+\_\+\+ARCHITECTURES="{}x86\+\_\+64;arm64"{} -\/DCMAKE\+\_\+\+OSX\+\_\+\+DEPLOYMENT\+\_\+\+TARGET=10.\+11
+\item for i\+OS-\/\+Simulator, using the latest, installed SDK:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_SYSTEM\_NAME=iOS\ -\/DCMAKE\_OSX\_SYSROOT=iphonesimulator\ -\/DCMAKE\_OSX\_ARCHITECTURES=x86\_64\ -\/DCMAKE\_OSX\_DEPLOYMENT\_TARGET=9.0}
+
+\end{DoxyCode}
+
+\item for i\+OS-\/\+Device, using the latest, installed SDK, 64-\/bit only
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_SYSTEM\_NAME=iOS\ -\/DCMAKE\_OSX\_SYSROOT=iphoneos\ -\/DCMAKE\_OSX\_ARCHITECTURES=arm64\ -\/DCMAKE\_OSX\_DEPLOYMENT\_TARGET=9.0}
+
+\end{DoxyCode}
+
+\item for i\+OS-\/\+Device, using the latest, installed SDK, mixed 32/\+64 bit
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_SYSTEM\_NAME=iOS\ -\/DCMAKE\_OSX\_SYSROOT=iphoneos\ -\/DCMAKE\_OSX\_ARCHITECTURES="{}arm64;armv7s"{}\ -\/DCMAKE\_OSX\_DEPLOYMENT\_TARGET=9.0}
+
+\end{DoxyCode}
+
+\item for i\+OS-\/\+Device, using a specific SDK revision (i\+OS 12.\+4, in this example):\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_SYSTEM\_NAME=iOS\ -\/DCMAKE\_OSX\_SYSROOT=iphoneos12.4\ -\/DCMAKE\_OSX\_ARCHITECTURES=arm64}
+
+\end{DoxyCode}
+
+\item for i\+OS-\/\+Simulator, using the latest, installed SDK, and building SDL test apps (as .app bundles):\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DSDL\_TESTS=1\ -\/DCMAKE\_SYSTEM\_NAME=iOS\ -\/DCMAKE\_OSX\_SYSROOT=iphonesimulator\ -\/DCMAKE\_OSX\_ARCHITECTURES=x86\_64\ -\/DCMAKE\_OSX\_DEPLOYMENT\_TARGET=9.0}
+
+\end{DoxyCode}
+
+\item for tv\+OS-\/\+Simulator, using the latest, installed SDK:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_SYSTEM\_NAME=tvOS\ -\/DCMAKE\_OSX\_SYSROOT=appletvsimulator\ -\/DCMAKE\_OSX\_ARCHITECTURES=x86\_64\ -\/DCMAKE\_OSX\_DEPLOYMENT\_TARGET=9.0}
+
+\end{DoxyCode}
+
+\item for tv\+OS-\/\+Device, using the latest, installed SDK:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_SYSTEM\_NAME=tvOS\ -\/DCMAKE\_OSX\_SYSROOT=appletvos\ -\/DCMAKE\_OSX\_ARCHITECTURES=arm64`\ -\/DCMAKE\_OSX\_DEPLOYMENT\_TARGET=9.0}
+
+\end{DoxyCode}
+
+\item for QNX/\+aarch64, using the latest, installed SDK:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ \string~/sdl\ -\/DCMAKE\_TOOLCHAIN\_FILE=\string~/sdl/build-\/scripts/cmake-\/toolchain-\/qnx-\/aarch64le.cmake\ -\/DSDL\_X11=0}
+
+\end{DoxyCode}
+
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1231}{}\doxysection{\texorpdfstring{SDL-\/specific CMake options}{SDL-\/specific CMake options}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1231}
+SDL can be customized through (platform-\/specific) CMake options. The following table shows generic options that are available for most platforms. At the end of SDL CMake configuration, a table shows all CMake options along with its detected value.
+
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}CMake option  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Valid values  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Description  \\
+{\ttfamily -\/DSDL\+\_\+\+SHARED=}  &{\ttfamily ON}/\+{\ttfamily OFF}  &Build SDL shared library (not all platforms support this) ({\ttfamily lib\+SDL3.\+so}/\+{\ttfamily lib\+SDL3.\+dylib}/\+{\ttfamily SDL3.\+dll})  \\
+{\ttfamily -\/DSDL\+\_\+\+STATIC=}  &{\ttfamily ON}/\+{\ttfamily OFF}  &Build SDL static library ({\ttfamily lib\+SDL3.\+a}/\+{\ttfamily SDL3-\/static.\+lib})  \\
+{\ttfamily -\/DSDL\+\_\+\+TEST\+\_\+\+LIBRARY=}  &{\ttfamily ON}/\+{\ttfamily OFF}  &Build SDL test library ({\ttfamily lib\+SDL3\+\_\+test.\+a}/\+{\ttfamily SDL3\+\_\+test.\+lib})  \\
+{\ttfamily -\/DSDL\+\_\+\+TESTS=}  &{\ttfamily ON}/\+{\ttfamily OFF}  &Build SDL test programs ({\bfseries{requires {\ttfamily -\/DSDL\+\_\+\+TEST\+\_\+\+LIBRARY=ON}}})  \\
+{\ttfamily -\/DSDL\+\_\+\+DISABLE\+\_\+\+INSTALL=}  &{\ttfamily ON}/\+{\ttfamily OFF}  &Don\textquotesingle{}t create a SDL install target  \\
+{\ttfamily -\/DSDL\+\_\+\+DISABLE\+\_\+\+INSTALL\+\_\+\+DOCS=}  &{\ttfamily ON}/\+{\ttfamily OFF}  &Don\textquotesingle{}t install the SDL documentation  \\
+{\ttfamily -\/DSDL\+\_\+\+INSTALL\+\_\+\+TESTS=}  &{\ttfamily ON}/\+{\ttfamily OFF}  &Install the SDL test programs  \\
+\end{DoxyTable}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1232}{}\doxysubsection{\texorpdfstring{Incompatibilities}{Incompatibilities}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1232}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1233}{}\doxysubsubsection{\texorpdfstring{{\ttfamily SDL\+\_\+\+LIBC=OFF} and sanitizers}{{\ttfamily SDL\+\_\+\+LIBC=OFF} and sanitizers}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1233}
+Building with {\ttfamily -\/DSDL\+\_\+\+LIBC=OFF} will make it impossible to use the sanitizer, such as the address sanitizer. Configure your project with {\ttfamily -\/DSDL\+\_\+\+LIBC=ON} to make use of sanitizers.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1234}{}\doxysection{\texorpdfstring{CMake FAQ}{CMake FAQ}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1234}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1235}{}\doxysubsection{\texorpdfstring{CMake fails to build without X11 or Wayland support}{CMake fails to build without X11 or Wayland support}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1235}
+Install the required system packages prior to running CMake. See \href{README-linux.md\#build-dependencies}{\texttt{README-\/linux.\+md}} for the list of dependencies on Linux. Other unix operating systems should provide similar packages.
+
+If you {\bfseries{really}} don\textquotesingle{}t need to show windows, add {\ttfamily -\/DSDL\+\_\+\+UNIX\+\_\+\+CONSOLE\+\_\+\+BUILD=ON} to the CMake configure command.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1236}{}\doxysubsection{\texorpdfstring{How do I copy a SDL3 dynamic library to another location?}{How do I copy a SDL3 dynamic library to another location?}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1236}
+Use \href{https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html\#target-dependent-expressions}{\texttt{CMake generator expressions}}. Generator expressions support multiple configurations, and are evaluated during build system generation time.
+
+On Windows, the following example copies {\ttfamily SDL3.\+dll} to the directory where {\ttfamily mygame.\+exe} is built. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{if(WIN32)}
+\DoxyCodeLine{\ \ \ \ add\_custom\_command(}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ TARGET\ mygame\ POST\_BUILD}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ COMMAND\ "{}\$\{CMAKE\_COMMAND\}"{}\ -\/E\ copy\ \$<TARGET\_FILE:SDL3::SDL3-\/shared>\ \$<TARGET\_FILE\_DIR:mygame>}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ VERBATIM}
+\DoxyCodeLine{\ \ \ \ )}
+\DoxyCodeLine{endif()}
+
+\end{DoxyCode}
+ On Unix systems, {\ttfamily \$\texorpdfstring{$<$}{<}TARGET\+\_\+\+FILE:\+...\texorpdfstring{$>$}{>}} will refer to the dynamic library (or framework), and you might need to use {\ttfamily \$\texorpdfstring{$<$}{<}TARGET\+\_\+\+SONAME\+\_\+\+FILE:\+tgt\texorpdfstring{$>$}{>}} instead.
+
+Most often, you can avoid copying libraries by configuring your project with absolute \href{https://cmake.org/cmake/help/latest/variable/CMAKE_LIBRARY_OUTPUT_DIRECTORY.html}{\texttt{{\ttfamily CMAKE\+\_\+\+LIBRARY\+\_\+\+OUTPUT\+\_\+\+DIRECTORY}}} and \href{https://cmake.org/cmake/help/latest/variable/CMAKE_RUNTIME_OUTPUT_DIRECTORY.html}{\texttt{{\ttfamily CMAKE\+\_\+\+RUNTIME\+\_\+\+OUTPUT\+\_\+\+DIRECTORY}}} paths. When using a multi-\/config generator (such as Visual Studio or Ninja Multi-\/\+Config), eventually add {\ttfamily /\+\$\texorpdfstring{$<$}{<}CONFIG\texorpdfstring{$>$}{>}} to both paths.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1237}{}\doxysubsection{\texorpdfstring{Linking against a static SDL library fails due to relocation errors}{Linking against a static SDL library fails due to relocation errors}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-cmake_autotoc_md1237}
+On unix platforms, all code that ends up in shared libraries needs to be built as relocatable (=position independent) code. However, by default CMake builds static libraries as non-\/relocatable. Configuring SDL with {\ttfamily -\/DCMAKE\+\_\+\+POSITION\+\_\+\+INDEPENDENT\+\_\+\+CODE=ON} will result in a static {\ttfamily lib\+SDL3.\+a} library which you can link against to create a shared library. 

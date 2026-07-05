@@ -1,0 +1,87 @@
+\doxysection{dist\+\_\+sink.\+h}
+\hypertarget{dist__sink_8h_source}{}\label{dist__sink_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/dist\_sink.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/dist\_sink.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}base\_sink.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/details/log\_msg.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <spdlog/details/null\_mutex.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <spdlog/pattern\_formatter.h>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Distribution\ sink\ (mux).\ Stores\ a\ vector\ of\ sinks\ which\ get\ called\ when\ log}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ is\ called}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00020\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }dist\_sink\ :\ \textcolor{keyword}{public}\ base\_sink<Mutex>\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ dist\_sink()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{explicit}\ dist\_sink(std::vector<std::shared\_ptr<sink>>\ sinks)}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ :\ sinks\_(std::move(sinks))\ \{\}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ dist\_sink(\textcolor{keyword}{const}\ dist\_sink\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00030\ \ \ \ \ dist\_sink\ \&operator=(\textcolor{keyword}{const}\ dist\_sink\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ add\_sink(std::shared\_ptr<sink>\ sub\_sink)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ sinks\_.push\_back(sub\_sink);}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ remove\_sink(std::shared\_ptr<sink>\ sub\_sink)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ sinks\_.erase(std::remove(sinks\_.begin(),\ sinks\_.end(),\ sub\_sink),\ sinks\_.end());}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_sinks(std::vector<std::shared\_ptr<sink>>\ sinks)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ sinks\_\ =\ std::move(sinks);}
+\DoxyCodeLine{00045\ \ \ \ \ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ std::vector<std::shared\_ptr<sink>>\ \&sinks()\ \{\ \textcolor{keywordflow}{return}\ sinks\_;\ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&sub\_sink\ :\ sinks\_)\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sub\_sink-\/>should\_log(msg.level))\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sub\_sink-\/>log(msg);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ flush\_()\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&sub\_sink\ :\ sinks\_)\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ sub\_sink-\/>flush();}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_pattern\_(\textcolor{keyword}{const}\ std::string\ \&pattern)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ set\_formatter\_(details::make\_unique<pattern\_formatter>(pattern));}
+\DoxyCodeLine{00066\ \ \ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_formatter\_(std::unique\_ptr<formatter>\ sink\_formatter)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ base\_sink<Mutex>::formatter\_\ =\ std::move(sink\_formatter);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ \&sub\_sink\ :\ sinks\_)\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ sub\_sink-\/>set\_formatter(base\_sink<Mutex>::formatter\_-\/>clone());}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ std::vector<std::shared\_ptr<sink>>\ sinks\_;}
+\DoxyCodeLine{00075\ \};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{using\ }dist\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1dist__sink}{dist\_sink<std::mutex>}};}
+\DoxyCodeLine{00078\ \textcolor{keyword}{using\ }dist\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1dist__sink}{dist\_sink<details::null\_mutex>}};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00081\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

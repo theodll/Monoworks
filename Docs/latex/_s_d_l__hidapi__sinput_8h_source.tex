@@ -1,0 +1,98 @@
+\doxysection{SDL\+\_\+hidapi\+\_\+sinput.\+h}
+\hypertarget{_s_d_l__hidapi__sinput_8h_source}{}\label{_s_d_l__hidapi__sinput_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/hidapi/SDL\_hidapi\_sinput.h@{MonoRuntime/extern/sdl/src/joystick/hidapi/SDL\_hidapi\_sinput.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 2025\ Mitchell\ Cairns\ <mitch.cairns@handheldlegend.com>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ SINPUT\_ANALOGSTYLE\_NONE,}
+\DoxyCodeLine{00025\ \ \ \ \ SINPUT\_ANALOGSTYLE\_LEFTONLY,}
+\DoxyCodeLine{00026\ \ \ \ \ SINPUT\_ANALOGSTYLE\_RIGHTONLY,}
+\DoxyCodeLine{00027\ \ \ \ \ SINPUT\_ANALOGSTYLE\_LEFTRIGHT,}
+\DoxyCodeLine{00028\ \ \ \ \ SINPUT\_ANALOGSTYLE\_MAX,}
+\DoxyCodeLine{00029\ \}\ SInput\_AnalogStyleType;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ SINPUT\_BUMPERSTYLE\_NONE,}
+\DoxyCodeLine{00034\ \ \ \ \ SINPUT\_BUMPERSTYLE\_ONE,}
+\DoxyCodeLine{00035\ \ \ \ \ SINPUT\_BUMPERSTYLE\_TWO,}
+\DoxyCodeLine{00036\ \ \ \ \ SINPUT\_BUMPERSTYLE\_MAX,}
+\DoxyCodeLine{00037\ \}\ SInput\_BumperStyleType;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ SINPUT\_TRIGGERSTYLE\_NONE,}
+\DoxyCodeLine{00042\ \ \ \ \ SINPUT\_TRIGGERSTYLE\_ANALOG,}
+\DoxyCodeLine{00043\ \ \ \ \ SINPUT\_TRIGGERSTYLE\_DIGITAL,}
+\DoxyCodeLine{00044\ \ \ \ \ SINPUT\_TRIGGERSTYLE\_DUALSTAGE,}
+\DoxyCodeLine{00045\ \ \ \ \ SINPUT\_TRIGGERSTYLE\_MAX,}
+\DoxyCodeLine{00046\ \}\ SInput\_TriggerStyleType;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ SINPUT\_PADDLESTYLE\_NONE,}
+\DoxyCodeLine{00051\ \ \ \ \ SINPUT\_PADDLESTYLE\_TWO,}
+\DoxyCodeLine{00052\ \ \ \ \ SINPUT\_PADDLESTYLE\_FOUR,}
+\DoxyCodeLine{00053\ \ \ \ \ SINPUT\_PADDLESTYLE\_MAX,}
+\DoxyCodeLine{00054\ \}\ SInput\_PaddleStyleType;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ SINPUT\_METASTYLE\_NONE,}
+\DoxyCodeLine{00059\ \ \ \ \ SINPUT\_METASTYLE\_BACK,}
+\DoxyCodeLine{00060\ \ \ \ \ SINPUT\_METASTYLE\_BACKGUIDE,}
+\DoxyCodeLine{00061\ \ \ \ \ SINPUT\_METASTYLE\_BACKGUIDESHARE,}
+\DoxyCodeLine{00062\ \ \ \ \ SINPUT\_METASTYLE\_MAX,}
+\DoxyCodeLine{00063\ \}\ SInput\_MetaStyleType;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00066\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ SINPUT\_TOUCHSTYLE\_NONE,}
+\DoxyCodeLine{00068\ \ \ \ \ SINPUT\_TOUCHSTYLE\_SINGLE,}
+\DoxyCodeLine{00069\ \ \ \ \ SINPUT\_TOUCHSTYLE\_DOUBLE,}
+\DoxyCodeLine{00070\ \ \ \ \ SINPUT\_TOUCHSTYLE\_MAX,}
+\DoxyCodeLine{00071\ \}\ SInput\_TouchStyleType;}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ SINPUT\_MISCSTYLE\_NONE,}
+\DoxyCodeLine{00076\ \ \ \ \ SINPUT\_MISCSTYLE\_1,}
+\DoxyCodeLine{00077\ \ \ \ \ SINPUT\_MISCSTYLE\_2,}
+\DoxyCodeLine{00078\ \ \ \ \ SINPUT\_MISCSTYLE\_3,}
+\DoxyCodeLine{00079\ \ \ \ \ SINPUT\_MISCSTYLE\_4,}
+\DoxyCodeLine{00080\ \ \ \ \ SINPUT\_MISCSTYLE\_MAX,}
+\DoxyCodeLine{00081\ \}\ SInput\_MiscStyleType;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00084\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ Uint16\ analog\_style;}
+\DoxyCodeLine{00086\ \ \ \ \ Uint16\ bumper\_style;}
+\DoxyCodeLine{00087\ \ \ \ \ Uint16\ trigger\_style;}
+\DoxyCodeLine{00088\ \ \ \ \ Uint16\ paddle\_style;}
+\DoxyCodeLine{00089\ \ \ \ \ Uint16\ meta\_style;}
+\DoxyCodeLine{00090\ \ \ \ \ Uint16\ touch\_style;}
+\DoxyCodeLine{00091\ \ \ \ \ Uint16\ misc\_style;}
+\DoxyCodeLine{00092\ \}\ \doxymbox{\hyperlink{struct_s_d_l___s_input_styles__t}{SDL\_SInputStyles\_t}};}
+
+\end{DoxyCode}

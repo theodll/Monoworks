@@ -1,0 +1,24 @@
+\doxysection{quaternion\+\_\+common\+\_\+simd.\+inl}
+\hypertarget{quaternion__common__simd_8inl_source}{}\label{quaternion__common__simd_8inl_source}\index{MonoEngine/thirdparty/glm/glm/ext/quaternion\_common\_simd.inl@{MonoEngine/thirdparty/glm/glm/ext/quaternion\_common\_simd.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\{}
+\DoxyCodeLine{00004\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00005\ \{}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ Q>}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__dot}{compute\_dot}}<qua<float,\ Q>,\ float,\ true>}
+\DoxyCodeLine{00008\ \ \ \ \ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{float}\ call(qua<float,\ Q>\ \textcolor{keyword}{const}\&\ x,\ qua<float,\ Q>\ \textcolor{keyword}{const}\&\ y)}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(glm\_vec1\_dot(x.data,\ y.data));}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00013\ \ \ \ \ \};}
+\DoxyCodeLine{00014\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00015\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+\DoxyCodeLine{00018\ }
+
+\end{DoxyCode}

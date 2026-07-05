@@ -1,0 +1,1114 @@
+\doxysection{type\+\_\+vec4.\+inl}
+\hypertarget{type__vec4_8inl_source}{}\label{type__vec4_8inl_source}\index{MonoEngine/thirdparty/glm/glm/detail/type\_vec4.inl@{MonoEngine/thirdparty/glm/glm/detail/type\_vec4.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}compute\_vector\_relational.hpp"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}compute\_vector\_decl.hpp"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\{}
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00008\ \{}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Implicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_CONFIG\_CTOR\_INIT\ ==\ GLM\_ENABLE}}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ GLM\_DEFAULTED\_DEFAULT\_CTOR\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>::vec}}()}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(0),\ y(0),\ z(0),\ w(0)}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ P>}
+\DoxyCodeLine{00023\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<4,\ T,\ P>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ :\ x(v.x),\ y(v.y),\ z(v.z),\ w(v.w)}
+\DoxyCodeLine{00025\ \ \ \ \ \{\}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Explicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00030\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(T\ scalar)}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ :\ x(scalar),\ y(scalar),\ z(scalar),\ w(scalar)}
+\DoxyCodeLine{00032\ \ \ \ \ \{\}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00035\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(T\ \_x,\ T\ \_y,\ T\ \_z,\ T\ \_w)}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ :\ x(\_x),\ y(\_y),\ z(\_z),\ w(\_w)}
+\DoxyCodeLine{00037\ \ \ \ \ \{\}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversion\ scalar\ constructors\ -\/-\/}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U,\ qualifier\ P>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ U,\ P>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(v.x))}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(v.x))}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(v.x))}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(v.x))}
+\DoxyCodeLine{00048\ \ \ \ \ \{\}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00052\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(X\ \_x,\ Y\ \_y,\ Z\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00057\ \ \ \ \ \{\}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00061\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ Y\ \_y,\ Z\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00066\ \ \ \ \ \{\}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00070\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(X\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ Z\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00075\ \ \ \ \ \{\}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00079\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ Z\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00084\ \ \ \ \ \{\}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00088\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(X\ \_x,\ Y\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00093\ \ \ \ \ \{\}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00097\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ Y\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00102\ \ \ \ \ \{\}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00106\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(X\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00111\ \ \ \ \ \{\}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00115\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ W\ \_w)}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00120\ \ \ \ \ \{\}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00124\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ Y\ \_y,\ Z\ \_z,\ vec<1,\ W,\ Q>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00129\ \ \ \ \ \{\}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00133\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(X\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ Z\ \_z,\ vec<1,\ W,\ Q>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00138\ \ \ \ \ \{\}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00142\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ Z\ \_z,\ vec<1,\ W,\ Q>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00147\ \ \ \ \ \{\}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00151\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(X\ \_x,\ Y\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ vec<1,\ W,\ Q>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00156\ \ \ \ \ \{\}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00160\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ Y\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ vec<1,\ W,\ Q>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00165\ \ \ \ \ \{\}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00169\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(X\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ vec<1,\ W,\ Q>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00174\ \ \ \ \ \{\}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ Y,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ W>}
+\DoxyCodeLine{00178\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ X,\ Q>\ \textcolor{keyword}{const}\&\ \_x,\ vec<1,\ Y,\ Q>\ \textcolor{keyword}{const}\&\ \_y,\ vec<1,\ Z,\ Q>\ \textcolor{keyword}{const}\&\ \_z,\ vec<1,\ W,\ Q>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00183\ \ \ \ \ \{\}}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversion\ vector\ constructors\ -\/-\/}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00189\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<2,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_xy,\ B\ \_z,\ C\ \_w)}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_xy.x))}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_xy.y))}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00194\ \ \ \ \ \{\}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00198\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<2,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_xy,\ vec<1,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_z,\ C\ \_w)}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_xy.x))}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_xy.y))}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00203\ \ \ \ \ \{\}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00207\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<2,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_xy,\ B\ \_z,\ vec<1,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_xy.x))}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_xy.y))}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z))}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00212\ \ \ \ \ \{\}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00216\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<2,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_xy,\ vec<1,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_z,\ vec<1,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_xy.x))}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_xy.y))}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_z.x))}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00221\ \ \ \ \ \{\}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00225\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(A\ \_x,\ vec<2,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_yz,\ C\ \_w)}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_yz.x))}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_yz.y))}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00230\ \ \ \ \ \{\}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00234\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_x,\ vec<2,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_yz,\ C\ \_w)}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_yz.x))}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_yz.y))}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00239\ \ \ \ \ \{\}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00243\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(A\ \_x,\ vec<2,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_yz,\ vec<1,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_yz.x))}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_yz.y))}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00248\ \ \ \ \ \{\}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00252\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_x,\ vec<2,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_yz,\ vec<1,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_yz.x))}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_yz.y))}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00257\ \ \ \ \ \{\}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00261\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(A\ \_x,\ B\ \_y,\ vec<2,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_zw)}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_zw.x))}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_zw.y))}
+\DoxyCodeLine{00266\ \ \ \ \ \{\}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00270\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_x,\ B\ \_y,\ vec<2,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_zw)}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y))}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_zw.x))}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_zw.y))}
+\DoxyCodeLine{00275\ \ \ \ \ \{\}}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00279\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(A\ \_x,\ vec<1,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_y,\ vec<2,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_zw)}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_zw.x))}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_zw.y))}
+\DoxyCodeLine{00284\ \ \ \ \ \{\}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ \textcolor{keyword}{typename}\ C,\ qualifier\ P>}
+\DoxyCodeLine{00288\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_x,\ vec<1,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_y,\ vec<2,\ C,\ P>\ \textcolor{keyword}{const}\&\ \_zw)}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_y.x))}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_zw.x))}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_zw.y))}
+\DoxyCodeLine{00293\ \ \ \ \ \{\}}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ qualifier\ P>}
+\DoxyCodeLine{00297\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<3,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_xyz,\ B\ \_w)}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_xyz.x))}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_xyz.y))}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_xyz.z))}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w))}
+\DoxyCodeLine{00302\ \ \ \ \ \{\}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ qualifier\ P>}
+\DoxyCodeLine{00306\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<3,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_xyz,\ vec<1,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_w)}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_xyz.x))}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_xyz.y))}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_xyz.z))}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_w.x))}
+\DoxyCodeLine{00311\ \ \ \ \ \{\}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ qualifier\ P>}
+\DoxyCodeLine{00315\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(A\ \_x,\ vec<3,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_yzw)}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x))}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_yzw.x))}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_yzw.y))}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_yzw.z))}
+\DoxyCodeLine{00320\ \ \ \ \ \{\}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ qualifier\ P>}
+\DoxyCodeLine{00324\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<1,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_x,\ vec<3,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_yzw)}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_x.x))}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_yzw.x))}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_yzw.y))}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_yzw.z))}
+\DoxyCodeLine{00329\ \ \ \ \ \{\}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B,\ qualifier\ P>}
+\DoxyCodeLine{00333\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<2,\ A,\ P>\ \textcolor{keyword}{const}\&\ \_xy,\ vec<2,\ B,\ P>\ \textcolor{keyword}{const}\&\ \_zw)}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(\_xy.x))}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(\_xy.y))}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(\_zw.x))}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(\_zw.y))}
+\DoxyCodeLine{00338\ \ \ \ \ \{\}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U,\ qualifier\ P>}
+\DoxyCodeLine{00342\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>::vec(vec<4,\ U,\ P>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ :\ x(static\_cast<T>(v.x))}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ ,\ y(static\_cast<T>(v.y))}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ ,\ z(static\_cast<T>(v.z))}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ ,\ w(static\_cast<T>(v.w))}
+\DoxyCodeLine{00347\ \ \ \ \ \{\}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Component\ accesses\ -\/-\/}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00353\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T\&\ vec<4,\ T,\ Q>::operator[](\textcolor{keyword}{typename}\ vec<4,\ T,\ Q>::length\_type\ i)}
+\DoxyCodeLine{00354\ \ \ \ \ \{}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ GLM\_ASSERT\_LENGTH(i,\ this-\/>length());}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (i)}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 0:}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ y;}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ z;}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ w;}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00368\ \ \ \ \ \}}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00371\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T\ \textcolor{keyword}{const}\&\ vec<4,\ T,\ Q>::operator[](\textcolor{keyword}{typename}\ vec<4,\ T,\ Q>::length\_type\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00372\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ GLM\_ASSERT\_LENGTH(i,\ this-\/>length());}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (i)}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 0:}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 1:}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ y;}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 2:}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ z;}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ 3:}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ w;}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00386\ \ \ \ \ \}}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00392\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\&\ vec<4,\ T,\ Q>::operator=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00393\ \ \ \ \ \{}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ this-\/>x\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.x);}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ this-\/>y\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.y);}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ this-\/>z\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.z);}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ this-\/>w\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v.w);}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00399\ \ \ \ \ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00403\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator+=(U\ scalar)}
+\DoxyCodeLine{00404\ \ \ \ \ \{}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_add<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00406\ \ \ \ \ \}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00410\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator+=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00411\ \ \ \ \ \{}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_add<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v.x)));}
+\DoxyCodeLine{00413\ \ \ \ \ \}}
+\DoxyCodeLine{00414\ }
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00417\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator+=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00418\ \ \ \ \ \{}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_add<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00420\ \ \ \ \ \}}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00424\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator-\/=(U\ scalar)}
+\DoxyCodeLine{00425\ \ \ \ \ \{}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_sub<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00427\ \ \ \ \ \}}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00431\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator-\/=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00432\ \ \ \ \ \{}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_sub<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v.x)));}
+\DoxyCodeLine{00434\ \ \ \ \ \}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00438\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator-\/=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00439\ \ \ \ \ \{}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_sub<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00441\ \ \ \ \ \}}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00445\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator*=(U\ scalar)}
+\DoxyCodeLine{00446\ \ \ \ \ \{}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_mul<4,T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00448\ \ \ \ \ \}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00452\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator*=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00453\ \ \ \ \ \{}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_mul<4,T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v.x)));}
+\DoxyCodeLine{00455\ \ \ \ \ \}}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00459\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator*=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00460\ \ \ \ \ \{}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_mul<4,T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00462\ \ \ \ \ \}}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00466\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator/=(U\ scalar)}
+\DoxyCodeLine{00467\ \ \ \ \ \{}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_div<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00469\ \ \ \ \ \}}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00473\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator/=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00474\ \ \ \ \ \{}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_div<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v.x)));}
+\DoxyCodeLine{00476\ \ \ \ \ \}}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00480\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator/=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00481\ \ \ \ \ \{}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_div<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00483\ \ \ \ \ \}}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Increment\ and\ decrement\ operators\ -\/-\/}}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00488\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator++()}
+\DoxyCodeLine{00489\ \ \ \ \ \{}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ ++this-\/>x;}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ ++this-\/>y;}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ ++this-\/>z;}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ ++this-\/>w;}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00495\ \ \ \ \ \}}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00498\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator-\/-\/()}
+\DoxyCodeLine{00499\ \ \ \ \ \{}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ -\/-\/this-\/>x;}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ -\/-\/this-\/>y;}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ -\/-\/this-\/>z;}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ -\/-\/this-\/>w;}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00505\ \ \ \ \ \}}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00508\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ vec<4,\ T,\ Q>::operator++(\textcolor{keywordtype}{int})}
+\DoxyCodeLine{00509\ \ \ \ \ \{}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ vec<4,\ T,\ Q>\ Result(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ ++*\textcolor{keyword}{this};}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00513\ \ \ \ \ \}}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00516\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ vec<4,\ T,\ Q>::operator-\/-\/(\textcolor{keywordtype}{int})}
+\DoxyCodeLine{00517\ \ \ \ \ \{}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ vec<4,\ T,\ Q>\ Result(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ -\/-\/*\textcolor{keyword}{this};}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00521\ \ \ \ \ \}}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ bit\ operators\ -\/-\/}}
+\DoxyCodeLine{00524\ }
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00527\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\%=(U\ scalar)}
+\DoxyCodeLine{00528\ \ \ \ \ \{}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_mod<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00530\ \ \ \ \ \}}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00534\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\%=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00535\ \ \ \ \ \{}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_mod<3,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<3,\ T,\ Q>(v)));}
+\DoxyCodeLine{00537\ \ \ \ \ \}}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00541\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\%=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00542\ \ \ \ \ \{}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_mod<4,\ T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00544\ \ \ \ \ \}}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00548\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\&=(U\ scalar)}
+\DoxyCodeLine{00549\ \ \ \ \ \{}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_and<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00551\ \ \ \ \ \}}
+\DoxyCodeLine{00552\ }
+\DoxyCodeLine{00553\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00555\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\&=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00556\ \ \ \ \ \{}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_and<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00558\ \ \ \ \ \}}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00562\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\&=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00563\ \ \ \ \ \{}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_and<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00565\ \ \ \ \ \}}
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00569\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator|=(U\ scalar)}
+\DoxyCodeLine{00570\ \ \ \ \ \{}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_or<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00572\ \ \ \ \ \}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00576\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator|=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00577\ \ \ \ \ \{}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_or<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00579\ \ \ \ \ \}}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00583\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator|=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00584\ \ \ \ \ \{}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_or<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00586\ \ \ \ \ \}}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00590\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\string^=(U\ scalar)}
+\DoxyCodeLine{00591\ \ \ \ \ \{}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_xor<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00593\ \ \ \ \ \}}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00597\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\string^=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00598\ \ \ \ \ \{}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_xor<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00600\ \ \ \ \ \}}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00603\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00604\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator\string^=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00605\ \ \ \ \ \{}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_xor<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00607\ \ \ \ \ \}}
+\DoxyCodeLine{00608\ }
+\DoxyCodeLine{00609\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00610\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00611\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator<<=(U\ scalar)}
+\DoxyCodeLine{00612\ \ \ \ \ \{}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_shift\_left<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00614\ \ \ \ \ \}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00618\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator<<=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00619\ \ \ \ \ \{}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_shift\_left<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00621\ \ \ \ \ \}}
+\DoxyCodeLine{00622\ }
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00625\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator<<=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00626\ \ \ \ \ \{}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_shift\_left<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00628\ \ \ \ \ \}}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00630\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00631\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00632\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator>>=(U\ scalar)}
+\DoxyCodeLine{00633\ \ \ \ \ \{}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_shift\_right<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(scalar)));}
+\DoxyCodeLine{00635\ \ \ \ \ \}}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00639\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator>>=(vec<1,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00640\ \ \ \ \ \{}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_shift\_right<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00642\ \ \ \ \ \}}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00646\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ \&\ vec<4,\ T,\ Q>::operator>>=(vec<4,\ U,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00647\ \ \ \ \ \{}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ detail::compute\_vec\_shift\_right<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ vec<4,\ T,\ Q>(v)));}
+\DoxyCodeLine{00649\ \ \ \ \ \}}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ constant\ operators\ -\/-\/}}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00654\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator+(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00655\ \ \ \ \ \{}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v;}
+\DoxyCodeLine{00657\ \ \ \ \ \}}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00660\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator-\/(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00661\ \ \ \ \ \{}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(0)\ -\/=\ v;}
+\DoxyCodeLine{00663\ \ \ \ \ \}}
+\DoxyCodeLine{00664\ }
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00668\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator+(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00669\ \ \ \ \ \{}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ +=\ scalar;}
+\DoxyCodeLine{00671\ \ \ \ \ \}}
+\DoxyCodeLine{00672\ }
+\DoxyCodeLine{00673\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00674\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator+(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00675\ \ \ \ \ \{}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ +=\ v2;}
+\DoxyCodeLine{00677\ \ \ \ \ \}}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00680\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator+(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00681\ \ \ \ \ \{}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ +=\ scalar;}
+\DoxyCodeLine{00683\ \ \ \ \ \}}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00686\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator+(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00687\ \ \ \ \ \{}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v2)\ +=\ v1;}
+\DoxyCodeLine{00689\ \ \ \ \ \}}
+\DoxyCodeLine{00690\ }
+\DoxyCodeLine{00691\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00692\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator+(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00693\ \ \ \ \ \{}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ +=\ v2;}
+\DoxyCodeLine{00695\ \ \ \ \ \}}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00698\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator-\/(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00699\ \ \ \ \ \{}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ -\/=\ scalar;}
+\DoxyCodeLine{00701\ \ \ \ \ \}}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00704\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator-\/(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00705\ \ \ \ \ \{}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ -\/=\ v2;}
+\DoxyCodeLine{00707\ \ \ \ \ \}}
+\DoxyCodeLine{00708\ }
+\DoxyCodeLine{00709\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00710\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator-\/(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00711\ \ \ \ \ \{}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ -\/=\ v;}
+\DoxyCodeLine{00713\ \ \ \ \ \}}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00716\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator-\/(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00717\ \ \ \ \ \{}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1.x)\ -\/=\ v2;}
+\DoxyCodeLine{00719\ \ \ \ \ \}}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00721\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00722\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator-\/(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00723\ \ \ \ \ \{}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ -\/=\ v2;}
+\DoxyCodeLine{00725\ \ \ \ \ \}}
+\DoxyCodeLine{00726\ }
+\DoxyCodeLine{00727\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00728\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator*(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00729\ \ \ \ \ \{}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ *=\ scalar;}
+\DoxyCodeLine{00731\ \ \ \ \ \}}
+\DoxyCodeLine{00732\ }
+\DoxyCodeLine{00733\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00734\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator*(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00735\ \ \ \ \ \{}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ *=\ v2;}
+\DoxyCodeLine{00737\ \ \ \ \ \}}
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00739\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00740\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator*(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00741\ \ \ \ \ \{}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ *=\ scalar;}
+\DoxyCodeLine{00743\ \ \ \ \ \}}
+\DoxyCodeLine{00744\ }
+\DoxyCodeLine{00745\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00746\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator*(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00747\ \ \ \ \ \{}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v2)\ *=\ v1;}
+\DoxyCodeLine{00749\ \ \ \ \ \}}
+\DoxyCodeLine{00750\ }
+\DoxyCodeLine{00751\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00752\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator*(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00753\ \ \ \ \ \{}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ *=\ v2;}
+\DoxyCodeLine{00755\ \ \ \ \ \}}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00758\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator/(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00759\ \ \ \ \ \{}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ /=\ scalar;}
+\DoxyCodeLine{00761\ \ \ \ \ \}}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00764\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator/(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00765\ \ \ \ \ \{}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ /=\ v2;}
+\DoxyCodeLine{00767\ \ \ \ \ \}}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00770\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator/(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00771\ \ \ \ \ \{}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ /=\ v;}
+\DoxyCodeLine{00773\ \ \ \ \ \}}
+\DoxyCodeLine{00774\ }
+\DoxyCodeLine{00775\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00776\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator/(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00777\ \ \ \ \ \{}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1.x)\ /=\ v2;}
+\DoxyCodeLine{00779\ \ \ \ \ \}}
+\DoxyCodeLine{00780\ }
+\DoxyCodeLine{00781\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00782\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator/(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00783\ \ \ \ \ \{}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ /=\ v2;}
+\DoxyCodeLine{00785\ \ \ \ \ \}}
+\DoxyCodeLine{00786\ }
+\DoxyCodeLine{00787\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ bit\ operators\ -\/-\/}}
+\DoxyCodeLine{00788\ }
+\DoxyCodeLine{00789\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00790\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\%(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00791\ \ \ \ \ \{}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ \%=\ scalar;}
+\DoxyCodeLine{00793\ \ \ \ \ \}}
+\DoxyCodeLine{00794\ }
+\DoxyCodeLine{00795\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00796\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\%(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00797\ \ \ \ \ \{}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ \%=\ v2.x;}
+\DoxyCodeLine{00799\ \ \ \ \ \}}
+\DoxyCodeLine{00800\ }
+\DoxyCodeLine{00801\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00802\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\%(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00803\ \ \ \ \ \{}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ \%=\ v;}
+\DoxyCodeLine{00805\ \ \ \ \ \}}
+\DoxyCodeLine{00806\ }
+\DoxyCodeLine{00807\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00808\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\%(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00809\ \ \ \ \ \{}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar.x)\ \%=\ v;}
+\DoxyCodeLine{00811\ \ \ \ \ \}}
+\DoxyCodeLine{00812\ }
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00814\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\%(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00815\ \ \ \ \ \{}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ \%=\ v2;}
+\DoxyCodeLine{00817\ \ \ \ \ \}}
+\DoxyCodeLine{00818\ }
+\DoxyCodeLine{00819\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00820\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\&(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00821\ \ \ \ \ \{}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ \&=\ scalar;}
+\DoxyCodeLine{00823\ \ \ \ \ \}}
+\DoxyCodeLine{00824\ }
+\DoxyCodeLine{00825\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00826\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\&(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ scalar)}
+\DoxyCodeLine{00827\ \ \ \ \ \{}
+\DoxyCodeLine{00828\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ \&=\ scalar;}
+\DoxyCodeLine{00829\ \ \ \ \ \}}
+\DoxyCodeLine{00830\ }
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00832\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\&(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00833\ \ \ \ \ \{}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ \&=\ v;}
+\DoxyCodeLine{00835\ \ \ \ \ \}}
+\DoxyCodeLine{00836\ }
+\DoxyCodeLine{00837\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00838\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\&(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00839\ \ \ \ \ \{}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1.x)\ \&=\ v2;}
+\DoxyCodeLine{00841\ \ \ \ \ \}}
+\DoxyCodeLine{00842\ }
+\DoxyCodeLine{00843\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00844\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\&(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00845\ \ \ \ \ \{}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ \&=\ v2;}
+\DoxyCodeLine{00847\ \ \ \ \ \}}
+\DoxyCodeLine{00848\ }
+\DoxyCodeLine{00849\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00850\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator|(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00851\ \ \ \ \ \{}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ |=\ scalar;}
+\DoxyCodeLine{00853\ \ \ \ \ \}}
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00856\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator|(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00857\ \ \ \ \ \{}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ |=\ v2.x;}
+\DoxyCodeLine{00859\ \ \ \ \ \}}
+\DoxyCodeLine{00860\ }
+\DoxyCodeLine{00861\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00862\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator|(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00863\ \ \ \ \ \{}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ |=\ v;}
+\DoxyCodeLine{00865\ \ \ \ \ \}}
+\DoxyCodeLine{00866\ }
+\DoxyCodeLine{00867\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00868\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator|(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00869\ \ \ \ \ \{}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1.x)\ |=\ v2;}
+\DoxyCodeLine{00871\ \ \ \ \ \}}
+\DoxyCodeLine{00872\ }
+\DoxyCodeLine{00873\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00874\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator|(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00875\ \ \ \ \ \{}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ |=\ v2;}
+\DoxyCodeLine{00877\ \ \ \ \ \}}
+\DoxyCodeLine{00878\ }
+\DoxyCodeLine{00879\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00880\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\string^(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00881\ \ \ \ \ \{}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ \string^=\ scalar;}
+\DoxyCodeLine{00883\ \ \ \ \ \}}
+\DoxyCodeLine{00884\ }
+\DoxyCodeLine{00885\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00886\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\string^(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00887\ \ \ \ \ \{}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ \string^=\ v2.x;}
+\DoxyCodeLine{00889\ \ \ \ \ \}}
+\DoxyCodeLine{00890\ }
+\DoxyCodeLine{00891\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00892\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\string^(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00893\ \ \ \ \ \{}
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ \string^=\ v;}
+\DoxyCodeLine{00895\ \ \ \ \ \}}
+\DoxyCodeLine{00896\ }
+\DoxyCodeLine{00897\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00898\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\string^(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00899\ \ \ \ \ \{}
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1.x)\ \string^=\ v2;}
+\DoxyCodeLine{00901\ \ \ \ \ \}}
+\DoxyCodeLine{00902\ }
+\DoxyCodeLine{00903\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00904\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\string^(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00905\ \ \ \ \ \{}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ \string^=\ v2;}
+\DoxyCodeLine{00907\ \ \ \ \ \}}
+\DoxyCodeLine{00908\ }
+\DoxyCodeLine{00909\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00910\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator<<(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00911\ \ \ \ \ \{}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ <<=\ scalar;}
+\DoxyCodeLine{00913\ \ \ \ \ \}}
+\DoxyCodeLine{00914\ }
+\DoxyCodeLine{00915\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00916\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator<<(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00917\ \ \ \ \ \{}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ <<=\ v2.x;}
+\DoxyCodeLine{00919\ \ \ \ \ \}}
+\DoxyCodeLine{00920\ }
+\DoxyCodeLine{00921\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00922\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator<<(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00923\ \ \ \ \ \{}
+\DoxyCodeLine{00924\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ <<=\ v;}
+\DoxyCodeLine{00925\ \ \ \ \ \}}
+\DoxyCodeLine{00926\ }
+\DoxyCodeLine{00927\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00928\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator<<(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00929\ \ \ \ \ \{}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1.x)\ <<=\ v2;}
+\DoxyCodeLine{00931\ \ \ \ \ \}}
+\DoxyCodeLine{00932\ }
+\DoxyCodeLine{00933\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00934\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator<<(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00935\ \ \ \ \ \{}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ <<=\ v2;}
+\DoxyCodeLine{00937\ \ \ \ \ \}}
+\DoxyCodeLine{00938\ }
+\DoxyCodeLine{00939\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00940\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator>>(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ T\ scalar)}
+\DoxyCodeLine{00941\ \ \ \ \ \{}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v)\ >>=\ scalar;}
+\DoxyCodeLine{00943\ \ \ \ \ \}}
+\DoxyCodeLine{00944\ }
+\DoxyCodeLine{00945\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00946\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator>>(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00947\ \ \ \ \ \{}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ >>=\ v2.x;}
+\DoxyCodeLine{00949\ \ \ \ \ \}}
+\DoxyCodeLine{00950\ }
+\DoxyCodeLine{00951\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00952\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator>>(T\ scalar,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00953\ \ \ \ \ \{}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(scalar)\ >>=\ v;}
+\DoxyCodeLine{00955\ \ \ \ \ \}}
+\DoxyCodeLine{00956\ }
+\DoxyCodeLine{00957\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00958\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator>>(vec<1,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00959\ \ \ \ \ \{}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1.x)\ >>=\ v2;}
+\DoxyCodeLine{00961\ \ \ \ \ \}}
+\DoxyCodeLine{00962\ }
+\DoxyCodeLine{00963\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00964\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator>>(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00965\ \ \ \ \ \{}
+\DoxyCodeLine{00966\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(v1)\ >>=\ v2;}
+\DoxyCodeLine{00967\ \ \ \ \ \}}
+\DoxyCodeLine{00968\ }
+\DoxyCodeLine{00969\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00970\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ T,\ Q>\ operator\string~(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00971\ \ \ \ \ \{}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::compute\_vec\_bitwise\_not<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(v);}
+\DoxyCodeLine{00973\ \ \ \ \ \}}
+\DoxyCodeLine{00974\ }
+\DoxyCodeLine{00975\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Boolean\ operators\ -\/-\/}}
+\DoxyCodeLine{00976\ }
+\DoxyCodeLine{00977\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00978\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keywordtype}{bool}\ operator==(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00979\ \ \ \ \ \{}
+\DoxyCodeLine{00980\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::compute\_vec\_equal<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(v1,\ v2);}
+\DoxyCodeLine{00981\ \ \ \ \ \}}
+\DoxyCodeLine{00982\ }
+\DoxyCodeLine{00983\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00984\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keywordtype}{bool}\ operator!=(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00985\ \ \ \ \ \{}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ detail::compute\_vec\_nequal<4,\ T,\ Q,\ detail::is\_int<T>::value,\ \textcolor{keyword}{sizeof}(T)\ *\ 8,\ detail::is\_aligned<Q>::value>::call(v1,\ v2);}
+\DoxyCodeLine{00987\ \ \ \ \ \}}
+\DoxyCodeLine{00988\ }
+\DoxyCodeLine{00989\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ Q>}
+\DoxyCodeLine{00990\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ bool,\ Q>\ operator\&\&(vec<4,\ bool,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ bool,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00991\ \ \ \ \ \{}
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ bool,\ Q>(v1.x\ \&\&\ v2.x,\ v1.y\ \&\&\ v2.y,\ v1.z\ \&\&\ v2.z,\ v1.w\ \&\&\ v2.w);}
+\DoxyCodeLine{00993\ \ \ \ \ \}}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ Q>}
+\DoxyCodeLine{00996\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ bool,\ Q>\ operator||(vec<4,\ bool,\ Q>\ \textcolor{keyword}{const}\&\ v1,\ vec<4,\ bool,\ Q>\ \textcolor{keyword}{const}\&\ v2)}
+\DoxyCodeLine{00997\ \ \ \ \ \{}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ bool,\ Q>(v1.x\ ||\ v2.x,\ v1.y\ ||\ v2.y,\ v1.z\ ||\ v2.z,\ v1.w\ ||\ v2.w);}
+\DoxyCodeLine{00999\ \ \ \ \ \}}
+\DoxyCodeLine{01000\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{01001\ }
+\DoxyCodeLine{01002\ \textcolor{preprocessor}{\#if\ GLM\_CONFIG\_SIMD\ ==\ GLM\_ENABLE}}
+\DoxyCodeLine{01003\ \textcolor{preprocessor}{\#\ \ \ include\ "{}type\_vec\_simd.inl"{}}}
+\DoxyCodeLine{01004\ }
+\DoxyCodeLine{01005\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\ \{}
+\DoxyCodeLine{01006\ \textcolor{comment}{/*\ build\ errors\ on\ Windows\ ARM\ Github\ C.I.}}
+\DoxyCodeLine{01007\ \textcolor{comment}{\#if\ GLM\_ARCH\ \&\ GLM\_ARCH\_NEON\_BIT\ \&\&\ !GLM\_CONFIG\_XYZW\_ONLY}}
+\DoxyCodeLine{01008\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_FLOAT);}}
+\DoxyCodeLine{01009\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_INT);}}
+\DoxyCodeLine{01010\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_UINT);}}
+\DoxyCodeLine{01011\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_VECF\_INT4);}}
+\DoxyCodeLine{01012\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_VECF\_UINT4);}}
+\DoxyCodeLine{01013\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_VECF\_VECF);}}
+\DoxyCodeLine{01014\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_VECF\_VECI);}}
+\DoxyCodeLine{01015\ \textcolor{comment}{\ \ \ \ CTORSL(4,\ CTOR\_VECF\_VECU);}}
+\DoxyCodeLine{01016\ \textcolor{comment}{\#endif//\ GLM\_ARCH\ \&\ GLM\_ARCH\_NEON\_BIT}}
+\DoxyCodeLine{01017\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01018\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+\DoxyCodeLine{01019\ \ \ \ \ CTORSL(4,\ CTOR\_FLOAT);}
+\DoxyCodeLine{01020\ \ \ \ \ CTORSL(4,\ CTOR\_DOUBLE);}
+\DoxyCodeLine{01021\ \ \ \ \ CTORSL(4,\ CTOR\_FLOAT4);}
+\DoxyCodeLine{01022\ \ \ \ \ CTORSL(4,\ CTOR\_DOUBLE4);}
+\DoxyCodeLine{01023\ \ \ \ \ CTORSL(4,\ CTOR\_INT);}
+\DoxyCodeLine{01024\ \ \ \ \ CTORSL(4,\ CTOR\_INT4);}
+\DoxyCodeLine{01025\ \ \ \ \ CTORSL(4,\ CTOR\_VECF\_INT4);}
+\DoxyCodeLine{01026\ }
+\DoxyCodeLine{01027\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01028\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01029\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ float,\ aligned\_highp>::vec}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ float,\ aligned\_highp>}}\&\ v):}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ data(v.data)}
+\DoxyCodeLine{01031\ \ \ \ \ \{}
+\DoxyCodeLine{01032\ \ \ \ \ \}}
+\DoxyCodeLine{01033\ }
+\DoxyCodeLine{01034\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01035\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01036\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ float,\ aligned\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ float,\ packed\_highp>\&\ v)}
+\DoxyCodeLine{01037\ \ \ \ \ \{}
+\DoxyCodeLine{01038\ \ \ \ \ \ \ \ \ data\ =\ \_mm\_loadu\_ps(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{float}*\textcolor{keyword}{>}(\&v));}
+\DoxyCodeLine{01039\ \ \ \ \ \}}
+\DoxyCodeLine{01040\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01041\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01042\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01043\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ float,\ packed\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ float,\ aligned\_highp>\&\ v)}
+\DoxyCodeLine{01044\ \ \ \ \ \{}
+\DoxyCodeLine{01045\ \ \ \ \ \ \ \ \ \_mm\_storeu\_ps(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{float}*\textcolor{keyword}{>}(\textcolor{keyword}{this}),\ v.data);}
+\DoxyCodeLine{01046\ \ \ \ \ \}}
+\DoxyCodeLine{01047\ }
+\DoxyCodeLine{01048\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01049\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01050\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ int,\ aligned\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ int,\ aligned\_highp>\&\ v)\ :}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ data(v.data)}
+\DoxyCodeLine{01052\ \ \ \ \ \{}
+\DoxyCodeLine{01053\ \ \ \ \ \}}
+\DoxyCodeLine{01054\ }
+\DoxyCodeLine{01055\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01056\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01057\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ int,\ aligned\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ int,\ packed\_highp>\&\ v)}
+\DoxyCodeLine{01058\ \ \ \ \ \{}
+\DoxyCodeLine{01059\ \ \ \ \ \ \ \ \ data\ =\ \_mm\_loadu\_si128(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\_\_m128i*\textcolor{keyword}{>}(\&v));}
+\DoxyCodeLine{01060\ \ \ \ \ \}}
+\DoxyCodeLine{01061\ }
+\DoxyCodeLine{01062\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01063\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01064\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ int,\ packed\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ int,\ aligned\_highp>\&\ v)}
+\DoxyCodeLine{01065\ \ \ \ \ \{}
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ \_mm\_storeu\_si128(\textcolor{keyword}{reinterpret\_cast<}\_\_m128i*\textcolor{keyword}{>}(\textcolor{keyword}{this}),\ v.data);}
+\DoxyCodeLine{01067\ \ \ \ \ \}}
+\DoxyCodeLine{01068\ }
+\DoxyCodeLine{01069\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01070\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01071\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ double,\ aligned\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ double,\ aligned\_highp>\&\ v)}
+\DoxyCodeLine{01072\ \ \ \ \ \{}
+\DoxyCodeLine{01073\ \textcolor{preprocessor}{\#\ \ \ if\ (GLM\_ARCH\ \&\ GLM\_ARCH\_AVX\_BIT)}}
+\DoxyCodeLine{01074\ \ \ \ \ \ \ \ \ data\ =\ v.data;}
+\DoxyCodeLine{01075\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01076\ \ \ \ \ \ \ \ \ data.setv(0,\ v.data.getv(0));}
+\DoxyCodeLine{01077\ \ \ \ \ \ \ \ \ data.setv(1,\ v.data.getv(1));}
+\DoxyCodeLine{01078\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01079\ \ \ \ \ \}}
+\DoxyCodeLine{01080\ }
+\DoxyCodeLine{01081\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01082\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01083\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ double,\ aligned\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ double,\ packed\_highp>\&\ v)}
+\DoxyCodeLine{01084\ \ \ \ \ \{}
+\DoxyCodeLine{01085\ \textcolor{preprocessor}{\#\ \ \ if\ (GLM\_ARCH\ \&\ GLM\_ARCH\_AVX\_BIT)}}
+\DoxyCodeLine{01086\ \ \ \ \ \ \ \ \ data\ =\ \_mm256\_loadu\_pd(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{double}*\textcolor{keyword}{>}(\&v));}
+\DoxyCodeLine{01087\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01088\ \ \ \ \ \ \ \ \ data.setv(0,\ \_mm\_loadu\_pd(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{double}*\textcolor{keyword}{>}(\&v)));}
+\DoxyCodeLine{01089\ \ \ \ \ \ \ \ \ data.setv(1,\ \_mm\_loadu\_pd(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keyword}{const\ }\textcolor{keywordtype}{double}*\textcolor{keyword}{>}(\&v)+2));}
+\DoxyCodeLine{01090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01091\ \ \ \ \ \}}
+\DoxyCodeLine{01092\ }
+\DoxyCodeLine{01093\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01094\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{01095\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ vec<4,\ double,\ packed\_highp>::vec(\textcolor{keyword}{const}\ vec<4,\ double,\ aligned\_highp>\&\ v)}
+\DoxyCodeLine{01096\ \ \ \ \ \{}
+\DoxyCodeLine{01097\ \textcolor{preprocessor}{\#\ \ \ if\ (GLM\_ARCH\ \&\ GLM\_ARCH\_AVX\_BIT)}}
+\DoxyCodeLine{01098\ \ \ \ \ \ \ \ \ \_mm256\_storeu\_pd(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{double}*\textcolor{keyword}{>}(\textcolor{keyword}{this}),\ v.data);}
+\DoxyCodeLine{01099\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01100\ \ \ \ \ \ \ \ \ \_mm\_storeu\_pd(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{double}*\textcolor{keyword}{>}(\textcolor{keyword}{this}),\ v.data.getv(0));}
+\DoxyCodeLine{01101\ \ \ \ \ \ \ \ \ \_mm\_storeu\_pd(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{double}*\textcolor{keyword}{>}(\textcolor{keyword}{this})\ +\ 2,\ v.data.getv(1));}
+\DoxyCodeLine{01102\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01103\ \ \ \ \ \}}
+\DoxyCodeLine{01104\ }
+\DoxyCodeLine{01105\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+\DoxyCodeLine{01106\ \}}
+\DoxyCodeLine{01107\ }
+\DoxyCodeLine{01108\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,60 @@
+\doxysection{imgui\+\_\+impl\+\_\+osx.\+h}
+\hypertarget{imgui__impl__osx_8h_source}{}\label{imgui__impl__osx_8h_source}\index{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_osx.h@{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_osx.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ dear\ imgui:\ Platform\ Backend\ for\ OSX\ /\ Cocoa}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ This\ needs\ to\ be\ used\ along\ with\ a\ Renderer\ (e.g.\ OpenGL2,\ OpenGL3,\ Vulkan,\ Metal..)}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ -\/\ Not\ well\ tested.\ If\ you\ want\ a\ portable\ application,\ prefer\ using\ the\ GLFW\ or\ SDL\ platform\ Backends\ on\ Mac.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ -\/\ Requires\ linking\ with\ the\ GameController\ framework\ ("{}-\/framework\ GameController"{}).}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ Implemented\ features:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ \ [X]\ Platform:\ Clipboard\ support\ is\ part\ of\ core\ Dear\ ImGui\ (no\ specific\ code\ in\ this\ backend).}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ \ [X]\ Platform:\ Mouse\ support.\ Can\ discriminate\ Mouse/Pen.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \ [X]\ Platform:\ Keyboard\ support.\ Since\ 1.87\ we\ are\ using\ the\ io.AddKeyEvent()\ function.\ Pass\ ImGuiKey\ values\ to\ all\ key\ functions\ e.g.\ ImGui::IsKeyPressed(ImGuiKey\_Space).\ [Legacy\ kVK\_*\ values\ are\ obsolete\ since\ 1.87\ and\ not\ supported\ since\ 1.91.5]}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ [X]\ Platform:\ Gamepad\ support.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ \ [X]\ Platform:\ Mouse\ cursor\ shape\ and\ visibility\ (ImGuiBackendFlags\_HasMouseCursors).\ Disable\ with\ 'io.ConfigFlags\ |=\ ImGuiConfigFlags\_NoMouseCursorChange'.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ [X]\ Platform:\ IME\ support.}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ You\ can\ use\ unmodified\ imgui\_impl\_*\ files\ in\ your\ project.\ See\ examples/\ folder\ for\ examples\ of\ using\ this.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Prefer\ including\ the\ entire\ imgui/\ repository\ into\ your\ project\ (either\ as\ a\ copy\ or\ as\ a\ submodule),\ and\ only\ build\ the\ backends\ you\ need.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Learn\ about\ Dear\ ImGui:}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ -\/\ FAQ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ https://dearimgui.com/faq}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ -\/\ Getting\ Started\ \ \ \ \ \ https://dearimgui.com/getting-\/started}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ -\/\ Documentation\ \ \ \ \ \ \ \ https://dearimgui.com/docs\ (same\ as\ your\ local\ docs/\ folder).}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ -\/\ Introduction,\ links\ and\ more\ at\ the\ top\ of\ imgui.cpp}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}imgui.h"{}}\ \ \ \ \ \ \textcolor{comment}{//\ IMGUI\_IMPL\_API}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ IMGUI\_DISABLE}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{@class}\ NSEvent;}
+\DoxyCodeLine{00029\ \textcolor{keyword}{@class}\ NSView;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ Follow\ "{}Getting\ Started"{}\ link\ and\ check\ examples/\ folder\ to\ learn\ about\ using\ backends!}}
+\DoxyCodeLine{00032\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ ImGui\_ImplOSX\_Init(NSView*\ \_Nonnull\ view);}
+\DoxyCodeLine{00033\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplOSX\_Shutdown();}
+\DoxyCodeLine{00034\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplOSX\_NewFrame(NSView*\ \_Nullable\ view);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ C++\ API}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#ifdef\ IMGUI\_IMPL\_METAL\_CPP\_EXTENSIONS}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ \#include\ <AppKit/AppKit.hpp>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#ifndef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Follow\ "{}Getting\ Started"{}\ link\ and\ check\ examples/\ folder\ to\ learn\ about\ using\ backends!}}
+\DoxyCodeLine{00047\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ ImGui\_ImplOSX\_Init(\textcolor{keywordtype}{void}*\ \_Nonnull\ view);}
+\DoxyCodeLine{00048\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplOSX\_Shutdown();}
+\DoxyCodeLine{00049\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplOSX\_NewFrame(\textcolor{keywordtype}{void}*\ \_Nullable\ view);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#ifndef\ IMGUI\_DISABLE}}
+
+\end{DoxyCode}

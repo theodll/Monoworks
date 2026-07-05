@@ -1,0 +1,110 @@
+\doxysection{Task\+Scheduler\+\_\+c.\+h}
+\hypertarget{_task_scheduler__c_8h_source}{}\label{_task_scheduler__c_8h_source}\index{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/enkiTS/TaskScheduler\_c.h@{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/enkiTS/TaskScheduler\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ (c)\ 2013\ Doug\ Binks}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ warranty.\ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ \ \ \ in\ a\ product,\ an\ acknowledgement\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00022\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}};}
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}}\ \ \ \ \ \ \ \doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ void\ (*\ enkiTaskExecuteRange)(\ uint32\_t\ start\_,\ uint32\_t\ end,\ uint32\_t\ threadnum\_,\ \textcolor{keywordtype}{void}*\ pArgs\_\ );}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Create\ a\ new\ task\ scheduler}}
+\DoxyCodeLine{00034\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ \ enkiNewTaskScheduler();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ Initialize\ task\ scheduler\ -\/\ will\ create\ GetNumHardwareThreads()-\/1\ threads,\ which\ is}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ sufficient\ to\ fill\ the\ system\ when\ including\ the\ main\ thread.}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ Initialize\ can\ be\ called\ multiple\ times\ -\/\ it\ will\ wait\ for\ completion}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ before\ re-\/initializing.}}
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiInitTaskScheduler(\ \ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_\ );}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ Initialize\ a\ task\ scheduler\ with\ numThreads\_\ (must\ be\ >\ 0)}}
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ will\ create\ numThreads\_-\/1\ threads,\ as\ thread\ 0\ is}}
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ the\ thread\ on\ which\ the\ initialize\ was\ called.}}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiInitTaskSchedulerNumThreads(\ \ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_,\ uint32\_t\ numThreads\_\ );}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ Delete\ a\ task\ scheduler}}
+\DoxyCodeLine{00049\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiDeleteTaskScheduler(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_\ );}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ Create\ a\ task\ set.}}
+\DoxyCodeLine{00052\ \doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}}*\ \ \ \ \ \ \ \ enkiCreateTaskSet(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_,\ enkiTaskExecuteRange\ taskFunc\_\ \ );}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ Delete\ a\ task\ set.}}
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiDeleteTaskSet(\ \doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}}*\ pTaskSet\_\ );}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ Schedule\ the\ task}}
+\DoxyCodeLine{00058\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiAddTaskSetToPipe(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_,\ \doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}}*\ pTaskSet\_,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ pArgs\_,\ uint32\_t\ setSize\_\ );}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Schedule\ the\ task\ with\ a\ minimum\ range.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ This\ should\ be\ set\ to\ a\ value\ which\ results\ in\ computation\ effort\ of\ at\ least\ 10k}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ clock\ cycles\ to\ minimize\ tast\ scheduler\ overhead.}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ NOTE:\ The\ last\ partition\ will\ be\ smaller\ than\ m\_MinRange\ if\ m\_SetSize\ is\ not\ a\ multiple}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ of\ m\_MinRange.}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ Also\ known\ as\ grain\ size\ in\ literature.}}
+\DoxyCodeLine{00067\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiAddTaskSetToPipeMinRange(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_,\ \doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}}*\ pTaskSet\_,}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ pArgs\_,\ uint32\_t\ setSize\_,\ uint32\_t\ minRange\_\ );}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{comment}{//\ Check\ if\ TaskSet\ is\ complete.\ Doesn't\ wait.\ Returns\ 1\ if\ complete,\ 0\ if\ not.}}
+\DoxyCodeLine{00072\ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiIsTaskSetComplete(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_,\ \doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}}*\ pTaskSet\_\ );}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ Wait\ for\ a\ given\ task.}}
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ should\ only\ be\ called\ from\ thread\ which\ created\ the\ taskscheduler\ ,\ or\ within\ a\ task}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//\ if\ called\ with\ 0\ it\ will\ try\ to\ run\ tasks,\ and\ return\ if\ none\ available.}}
+\DoxyCodeLine{00078\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiWaitForTaskSet(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_,\ \doxymbox{\hyperlink{structenki_task_set}{enkiTaskSet}}*\ pTaskSet\_\ );}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{//\ Waits\ for\ all\ task\ sets\ to\ complete\ -\/\ not\ guaranteed\ to\ work\ unless\ we\ know\ we}}
+\DoxyCodeLine{00082\ \textcolor{comment}{//\ are\ in\ a\ situation\ where\ tasks\ aren't\ being\ continuosly\ added.}}
+\DoxyCodeLine{00083\ \textcolor{keywordtype}{void}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ enkiWaitForAll(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_\ );}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{comment}{//\ get\ number\ of\ threads}}
+\DoxyCodeLine{00087\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ enkiGetNumTaskThreads(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_\ );}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ TaskScheduler\ implements\ several\ callbacks\ intended\ for\ profilers}}
+\DoxyCodeLine{00090\ \textcolor{keyword}{typedef}\ void\ (*enkiProfilerCallbackFunc)(\ uint32\_t\ threadnum\_\ );}
+\DoxyCodeLine{00091\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structenki_profiler_callbacks}{enkiProfilerCallbacks}}}
+\DoxyCodeLine{00092\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ enkiProfilerCallbackFunc\ threadStart;}
+\DoxyCodeLine{00094\ \ \ \ \ enkiProfilerCallbackFunc\ threadStop;}
+\DoxyCodeLine{00095\ \ \ \ \ enkiProfilerCallbackFunc\ waitStart;}
+\DoxyCodeLine{00096\ \ \ \ \ enkiProfilerCallbackFunc\ waitStop;}
+\DoxyCodeLine{00097\ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{comment}{//\ Get\ the\ callback\ structure\ so\ it\ can\ be\ set\ }}
+\DoxyCodeLine{00100\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structenki_profiler_callbacks}{enkiProfilerCallbacks}}*\ \ \ enkiGetProfilerCallbacks(\ \doxymbox{\hyperlink{structenki_task_scheduler}{enkiTaskScheduler}}*\ pETS\_\ );}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

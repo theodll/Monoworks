@@ -1,0 +1,48 @@
+\doxysection{SDL\+\_\+render\+\_\+vita\+\_\+gxm\+\_\+memory.\+h}
+\hypertarget{_s_d_l__render__vita__gxm__memory_8h_source}{}\label{_s_d_l__render__vita__gxm__memory_8h_source}\index{MonoRuntime/extern/sdl/src/render/vitagxm/SDL\_render\_vita\_gxm\_memory.h@{MonoRuntime/extern/sdl/src/render/vitagxm/SDL\_render\_vita\_gxm\_memory.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_RENDER\_VITA\_GXM\_MEMORY\_H}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_RENDER\_VITA\_GXM\_MEMORY\_H}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <psp2/gxm.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <psp2/types.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <psp2/kernel/sysmem.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}SDL\_render\_vita\_gxm\_types.h"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ ALIGN(x,\ a)\ (((x)\ +\ ((a)-\/1))\ \&\ \string~((a)-\/1))}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{void}\ *vita\_mem\_alloc(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ type,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ alignment,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ attribs,\ SceUID\ *uid);}
+\DoxyCodeLine{00033\ \textcolor{keywordtype}{void}\ vita\_mem\_free(SceUID\ uid);}
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{void}\ *vita\_gpu\_mem\_alloc(\doxymbox{\hyperlink{struct_v_i_t_a___g_x_m___render_data}{VITA\_GXM\_RenderData}}\ *data,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size);}
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{void}\ vita\_gpu\_mem\_free(\doxymbox{\hyperlink{struct_v_i_t_a___g_x_m___render_data}{VITA\_GXM\_RenderData}}\ *data,\ \textcolor{keywordtype}{void}\ *ptr);}
+\DoxyCodeLine{00036\ \textcolor{keywordtype}{void}\ vita\_gpu\_mem\_destroy(\doxymbox{\hyperlink{struct_v_i_t_a___g_x_m___render_data}{VITA\_GXM\_RenderData}}\ *data);}
+\DoxyCodeLine{00037\ \textcolor{keywordtype}{void}\ *vita\_mem\_vertex\_usse\_alloc(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size,\ SceUID\ *uid,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *usse\_offset);}
+\DoxyCodeLine{00038\ \textcolor{keywordtype}{void}\ vita\_mem\_vertex\_usse\_free(SceUID\ uid);}
+\DoxyCodeLine{00039\ \textcolor{keywordtype}{void}\ *vita\_mem\_fragment\_usse\_alloc(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ size,\ SceUID\ *uid,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *usse\_offset);}
+\DoxyCodeLine{00040\ \textcolor{keywordtype}{void}\ vita\_mem\_fragment\_usse\_free(SceUID\ uid);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_RENDER\_VITA\_GXM\_MEMORY\_H}}
+
+\end{DoxyCode}

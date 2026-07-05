@@ -1,0 +1,118 @@
+\chapter{Call stacks }
+\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack}{}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack}\index{Call stacks@{Call stacks}}
+\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1115}%
+\Hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1115}%
+
+
+A call stack is a trace of program execution at the moment of capture. This capture can happen at any time, but it usually occurs when a program crashes, so the developer can trace the path that led to the failure. The case of call stacks in a profiler is very different. During profiling, the operating system halts execution of the program at a predefined rate-\/for example, 10 k\+Hz-\/notes where the program execution is and the function calls that led it there, then resumes the program. As can be seen, the call stacks in a profiler are slices of a normal workflow you can use to explore execution characteristics, not indications of failure.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1116}{}\doxysection{\texorpdfstring{Call stack structure}{Call stack structure}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1116}
+The top call stack frame is numbered 0, and it always is the place {\itshape where the program execution is} during the stack capture. Stack frame numbers increase the farther toward the origin function we go, as the usual convention goes. A stack trace is always a snapshot of what a {\itshape single thread} is doing.
+
+In Tracy Profiler, each execution frame can have multiple {\itshape inline} frames. When a program is compiled, the compiler, as an optimization, may inline function calls into the base function ("{}symbol"{}), and the profiler can track that.
+
+To show how it works, let\textquotesingle{}s consider the following source code:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{float}\ Square(\textcolor{keywordtype}{float}\ val)\ \{\ \textcolor{keywordflow}{return}\ val*val;\ \}}
+\DoxyCodeLine{\textcolor{keywordtype}{float}\ Distance(Point\ p1,\ Point\ p2)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(Square(p1.x-\/p2.x)+Square(p1.y-\/p2.y));\ \}}
+\DoxyCodeLine{\textcolor{keywordtype}{bool}\ CanReach(\doxymbox{\hyperlink{struct_player}{Player}}\ p,\ Item\ i)\ \{\ \textcolor{keywordflow}{return}\ Distance(p.pos,\ i.pos)<5;\ \}}
+
+\end{DoxyCode}
+
+
+Now, let\textquotesingle{}s say we capture a call stack inside the {\ttfamily Square} function. This is how the call stack can look:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0.\ Square()\ [inline\ 0]}
+\DoxyCodeLine{0.\ Distance()\ [inline\ 1]}
+\DoxyCodeLine{0.\ CanReach()\ [inline\ 2]}
+\DoxyCodeLine{1.\ ItemsLoop()}
+\DoxyCodeLine{2.\ PlayerLogic()}
+\DoxyCodeLine{3.\ ...}
+
+\end{DoxyCode}
+
+
+There are three frames with index 0, which means that both {\ttfamily Square} and {\ttfamily Distance} have been inlined into the {\ttfamily Can\+Reach} function, forming a symbol named {\ttfamily Can\+Reach}. Following the inline stack frame indices, we can also see that the call order is {\ttfamily Can\+Reach} -\/\texorpdfstring{$>$}{>} {\ttfamily Distance} -\/\texorpdfstring{$>$}{>} {\ttfamily Square}, which matches what the source code does.
+
+Note that while the example is at the top level, inline frames can appear at any depth of the call stack.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1117}{}\doxysection{\texorpdfstring{Call stacks are return stacks}{Call stacks are return stacks}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1117}
+You need to be very careful when reading call stacks. The usual notion is that call stacks (as the name suggests) show function call stacks, that is, which function called which to get where we are. Unfortunately, this is not true. In reality, call stacks are {\itshape function return stacks}. The call stack shows where each function will {\bfseries{return}}, not from where it was called.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1118}{}\doxysubsection{\texorpdfstring{Example 1}{Example 1}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1118}
+To fully understand how this works, consider the following source code:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{int}\ main()}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{auto}\ app\ =\ std::make\_unique<Application>();}
+\DoxyCodeLine{\ \ \ \ app-\/>Run();}
+\DoxyCodeLine{\ \ \ \ app.reset();}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Let\textquotesingle{}s assume the {\ttfamily Application} instance ({\ttfamily app}) is already created and we have entered the {\ttfamily Run} method, where, somewhere inside, we\textquotesingle{}re capturing a call stack. Here\textquotesingle{}s a result we might get:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0.\ Application::Run()}
+\DoxyCodeLine{1.\ std::unique\_ptr<Application>::reset()}
+\DoxyCodeLine{2.\ main()}
+
+\end{DoxyCode}
+
+
+At the first glance it may look like {\ttfamily unique\+\_\+ptr::\+reset} was the {\itshape call site} of the {\ttfamily Application::\+\+Run}, which would make no sense, but this is not the case here. When you remember these are the {\itshape function return points}, it becomes much more clear what is happening. As an optimization, {\ttfamily Application::\+\+Run} is returning directly into {\ttfamily unique\+\_\+ptr::\+reset}, skipping the return to {\ttfamily main} and an unnecessary {\ttfamily reset} function call.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1119}{}\doxysubsection{\texorpdfstring{Example 2}{Example 2}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1119}
+Here you will see how a function on the call chain can be entirely absent:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{int}\ ComputeHash(\textcolor{keyword}{const}\ Buffer\&\ b)\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ expensive\ hashing}}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int}\ Validate(\textcolor{keyword}{const}\ Buffer\&\ b)\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}(b.empty())\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ ComputeHash(b);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{void}\ HandleRequest(Request\&\ r)\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordtype}{int}\ h\ =\ Validate(r.payload);}
+\DoxyCodeLine{\ \ \ \ Store(r,\ h);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+A sample lands inside Compute\+Hash. The captured stack looks like this:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{0.\ ComputeHash()}
+\DoxyCodeLine{1.\ HandleRequest()}
+\DoxyCodeLine{2.\ RequestLoop()}
+
+\end{DoxyCode}
+
+
+{\bfseries{Naive (call-\/stack) reading:\+}} {\ttfamily Handle\+Request} called {\ttfamily Compute\+Hash} directly. Conclusion:\+ optimize the call site in {\ttfamily Handle\+Request}, or rethink why {\ttfamily Handle\+Request} is hashing.
+
+{\bfseries{Correct (return-\/stack) reading:\+}} Frame 1 is where {\ttfamily Compute\+Hash} will return to, not who called it. {\ttfamily Validate} ended with return {\ttfamily Compute\+Hash(b)}, so the compiler turned that into a tail call — {\ttfamily Validate}\textquotesingle{}s own frame was reused for {\ttfamily Compute\+Hash}. When {\ttfamily Compute\+Hash} returns, it skips {\ttfamily Validate} entirely and lands in {\ttfamily Handle\+Request}. {\ttfamily Validate} is on the actual call chain ({\ttfamily Handle\+Request} -\/\texorpdfstring{$>$}{>} {\ttfamily Validate} -\/\texorpdfstring{$>$}{>} {\ttfamily Compute\+Hash}) but is missing from the stack.
+
+{\bfseries{Why the divergence matters:\+}} The naive reading sends you to fix the wrong code. {\ttfamily Handle\+Request} doesn\textquotesingle{}t decide to hash anything — {\ttfamily Validate} does. If you act on the naive interpretation, you investigate a function that has no agency in this hot path while the actual decision-\/maker ({\ttfamily Validate}) is invisible.
+
+{\bfseries{Lesson the example teaches:\+}} Any frame below a given frame in the stack may not be its caller. It is only guaranteed to be the return target. Functions on the real call chain can be entirely absent — tail-\/called away or inlined.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1120}{}\doxysection{\texorpdfstring{Crash handler}{Crash handler}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1120}
+Tracy Profiler can intercept crashes and report them to the user for analysis. To do this, some code machinery is needed, and then the Tracy crash handler needs to run, capture the call stack, and send it over the network. All this only happens after the actual crash occurred; otherwise, there would be no reason to run the crash handler. As a consequence, the retrieved crash trace may include parts of the crash handler stack, which you must ignore.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1121}{}\doxysection{\texorpdfstring{Base address and instruction pointer}{Base address and instruction pointer}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1121}
+Each frame in a call stack has an associated instruction pointer, {\ttfamily ip} – the return address where the execution will return from the function a frame above. This address is somewhere in the symbol code. The start of the symbol is provided as the {\ttfamily base\+Addr} value. This base address identifies the symbol and can be used in various symbol-\/related tool calls as the symbol address.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1122}{}\doxysection{\texorpdfstring{Wait stacks}{Wait stacks}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1122}
+Some call stacks represent time spent waiting for something to happen. For example, the program may want to read something from the disk. In such cases, program execution will be paused, and the CPU will start running kernel code responsible for filesystem access, I/\+O routines, or just idling while waiting for a response from the hardware.
+
+A wait stack is identified by the presence of the {\ttfamily wait\+\_\+time} field, which shows how much time was spent waiting for execution to return to the program. Further information about the wait stack can be inferred from the optional fields {\ttfamily wait\+\_\+reason} (with an explanation in {\ttfamily wait\+\_\+reason\+\_\+hint}) and {\ttfamily wait\+\_\+state} (with an explanation in {\ttfamily wait\+\_\+state\+\_\+hint}).\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1123}{}\doxysection{\texorpdfstring{Inspecting call stacks}{Inspecting call stacks}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8callstack_autotoc_md1123}
+
+\begin{DoxyEnumerate}
+\item Focus on user\textquotesingle{}s code. Ignore standard library boilerplate.
+\item Retrieve source code to verify call stack validity. Frames in call stacks are return locations, and the call site may actually be near the reported source line, or in a different function altogether.
+\item Top of the call stack is the most interesting, as it shows what the program is doing {\itshape now}. The bottom of the call stack shows what the program did to do what it\textquotesingle{}s doing.
+\item If the call stack contains Tracy\textquotesingle{}s crash handler, the profiled program has crashed. In this case, ignore the crash handler and any functions it may be calling. The crash happened {\itshape before} the handler intercepted it. 
+\end{DoxyEnumerate}

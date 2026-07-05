@@ -1,0 +1,97 @@
+\doxysection{SDL\+\_\+vulkan.\+h}
+\hypertarget{_s_d_l__vulkan_8h_source}{}\label{_s_d_l__vulkan_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_vulkan.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_vulkan.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 2017,\ Mark\ Callow}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifndef\ SDL\_vulkan\_h\_}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ SDL\_vulkan\_h\_}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_video.h>}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00049\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{/*\ Avoid\ including\ vulkan\_core.h,\ don't\ define\ VkInstance\ if\ it's\ already\ included\ */}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#ifdef\ VULKAN\_CORE\_H\_}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ NO\_SDL\_VULKAN\_TYPEDEFS}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#ifndef\ NO\_SDL\_VULKAN\_TYPEDEFS}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ VK\_DEFINE\_HANDLE(object)\ typedef\ struct\ object\#\#\_T*\ object;}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#if\ defined(\_\_LP64\_\_)\ ||\ defined(\_WIN64)\ ||\ (defined(\_\_x86\_64\_\_)\ \&\&\ !defined(\_\_ILP32\_\_))\ ||\ defined(\_M\_X64)\ ||\ defined(\_\_ia64)\ ||\ defined\ (\_M\_IA64)\ ||\ defined(\_\_aarch64\_\_)\ ||\ defined(\_\_powerpc64\_\_)\ ||\ (defined(\_\_riscv)\ \&\&\ \_\_riscv\_xlen\ ==\ 64)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ VK\_DEFINE\_NON\_DISPATCHABLE\_HANDLE(object)\ typedef\ struct\ object\#\#\_T\ *object;}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ VK\_DEFINE\_NON\_DISPATCHABLE\_HANDLE(object)\ typedef\ uint64\_t\ object;}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ VK\_DEFINE\_HANDLE(VkInstance)}
+\DoxyCodeLine{00068\ VK\_DEFINE\_HANDLE(VkPhysicalDevice)}
+\DoxyCodeLine{00069\ VK\_DEFINE\_NON\_DISPATCHABLE\_HANDLE(VkSurfaceKHR)}
+\DoxyCodeLine{00070\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{/*\ Make\ sure\ to\ undef\ to\ avoid\ issues\ in\ case\ of\ later\ vulkan\ include\ */}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#undef\ VK\_DEFINE\_HANDLE}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#undef\ VK\_DEFINE\_NON\_DISPATCHABLE\_HANDLE}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !NO\_SDL\_VULKAN\_TYPEDEFS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_Vulkan\_LoadLibrary(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_FunctionPointer\ SDLCALL\ SDL\_Vulkan\_GetVkGetInstanceProcAddr(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00176\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_Vulkan\_UnloadLibrary(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ \textcolor{keyword}{const}\ *\ \textcolor{keyword}{const}\ *\ SDLCALL\ SDL\_Vulkan\_GetInstanceExtensions(Uint32\ *count);}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00226\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_Vulkan\_CreateSurface(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkInstance\ instance,}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}\ *allocator,}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkSurfaceKHR\ *surface);}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00254\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_Vulkan\_DestroySurface(VkInstance\ instance,}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkSurfaceKHR\ surface,}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}\ *allocator);}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00275\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_Vulkan\_GetPresentationSupport(VkInstance\ instance,}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ VkPhysicalDevice\ physicalDevice,}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Uint32\ queueFamilyIndex);}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Vulkan\ support\ functions\ */}}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00283\ \}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_vulkan\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

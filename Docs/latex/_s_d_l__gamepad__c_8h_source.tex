@@ -1,0 +1,56 @@
+\doxysection{SDL\+\_\+gamepad\+\_\+c.\+h}
+\hypertarget{_s_d_l__gamepad__c_8h_source}{}\label{_s_d_l__gamepad__c_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/SDL\_gamepad\_c.h@{MonoRuntime/extern/sdl/src/joystick/SDL\_gamepad\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_gamepad\_c\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_gamepad\_c\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ Useful\ functions\ and\ variables\ from\ SDL\_gamepad.c}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Initialization\ and\ shutdown\ functions}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_InitGamepadMappings(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00031\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_QuitGamepadMappings(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_InitGamepads(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00033\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_QuitGamepads(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_PrivateGamepadAdded(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00036\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_PrivateGamepadRemoved(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ Function\ to\ return\ whether\ a\ joystick\ name\ and\ GUID\ is\ a\ gamepad}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_IsGamepadNameAndGUID(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \doxymbox{\hyperlink{struct_s_d_l___g_u_i_d}{SDL\_GUID}}\ guid);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ Function\ to\ return\ whether\ a\ gamepad\ should\ be\ ignored}}
+\DoxyCodeLine{00042\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_ShouldIgnoreGamepad(Uint16\ vendor\_id,\ Uint16\ product\_id,\ Uint16\ version,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ Handle\ delayed\ guide\ button\ on\ a\ gamepad}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_GamepadHandleDelayedGuideButton(\doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ Handle\ system\ sensor\ data}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_GamepadSensorWatcher(Uint64\ timestamp,\ SDL\_SensorID\ sensor,\ Uint64\ sensor\_timestamp,\ \textcolor{keywordtype}{float}\ *data,\ \textcolor{keywordtype}{int}\ num\_values);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_gamepad\_c\_h\_}}
+
+\end{DoxyCode}

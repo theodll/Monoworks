@@ -1,0 +1,183 @@
+\doxysection{args.\+h}
+\hypertarget{args_8h_source}{}\label{args_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/fmt/bundled/args.h@{MonoEngine/thirdparty/spdlog/include/spdlog/fmt/bundled/args.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Formatting\ library\ for\ C++\ -\/\ dynamic\ argument\ lists}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ Copyright\ (c)\ 2012\ -\/\ present,\ Victor\ Zverovich}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ All\ rights\ reserved.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ For\ the\ license\ information\ refer\ to\ format.h.}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#ifndef\ FMT\_ARGS\_H\_}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ FMT\_ARGS\_H\_}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#ifndef\ FMT\_MODULE}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ include\ <functional>}\ \ \textcolor{comment}{//\ std::reference\_wrapper}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ include\ <memory>}\ \ \ \ \ \ \textcolor{comment}{//\ std::unique\_ptr}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ \ include\ <vector>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}format.h"{}}\ \ \textcolor{comment}{//\ std\_string\_view}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ FMT\_BEGIN\_NAMESPACE}
+\DoxyCodeLine{00020\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedetail}{detail}}\ \{}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdetail_1_1is__reference__wrapper}{is\_reference\_wrapper}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00023\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdetail_1_1is__reference__wrapper}{is\_reference\_wrapper}}<std::reference\_wrapper<T>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{auto}\ unwrap(\textcolor{keyword}{const}\ T\&\ v)\ -\/>\ \textcolor{keyword}{const}\ T\&\ \{\ \textcolor{keywordflow}{return}\ v;\ \}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00028\ \textcolor{keyword}{auto}\ unwrap(\textcolor{keyword}{const}\ std::reference\_wrapper<T>\&\ v)\ -\/>\ \textcolor{keyword}{const}\ T\&\ \{}
+\DoxyCodeLine{00029\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }T\&\textcolor{keyword}{>}(v);}
+\DoxyCodeLine{00030\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ node\ is\ defined\ outside\ dynamic\_arg\_list\ to\ workaround\ a\ C2504\ bug\ in\ MSVC}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ 2022\ (v17.10.0).}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Workaround\ for\ clang's\ -\/Wweak-\/vtables.\ Unlike\ for\ regular\ classes,\ for}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ templates\ it\ doesn't\ complain\ about\ inability\ to\ deduce\ single\ translation}}
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ unit\ for\ placing\ vtable.\ So\ node\ is\ made\ a\ fake\ template.}}
+\DoxyCodeLine{00038\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdetail_1_1node}{node}}\ \{}
+\DoxyCodeLine{00039\ \ \ \textcolor{keyword}{virtual}\ \doxymbox{\hyperlink{structdetail_1_1node}{\string~node}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00040\ \ \ std::unique\_ptr<node<>>\ next;}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classdetail_1_1dynamic__arg__list}{dynamic\_arg\_list}}\ \{}
+\DoxyCodeLine{00044\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }typed\_node\ :\ \doxymbox{\hyperlink{structdetail_1_1node}{node}}<>\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ T\ \doxymbox{\hyperlink{classdetail_1_1value}{value}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Arg>}
+\DoxyCodeLine{00048\ \ \ \ \ FMT\_CONSTEXPR\ typed\_node(\textcolor{keyword}{const}\ Arg\&\ arg)\ :\ \doxymbox{\hyperlink{classdetail_1_1value}{value}}(arg)\ \{\}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Char>}
+\DoxyCodeLine{00051\ \ \ \ \ FMT\_CONSTEXPR\ typed\_node(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classbasic__string__view}{basic\_string\_view<Char>}}\&\ arg)}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ :\ \doxymbox{\hyperlink{classdetail_1_1value}{value}}(arg.data(),\ arg.size())\ \{\}}
+\DoxyCodeLine{00053\ \ \ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ std::unique\_ptr<node<>>\ head\_;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00058\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Arg>\ \textcolor{keyword}{auto}\ push(\textcolor{keyword}{const}\ Arg\&\ arg)\ -\/>\ \textcolor{keyword}{const}\ T\&\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{auto}\ new\_node\ =\ std::unique\_ptr<typed\_node<T>>(\textcolor{keyword}{new}\ typed\_node<T>(arg));}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{auto}\&\ \doxymbox{\hyperlink{classdetail_1_1value}{value}}\ =\ new\_node-\/>value;}
+\DoxyCodeLine{00061\ \ \ \ \ new\_node-\/>next\ =\ std::move(head\_);}
+\DoxyCodeLine{00062\ \ \ \ \ head\_\ =\ std::move(new\_node);}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classdetail_1_1value}{value}};}
+\DoxyCodeLine{00064\ \ \ \}}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ \}\ \ \textcolor{comment}{//\ namespace\ detail}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00074\ FMT\_EXPORT\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Context>\ \textcolor{keyword}{class\ }dynamic\_format\_arg\_store\ \{}
+\DoxyCodeLine{00075\ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00076\ \ \ \textcolor{keyword}{using\ }char\_type\ =\ \textcolor{keyword}{typename}\ Context::char\_type;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }need\_copy\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ detail::type\ mapped\_type\ =}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ detail::mapped\_type\_constant<T,\ char\_type>::value;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ value\ =\ !(\doxymbox{\hyperlink{structdetail_1_1is__reference__wrapper}{detail::is\_reference\_wrapper<T>::value}}\ ||}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_same<T,\ basic\_string\_view<char\_type>>::value\ ||}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::is\_same<T,\ detail::std\_string\_view<char\_type>>::value\ ||}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (mapped\_type\ !=\ detail::type::cstring\_type\ \&\&}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mapped\_type\ !=\ detail::type::string\_type\ \&\&}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mapped\_type\ !=\ detail::type::custom\_type))}
+\DoxyCodeLine{00089\ \ \ \ \ \};}
+\DoxyCodeLine{00090\ \ \ \};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00093\ \ \ \textcolor{keyword}{using\ }stored\_t\ =\ conditional\_t<}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ std::is\_convertible<T,\ std::basic\_string<char\_type>>::value\ \&\&}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ !\doxymbox{\hyperlink{structdetail_1_1is__reference__wrapper}{detail::is\_reference\_wrapper<T>::value}},}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ std::basic\_string<char\_type>,\ T>;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \textcolor{comment}{//\ Storage\ of\ basic\_format\_arg\ must\ be\ contiguous.}}
+\DoxyCodeLine{00099\ \ \ std::vector<basic\_format\_arg<Context>>\ data\_;}
+\DoxyCodeLine{00100\ \ \ std::vector<detail::named\_arg\_info<char\_type>>\ named\_info\_;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \textcolor{comment}{//\ Storage\ of\ arguments\ not\ fitting\ into\ basic\_format\_arg\ must\ grow}}
+\DoxyCodeLine{00103\ \ \ \textcolor{comment}{//\ without\ relocation\ because\ items\ in\ data\_\ refer\ to\ it.}}
+\DoxyCodeLine{00104\ \ \ \doxymbox{\hyperlink{classdetail_1_1dynamic__arg__list}{detail::dynamic\_arg\_list}}\ dynamic\_args\_;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classbasic__format__args}{basic\_format\_args}}<Context>;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \textcolor{keyword}{auto}\ data()\ \textcolor{keyword}{const}\ -\/>\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classbasic__format__arg}{basic\_format\_arg<Context>}}*\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordflow}{return}\ named\_info\_.empty()\ ?\ data\_.data()\ :\ data\_.data()\ +\ 1;}
+\DoxyCodeLine{00110\ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keywordtype}{void}\ emplace\_arg(\textcolor{keyword}{const}\ T\&\ arg)\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ data\_.emplace\_back(arg);}
+\DoxyCodeLine{00114\ \ \ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00117\ \ \ \textcolor{keywordtype}{void}\ emplace\_arg(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetail_1_1named__arg}{detail::named\_arg<char\_type,\ T>}}\&\ arg)\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordflow}{if}\ (named\_info\_.empty())}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ data\_.insert(data\_.begin(),\ \doxymbox{\hyperlink{classbasic__format__arg}{basic\_format\_arg<Context>}}(\textcolor{keyword}{nullptr},\ 0));}
+\DoxyCodeLine{00120\ \ \ \ \ data\_.emplace\_back(detail::unwrap(arg.value));}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{auto}\ pop\_one\ =\ [](std::vector<basic\_format\_arg<Context>>*\ data)\ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ data-\/>pop\_back();}
+\DoxyCodeLine{00123\ \ \ \ \ \};}
+\DoxyCodeLine{00124\ \ \ \ \ std::unique\_ptr<std::vector<basic\_format\_arg<Context>>,\ \textcolor{keyword}{decltype}(pop\_one)>}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ guard\{\&data\_,\ pop\_one\};}
+\DoxyCodeLine{00126\ \ \ \ \ named\_info\_.push\_back(\{arg.name,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(data\_.size()\ -\/\ 2u)\});}
+\DoxyCodeLine{00127\ \ \ \ \ data\_[0]\ =\ \{named\_info\_.data(),\ named\_info\_.size()\};}
+\DoxyCodeLine{00128\ \ \ \ \ guard.release();}
+\DoxyCodeLine{00129\ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00132\ \ \ \textcolor{keyword}{constexpr}\ dynamic\_format\_arg\_store()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \textcolor{keyword}{operator}\ \doxymbox{\hyperlink{classbasic__format__args}{basic\_format\_args<Context>}}()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{classbasic__format__args}{basic\_format\_args<Context>}}(data(),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(data\_.size()),}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !named\_info\_.empty());}
+\DoxyCodeLine{00137\ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00154\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdynamic__format__arg__store_a710e994685e69fd1cd4f56d29efc0d95}{push\_back}}(\textcolor{keyword}{const}\ T\&\ arg)\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordflow}{if}\ (detail::const\_check(need\_copy<T>::value))}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ emplace\_arg(dynamic\_args\_.push<stored\_t<T>>(arg));}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ emplace\_arg(detail::unwrap(arg));}
+\DoxyCodeLine{00159\ \ \ \}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00174\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdynamic__format__arg__store_ac58637a7965cbfeab47c2f50e923dc07}{push\_back}}(std::reference\_wrapper<T>\ arg)\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{static\_assert}(}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ need\_copy<T>::value,}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}objects\ of\ built-\/in\ types\ and\ string\ views\ are\ always\ copied"{}});}
+\DoxyCodeLine{00178\ \ \ \ \ emplace\_arg(arg.get());}
+\DoxyCodeLine{00179\ \ \ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00186\ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00187\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdynamic__format__arg__store_a14baaad39c59b82fdf86dc4276f7d7cc}{push\_back}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetail_1_1named__arg}{detail::named\_arg<char\_type,\ T>}}\&\ arg)\ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{const}\ char\_type*\ arg\_name\ =}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ dynamic\_args\_.push<std::basic\_string<char\_type>>(arg.name).c\_str();}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keywordflow}{if}\ (detail::const\_check(need\_copy<T>::value))\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ emplace\_arg(}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ fmt::arg(arg\_name,\ dynamic\_args\_.push<stored\_t<T>>(arg.value)));}
+\DoxyCodeLine{00193\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ emplace\_arg(fmt::arg(arg\_name,\ arg.value));}
+\DoxyCodeLine{00195\ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00199\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdynamic__format__arg__store_a94763fc905f02222d575f7c03161c212}{clear}}()\ \{}
+\DoxyCodeLine{00200\ \ \ \ \ data\_.clear();}
+\DoxyCodeLine{00201\ \ \ \ \ named\_info\_.clear();}
+\DoxyCodeLine{00202\ \ \ \ \ dynamic\_args\_\ =\ \{\};}
+\DoxyCodeLine{00203\ \ \ \}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00207\ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdynamic__format__arg__store_a9c6983c46b69775b5066f6ad748be584}{reserve}}(\textcolor{keywordtype}{size\_t}\ new\_cap,\ \textcolor{keywordtype}{size\_t}\ new\_cap\_named)\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ FMT\_ASSERT(new\_cap\ >=\ new\_cap\_named,}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}set\ of\ arguments\ includes\ set\ of\ named\ arguments"{}});}
+\DoxyCodeLine{00210\ \ \ \ \ data\_.reserve(new\_cap);}
+\DoxyCodeLine{00211\ \ \ \ \ named\_info\_.reserve(new\_cap\_named);}
+\DoxyCodeLine{00212\ \ \ \}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00215\ \ \ \textcolor{keyword}{auto}\ \doxymbox{\hyperlink{classdynamic__format__arg__store_ad132a5292743bdb112ae62dddc7912cd}{size}}()\ const\ noexcept\ -\/>\ \textcolor{keywordtype}{size\_t}\ \{\ \textcolor{keywordflow}{return}\ data\_.size();\ \}}
+\DoxyCodeLine{00216\ \};}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ FMT\_END\_NAMESPACE}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ FMT\_ARGS\_H\_}}
+
+\end{DoxyCode}

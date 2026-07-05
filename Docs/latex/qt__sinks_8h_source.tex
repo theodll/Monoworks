@@ -1,0 +1,314 @@
+\doxysection{qt\+\_\+sinks.\+h}
+\hypertarget{qt__sinks_8h_source}{}\label{qt__sinks_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/qt\_sinks.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/qt\_sinks.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman,\ mguludag\ and\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Custom\ sink\ for\ QPlainTextEdit\ or\ QTextEdit\ and\ its\ children\ (QTextBrowser...}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ etc)\ Building\ and\ using\ requires\ Qt\ library.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ Warning:\ the\ qt\_sink\ won't\ be\ notified\ if\ the\ target\ widget\ is\ destroyed.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ If\ the\ widget's\ lifetime\ can\ be\ shorter\ than\ the\ logger's\ one,\ you\ should\ provide\ some\ permanent}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ QObject,\ and\ then\ use\ a\ standard\ signal/slot.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}spdlog/common.h"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}spdlog/details/log\_msg.h"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}spdlog/details/synchronous\_factory.h"{}}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}spdlog/sinks/base\_sink.h"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <QPlainTextEdit>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <QTextEdit>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ qt\_sink\ class}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//}}
+\DoxyCodeLine{00027\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }qt\_sink\ :\ \textcolor{keyword}{public}\ base\_sink<Mutex>\ \{}
+\DoxyCodeLine{00031\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \ \ qt\_sink(QObject\ *qt\_object,\ std::string\ meta\_method)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ :\ qt\_object\_(qt\_object),}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ meta\_method\_(std::move(meta\_method))\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!qt\_object\_)\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}qt\_sink:\ qt\_object\ is\ null"{}});}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \string~qt\_sink()\ \{\ flush\_();\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ memory\_buf\_t\ formatted;}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ base\_sink<Mutex>::formatter\_-\/>format(msg,\ formatted);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ str\ =\ string\_view\_t(formatted.data(),\ formatted.size());}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ QMetaObject::invokeMethod(}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ qt\_object\_,\ meta\_method\_.c\_str(),\ Qt::AutoConnection,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ Q\_ARG(QString,\ QString::fromUtf8(str.data(),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(str.size())).trimmed()));}
+\DoxyCodeLine{00050\ \ \ \ \ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ flush\_()\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00055\ \ \ \ \ QObject\ *qt\_object\_\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00056\ \ \ \ \ std::string\ meta\_method\_;}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ Qt\ color\ sink\ to\ QTextEdit.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ Color\ location\ is\ determined\ by\ the\ sink\ log\ pattern\ like\ in\ the\ rest\ of\ spdlog\ sinks.}}
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Colors\ can\ be\ modified\ if\ needed\ using\ sink-\/>set\_color(level,\ qtTextCharFormat).}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ max\_lines\ is\ the\ maximum\ number\ of\ lines\ that\ the\ sink\ will\ hold\ before\ removing\ the\ oldest}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ lines.\ By\ default,\ only\ ascii\ (latin1)\ is\ supported\ by\ this\ sink.\ Set\ is\_utf8\ to\ true\ if\ utf8}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ support\ is\ needed.}}
+\DoxyCodeLine{00065\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00066\ \textcolor{keyword}{class\ }qt\_color\_sink\ :\ \textcolor{keyword}{public}\ base\_sink<Mutex>\ \{}
+\DoxyCodeLine{00067\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00068\ \ \ \ \ qt\_color\_sink(QTextEdit\ *qt\_text\_edit,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_lines,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ dark\_colors\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_utf8\ =\ \textcolor{keyword}{false})}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ :\ qt\_text\_edit\_(qt\_text\_edit),}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ max\_lines\_(max\_lines),}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ is\_utf8\_(is\_utf8)\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!qt\_text\_edit\_)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}qt\_color\_text\_sink:\ text\_edit\ is\ null"{}});}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ default\_color\_\ =\ qt\_text\_edit\_-\/>currentCharFormat();}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ set\ colors}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ QTextCharFormat\ format;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ trace}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ format.setForeground(dark\_colors\ ?\ Qt::darkGray\ :\ Qt::gray);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ colors\_.at(level::trace)\ =\ format;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ debug}}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ format.setForeground(dark\_colors\ ?\ Qt::darkCyan\ :\ Qt::cyan);}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ colors\_.at(level::debug)\ =\ format;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ info}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ format.setForeground(dark\_colors\ ?\ Qt::darkGreen\ :\ Qt::green);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ colors\_.at(level::info)\ =\ format;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ warn}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ format.setForeground(dark\_colors\ ?\ Qt::darkYellow\ :\ Qt::yellow);}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ colors\_.at(level::warn)\ =\ format;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ err}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ format.setForeground(Qt::red);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ colors\_.at(level::err)\ =\ format;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ critical}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ format.setForeground(Qt::white);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ format.setBackground(Qt::red);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ colors\_.at(level::critical)\ =\ format;}
+\DoxyCodeLine{00101\ \ \ \ \ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \string~qt\_color\_sink()\ \{\ flush\_();\ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_default\_color(QTextCharFormat\ format)\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ default\_color\_\ =\ format;}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_level\_color(level::level\_enum\ color\_level,\ QTextCharFormat\ format)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ colors\_.at(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(color\_level))\ =\ format;}
+\DoxyCodeLine{00113\ \ \ \ \ \}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ QTextCharFormat\ \&get\_level\_color(level::level\_enum\ color\_level)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ colors\_.at(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(color\_level));}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ QTextCharFormat\ \&get\_default\_color()\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ default\_color\_;}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{struct\ }invoke\_params\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ invoke\_params(\textcolor{keywordtype}{int}\ max\_lines,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QTextEdit\ *q\_text\_edit,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QString\ payload,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QTextCharFormat\ default\_color,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QTextCharFormat\ level\_color,}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\_range\_start,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\_range\_end)}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ :\ max\_lines(max\_lines),}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ q\_text\_edit(q\_text\_edit),}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ payload(std::move(payload)),}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\_color(default\_color),}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ level\_color(level\_color),}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_range\_start(color\_range\_start),}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_range\_end(color\_range\_end)\ \{\}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_lines;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ QTextEdit\ *q\_text\_edit;}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ QString\ payload;}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ QTextCharFormat\ default\_color;}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ QTextCharFormat\ level\_color;}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\_range\_start;}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\_range\_end;}
+\DoxyCodeLine{00148\ \ \ \ \ \};}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{void}\ sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ memory\_buf\_t\ formatted;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ base\_sink<Mutex>::formatter\_-\/>format(msg,\ formatted);}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ str\ =\ string\_view\_t(formatted.data(),\ formatted.size());}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ apply\ the\ color\ to\ the\ color\ range\ in\ the\ formatted\ message.}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ QString\ payload;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\_range\_start\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(msg.color\_range\_start);}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ color\_range\_end\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(msg.color\_range\_end);}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_utf8\_)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ payload\ =\ QString::fromUtf8(str.data(),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(str.size()));}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ convert\ color\ ranges\ from\ byte\ index\ to\ character\ index.}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (msg.color\_range\_start\ <\ msg.color\_range\_end)\ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_range\_start\ =}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QString::fromUtf8(str.data(),\ \textcolor{keyword}{static\_cast<}qsizetype\textcolor{keyword}{>}(msg.color\_range\_start))}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .size();}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_range\_end\ =}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QString::fromUtf8(str.data(),\ \textcolor{keyword}{static\_cast<}qsizetype\textcolor{keyword}{>}(msg.color\_range\_end))}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .size();}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ payload\ =\ QString::fromLatin1(str.data(),\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(str.size()));}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structsinks_1_1qt__color__sink_1_1invoke__params}{invoke\_params}}\ params\{max\_lines\_,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ max\ lines}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ qt\_text\_edit\_,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ text\ edit\ to\ append\ to}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::move(payload),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ text\ to\ append}}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\_color\_,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ default\ color}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ colors\_.at(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(msg.level)),\ \ \textcolor{comment}{//\ color\ to\ apply}}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_range\_start,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ color\ range\ start}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ color\_range\_end\};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ color\ range\ end}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ QMetaObject::invokeMethod(}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ qt\_text\_edit\_,\ [params]()\ \{\ invoke\_method\_(params);\ \},\ Qt::AutoConnection);}
+\DoxyCodeLine{00184\ \ \ \ \ \}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{void}\ flush\_()\textcolor{keyword}{\ override\ }\{\}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{comment}{//\ Add\ colored\ text\ to\ the\ text\ edit\ widget.\ This\ method\ is\ invoked\ in\ the\ GUI\ thread.}}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{comment}{//\ It\ is\ a\ static\ method\ to\ ensure\ that\ it\ is\ handled\ correctly\ even\ if\ the\ sink\ is\ destroyed}}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{//\ prematurely\ before\ it\ is\ invoked.}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ invoke\_method\_(\doxymbox{\hyperlink{structsinks_1_1qt__color__sink_1_1invoke__params}{invoke\_params}}\ params)\ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ *document\ =\ params.q\_text\_edit-\/>document();}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ QTextCursor\ cursor(document);}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ remove\ first\ blocks\ if\ number\ of\ blocks\ exceeds\ max\_lines}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (document-\/>blockCount()\ >\ params.max\_lines)\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ cursor.select(QTextCursor::BlockUnderCursor);}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ cursor.removeSelectedText();}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ cursor.deleteChar();\ \ \textcolor{comment}{//\ delete\ the\ newline\ after\ the\ block}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ cursor.movePosition(QTextCursor::End);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ cursor.setCharFormat(params.default\_color);}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ color\ range\ not\ specified\ or\ not\ not\ valid,\ just\ append\ the\ text\ with\ default\ color}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (params.color\_range\_end\ <=\ params.color\_range\_start)\ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ cursor.insertText(params.payload);}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ insert\ the\ text\ before\ the\ color\ range}}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ cursor.insertText(params.payload.left(params.color\_range\_start));}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ insert\ the\ colorized\ text}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ cursor.setCharFormat(params.level\_color);}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ cursor.insertText(params.payload.mid(params.color\_range\_start,}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ params.color\_range\_end\ -\/\ params.color\_range\_start));}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ insert\ the\ text\ after\ the\ color\ range\ with\ default\ format}}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ cursor.setCharFormat(params.default\_color);}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ cursor.insertText(params.payload.mid(params.color\_range\_end));}
+\DoxyCodeLine{00223\ \ \ \ \ \}}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ QTextEdit\ *qt\_text\_edit\_;}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keywordtype}{int}\ max\_lines\_;}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_utf8\_;}
+\DoxyCodeLine{00228\ \ \ \ \ QTextCharFormat\ default\_color\_;}
+\DoxyCodeLine{00229\ \ \ \ \ std::array<QTextCharFormat,\ level::n\_levels>\ colors\_;}
+\DoxyCodeLine{00230\ \};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#include\ "{}spdlog/details/null\_mutex.h"{}}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{keyword}{using\ }qt\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1qt__sink}{qt\_sink<std::mutex>}};}
+\DoxyCodeLine{00236\ \textcolor{keyword}{using\ }qt\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1qt__sink}{qt\_sink<details::null\_mutex>}};}
+\DoxyCodeLine{00237\ \textcolor{keyword}{using\ }qt\_color\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1qt__color__sink}{qt\_color\_sink<std::mutex>}};}
+\DoxyCodeLine{00238\ \textcolor{keyword}{using\ }qt\_color\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1qt__color__sink}{qt\_color\_sink<details::null\_mutex>}};}
+\DoxyCodeLine{00239\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \textcolor{comment}{//}}
+\DoxyCodeLine{00242\ \textcolor{comment}{//\ Factory\ functions}}
+\DoxyCodeLine{00243\ \textcolor{comment}{//}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{comment}{//\ log\ to\ QTextEdit}}
+\DoxyCodeLine{00246\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00247\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_logger\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QTextEdit\ *qt\_object,}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&meta\_method\ =\ \textcolor{stringliteral}{"{}append"{}})\ \{}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_sink\_mt>(logger\_name,\ qt\_object,\ meta\_method);}
+\DoxyCodeLine{00251\ \}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00254\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_logger\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QTextEdit\ *qt\_object,}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&meta\_method\ =\ \textcolor{stringliteral}{"{}append"{}})\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_sink\_st>(logger\_name,\ qt\_object,\ meta\_method);}
+\DoxyCodeLine{00258\ \}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{comment}{//\ log\ to\ QPlainTextEdit}}
+\DoxyCodeLine{00261\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00262\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_logger\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QPlainTextEdit\ *qt\_object,}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&meta\_method\ =\ \textcolor{stringliteral}{"{}appendPlainText"{}})\ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_sink\_mt>(logger\_name,\ qt\_object,\ meta\_method);}
+\DoxyCodeLine{00266\ \}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00269\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_logger\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QPlainTextEdit\ *qt\_object,}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&meta\_method\ =\ \textcolor{stringliteral}{"{}appendPlainText"{}})\ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_sink\_st>(logger\_name,\ qt\_object,\ meta\_method);}
+\DoxyCodeLine{00273\ \}}
+\DoxyCodeLine{00274\ \textcolor{comment}{//\ log\ to\ QObject}}
+\DoxyCodeLine{00275\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00276\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_logger\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QObject\ *qt\_object,}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&meta\_method)\ \{}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_sink\_mt>(logger\_name,\ qt\_object,\ meta\_method);}
+\DoxyCodeLine{00280\ \}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00283\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_logger\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QObject\ *qt\_object,}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ \&meta\_method)\ \{}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_sink\_st>(logger\_name,\ qt\_object,\ meta\_method);}
+\DoxyCodeLine{00287\ \}}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \textcolor{comment}{//\ log\ to\ QTextEdit\ with\ colorized\ output}}
+\DoxyCodeLine{00290\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00291\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_color\_logger\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QTextEdit\ *qt\_text\_edit,}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_lines,}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_utf8\ =\ \textcolor{keyword}{false})\ \{}
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_color\_sink\_mt>(logger\_name,\ qt\_text\_edit,\ max\_lines,}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false},\ is\_utf8);}
+\DoxyCodeLine{00297\ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00300\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ qt\_color\_logger\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ QTextEdit\ *qt\_text\_edit,}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_lines,}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_utf8\ =\ \textcolor{keyword}{false})\ \{}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::qt\_color\_sink\_st>(logger\_name,\ qt\_text\_edit,\ max\_lines,}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{false},\ is\_utf8);}
+\DoxyCodeLine{00306\ \}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

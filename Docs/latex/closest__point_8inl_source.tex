@@ -1,0 +1,51 @@
+\doxysection{closest\+\_\+point.\+inl}
+\hypertarget{closest__point_8inl_source}{}\label{closest__point_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/closest\_point.inl@{MonoEngine/thirdparty/glm/glm/gtx/closest\_point.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00006\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__closest__point_ga9eb4acb0e39642c8f45e61125767f86b}{closestPointOnLine}}}
+\DoxyCodeLine{00007\ \ \ \ \ (}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ point,}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ a,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ b}
+\DoxyCodeLine{00011\ \ \ \ \ )}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ T\ LineLength\ =\ distance(a,\ b);}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ Vector\ =\ point\ -\/\ a;}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ LineDirection\ =\ (b\ -\/\ a)\ /\ LineLength;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Project\ Vector\ to\ LineDirection\ to\ get\ the\ distance\ of\ point\ from\ a}}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ T\ Distance\ =\ dot(Vector,\ LineDirection);}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(Distance\ <=\ T(0))\ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(Distance\ >=\ LineLength)\ \textcolor{keywordflow}{return}\ b;}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a\ +\ LineDirection\ *\ Distance;}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00026\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__closest__point_ga9eb4acb0e39642c8f45e61125767f86b}{closestPointOnLine}}}
+\DoxyCodeLine{00027\ \ \ \ \ (}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ point,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ a,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ b}
+\DoxyCodeLine{00031\ \ \ \ \ )}
+\DoxyCodeLine{00032\ \ \ \ \ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ T\ LineLength\ =\ distance(a,\ b);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\ Vector\ =\ point\ -\/\ a;}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\ LineDirection\ =\ (b\ -\/\ a)\ /\ LineLength;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Project\ Vector\ to\ LineDirection\ to\ get\ the\ distance\ of\ point\ from\ a}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ T\ Distance\ =\ dot(Vector,\ LineDirection);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(Distance\ <=\ T(0))\ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(Distance\ >=\ LineLength)\ \textcolor{keywordflow}{return}\ b;}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a\ +\ LineDirection\ *\ Distance;}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

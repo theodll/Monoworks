@@ -1,0 +1,95 @@
+\doxysection{quaternion\+\_\+exponential.\+inl}
+\hypertarget{quaternion__exponential_8inl_source}{}\label{quaternion__exponential_8inl_source}\index{MonoEngine/thirdparty/glm/glm/ext/quaternion\_exponential.inl@{MonoEngine/thirdparty/glm/glm/ext/quaternion\_exponential.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{scalar__constants_8hpp}{scalar\_constants.hpp}}"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00006\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \doxymbox{\hyperlink{group__core__func__exponential_gaf6342f49d902286a599ceb86036236ce}{exp}}(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00007\ \ \ \ \ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ u(q.x,\ q.y,\ q.z);}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ Angle\ =\ glm::length(u);}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Angle\ <\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon<T>}}())}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}();}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\ v(u\ /\ Angle);}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(\doxymbox{\hyperlink{group__core__func__trigonometric_ga54745147add8b4fa05642f5c71f6833e}{cos}}(Angle),\ \doxymbox{\hyperlink{group__core__func__trigonometric_ga3fcdcfa2d2ac38de9ba1885cd1c79414}{sin}}(Angle)\ *\ v);}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00018\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \doxymbox{\hyperlink{group__core__func__exponential_gad26901b9f2fdd30612867a8dcfa73fbc}{log}}(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00019\ \ \ \ \ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ u(q.x,\ q.y,\ q.z);}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ T\ Vec3Len\ =\ length(u);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Vec3Len\ <\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon<T>}}())}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(q.w\ >\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0))}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(\doxymbox{\hyperlink{group__core__func__exponential_gad26901b9f2fdd30612867a8dcfa73fbc}{log}}(q.w),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(q.w\ <\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0))}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(\doxymbox{\hyperlink{group__core__func__exponential_gad26901b9f2fdd30612867a8dcfa73fbc}{log}}(-\/q.w),\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga94bafeb2a0f23ab6450fed1f98ee4e45}{pi<T>}}(),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(std::numeric\_limits<T>::infinity(),\ std::numeric\_limits<T>::infinity(),\ std::numeric\_limits<T>::infinity(),\ std::numeric\_limits<T>::infinity());}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ T\ t\ =\ atan(Vec3Len,\ T(q.w))\ /\ Vec3Len;}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ T\ QuatLen2\ =\ Vec3Len\ *\ Vec3Len\ +\ q.w\ *\ q.w;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ \doxymbox{\hyperlink{group__core__func__exponential_gad26901b9f2fdd30612867a8dcfa73fbc}{log}}(QuatLen2),\ t\ *\ q.x,\ t\ *\ q.y,\ t\ *\ q.z);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00041\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \doxymbox{\hyperlink{group__core__func__exponential_ga717a43207fffc8b5e8e66cf56ded5ace}{pow}}(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ x,\ T\ y)}
+\DoxyCodeLine{00042\ \ \ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Raising\ to\ the\ power\ of\ 0\ should\ yield\ 1}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Needed\ to\ prevent\ a\ division\ by\ 0\ error\ later\ on}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(y\ >\ -\/\doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon<T>}}()\ \&\&\ y\ <\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon<T>}}())}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(1,0,0,0);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//To\ deal\ with\ non-\/unit\ quaternions}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ T\ magnitude\ =\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(x.x\ *\ x.x\ +\ x.y\ *\ x.y\ +\ x.z\ *\ x.z\ +\ x.w\ *x.w);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ T\ Angle;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{abs}}(x.w\ /\ magnitude)\ >\ \doxymbox{\hyperlink{group__ext__scalar__constants_gae8d1938913da2e5b2e102b9076cd0389}{cos\_one\_over\_two<T>}}())}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Scalar\ component\ is\ close\ to\ 1;\ using\ it\ to\ recover\ angle\ would\ lose\ precision}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Instead,\ we\ use\ the\ non-\/scalar\ components\ since\ sin()\ is\ accurate\ around\ 0}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Prevent\ a\ division\ by\ 0\ error\ later\ on}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ T\ VectorMagnitude\ =\ x.x\ *\ x.x\ +\ x.y\ *\ x.y\ +\ x.z\ *\ x.z;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Despite\ the\ compiler\ might\ say,\ we\ actually\ want\ to\ compare}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//VectorMagnitude\ to\ 0.\ here;\ we\ could\ use\ denorm\_int()\ compiling\ a}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//project\ with\ unsafe\ maths\ optimizations\ might\ make\ the\ comparison}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//always\ false,\ even\ when\ VectorMagnitude\ is\ 0.}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (VectorMagnitude\ <\ (std::numeric\_limits<T>::min)())\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Equivalent\ to\ raising\ a\ real\ number\ to\ a\ power}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(\doxymbox{\hyperlink{group__core__func__exponential_ga717a43207fffc8b5e8e66cf56ded5ace}{pow}}(x.w,\ y),\ 0,\ 0,\ 0);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ Angle\ =\ \doxymbox{\hyperlink{group__core__func__trigonometric_gad3628b879437a75d1941f965b2893db7}{asin}}(\doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(VectorMagnitude)\ /\ magnitude);}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Scalar\ component\ is\ small,\ shouldn't\ cause\ loss\ of\ precision}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ Angle\ =\ \doxymbox{\hyperlink{group__core__func__trigonometric_gaf621a212fa21c1009344895a52e9c82c}{acos}}(x.w\ /\ magnitude);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ T\ NewAngle\ =\ Angle\ *\ y;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ T\ Div\ =\ \doxymbox{\hyperlink{group__core__func__trigonometric_ga3fcdcfa2d2ac38de9ba1885cd1c79414}{sin}}(NewAngle)\ /\ \doxymbox{\hyperlink{group__core__func__trigonometric_ga3fcdcfa2d2ac38de9ba1885cd1c79414}{sin}}(Angle);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ T\ Mag\ =\ \doxymbox{\hyperlink{group__core__func__exponential_ga717a43207fffc8b5e8e66cf56ded5ace}{pow}}(magnitude,\ y\ -\/\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(\doxymbox{\hyperlink{group__core__func__trigonometric_ga54745147add8b4fa05642f5c71f6833e}{cos}}(NewAngle)\ *\ magnitude\ *\ Mag,\ x.x\ *\ Div\ *\ Mag,\ x.y\ *\ Div\ *\ Mag,\ x.z\ *\ Div\ *\ Mag);}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00083\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00084\ \ \ \ \ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__exponential_ga717a43207fffc8b5e8e66cf56ded5ace}{pow}}(x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5));}
+\DoxyCodeLine{00086\ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ }
+
+\end{DoxyCode}

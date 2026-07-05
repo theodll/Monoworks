@@ -1,0 +1,102 @@
+\doxysection{spdlog-\/inl.h}
+\hypertarget{spdlog-inl_8h_source}{}\label{spdlog-inl_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/spdlog-\/inl.h@{MonoEngine/thirdparty/spdlog/include/spdlog/spdlog-\/inl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/spdlog.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <spdlog/pattern\_formatter.h>}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ initialize\_logger(std::shared\_ptr<logger>\ \doxymbox{\hyperlink{classlogger}{logger}})\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ details::registry::instance().initialize\_logger(std::move(\doxymbox{\hyperlink{classlogger}{logger}}));}
+\DoxyCodeLine{00017\ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ get(\textcolor{keyword}{const}\ std::string\ \&name)\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordflow}{return}\ details::registry::instance().get(name);}
+\DoxyCodeLine{00021\ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ set\_formatter(std::unique\_ptr<formatter>\ \doxymbox{\hyperlink{structformatter}{formatter}})\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ details::registry::instance().set\_formatter(std::move(\doxymbox{\hyperlink{structformatter}{formatter}}));}
+\DoxyCodeLine{00025\ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ set\_pattern(std::string\ pattern,\ pattern\_time\_type\ time\_type)\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ set\_formatter(}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ std::unique\_ptr<formatter>(\textcolor{keyword}{new}\ \doxymbox{\hyperlink{classpattern__formatter}{pattern\_formatter}}(std::move(pattern),\ time\_type)));}
+\DoxyCodeLine{00030\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ enable\_backtrace(\textcolor{keywordtype}{size\_t}\ n\_messages)\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ details::registry::instance().enable\_backtrace(n\_messages);}
+\DoxyCodeLine{00034\ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ disable\_backtrace()\ \{\ details::registry::instance().disable\_backtrace();\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ dump\_backtrace()\ \{\ default\_logger\_raw()-\/>dump\_backtrace();\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ SPDLOG\_INLINE\ level::level\_enum\ get\_level()\ \{\ \textcolor{keywordflow}{return}\ default\_logger\_raw()-\/>level();\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ SPDLOG\_INLINE\ \textcolor{keywordtype}{bool}\ should\_log(level::level\_enum\ log\_level)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{return}\ default\_logger\_raw()-\/>should\_log(log\_level);}
+\DoxyCodeLine{00044\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ set\_level(level::level\_enum\ log\_level)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ details::registry::instance().set\_level(log\_level);}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ flush\_on(level::level\_enum\ log\_level)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ details::registry::instance().flush\_on(log\_level);}
+\DoxyCodeLine{00052\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ set\_error\_handler(\textcolor{keywordtype}{void}\ (*handler)(\textcolor{keyword}{const}\ std::string\ \&msg))\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ details::registry::instance().set\_error\_handler(handler);}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ register\_logger(std::shared\_ptr<logger>\ \doxymbox{\hyperlink{classlogger}{logger}})\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ details::registry::instance().register\_logger(std::move(\doxymbox{\hyperlink{classlogger}{logger}}));}
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ register\_or\_replace(std::shared\_ptr<logger>\ \doxymbox{\hyperlink{classlogger}{logger}})\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ details::registry::instance().register\_or\_replace(std::move(\doxymbox{\hyperlink{classlogger}{logger}}));}
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ apply\_all(\textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{void}(std::shared\_ptr<logger>)>\ \&fun)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ details::registry::instance().apply\_all(fun);}
+\DoxyCodeLine{00068\ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ drop(\textcolor{keyword}{const}\ std::string\ \&name)\ \{\ details::registry::instance().drop(name);\ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ drop\_all()\ \{\ details::registry::instance().drop\_all();\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ shutdown()\ \{\ details::registry::instance().shutdown();\ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ set\_automatic\_registration(\textcolor{keywordtype}{bool}\ automatic\_registration)\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ details::registry::instance().set\_automatic\_registration(automatic\_registration);}
+\DoxyCodeLine{00078\ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ SPDLOG\_INLINE\ std::shared\_ptr<logger>\ default\_logger()\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{return}\ details::registry::instance().default\_logger();}
+\DoxyCodeLine{00082\ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ SPDLOG\_INLINE\ \doxymbox{\hyperlink{classlogger}{logger}}\ *default\_logger\_raw()\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ details::registry::instance().get\_default\_raw();}
+\DoxyCodeLine{00086\ \}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ set\_default\_logger(std::shared\_ptr<logger>\ default\_logger)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ details::registry::instance().set\_default\_logger(std::move(default\_logger));}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ apply\_logger\_env\_levels(std::shared\_ptr<logger>\ \doxymbox{\hyperlink{classlogger}{logger}})\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ details::registry::instance().apply\_logger\_env\_levels(std::move(\doxymbox{\hyperlink{classlogger}{logger}}));}
+\DoxyCodeLine{00094\ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

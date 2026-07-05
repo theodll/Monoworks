@@ -1,0 +1,252 @@
+\doxysection{SDL\+\_\+msctf.\+h}
+\hypertarget{_s_d_l__msctf_8h_source}{}\label{_s_d_l__msctf_8h_source}\index{MonoRuntime/extern/sdl/src/video/windows/SDL\_msctf.h@{MonoRuntime/extern/sdl/src/video/windows/SDL\_msctf.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_msctf\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_msctf\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <unknwn.h>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ TF\_INVALID\_COOKIE\ \ \ \ \ \ \ \ \ \ \ \ (0xffffffff)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ TF\_IPSINK\_FLAG\_ACTIVE\ \ \ \ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ TF\_TMAE\_UIELEMENTENABLEDONLY\ 0x00000004}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ \doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}};}
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}};}
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ITfClientId\ ITfClientId;}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }IEnumTfDocumentMgrs\ IEnumTfDocumentMgrs;}
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }IEnumTfFunctionProviders\ IEnumTfFunctionProviders;}
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ITfFunctionProvider\ ITfFunctionProvider;}
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ITfCompartmentMgr\ ITfCompartmentMgr;}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ITfContext\ ITfContext;}
+\DoxyCodeLine{00042\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }IEnumTfContexts\ IEnumTfContexts;}
+\DoxyCodeLine{00043\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}\ \doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}};}
+\DoxyCodeLine{00044\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ \doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}};}
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ \doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}};}
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }IEnumTfUIElements\ IEnumTfUIElements;}
+\DoxyCodeLine{00047\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ \doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}};}
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ \doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}};}
+\DoxyCodeLine{00049\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ \doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}};}
+\DoxyCodeLine{00050\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink}{ITfInputProcessorProfileActivationSink}}\ \doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink}{ITfInputProcessorProfileActivationSink}};}
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}}\ \doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ DWORD\ TfClientId;}
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ DWORD\ TfEditCookie;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr_vtbl}{ITfThreadMgrVtbl}}}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00059\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *);}
+\DoxyCodeLine{00060\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *);}
+\DoxyCodeLine{00061\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Activate)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ TfClientId\ *);}
+\DoxyCodeLine{00062\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Deactivate)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *);}
+\DoxyCodeLine{00063\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *CreateDocumentMgr)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *);}
+\DoxyCodeLine{00064\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EnumDocumentMgrs)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ IEnumTfDocumentMgrs\ **);}
+\DoxyCodeLine{00065\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ **);}
+\DoxyCodeLine{00066\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *SetFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *);}
+\DoxyCodeLine{00067\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *AssociateFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ HWND,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ **);}
+\DoxyCodeLine{00068\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *IsThreadFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ BOOL\ *);}
+\DoxyCodeLine{00069\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetFunctionProvider)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ REFCLSID,\ ITfFunctionProvider\ **);}
+\DoxyCodeLine{00070\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EnumFunctionProviders)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ IEnumTfFunctionProviders\ **);}
+\DoxyCodeLine{00071\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetGlobalCompartment)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}\ *,\ ITfCompartmentMgr\ **);}
+\DoxyCodeLine{00072\ \}\ \doxymbox{\hyperlink{struct_i_tf_thread_mgr_vtbl}{ITfThreadMgrVtbl}};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr}{ITfThreadMgr}}}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr_vtbl}{ITfThreadMgrVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00077\ \};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex_vtbl}{ITfThreadMgrExVtbl}}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00082\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *);}
+\DoxyCodeLine{00083\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *);}
+\DoxyCodeLine{00084\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Activate)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ TfClientId\ *);}
+\DoxyCodeLine{00085\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Deactivate)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *);}
+\DoxyCodeLine{00086\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *CreateDocumentMgr)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ **);}
+\DoxyCodeLine{00087\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EnumDocumentMgrs)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ IEnumTfDocumentMgrs\ **);}
+\DoxyCodeLine{00088\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ **);}
+\DoxyCodeLine{00089\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *SetFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *);}
+\DoxyCodeLine{00090\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *AssociateFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ **);}
+\DoxyCodeLine{00091\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *IsThreadFocus)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ BOOL\ *);}
+\DoxyCodeLine{00092\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetFunctionProvider)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ REFCLSID,\ ITfFunctionProvider\ **);}
+\DoxyCodeLine{00093\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EnumFunctionProviders)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ IEnumTfFunctionProviders\ **);}
+\DoxyCodeLine{00094\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetGlobalCompartment)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ ITfCompartmentMgr\ **);}
+\DoxyCodeLine{00095\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *ActivateEx)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ TfClientId\ *,\ DWORD);}
+\DoxyCodeLine{00096\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetActiveFlags)(\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}\ *,\ DWORD\ *);}
+\DoxyCodeLine{00097\ \}\ \doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex_vtbl}{ITfThreadMgrExVtbl}};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex}{ITfThreadMgrEx}}}
+\DoxyCodeLine{00100\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_thread_mgr_ex_vtbl}{ITfThreadMgrExVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00102\ \};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_document_mgr_vtbl}{ITfDocumentMgrVtbl}}}
+\DoxyCodeLine{00105\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00107\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *);}
+\DoxyCodeLine{00108\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *);}
+\DoxyCodeLine{00109\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *CreateContext)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ TfClientId,\ DWORD,\ IUnknown\ *,\ ITfContext\ **,\ TfEditCookie\ *);}
+\DoxyCodeLine{00110\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Push)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ ITfContext\ *);}
+\DoxyCodeLine{00111\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Pop)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *);}
+\DoxyCodeLine{00112\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetTop)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ ITfContext\ **);}
+\DoxyCodeLine{00113\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetBase)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ ITfContext\ **);}
+\DoxyCodeLine{00114\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EnumContexts)(\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ *,\ IEnumTfContexts\ **);}
+\DoxyCodeLine{00115\ \}\ \doxymbox{\hyperlink{struct_i_tf_document_mgr_vtbl}{ITfDocumentMgrVtbl}};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}}
+\DoxyCodeLine{00118\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_document_mgr_vtbl}{ITfDocumentMgrVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00120\ \};}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink_vtbl}{ITfUIElementSinkVtbl}}}
+\DoxyCodeLine{00123\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00125\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}\ *);}
+\DoxyCodeLine{00126\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}\ *);}
+\DoxyCodeLine{00127\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *BeginUIElement)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}\ *,\ DWORD,\ BOOL\ *);}
+\DoxyCodeLine{00128\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *UpdateUIElement)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}\ *,\ DWORD);}
+\DoxyCodeLine{00129\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EndUIElement)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}\ *,\ DWORD);}
+\DoxyCodeLine{00130\ \}\ \doxymbox{\hyperlink{struct_i_tf_u_i_element_sink_vtbl}{ITfUIElementSinkVtbl}};}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink}{ITfUIElementSink}}}
+\DoxyCodeLine{00133\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_sink_vtbl}{ITfUIElementSinkVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00135\ \};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr_vtbl}{ITfUIElementMgrVtbl}}}
+\DoxyCodeLine{00138\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00140\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *);}
+\DoxyCodeLine{00141\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *);}
+\DoxyCodeLine{00142\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *BeginUIElement)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *,\ BOOL\ *,\ DWORD\ *);}
+\DoxyCodeLine{00143\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *UpdateUIElement)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *,\ DWORD);}
+\DoxyCodeLine{00144\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EndUIElement)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *,\ DWORD);}
+\DoxyCodeLine{00145\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetUIElement)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *,\ DWORD,\ \doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ **);}
+\DoxyCodeLine{00146\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *EnumUIElements)(\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}\ *,\ IEnumTfUIElements\ **);}
+\DoxyCodeLine{00147\ \}\ \doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr_vtbl}{ITfUIElementMgrVtbl}};}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr}{ITfUIElementMgr}}}
+\DoxyCodeLine{00150\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_mgr_vtbl}{ITfUIElementMgrVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00152\ \};}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element_vtbl}{ITfCandidateListUIElementVtbl}}}
+\DoxyCodeLine{00155\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00157\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *);}
+\DoxyCodeLine{00158\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *);}
+\DoxyCodeLine{00159\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetDescription)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ BSTR\ *);}
+\DoxyCodeLine{00160\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetGUID)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ GUID\ *);}
+\DoxyCodeLine{00161\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Show)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ BOOL);}
+\DoxyCodeLine{00162\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *IsShown)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ BOOL\ *);}
+\DoxyCodeLine{00163\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetUpdatedFlags)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ DWORD\ *);}
+\DoxyCodeLine{00164\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetDocumentMgr)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ \doxymbox{\hyperlink{struct_i_tf_document_mgr}{ITfDocumentMgr}}\ **);}
+\DoxyCodeLine{00165\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetCount)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ UINT\ *);}
+\DoxyCodeLine{00166\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetSelection)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ UINT\ *);}
+\DoxyCodeLine{00167\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetString)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ UINT,\ BSTR\ *);}
+\DoxyCodeLine{00168\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetPageIndex)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ UINT\ *,\ UINT,\ UINT\ *);}
+\DoxyCodeLine{00169\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *SetPageIndex)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ UINT\ *,\ UINT);}
+\DoxyCodeLine{00170\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetCurrentPage)(\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}\ *,\ UINT\ *);}
+\DoxyCodeLine{00171\ \}\ \doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element_vtbl}{ITfCandidateListUIElementVtbl}};}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element}{ITfCandidateListUIElement}}}
+\DoxyCodeLine{00174\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_candidate_list_u_i_element_vtbl}{ITfCandidateListUIElementVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00176\ \};}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element_vtbl}{ITfReadingInformationUIElementVtbl}}}
+\DoxyCodeLine{00179\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00181\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *);}
+\DoxyCodeLine{00182\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *);}
+\DoxyCodeLine{00183\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetDescription)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ BSTR\ *);}
+\DoxyCodeLine{00184\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetGUID)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ GUID\ *);}
+\DoxyCodeLine{00185\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Show)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ BOOL);}
+\DoxyCodeLine{00186\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *IsShown)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ BOOL\ *);}
+\DoxyCodeLine{00187\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetUpdatedFlags)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ DWORD\ *);}
+\DoxyCodeLine{00188\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetContext)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ ITfContext\ **);}
+\DoxyCodeLine{00189\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetString)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ BSTR\ *);}
+\DoxyCodeLine{00190\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetMaxReadingStringLength)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ UINT\ *);}
+\DoxyCodeLine{00191\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetErrorIndex)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ UINT\ *);}
+\DoxyCodeLine{00192\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *IsVerticalOrderPreferred)(\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}\ *,\ BOOL\ *);}
+\DoxyCodeLine{00193\ \}\ \doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element_vtbl}{ITfReadingInformationUIElementVtbl}};}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element}{ITfReadingInformationUIElement}}}
+\DoxyCodeLine{00196\ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_reading_information_u_i_element_vtbl}{ITfReadingInformationUIElementVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00198\ \};}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_vtbl}{ITfUIElementVtbl}}}
+\DoxyCodeLine{00201\ \{}
+\DoxyCodeLine{00202\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00203\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *);}
+\DoxyCodeLine{00204\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *);}
+\DoxyCodeLine{00205\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetDescription)(\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *,\ BSTR\ *);}
+\DoxyCodeLine{00206\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *GetGUID)(\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *,\ GUID\ *);}
+\DoxyCodeLine{00207\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *Show)(\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *,\ BOOL);}
+\DoxyCodeLine{00208\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *IsShown)(\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}\ *,\ BOOL\ *);}
+\DoxyCodeLine{00209\ \}\ \doxymbox{\hyperlink{struct_i_tf_u_i_element_vtbl}{ITfUIElementVtbl}};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element}{ITfUIElement}}}
+\DoxyCodeLine{00212\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_u_i_element_vtbl}{ITfUIElementVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00214\ \};}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink_vtbl}{ITfInputProcessorProfileActivationSinkVtbl}}}
+\DoxyCodeLine{00217\ \{}
+\DoxyCodeLine{00218\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink}{ITfInputProcessorProfileActivationSink}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00219\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink}{ITfInputProcessorProfileActivationSink}}\ *);}
+\DoxyCodeLine{00220\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink}{ITfInputProcessorProfileActivationSink}}\ *);}
+\DoxyCodeLine{00221\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *OnActivated)(\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink}{ITfInputProcessorProfileActivationSink}}\ *,\ DWORD,\ LANGID,\ REFCLSID,\ REFGUID,\ REFGUID,\ HKL,\ DWORD);}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \}\ \doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink_vtbl}{ITfInputProcessorProfileActivationSinkVtbl}};}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink}{ITfInputProcessorProfileActivationSink}}}
+\DoxyCodeLine{00226\ \{}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_input_processor_profile_activation_sink_vtbl}{ITfInputProcessorProfileActivationSinkVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00228\ \};}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_source_vtbl}{ITfSourceVtbl}}}
+\DoxyCodeLine{00231\ \{}
+\DoxyCodeLine{00232\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *QueryInterface)(\doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}}\ *,\ REFIID,\ \textcolor{keywordtype}{void}\ **);}
+\DoxyCodeLine{00233\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *AddRef)(\doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}}\ *);}
+\DoxyCodeLine{00234\ \ \ \ \ ULONG\ (STDMETHODCALLTYPE\ *Release)(\doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}}\ *);}
+\DoxyCodeLine{00235\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *AdviseSink)(\doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}}\ *,\ REFIID,\ IUnknown\ *,\ DWORD\ *);}
+\DoxyCodeLine{00236\ \ \ \ \ HRESULT\ (STDMETHODCALLTYPE\ *UnadviseSink)(\doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}}\ *,\ DWORD);}
+\DoxyCodeLine{00237\ \}\ \doxymbox{\hyperlink{struct_i_tf_source_vtbl}{ITfSourceVtbl}};}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_source}{ITfSource}}}
+\DoxyCodeLine{00240\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_i_tf_source_vtbl}{ITfSourceVtbl}}\ *lpVtbl;}
+\DoxyCodeLine{00242\ \};}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_msctf\_h\_}}
+
+\end{DoxyCode}

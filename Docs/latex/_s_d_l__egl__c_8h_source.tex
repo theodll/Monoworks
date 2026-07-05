@@ -1,0 +1,174 @@
+\doxysection{SDL\+\_\+egl\+\_\+c.\+h}
+\hypertarget{_s_d_l__egl__c_8h_source}{}\label{_s_d_l__egl__c_8h_source}\index{MonoRuntime/extern/sdl/src/video/SDL\_egl\_c.h@{MonoRuntime/extern/sdl/src/video/SDL\_egl\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_egl\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_egl\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL\_EGL}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_egl.h>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}SDL\_sysvideo.h"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SDL\_EGL\_MAX\_DEVICES\ 8}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ For\ systems\ that\ don't\ define\ these}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ intptr\_t\ EGLAttrib;}
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLDeviceEXT;}
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ EGLDisplay\ (EGLAPIENTRYP\ PFNEGLGETDISPLAYPROC)\ (EGLNativeDisplayType\ display\_id);}
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLINITIALIZEPROC)\ (EGLDisplay\ dpy,\ EGLint\ *major,\ EGLint\ *minor);}
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLTERMINATEPROC)\ (EGLDisplay\ dpy);}
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ \_\_eglMustCastToProperFunctionPointerType\ (EGLAPIENTRYP\ PFNEGLGETPROCADDRESSPROC)\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *procname);}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCHOOSECONFIGPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list,\ EGLConfig\ *configs,\ EGLint\ config\_size,\ EGLint\ *num\_config);}
+\DoxyCodeLine{00042\ \textcolor{keyword}{typedef}\ EGLContext\ (EGLAPIENTRYP\ PFNEGLCREATECONTEXTPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ EGLContext\ share\_context,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00043\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYCONTEXTPROC)\ (EGLDisplay\ dpy,\ EGLContext\ ctx);}
+\DoxyCodeLine{00044\ \textcolor{keyword}{typedef}\ EGLSurface\ (EGLAPIENTRYP\ PFNEGLCREATEPBUFFERSURFACEPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ EGLSurface\ (EGLAPIENTRYP\ PFNEGLCREATEWINDOWSURFACEPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ EGLNativeWindowType\ win,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYSURFACEPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface);}
+\DoxyCodeLine{00047\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLMAKECURRENTPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ draw,\ EGLSurface\ read,\ EGLContext\ ctx);}
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSWAPBUFFERSPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface);}
+\DoxyCodeLine{00049\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSWAPINTERVALPROC)\ (EGLDisplay\ dpy,\ EGLint\ interval);}
+\DoxyCodeLine{00050\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *(EGLAPIENTRYP\ PFNEGLQUERYSTRINGPROC)\ (EGLDisplay\ dpy,\ EGLint\ name);}
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETCONFIGATTRIBPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ EGLint\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLWAITNATIVEPROC)\ (EGLint\ engine);}
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLWAITGLPROC)\ (void);}
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLBINDAPIPROC)\ (EGLenum\ api);}
+\DoxyCodeLine{00055\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLGETERRORPROC)\ (void);}
+\DoxyCodeLine{00056\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDEVICESEXTPROC)\ (EGLint\ max\_devices,\ EGLDeviceEXT\ *devices,\ EGLint\ *num\_devices);}
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ EGLDisplay\ (EGLAPIENTRYP\ PFNEGLGETPLATFORMDISPLAYPROC)\ (EGLenum\ platform,\ \textcolor{keywordtype}{void}\ *native\_display,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ EGLDisplay\ (EGLAPIENTRYP\ PFNEGLGETPLATFORMDISPLAYEXTPROC)\ (EGLenum\ platform,\ \textcolor{keywordtype}{void}\ *native\_display,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ EGLSyncKHR\ (EGLAPIENTRYP\ PFNEGLCREATESYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLenum\ type,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYSYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync);}
+\DoxyCodeLine{00061\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLDUPNATIVEFENCEFDANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync);}
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLWAITSYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ flags);}
+\DoxyCodeLine{00063\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLCLIENTWAITSYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ flags,\ EGLTimeKHR\ timeout);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_EGL\_VideoData}
+\DoxyCodeLine{00066\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ SDL\_SharedObject\ *opengl\_dll\_handle;}
+\DoxyCodeLine{00068\ \ \ \ \ SDL\_SharedObject\ *egl\_dll\_handle;}
+\DoxyCodeLine{00069\ \ \ \ \ EGLDisplay\ egl\_display;}
+\DoxyCodeLine{00070\ \ \ \ \ EGLConfig\ egl\_config;}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{int}\ egl\_swapinterval;}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ egl\_surfacetype;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{int}\ egl\_version\_major,\ egl\_version\_minor;}
+\DoxyCodeLine{00074\ \ \ \ \ EGLint\ egl\_required\_visual\_id;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_offscreen;\ \textcolor{comment}{//\ whether\ EGL\ display\ was\ offscreen}}
+\DoxyCodeLine{00076\ \ \ \ \ EGLenum\ apitype;\ \ \ \ \ \ \ \textcolor{comment}{//\ EGL\_OPENGL\_ES\_API,\ EGL\_OPENGL\_API,\ etc}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ PFNEGLGETDISPLAYPROC\ eglGetDisplay;}
+\DoxyCodeLine{00079\ \ \ \ \ PFNEGLINITIALIZEPROC\ eglInitialize;}
+\DoxyCodeLine{00080\ \ \ \ \ PFNEGLTERMINATEPROC\ eglTerminate;}
+\DoxyCodeLine{00081\ \ \ \ \ PFNEGLGETPROCADDRESSPROC\ eglGetProcAddress;}
+\DoxyCodeLine{00082\ \ \ \ \ PFNEGLCHOOSECONFIGPROC\ eglChooseConfig;}
+\DoxyCodeLine{00083\ \ \ \ \ PFNEGLCREATECONTEXTPROC\ eglCreateContext;}
+\DoxyCodeLine{00084\ \ \ \ \ PFNEGLDESTROYCONTEXTPROC\ eglDestroyContext;}
+\DoxyCodeLine{00085\ \ \ \ \ PFNEGLCREATEPBUFFERSURFACEPROC\ eglCreatePbufferSurface;}
+\DoxyCodeLine{00086\ \ \ \ \ PFNEGLCREATEWINDOWSURFACEPROC\ eglCreateWindowSurface;}
+\DoxyCodeLine{00087\ \ \ \ \ PFNEGLDESTROYSURFACEPROC\ eglDestroySurface;}
+\DoxyCodeLine{00088\ \ \ \ \ PFNEGLMAKECURRENTPROC\ eglMakeCurrent;}
+\DoxyCodeLine{00089\ \ \ \ \ PFNEGLSWAPBUFFERSPROC\ eglSwapBuffers;}
+\DoxyCodeLine{00090\ \ \ \ \ PFNEGLSWAPINTERVALPROC\ eglSwapInterval;}
+\DoxyCodeLine{00091\ \ \ \ \ PFNEGLQUERYSTRINGPROC\ eglQueryString;}
+\DoxyCodeLine{00092\ \ \ \ \ PFNEGLGETCONFIGATTRIBPROC\ eglGetConfigAttrib;}
+\DoxyCodeLine{00093\ \ \ \ \ PFNEGLWAITNATIVEPROC\ eglWaitNative;}
+\DoxyCodeLine{00094\ \ \ \ \ PFNEGLWAITGLPROC\ eglWaitGL;}
+\DoxyCodeLine{00095\ \ \ \ \ PFNEGLBINDAPIPROC\ eglBindAPI;}
+\DoxyCodeLine{00096\ \ \ \ \ PFNEGLGETERRORPROC\ eglGetError;}
+\DoxyCodeLine{00097\ \ \ \ \ PFNEGLQUERYDEVICESEXTPROC\ eglQueryDevicesEXT;}
+\DoxyCodeLine{00098\ \ \ \ \ PFNEGLGETPLATFORMDISPLAYPROC\ eglGetPlatformDisplay;}
+\DoxyCodeLine{00099\ \ \ \ \ PFNEGLGETPLATFORMDISPLAYEXTPROC\ eglGetPlatformDisplayEXT;}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{comment}{//\ Atomic\ functions}}
+\DoxyCodeLine{00102\ \ \ \ \ PFNEGLCREATESYNCKHRPROC\ eglCreateSyncKHR;}
+\DoxyCodeLine{00103\ \ \ \ \ PFNEGLDESTROYSYNCKHRPROC\ eglDestroySyncKHR;}
+\DoxyCodeLine{00104\ \ \ \ \ PFNEGLDUPNATIVEFENCEFDANDROIDPROC\ eglDupNativeFenceFDANDROID;}
+\DoxyCodeLine{00105\ \ \ \ \ PFNEGLWAITSYNCKHRPROC\ eglWaitSyncKHR;}
+\DoxyCodeLine{00106\ \ \ \ \ PFNEGLCLIENTWAITSYNCKHRPROC\ eglClientWaitSyncKHR;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ Atomic\ functions\ end}}
+\DoxyCodeLine{00109\ \}\ SDL\_EGL\_VideoData;}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{comment}{//\ OpenGLES\ functions}}
+\DoxyCodeLine{00112\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_EGL\_ExtensionType}
+\DoxyCodeLine{00113\ \{}
+\DoxyCodeLine{00114\ \ \ \ \ SDL\_EGL\_DISPLAY\_EXTENSION,}
+\DoxyCodeLine{00115\ \ \ \ \ SDL\_EGL\_CLIENT\_EXTENSION}
+\DoxyCodeLine{00116\ \}\ SDL\_EGL\_ExtensionType;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_HasExtension(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ SDL\_EGL\_ExtensionType\ type,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *ext);}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_GetAttribute(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ SDL\_GLAttr\ attrib,\ \textcolor{keywordtype}{int}\ *value);}
+\DoxyCodeLine{00121\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_LoadLibraryOnly(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00122\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_LoadLibrary(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path,\ NativeDisplayType\ native\_display);}
+\DoxyCodeLine{00123\ \textcolor{keyword}{extern}\ SDL\_FunctionPointer\ SDL\_EGL\_GetProcAddressInternal(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *proc);}
+\DoxyCodeLine{00124\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_EGL\_UnloadLibrary(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00125\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_EGL\_SetRequiredVisualId(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ visual\_id);}
+\DoxyCodeLine{00126\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_ChooseConfig(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00127\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_SetSwapInterval(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ interval);}
+\DoxyCodeLine{00128\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_GetSwapInterval(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ *interval);}
+\DoxyCodeLine{00129\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_DestroyContext(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{00130\ \textcolor{keyword}{extern}\ EGLSurface\ SDL\_EGL\_CreateSurface(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ NativeWindowType\ nw);}
+\DoxyCodeLine{00131\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_EGL\_DestroySurface(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ EGLSurface\ egl\_surface);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{extern}\ EGLSurface\ SDL\_EGL\_CreateOffscreenSurface(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height);}
+\DoxyCodeLine{00134\ \textcolor{comment}{//\ Assumes\ that\ LoadLibraryOnly()\ has\ succeeded}}
+\DoxyCodeLine{00135\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_InitializeOffscreen(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ device);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{comment}{//\ These\ need\ to\ be\ wrapped\ to\ get\ the\ surface\ for\ the\ window\ by\ the\ platform\ GLES\ implementation}}
+\DoxyCodeLine{00138\ \textcolor{keyword}{extern}\ SDL\_GLContext\ SDL\_EGL\_CreateContext(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ EGLSurface\ egl\_surface);}
+\DoxyCodeLine{00139\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_MakeCurrent(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ EGLSurface\ egl\_surface,\ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{00140\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_SwapBuffers(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ EGLSurface\ egl\_surface);}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{comment}{//\ SDL\ Error-\/reporting}}
+\DoxyCodeLine{00143\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_EGL\_SetErrorEx(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *message,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *eglFunctionName,\ EGLint\ eglErrorCode);}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ SDL\_EGL\_SetError(message,\ eglFunctionName)\ SDL\_EGL\_SetErrorEx(message,\ eglFunctionName,\ \_this-\/>egl\_data-\/>eglGetError())}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{comment}{//\ A\ few\ of\ useful\ macros}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ SDL\_EGL\_SwapWindow\_impl(BACKEND)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\ \ \ \ bool\ BACKEND\#\#\_GLES\_SwapWindow(SDL\_VideoDevice\ *\_this,\ SDL\_Window\ *window)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ SDL\_EGL\_SwapBuffers(\_this,\ window-\/>internal-\/>egl\_surface);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ SDL\_EGL\_MakeCurrent\_impl(BACKEND)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ bool\ BACKEND\#\#\_GLES\_MakeCurrent(SDL\_VideoDevice\ *\_this,\ SDL\_Window\ *window,\ SDL\_GLContext\ context)\ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ SDL\_EGL\_MakeCurrent(\_this,\ window\ ?\ window-\/>internal-\/>egl\_surface\ :\ EGL\_NO\_SURFACE,\ context);\ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ SDL\_EGL\_CreateContext\_impl(BACKEND)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ \ \ SDL\_GLContext\ BACKEND\#\#\_GLES\_CreateContext(SDL\_VideoDevice\ *\_this,\ SDL\_Window\ *window)\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ return\ SDL\_EGL\_CreateContext(\_this,\ window-\/>internal-\/>egl\_surface);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_OPENGL\_EGL}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_egl\_h\_}}
+
+\end{DoxyCode}

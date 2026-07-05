@@ -1,0 +1,199 @@
+\doxysection{hourly\+\_\+file\+\_\+sink.\+h}
+\hypertarget{hourly__file__sink_8h_source}{}\label{hourly__file__sink_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/hourly\_file\_sink.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/hourly\_file\_sink.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/details/circular\_q.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <spdlog/details/file\_helper.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <spdlog/details/null\_mutex.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <spdlog/details/os.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <spdlog/details/synchronous\_factory.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <spdlog/fmt/fmt.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/base\_sink.h>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ Generator\ of\ Hourly\ log\ file\ names\ in\ format\ basename.YYYY-\/MM-\/DD-\/HH.ext}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structsinks_1_1hourly__filename__calculator}{hourly\_filename\_calculator}}\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ Create\ filename\ for\ the\ form\ basename.YYYY-\/MM-\/DD-\/H}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{static}\ filename\_t\ calc\_filename(\textcolor{keyword}{const}\ filename\_t\ \&filename,\ \textcolor{keyword}{const}\ tm\ \&now\_tm)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ filename\_t\ basename,\ ext;}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ std::tie(basename,\ ext)\ =\ details::file\_helper::split\_by\_extension(filename);}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fmt\_lib::format(SPDLOG\_FILENAME\_T(\textcolor{stringliteral}{"{}\{\}\_\{:04d\}-\/\{:02d\}-\/\{:02d\}\_\{:02d\}\{\}"{}}),\ basename,}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ now\_tm.tm\_year\ +\ 1900,\ now\_tm.tm\_mon\ +\ 1,\ now\_tm.tm\_mday,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ now\_tm.tm\_hour,\ ext);}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ *\ Rotating\ file\ sink\ based\ on\ time.}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ *\ If\ truncate\ !=\ false\ ,\ the\ created\ file\ will\ be\ truncated.}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ *\ If\ max\_files\ >\ 0,\ retain\ only\ the\ last\ max\_files\ and\ delete\ previous.}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ *\ Note\ that\ old\ log\ files\ from\ previous\ executions\ will\ not\ be\ deleted\ by\ this\ class,}}
+\DoxyCodeLine{00043\ \textcolor{comment}{\ *\ rotation\ and\ deletion\ is\ only\ applied\ while\ the\ program\ is\ running.}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex,\ \textcolor{keyword}{typename}\ FileNameCalc\ =\ hourly\_filename\_calculator>}
+\DoxyCodeLine{00046\ \textcolor{keyword}{class\ }hourly\_file\_sink\ final\ :\ \textcolor{keyword}{public}\ base\_sink<Mutex>\ \{}
+\DoxyCodeLine{00047\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ create\ hourly\ file\ sink\ which\ rotates\ on\ given\ time}}
+\DoxyCodeLine{00049\ \ \ \ \ hourly\_file\_sink(filename\_t\ base\_filename,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ truncate\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint16\_t\ max\_files\ =\ 0,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfile__event__handlers}{file\_event\_handlers}}\ \&event\_handlers\ =\ \{\})}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ :\ base\_filename\_(std::move(base\_filename)),}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ file\_helper\_\{event\_handlers\},}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ truncate\_(truncate),}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ max\_files\_(max\_files),}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ filenames\_q\_()\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ now\ =\ log\_clock::now();}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ filename\ =\ FileNameCalc::calc\_filename(base\_filename\_,\ now\_tm(now));}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ file\_helper\_.open(filename,\ truncate\_);}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ remove\_init\_file\_\ =\ file\_helper\_.size()\ ==\ 0;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ rotation\_tp\_\ =\ next\_rotation\_tp\_();}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_files\_\ >\ 0)\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ init\_filenames\_q\_();}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ filename\_t\ filename()\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ file\_helper\_.filename();}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ time\ =\ msg.time;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ should\_rotate\ =\ time\ >=\ rotation\_tp\_;}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (should\_rotate)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (remove\_init\_file\_)\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file\_helper\_.close();}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ details::os::remove(file\_helper\_.filename());}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ filename\ =\ FileNameCalc::calc\_filename(base\_filename\_,\ now\_tm(time));}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ file\_helper\_.open(filename,\ truncate\_);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ rotation\_tp\_\ =\ next\_rotation\_tp\_();}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ remove\_init\_file\_\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ memory\_buf\_t\ formatted;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ base\_sink<Mutex>::formatter\_-\/>format(msg,\ formatted);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ file\_helper\_.write(formatted);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Do\ the\ cleaning\ only\ at\ the\ end\ because\ it\ might\ throw\ on\ failure.}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (should\_rotate\ \&\&\ max\_files\_\ >\ 0)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ delete\_old\_();}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \ \ \ \ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{void}\ flush\_()\textcolor{keyword}{\ override\ }\{\ file\_helper\_.flush();\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ init\_filenames\_q\_()\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }details::os::path\_exists;}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ filenames\_q\_\ =\ \doxymbox{\hyperlink{classdetails_1_1circular__q}{details::circular\_q<filename\_t>}}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(max\_files\_));}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ std::vector<filename\_t>\ filenames;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ now\ =\ log\_clock::now();}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (filenames.size()\ <\ max\_files\_)\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ filename\ =\ FileNameCalc::calc\_filename(base\_filename\_,\ now\_tm(now));}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!path\_exists(filename))\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ filenames.emplace\_back(filename);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ now\ -\/=\ std::chrono::hours(1);}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ iter\ =\ filenames.rbegin();\ iter\ !=\ filenames.rend();\ ++iter)\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ filenames\_q\_.push\_back(std::move(*iter));}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ tm\ now\_tm(log\_clock::time\_point\ tp)\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ time\_t\ tnow\ =\ log\_clock::to\_time\_t(tp);}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ details::os::localtime(tnow);}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ log\_clock::time\_point\ next\_rotation\_tp\_()\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ now\ =\ log\_clock::now();}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ tm\ date\ =\ now\_tm(now);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ date.tm\_min\ =\ 0;}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ date.tm\_sec\ =\ 0;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ rotation\_time\ =\ log\_clock::from\_time\_t(std::mktime(\&date));}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rotation\_time\ >\ now)\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ rotation\_time;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{rotation\_time\ +\ std::chrono::hours(1)\};}
+\DoxyCodeLine{00135\ \ \ \ \ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{comment}{//\ Delete\ the\ file\ N\ rotations\ ago.}}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{comment}{//\ Throw\ spdlog\_ex\ on\ failure\ to\ delete\ the\ old\ file.}}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordtype}{void}\ delete\_old\_()\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }details::os::filename\_to\_str;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }details::os::remove\_if\_exists;}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ filename\_t\ current\_file\ =\ file\_helper\_.filename();}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (filenames\_q\_.full())\ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ old\_filename\ =\ std::move(filenames\_q\_.front());}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ filenames\_q\_.pop\_front();}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ ok\ =\ remove\_if\_exists(old\_filename)\ ==\ 0;}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ok)\ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ filenames\_q\_.push\_back(std::move(current\_file));}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SPDLOG\_THROW(\doxymbox{\hyperlink{classspdlog__ex}{spdlog\_ex}}(}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Failed\ removing\ hourly\ file\ "{}}\ +\ filename\_to\_str(old\_filename),\ errno));}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ filenames\_q\_.push\_back(std::move(current\_file));}
+\DoxyCodeLine{00155\ \ \ \ \ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ filename\_t\ base\_filename\_;}
+\DoxyCodeLine{00158\ \ \ \ \ log\_clock::time\_point\ rotation\_tp\_;}
+\DoxyCodeLine{00159\ \ \ \ \ \doxymbox{\hyperlink{classdetails_1_1file__helper}{details::file\_helper}}\ file\_helper\_;}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{bool}\ truncate\_;}
+\DoxyCodeLine{00161\ \ \ \ \ uint16\_t\ max\_files\_;}
+\DoxyCodeLine{00162\ \ \ \ \ \doxymbox{\hyperlink{classdetails_1_1circular__q}{details::circular\_q<filename\_t>}}\ filenames\_q\_;}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{bool}\ remove\_init\_file\_;}
+\DoxyCodeLine{00164\ \};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keyword}{using\ }hourly\_file\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1hourly__file__sink}{hourly\_file\_sink<std::mutex>}};}
+\DoxyCodeLine{00167\ \textcolor{keyword}{using\ }hourly\_file\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1hourly__file__sink}{hourly\_file\_sink<details::null\_mutex>}};}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{//}}
+\DoxyCodeLine{00172\ \textcolor{comment}{//\ factory\ functions}}
+\DoxyCodeLine{00173\ \textcolor{comment}{//}}
+\DoxyCodeLine{00174\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00175\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ hourly\_logger\_mt(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ filename\_t\ \&filename,}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ truncate\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint16\_t\ max\_files\ =\ 0,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfile__event__handlers}{file\_event\_handlers}}\ \&event\_handlers\ =\ \{\})\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::hourly\_file\_sink\_mt>(logger\_name,\ filename,\ truncate,}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_files,\ event\_handlers);}
+\DoxyCodeLine{00182\ \}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Factory\ =\ synchronous\_factory>}
+\DoxyCodeLine{00185\ \textcolor{keyword}{inline}\ std::shared\_ptr<logger>\ hourly\_logger\_st(\textcolor{keyword}{const}\ std::string\ \&logger\_name,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ filename\_t\ \&filename,}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ truncate\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint16\_t\ max\_files\ =\ 0,}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfile__event__handlers}{file\_event\_handlers}}\ \&event\_handlers\ =\ \{\})\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keywordflow}{return}\ Factory::template\ create<sinks::hourly\_file\_sink\_st>(logger\_name,\ filename,\ truncate,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_files,\ event\_handlers);}
+\DoxyCodeLine{00192\ \}}
+\DoxyCodeLine{00193\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

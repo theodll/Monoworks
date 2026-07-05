@@ -1,0 +1,235 @@
+\doxysection{SDL\+\_\+syscamera.\+h}
+\hypertarget{_s_d_l__syscamera_8h_source}{}\label{_s_d_l__syscamera_8h_source}\index{MonoRuntime/extern/sdl/src/camera/SDL\_syscamera.h@{MonoRuntime/extern/sdl/src/camera/SDL\_syscamera.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}../SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_syscamera\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_syscamera\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../video/SDL\_surface\_c.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ DEBUG\_CAMERA\ 0}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ Backends\ should\ call\ this\ as\ devices\ are\ added\ to\ the\ system\ (such\ as}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ a\ USB\ camera\ being\ plugged\ in),\ and\ should\ also\ be\ called\ for}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ for\ every\ device\ found\ during\ DetectDevices().\ */}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *SDL\_AddCamera(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ SDL\_CameraPosition\ position,\ \textcolor{keywordtype}{int}\ num\_specs,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ *specs,\ \textcolor{keywordtype}{void}\ *handle);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{/*\ Backends\ should\ call\ this\ if\ an\ opened\ camera\ device\ is\ lost.}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ \ \ This\ can\ happen\ due\ to\ i/o\ errors,\ or\ a\ device\ being\ unplugged,\ etc.\ */}}
+\DoxyCodeLine{00037\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_CameraDisconnected(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ Find\ an\ SDL\_Camera,\ selected\ by\ a\ callback.\ NULL\ if\ not\ found.\ DOES\ NOT\ LOCK\ THE\ DEVICE.}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *SDL\_FindPhysicalCameraByCallback(\textcolor{keywordtype}{bool}\ (*callback)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \textcolor{keywordtype}{void}\ *userdata),\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ Backends\ should\ call\ this\ when\ the\ user\ has\ approved/denied\ access\ to\ a\ camera.}}
+\DoxyCodeLine{00043\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_CameraPermissionOutcome(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \textcolor{keywordtype}{bool}\ approved);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ Backends\ can\ call\ this\ to\ get\ a\ standardized\ name\ for\ a\ thread\ to\ power\ a\ specific\ camera\ device.}}
+\DoxyCodeLine{00046\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}\ *SDL\_GetCameraThreadName(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \textcolor{keywordtype}{char}\ *buf,\ \textcolor{keywordtype}{size\_t}\ buflen);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ Backends\ can\ call\ these\ to\ change\ a\ device's\ refcount.}}
+\DoxyCodeLine{00049\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ RefPhysicalCamera(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00050\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ UnrefPhysicalCamera(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ These\ functions\ are\ the\ heart\ of\ the\ camera\ threads.\ Backends\ can\ call\ them\ directly\ if\ they\ aren't\ using\ the\ SDL-\/provided\ thread.}}
+\DoxyCodeLine{00053\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_CameraThreadSetup(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00054\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_CameraThreadIterate(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00055\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_CameraThreadShutdown(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ Backends\ can\ call\ this\ if\ they\ have\ to\ finish\ initializing\ later,\ like\ Emscripten.\ Most\ backends\ should\ \_not\_\ call\ this\ directly!}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_PrepareCameraSurfaces(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ common\ utility\ functionality\ to\ gather\ up\ camera\ specs.\ Not\ required!}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_camera_format_add_data}{CameraFormatAddData}}}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ *specs;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_specs;}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{int}\ allocated\_specs;}
+\DoxyCodeLine{00067\ \}\ \doxymbox{\hyperlink{struct_camera_format_add_data}{CameraFormatAddData}};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keywordtype}{bool}\ SDL\_AddCameraFormat(\doxymbox{\hyperlink{struct_camera_format_add_data}{CameraFormatAddData}}\ *data,\ SDL\_PixelFormat\ format,\ SDL\_Colorspace\ colorspace,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ \textcolor{keywordtype}{int}\ framerate\_numerator,\ \textcolor{keywordtype}{int}\ framerate\_denominator);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_CameraFrameResult}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ SDL\_CAMERA\_FRAME\_ERROR,}
+\DoxyCodeLine{00074\ \ \ \ \ SDL\_CAMERA\_FRAME\_SKIP,}
+\DoxyCodeLine{00075\ \ \ \ \ SDL\_CAMERA\_FRAME\_READY}
+\DoxyCodeLine{00076\ \}\ SDL\_CameraFrameResult;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_surface_list}{SurfaceList}}}
+\DoxyCodeLine{00079\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface;}
+\DoxyCodeLine{00081\ \ \ \ \ Uint64\ timestampNS;}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_surface_list}{SurfaceList}}\ *next;}
+\DoxyCodeLine{00083\ \}\ \doxymbox{\hyperlink{struct_surface_list}{SurfaceList}};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{comment}{//\ Define\ the\ SDL\ camera\ driver\ structure}}
+\DoxyCodeLine{00086\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}}
+\DoxyCodeLine{00087\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//\ A\ mutex\ for\ locking}}
+\DoxyCodeLine{00089\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *lock;}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ Human-\/readable\ device\ name.}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ Position\ of\ camera\ (front-\/facing,\ back-\/facing,\ etc).}}
+\DoxyCodeLine{00095\ \ \ \ \ SDL\_CameraPosition\ position;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{//\ When\ refcount\ hits\ zero,\ we\ destroy\ the\ device\ object.}}
+\DoxyCodeLine{00098\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ refcount;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{comment}{//\ These\ are,\ initially,\ set\ from\ camera\_driver,\ but\ we\ might\ swap\ them\ out\ with\ Zombie\ versions\ on\ disconnect/failure.}}
+\DoxyCodeLine{00101\ \ \ \ \ bool\ (*WaitDevice)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00102\ \ \ \ \ SDL\_CameraFrameResult\ (*AcquireFrame)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *frame,\ Uint64\ *timestampNS,\ \textcolor{keywordtype}{float}\ *rotation);}
+\DoxyCodeLine{00103\ \ \ \ \ void\ (*ReleaseFrame)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *frame);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{comment}{//\ All\ supported\ formats/dimensions\ for\ this\ device.}}
+\DoxyCodeLine{00106\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ *all\_specs;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ Elements\ in\ all\_specs.}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_specs;}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//\ The\ device's\ actual\ specification\ that\ the\ camera\ is\ outputting,\ before\ conversion.}}
+\DoxyCodeLine{00112\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ actual\_spec;}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{comment}{//\ The\ device's\ current\ camera\ specification,\ after\ conversions.}}
+\DoxyCodeLine{00115\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ spec;}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{comment}{//\ Unique\ value\ assigned\ at\ creation\ time.}}
+\DoxyCodeLine{00118\ \ \ \ \ SDL\_CameraID\ instance\_id;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ Driver-\/specific\ hardware\ data\ on\ how\ to\ open\ device\ (`hidden`\ is\ driver-\/specific\ data\ \_when\ opened\_).}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{void}\ *handle;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{comment}{//\ Dropping\ the\ first\ frame(s)\ after\ open\ seems\ to\ help\ timing\ on\ some\ platforms.}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{int}\ drop\_frames;}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{comment}{//\ Backend\ timestamp\ of\ first\ acquired\ frame,\ so\ we\ can\ keep\ these\ meaningful\ regardless\ of\ epoch.}}
+\DoxyCodeLine{00127\ \ \ \ \ Uint64\ base\_timestamp;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{//\ SDL\ timestamp\ of\ first\ acquired\ frame,\ so\ we\ can\ roughly\ convert\ to\ SDL\ ticks.}}
+\DoxyCodeLine{00130\ \ \ \ \ Uint64\ adjust\_timestamp;}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//\ Pixel\ data\ flows\ from\ the\ driver\ into\ these,\ then\ gets\ converted\ for\ the\ app\ if\ necessary.}}
+\DoxyCodeLine{00133\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *acquire\_surface;}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{//\ acquire\_surface\ converts\ or\ scales\ to\ this\ surface\ before\ landing\ in\ output\_surfaces,\ if\ necessary.}}
+\DoxyCodeLine{00136\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *conversion\_surface;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{comment}{//\ A\ queue\ of\ surfaces\ that\ buffer\ converted/scaled\ frames\ of\ video\ until\ the\ app\ claims\ them.}}
+\DoxyCodeLine{00139\ \ \ \ \ \doxymbox{\hyperlink{struct_surface_list}{SurfaceList}}\ output\_surfaces[8];}
+\DoxyCodeLine{00140\ \ \ \ \ \doxymbox{\hyperlink{struct_surface_list}{SurfaceList}}\ filled\_output\_surfaces;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ is\ FIFO}}
+\DoxyCodeLine{00141\ \ \ \ \ \doxymbox{\hyperlink{struct_surface_list}{SurfaceList}}\ empty\_output\_surfaces;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ is\ LIFO}}
+\DoxyCodeLine{00142\ \ \ \ \ \doxymbox{\hyperlink{struct_surface_list}{SurfaceList}}\ app\_held\_output\_surfaces;}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{comment}{//\ A\ fake\ video\ frame\ we\ allocate\ if\ the\ camera\ fails/disconnects.}}
+\DoxyCodeLine{00145\ \ \ \ \ Uint8\ *zombie\_pixels;}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{//\ non-\/zero\ if\ acquire\_surface\ needs\ to\ be\ scaled\ for\ final\ output.}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{int}\ needs\_scaling;\ \ \textcolor{comment}{//\ -\/1:\ downscale,\ 0:\ no\ scaling,\ 1:\ upscale}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ true\ if\ acquire\_surface\ needs\ to\ be\ converted\ for\ final\ output.}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{bool}\ needs\_conversion;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{comment}{//\ Current\ state\ flags}}
+\DoxyCodeLine{00154\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ shutdown;}
+\DoxyCodeLine{00155\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ zombie;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{//\ A\ thread\ to\ feed\ the\ camera\ device}}
+\DoxyCodeLine{00158\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___thread}{SDL\_Thread}}\ *thread;}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{//\ Optional\ properties.}}
+\DoxyCodeLine{00161\ \ \ \ \ SDL\_PropertiesID\ props;}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{comment}{//\ Current\ state\ of\ user\ permission\ check.}}
+\DoxyCodeLine{00164\ \ \ \ \ SDL\_CameraPermissionState\ permission;}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{//\ Data\ private\ to\ this\ driver,\ used\ when\ device\ is\ opened\ and\ running.}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_PrivateCameraData\ *hidden;}
+\DoxyCodeLine{00168\ \};}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{//\ Note\ that\ for\ AcquireFrame,\ \`{}rotation`\ is\ degrees,\ with\ positive\ values\ rotating\ clockwise.\ This\ is\ the\ amount\ to\ rotate\ an\ image\ so\ it\ would\ be\ right-\/side\ up.}}
+\DoxyCodeLine{00172\ \textcolor{comment}{//\ Rotations\ should\ be\ in\ 90\ degree\ increments\ at\ this\ time\ (landscape\ to\ portrait,\ or\ upside\ down\ to\ right\ side\ up,\ etc).}}
+\DoxyCodeLine{00173\ \textcolor{comment}{//\ Most\ platforms\ won't\ care\ about\ this,\ but\ mobile\ devices\ might\ need\ to\ deal\ with\ the\ device\ itself\ being\ physically\ rotated,\ causing\ the\ fixed-\/orientation\ camera\ to\ be\ presenting\ sideways\ images.}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___camera_driver_impl}{SDL\_CameraDriverImpl}}}
+\DoxyCodeLine{00176\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ void\ (*DetectDevices)(void);}
+\DoxyCodeLine{00178\ \ \ \ \ bool\ (*OpenDevice)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ *spec);}
+\DoxyCodeLine{00179\ \ \ \ \ void\ (*CloseDevice)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00180\ \ \ \ \ bool\ (*WaitDevice)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);}
+\DoxyCodeLine{00181\ \ \ \ \ SDL\_CameraFrameResult\ (*AcquireFrame)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *frame,\ Uint64\ *timestampNS,\ \textcolor{keywordtype}{float}\ *rotation);\ \textcolor{comment}{//\ set\ frame-\/>pixels,\ frame-\/>pitch,\ *timestampNS,\ and\ *rotation!}}
+\DoxyCodeLine{00182\ \ \ \ \ void\ (*ReleaseFrame)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *frame);\ \textcolor{comment}{//\ Reclaim\ frame-\/>pixels\ and\ frame-\/>pitch!}}
+\DoxyCodeLine{00183\ \ \ \ \ void\ (*FreeDeviceHandle)(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *device);\ \textcolor{comment}{//\ SDL\ is\ done\ with\ this\ device;\ free\ the\ handle\ from\ SDL\_AddCamera()}}
+\DoxyCodeLine{00184\ \ \ \ \ void\ (*Deinitialize)(void);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{bool}\ ProvidesOwnCallbackThread;}
+\DoxyCodeLine{00187\ \}\ \doxymbox{\hyperlink{struct_s_d_l___camera_driver_impl}{SDL\_CameraDriverImpl}};}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___pending_camera_event}{SDL\_PendingCameraEvent}}}
+\DoxyCodeLine{00190\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ Uint32\ type;}
+\DoxyCodeLine{00192\ \ \ \ \ SDL\_CameraID\ devid;}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___pending_camera_event}{SDL\_PendingCameraEvent}}\ *next;}
+\DoxyCodeLine{00194\ \}\ \doxymbox{\hyperlink{struct_s_d_l___pending_camera_event}{SDL\_PendingCameraEvent}};}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___camera_driver}{SDL\_CameraDriver}}}
+\DoxyCodeLine{00197\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;\ \ \textcolor{comment}{//\ The\ name\ of\ this\ camera\ driver}}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *desc;\ \ \textcolor{comment}{//\ The\ description\ of\ this\ camera\ driver}}
+\DoxyCodeLine{00200\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___camera_driver_impl}{SDL\_CameraDriverImpl}}\ impl;\ \textcolor{comment}{//\ the\ backend's\ interface}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___r_w_lock}{SDL\_RWLock}}\ *device\_hash\_lock;\ \ \textcolor{comment}{//\ A\ rwlock\ that\ protects\ \`{}device\_hash`\ \ \ //\ !!!\ FIXME:\ device\_hash\ \_also\_\ has\ a\ rwlock,\ see\ if\ we\ still\ need\ this\ one.}}
+\DoxyCodeLine{00203\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___hash_table}{SDL\_HashTable}}\ *device\_hash;\ \ \textcolor{comment}{//\ the\ collection\ of\ currently-\/available\ camera\ devices}}
+\DoxyCodeLine{00204\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___pending_camera_event}{SDL\_PendingCameraEvent}}\ pending\_events;}
+\DoxyCodeLine{00205\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___pending_camera_event}{SDL\_PendingCameraEvent}}\ *pending\_events\_tail;}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ device\_count;}
+\DoxyCodeLine{00208\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ shutting\_down;\ \ \textcolor{comment}{//\ non-\/zero\ during\ SDL\_Quit,\ so\ we\ known\ not\ to\ accept\ any\ last-\/minute\ device\ hotplugs.}}
+\DoxyCodeLine{00209\ \}\ \doxymbox{\hyperlink{struct_s_d_l___camera_driver}{SDL\_CameraDriver}};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}}
+\DoxyCodeLine{00212\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *desc;}
+\DoxyCodeLine{00215\ \ \ \ \ bool\ (*init)(\doxymbox{\hyperlink{struct_s_d_l___camera_driver_impl}{SDL\_CameraDriverImpl}}\ *impl);}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordtype}{bool}\ demand\_only;\ \textcolor{comment}{//\ if\ true:\ request\ explicitly,\ or\ it\ won't\ be\ available.}}
+\DoxyCodeLine{00217\ \}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}};}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{comment}{//\ Not\ all\ of\ these\ are\ available\ in\ a\ given\ build.\ Use\ \#ifdefs,\ etc.}}
+\DoxyCodeLine{00220\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ DUMMYCAMERA\_bootstrap;}
+\DoxyCodeLine{00221\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ PIPEWIRECAMERA\_bootstrap;}
+\DoxyCodeLine{00222\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ V4L2\_bootstrap;}
+\DoxyCodeLine{00223\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ COREMEDIA\_bootstrap;}
+\DoxyCodeLine{00224\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ ANDROIDCAMERA\_bootstrap;}
+\DoxyCodeLine{00225\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ EMSCRIPTENCAMERA\_bootstrap;}
+\DoxyCodeLine{00226\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ MEDIAFOUNDATION\_bootstrap;}
+\DoxyCodeLine{00227\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_camera_boot_strap}{CameraBootStrap}}\ VITACAMERA\_bootstrap;}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_syscamera\_h\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,432 @@
+\doxysection{SDL\+\_\+\+BApp.\+h}
+\hypertarget{_s_d_l___b_app_8h_source}{}\label{_s_d_l___b_app_8h_source}\index{MonoRuntime/extern/sdl/src/core/haiku/SDL\_BApp.h@{MonoRuntime/extern/sdl/src/core/haiku/SDL\_BApp.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifndef\ SDL\_BAPP\_H}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ SDL\_BAPP\_H}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <Path.h>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <InterfaceKit.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <LocaleRoster.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <OpenGLKit.h>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}../../video/haiku/SDL\_bkeyboard.h"{}}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ Local\ includes}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ "{}../../events/SDL\_events\_c.h"{}}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ "{}../../video/haiku/SDL\_bframebuffer.h"{}}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00044\ \}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ Forward\ declarations}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_s_d_l___b_looper}{SDL\_BLooper}};}
+\DoxyCodeLine{00052\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_s_d_l___b_win}{SDL\_BWin}};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ Message\ constants}}
+\DoxyCodeLine{00055\ \textcolor{keyword}{enum}\ ToSDL}
+\DoxyCodeLine{00056\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ Intercepted\ by\ BWindow\ on\ its\ way\ to\ BView}}
+\DoxyCodeLine{00058\ \ \ \ \ BAPP\_MOUSE\_MOVED,}
+\DoxyCodeLine{00059\ \ \ \ \ BAPP\_MOUSE\_BUTTON,}
+\DoxyCodeLine{00060\ \ \ \ \ BAPP\_MOUSE\_WHEEL,}
+\DoxyCodeLine{00061\ \ \ \ \ BAPP\_KEY,}
+\DoxyCodeLine{00062\ \ \ \ \ BAPP\_REPAINT,\ \textcolor{comment}{//\ from\ \_UPDATE\_}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ From\ BWindow}}
+\DoxyCodeLine{00064\ \ \ \ \ BAPP\_MAXIMIZE,\ \textcolor{comment}{//\ from\ B\_ZOOM}}
+\DoxyCodeLine{00065\ \ \ \ \ BAPP\_MINIMIZE,}
+\DoxyCodeLine{00066\ \ \ \ \ BAPP\_RESTORE,\ \textcolor{comment}{//\ TODO:\ IMPLEMENT!}}
+\DoxyCodeLine{00067\ \ \ \ \ BAPP\_SHOW,}
+\DoxyCodeLine{00068\ \ \ \ \ BAPP\_HIDE,}
+\DoxyCodeLine{00069\ \ \ \ \ BAPP\_MOUSE\_FOCUS,\ \ \ \ \textcolor{comment}{//\ caused\ by\ MOUSE\_MOVE}}
+\DoxyCodeLine{00070\ \ \ \ \ BAPP\_KEYBOARD\_FOCUS,\ \textcolor{comment}{//\ from\ WINDOW\_ACTIVATED}}
+\DoxyCodeLine{00071\ \ \ \ \ BAPP\_WINDOW\_CLOSE\_REQUESTED,}
+\DoxyCodeLine{00072\ \ \ \ \ BAPP\_WINDOW\_MOVED,}
+\DoxyCodeLine{00073\ \ \ \ \ BAPP\_WINDOW\_RESIZED,}
+\DoxyCodeLine{00074\ \ \ \ \ BAPP\_SCREEN\_CHANGED}
+\DoxyCodeLine{00075\ \};}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \doxymbox{\hyperlink{class_s_d_l___b_looper}{SDL\_BLooper}}\ *SDL\_Looper;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{//\ Create\ a\ descendant\ of\ BLooper}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{class\ }SDL\_BLooper\ :\ \textcolor{keyword}{public}\ BLooper}
+\DoxyCodeLine{00083\ \{}
+\DoxyCodeLine{00084\ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00085\ \ \ \ \ SDL\_BLooper(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name)\ :\ BLooper(name)}
+\DoxyCodeLine{00086\ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \_current\_context\ =\ NULL;}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~SDL\_BLooper()}
+\DoxyCodeLine{00093\ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ Event-\/handling\ functions}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ MessageReceived(BMessage\ *message)}
+\DoxyCodeLine{00098\ \ \ \ \ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Sort\ out\ SDL-\/related\ messages}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (message-\/>what)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_MOUSE\_MOVED:}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleMouseMove(message);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_MOUSE\_BUTTON:}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleMouseButton(message);}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_MOUSE\_WHEEL:}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleMouseWheel(message);}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_KEY:}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleKey(message);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_REPAINT:}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleBasicWindowEvent(message,\ SDL\_EVENT\_WINDOW\_EXPOSED);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_MAXIMIZE:}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleBasicWindowEvent(message,\ SDL\_EVENT\_WINDOW\_MAXIMIZED);}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_MINIMIZE:}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleBasicWindowEvent(message,\ SDL\_EVENT\_WINDOW\_MINIMIZED);}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_SHOW:}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleBasicWindowEvent(message,\ SDL\_EVENT\_WINDOW\_SHOWN);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_HIDE:}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleBasicWindowEvent(message,\ SDL\_EVENT\_WINDOW\_HIDDEN);}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_MOUSE\_FOCUS:}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleMouseFocus(message);}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_KEYBOARD\_FOCUS:}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleKeyboardFocus(message);}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_WINDOW\_CLOSE\_REQUESTED:}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleBasicWindowEvent(message,\ SDL\_EVENT\_WINDOW\_CLOSE\_REQUESTED);}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_WINDOW\_MOVED:}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleWindowMoved(message);}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_WINDOW\_RESIZED:}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \_HandleWindowResized(message);}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ B\_LOCALE\_CHANGED:}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SendLocaleChangedEvent();}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ BAPP\_SCREEN\_CHANGED:}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Handle\ screen\ resize\ or\ workspace\ change}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ BLooper::MessageReceived(message);}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ Window\ creation/destruction\ methods}}
+\DoxyCodeLine{00172\ \ \ \ \ int32\ GetID(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win)}
+\DoxyCodeLine{00173\ \ \ \ \ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ int32\ i;}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ 0;\ i\ <\ \_GetNumWindowSlots();\ ++i)\ \{}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (GetSDLWindow(i)\ ==\ NULL)\ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_SetSDLWindow(win,\ i);}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Expand\ the\ vector\ if\ all\ slots\ are\ full}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ \_GetNumWindowSlots())\ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \_PushBackWindow(win);}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ error\ handling}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00190\ \ \ \ \ \}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{/*\ FIXME:\ Bad\ coding\ practice,\ but\ I\ can't\ include\ SDL\_BWin.h\ here.\ \ Is}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ \ \ \ \ \ \ there\ another\ way\ to\ do\ this?\ */}}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keywordtype}{void}\ ClearID(\doxymbox{\hyperlink{class_s_d_l___b_win}{SDL\_BWin}}\ *bwin);\ \textcolor{comment}{//\ Defined\ in\ SDL\_BeApp.cc}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *GetSDLWindow(int32\ winID)}
+\DoxyCodeLine{00197\ \ \ \ \ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_window\_map[winID];}
+\DoxyCodeLine{00199\ \ \ \ \ \}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL}}
+\DoxyCodeLine{00202\ \ \ \ \ BGLView\ *GetCurrentContext()}
+\DoxyCodeLine{00203\ \ \ \ \ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_current\_context;}
+\DoxyCodeLine{00205\ \ \ \ \ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCurrentContext(BGLView\ *newContext)}
+\DoxyCodeLine{00208\ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_current\_context)}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \_current\_context-\/>UnlockGL();}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \_current\_context\ =\ newContext;}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_current\_context)}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \_current\_context-\/>LockGL();}
+\DoxyCodeLine{00214\ \ \ \ \ \}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{//\ Event\ management}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleBasicWindowEvent(BMessage\ *msg,\ SDL\_EventType\ sdlEventType)}
+\DoxyCodeLine{00220\ \ \ \ \ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID))\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ SDL\_SendWindowEvent(win,\ sdlEventType,\ 0,\ 0);}
+\DoxyCodeLine{00229\ \ \ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleMouseMove(BMessage\ *msg)}
+\DoxyCodeLine{00232\ \ \ \ \ \{}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ int32\ x\ =\ 0,\ y\ =\ 0;}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID)\ ||}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}x"{}},\ \&x)\ !=\ B\_OK\ ||\ \textcolor{comment}{//\ x\ movement}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}y"{}},\ \&y)\ !=\ B\_OK\ \ \ \ \textcolor{comment}{//\ y\ movement}}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ )\ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Simple\ relative\ mode\ support\ for\ mouse.}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (SDL\_GetMouse()-\/>relative\_mode)\ \{}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ winWidth,\ winHeight,\ winPosX,\ winPosY;}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_GetWindowSize(win,\ \&winWidth,\ \&winHeight);}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_GetWindowPosition(win,\ \&winPosX,\ \&winPosY);}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dx\ =\ x\ -\/\ (winWidth\ /\ 2);}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ dy\ =\ y\ -\/\ (winHeight\ /\ 2);}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SendMouseMotion(0,\ win,\ SDL\_DEFAULT\_MOUSE\_ID,\ SDL\_GetMouse()-\/>relative\_mode,\ (\textcolor{keywordtype}{float})dx,\ (\textcolor{keywordtype}{float})dy);}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ set\_mouse\_position((winPosX\ +\ winWidth\ /\ 2),\ (winPosY\ +\ winHeight\ /\ 2));}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!be\_app-\/>IsCursorHidden())}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ be\_app-\/>HideCursor();}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SendMouseMotion(0,\ win,\ SDL\_DEFAULT\_MOUSE\_ID,\ \textcolor{keyword}{false},\ (\textcolor{keywordtype}{float})x,\ (\textcolor{keywordtype}{float})y);}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (SDL\_CursorVisible()\ \&\&\ be\_app-\/>IsCursorHidden())}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ be\_app-\/>ShowCursor();}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00261\ \ \ \ \ \}}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleMouseButton(BMessage\ *msg)}
+\DoxyCodeLine{00264\ \ \ \ \ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ int32\ button;}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ down;}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID)\ ||}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}button-\/id"{}},\ \&button)\ !=\ B\_OK\ ||}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindBool(\textcolor{stringliteral}{"{}button-\/down"{}},\ \&down)\ !=\ B\_OK)\ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ SDL\_SendMouseButton(0,\ win,\ SDL\_DEFAULT\_MOUSE\_ID,\ button,\ down);}
+\DoxyCodeLine{00277\ \ \ \ \ \}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleMouseWheel(BMessage\ *msg)}
+\DoxyCodeLine{00280\ \ \ \ \ \{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ int32\ xTicks,\ yTicks;}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID)\ ||}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}xticks"{}},\ \&xTicks)\ !=\ B\_OK\ ||}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}yticks"{}},\ \&yTicks)\ !=\ B\_OK)\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ SDL\_SendMouseWheel(0,\ win,\ SDL\_DEFAULT\_MOUSE\_ID,\ xTicks,\ -\/yTicks,\ SDL\_MOUSEWHEEL\_NORMAL);}
+\DoxyCodeLine{00292\ \ \ \ \ \}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleKey(BMessage\ *msg)}
+\DoxyCodeLine{00295\ \ \ \ \ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ int32\ scancode;}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ down;}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}key-\/scancode"{}},\ \&scancode)\ !=\ B\_OK\ ||}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindBool(\textcolor{stringliteral}{"{}key-\/down"{}},\ \&down)\ !=\ B\_OK)\ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ SDL\_SendKeyboardKey(0,\ SDL\_DEFAULT\_KEYBOARD\_ID,\ scancode,\ HAIKU\_GetScancodeFromBeKey(scancode),\ down);}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (down)\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win\ =\ SDL\_GetKeyboardFocus();}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (win\ \&\&\ SDL\_TextInputActive(win))\ \{}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int8\ *keyUtf8;}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ssize\_t\ count;}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (msg-\/>FindData(\textcolor{stringliteral}{"{}key-\/utf8"{}},\ B\_INT8\_TYPE,\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ **)\&keyUtf8,\ \&count)\ ==\ B\_OK)\ \{}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ text[64];}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_zeroa(text);}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_memcpy(text,\ keyUtf8,\ count);}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SendKeyboardText(text);}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00319\ \ \ \ \ \}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleMouseFocus(BMessage\ *msg)}
+\DoxyCodeLine{00322\ \ \ \ \ \{}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ bSetFocus;\ \textcolor{comment}{//\ If\ false,\ lose\ focus}}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID)\ ||}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindBool(\textcolor{stringliteral}{"{}focusGained"{}},\ \&bSetFocus)\ !=\ B\_OK)\ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (bSetFocus)\ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SetMouseFocus(win);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (SDL\_GetMouseFocus()\ ==\ win)\ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ lose\ all\ focus\ if\ this\ window\ was\ the\ current\ focus}}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SetMouseFocus(NULL);}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00338\ \ \ \ \ \}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleKeyboardFocus(BMessage\ *msg)}
+\DoxyCodeLine{00341\ \ \ \ \ \{}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ bSetFocus;\ \textcolor{comment}{//\ If\ false,\ lose\ focus}}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID)\ ||}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindBool(\textcolor{stringliteral}{"{}focusGained"{}},\ \&bSetFocus)\ !=\ B\_OK)\ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (bSetFocus)\ \{}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SetKeyboardFocus(win);}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (SDL\_GetKeyboardFocus()\ ==\ win)\ \{}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ lose\ all\ focus\ if\ this\ window\ was\ the\ current\ focus}}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_SetKeyboardFocus(NULL);}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00357\ \ \ \ \ \}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleWindowMoved(BMessage\ *msg)}
+\DoxyCodeLine{00360\ \ \ \ \ \{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ int32\ xPos,\ yPos;}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ window\ id\ and\ new\ x/y\ position\ of\ the\ window}}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID)\ ||}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}window-\/x"{}},\ \&xPos)\ !=\ B\_OK\ ||}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}window-\/y"{}},\ \&yPos)\ !=\ B\_OK)\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ SDL\_SendWindowEvent(win,\ SDL\_EVENT\_WINDOW\_MOVED,\ xPos,\ yPos);}
+\DoxyCodeLine{00373\ \ \ \ \ \}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordtype}{void}\ \_HandleWindowResized(BMessage\ *msg)}
+\DoxyCodeLine{00376\ \ \ \ \ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win;}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ int32\ winID;}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ int32\ w,\ h;}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ window\ id\ ]and\ new\ x/y\ position\ of\ the\ window}}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ !\_GetWinID(msg,\ \&winID)\ ||}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}window-\/w"{}},\ \&w)\ !=\ B\_OK\ ||}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ msg-\/>FindInt32(\textcolor{stringliteral}{"{}window-\/h"{}},\ \&h)\ !=\ B\_OK)\ \{}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ win\ =\ GetSDLWindow(winID);}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ SDL\_SendWindowEvent(win,\ SDL\_EVENT\_WINDOW\_RESIZED,\ w,\ h);}
+\DoxyCodeLine{00389\ \ \ \ \ \}}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keywordtype}{bool}\ \_GetWinID(BMessage\ *msg,\ int32\ *winID)}
+\DoxyCodeLine{00392\ \ \ \ \ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ msg-\/>FindInt32(\textcolor{stringliteral}{"{}window-\/id"{}},\ winID)\ ==\ B\_OK;}
+\DoxyCodeLine{00394\ \ \ \ \ \}}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{comment}{/*\ Vector\ functions:\ Wraps\ vector\ stuff\ in\ case\ we\ need\ to\ change}}
+\DoxyCodeLine{00397\ \textcolor{comment}{\ \ \ \ \ \ \ implementation\ */}}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keywordtype}{void}\ \_SetSDLWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win,\ int32\ winID)}
+\DoxyCodeLine{00399\ \ \ \ \ \{}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \_window\_map[winID]\ =\ win;}
+\DoxyCodeLine{00401\ \ \ \ \ \}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \ \ \ \ int32\ \_GetNumWindowSlots()}
+\DoxyCodeLine{00404\ \ \ \ \ \{}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_window\_map.size();}
+\DoxyCodeLine{00406\ \ \ \ \ \}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{keywordtype}{void}\ \_PopBackWindow()}
+\DoxyCodeLine{00409\ \ \ \ \ \{}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \_window\_map.pop\_back();}
+\DoxyCodeLine{00411\ \ \ \ \ \}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keywordtype}{void}\ \_PushBackWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win)}
+\DoxyCodeLine{00414\ \ \ \ \ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \_window\_map.push\_back(win);}
+\DoxyCodeLine{00416\ \ \ \ \ \}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{comment}{//\ Members}}
+\DoxyCodeLine{00419\ \ \ \ \ std::vector<SDL\_Window\ *>\ \_window\_map;\ \textcolor{comment}{//\ Keeps\ track\ of\ SDL\_Windows\ by\ index-\/id}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL}}
+\DoxyCodeLine{00422\ \ \ \ \ BGLView\ *\_current\_context;}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00424\ \};}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

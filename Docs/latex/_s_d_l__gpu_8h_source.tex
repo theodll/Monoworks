@@ -1,0 +1,1404 @@
+\doxysection{SDL\+\_\+gpu.\+h}
+\hypertarget{_s_d_l__gpu_8h_source}{}\label{_s_d_l__gpu_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_gpu.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_gpu.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ WIKI\ CATEGORY:\ GPU\ */}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#ifndef\ SDL\_gpu\_h\_}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#define\ SDL\_gpu\_h\_}}
+\DoxyCodeLine{00391\ }
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_pixels.h>}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_rect.h>}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_surface.h>}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_video.h>}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00401\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_cplusplus\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \textcolor{comment}{/*\ Type\ Declarations\ */}}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00411\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}};}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00435\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUBuffer\ SDL\_GPUBuffer;}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00453\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUTransferBuffer\ SDL\_GPUTransferBuffer;}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00473\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUTexture\ SDL\_GPUTexture;}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00485\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUSampler\ SDL\_GPUSampler;}
+\DoxyCodeLine{00486\ }
+\DoxyCodeLine{00496\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUShader\ SDL\_GPUShader;}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00509\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUComputePipeline\ SDL\_GPUComputePipeline;}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00522\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUGraphicsPipeline\ SDL\_GPUGraphicsPipeline;}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00547\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUCommandBuffer\ SDL\_GPUCommandBuffer;}
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00560\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPURenderPass\ SDL\_GPURenderPass;}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00573\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUComputePass\ SDL\_GPUComputePass;}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00586\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUCopyPass\ SDL\_GPUCopyPass;}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00598\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GPUFence\ SDL\_GPUFence;}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00621\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUPrimitiveType}
+\DoxyCodeLine{00622\ \{}
+\DoxyCodeLine{00623\ \ \ \ \ SDL\_GPU\_PRIMITIVETYPE\_TRIANGLELIST,\ \ }
+\DoxyCodeLine{00624\ \ \ \ \ SDL\_GPU\_PRIMITIVETYPE\_TRIANGLESTRIP,\ }
+\DoxyCodeLine{00625\ \ \ \ \ SDL\_GPU\_PRIMITIVETYPE\_LINELIST,\ \ \ \ \ \ }
+\DoxyCodeLine{00626\ \ \ \ \ SDL\_GPU\_PRIMITIVETYPE\_LINESTRIP,\ \ \ \ \ }
+\DoxyCodeLine{00627\ \ \ \ \ SDL\_GPU\_PRIMITIVETYPE\_POINTLIST\ \ \ \ \ \ }
+\DoxyCodeLine{00628\ \}\ SDL\_GPUPrimitiveType;}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00638\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPULoadOp}
+\DoxyCodeLine{00639\ \{}
+\DoxyCodeLine{00640\ \ \ \ \ SDL\_GPU\_LOADOP\_LOAD,\ \ \ \ \ \ }
+\DoxyCodeLine{00641\ \ \ \ \ SDL\_GPU\_LOADOP\_CLEAR,\ \ \ \ \ }
+\DoxyCodeLine{00642\ \ \ \ \ SDL\_GPU\_LOADOP\_DONT\_CARE\ \ }
+\DoxyCodeLine{00643\ \}\ SDL\_GPULoadOp;}
+\DoxyCodeLine{00644\ }
+\DoxyCodeLine{00653\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUStoreOp}
+\DoxyCodeLine{00654\ \{}
+\DoxyCodeLine{00655\ \ \ \ \ SDL\_GPU\_STOREOP\_STORE,\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00656\ \ \ \ \ SDL\_GPU\_STOREOP\_DONT\_CARE,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00657\ \ \ \ \ SDL\_GPU\_STOREOP\_RESOLVE,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00658\ \ \ \ \ SDL\_GPU\_STOREOP\_RESOLVE\_AND\_STORE\ \ }
+\DoxyCodeLine{00659\ \}\ SDL\_GPUStoreOp;}
+\DoxyCodeLine{00660\ }
+\DoxyCodeLine{00668\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUIndexElementSize}
+\DoxyCodeLine{00669\ \{}
+\DoxyCodeLine{00670\ \ \ \ \ SDL\_GPU\_INDEXELEMENTSIZE\_16BIT,\ }
+\DoxyCodeLine{00671\ \ \ \ \ SDL\_GPU\_INDEXELEMENTSIZE\_32BIT\ \ }
+\DoxyCodeLine{00672\ \}\ SDL\_GPUIndexElementSize;}
+\DoxyCodeLine{00673\ }
+\DoxyCodeLine{00759\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUTextureFormat}
+\DoxyCodeLine{00760\ \{}
+\DoxyCodeLine{00761\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_INVALID,}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{comment}{/*\ Unsigned\ Normalized\ Float\ Color\ Formats\ */}}
+\DoxyCodeLine{00764\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_A8\_UNORM,}
+\DoxyCodeLine{00765\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8\_UNORM,}
+\DoxyCodeLine{00766\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8\_UNORM,}
+\DoxyCodeLine{00767\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8B8A8\_UNORM,}
+\DoxyCodeLine{00768\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16\_UNORM,}
+\DoxyCodeLine{00769\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16\_UNORM,}
+\DoxyCodeLine{00770\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16B16A16\_UNORM,}
+\DoxyCodeLine{00771\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R10G10B10A2\_UNORM,}
+\DoxyCodeLine{00772\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_B5G6R5\_UNORM,}
+\DoxyCodeLine{00773\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_B5G5R5A1\_UNORM,}
+\DoxyCodeLine{00774\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_B4G4R4A4\_UNORM,}
+\DoxyCodeLine{00775\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_B8G8R8A8\_UNORM,}
+\DoxyCodeLine{00776\ \ \ \ \ \textcolor{comment}{/*\ Compressed\ Unsigned\ Normalized\ Float\ Color\ Formats\ */}}
+\DoxyCodeLine{00777\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC1\_RGBA\_UNORM,}
+\DoxyCodeLine{00778\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC2\_RGBA\_UNORM,}
+\DoxyCodeLine{00779\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC3\_RGBA\_UNORM,}
+\DoxyCodeLine{00780\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC4\_R\_UNORM,}
+\DoxyCodeLine{00781\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC5\_RG\_UNORM,}
+\DoxyCodeLine{00782\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC7\_RGBA\_UNORM,}
+\DoxyCodeLine{00783\ \ \ \ \ \textcolor{comment}{/*\ Compressed\ Signed\ Float\ Color\ Formats\ */}}
+\DoxyCodeLine{00784\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC6H\_RGB\_FLOAT,}
+\DoxyCodeLine{00785\ \ \ \ \ \textcolor{comment}{/*\ Compressed\ Unsigned\ Float\ Color\ Formats\ */}}
+\DoxyCodeLine{00786\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC6H\_RGB\_UFLOAT,}
+\DoxyCodeLine{00787\ \ \ \ \ \textcolor{comment}{/*\ Signed\ Normalized\ Float\ Color\ Formats\ \ */}}
+\DoxyCodeLine{00788\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8\_SNORM,}
+\DoxyCodeLine{00789\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8\_SNORM,}
+\DoxyCodeLine{00790\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8B8A8\_SNORM,}
+\DoxyCodeLine{00791\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16\_SNORM,}
+\DoxyCodeLine{00792\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16\_SNORM,}
+\DoxyCodeLine{00793\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16B16A16\_SNORM,}
+\DoxyCodeLine{00794\ \ \ \ \ \textcolor{comment}{/*\ Signed\ Float\ Color\ Formats\ */}}
+\DoxyCodeLine{00795\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16\_FLOAT,}
+\DoxyCodeLine{00796\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16\_FLOAT,}
+\DoxyCodeLine{00797\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16B16A16\_FLOAT,}
+\DoxyCodeLine{00798\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32\_FLOAT,}
+\DoxyCodeLine{00799\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32G32\_FLOAT,}
+\DoxyCodeLine{00800\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32G32B32A32\_FLOAT,}
+\DoxyCodeLine{00801\ \ \ \ \ \textcolor{comment}{/*\ Unsigned\ Float\ Color\ Formats\ */}}
+\DoxyCodeLine{00802\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R11G11B10\_UFLOAT,}
+\DoxyCodeLine{00803\ \ \ \ \ \textcolor{comment}{/*\ Unsigned\ Integer\ Color\ Formats\ */}}
+\DoxyCodeLine{00804\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8\_UINT,}
+\DoxyCodeLine{00805\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8\_UINT,}
+\DoxyCodeLine{00806\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8B8A8\_UINT,}
+\DoxyCodeLine{00807\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16\_UINT,}
+\DoxyCodeLine{00808\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16\_UINT,}
+\DoxyCodeLine{00809\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16B16A16\_UINT,}
+\DoxyCodeLine{00810\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32\_UINT,}
+\DoxyCodeLine{00811\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32G32\_UINT,}
+\DoxyCodeLine{00812\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32G32B32A32\_UINT,}
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{comment}{/*\ Signed\ Integer\ Color\ Formats\ */}}
+\DoxyCodeLine{00814\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8\_INT,}
+\DoxyCodeLine{00815\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8\_INT,}
+\DoxyCodeLine{00816\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8B8A8\_INT,}
+\DoxyCodeLine{00817\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16\_INT,}
+\DoxyCodeLine{00818\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16\_INT,}
+\DoxyCodeLine{00819\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R16G16B16A16\_INT,}
+\DoxyCodeLine{00820\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32\_INT,}
+\DoxyCodeLine{00821\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32G32\_INT,}
+\DoxyCodeLine{00822\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R32G32B32A32\_INT,}
+\DoxyCodeLine{00823\ \ \ \ \ \textcolor{comment}{/*\ SRGB\ Unsigned\ Normalized\ Color\ Formats\ */}}
+\DoxyCodeLine{00824\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_R8G8B8A8\_UNORM\_SRGB,}
+\DoxyCodeLine{00825\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_B8G8R8A8\_UNORM\_SRGB,}
+\DoxyCodeLine{00826\ \ \ \ \ \textcolor{comment}{/*\ Compressed\ SRGB\ Unsigned\ Normalized\ Color\ Formats\ */}}
+\DoxyCodeLine{00827\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC1\_RGBA\_UNORM\_SRGB,}
+\DoxyCodeLine{00828\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC2\_RGBA\_UNORM\_SRGB,}
+\DoxyCodeLine{00829\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC3\_RGBA\_UNORM\_SRGB,}
+\DoxyCodeLine{00830\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_BC7\_RGBA\_UNORM\_SRGB,}
+\DoxyCodeLine{00831\ \ \ \ \ \textcolor{comment}{/*\ Depth\ Formats\ */}}
+\DoxyCodeLine{00832\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_D16\_UNORM,}
+\DoxyCodeLine{00833\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_D24\_UNORM,}
+\DoxyCodeLine{00834\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_D32\_FLOAT,}
+\DoxyCodeLine{00835\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_D24\_UNORM\_S8\_UINT,}
+\DoxyCodeLine{00836\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_D32\_FLOAT\_S8\_UINT,}
+\DoxyCodeLine{00837\ \ \ \ \ \textcolor{comment}{/*\ Compressed\ ASTC\ Normalized\ Float\ Color\ Formats*/}}
+\DoxyCodeLine{00838\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_4x4\_UNORM,}
+\DoxyCodeLine{00839\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_5x4\_UNORM,}
+\DoxyCodeLine{00840\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_5x5\_UNORM,}
+\DoxyCodeLine{00841\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_6x5\_UNORM,}
+\DoxyCodeLine{00842\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_6x6\_UNORM,}
+\DoxyCodeLine{00843\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x5\_UNORM,}
+\DoxyCodeLine{00844\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x6\_UNORM,}
+\DoxyCodeLine{00845\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x8\_UNORM,}
+\DoxyCodeLine{00846\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x5\_UNORM,}
+\DoxyCodeLine{00847\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x6\_UNORM,}
+\DoxyCodeLine{00848\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x8\_UNORM,}
+\DoxyCodeLine{00849\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x10\_UNORM,}
+\DoxyCodeLine{00850\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_12x10\_UNORM,}
+\DoxyCodeLine{00851\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_12x12\_UNORM,}
+\DoxyCodeLine{00852\ \ \ \ \ \textcolor{comment}{/*\ Compressed\ SRGB\ ASTC\ Normalized\ Float\ Color\ Formats*/}}
+\DoxyCodeLine{00853\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_4x4\_UNORM\_SRGB,}
+\DoxyCodeLine{00854\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_5x4\_UNORM\_SRGB,}
+\DoxyCodeLine{00855\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_5x5\_UNORM\_SRGB,}
+\DoxyCodeLine{00856\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_6x5\_UNORM\_SRGB,}
+\DoxyCodeLine{00857\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_6x6\_UNORM\_SRGB,}
+\DoxyCodeLine{00858\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x5\_UNORM\_SRGB,}
+\DoxyCodeLine{00859\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x6\_UNORM\_SRGB,}
+\DoxyCodeLine{00860\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x8\_UNORM\_SRGB,}
+\DoxyCodeLine{00861\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x5\_UNORM\_SRGB,}
+\DoxyCodeLine{00862\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x6\_UNORM\_SRGB,}
+\DoxyCodeLine{00863\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x8\_UNORM\_SRGB,}
+\DoxyCodeLine{00864\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x10\_UNORM\_SRGB,}
+\DoxyCodeLine{00865\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_12x10\_UNORM\_SRGB,}
+\DoxyCodeLine{00866\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_12x12\_UNORM\_SRGB,}
+\DoxyCodeLine{00867\ \ \ \ \ \textcolor{comment}{/*\ Compressed\ ASTC\ Signed\ Float\ Color\ Formats*/}}
+\DoxyCodeLine{00868\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_4x4\_FLOAT,}
+\DoxyCodeLine{00869\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_5x4\_FLOAT,}
+\DoxyCodeLine{00870\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_5x5\_FLOAT,}
+\DoxyCodeLine{00871\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_6x5\_FLOAT,}
+\DoxyCodeLine{00872\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_6x6\_FLOAT,}
+\DoxyCodeLine{00873\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x5\_FLOAT,}
+\DoxyCodeLine{00874\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x6\_FLOAT,}
+\DoxyCodeLine{00875\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_8x8\_FLOAT,}
+\DoxyCodeLine{00876\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x5\_FLOAT,}
+\DoxyCodeLine{00877\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x6\_FLOAT,}
+\DoxyCodeLine{00878\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x8\_FLOAT,}
+\DoxyCodeLine{00879\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_10x10\_FLOAT,}
+\DoxyCodeLine{00880\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_12x10\_FLOAT,}
+\DoxyCodeLine{00881\ \ \ \ \ SDL\_GPU\_TEXTUREFORMAT\_ASTC\_12x12\_FLOAT}
+\DoxyCodeLine{00882\ \}\ SDL\_GPUTextureFormat;}
+\DoxyCodeLine{00883\ }
+\DoxyCodeLine{00904\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_GPUTextureUsageFlags;}
+\DoxyCodeLine{00905\ }
+\DoxyCodeLine{00906\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_TEXTUREUSAGE\_SAMPLER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 0)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00907\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_TEXTUREUSAGE\_COLOR\_TARGET\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 1)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00908\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_TEXTUREUSAGE\_DEPTH\_STENCIL\_TARGET\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 2)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00909\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_TEXTUREUSAGE\_GRAPHICS\_STORAGE\_READ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 3)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00910\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_TEXTUREUSAGE\_COMPUTE\_STORAGE\_READ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 4)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00911\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_TEXTUREUSAGE\_COMPUTE\_STORAGE\_WRITE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 5)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00912\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_TEXTUREUSAGE\_COMPUTE\_STORAGE\_SIMULTANEOUS\_READ\_WRITE\ (1u\ <<\ 6)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00913\ }
+\DoxyCodeLine{00921\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUTextureType}
+\DoxyCodeLine{00922\ \{}
+\DoxyCodeLine{00923\ \ \ \ \ SDL\_GPU\_TEXTURETYPE\_2D,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00924\ \ \ \ \ SDL\_GPU\_TEXTURETYPE\_2D\_ARRAY,\ \ \ }
+\DoxyCodeLine{00925\ \ \ \ \ SDL\_GPU\_TEXTURETYPE\_3D,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00926\ \ \ \ \ SDL\_GPU\_TEXTURETYPE\_CUBE,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00927\ \ \ \ \ SDL\_GPU\_TEXTURETYPE\_CUBE\_ARRAY\ \ }
+\DoxyCodeLine{00928\ \}\ SDL\_GPUTextureType;}
+\DoxyCodeLine{00929\ }
+\DoxyCodeLine{00941\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUSampleCount}
+\DoxyCodeLine{00942\ \{}
+\DoxyCodeLine{00943\ \ \ \ \ SDL\_GPU\_SAMPLECOUNT\_1,\ \ }
+\DoxyCodeLine{00944\ \ \ \ \ SDL\_GPU\_SAMPLECOUNT\_2,\ \ }
+\DoxyCodeLine{00945\ \ \ \ \ SDL\_GPU\_SAMPLECOUNT\_4,\ \ }
+\DoxyCodeLine{00946\ \ \ \ \ SDL\_GPU\_SAMPLECOUNT\_8\ \ \ }
+\DoxyCodeLine{00947\ \}\ SDL\_GPUSampleCount;}
+\DoxyCodeLine{00948\ }
+\DoxyCodeLine{00949\ }
+\DoxyCodeLine{00957\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUCubeMapFace}
+\DoxyCodeLine{00958\ \{}
+\DoxyCodeLine{00959\ \ \ \ \ SDL\_GPU\_CUBEMAPFACE\_POSITIVEX,}
+\DoxyCodeLine{00960\ \ \ \ \ SDL\_GPU\_CUBEMAPFACE\_NEGATIVEX,}
+\DoxyCodeLine{00961\ \ \ \ \ SDL\_GPU\_CUBEMAPFACE\_POSITIVEY,}
+\DoxyCodeLine{00962\ \ \ \ \ SDL\_GPU\_CUBEMAPFACE\_NEGATIVEY,}
+\DoxyCodeLine{00963\ \ \ \ \ SDL\_GPU\_CUBEMAPFACE\_POSITIVEZ,}
+\DoxyCodeLine{00964\ \ \ \ \ SDL\_GPU\_CUBEMAPFACE\_NEGATIVEZ}
+\DoxyCodeLine{00965\ \}\ SDL\_GPUCubeMapFace;}
+\DoxyCodeLine{00966\ }
+\DoxyCodeLine{00984\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_GPUBufferUsageFlags;}
+\DoxyCodeLine{00985\ }
+\DoxyCodeLine{00986\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BUFFERUSAGE\_VERTEX\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 0)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00987\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BUFFERUSAGE\_INDEX\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 1)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00988\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BUFFERUSAGE\_INDIRECT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 2)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00989\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BUFFERUSAGE\_GRAPHICS\_STORAGE\_READ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 3)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00990\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BUFFERUSAGE\_COMPUTE\_STORAGE\_READ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 4)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00991\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BUFFERUSAGE\_COMPUTE\_STORAGE\_WRITE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1u\ <<\ 5)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00992\ }
+\DoxyCodeLine{01003\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUTransferBufferUsage}
+\DoxyCodeLine{01004\ \{}
+\DoxyCodeLine{01005\ \ \ \ \ SDL\_GPU\_TRANSFERBUFFERUSAGE\_UPLOAD,}
+\DoxyCodeLine{01006\ \ \ \ \ SDL\_GPU\_TRANSFERBUFFERUSAGE\_DOWNLOAD}
+\DoxyCodeLine{01007\ \}\ SDL\_GPUTransferBufferUsage;}
+\DoxyCodeLine{01008\ }
+\DoxyCodeLine{01016\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUShaderStage}
+\DoxyCodeLine{01017\ \{}
+\DoxyCodeLine{01018\ \ \ \ \ SDL\_GPU\_SHADERSTAGE\_VERTEX,}
+\DoxyCodeLine{01019\ \ \ \ \ SDL\_GPU\_SHADERSTAGE\_FRAGMENT}
+\DoxyCodeLine{01020\ \}\ SDL\_GPUShaderStage;}
+\DoxyCodeLine{01021\ }
+\DoxyCodeLine{01031\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_GPUShaderFormat;}
+\DoxyCodeLine{01032\ }
+\DoxyCodeLine{01033\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_SHADERFORMAT\_INVALID\ \ 0}}
+\DoxyCodeLine{01034\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_SHADERFORMAT\_PRIVATE\ \ (1u\ <<\ 0)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01035\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_SHADERFORMAT\_SPIRV\ \ \ \ (1u\ <<\ 1)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01036\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_SHADERFORMAT\_DXBC\ \ \ \ \ (1u\ <<\ 2)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01037\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_SHADERFORMAT\_DXIL\ \ \ \ \ (1u\ <<\ 3)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01038\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_SHADERFORMAT\_MSL\ \ \ \ \ \ (1u\ <<\ 4)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01039\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_SHADERFORMAT\_METALLIB\ (1u\ <<\ 5)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUVertexElementFormat}
+\DoxyCodeLine{01049\ \{}
+\DoxyCodeLine{01050\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_INVALID,}
+\DoxyCodeLine{01051\ }
+\DoxyCodeLine{01052\ \ \ \ \ \textcolor{comment}{/*\ 32-\/bit\ Signed\ Integers\ */}}
+\DoxyCodeLine{01053\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_INT,}
+\DoxyCodeLine{01054\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_INT2,}
+\DoxyCodeLine{01055\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_INT3,}
+\DoxyCodeLine{01056\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_INT4,}
+\DoxyCodeLine{01057\ }
+\DoxyCodeLine{01058\ \ \ \ \ \textcolor{comment}{/*\ 32-\/bit\ Unsigned\ Integers\ */}}
+\DoxyCodeLine{01059\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UINT,}
+\DoxyCodeLine{01060\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UINT2,}
+\DoxyCodeLine{01061\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UINT3,}
+\DoxyCodeLine{01062\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UINT4,}
+\DoxyCodeLine{01063\ }
+\DoxyCodeLine{01064\ \ \ \ \ \textcolor{comment}{/*\ 32-\/bit\ Floats\ */}}
+\DoxyCodeLine{01065\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_FLOAT,}
+\DoxyCodeLine{01066\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_FLOAT2,}
+\DoxyCodeLine{01067\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_FLOAT3,}
+\DoxyCodeLine{01068\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_FLOAT4,}
+\DoxyCodeLine{01069\ }
+\DoxyCodeLine{01070\ \ \ \ \ \textcolor{comment}{/*\ 8-\/bit\ Signed\ Integers\ */}}
+\DoxyCodeLine{01071\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_BYTE2,}
+\DoxyCodeLine{01072\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_BYTE4,}
+\DoxyCodeLine{01073\ }
+\DoxyCodeLine{01074\ \ \ \ \ \textcolor{comment}{/*\ 8-\/bit\ Unsigned\ Integers\ */}}
+\DoxyCodeLine{01075\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UBYTE2,}
+\DoxyCodeLine{01076\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UBYTE4,}
+\DoxyCodeLine{01077\ }
+\DoxyCodeLine{01078\ \ \ \ \ \textcolor{comment}{/*\ 8-\/bit\ Signed\ Normalized\ */}}
+\DoxyCodeLine{01079\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_BYTE2\_NORM,}
+\DoxyCodeLine{01080\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_BYTE4\_NORM,}
+\DoxyCodeLine{01081\ }
+\DoxyCodeLine{01082\ \ \ \ \ \textcolor{comment}{/*\ 8-\/bit\ Unsigned\ Normalized\ */}}
+\DoxyCodeLine{01083\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UBYTE2\_NORM,}
+\DoxyCodeLine{01084\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_UBYTE4\_NORM,}
+\DoxyCodeLine{01085\ }
+\DoxyCodeLine{01086\ \ \ \ \ \textcolor{comment}{/*\ 16-\/bit\ Signed\ Integers\ */}}
+\DoxyCodeLine{01087\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_SHORT2,}
+\DoxyCodeLine{01088\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_SHORT4,}
+\DoxyCodeLine{01089\ }
+\DoxyCodeLine{01090\ \ \ \ \ \textcolor{comment}{/*\ 16-\/bit\ Unsigned\ Integers\ */}}
+\DoxyCodeLine{01091\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_USHORT2,}
+\DoxyCodeLine{01092\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_USHORT4,}
+\DoxyCodeLine{01093\ }
+\DoxyCodeLine{01094\ \ \ \ \ \textcolor{comment}{/*\ 16-\/bit\ Signed\ Normalized\ */}}
+\DoxyCodeLine{01095\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_SHORT2\_NORM,}
+\DoxyCodeLine{01096\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_SHORT4\_NORM,}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \ \ \ \ \textcolor{comment}{/*\ 16-\/bit\ Unsigned\ Normalized\ */}}
+\DoxyCodeLine{01099\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_USHORT2\_NORM,}
+\DoxyCodeLine{01100\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_USHORT4\_NORM,}
+\DoxyCodeLine{01101\ }
+\DoxyCodeLine{01102\ \ \ \ \ \textcolor{comment}{/*\ 16-\/bit\ Floats\ */}}
+\DoxyCodeLine{01103\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_HALF2,}
+\DoxyCodeLine{01104\ \ \ \ \ SDL\_GPU\_VERTEXELEMENTFORMAT\_HALF4}
+\DoxyCodeLine{01105\ \}\ SDL\_GPUVertexElementFormat;}
+\DoxyCodeLine{01106\ }
+\DoxyCodeLine{01114\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUVertexInputRate}
+\DoxyCodeLine{01115\ \{}
+\DoxyCodeLine{01116\ \ \ \ \ SDL\_GPU\_VERTEXINPUTRATE\_VERTEX,\ \ \ }
+\DoxyCodeLine{01117\ \ \ \ \ SDL\_GPU\_VERTEXINPUTRATE\_INSTANCE\ \ }
+\DoxyCodeLine{01118\ \}\ SDL\_GPUVertexInputRate;}
+\DoxyCodeLine{01119\ }
+\DoxyCodeLine{01127\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUFillMode}
+\DoxyCodeLine{01128\ \{}
+\DoxyCodeLine{01129\ \ \ \ \ SDL\_GPU\_FILLMODE\_FILL,\ \ }
+\DoxyCodeLine{01130\ \ \ \ \ SDL\_GPU\_FILLMODE\_LINE\ \ \ }
+\DoxyCodeLine{01131\ \}\ SDL\_GPUFillMode;}
+\DoxyCodeLine{01132\ }
+\DoxyCodeLine{01140\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUCullMode}
+\DoxyCodeLine{01141\ \{}
+\DoxyCodeLine{01142\ \ \ \ \ SDL\_GPU\_CULLMODE\_NONE,\ \ \ }
+\DoxyCodeLine{01143\ \ \ \ \ SDL\_GPU\_CULLMODE\_FRONT,\ \ }
+\DoxyCodeLine{01144\ \ \ \ \ SDL\_GPU\_CULLMODE\_BACK\ \ \ \ }
+\DoxyCodeLine{01145\ \}\ SDL\_GPUCullMode;}
+\DoxyCodeLine{01146\ }
+\DoxyCodeLine{01155\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUFrontFace}
+\DoxyCodeLine{01156\ \{}
+\DoxyCodeLine{01157\ \ \ \ \ SDL\_GPU\_FRONTFACE\_COUNTER\_CLOCKWISE,\ \ }
+\DoxyCodeLine{01158\ \ \ \ \ SDL\_GPU\_FRONTFACE\_CLOCKWISE\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01159\ \}\ SDL\_GPUFrontFace;}
+\DoxyCodeLine{01160\ }
+\DoxyCodeLine{01168\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUCompareOp}
+\DoxyCodeLine{01169\ \{}
+\DoxyCodeLine{01170\ \ \ \ \ SDL\_GPU\_COMPAREOP\_INVALID,}
+\DoxyCodeLine{01171\ \ \ \ \ SDL\_GPU\_COMPAREOP\_NEVER,\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01172\ \ \ \ \ SDL\_GPU\_COMPAREOP\_LESS,\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01173\ \ \ \ \ SDL\_GPU\_COMPAREOP\_EQUAL,\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01174\ \ \ \ \ SDL\_GPU\_COMPAREOP\_LESS\_OR\_EQUAL,\ \ \ \ \ }
+\DoxyCodeLine{01175\ \ \ \ \ SDL\_GPU\_COMPAREOP\_GREATER,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01176\ \ \ \ \ SDL\_GPU\_COMPAREOP\_NOT\_EQUAL,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01177\ \ \ \ \ SDL\_GPU\_COMPAREOP\_GREATER\_OR\_EQUAL,\ \ }
+\DoxyCodeLine{01178\ \ \ \ \ SDL\_GPU\_COMPAREOP\_ALWAYS\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01179\ \}\ SDL\_GPUCompareOp;}
+\DoxyCodeLine{01180\ }
+\DoxyCodeLine{01189\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUStencilOp}
+\DoxyCodeLine{01190\ \{}
+\DoxyCodeLine{01191\ \ \ \ \ SDL\_GPU\_STENCILOP\_INVALID,}
+\DoxyCodeLine{01192\ \ \ \ \ SDL\_GPU\_STENCILOP\_KEEP,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01193\ \ \ \ \ SDL\_GPU\_STENCILOP\_ZERO,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01194\ \ \ \ \ SDL\_GPU\_STENCILOP\_REPLACE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01195\ \ \ \ \ SDL\_GPU\_STENCILOP\_INCREMENT\_AND\_CLAMP,\ \ }
+\DoxyCodeLine{01196\ \ \ \ \ SDL\_GPU\_STENCILOP\_DECREMENT\_AND\_CLAMP,\ \ }
+\DoxyCodeLine{01197\ \ \ \ \ SDL\_GPU\_STENCILOP\_INVERT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01198\ \ \ \ \ SDL\_GPU\_STENCILOP\_INCREMENT\_AND\_WRAP,\ \ \ }
+\DoxyCodeLine{01199\ \ \ \ \ SDL\_GPU\_STENCILOP\_DECREMENT\_AND\_WRAP\ \ \ \ }
+\DoxyCodeLine{01200\ \}\ SDL\_GPUStencilOp;}
+\DoxyCodeLine{01201\ }
+\DoxyCodeLine{01213\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUBlendOp}
+\DoxyCodeLine{01214\ \{}
+\DoxyCodeLine{01215\ \ \ \ \ SDL\_GPU\_BLENDOP\_INVALID,}
+\DoxyCodeLine{01216\ \ \ \ \ SDL\_GPU\_BLENDOP\_ADD,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01217\ \ \ \ \ SDL\_GPU\_BLENDOP\_SUBTRACT,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01218\ \ \ \ \ SDL\_GPU\_BLENDOP\_REVERSE\_SUBTRACT,\ \ }
+\DoxyCodeLine{01219\ \ \ \ \ SDL\_GPU\_BLENDOP\_MIN,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01220\ \ \ \ \ SDL\_GPU\_BLENDOP\_MAX\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01221\ \}\ SDL\_GPUBlendOp;}
+\DoxyCodeLine{01222\ }
+\DoxyCodeLine{01234\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUBlendFactor}
+\DoxyCodeLine{01235\ \{}
+\DoxyCodeLine{01236\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_INVALID,}
+\DoxyCodeLine{01237\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_ZERO,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01238\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_ONE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01239\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_SRC\_COLOR,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01240\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_SRC\_COLOR,\ \ \ \ \ \ \ }
+\DoxyCodeLine{01241\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_DST\_COLOR,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01242\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_DST\_COLOR,\ \ \ \ \ \ \ }
+\DoxyCodeLine{01243\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_SRC\_ALPHA,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01244\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_SRC\_ALPHA,\ \ \ \ \ \ \ }
+\DoxyCodeLine{01245\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_DST\_ALPHA,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01246\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_DST\_ALPHA,\ \ \ \ \ \ \ }
+\DoxyCodeLine{01247\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_CONSTANT\_COLOR,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01248\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_CONSTANT\_COLOR,\ \ }
+\DoxyCodeLine{01249\ \ \ \ \ SDL\_GPU\_BLENDFACTOR\_SRC\_ALPHA\_SATURATE\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01250\ \}\ SDL\_GPUBlendFactor;}
+\DoxyCodeLine{01251\ }
+\DoxyCodeLine{01259\ \textcolor{keyword}{typedef}\ Uint8\ SDL\_GPUColorComponentFlags;}
+\DoxyCodeLine{01260\ }
+\DoxyCodeLine{01261\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_COLORCOMPONENT\_R\ (1u\ <<\ 0)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01262\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_COLORCOMPONENT\_G\ (1u\ <<\ 1)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01263\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_COLORCOMPONENT\_B\ (1u\ <<\ 2)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01264\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_COLORCOMPONENT\_A\ (1u\ <<\ 3)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{01265\ }
+\DoxyCodeLine{01273\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUFilter}
+\DoxyCodeLine{01274\ \{}
+\DoxyCodeLine{01275\ \ \ \ \ SDL\_GPU\_FILTER\_NEAREST,\ \ }
+\DoxyCodeLine{01276\ \ \ \ \ SDL\_GPU\_FILTER\_LINEAR\ \ \ \ }
+\DoxyCodeLine{01277\ \}\ SDL\_GPUFilter;}
+\DoxyCodeLine{01278\ }
+\DoxyCodeLine{01286\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUSamplerMipmapMode}
+\DoxyCodeLine{01287\ \{}
+\DoxyCodeLine{01288\ \ \ \ \ SDL\_GPU\_SAMPLERMIPMAPMODE\_NEAREST,\ \ }
+\DoxyCodeLine{01289\ \ \ \ \ SDL\_GPU\_SAMPLERMIPMAPMODE\_LINEAR\ \ \ \ }
+\DoxyCodeLine{01290\ \}\ SDL\_GPUSamplerMipmapMode;}
+\DoxyCodeLine{01291\ }
+\DoxyCodeLine{01300\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUSamplerAddressMode}
+\DoxyCodeLine{01301\ \{}
+\DoxyCodeLine{01302\ \ \ \ \ SDL\_GPU\_SAMPLERADDRESSMODE\_REPEAT,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01303\ \ \ \ \ SDL\_GPU\_SAMPLERADDRESSMODE\_MIRRORED\_REPEAT,\ \ }
+\DoxyCodeLine{01304\ \ \ \ \ SDL\_GPU\_SAMPLERADDRESSMODE\_CLAMP\_TO\_EDGE\ \ \ \ \ }
+\DoxyCodeLine{01305\ \}\ SDL\_GPUSamplerAddressMode;}
+\DoxyCodeLine{01306\ }
+\DoxyCodeLine{01332\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUPresentMode}
+\DoxyCodeLine{01333\ \{}
+\DoxyCodeLine{01334\ \ \ \ \ SDL\_GPU\_PRESENTMODE\_VSYNC,}
+\DoxyCodeLine{01335\ \ \ \ \ SDL\_GPU\_PRESENTMODE\_IMMEDIATE,}
+\DoxyCodeLine{01336\ \ \ \ \ SDL\_GPU\_PRESENTMODE\_MAILBOX}
+\DoxyCodeLine{01337\ \}\ SDL\_GPUPresentMode;}
+\DoxyCodeLine{01338\ }
+\DoxyCodeLine{01365\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GPUSwapchainComposition}
+\DoxyCodeLine{01366\ \{}
+\DoxyCodeLine{01367\ \ \ \ \ SDL\_GPU\_SWAPCHAINCOMPOSITION\_SDR,}
+\DoxyCodeLine{01368\ \ \ \ \ SDL\_GPU\_SWAPCHAINCOMPOSITION\_SDR\_LINEAR,}
+\DoxyCodeLine{01369\ \ \ \ \ SDL\_GPU\_SWAPCHAINCOMPOSITION\_HDR\_EXTENDED\_LINEAR,}
+\DoxyCodeLine{01370\ \ \ \ \ SDL\_GPU\_SWAPCHAINCOMPOSITION\_HDR10\_ST2084}
+\DoxyCodeLine{01371\ \}\ SDL\_GPUSwapchainComposition;}
+\DoxyCodeLine{01372\ }
+\DoxyCodeLine{01373\ \textcolor{comment}{/*\ Structures\ */}}
+\DoxyCodeLine{01374\ }
+\DoxyCodeLine{01382\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport}{SDL\_GPUViewport}}}
+\DoxyCodeLine{01383\ \{}
+\DoxyCodeLine{01384\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport_a857a846fec4436cee85cf44444d76af9}{x}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01385\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport_ad0a2cc794d258fe2a4d032aa6f929f43}{y}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01386\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport_a80d8fda1d5f70618a96856ce2eb4d0c4}{w}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01387\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport_a51198d957a8cf766660c69250cf96f4d}{h}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01388\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport_a5d4a43ee1b8e1d73eff12c5d0393d1cf}{min\_depth}};\ \ }
+\DoxyCodeLine{01389\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport_a89b33a72388de9c7541cc24ec9480698}{max\_depth}};\ \ }
+\DoxyCodeLine{01390\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport}{SDL\_GPUViewport}};}
+\DoxyCodeLine{01391\ }
+\DoxyCodeLine{01413\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info}{SDL\_GPUTextureTransferInfo}}}
+\DoxyCodeLine{01414\ \{}
+\DoxyCodeLine{01415\ \ \ \ \ SDL\_GPUTransferBuffer\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_a2694310f1b590e82c38325ed0b02decc}{transfer\_buffer}};\ \ }
+\DoxyCodeLine{01416\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_a340f8733c1db1c81d38536d6e1b9f309}{offset}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01417\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_a88bd2cc67ced0dcb8b286af477887179}{pixels\_per\_row}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01418\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info_ae57e799b9fc5487fdd4b2000667bc620}{rows\_per\_layer}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01419\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info}{SDL\_GPUTextureTransferInfo}};}
+\DoxyCodeLine{01420\ }
+\DoxyCodeLine{01431\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_location}{SDL\_GPUTransferBufferLocation}}}
+\DoxyCodeLine{01432\ \{}
+\DoxyCodeLine{01433\ \ \ \ \ SDL\_GPUTransferBuffer\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_location_a79c7358377ec11af8de002faa1c1cc5b}{transfer\_buffer}};\ \ }
+\DoxyCodeLine{01434\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_location_aab203a31a35b65f73eaeba84f066308a}{offset}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01435\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_location}{SDL\_GPUTransferBufferLocation}};}
+\DoxyCodeLine{01436\ }
+\DoxyCodeLine{01446\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location}{SDL\_GPUTextureLocation}}}
+\DoxyCodeLine{01447\ \{}
+\DoxyCodeLine{01448\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location_affc67b0015f45501ee13c254d9bab888}{texture}};\ \ }
+\DoxyCodeLine{01449\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location_ad1676559b91d5f582125fd8c0bda7e7b}{mip\_level}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01450\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location_a256ca4e4c92d8933382cba2a8d21c604}{layer}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01451\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location_a5a2ea5d149a69dcf3fe43fe14c1e2603}{x}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01452\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location_a68a05f7d2818da97a1c6a52aab628344}{y}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01453\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location_aee23dd762bd10025227aee81029afd30}{z}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01454\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location}{SDL\_GPUTextureLocation}};}
+\DoxyCodeLine{01455\ }
+\DoxyCodeLine{01467\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region}{SDL\_GPUTextureRegion}}}
+\DoxyCodeLine{01468\ \{}
+\DoxyCodeLine{01469\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_a46df0937781f97cac0260490269a3246}{texture}};\ \ }
+\DoxyCodeLine{01470\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_a7721921ba212dd16fb42ad4b97ef0071}{mip\_level}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01471\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_af94bd7455245495eb616c6abd3762b22}{layer}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01472\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_a641daa8e3059ed114299ab42d0793903}{x}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01473\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_ab5d18ef35a3223d5bfb50724b45d858e}{y}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01474\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_a08b4fd23af53c5c655805049282e50ce}{z}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01475\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_a6ece87c6f72f220211a75c4f407ef6e5}{w}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01476\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_a3b83c486851fe9ecb0b46f88412d8303}{h}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01477\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region_a07462be11b3898e7fc9f28ab1f395c44}{d}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01478\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region}{SDL\_GPUTextureRegion}};}
+\DoxyCodeLine{01479\ }
+\DoxyCodeLine{01487\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region}{SDL\_GPUBlitRegion}}}
+\DoxyCodeLine{01488\ \{}
+\DoxyCodeLine{01489\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region_a30f3bcf30a214adda36c915e127baba0}{texture}};\ \ \ \ \ \ }
+\DoxyCodeLine{01490\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region_ac51701ea5ea6a064395846dff4e8aca3}{mip\_level}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01491\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region_a8d25d5c31339a09a0edfd8acbc3e9c3b}{layer\_or\_depth\_plane}};\ \ }
+\DoxyCodeLine{01492\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region_a5ed14558004c0acbb708c2eb20bb3bfd}{x}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01493\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region_a08372053f0c1b1b680d5a75d0744fe77}{y}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01494\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region_a226835c55d85630bd02c40b7f9103c5a}{w}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01495\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region_aa4778d9a5af8e12f5c2f2ed1f3cc0107}{h}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01496\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region}{SDL\_GPUBlitRegion}};}
+\DoxyCodeLine{01497\ }
+\DoxyCodeLine{01507\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_location}{SDL\_GPUBufferLocation}}}
+\DoxyCodeLine{01508\ \{}
+\DoxyCodeLine{01509\ \ \ \ \ SDL\_GPUBuffer\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_location_a09fd24c90d31b350f4ab71fdd61f07f3}{buffer}};\ \ }
+\DoxyCodeLine{01510\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_location_aaba16be3ab71b86e1d8dd94fd205d6e9}{offset}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01511\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_location}{SDL\_GPUBufferLocation}};}
+\DoxyCodeLine{01512\ }
+\DoxyCodeLine{01523\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_region}{SDL\_GPUBufferRegion}}}
+\DoxyCodeLine{01524\ \{}
+\DoxyCodeLine{01525\ \ \ \ \ SDL\_GPUBuffer\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_region_a9acf21665de8fbaec145ae28e782957e}{buffer}};\ \ }
+\DoxyCodeLine{01526\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_region_ab6a3729eca7e7cf2ff029931394eb6ba}{offset}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01527\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_region_af9b2656f4b949ea4866b3f25b9121b3b}{size}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01528\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_region}{SDL\_GPUBufferRegion}};}
+\DoxyCodeLine{01529\ }
+\DoxyCodeLine{01544\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_draw_command}{SDL\_GPUIndirectDrawCommand}}}
+\DoxyCodeLine{01545\ \{}
+\DoxyCodeLine{01546\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_draw_command_af580a4099309839e90def8eaf083e64d}{num\_vertices}};\ \ \ }
+\DoxyCodeLine{01547\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_draw_command_ac93683a0957d946eb53b041cc95dfa15}{num\_instances}};\ \ }
+\DoxyCodeLine{01548\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_draw_command_a74726c16ed151dc1121b0ecc5601ad06}{first\_vertex}};\ \ \ }
+\DoxyCodeLine{01549\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_draw_command_a5a50c09f0c1828f0f658ac8385e0d429}{first\_instance}};\ }
+\DoxyCodeLine{01550\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_draw_command}{SDL\_GPUIndirectDrawCommand}};}
+\DoxyCodeLine{01551\ }
+\DoxyCodeLine{01566\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_indexed_indirect_draw_command}{SDL\_GPUIndexedIndirectDrawCommand}}}
+\DoxyCodeLine{01567\ \{}
+\DoxyCodeLine{01568\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indexed_indirect_draw_command_ad00e0d15fba620cf0fd7a9082866e95b}{num\_indices}};\ \ \ \ }
+\DoxyCodeLine{01569\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indexed_indirect_draw_command_abdcd414aa0fe1059f3f9b04b11a22e06}{num\_instances}};\ \ }
+\DoxyCodeLine{01570\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indexed_indirect_draw_command_ab2a42cd82e4dea02f4aea11440d68d5f}{first\_index}};\ \ \ \ }
+\DoxyCodeLine{01571\ \ \ \ \ Sint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indexed_indirect_draw_command_a9ca5fa10ff3757c2378cbeb47f20493d}{vertex\_offset}};\ \ }
+\DoxyCodeLine{01572\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indexed_indirect_draw_command_a8f9751b0dd3d82e909ecd70038afe4fc}{first\_instance}};\ }
+\DoxyCodeLine{01573\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indexed_indirect_draw_command}{SDL\_GPUIndexedIndirectDrawCommand}};}
+\DoxyCodeLine{01574\ }
+\DoxyCodeLine{01582\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_dispatch_command}{SDL\_GPUIndirectDispatchCommand}}}
+\DoxyCodeLine{01583\ \{}
+\DoxyCodeLine{01584\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_dispatch_command_af59e4ffaac6b5eaf5a331bb34e053391}{groupcount\_x}};\ \ }
+\DoxyCodeLine{01585\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_dispatch_command_a2a7a7da130962d0a9bdffc612ad8c175}{groupcount\_y}};\ \ }
+\DoxyCodeLine{01586\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_dispatch_command_a431fe8b38820b0d0e79421a80457ec9d}{groupcount\_z}};\ \ }
+\DoxyCodeLine{01587\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_indirect_dispatch_command}{SDL\_GPUIndirectDispatchCommand}};}
+\DoxyCodeLine{01588\ }
+\DoxyCodeLine{01589\ \textcolor{comment}{/*\ State\ structures\ */}}
+\DoxyCodeLine{01590\ }
+\DoxyCodeLine{01605\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info}{SDL\_GPUSamplerCreateInfo}}}
+\DoxyCodeLine{01606\ \{}
+\DoxyCodeLine{01607\ \ \ \ \ SDL\_GPUFilter\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_aa59418d65b0d44503a50ef5c9f980e5f}{min\_filter}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01608\ \ \ \ \ SDL\_GPUFilter\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a51505385d82c0ad83bc6c583fae0af2b}{mag\_filter}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01609\ \ \ \ \ SDL\_GPUSamplerMipmapMode\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a75795175e2a09909b387b8e909ff7072}{mipmap\_mode}};\ \ \ \ \ \ }
+\DoxyCodeLine{01610\ \ \ \ \ SDL\_GPUSamplerAddressMode\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a734cf4cac5a96136193d4e816bb7ed06}{address\_mode\_u}};\ \ }
+\DoxyCodeLine{01611\ \ \ \ \ SDL\_GPUSamplerAddressMode\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a864d605db098fe6aa4d930d53fe8b915}{address\_mode\_v}};\ \ }
+\DoxyCodeLine{01612\ \ \ \ \ SDL\_GPUSamplerAddressMode\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_aa0f5d175f17a0447d5cffc57b49428a7}{address\_mode\_w}};\ \ }
+\DoxyCodeLine{01613\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_af840c9153ef1b0df65ede0025ccce8c8}{mip\_lod\_bias}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01614\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a90bbc803517da57aadc27a3b0521f146}{max\_anisotropy}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01615\ \ \ \ \ SDL\_GPUCompareOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_ae851ff52c514b395b3dc9104f5f40e2c}{compare\_op}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01616\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a8a4a02730c2645cd07f6442903ee8baa}{min\_lod}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01617\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a281e34620f3d138e1e7e7476f4a25e15}{max\_lod}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01618\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a2e659a70ae68705038210b0af04d223b}{enable\_anisotropy}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01619\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_a19461ba38580e7b6e3699db6479a4b38}{enable\_compare}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01620\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{01621\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{01622\ }
+\DoxyCodeLine{01623\ \ \ \ \ SDL\_PropertiesID\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info_ae1298c246b1eb12aeef10f90d819d64d}{props}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01624\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info}{SDL\_GPUSamplerCreateInfo}};}
+\DoxyCodeLine{01625\ }
+\DoxyCodeLine{01644\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_buffer_description}{SDL\_GPUVertexBufferDescription}}}
+\DoxyCodeLine{01645\ \{}
+\DoxyCodeLine{01646\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_buffer_description_afbbd76b16f6781c051e5d6052c1fdc4f}{slot}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01647\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_buffer_description_a8b8a53fd934c90ac56319ba7b6dd18c6}{pitch}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01648\ \ \ \ \ SDL\_GPUVertexInputRate\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_buffer_description_a248e84fde2471f0db3266fb954246ced}{input\_rate}};\ \ }
+\DoxyCodeLine{01649\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_buffer_description_a69b3b9ee69155deae5ce6d5b03cf18a4}{instance\_step\_rate}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01650\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_buffer_description}{SDL\_GPUVertexBufferDescription}};}
+\DoxyCodeLine{01651\ }
+\DoxyCodeLine{01664\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_attribute}{SDL\_GPUVertexAttribute}}}
+\DoxyCodeLine{01665\ \{}
+\DoxyCodeLine{01666\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_attribute_ac1f97015355bd3e6c98ddd9337f0bed6}{location}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01667\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_attribute_a33e82cba7f2afc0f8dd7953918135c25}{buffer\_slot}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01668\ \ \ \ \ SDL\_GPUVertexElementFormat\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_attribute_acc38a62e1882ed765c68337c6733b5e8}{format}};\ \ }
+\DoxyCodeLine{01669\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_attribute_ac54e502b95efda0e84ba84512893d21d}{offset}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01670\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_attribute}{SDL\_GPUVertexAttribute}};}
+\DoxyCodeLine{01671\ }
+\DoxyCodeLine{01682\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_input_state}{SDL\_GPUVertexInputState}}}
+\DoxyCodeLine{01683\ \{}
+\DoxyCodeLine{01684\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_buffer_description}{SDL\_GPUVertexBufferDescription}}\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_input_state_af5c88bc02480f6f852293295a8da98d4}{vertex\_buffer\_descriptions}};\ }
+\DoxyCodeLine{01685\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_input_state_a311673db9393411ee9237a3cccb4a742}{num\_vertex\_buffers}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01686\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_attribute}{SDL\_GPUVertexAttribute}}\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_input_state_a070e217af541af627e94e82860dba230}{vertex\_attributes}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01687\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_input_state_a9735bfb20648ff0e0e49711c0963c031}{num\_vertex\_attributes}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01688\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_input_state}{SDL\_GPUVertexInputState}};}
+\DoxyCodeLine{01689\ }
+\DoxyCodeLine{01697\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state}{SDL\_GPUStencilOpState}}}
+\DoxyCodeLine{01698\ \{}
+\DoxyCodeLine{01699\ \ \ \ \ SDL\_GPUStencilOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state_a023a72e00c4d646921c6e1c104eeacbe}{fail\_op}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01700\ \ \ \ \ SDL\_GPUStencilOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state_aa419ac14bb9981418c2fde713f9d9fd5}{pass\_op}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01701\ \ \ \ \ SDL\_GPUStencilOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state_a7cdd531a46e5e1720239917d5805530c}{depth\_fail\_op}};\ \ }
+\DoxyCodeLine{01702\ \ \ \ \ SDL\_GPUCompareOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state_adb55069e578030923b25fb4c2a90422d}{compare\_op}};\ \ \ \ \ }
+\DoxyCodeLine{01703\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state}{SDL\_GPUStencilOpState}};}
+\DoxyCodeLine{01704\ }
+\DoxyCodeLine{01715\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state}{SDL\_GPUColorTargetBlendState}}}
+\DoxyCodeLine{01716\ \{}
+\DoxyCodeLine{01717\ \ \ \ \ SDL\_GPUBlendFactor\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_aed5758ae2577e38ee4621b3394df5d9f}{src\_color\_blendfactor}};\ \ \ \ \ }
+\DoxyCodeLine{01718\ \ \ \ \ SDL\_GPUBlendFactor\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_af05c5e42e4aed03e89fe32d48605b89d}{dst\_color\_blendfactor}};\ \ \ \ \ }
+\DoxyCodeLine{01719\ \ \ \ \ SDL\_GPUBlendOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_a41aaac9666c6d9a6bbaaa92b5c9094fc}{color\_blend\_op}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01720\ \ \ \ \ SDL\_GPUBlendFactor\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_a6f2bac3e7c5e5d9b9067d9d1b7b55ea4}{src\_alpha\_blendfactor}};\ \ \ \ \ }
+\DoxyCodeLine{01721\ \ \ \ \ SDL\_GPUBlendFactor\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_ae2f20ac9e4b9044df09e739161726c57}{dst\_alpha\_blendfactor}};\ \ \ \ \ }
+\DoxyCodeLine{01722\ \ \ \ \ SDL\_GPUBlendOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_aaf3650c1e898da070b31976e8d895c7e}{alpha\_blend\_op}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01723\ \ \ \ \ SDL\_GPUColorComponentFlags\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_a613d92771e12d8c0918300702bf2b8d8}{color\_write\_mask}};\ \ }
+\DoxyCodeLine{01724\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_acdb53fa8e657218fd7543814e0fd527a}{enable\_blend}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01725\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state_a747f1a330b05795b382fdb32246ee2d9}{enable\_color\_write\_mask}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01726\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{01727\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{01728\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state}{SDL\_GPUColorTargetBlendState}};}
+\DoxyCodeLine{01729\ }
+\DoxyCodeLine{01730\ }
+\DoxyCodeLine{01740\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info}{SDL\_GPUShaderCreateInfo}}}
+\DoxyCodeLine{01741\ \{}
+\DoxyCodeLine{01742\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a56bcaf0c52233e8471b5b4292fd67a35}{code\_size}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01743\ \ \ \ \ \textcolor{keyword}{const}\ Uint8\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a6952e81442e724b423a065102230009c}{code}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01744\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a8682d22434fbc8349c09ab6ed43f762e}{entrypoint}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{01745\ \ \ \ \ SDL\_GPUShaderFormat\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a41af84f7bef3b13684e0ca6158a73a36}{format}};\ \ \ }
+\DoxyCodeLine{01746\ \ \ \ \ SDL\_GPUShaderStage\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a8b4de09054e4d7a6dde067a92acdebfb}{stage}};\ \ \ \ \ }
+\DoxyCodeLine{01747\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_ac788fbfa66f13915f574dbd30e83e465}{num\_samplers}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01748\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a25423dc33de6e67456fdc751b52c7235}{num\_storage\_textures}};\ \ }
+\DoxyCodeLine{01749\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a7c2a514b4e54a9c6fc90b9052a2c97c2}{num\_storage\_buffers}};\ \ \ }
+\DoxyCodeLine{01750\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_ab14f9fd453c2e8ec33cf1b039dff1395}{num\_uniform\_buffers}};\ \ \ }
+\DoxyCodeLine{01751\ }
+\DoxyCodeLine{01752\ \ \ \ \ SDL\_PropertiesID\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info_a170556996710ff9354620b8b98301d96}{props}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{01753\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info}{SDL\_GPUShaderCreateInfo}};}
+\DoxyCodeLine{01754\ }
+\DoxyCodeLine{01770\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info}{SDL\_GPUTextureCreateInfo}}}
+\DoxyCodeLine{01771\ \{}
+\DoxyCodeLine{01772\ \ \ \ \ SDL\_GPUTextureType\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_a3fe25802d992ed327efcef24cb0518ca}{type}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01773\ \ \ \ \ SDL\_GPUTextureFormat\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_a38c814ee7f79fb17d40b558e2e8134dd}{format}};\ \ \ \ \ \ }
+\DoxyCodeLine{01774\ \ \ \ \ SDL\_GPUTextureUsageFlags\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_a350abf64ae39eead26a44559fc1b99d0}{usage}};\ \ \ }
+\DoxyCodeLine{01775\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_acbe924f1af649aba3847e61ef9f5b68c}{width}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01776\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_ac1242cab28812eecb525ab1fe73b6ac7}{height}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01777\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_ab6e74a63bcb065fcbaec1dfdeec47658}{layer\_count\_or\_depth}};\ \ \ \ \ \ }
+\DoxyCodeLine{01778\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_aa3ea588a19a2674946e067d8662ff4e7}{num\_levels}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01779\ \ \ \ \ SDL\_GPUSampleCount\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_a4204b534693d751d791ea2aecb93fcb4}{sample\_count}};\ \ }
+\DoxyCodeLine{01780\ }
+\DoxyCodeLine{01781\ \ \ \ \ SDL\_PropertiesID\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info_a08bbeda5cce3e314d2306dc5667f2ca9}{props}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01782\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info}{SDL\_GPUTextureCreateInfo}};}
+\DoxyCodeLine{01783\ }
+\DoxyCodeLine{01795\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_create_info}{SDL\_GPUBufferCreateInfo}}}
+\DoxyCodeLine{01796\ \{}
+\DoxyCodeLine{01797\ \ \ \ \ SDL\_GPUBufferUsageFlags\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_create_info_a5f6dc085908369b97d5ee73bf72b5783}{usage}};\ \ }
+\DoxyCodeLine{01798\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_create_info_a8e8d1f83c1362a3b63321eee20405f02}{size}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01799\ }
+\DoxyCodeLine{01800\ \ \ \ \ SDL\_PropertiesID\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_create_info_a115e07c29dc95dd009bda6ae16683b0c}{props}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01801\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_create_info}{SDL\_GPUBufferCreateInfo}};}
+\DoxyCodeLine{01802\ }
+\DoxyCodeLine{01811\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_create_info}{SDL\_GPUTransferBufferCreateInfo}}}
+\DoxyCodeLine{01812\ \{}
+\DoxyCodeLine{01813\ \ \ \ \ SDL\_GPUTransferBufferUsage\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_create_info_a4507a9942e3fb4da6d767ddc2a9b8b32}{usage}};\ \ }
+\DoxyCodeLine{01814\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_create_info_a63333725952f8666933d56d9f1697b94}{size}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01815\ }
+\DoxyCodeLine{01816\ \ \ \ \ SDL\_PropertiesID\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_create_info_a49d0f8dddcdc033de009c0f2c7377504}{props}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01817\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_create_info}{SDL\_GPUTransferBufferCreateInfo}};}
+\DoxyCodeLine{01818\ }
+\DoxyCodeLine{01819\ \textcolor{comment}{/*\ Pipeline\ state\ structures\ */}}
+\DoxyCodeLine{01820\ }
+\DoxyCodeLine{01837\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state}{SDL\_GPURasterizerState}}}
+\DoxyCodeLine{01838\ \{}
+\DoxyCodeLine{01839\ \ \ \ \ SDL\_GPUFillMode\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_af92206360eaf21a879e8760716317e7a}{fill\_mode}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01840\ \ \ \ \ SDL\_GPUCullMode\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_ab9ffd883d5ab54456a5bdf2f65098228}{cull\_mode}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01841\ \ \ \ \ SDL\_GPUFrontFace\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_a6801477a78bbc9fef63c38d302b80128}{front\_face}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{01842\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_ad5df8122c0d3845e5c28f547d97f7e87}{depth\_bias\_constant\_factor}};\ \ }
+\DoxyCodeLine{01843\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_acf917168f64db2f540dd1a62482b0620}{depth\_bias\_clamp}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01844\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_a1f6e46fa32b09a8a3f928f0a1a527bd2}{depth\_bias\_slope\_factor}};\ \ \ \ \ }
+\DoxyCodeLine{01845\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_afd0b77d4bb54761305fd5a50b2525f0d}{enable\_depth\_bias}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01846\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state_a2c4c44c8fd34c4926dcc37df80a248f7}{enable\_depth\_clip}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01847\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{01848\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{01849\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state}{SDL\_GPURasterizerState}};}
+\DoxyCodeLine{01850\ }
+\DoxyCodeLine{01859\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_multisample_state}{SDL\_GPUMultisampleState}}}
+\DoxyCodeLine{01860\ \{}
+\DoxyCodeLine{01861\ \ \ \ \ SDL\_GPUSampleCount\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_multisample_state_a84fd6182043644431e4cc648e5b85bd6}{sample\_count}};\ \ }
+\DoxyCodeLine{01862\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_multisample_state_a6cc05168b96edac919c24dd80a9f3120}{sample\_mask}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01863\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_multisample_state_a43b4f9fd42e0519ff5c13f051642b39d}{enable\_mask}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01864\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_multisample_state_a6a688ef7c5079e29b2bc9ec9475726d5}{enable\_alpha\_to\_coverage}};\ \ \ \ }
+\DoxyCodeLine{01865\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{01866\ \ \ \ \ Uint8\ padding3;}
+\DoxyCodeLine{01867\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_multisample_state}{SDL\_GPUMultisampleState}};}
+\DoxyCodeLine{01868\ }
+\DoxyCodeLine{01878\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state}{SDL\_GPUDepthStencilState}}}
+\DoxyCodeLine{01879\ \{}
+\DoxyCodeLine{01880\ \ \ \ \ SDL\_GPUCompareOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_a711edd60ac9cc71f659eba1f88d23d3a}{compare\_op}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01881\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state}{SDL\_GPUStencilOpState}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_a62099d19aa536a80344c42f15cddb86e}{back\_stencil\_state}};\ \ \ }
+\DoxyCodeLine{01882\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_stencil_op_state}{SDL\_GPUStencilOpState}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_ae8cdb1a22902f62b84b06a65e8e53149}{front\_stencil\_state}};\ \ }
+\DoxyCodeLine{01883\ \ \ \ \ Uint8\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_af8b63d3771dd39d80ce2cbe6d988adac}{compare\_mask}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01884\ \ \ \ \ Uint8\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_a64429bb40a7b41bbe0e7427386b5dc02}{write\_mask}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01885\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_ae6bf3091cc9b25d9f8fa1919ee8ce85c}{enable\_depth\_test}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01886\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_ae71841f51809c7e585951bc1352bb65b}{enable\_depth\_write}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01887\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state_a1baf306c3112c992d139095b31f10f06}{enable\_stencil\_test}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01888\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{01889\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{01890\ \ \ \ \ Uint8\ padding3;}
+\DoxyCodeLine{01891\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state}{SDL\_GPUDepthStencilState}};}
+\DoxyCodeLine{01892\ }
+\DoxyCodeLine{01901\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_description}{SDL\_GPUColorTargetDescription}}}
+\DoxyCodeLine{01902\ \{}
+\DoxyCodeLine{01903\ \ \ \ \ SDL\_GPUTextureFormat\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_description_afaa97d32e8ca785a455cf80ae9b9a6c0}{format}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01904\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_blend_state}{SDL\_GPUColorTargetBlendState}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_description_ab52b8fdace0e68687ed669ae89fe9207}{blend\_state}};\ \ }
+\DoxyCodeLine{01905\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_description}{SDL\_GPUColorTargetDescription}};}
+\DoxyCodeLine{01906\ }
+\DoxyCodeLine{01917\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_target_info}{SDL\_GPUGraphicsPipelineTargetInfo}}}
+\DoxyCodeLine{01918\ \{}
+\DoxyCodeLine{01919\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_description}{SDL\_GPUColorTargetDescription}}\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_target_info_adf000340006aba469a91be6813d437af}{color\_target\_descriptions}};\ \ }
+\DoxyCodeLine{01920\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_target_info_af47971069ee20bb8139e3dd4dd57e0b8}{num\_color\_targets}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01921\ \ \ \ \ SDL\_GPUTextureFormat\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_target_info_a09aabf7e30122aba1a91f19491e5d9b8}{depth\_stencil\_format}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01922\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_target_info_abf95fb30f84aac5496f7b64302961844}{has\_depth\_stencil\_target}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01923\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{01924\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{01925\ \ \ \ \ Uint8\ padding3;}
+\DoxyCodeLine{01926\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_target_info}{SDL\_GPUGraphicsPipelineTargetInfo}};}
+\DoxyCodeLine{01927\ }
+\DoxyCodeLine{01942\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info}{SDL\_GPUGraphicsPipelineCreateInfo}}}
+\DoxyCodeLine{01943\ \{}
+\DoxyCodeLine{01944\ \ \ \ \ SDL\_GPUShader\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_a10158870f5f38c8c5e3261c47c5992d1}{vertex\_shader}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01945\ \ \ \ \ SDL\_GPUShader\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_a12ae92cf7f4862a9453b1c295798c35a}{fragment\_shader}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01946\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vertex_input_state}{SDL\_GPUVertexInputState}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_adae6550bfea84adb51e755bf22cab0f7}{vertex\_input\_state}};\ \ \ \ \ }
+\DoxyCodeLine{01947\ \ \ \ \ SDL\_GPUPrimitiveType\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_a60e848c9c8e4e8b2132771019ebc2be9}{primitive\_type}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01948\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_rasterizer_state}{SDL\_GPURasterizerState}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_af345ba501cc39980cbb77dd4a2433883}{rasterizer\_state}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01949\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_multisample_state}{SDL\_GPUMultisampleState}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_a1703ea63f9cc264fac962b6d8fa434e1}{multisample\_state}};\ \ \ \ \ \ }
+\DoxyCodeLine{01950\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_state}{SDL\_GPUDepthStencilState}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_a63e95fa5c49328b429a5675ddc48cb81}{depth\_stencil\_state}};\ \ \ }
+\DoxyCodeLine{01951\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_target_info}{SDL\_GPUGraphicsPipelineTargetInfo}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_abf288914362c539872e46891461dacca}{target\_info}};\ \ }
+\DoxyCodeLine{01952\ }
+\DoxyCodeLine{01953\ \ \ \ \ SDL\_PropertiesID\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info_a2f660a1ae03f6f9d7d63f7ea78a26986}{props}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01954\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info}{SDL\_GPUGraphicsPipelineCreateInfo}};}
+\DoxyCodeLine{01955\ }
+\DoxyCodeLine{01964\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info}{SDL\_GPUComputePipelineCreateInfo}}}
+\DoxyCodeLine{01965\ \{}
+\DoxyCodeLine{01966\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_aca04a4f9addc2977cb8ea6f377bb92d0}{code\_size}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01967\ \ \ \ \ \textcolor{keyword}{const}\ Uint8\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a7e171e78a95ca94a853bdc7930aa20b8}{code}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01968\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a01fe3bc43187643f5a26bdcfef3572bc}{entrypoint}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01969\ \ \ \ \ SDL\_GPUShaderFormat\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_ac31378860f82e533d591c3b395c9ad4f}{format}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01970\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a7ad5be252569e21272e6791bfc0876ca}{num\_samplers}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01971\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a71e3d74e0a257f726e149ab776f944e0}{num\_readonly\_storage\_textures}};\ \ \ }
+\DoxyCodeLine{01972\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a2b1a80a1ae69b57c8bed1b4085a30063}{num\_readonly\_storage\_buffers}};\ \ \ \ }
+\DoxyCodeLine{01973\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a8edd00d88deeec396e98d1ecb503d933}{num\_readwrite\_storage\_textures}};\ \ }
+\DoxyCodeLine{01974\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a2e6aba498b64c9d442a2feee25ba4d97}{num\_readwrite\_storage\_buffers}};\ \ \ }
+\DoxyCodeLine{01975\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a43cc8ab99c2174ce2702e2e17eabdc76}{num\_uniform\_buffers}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01976\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a35282f1a7785fe4aa9dce1541433a31d}{threadcount\_x}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01977\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a04ce8bad26cd717a43d9bd98392234d8}{threadcount\_y}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01978\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a0e74ee14ac2d74c95ee6f686a42f549a}{threadcount\_z}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01979\ }
+\DoxyCodeLine{01980\ \ \ \ \ SDL\_PropertiesID\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info_a1f703a67e7c1f50066c4f33d2929f43c}{props}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{01981\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info}{SDL\_GPUComputePipelineCreateInfo}};}
+\DoxyCodeLine{01982\ }
+\DoxyCodeLine{02019\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info}{SDL\_GPUColorTargetInfo}}}
+\DoxyCodeLine{02020\ \{}
+\DoxyCodeLine{02021\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_a4c751add8ced5025419a1a210c20c737}{texture}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02022\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_a5e8a6077ca8999b499885913077a38de}{mip\_level}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02023\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_a964ccaa882ce542ccf3bab3697e4bf2c}{layer\_or\_depth\_plane}};\ \ \ \ \ }
+\DoxyCodeLine{02024\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_a2c8ee02d6a6b9c24db274f54db29afb4}{clear\_color}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02025\ \ \ \ \ SDL\_GPULoadOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_a8b156c1d8b9ca326f06f28e5067b31bd}{load\_op}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02026\ \ \ \ \ SDL\_GPUStoreOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_af31df585e0c2de6f077354071ed161c3}{store\_op}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02027\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_af1404e5117f406ff4f451c7901a885e7}{resolve\_texture}};\ }
+\DoxyCodeLine{02028\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_ad5752bd83491caba67c8d8dc5f3f9807}{resolve\_mip\_level}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02029\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_adfdcb842d8bac7c47f19eed2249e8faa}{resolve\_layer}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02030\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_a22f7c242b5487449bd93a3e8ff04063c}{cycle}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02031\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info_ac35ff902795f239ac37e51f8fc10b969}{cycle\_resolve\_texture}};\ \ \ \ \ \ }
+\DoxyCodeLine{02032\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{02033\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{02034\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info}{SDL\_GPUColorTargetInfo}};}
+\DoxyCodeLine{02035\ }
+\DoxyCodeLine{02083\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info}{SDL\_GPUDepthStencilTargetInfo}}}
+\DoxyCodeLine{02084\ \{}
+\DoxyCodeLine{02085\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a42d1055f0f59752ce3a007d6f08a3ee7}{texture}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02086\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_afb22e2e139ec793ba6809c27e72f14b7}{clear\_depth}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02087\ \ \ \ \ SDL\_GPULoadOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_abd3ef0c4fd8c36ec838195fef4e0da58}{load\_op}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02088\ \ \ \ \ SDL\_GPUStoreOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a6593c8284cd371e349f9da46fd5a3415}{store\_op}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02089\ \ \ \ \ SDL\_GPULoadOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_afd49dce122ebc0f006ecab5de59f82f6}{stencil\_load\_op}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02090\ \ \ \ \ SDL\_GPUStoreOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a803f44c4b8032f7d9481ff010958b5b1}{stencil\_store\_op}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{02091\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a40965a6d730a709dfaca5ba0604c479e}{cycle}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02092\ \ \ \ \ Uint8\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a31dabbc1c45f6646bb3e90868c87d4b9}{clear\_stencil}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02093\ \ \ \ \ Uint8\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_a165eece7acc2b7d999f380d53c93cf54}{mip\_level}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02094\ \ \ \ \ Uint8\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info_af2d6c3a0f28a3ed57c423436a1197239}{layer}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02095\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info}{SDL\_GPUDepthStencilTargetInfo}};}
+\DoxyCodeLine{02096\ }
+\DoxyCodeLine{02104\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info}{SDL\_GPUBlitInfo}}\ \{}
+\DoxyCodeLine{02105\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region}{SDL\_GPUBlitRegion}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info_ade41c81f4f18aaae044d13f268a88469}{source}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{02106\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_region}{SDL\_GPUBlitRegion}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info_ae037b7e81f4bca89df2922d7001ddaf8}{destination}};\ \ }
+\DoxyCodeLine{02107\ \ \ \ \ SDL\_GPULoadOp\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info_ae06833cc41c513b07d191f83195048b3}{load\_op}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02108\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info_ac674c883d9d454c40be8a03ddd14019f}{clear\_color}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02109\ \ \ \ \ SDL\_FlipMode\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info_a5e3e1a8b4aa442f9ad1cbdc126387c90}{flip\_mode}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02110\ \ \ \ \ SDL\_GPUFilter\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info_ad0d7dc13e9b9db5ff47d9d9eac969203}{filter}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02111\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info_abaf7aa9716d2ef11be4a0fc8e281f6dd}{cycle}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02112\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{02113\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{02114\ \ \ \ \ Uint8\ padding3;}
+\DoxyCodeLine{02115\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info}{SDL\_GPUBlitInfo}};}
+\DoxyCodeLine{02116\ }
+\DoxyCodeLine{02117\ \textcolor{comment}{/*\ Binding\ structs\ */}}
+\DoxyCodeLine{02118\ }
+\DoxyCodeLine{02127\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_binding}{SDL\_GPUBufferBinding}}}
+\DoxyCodeLine{02128\ \{}
+\DoxyCodeLine{02129\ \ \ \ \ SDL\_GPUBuffer\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_binding_a0d011aee37fc33ecd44c0f147a7d5d09}{buffer}};\ \ }
+\DoxyCodeLine{02130\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_binding_a10ad5b2acef20160abc5e50290af860a}{offset}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02131\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_binding}{SDL\_GPUBufferBinding}};}
+\DoxyCodeLine{02132\ }
+\DoxyCodeLine{02143\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding}{SDL\_GPUTextureSamplerBinding}}}
+\DoxyCodeLine{02144\ \{}
+\DoxyCodeLine{02145\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding_ae17e91dec002fdf0f951083e68c74a28}{texture}};\ \ }
+\DoxyCodeLine{02146\ \ \ \ \ SDL\_GPUSampler\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding_a78853167d5d2ed6692ac2e1308bc6828}{sampler}};\ \ }
+\DoxyCodeLine{02147\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding}{SDL\_GPUTextureSamplerBinding}};}
+\DoxyCodeLine{02148\ }
+\DoxyCodeLine{02157\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_buffer_read_write_binding}{SDL\_GPUStorageBufferReadWriteBinding}}}
+\DoxyCodeLine{02158\ \{}
+\DoxyCodeLine{02159\ \ \ \ \ SDL\_GPUBuffer\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_buffer_read_write_binding_a0fa4cba3552bbdab914585ee1c4e359b}{buffer}};\ \ }
+\DoxyCodeLine{02160\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_buffer_read_write_binding_af95ee0049c6bd7e001889325efe138df}{cycle}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02161\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{02162\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{02163\ \ \ \ \ Uint8\ padding3;}
+\DoxyCodeLine{02164\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_buffer_read_write_binding}{SDL\_GPUStorageBufferReadWriteBinding}};}
+\DoxyCodeLine{02165\ }
+\DoxyCodeLine{02174\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_texture_read_write_binding}{SDL\_GPUStorageTextureReadWriteBinding}}}
+\DoxyCodeLine{02175\ \{}
+\DoxyCodeLine{02176\ \ \ \ \ SDL\_GPUTexture\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_texture_read_write_binding_aae57bd203e17c35f5318fb6778d1800a}{texture}};\ \ }
+\DoxyCodeLine{02177\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_texture_read_write_binding_ac37f9993c61c6ebb361852b8e36ca59c}{mip\_level}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02178\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_texture_read_write_binding_a23374572d3ff2930c60f43fd75b15298}{layer}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02179\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_texture_read_write_binding_a50128dd4f704475276c9dd73500d7c50}{cycle}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02180\ \ \ \ \ Uint8\ padding1;}
+\DoxyCodeLine{02181\ \ \ \ \ Uint8\ padding2;}
+\DoxyCodeLine{02182\ \ \ \ \ Uint8\ padding3;}
+\DoxyCodeLine{02183\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_texture_read_write_binding}{SDL\_GPUStorageTextureReadWriteBinding}};}
+\DoxyCodeLine{02184\ }
+\DoxyCodeLine{02185\ \textcolor{comment}{/*\ Functions\ */}}
+\DoxyCodeLine{02186\ }
+\DoxyCodeLine{02187\ \textcolor{comment}{/*\ Device\ */}}
+\DoxyCodeLine{02188\ }
+\DoxyCodeLine{02202\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GPUSupportsShaderFormats(}
+\DoxyCodeLine{02203\ \ \ \ \ SDL\_GPUShaderFormat\ format\_flags,}
+\DoxyCodeLine{02204\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{02205\ }
+\DoxyCodeLine{02216\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GPUSupportsProperties(}
+\DoxyCodeLine{02217\ \ \ \ \ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{02218\ }
+\DoxyCodeLine{02245\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *\ SDLCALL\ SDL\_CreateGPUDevice(}
+\DoxyCodeLine{02246\ \ \ \ \ SDL\_GPUShaderFormat\ format\_flags,}
+\DoxyCodeLine{02247\ \ \ \ \ \textcolor{keywordtype}{bool}\ debug\_mode,}
+\DoxyCodeLine{02248\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{02249\ }
+\DoxyCodeLine{02362\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *\ SDLCALL\ SDL\_CreateGPUDeviceWithProperties(}
+\DoxyCodeLine{02363\ \ \ \ \ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{02364\ }
+\DoxyCodeLine{02365\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_DEBUGMODE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.debugmode"{}}}
+\DoxyCodeLine{02366\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_PREFERLOWPOWER\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.preferlowpower"{}}}
+\DoxyCodeLine{02367\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_VERBOSE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.verbose"{}}}
+\DoxyCodeLine{02368\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_NAME\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.name"{}}}
+\DoxyCodeLine{02369\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_FEATURE\_CLIP\_DISTANCE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.feature.clip\_distance"{}}}
+\DoxyCodeLine{02370\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_FEATURE\_DEPTH\_CLAMPING\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.feature.depth\_clamping"{}}}
+\DoxyCodeLine{02371\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_FEATURE\_INDIRECT\_DRAW\_FIRST\_INSTANCE\_BOOLEAN\ "{}SDL.gpu.device.create.feature.indirect\_draw\_first\_instance"{}}}
+\DoxyCodeLine{02372\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_FEATURE\_ANISOTROPY\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.feature.anisotropy"{}}}
+\DoxyCodeLine{02373\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_SHADERS\_PRIVATE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.shaders.private"{}}}
+\DoxyCodeLine{02374\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_SHADERS\_SPIRV\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.shaders.spirv"{}}}
+\DoxyCodeLine{02375\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_SHADERS\_DXBC\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.shaders.dxbc"{}}}
+\DoxyCodeLine{02376\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_SHADERS\_DXIL\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.shaders.dxil"{}}}
+\DoxyCodeLine{02377\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_SHADERS\_MSL\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.shaders.msl"{}}}
+\DoxyCodeLine{02378\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_SHADERS\_METALLIB\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.shaders.metallib"{}}}
+\DoxyCodeLine{02379\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_D3D12\_ALLOW\_FEWER\_RESOURCE\_SLOTS\_BOOLEAN\ \ \ \ \ "{}SDL.gpu.device.create.d3d12.allowtier1resourcebinding"{}}}
+\DoxyCodeLine{02380\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_D3D12\_SEMANTIC\_NAME\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.d3d12.semantic"{}}}
+\DoxyCodeLine{02381\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_D3D12\_AGILITY\_SDK\_VERSION\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.d3d12.agility\_sdk\_version"{}}}
+\DoxyCodeLine{02382\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_D3D12\_AGILITY\_SDK\_PATH\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.d3d12.agility\_sdk\_path"{}}}
+\DoxyCodeLine{02383\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_VULKAN\_REQUIRE\_HARDWARE\_ACCELERATION\_BOOLEAN\ "{}SDL.gpu.device.create.vulkan.requirehardwareacceleration"{}}}
+\DoxyCodeLine{02384\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_VULKAN\_OPTIONS\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.vulkan.options"{}}}
+\DoxyCodeLine{02385\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_METAL\_ALLOW\_MACFAMILY1\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.metal.allowmacfamily1"{}}}
+\DoxyCodeLine{02386\ }
+\DoxyCodeLine{02387\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_ENABLE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.enable"{}}}
+\DoxyCodeLine{02388\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_INSTANCE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.instance\_out"{}}}
+\DoxyCodeLine{02389\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_SYSTEM\_ID\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.system\_id\_out"{}}}
+\DoxyCodeLine{02390\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_VERSION\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.version"{}}}
+\DoxyCodeLine{02391\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_FORM\_FACTOR\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.form\_factor"{}}}
+\DoxyCodeLine{02392\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_EXTENSION\_COUNT\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.extensions.count"{}}}
+\DoxyCodeLine{02393\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_EXTENSION\_NAMES\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.extensions.names"{}}}
+\DoxyCodeLine{02394\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_LAYER\_COUNT\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.layers.count"{}}}
+\DoxyCodeLine{02395\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_LAYER\_NAMES\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.layers.names"{}}}
+\DoxyCodeLine{02396\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_APPLICATION\_NAME\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.application.name"{}}}
+\DoxyCodeLine{02397\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_APPLICATION\_VERSION\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.application.version"{}}}
+\DoxyCodeLine{02398\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_ENGINE\_NAME\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.engine.name"{}}}
+\DoxyCodeLine{02399\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_CREATE\_XR\_ENGINE\_VERSION\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.create.xr.engine.version"{}}}
+\DoxyCodeLine{02400\ }
+\DoxyCodeLine{02401\ }
+\DoxyCodeLine{02418\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options}{SDL\_GPUVulkanOptions}}}
+\DoxyCodeLine{02419\ \{}
+\DoxyCodeLine{02420\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options_a7c4165c65218812bc5f955b89dcf08aa}{vulkan\_api\_version}};\ }
+\DoxyCodeLine{02421\ \ \ \ \ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options_ab52bd7ce7f31a06d26c6e52d9726f280}{feature\_list}};\ }
+\DoxyCodeLine{02422\ \ \ \ \ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options_a0f686328bbb98b73f1ca443592ccbf14}{vulkan\_10\_physical\_device\_features}};\ }
+\DoxyCodeLine{02423\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options_a99fe88984ed4e96cde94172f4a5231ed}{device\_extension\_count}};\ }
+\DoxyCodeLine{02424\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options_a8432ab9858a4f759cd3a46bf30fadfc0}{device\_extension\_names}};\ }
+\DoxyCodeLine{02425\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options_a210f23e5e1f91dfc4ea52397969096aa}{instance\_extension\_count}};\ }
+\DoxyCodeLine{02426\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **\doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options_aaa951667c4edac728f86f4e4e997908f}{instance\_extension\_names}};\ }
+\DoxyCodeLine{02427\ \}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_vulkan_options}{SDL\_GPUVulkanOptions}};}
+\DoxyCodeLine{02428\ }
+\DoxyCodeLine{02438\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyGPUDevice(\doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{02439\ }
+\DoxyCodeLine{02449\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetNumGPUDrivers(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{02450\ }
+\DoxyCodeLine{02470\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGPUDriver(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{02471\ }
+\DoxyCodeLine{02480\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGPUDeviceDriver(\doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{02481\ }
+\DoxyCodeLine{02491\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUShaderFormat\ SDLCALL\ SDL\_GetGPUShaderFormats(\doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{02492\ }
+\DoxyCodeLine{02595\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetGPUDeviceProperties(\doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{02596\ }
+\DoxyCodeLine{02597\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_NAME\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.device.name"{}}}
+\DoxyCodeLine{02598\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_DRIVER\_NAME\_STRING\ \ \ \ \ \ \ \ "{}SDL.gpu.device.driver\_name"{}}}
+\DoxyCodeLine{02599\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_DRIVER\_VERSION\_STRING\ \ \ \ \ "{}SDL.gpu.device.driver\_version"{}}}
+\DoxyCodeLine{02600\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_DEVICE\_DRIVER\_INFO\_STRING\ \ \ \ \ \ \ \ "{}SDL.gpu.device.driver\_info"{}}}
+\DoxyCodeLine{02601\ }
+\DoxyCodeLine{02602\ }
+\DoxyCodeLine{02603\ \textcolor{comment}{/*\ State\ Creation\ */}}
+\DoxyCodeLine{02604\ }
+\DoxyCodeLine{02650\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUComputePipeline\ *\ SDLCALL\ SDL\_CreateGPUComputePipeline(}
+\DoxyCodeLine{02651\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02652\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_compute_pipeline_create_info}{SDL\_GPUComputePipelineCreateInfo}}\ *createinfo);}
+\DoxyCodeLine{02653\ }
+\DoxyCodeLine{02654\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_COMPUTEPIPELINE\_CREATE\_NAME\_STRING\ "{}SDL.gpu.computepipeline.create.name"{}}}
+\DoxyCodeLine{02655\ }
+\DoxyCodeLine{02677\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUGraphicsPipeline\ *\ SDLCALL\ SDL\_CreateGPUGraphicsPipeline(}
+\DoxyCodeLine{02678\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02679\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_graphics_pipeline_create_info}{SDL\_GPUGraphicsPipelineCreateInfo}}\ *createinfo);}
+\DoxyCodeLine{02680\ }
+\DoxyCodeLine{02681\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_GRAPHICSPIPELINE\_CREATE\_NAME\_STRING\ "{}SDL.gpu.graphicspipeline.create.name"{}}}
+\DoxyCodeLine{02682\ }
+\DoxyCodeLine{02704\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUSampler\ *\ SDLCALL\ SDL\_CreateGPUSampler(}
+\DoxyCodeLine{02705\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02706\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_sampler_create_info}{SDL\_GPUSamplerCreateInfo}}\ *createinfo);}
+\DoxyCodeLine{02707\ }
+\DoxyCodeLine{02708\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_SAMPLER\_CREATE\_NAME\_STRING\ "{}SDL.gpu.sampler.create.name"{}}}
+\DoxyCodeLine{02709\ }
+\DoxyCodeLine{02783\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUShader\ *\ SDLCALL\ SDL\_CreateGPUShader(}
+\DoxyCodeLine{02784\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02785\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_shader_create_info}{SDL\_GPUShaderCreateInfo}}\ *createinfo);}
+\DoxyCodeLine{02786\ }
+\DoxyCodeLine{02787\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_SHADER\_CREATE\_NAME\_STRING\ "{}SDL.gpu.shader.create.name"{}}}
+\DoxyCodeLine{02788\ }
+\DoxyCodeLine{02847\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUTexture\ *\ SDLCALL\ SDL\_CreateGPUTexture(}
+\DoxyCodeLine{02848\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02849\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_create_info}{SDL\_GPUTextureCreateInfo}}\ *createinfo);}
+\DoxyCodeLine{02850\ }
+\DoxyCodeLine{02851\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TEXTURE\_CREATE\_D3D12\_CLEAR\_R\_FLOAT\ \ \ \ \ \ \ \ \ "{}SDL.gpu.texture.create.d3d12.clear.r"{}}}
+\DoxyCodeLine{02852\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TEXTURE\_CREATE\_D3D12\_CLEAR\_G\_FLOAT\ \ \ \ \ \ \ \ \ "{}SDL.gpu.texture.create.d3d12.clear.g"{}}}
+\DoxyCodeLine{02853\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TEXTURE\_CREATE\_D3D12\_CLEAR\_B\_FLOAT\ \ \ \ \ \ \ \ \ "{}SDL.gpu.texture.create.d3d12.clear.b"{}}}
+\DoxyCodeLine{02854\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TEXTURE\_CREATE\_D3D12\_CLEAR\_A\_FLOAT\ \ \ \ \ \ \ \ \ "{}SDL.gpu.texture.create.d3d12.clear.a"{}}}
+\DoxyCodeLine{02855\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TEXTURE\_CREATE\_D3D12\_CLEAR\_DEPTH\_FLOAT\ \ \ \ \ "{}SDL.gpu.texture.create.d3d12.clear.depth"{}}}
+\DoxyCodeLine{02856\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TEXTURE\_CREATE\_D3D12\_CLEAR\_STENCIL\_NUMBER\ \ "{}SDL.gpu.texture.create.d3d12.clear.stencil"{}}}
+\DoxyCodeLine{02857\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TEXTURE\_CREATE\_NAME\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.gpu.texture.create.name"{}}}
+\DoxyCodeLine{02858\ }
+\DoxyCodeLine{02903\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUBuffer\ *\ SDLCALL\ SDL\_CreateGPUBuffer(}
+\DoxyCodeLine{02904\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02905\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_create_info}{SDL\_GPUBufferCreateInfo}}\ *createinfo);}
+\DoxyCodeLine{02906\ }
+\DoxyCodeLine{02907\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_BUFFER\_CREATE\_NAME\_STRING\ "{}SDL.gpu.buffer.create.name"{}}}
+\DoxyCodeLine{02908\ }
+\DoxyCodeLine{02936\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUTransferBuffer\ *\ SDLCALL\ SDL\_CreateGPUTransferBuffer(}
+\DoxyCodeLine{02937\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02938\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_create_info}{SDL\_GPUTransferBufferCreateInfo}}\ *createinfo);}
+\DoxyCodeLine{02939\ }
+\DoxyCodeLine{02940\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GPU\_TRANSFERBUFFER\_CREATE\_NAME\_STRING\ "{}SDL.gpu.transferbuffer.create.name"{}}}
+\DoxyCodeLine{02941\ }
+\DoxyCodeLine{02942\ \textcolor{comment}{/*\ Debug\ Naming\ */}}
+\DoxyCodeLine{02943\ }
+\DoxyCodeLine{02961\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetGPUBufferName(}
+\DoxyCodeLine{02962\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02963\ \ \ \ \ SDL\_GPUBuffer\ *buffer,}
+\DoxyCodeLine{02964\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text);}
+\DoxyCodeLine{02965\ }
+\DoxyCodeLine{02984\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetGPUTextureName(}
+\DoxyCodeLine{02985\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{02986\ \ \ \ \ SDL\_GPUTexture\ *texture,}
+\DoxyCodeLine{02987\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text);}
+\DoxyCodeLine{02988\ }
+\DoxyCodeLine{03005\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_InsertGPUDebugLabel(}
+\DoxyCodeLine{03006\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{03007\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text);}
+\DoxyCodeLine{03008\ }
+\DoxyCodeLine{03035\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_PushGPUDebugGroup(}
+\DoxyCodeLine{03036\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{03037\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{03038\ }
+\DoxyCodeLine{03053\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_PopGPUDebugGroup(}
+\DoxyCodeLine{03054\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer);}
+\DoxyCodeLine{03055\ }
+\DoxyCodeLine{03056\ \textcolor{comment}{/*\ Disposal\ */}}
+\DoxyCodeLine{03057\ }
+\DoxyCodeLine{03071\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUTexture(}
+\DoxyCodeLine{03072\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03073\ \ \ \ \ SDL\_GPUTexture\ *texture);}
+\DoxyCodeLine{03074\ }
+\DoxyCodeLine{03088\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUSampler(}
+\DoxyCodeLine{03089\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03090\ \ \ \ \ SDL\_GPUSampler\ *sampler);}
+\DoxyCodeLine{03091\ }
+\DoxyCodeLine{03105\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUBuffer(}
+\DoxyCodeLine{03106\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03107\ \ \ \ \ SDL\_GPUBuffer\ *buffer);}
+\DoxyCodeLine{03108\ }
+\DoxyCodeLine{03122\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUTransferBuffer(}
+\DoxyCodeLine{03123\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03124\ \ \ \ \ SDL\_GPUTransferBuffer\ *transfer\_buffer);}
+\DoxyCodeLine{03125\ }
+\DoxyCodeLine{03139\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUComputePipeline(}
+\DoxyCodeLine{03140\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03141\ \ \ \ \ SDL\_GPUComputePipeline\ *compute\_pipeline);}
+\DoxyCodeLine{03142\ }
+\DoxyCodeLine{03156\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUShader(}
+\DoxyCodeLine{03157\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03158\ \ \ \ \ SDL\_GPUShader\ *shader);}
+\DoxyCodeLine{03159\ }
+\DoxyCodeLine{03173\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUGraphicsPipeline(}
+\DoxyCodeLine{03174\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03175\ \ \ \ \ SDL\_GPUGraphicsPipeline\ *graphics\_pipeline);}
+\DoxyCodeLine{03176\ }
+\DoxyCodeLine{03201\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUCommandBuffer\ *\ SDLCALL\ SDL\_AcquireGPUCommandBuffer(}
+\DoxyCodeLine{03202\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{03203\ }
+\DoxyCodeLine{03204\ \textcolor{comment}{/*\ Uniform\ Data\ */}}
+\DoxyCodeLine{03205\ }
+\DoxyCodeLine{03225\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_PushGPUVertexUniformData(}
+\DoxyCodeLine{03226\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{03227\ \ \ \ \ Uint32\ slot\_index,}
+\DoxyCodeLine{03228\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,}
+\DoxyCodeLine{03229\ \ \ \ \ Uint32\ length);}
+\DoxyCodeLine{03230\ }
+\DoxyCodeLine{03247\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_PushGPUFragmentUniformData(}
+\DoxyCodeLine{03248\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{03249\ \ \ \ \ Uint32\ slot\_index,}
+\DoxyCodeLine{03250\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,}
+\DoxyCodeLine{03251\ \ \ \ \ Uint32\ length);}
+\DoxyCodeLine{03252\ }
+\DoxyCodeLine{03269\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_PushGPUComputeUniformData(}
+\DoxyCodeLine{03270\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{03271\ \ \ \ \ Uint32\ slot\_index,}
+\DoxyCodeLine{03272\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,}
+\DoxyCodeLine{03273\ \ \ \ \ Uint32\ length);}
+\DoxyCodeLine{03274\ }
+\DoxyCodeLine{03275\ \textcolor{comment}{/*\ Graphics\ State\ */}}
+\DoxyCodeLine{03276\ }
+\DoxyCodeLine{03310\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPURenderPass\ *\ SDLCALL\ SDL\_BeginGPURenderPass(}
+\DoxyCodeLine{03311\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{03312\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_color_target_info}{SDL\_GPUColorTargetInfo}}\ *color\_target\_infos,}
+\DoxyCodeLine{03313\ \ \ \ \ Uint32\ num\_color\_targets,}
+\DoxyCodeLine{03314\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_depth_stencil_target_info}{SDL\_GPUDepthStencilTargetInfo}}\ *depth\_stencil\_target\_info);}
+\DoxyCodeLine{03315\ }
+\DoxyCodeLine{03326\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUGraphicsPipeline(}
+\DoxyCodeLine{03327\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03328\ \ \ \ \ SDL\_GPUGraphicsPipeline\ *graphics\_pipeline);}
+\DoxyCodeLine{03329\ }
+\DoxyCodeLine{03338\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetGPUViewport(}
+\DoxyCodeLine{03339\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03340\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_viewport}{SDL\_GPUViewport}}\ *viewport);}
+\DoxyCodeLine{03341\ }
+\DoxyCodeLine{03350\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetGPUScissor(}
+\DoxyCodeLine{03351\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03352\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *scissor);}
+\DoxyCodeLine{03353\ }
+\DoxyCodeLine{03365\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetGPUBlendConstants(}
+\DoxyCodeLine{03366\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03367\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___f_color}{SDL\_FColor}}\ blend\_constants);}
+\DoxyCodeLine{03368\ }
+\DoxyCodeLine{03377\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetGPUStencilReference(}
+\DoxyCodeLine{03378\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03379\ \ \ \ \ Uint8\ reference);}
+\DoxyCodeLine{03380\ }
+\DoxyCodeLine{03393\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUVertexBuffers(}
+\DoxyCodeLine{03394\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03395\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03396\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_binding}{SDL\_GPUBufferBinding}}\ *bindings,}
+\DoxyCodeLine{03397\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03398\ }
+\DoxyCodeLine{03410\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUIndexBuffer(}
+\DoxyCodeLine{03411\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03412\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_binding}{SDL\_GPUBufferBinding}}\ *binding,}
+\DoxyCodeLine{03413\ \ \ \ \ SDL\_GPUIndexElementSize\ index\_element\_size);}
+\DoxyCodeLine{03414\ }
+\DoxyCodeLine{03434\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUVertexSamplers(}
+\DoxyCodeLine{03435\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03436\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03437\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding}{SDL\_GPUTextureSamplerBinding}}\ *texture\_sampler\_bindings,}
+\DoxyCodeLine{03438\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03439\ }
+\DoxyCodeLine{03458\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUVertexStorageTextures(}
+\DoxyCodeLine{03459\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03460\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03461\ \ \ \ \ SDL\_GPUTexture\ *\textcolor{keyword}{const}\ *storage\_textures,}
+\DoxyCodeLine{03462\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03463\ }
+\DoxyCodeLine{03482\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUVertexStorageBuffers(}
+\DoxyCodeLine{03483\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03484\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03485\ \ \ \ \ SDL\_GPUBuffer\ *\textcolor{keyword}{const}\ *storage\_buffers,}
+\DoxyCodeLine{03486\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03487\ }
+\DoxyCodeLine{03507\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUFragmentSamplers(}
+\DoxyCodeLine{03508\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03509\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03510\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding}{SDL\_GPUTextureSamplerBinding}}\ *texture\_sampler\_bindings,}
+\DoxyCodeLine{03511\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03512\ }
+\DoxyCodeLine{03531\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUFragmentStorageTextures(}
+\DoxyCodeLine{03532\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03533\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03534\ \ \ \ \ SDL\_GPUTexture\ *\textcolor{keyword}{const}\ *storage\_textures,}
+\DoxyCodeLine{03535\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03536\ }
+\DoxyCodeLine{03555\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUFragmentStorageBuffers(}
+\DoxyCodeLine{03556\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03557\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03558\ \ \ \ \ SDL\_GPUBuffer\ *\textcolor{keyword}{const}\ *storage\_buffers,}
+\DoxyCodeLine{03559\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03560\ }
+\DoxyCodeLine{03561\ \textcolor{comment}{/*\ Drawing\ */}}
+\DoxyCodeLine{03562\ }
+\DoxyCodeLine{03586\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DrawGPUIndexedPrimitives(}
+\DoxyCodeLine{03587\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03588\ \ \ \ \ Uint32\ num\_indices,}
+\DoxyCodeLine{03589\ \ \ \ \ Uint32\ num\_instances,}
+\DoxyCodeLine{03590\ \ \ \ \ Uint32\ first\_index,}
+\DoxyCodeLine{03591\ \ \ \ \ Sint32\ vertex\_offset,}
+\DoxyCodeLine{03592\ \ \ \ \ Uint32\ first\_instance);}
+\DoxyCodeLine{03593\ }
+\DoxyCodeLine{03614\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DrawGPUPrimitives(}
+\DoxyCodeLine{03615\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03616\ \ \ \ \ Uint32\ num\_vertices,}
+\DoxyCodeLine{03617\ \ \ \ \ Uint32\ num\_instances,}
+\DoxyCodeLine{03618\ \ \ \ \ Uint32\ first\_vertex,}
+\DoxyCodeLine{03619\ \ \ \ \ Uint32\ first\_instance);}
+\DoxyCodeLine{03620\ }
+\DoxyCodeLine{03637\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DrawGPUPrimitivesIndirect(}
+\DoxyCodeLine{03638\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03639\ \ \ \ \ SDL\_GPUBuffer\ *buffer,}
+\DoxyCodeLine{03640\ \ \ \ \ Uint32\ offset,}
+\DoxyCodeLine{03641\ \ \ \ \ Uint32\ draw\_count);}
+\DoxyCodeLine{03642\ }
+\DoxyCodeLine{03659\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DrawGPUIndexedPrimitivesIndirect(}
+\DoxyCodeLine{03660\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass,}
+\DoxyCodeLine{03661\ \ \ \ \ SDL\_GPUBuffer\ *buffer,}
+\DoxyCodeLine{03662\ \ \ \ \ Uint32\ offset,}
+\DoxyCodeLine{03663\ \ \ \ \ Uint32\ draw\_count);}
+\DoxyCodeLine{03664\ }
+\DoxyCodeLine{03675\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_EndGPURenderPass(}
+\DoxyCodeLine{03676\ \ \ \ \ SDL\_GPURenderPass\ *render\_pass);}
+\DoxyCodeLine{03677\ }
+\DoxyCodeLine{03678\ \textcolor{comment}{/*\ Compute\ Pass\ */}}
+\DoxyCodeLine{03679\ }
+\DoxyCodeLine{03717\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUComputePass\ *\ SDLCALL\ SDL\_BeginGPUComputePass(}
+\DoxyCodeLine{03718\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{03719\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_texture_read_write_binding}{SDL\_GPUStorageTextureReadWriteBinding}}\ *storage\_texture\_bindings,}
+\DoxyCodeLine{03720\ \ \ \ \ Uint32\ num\_storage\_texture\_bindings,}
+\DoxyCodeLine{03721\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_storage_buffer_read_write_binding}{SDL\_GPUStorageBufferReadWriteBinding}}\ *storage\_buffer\_bindings,}
+\DoxyCodeLine{03722\ \ \ \ \ Uint32\ num\_storage\_buffer\_bindings);}
+\DoxyCodeLine{03723\ }
+\DoxyCodeLine{03732\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUComputePipeline(}
+\DoxyCodeLine{03733\ \ \ \ \ SDL\_GPUComputePass\ *compute\_pass,}
+\DoxyCodeLine{03734\ \ \ \ \ SDL\_GPUComputePipeline\ *compute\_pipeline);}
+\DoxyCodeLine{03735\ }
+\DoxyCodeLine{03755\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUComputeSamplers(}
+\DoxyCodeLine{03756\ \ \ \ \ SDL\_GPUComputePass\ *compute\_pass,}
+\DoxyCodeLine{03757\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03758\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_sampler_binding}{SDL\_GPUTextureSamplerBinding}}\ *texture\_sampler\_bindings,}
+\DoxyCodeLine{03759\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03760\ }
+\DoxyCodeLine{03779\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUComputeStorageTextures(}
+\DoxyCodeLine{03780\ \ \ \ \ SDL\_GPUComputePass\ *compute\_pass,}
+\DoxyCodeLine{03781\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03782\ \ \ \ \ SDL\_GPUTexture\ *\textcolor{keyword}{const}\ *storage\_textures,}
+\DoxyCodeLine{03783\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03784\ }
+\DoxyCodeLine{03803\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BindGPUComputeStorageBuffers(}
+\DoxyCodeLine{03804\ \ \ \ \ SDL\_GPUComputePass\ *compute\_pass,}
+\DoxyCodeLine{03805\ \ \ \ \ Uint32\ first\_slot,}
+\DoxyCodeLine{03806\ \ \ \ \ SDL\_GPUBuffer\ *\textcolor{keyword}{const}\ *storage\_buffers,}
+\DoxyCodeLine{03807\ \ \ \ \ Uint32\ num\_bindings);}
+\DoxyCodeLine{03808\ }
+\DoxyCodeLine{03829\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DispatchGPUCompute(}
+\DoxyCodeLine{03830\ \ \ \ \ SDL\_GPUComputePass\ *compute\_pass,}
+\DoxyCodeLine{03831\ \ \ \ \ Uint32\ groupcount\_x,}
+\DoxyCodeLine{03832\ \ \ \ \ Uint32\ groupcount\_y,}
+\DoxyCodeLine{03833\ \ \ \ \ Uint32\ groupcount\_z);}
+\DoxyCodeLine{03834\ }
+\DoxyCodeLine{03853\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DispatchGPUComputeIndirect(}
+\DoxyCodeLine{03854\ \ \ \ \ SDL\_GPUComputePass\ *compute\_pass,}
+\DoxyCodeLine{03855\ \ \ \ \ SDL\_GPUBuffer\ *buffer,}
+\DoxyCodeLine{03856\ \ \ \ \ Uint32\ offset);}
+\DoxyCodeLine{03857\ }
+\DoxyCodeLine{03868\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_EndGPUComputePass(}
+\DoxyCodeLine{03869\ \ \ \ \ SDL\_GPUComputePass\ *compute\_pass);}
+\DoxyCodeLine{03870\ }
+\DoxyCodeLine{03871\ \textcolor{comment}{/*\ TransferBuffer\ Data\ */}}
+\DoxyCodeLine{03872\ }
+\DoxyCodeLine{03888\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_MapGPUTransferBuffer(}
+\DoxyCodeLine{03889\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03890\ \ \ \ \ SDL\_GPUTransferBuffer\ *transfer\_buffer,}
+\DoxyCodeLine{03891\ \ \ \ \ \textcolor{keywordtype}{bool}\ cycle);}
+\DoxyCodeLine{03892\ }
+\DoxyCodeLine{03901\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UnmapGPUTransferBuffer(}
+\DoxyCodeLine{03902\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{03903\ \ \ \ \ SDL\_GPUTransferBuffer\ *transfer\_buffer);}
+\DoxyCodeLine{03904\ }
+\DoxyCodeLine{03905\ \textcolor{comment}{/*\ Copy\ Pass\ */}}
+\DoxyCodeLine{03906\ }
+\DoxyCodeLine{03921\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUCopyPass\ *\ SDLCALL\ SDL\_BeginGPUCopyPass(}
+\DoxyCodeLine{03922\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer);}
+\DoxyCodeLine{03923\ }
+\DoxyCodeLine{03941\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UploadToGPUTexture(}
+\DoxyCodeLine{03942\ \ \ \ \ SDL\_GPUCopyPass\ *copy\_pass,}
+\DoxyCodeLine{03943\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info}{SDL\_GPUTextureTransferInfo}}\ *source,}
+\DoxyCodeLine{03944\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region}{SDL\_GPUTextureRegion}}\ *destination,}
+\DoxyCodeLine{03945\ \ \ \ \ \textcolor{keywordtype}{bool}\ cycle);}
+\DoxyCodeLine{03946\ }
+\DoxyCodeLine{03961\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UploadToGPUBuffer(}
+\DoxyCodeLine{03962\ \ \ \ \ SDL\_GPUCopyPass\ *copy\_pass,}
+\DoxyCodeLine{03963\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_location}{SDL\_GPUTransferBufferLocation}}\ *source,}
+\DoxyCodeLine{03964\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_region}{SDL\_GPUBufferRegion}}\ *destination,}
+\DoxyCodeLine{03965\ \ \ \ \ \textcolor{keywordtype}{bool}\ cycle);}
+\DoxyCodeLine{03966\ }
+\DoxyCodeLine{03988\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_CopyGPUTextureToTexture(}
+\DoxyCodeLine{03989\ \ \ \ \ SDL\_GPUCopyPass\ *copy\_pass,}
+\DoxyCodeLine{03990\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location}{SDL\_GPUTextureLocation}}\ *source,}
+\DoxyCodeLine{03991\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_location}{SDL\_GPUTextureLocation}}\ *destination,}
+\DoxyCodeLine{03992\ \ \ \ \ Uint32\ w,}
+\DoxyCodeLine{03993\ \ \ \ \ Uint32\ h,}
+\DoxyCodeLine{03994\ \ \ \ \ Uint32\ d,}
+\DoxyCodeLine{03995\ \ \ \ \ \textcolor{keywordtype}{bool}\ cycle);}
+\DoxyCodeLine{03996\ }
+\DoxyCodeLine{04012\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_CopyGPUBufferToBuffer(}
+\DoxyCodeLine{04013\ \ \ \ \ SDL\_GPUCopyPass\ *copy\_pass,}
+\DoxyCodeLine{04014\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_location}{SDL\_GPUBufferLocation}}\ *source,}
+\DoxyCodeLine{04015\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_location}{SDL\_GPUBufferLocation}}\ *destination,}
+\DoxyCodeLine{04016\ \ \ \ \ Uint32\ size,}
+\DoxyCodeLine{04017\ \ \ \ \ \textcolor{keywordtype}{bool}\ cycle);}
+\DoxyCodeLine{04018\ }
+\DoxyCodeLine{04032\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DownloadFromGPUTexture(}
+\DoxyCodeLine{04033\ \ \ \ \ SDL\_GPUCopyPass\ *copy\_pass,}
+\DoxyCodeLine{04034\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_region}{SDL\_GPUTextureRegion}}\ *source,}
+\DoxyCodeLine{04035\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_texture_transfer_info}{SDL\_GPUTextureTransferInfo}}\ *destination);}
+\DoxyCodeLine{04036\ }
+\DoxyCodeLine{04049\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DownloadFromGPUBuffer(}
+\DoxyCodeLine{04050\ \ \ \ \ SDL\_GPUCopyPass\ *copy\_pass,}
+\DoxyCodeLine{04051\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_buffer_region}{SDL\_GPUBufferRegion}}\ *source,}
+\DoxyCodeLine{04052\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_transfer_buffer_location}{SDL\_GPUTransferBufferLocation}}\ *destination);}
+\DoxyCodeLine{04053\ }
+\DoxyCodeLine{04061\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_EndGPUCopyPass(}
+\DoxyCodeLine{04062\ \ \ \ \ SDL\_GPUCopyPass\ *copy\_pass);}
+\DoxyCodeLine{04063\ }
+\DoxyCodeLine{04074\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GenerateMipmapsForGPUTexture(}
+\DoxyCodeLine{04075\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{04076\ \ \ \ \ SDL\_GPUTexture\ *texture);}
+\DoxyCodeLine{04077\ }
+\DoxyCodeLine{04088\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_BlitGPUTexture(}
+\DoxyCodeLine{04089\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{04090\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_blit_info}{SDL\_GPUBlitInfo}}\ *info);}
+\DoxyCodeLine{04091\ }
+\DoxyCodeLine{04092\ \textcolor{comment}{/*\ Submission/Presentation\ */}}
+\DoxyCodeLine{04093\ }
+\DoxyCodeLine{04108\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WindowSupportsGPUSwapchainComposition(}
+\DoxyCodeLine{04109\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04110\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{04111\ \ \ \ \ SDL\_GPUSwapchainComposition\ swapchain\_composition);}
+\DoxyCodeLine{04112\ }
+\DoxyCodeLine{04127\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WindowSupportsGPUPresentMode(}
+\DoxyCodeLine{04128\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04129\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{04130\ \ \ \ \ SDL\_GPUPresentMode\ present\_mode);}
+\DoxyCodeLine{04131\ }
+\DoxyCodeLine{04159\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ClaimWindowForGPUDevice(}
+\DoxyCodeLine{04160\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04161\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{04162\ }
+\DoxyCodeLine{04173\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseWindowFromGPUDevice(}
+\DoxyCodeLine{04174\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04175\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{04176\ }
+\DoxyCodeLine{04200\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetGPUSwapchainParameters(}
+\DoxyCodeLine{04201\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04202\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{04203\ \ \ \ \ SDL\_GPUSwapchainComposition\ swapchain\_composition,}
+\DoxyCodeLine{04204\ \ \ \ \ SDL\_GPUPresentMode\ present\_mode);}
+\DoxyCodeLine{04205\ }
+\DoxyCodeLine{04231\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetGPUAllowedFramesInFlight(}
+\DoxyCodeLine{04232\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04233\ \ \ \ \ Uint32\ allowed\_frames\_in\_flight);}
+\DoxyCodeLine{04234\ }
+\DoxyCodeLine{04246\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUTextureFormat\ SDLCALL\ SDL\_GetGPUSwapchainTextureFormat(}
+\DoxyCodeLine{04247\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04248\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{04249\ }
+\DoxyCodeLine{04301\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_AcquireGPUSwapchainTexture(}
+\DoxyCodeLine{04302\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{04303\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{04304\ \ \ \ \ SDL\_GPUTexture\ **swapchain\_texture,}
+\DoxyCodeLine{04305\ \ \ \ \ Uint32\ *swapchain\_texture\_width,}
+\DoxyCodeLine{04306\ \ \ \ \ Uint32\ *swapchain\_texture\_height);}
+\DoxyCodeLine{04307\ }
+\DoxyCodeLine{04326\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WaitForGPUSwapchain(}
+\DoxyCodeLine{04327\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04328\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{04329\ }
+\DoxyCodeLine{04372\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WaitAndAcquireGPUSwapchainTexture(}
+\DoxyCodeLine{04373\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer,}
+\DoxyCodeLine{04374\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{04375\ \ \ \ \ SDL\_GPUTexture\ **swapchain\_texture,}
+\DoxyCodeLine{04376\ \ \ \ \ Uint32\ *swapchain\_texture\_width,}
+\DoxyCodeLine{04377\ \ \ \ \ Uint32\ *swapchain\_texture\_height);}
+\DoxyCodeLine{04378\ }
+\DoxyCodeLine{04400\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SubmitGPUCommandBuffer(}
+\DoxyCodeLine{04401\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer);}
+\DoxyCodeLine{04402\ }
+\DoxyCodeLine{04427\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUFence\ *\ SDLCALL\ SDL\_SubmitGPUCommandBufferAndAcquireFence(}
+\DoxyCodeLine{04428\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer);}
+\DoxyCodeLine{04429\ }
+\DoxyCodeLine{04452\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_CancelGPUCommandBuffer(}
+\DoxyCodeLine{04453\ \ \ \ \ SDL\_GPUCommandBuffer\ *command\_buffer);}
+\DoxyCodeLine{04454\ }
+\DoxyCodeLine{04466\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WaitForGPUIdle(}
+\DoxyCodeLine{04467\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{04468\ }
+\DoxyCodeLine{04485\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WaitForGPUFences(}
+\DoxyCodeLine{04486\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04487\ \ \ \ \ \textcolor{keywordtype}{bool}\ wait\_all,}
+\DoxyCodeLine{04488\ \ \ \ \ SDL\_GPUFence\ *\textcolor{keyword}{const}\ *fences,}
+\DoxyCodeLine{04489\ \ \ \ \ Uint32\ num\_fences);}
+\DoxyCodeLine{04490\ }
+\DoxyCodeLine{04502\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_QueryGPUFence(}
+\DoxyCodeLine{04503\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04504\ \ \ \ \ SDL\_GPUFence\ *fence);}
+\DoxyCodeLine{04505\ }
+\DoxyCodeLine{04520\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseGPUFence(}
+\DoxyCodeLine{04521\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04522\ \ \ \ \ SDL\_GPUFence\ *fence);}
+\DoxyCodeLine{04523\ }
+\DoxyCodeLine{04524\ \textcolor{comment}{/*\ Format\ Info\ */}}
+\DoxyCodeLine{04525\ }
+\DoxyCodeLine{04536\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_GPUTextureFormatTexelBlockSize(}
+\DoxyCodeLine{04537\ \ \ \ \ SDL\_GPUTextureFormat\ format);}
+\DoxyCodeLine{04538\ }
+\DoxyCodeLine{04551\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GPUTextureSupportsFormat(}
+\DoxyCodeLine{04552\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04553\ \ \ \ \ SDL\_GPUTextureFormat\ format,}
+\DoxyCodeLine{04554\ \ \ \ \ SDL\_GPUTextureType\ type,}
+\DoxyCodeLine{04555\ \ \ \ \ SDL\_GPUTextureUsageFlags\ usage);}
+\DoxyCodeLine{04556\ }
+\DoxyCodeLine{04567\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GPUTextureSupportsSampleCount(}
+\DoxyCodeLine{04568\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device,}
+\DoxyCodeLine{04569\ \ \ \ \ SDL\_GPUTextureFormat\ format,}
+\DoxyCodeLine{04570\ \ \ \ \ SDL\_GPUSampleCount\ sample\_count);}
+\DoxyCodeLine{04571\ }
+\DoxyCodeLine{04583\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_CalculateGPUTextureFormatSize(}
+\DoxyCodeLine{04584\ \ \ \ \ SDL\_GPUTextureFormat\ format,}
+\DoxyCodeLine{04585\ \ \ \ \ Uint32\ width,}
+\DoxyCodeLine{04586\ \ \ \ \ Uint32\ height,}
+\DoxyCodeLine{04587\ \ \ \ \ Uint32\ depth\_or\_layer\_count);}
+\DoxyCodeLine{04588\ }
+\DoxyCodeLine{04598\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PixelFormat\ SDLCALL\ SDL\_GetPixelFormatFromGPUTextureFormat(SDL\_GPUTextureFormat\ format);}
+\DoxyCodeLine{04599\ }
+\DoxyCodeLine{04610\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GPUTextureFormat\ SDLCALL\ SDL\_GetGPUTextureFormatFromPixelFormat(SDL\_PixelFormat\ format);}
+\DoxyCodeLine{04611\ }
+\DoxyCodeLine{04612\ \textcolor{preprocessor}{\#ifdef\ SDL\_PLATFORM\_GDK}}
+\DoxyCodeLine{04613\ }
+\DoxyCodeLine{04629\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GDKSuspendGPU(\doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{04630\ }
+\DoxyCodeLine{04646\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GDKResumeGPU(\doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{04647\ }
+\DoxyCodeLine{04648\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_PLATFORM\_GDK\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{04649\ }
+\DoxyCodeLine{04650\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{04651\ \}}
+\DoxyCodeLine{04652\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_cplusplus\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{04653\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{04654\ }
+\DoxyCodeLine{04655\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_gpu\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,403 @@
+\doxysection{type\+\_\+quat.\+inl}
+\hypertarget{type__quat_8inl_source}{}\label{type__quat_8inl_source}\index{MonoEngine/thirdparty/glm/glm/detail/type\_quat.inl@{MonoEngine/thirdparty/glm/glm/detail/type\_quat.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{trigonometric_8hpp}{../trigonometric.hpp}}"{}}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{exponential_8hpp}{../exponential.hpp}}"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{quaternion__common_8hpp}{../ext/quaternion\_common.hpp}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{quaternion__geometric_8hpp}{../ext/quaternion\_geometric.hpp}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\{}
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1gen_type_trait}{genTypeTrait}}<\doxymbox{\hyperlink{structglm_1_1qua}{qua}}<T>\ >}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ genTypeEnum\ GENTYPE\ =\ GENTYPE\_QUAT;}
+\DoxyCodeLine{00014\ \ \ \ \ \};}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__dot}{compute\_dot}}<\doxymbox{\hyperlink{structglm_1_1qua}{qua}}<T,\ Q>,\ T,\ Aligned>}
+\DoxyCodeLine{00018\ \ \ \ \ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{static}\ T\ call(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ a,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ b)}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ tmp(a.w\ *\ b.w,\ a.x\ *\ b.x,\ a.y\ *\ b.y,\ a.z\ *\ b.z);}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (tmp.x\ +\ tmp.y)\ +\ (tmp.z\ +\ tmp.w);}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__add}{compute\_quat\_add}}}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ call(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(q.w\ +\ p.w,\ q.x\ +\ p.x,\ q.y\ +\ p.y,\ q.z\ +\ p.z);}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__sub}{compute\_quat\_sub}}}
+\DoxyCodeLine{00037\ \ \ \ \ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ call(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(q.w\ -\/\ p.w,\ q.x\ -\/\ p.x,\ q.y\ -\/\ p.y,\ q.z\ -\/\ p.z);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__scalar}{compute\_quat\_mul\_scalar}}}
+\DoxyCodeLine{00046\ \ \ \ \ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ call(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ T\ s)}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(q.w\ *\ s,\ q.x\ *\ s,\ q.y\ *\ s,\ q.z\ *\ s);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__div__scalar}{compute\_quat\_div\_scalar}}}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ call(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ T\ s)}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(q.w\ /\ s,\ q.x\ /\ s,\ q.y\ /\ s,\ q.z\ /\ s);}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keywordtype}{bool}\ Aligned>}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__vec4}{compute\_quat\_mul\_vec4}}}
+\DoxyCodeLine{00064\ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ call(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}(q\ *\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}(v),\ v.w);}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \};}
+\DoxyCodeLine{00070\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Component\ accesses\ -\/-\/}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00075\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T\ \&\ qua<T,\ Q>::operator[](\textcolor{keyword}{typename}\ qua<T,\ Q>::length\_type\ i)}
+\DoxyCodeLine{00076\ \ \ \ \ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ GLM\_ASSERT\_LENGTH(i,\ this-\/>length());}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_WXYZ}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&w)[i];}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&x)[i];}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00086\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T\ \textcolor{keyword}{const}\&\ qua<T,\ Q>::operator[](\textcolor{keyword}{typename}\ qua<T,\ Q>::length\_type\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00087\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ GLM\_ASSERT\_LENGTH(i,\ this-\/>length());}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_WXYZ}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&w)[i];}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&x)[i];}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Implicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_CONFIG\_CTOR\_INIT\ ==\ GLM\_ENABLE}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ GLM\_DEFAULTED\_DEFAULT\_CTOR\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua()}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_WXYZ}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ w(1),\ x(0),\ y(0),\ z(0)}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(0),\ y(0),\ z(0),\ w(1)}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ P>}
+\DoxyCodeLine{00111\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ P>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_WXYZ}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ :\ w(q.w),\ x(q.x),\ y(q.y),\ z(q.z)}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(q.x),\ y(q.y),\ z(q.z),\ w(q.w)}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00117\ \ \ \ \ \{\}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Explicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00122\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(T\ s,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_WXYZ}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ :\ w(s),\ x(v.x),\ y(v.y),\ z(v.z)}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(v.x),\ y(v.y),\ z(v.z),\ w(s)}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00128\ \ \ \ \ \{\}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_XYZW}}
+\DoxyCodeLine{00132\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(T\ \_x,\ T\ \_y,\ T\ \_z,\ T\ \_w)}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00134\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(T\ \_w,\ T\ \_x,\ T\ \_y,\ T\ \_z)}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_WXYZ}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ :\ w(\_w),\ x(\_x),\ y(\_y),\ z(\_z)}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(\_x),\ y(\_y),\ z(\_z),\ w(\_w)}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00141\ \ \ \ \ \{\}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00144\ \ \ \ \ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ qua<T,\ Q>::wxyz(T\ w,\ T\ x,\ T\ y,\ T\ z)\ \{}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#\ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_XYZW}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(x,\ y,\ z,\ w);}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(w,\ x,\ y,\ z);}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00150\ \ \ \ \ \}}
+\DoxyCodeLine{00151\ \ \ \ \ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversion\ constructors\ -\/-\/}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U,\ qualifier\ P>}
+\DoxyCodeLine{00156\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(\doxymbox{\hyperlink{structglm_1_1qua}{qua<U,\ P>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ ifdef\ GLM\_FORCE\_QUAT\_DATA\_WXYZ}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ :\ w(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.w)),\ x(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.x)),\ y(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.y)),\ z(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.z))}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ else}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ :\ x(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.x)),\ y(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.y)),\ z(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.z)),\ w(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.w))}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00162\ \ \ \ \ \{\}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{comment}{//template<typename\ valType>}}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{//GLM\_FUNC\_QUALIFIER\ qua<valType>::qua}}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{//(}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{comment}{//\ \ valType\ const\&\ pitch,}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{comment}{//\ \ valType\ const\&\ yaw,}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{//\ \ valType\ const\&\ roll}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//)}}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\{}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{//\ \ vec<3,\ valType>\ eulerAngle(pitch\ *\ valType(0.5),\ yaw\ *\ valType(0.5),\ roll\ *\ valType(0.5));}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ \ vec<3,\ valType>\ c\ =\ glm::cos(eulerAngle\ *\ valType(0.5));}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{//\ \ vec<3,\ valType>\ s\ =\ glm::sin(eulerAngle\ *\ valType(0.5));}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>w\ =\ c.x\ *\ c.y\ *\ c.z\ +\ s.x\ *\ s.y\ *\ s.z;}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>x\ =\ s.x\ *\ c.y\ *\ c.z\ -\/\ c.x\ *\ s.y\ *\ s.z;}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>y\ =\ c.x\ *\ s.y\ *\ c.z\ +\ s.x\ *\ c.y\ *\ s.z;}}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{//\ \ this-\/>z\ =\ c.x\ *\ c.y\ *\ s.z\ -\/\ s.x\ *\ s.y\ *\ c.z;}}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00183\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ qua<T,\ Q>::qua(\doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ u,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00184\ \ \ \ \ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ T\ norm\_u\_norm\_v\ =\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(dot(u,\ u)\ *\ dot(v,\ v));}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ T\ real\_part\ =\ norm\_u\_norm\_v\ +\ dot(u,\ v);}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ t;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(real\_part\ <\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1.e-\/6f)\ *\ norm\_u\_norm\_v)}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ u\ and\ v\ are\ exactly\ opposite,\ rotate\ 180\ degrees}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ around\ an\ arbitrary\ orthogonal\ axis.\ Axis\ normalisation}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can\ happen\ later,\ when\ we\ normalise\ the\ quaternion.}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ real\_part\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ t\ =\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{abs}}(u.x)\ >\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{abs}}(u.z)\ ?\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}(-\/u.y,\ u.x,\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0))\ :\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ -\/u.z,\ u.y);}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Otherwise,\ build\ quaternion\ the\ standard\ way.}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ t\ =\ \doxymbox{\hyperlink{group__core__func__geometric_ga1882f52ee88a161ed86dea9905a6da91}{cross}}(u,\ v);}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{group__core__func__geometric_ga5c6c1379961d4589035a390856f2d66c}{normalize}}(qua<T,\ Q>::wxyz(real\_part,\ t.x,\ t.y,\ t.z));}
+\DoxyCodeLine{00204\ \ \ \ \ \}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00207\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(\doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ eulerAngle)}
+\DoxyCodeLine{00208\ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ c\ =\ \doxymbox{\hyperlink{group__core__func__trigonometric_ga54745147add8b4fa05642f5c71f6833e}{glm::cos}}(eulerAngle\ *\ T(0.5));}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ s\ =\ \doxymbox{\hyperlink{group__core__func__trigonometric_ga3fcdcfa2d2ac38de9ba1885cd1c79414}{glm::sin}}(eulerAngle\ *\ T(0.5));}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ this-\/>w\ =\ c.x\ *\ c.y\ *\ c.z\ +\ s.x\ *\ s.y\ *\ s.z;}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ this-\/>x\ =\ s.x\ *\ c.y\ *\ c.z\ -\/\ c.x\ *\ s.y\ *\ s.z;}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ this-\/>y\ =\ c.x\ *\ s.y\ *\ c.z\ +\ s.x\ *\ c.y\ *\ s.z;}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ this-\/>z\ =\ c.x\ *\ c.y\ *\ s.z\ -\/\ s.x\ *\ s.y\ *\ c.z;}
+\DoxyCodeLine{00216\ \ \ \ \ \}}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00219\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(\doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{structm}{m}})}
+\DoxyCodeLine{00220\ \ \ \ \ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{group__gtc__quaternion_ga3d350068ce0d14e4496cb844eb79a05f}{quat\_cast}}(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00222\ \ \ \ \ \}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00225\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ qua<T,\ Q>::qua(mat<4,\ 4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{structm}{m}})}
+\DoxyCodeLine{00226\ \ \ \ \ \{}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ quat\_cast(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00228\ \ \ \ \ \}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00231\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>::operator}}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00232\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__gtc__quaternion_ga485b4423fd52c3ae1ff1051bda614c93}{mat3\_cast}}(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00234\ \ \ \ \ \}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00237\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>::operator}}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00238\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__gtc__quaternion_gaa6dc632fb953f612d07ad5b533d0390f}{mat4\_cast}}(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00240\ \ \ \ \ \}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00246\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \&\ qua<T,\ Q>::operator=(\doxymbox{\hyperlink{structglm_1_1qua}{qua<U,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00247\ \ \ \ \ \{}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ this-\/>w\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.w);}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ this-\/>x\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.x);}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ this-\/>y\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.y);}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ this-\/>z\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(q.z);}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00257\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \&\ qua<T,\ Q>::operator+=(\doxymbox{\hyperlink{structglm_1_1qua}{qua<U,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00258\ \ \ \ \ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__add}{detail::compute\_quat\_add}}<T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(q)));}
+\DoxyCodeLine{00260\ \ \ \ \ \}}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00264\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \&\ qua<T,\ Q>::operator-\/=(\doxymbox{\hyperlink{structglm_1_1qua}{qua<U,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00265\ \ \ \ \ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__sub}{detail::compute\_quat\_sub}}<T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(q)));}
+\DoxyCodeLine{00267\ \ \ \ \ \}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00271\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \&\ qua<T,\ Q>::operator*=(\doxymbox{\hyperlink{structglm_1_1qua}{qua<U,\ Q>}}\ \textcolor{keyword}{const}\&\ r)}
+\DoxyCodeLine{00272\ \ \ \ \ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\ p(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\ q(r);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ this-\/>w\ =\ p.w\ *\ q.w\ -\/\ p.x\ *\ q.x\ -\/\ p.y\ *\ q.y\ -\/\ p.z\ *\ q.z;}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ this-\/>x\ =\ p.w\ *\ q.x\ +\ p.x\ *\ q.w\ +\ p.y\ *\ q.z\ -\/\ p.z\ *\ q.y;}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ this-\/>y\ =\ p.w\ *\ q.y\ +\ p.y\ *\ q.w\ +\ p.z\ *\ q.x\ -\/\ p.x\ *\ q.z;}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ this-\/>z\ =\ p.w\ *\ q.z\ +\ p.z\ *\ q.w\ +\ p.x\ *\ q.y\ -\/\ p.y\ *\ q.x;}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00285\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \&\ qua<T,\ Q>::operator*=(U\ s)}
+\DoxyCodeLine{00286\ \ \ \ \ \{}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__scalar}{detail::compute\_quat\_mul\_scalar}}<T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ \textcolor{keyword}{static\_cast<}U\textcolor{keyword}{>}(s)));}
+\DoxyCodeLine{00288\ \ \ \ \ \}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00292\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \&\ qua<T,\ Q>::operator/=(U\ s)}
+\DoxyCodeLine{00293\ \ \ \ \ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__div__scalar}{detail::compute\_quat\_div\_scalar}}<T,\ Q,\ detail::is\_aligned<Q>::value>::call(*\textcolor{keyword}{this},\ \textcolor{keyword}{static\_cast<}U\textcolor{keyword}{>}(s)));}
+\DoxyCodeLine{00295\ \ \ \ \ \}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ bit\ operators\ -\/-\/}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00300\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator+(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00301\ \ \ \ \ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q;}
+\DoxyCodeLine{00303\ \ \ \ \ \}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00306\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator-\/(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00307\ \ \ \ \ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(-\/q.w,\ -\/q.x,\ -\/q.y,\ -\/q.z);}
+\DoxyCodeLine{00309\ \ \ \ \ \}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ operators\ -\/-\/}}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00314\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator+(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00315\ \ \ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(q)\ +=\ p;}
+\DoxyCodeLine{00317\ \ \ \ \ \}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00320\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator-\/(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00321\ \ \ \ \ \{}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(q)\ -\/=\ p;}
+\DoxyCodeLine{00323\ \ \ \ \ \}}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00326\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator*(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00327\ \ \ \ \ \{}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(q)\ *=\ p;}
+\DoxyCodeLine{00329\ \ \ \ \ \}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00332\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ operator*(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00333\ \ \ \ \ \{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\ QuatVector(q.x,\ q.y,\ q.z);}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\ uv(\doxymbox{\hyperlink{group__core__func__geometric_ga1882f52ee88a161ed86dea9905a6da91}{glm::cross}}(QuatVector,\ v));}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\ uuv(\doxymbox{\hyperlink{group__core__func__geometric_ga1882f52ee88a161ed86dea9905a6da91}{glm::cross}}(QuatVector,\ uv));}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v\ +\ ((uv\ *\ q.w)\ +\ uuv)\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(2);}
+\DoxyCodeLine{00339\ \ \ \ \ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00342\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ operator*(\doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00343\ \ \ \ \ \{}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__matrix_gace61e11fc177491beeca0c6971e2f3fc}{glm::inverse}}(q)\ *\ v;}
+\DoxyCodeLine{00345\ \ \ \ \ \}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00348\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ operator*(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00349\ \ \ \ \ \{}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1compute__quat__mul__vec4}{detail::compute\_quat\_mul\_vec4<T,\ Q,\ detail::is\_aligned<Q>::value}}>::call(q,\ v);}
+\DoxyCodeLine{00351\ \ \ \ \ \}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00354\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ operator*(\doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00355\ \ \ \ \ \{}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__matrix_gace61e11fc177491beeca0c6971e2f3fc}{glm::inverse}}(q)\ *\ v;}
+\DoxyCodeLine{00357\ \ \ \ \ \}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00360\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator*(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ T\ \textcolor{keyword}{const}\&\ s)}
+\DoxyCodeLine{00361\ \ \ \ \ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ q.w\ *\ s,\ q.x\ *\ s,\ q.y\ *\ s,\ q.z\ *\ s);}
+\DoxyCodeLine{00364\ \ \ \ \ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00367\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator*(T\ \textcolor{keyword}{const}\&\ s,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00368\ \ \ \ \ \{}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q\ *\ s;}
+\DoxyCodeLine{00370\ \ \ \ \ \}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00373\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ operator/(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q,\ T\ \textcolor{keyword}{const}\&\ s)}
+\DoxyCodeLine{00374\ \ \ \ \ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qua<T,\ Q>::wxyz(}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ q.w\ /\ s,\ q.x\ /\ s,\ q.y\ /\ s,\ q.z\ /\ s);}
+\DoxyCodeLine{00377\ \ \ \ \ \}}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Boolean\ operators\ -\/-\/}}
+\DoxyCodeLine{00380\ }
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00382\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keywordtype}{bool}\ operator==(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q1,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q2)}
+\DoxyCodeLine{00383\ \ \ \ \ \{}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q1.x\ ==\ q2.x\ \&\&\ q1.y\ ==\ q2.y\ \&\&\ q1.z\ ==\ q2.z\ \&\&\ q1.w\ ==\ q2.w;}
+\DoxyCodeLine{00385\ \ \ \ \ \}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00388\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keywordtype}{bool}\ operator!=(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q1,\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q2)}
+\DoxyCodeLine{00389\ \ \ \ \ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q1.x\ !=\ q2.x\ ||\ q1.y\ !=\ q2.y\ ||\ q1.z\ !=\ q2.z\ ||\ q1.w\ !=\ q2.w;}
+\DoxyCodeLine{00391\ \ \ \ \ \}}
+\DoxyCodeLine{00392\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#if\ GLM\_CONFIG\_SIMD\ ==\ GLM\_ENABLE}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#\ \ \ include\ "{}type\_quat\_simd.inl"{}}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00397\ }
+
+\end{DoxyCode}

@@ -1,0 +1,186 @@
+\doxysection{SDL\+\_\+d3dmath.\+h}
+\hypertarget{_s_d_l__d3dmath_8h_source}{}\label{_s_d_l__d3dmath_8h_source}\index{MonoRuntime/extern/sdl/src/render/SDL\_d3dmath.h@{MonoRuntime/extern/sdl/src/render/SDL\_d3dmath.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#if\ defined(SDL\_VIDEO\_RENDER\_D3D)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\ \ \ \ defined(SDL\_VIDEO\_RENDER\_D3D11)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \ \ defined(SDL\_VIDEO\_RENDER\_D3D12)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\ \ \ \ defined(SDL\_VIDEO\_RENDER\_GPU)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ defined(SDL\_VIDEO\_RENDER\_VULKAN)}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Direct3D\ matrix\ math\ functions}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00040\ \}\ Float2;}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{float}\ z;}
+\DoxyCodeLine{00047\ \}\ Float3;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00050\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{float}\ z;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{float}\ w;}
+\DoxyCodeLine{00055\ \}\ Float4;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00058\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_11,\ \_12,\ \_13,\ \_14;}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_21,\ \_22,\ \_23,\ \_24;}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_31,\ \_32,\ \_33,\ \_34;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_41,\ \_42,\ \_43,\ \_44;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \}\ v;}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{structm}{m}}[4][4];}
+\DoxyCodeLine{00069\ \ \ \ \ \};}
+\DoxyCodeLine{00070\ \}\ Float4X4;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ Float4X4\ MatrixIdentity(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ Float4X4\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00075\ \ \ \ \ SDL\_zero(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00076\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_11\ =\ 1.0f;}
+\DoxyCodeLine{00077\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_22\ =\ 1.0f;}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_33\ =\ 1.0f;}
+\DoxyCodeLine{00079\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_44\ =\ 1.0f;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ Float4X4\ MatrixMultiply(Float4X4\ M1,\ Float4X4\ M2)}
+\DoxyCodeLine{00084\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ Float4X4\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00086\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_11\ =\ M1.v.\_11\ *\ M2.v.\_11\ +\ M1.v.\_12\ *\ M2.v.\_21\ +\ M1.v.\_13\ *\ M2.v.\_31\ +\ M1.v.\_14\ *\ M2.v.\_41;}
+\DoxyCodeLine{00087\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_12\ =\ M1.v.\_11\ *\ M2.v.\_12\ +\ M1.v.\_12\ *\ M2.v.\_22\ +\ M1.v.\_13\ *\ M2.v.\_32\ +\ M1.v.\_14\ *\ M2.v.\_42;}
+\DoxyCodeLine{00088\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_13\ =\ M1.v.\_11\ *\ M2.v.\_13\ +\ M1.v.\_12\ *\ M2.v.\_23\ +\ M1.v.\_13\ *\ M2.v.\_33\ +\ M1.v.\_14\ *\ M2.v.\_43;}
+\DoxyCodeLine{00089\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_14\ =\ M1.v.\_11\ *\ M2.v.\_14\ +\ M1.v.\_12\ *\ M2.v.\_24\ +\ M1.v.\_13\ *\ M2.v.\_34\ +\ M1.v.\_14\ *\ M2.v.\_44;}
+\DoxyCodeLine{00090\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_21\ =\ M1.v.\_21\ *\ M2.v.\_11\ +\ M1.v.\_22\ *\ M2.v.\_21\ +\ M1.v.\_23\ *\ M2.v.\_31\ +\ M1.v.\_24\ *\ M2.v.\_41;}
+\DoxyCodeLine{00091\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_22\ =\ M1.v.\_21\ *\ M2.v.\_12\ +\ M1.v.\_22\ *\ M2.v.\_22\ +\ M1.v.\_23\ *\ M2.v.\_32\ +\ M1.v.\_24\ *\ M2.v.\_42;}
+\DoxyCodeLine{00092\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_23\ =\ M1.v.\_21\ *\ M2.v.\_13\ +\ M1.v.\_22\ *\ M2.v.\_23\ +\ M1.v.\_23\ *\ M2.v.\_33\ +\ M1.v.\_24\ *\ M2.v.\_43;}
+\DoxyCodeLine{00093\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_24\ =\ M1.v.\_21\ *\ M2.v.\_14\ +\ M1.v.\_22\ *\ M2.v.\_24\ +\ M1.v.\_23\ *\ M2.v.\_34\ +\ M1.v.\_24\ *\ M2.v.\_44;}
+\DoxyCodeLine{00094\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_31\ =\ M1.v.\_31\ *\ M2.v.\_11\ +\ M1.v.\_32\ *\ M2.v.\_21\ +\ M1.v.\_33\ *\ M2.v.\_31\ +\ M1.v.\_34\ *\ M2.v.\_41;}
+\DoxyCodeLine{00095\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_32\ =\ M1.v.\_31\ *\ M2.v.\_12\ +\ M1.v.\_32\ *\ M2.v.\_22\ +\ M1.v.\_33\ *\ M2.v.\_32\ +\ M1.v.\_34\ *\ M2.v.\_42;}
+\DoxyCodeLine{00096\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_33\ =\ M1.v.\_31\ *\ M2.v.\_13\ +\ M1.v.\_32\ *\ M2.v.\_23\ +\ M1.v.\_33\ *\ M2.v.\_33\ +\ M1.v.\_34\ *\ M2.v.\_43;}
+\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_34\ =\ M1.v.\_31\ *\ M2.v.\_14\ +\ M1.v.\_32\ *\ M2.v.\_24\ +\ M1.v.\_33\ *\ M2.v.\_34\ +\ M1.v.\_34\ *\ M2.v.\_44;}
+\DoxyCodeLine{00098\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_41\ =\ M1.v.\_41\ *\ M2.v.\_11\ +\ M1.v.\_42\ *\ M2.v.\_21\ +\ M1.v.\_43\ *\ M2.v.\_31\ +\ M1.v.\_44\ *\ M2.v.\_41;}
+\DoxyCodeLine{00099\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_42\ =\ M1.v.\_41\ *\ M2.v.\_12\ +\ M1.v.\_42\ *\ M2.v.\_22\ +\ M1.v.\_43\ *\ M2.v.\_32\ +\ M1.v.\_44\ *\ M2.v.\_42;}
+\DoxyCodeLine{00100\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_43\ =\ M1.v.\_41\ *\ M2.v.\_13\ +\ M1.v.\_42\ *\ M2.v.\_23\ +\ M1.v.\_43\ *\ M2.v.\_33\ +\ M1.v.\_44\ *\ M2.v.\_43;}
+\DoxyCodeLine{00101\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_44\ =\ M1.v.\_41\ *\ M2.v.\_14\ +\ M1.v.\_42\ *\ M2.v.\_24\ +\ M1.v.\_43\ *\ M2.v.\_34\ +\ M1.v.\_44\ *\ M2.v.\_44;}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00103\ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ Float4X4\ MatrixScaling(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{00106\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ Float4X4\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00108\ \ \ \ \ SDL\_zero(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00109\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_11\ =\ x;}
+\DoxyCodeLine{00110\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_22\ =\ y;}
+\DoxyCodeLine{00111\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_33\ =\ z;}
+\DoxyCodeLine{00112\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_44\ =\ 1.0f;}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00114\ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ Float4X4\ MatrixTranslation(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{00117\ \{}
+\DoxyCodeLine{00118\ \ \ \ \ Float4X4\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00119\ \ \ \ \ SDL\_zero(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00120\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_11\ =\ 1.0f;}
+\DoxyCodeLine{00121\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_22\ =\ 1.0f;}
+\DoxyCodeLine{00122\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_33\ =\ 1.0f;}
+\DoxyCodeLine{00123\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_44\ =\ 1.0f;}
+\DoxyCodeLine{00124\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_41\ =\ x;}
+\DoxyCodeLine{00125\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_42\ =\ y;}
+\DoxyCodeLine{00126\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_43\ =\ z;}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00128\ \}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ Float4X4\ MatrixRotationX(\textcolor{keywordtype}{float}\ r)}
+\DoxyCodeLine{00131\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{float}\ sinR\ =\ SDL\_sinf(r);}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{float}\ cosR\ =\ SDL\_cosf(r);}
+\DoxyCodeLine{00134\ \ \ \ \ Float4X4\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00135\ \ \ \ \ SDL\_zero(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00136\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_11\ =\ 1.0f;}
+\DoxyCodeLine{00137\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_22\ =\ cosR;}
+\DoxyCodeLine{00138\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_23\ =\ sinR;}
+\DoxyCodeLine{00139\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_32\ =\ -\/sinR;}
+\DoxyCodeLine{00140\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_33\ =\ cosR;}
+\DoxyCodeLine{00141\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_44\ =\ 1.0f;}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00143\ \}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ Float4X4\ MatrixRotationY(\textcolor{keywordtype}{float}\ r)}
+\DoxyCodeLine{00146\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{float}\ sinR\ =\ SDL\_sinf(r);}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{float}\ cosR\ =\ SDL\_cosf(r);}
+\DoxyCodeLine{00149\ \ \ \ \ Float4X4\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00150\ \ \ \ \ SDL\_zero(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00151\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_11\ =\ cosR;}
+\DoxyCodeLine{00152\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_13\ =\ -\/sinR;}
+\DoxyCodeLine{00153\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_22\ =\ 1.0f;}
+\DoxyCodeLine{00154\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_31\ =\ sinR;}
+\DoxyCodeLine{00155\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_33\ =\ cosR;}
+\DoxyCodeLine{00156\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_44\ =\ 1.0f;}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00158\ \}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ Float4X4\ MatrixRotationZ(\textcolor{keywordtype}{float}\ r)}
+\DoxyCodeLine{00161\ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{float}\ sinR\ =\ SDL\_sinf(r);}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{float}\ cosR\ =\ SDL\_cosf(r);}
+\DoxyCodeLine{00164\ \ \ \ \ Float4X4\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00165\ \ \ \ \ SDL\_zero(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00166\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_11\ =\ cosR;}
+\DoxyCodeLine{00167\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_12\ =\ sinR;}
+\DoxyCodeLine{00168\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_21\ =\ -\/sinR;}
+\DoxyCodeLine{00169\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_22\ =\ cosR;}
+\DoxyCodeLine{00170\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_33\ =\ 1.0f;}
+\DoxyCodeLine{00171\ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}.v.\_44\ =\ 1.0f;}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00173\ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \textcolor{comment}{//\ Ends\ C\ function\ definitions\ when\ using\ C++}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00177\ \}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_RENDER\_D3D\ ||\ SDL\_VIDEO\_RENDER\_D3D11\ ||\ SDL\_VIDEO\_RENDER\_D3D12\ ||\ SDL\_VIDEO\_RENDER\_VULKAN}}
+
+\end{DoxyCode}

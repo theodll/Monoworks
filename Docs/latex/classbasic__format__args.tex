@@ -1,0 +1,49 @@
+\doxysection{basic\+\_\+format\+\_\+args\texorpdfstring{$<$}{<} Context \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classbasic__format__args}{}\label{classbasic__format__args}\index{basic\_format\_args$<$ Context $>$@{basic\_format\_args$<$ Context $>$}}
+
+
+{\ttfamily \+\#include $<$base.\+h$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classbasic__format__args_af22c7ecd69cc9c3dc2a9a113b5ff5088}\label{classbasic__format__args_af22c7ecd69cc9c3dc2a9a113b5ff5088} 
+using {\bfseries format\+\_\+arg} = \doxymbox{\hyperlink{classbasic__format__arg}{basic\+\_\+format\+\_\+arg}}$<$Context$>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classbasic__format__args_a7f3ea525b2025e651a9a62817b532104}\label{classbasic__format__args_a7f3ea525b2025e651a9a62817b532104} 
+{\footnotesize template$<$int NUM\+\_\+\+ARGS, int NUM\+\_\+\+NAMED\+\_\+\+ARGS, unsigned long long DESC, FMT\+\_\+\+ENABLE\+\_\+\+IF(NUM\+\_\+\+ARGS$<$=detail::\+max\+\_\+packed\+\_\+args)$>$ }\\constexpr FMT\+\_\+\+ALWAYS\+\_\+\+INLINE {\bfseries basic\+\_\+format\+\_\+args} (const store$<$ NUM\+\_\+\+ARGS, NUM\+\_\+\+NAMED\+\_\+\+ARGS, DESC $>$ \&s)
+\begin{DoxyCompactList}\small\item\em Constructs a {\ttfamily \doxylink{classbasic__format__args}{basic\+\_\+format\+\_\+args}} object from {\ttfamily format\+\_\+arg\+\_\+store}. \end{DoxyCompactList}\item 
+\Hypertarget{classbasic__format__args_a5026ec73b29553247c2981c0895ac03c}\label{classbasic__format__args_a5026ec73b29553247c2981c0895ac03c} 
+{\footnotesize template$<$int NUM\+\_\+\+ARGS, int NUM\+\_\+\+NAMED\+\_\+\+ARGS, unsigned long long DESC, FMT\+\_\+\+ENABLE\+\_\+\+IF(NUM\+\_\+\+ARGS $>$ detail::\+max\+\_\+packed\+\_\+args)$>$ }\\constexpr {\bfseries basic\+\_\+format\+\_\+args} (const store$<$ NUM\+\_\+\+ARGS, NUM\+\_\+\+NAMED\+\_\+\+ARGS, DESC $>$ \&s)
+\item 
+\Hypertarget{classbasic__format__args_ab892e5918e9b9b5df9b96c902fadfb9d}\label{classbasic__format__args_ab892e5918e9b9b5df9b96c902fadfb9d} 
+constexpr {\bfseries basic\+\_\+format\+\_\+args} (const format\+\_\+arg \texorpdfstring{$\ast$}{*}args, int count, bool has\+\_\+named=false)
+\begin{DoxyCompactList}\small\item\em Constructs a {\ttfamily \doxylink{classbasic__format__args}{basic\+\_\+format\+\_\+args}} object from a dynamic list of arguments. \end{DoxyCompactList}\item 
+\Hypertarget{classbasic__format__args_a3339d3a4e4daaf7bb0de1a8084e7f086}\label{classbasic__format__args_a3339d3a4e4daaf7bb0de1a8084e7f086} 
+FMT\+\_\+\+CONSTEXPR auto {\bfseries get} (int id) const -\/$>$ format\+\_\+arg
+\begin{DoxyCompactList}\small\item\em Returns the argument with the specified id. \end{DoxyCompactList}\item 
+\Hypertarget{classbasic__format__args_abb2e1c3f297bf50f1bd260133495a024}\label{classbasic__format__args_abb2e1c3f297bf50f1bd260133495a024} 
+{\footnotesize template$<$typename Char$>$ }\\auto {\bfseries get} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}}$<$ Char $>$ name) const -\/$>$ format\+\_\+arg
+\item 
+\Hypertarget{classbasic__format__args_a46c50be7d2d5cb389f25404bb0b030ee}\label{classbasic__format__args_a46c50be7d2d5cb389f25404bb0b030ee} 
+{\footnotesize template$<$typename Char$>$ }\\FMT\+\_\+\+CONSTEXPR auto {\bfseries get\+\_\+id} (\doxymbox{\hyperlink{classbasic__string__view}{basic\+\_\+string\+\_\+view}}$<$ Char $>$ name) const -\/$>$ int
+\item 
+\Hypertarget{classbasic__format__args_a7747894fe7c14fb78260b53ca7702782}\label{classbasic__format__args_a7747894fe7c14fb78260b53ca7702782} 
+auto {\bfseries max\+\_\+size} () const -\/$>$ int
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Context$>$\newline
+class basic\+\_\+format\+\_\+args$<$ Context $>$}
+A view of a collection of formatting arguments. To avoid lifetime issues it should only be used as a parameter type in type-\/erased functions such as {\ttfamily vformat}:\+ \begin{DoxyVerb}void vlog(fmt::string_view fmt, fmt::format_args args);  // OK
+fmt::format_args args = fmt::make_format_args();  // Dangling reference
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Engine/\+thirdparty/\+spdlog/\+include/\+spdlog/\+fmt/\+bundled/\+base.\+h\end{DoxyCompactItemize}

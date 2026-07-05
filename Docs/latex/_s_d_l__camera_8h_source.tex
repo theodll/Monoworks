@@ -1,0 +1,109 @@
+\doxysection{SDL\+\_\+camera.\+h}
+\hypertarget{_s_d_l__camera_8h_source}{}\label{_s_d_l__camera_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_camera.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_camera.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifndef\ SDL\_camera\_h\_}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ SDL\_camera\_h\_}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_pixels.h>}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_surface.h>}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00078\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00080\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_CameraID;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ \doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}}
+\DoxyCodeLine{00116\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ SDL\_PixelFormat\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec_a4aa78ca2c23f1459cd1d591b3e98e6ab}{format}};\ \ \ \ \ }
+\DoxyCodeLine{00118\ \ \ \ \ SDL\_Colorspace\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec_ae91c86d64fa947c642d9ec6ac5f36e44}{colorspace}};\ \ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec_a746c6ca6700173f48d6293944d99c9ac}{width}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec_ab1d76516ab7e03c5d1002b0c0ea1c4c5}{height}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec_a2a4f6720b790bb1022fefbeb87385d13}{framerate\_numerator}};\ \ \ \ \ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec_a236cdb78c2d67866a8999c16cf9d8dee}{framerate\_denominator}};\ \ \ }
+\DoxyCodeLine{00123\ \}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}};}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00132\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_CameraPosition}
+\DoxyCodeLine{00133\ \{}
+\DoxyCodeLine{00134\ \ \ \ \ SDL\_CAMERA\_POSITION\_UNKNOWN,}
+\DoxyCodeLine{00135\ \ \ \ \ SDL\_CAMERA\_POSITION\_FRONT\_FACING,}
+\DoxyCodeLine{00136\ \ \ \ \ SDL\_CAMERA\_POSITION\_BACK\_FACING}
+\DoxyCodeLine{00137\ \}\ SDL\_CameraPosition;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00146\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_CameraPermissionState}
+\DoxyCodeLine{00147\ \{}
+\DoxyCodeLine{00148\ \ \ \ \ SDL\_CAMERA\_PERMISSION\_STATE\_DENIED\ =\ -\/1,}
+\DoxyCodeLine{00149\ \ \ \ \ SDL\_CAMERA\_PERMISSION\_STATE\_PENDING,}
+\DoxyCodeLine{00150\ \ \ \ \ SDL\_CAMERA\_PERMISSION\_STATE\_APPROVED}
+\DoxyCodeLine{00151\ \}\ SDL\_CameraPermissionState;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00175\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetNumCameraDrivers(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00199\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetCameraDriver(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00215\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetCurrentCameraDriver(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00232\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_CameraID\ *\ SDLCALL\ SDL\_GetCameras(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00271\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ **\ SDLCALL\ SDL\_GetCameraSupportedFormats(SDL\_CameraID\ instance\_id,\ \textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00286\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetCameraName(SDL\_CameraID\ instance\_id);}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00305\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_CameraPosition\ SDLCALL\ SDL\_GetCameraPosition(SDL\_CameraID\ instance\_id);}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00352\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *\ SDLCALL\ SDL\_OpenCamera(SDL\_CameraID\ instance\_id,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ *spec);}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00387\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_CameraPermissionState\ SDLCALL\ SDL\_GetCameraPermissionState(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *camera);}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00402\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_CameraID\ SDLCALL\ SDL\_GetCameraID(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *camera);}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00415\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetCameraProperties(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *camera);}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00441\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetCameraFormat(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *camera,\ \doxymbox{\hyperlink{struct_s_d_l___camera_spec}{SDL\_CameraSpec}}\ *spec);}
+\DoxyCodeLine{00442\ }
+\DoxyCodeLine{00484\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_AcquireCameraFrame(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *camera,\ Uint64\ *timestampNS);}
+\DoxyCodeLine{00485\ }
+\DoxyCodeLine{00512\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ReleaseCameraFrame(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *camera,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *frame);}
+\DoxyCodeLine{00513\ }
+\DoxyCodeLine{00527\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_CloseCamera(\doxymbox{\hyperlink{struct_s_d_l___camera}{SDL\_Camera}}\ *camera);}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00531\ \}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_camera\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

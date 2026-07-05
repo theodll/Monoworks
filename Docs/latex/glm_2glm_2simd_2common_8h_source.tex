@@ -1,0 +1,254 @@
+\doxysection{common.\+h}
+\hypertarget{glm_2glm_2simd_2common_8h_source}{}\label{glm_2glm_2simd_2common_8h_source}\index{MonoEngine/thirdparty/glm/glm/simd/common.h@{MonoEngine/thirdparty/glm/glm/simd/common.h}}
+\doxymbox{\hyperlink{glm_2glm_2simd_2common_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}platform.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_add(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_add\_ps(a,\ b);}
+\DoxyCodeLine{00013\ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec1\_add(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_add\_ss(a,\ b);}
+\DoxyCodeLine{00018\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_sub(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_sub\_ps(a,\ b);}
+\DoxyCodeLine{00023\ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec1\_sub(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_sub\_ss(a,\ b);}
+\DoxyCodeLine{00028\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_mul(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_mul\_ps(a,\ b);}
+\DoxyCodeLine{00033\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec1\_mul(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_mul\_ss(a,\ b);}
+\DoxyCodeLine{00038\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_div(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_div\_ps(a,\ b);}
+\DoxyCodeLine{00043\ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec1\_div(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_div\_ss(a,\ b);}
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_div\_lowp(glm\_f32vec4\ a,\ glm\_f32vec4\ b)}
+\DoxyCodeLine{00051\ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{return}\ glm\_vec4\_mul(a,\ \_mm\_rcp\_ps(b));}
+\DoxyCodeLine{00053\ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_swizzle\_xyzw(glm\_f32vec4\ a)}
+\DoxyCodeLine{00056\ \{}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_ARCH\ \&\ GLM\_ARCH\_AVX2\_BIT}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_permute\_ps(a,\ \_MM\_SHUFFLE(3,\ 2,\ 1,\ 0));}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_shuffle\_ps(a,\ a,\ \_MM\_SHUFFLE(3,\ 2,\ 1,\ 0));}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00062\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec1\_fma(glm\_f32vec4\ a,\ glm\_f32vec4\ b,\ glm\_f32vec4\ c)}
+\DoxyCodeLine{00065\ \{}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#\ \ \ ifdef\ GLM\_FORCE\_FMA}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_fmadd\_ss(a,\ b,\ c);}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_add\_ss(\_mm\_mul\_ss(a,\ b),\ c);}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00071\ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_fma(glm\_f32vec4\ a,\ glm\_f32vec4\ b,\ glm\_f32vec4\ c)}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#\ \ \ ifdef\ GLM\_FORCE\_FMA}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_fmadd\_ps(a,\ b,\ c);}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ glm\_vec4\_add(glm\_vec4\_mul(a,\ b),\ c);}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00080\ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4d\_fma(glm\_f32vec4\ a,\ glm\_f32vec4\ b,\ glm\_f32vec4\ c)}
+\DoxyCodeLine{00083\ \{}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#\ \ \ ifdef\ GLM\_FORCE\_FMA}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_fmadd\_ps(a,\ b,\ c);}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ glm\_vec4\_add(glm\_vec4\_mul(a,\ b),\ c);}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00089\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_abs(glm\_f32vec4\ x)}
+\DoxyCodeLine{00092\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_and\_ps(x,\ \_mm\_castsi128\_ps(\_mm\_set1\_epi32(0x7FFFFFFF)));}
+\DoxyCodeLine{00094\ \}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ GLM\_FUNC\_QUALIFIER\ glm\_ivec4\ glm\_ivec4\_abs(glm\_ivec4\ x)}
+\DoxyCodeLine{00097\ \{}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSSE3\_BIT}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_sign\_epi32(x,\ x);}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ sgn0\ =\ \_mm\_srai\_epi32(x,\ 31);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ inv0\ =\ \_mm\_xor\_si128(x,\ sgn0);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ sub0\ =\ \_mm\_sub\_epi32(inv0,\ sgn0);}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sub0;}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00106\ \}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_sign(glm\_vec4\ x)}
+\DoxyCodeLine{00109\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ zro0\ =\ \_mm\_setzero\_ps();}
+\DoxyCodeLine{00111\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ cmp0\ =\ \_mm\_cmplt\_ps(x,\ zro0);}
+\DoxyCodeLine{00112\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ cmp1\ =\ \_mm\_cmpgt\_ps(x,\ zro0);}
+\DoxyCodeLine{00113\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ and0\ =\ \_mm\_and\_ps(cmp0,\ \_mm\_set1\_ps(-\/1.0f));}
+\DoxyCodeLine{00114\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ and1\ =\ \_mm\_and\_ps(cmp1,\ \_mm\_set1\_ps(1.0f));}
+\DoxyCodeLine{00115\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ or0\ =\ \_mm\_or\_ps(and0,\ and1);}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordflow}{return}\ or0;}
+\DoxyCodeLine{00117\ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_round(glm\_vec4\ x)}
+\DoxyCodeLine{00120\ \{}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE41\_BIT}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_round\_ps(x,\ \_MM\_FROUND\_TO\_NEAREST\_INT);}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sgn0\ =\ \_mm\_castsi128\_ps(\_mm\_set1\_epi32(\textcolor{keywordtype}{int}(0x80000000)));}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ and0\ =\ \_mm\_and\_ps(sgn0,\ x);}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ or0\ =\ \_mm\_or\_ps(and0,\ \_mm\_set\_ps1(8388608.0f));}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ add0\ =\ glm\_vec4\_add(x,\ or0);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub0\ =\ glm\_vec4\_sub(add0,\ or0);}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sub0;}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00131\ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_floor(glm\_vec4\ x)}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE41\_BIT}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_floor\_ps(x);}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ rnd0\ =\ glm\_vec4\_round(x);}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ cmp0\ =\ \_mm\_cmplt\_ps(x,\ rnd0);}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ and0\ =\ \_mm\_and\_ps(cmp0,\ \_mm\_set1\_ps(1.0f));}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub0\ =\ glm\_vec4\_sub(rnd0,\ and0);}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sub0;}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00144\ \}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{comment}{/*\ trunc\ TODO}}
+\DoxyCodeLine{00147\ \textcolor{comment}{GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_trunc(glm\_vec4\ x)}}
+\DoxyCodeLine{00148\ \textcolor{comment}{\{}}
+\DoxyCodeLine{00149\ \textcolor{comment}{\ \ \ \ return\ glm\_vec4();}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\}}}
+\DoxyCodeLine{00151\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{comment}{//roundEven}}
+\DoxyCodeLine{00154\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_roundEven(glm\_vec4\ x)}
+\DoxyCodeLine{00155\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sgn0\ =\ \_mm\_castsi128\_ps(\_mm\_set1\_epi32(\textcolor{keywordtype}{int}(0x80000000)));}
+\DoxyCodeLine{00157\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ and0\ =\ \_mm\_and\_ps(sgn0,\ x);}
+\DoxyCodeLine{00158\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ or0\ =\ \_mm\_or\_ps(and0,\ \_mm\_set\_ps1(8388608.0f));}
+\DoxyCodeLine{00159\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ add0\ =\ glm\_vec4\_add(x,\ or0);}
+\DoxyCodeLine{00160\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub0\ =\ glm\_vec4\_sub(add0,\ or0);}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordflow}{return}\ sub0;}
+\DoxyCodeLine{00162\ \}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_ceil(glm\_vec4\ x)}
+\DoxyCodeLine{00165\ \{}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE41\_BIT}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_ceil\_ps(x);}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ rnd0\ =\ glm\_vec4\_round(x);}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ cmp0\ =\ \_mm\_cmpgt\_ps(x,\ rnd0);}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ and0\ =\ \_mm\_and\_ps(cmp0,\ \_mm\_set1\_ps(1.0f));}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ add0\ =\ glm\_vec4\_add(rnd0,\ and0);}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ add0;}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00175\ \}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_fract(glm\_vec4\ x)}
+\DoxyCodeLine{00178\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ flr0\ =\ glm\_vec4\_floor(x);}
+\DoxyCodeLine{00180\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub0\ =\ glm\_vec4\_sub(x,\ flr0);}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordflow}{return}\ sub0;}
+\DoxyCodeLine{00182\ \}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_mod(glm\_vec4\ x,\ glm\_vec4\ y)}
+\DoxyCodeLine{00185\ \{}
+\DoxyCodeLine{00186\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ div0\ =\ glm\_vec4\_div(x,\ y);}
+\DoxyCodeLine{00187\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ flr0\ =\ glm\_vec4\_floor(div0);}
+\DoxyCodeLine{00188\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ mul0\ =\ glm\_vec4\_mul(y,\ flr0);}
+\DoxyCodeLine{00189\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub0\ =\ glm\_vec4\_sub(x,\ mul0);}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keywordflow}{return}\ sub0;}
+\DoxyCodeLine{00191\ \}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_clamp(glm\_vec4\ v,\ glm\_vec4\ minVal,\ glm\_vec4\ maxVal)}
+\DoxyCodeLine{00194\ \{}
+\DoxyCodeLine{00195\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ min0\ =\ \_mm\_min\_ps(v,\ maxVal);}
+\DoxyCodeLine{00196\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ max0\ =\ \_mm\_max\_ps(min0,\ minVal);}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordflow}{return}\ max0;}
+\DoxyCodeLine{00198\ \}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_mix(glm\_vec4\ v1,\ glm\_vec4\ v2,\ glm\_vec4\ a)}
+\DoxyCodeLine{00201\ \{}
+\DoxyCodeLine{00202\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub0\ =\ glm\_vec4\_sub(\_mm\_set1\_ps(1.0f),\ a);}
+\DoxyCodeLine{00203\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ mul0\ =\ glm\_vec4\_mul(v1,\ sub0);}
+\DoxyCodeLine{00204\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ mad0\ =\ glm\_vec4\_fma(v2,\ a,\ mul0);}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordflow}{return}\ mad0;}
+\DoxyCodeLine{00206\ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_step(glm\_vec4\ edge,\ glm\_vec4\ x)}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ cmp\ =\ \_mm\_cmple\_ps(x,\ edge);}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_movemask\_ps(cmp)\ ==\ 0\ ?\ \_mm\_set1\_ps(1.0f)\ :\ \_mm\_setzero\_ps();}
+\DoxyCodeLine{00212\ \}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_smoothstep(glm\_vec4\ edge0,\ glm\_vec4\ edge1,\ glm\_vec4\ x)}
+\DoxyCodeLine{00215\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub0\ =\ glm\_vec4\_sub(x,\ edge0);}
+\DoxyCodeLine{00217\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub1\ =\ glm\_vec4\_sub(edge1,\ edge0);}
+\DoxyCodeLine{00218\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ div0\ =\ glm\_vec4\_div(sub0,\ sub1);}
+\DoxyCodeLine{00219\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ clp0\ =\ glm\_vec4\_clamp(div0,\ \_mm\_setzero\_ps(),\ \_mm\_set1\_ps(1.0f));}
+\DoxyCodeLine{00220\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ mul0\ =\ glm\_vec4\_mul(\_mm\_set1\_ps(2.0f),\ clp0);}
+\DoxyCodeLine{00221\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ sub2\ =\ glm\_vec4\_sub(\_mm\_set1\_ps(3.0f),\ mul0);}
+\DoxyCodeLine{00222\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ mul1\ =\ glm\_vec4\_mul(clp0,\ clp0);}
+\DoxyCodeLine{00223\ \ \ \ \ glm\_vec4\ \textcolor{keyword}{const}\ mul2\ =\ glm\_vec4\_mul(mul1,\ sub2);}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keywordflow}{return}\ mul2;}
+\DoxyCodeLine{00225\ \}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{comment}{//\ Agner\ Fog\ method}}
+\DoxyCodeLine{00228\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_nan(glm\_vec4\ x)}
+\DoxyCodeLine{00229\ \{}
+\DoxyCodeLine{00230\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ t1\ =\ \_mm\_castps\_si128(x);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ reinterpret\ as\ 32-\/bit\ integer}}
+\DoxyCodeLine{00231\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ t2\ =\ \_mm\_sll\_epi32(t1,\ \_mm\_cvtsi32\_si128(1));\ \ \ \textcolor{comment}{//\ shift\ out\ sign\ bit}}
+\DoxyCodeLine{00232\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ t3\ =\ \_mm\_set1\_epi32(\textcolor{keywordtype}{int}(0xFF000000));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ exponent\ mask}}
+\DoxyCodeLine{00233\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ t4\ =\ \_mm\_and\_si128(t2,\ t3);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ exponent}}
+\DoxyCodeLine{00234\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ t5\ =\ \_mm\_andnot\_si128(t3,\ t2);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fraction}}
+\DoxyCodeLine{00235\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ Equal\ =\ \_mm\_cmpeq\_epi32(t3,\ t4);}
+\DoxyCodeLine{00236\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ Nequal\ =\ \_mm\_cmpeq\_epi32(t5,\ \_mm\_setzero\_si128());}
+\DoxyCodeLine{00237\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ And\ =\ \_mm\_and\_si128(Equal,\ Nequal);}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_castsi128\_ps(And);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ exponent\ =\ all\ 1s\ and\ fraction\ !=\ 0}}
+\DoxyCodeLine{00239\ \}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \textcolor{comment}{//\ Agner\ Fog\ method}}
+\DoxyCodeLine{00242\ GLM\_FUNC\_QUALIFIER\ glm\_vec4\ glm\_vec4\_inf(glm\_vec4\ x)}
+\DoxyCodeLine{00243\ \{}
+\DoxyCodeLine{00244\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ t1\ =\ \_mm\_castps\_si128(x);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ reinterpret\ as\ 32-\/bit\ integer}}
+\DoxyCodeLine{00245\ \ \ \ \ glm\_ivec4\ \textcolor{keyword}{const}\ t2\ =\ \_mm\_sll\_epi32(t1,\ \_mm\_cvtsi32\_si128(1));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ shift\ out\ sign\ bit}}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_castsi128\_ps(\_mm\_cmpeq\_epi32(t2,\ \_mm\_set1\_epi32(\textcolor{keywordtype}{int}(0xFF000000))));\ \ \ \ \ \ \textcolor{comment}{//\ exponent\ is\ all\ 1s,\ fraction\ is\ 0}}
+\DoxyCodeLine{00247\ \}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+
+\end{DoxyCode}

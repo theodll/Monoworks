@@ -1,0 +1,68 @@
+\doxysection{SDL\+\_\+ngageaudio.\+h}
+\hypertarget{_s_d_l__ngageaudio_8h_source}{}\label{_s_d_l__ngageaudio_8h_source}\index{MonoRuntime/extern/sdl/src/audio/ngage/SDL\_ngageaudio.h@{MonoRuntime/extern/sdl/src/audio/ngage/SDL\_ngageaudio.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_ngageaudio\_h}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_ngageaudio\_h}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifndef\ SDL\_HINT\_AUDIO\_NGAGE\_LATENCY}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ SDL\_HINT\_AUDIO\_NGAGE\_LATENCY\ "{}SDL\_AUDIO\_NGAGE\_LATENCY"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#ifndef\ SDL\_HINT\_AUDIO\_NGAGE\_SCHEDULER\_TICK}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SDL\_HINT\_AUDIO\_NGAGE\_SCHEDULER\_TICK\ \ \ "{}SDL\_AUDIO\_NGAGE\_SCHEDULER\_TICK"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#ifndef\ SDL\_HINT\_AUDIO\_NGAGE\_PROCESS\_TICK}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ SDL\_HINT\_AUDIO\_NGAGE\_PROCESS\_TICK\ \ \ \ \ "{}SDL\_AUDIO\_NGAGE\_PROCESS\_TICK"{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifndef\ SDL\_HINT\_AUDIO\_NGAGE\_PROCESS\_PRIORITY}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ SDL\_HINT\_AUDIO\_NGAGE\_PROCESS\_PRIORITY\ "{}SDL\_AUDIO\_NGAGE\_PROCESS\_PRIORITY"{}}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___private_audio_data}{SDL\_PrivateAudioData}}}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ Uint8\ *buffer[2];}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ fill\_index;\ \textcolor{comment}{/*\ Which\ buffer\ SDL\ is\ currently\ filling\ */}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{int}\ play\_index;\ \textcolor{comment}{/*\ Which\ buffer\ the\ hardware\ is\ currently\ using*/}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{int}\ buffer\_size;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \}\ \doxymbox{\hyperlink{struct_s_d_l___private_audio_data}{SDL\_PrivateAudioData}};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysaudio.h"{}}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \doxymbox{\hyperlink{struct_s_d_l___audio_device}{SDL\_AudioDevice}}\ *NGAGE\_GetAudioDeviceAddr();}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_ngageaudio\_h}}
+
+\end{DoxyCode}

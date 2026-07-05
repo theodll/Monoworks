@@ -1,0 +1,88 @@
+\doxysection{Tracy\+Short\+Ptr.\+hpp}
+\hypertarget{_tracy_short_ptr_8hpp_source}{}\label{_tracy_short_ptr_8hpp_source}\index{MonoEngine/thirdparty/tracy/server/TracyShortPtr.hpp@{MonoEngine/thirdparty/tracy/server/TracyShortPtr.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYSHORTPTR\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYSHORTPTR\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}../public/common/TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#if\ UINTPTR\_MAX\ ==\ 0xFFFFFFFFFFFFFFFF}}
+\DoxyCodeLine{00014\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr}}}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ tracy\_force\_inline\ short\_ptr()\ \{\}}
+\DoxyCodeLine{00019\ \ \ \ \ tracy\_force\_inline\ short\_ptr(\ \textcolor{keyword}{const}\ T*\ ptr\ )\ \{\ set(\ ptr\ );\ \}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{operator}\ T*()\ \{\ \textcolor{keywordflow}{return}\ get();\ \}}
+\DoxyCodeLine{00022\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{operator}\ \textcolor{keyword}{const}\ T*()\ \textcolor{keyword}{const}\ \{\ \textcolor{keywordflow}{return}\ get();\ \}}
+\DoxyCodeLine{00023\ \ \ \ \ tracy\_force\_inline\ T\&\ operator*()\ \{\ \textcolor{keywordflow}{return}\ *get();\ \}}
+\DoxyCodeLine{00024\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T\&\ operator*()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *get();\ \}}
+\DoxyCodeLine{00025\ \ \ \ \ tracy\_force\_inline\ T*\ operator-\/>()\ \{\ \textcolor{keywordflow}{return}\ get();\ \}}
+\DoxyCodeLine{00026\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T*\ operator-\/>()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ get();\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ set(\ \textcolor{keyword}{const}\ T*\ ptr\ )}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ assert(\ (\ uint64\_t(\ ptr\ )\ \&\ 0xFFFF000000000000\ )\ ==\ 0\ );}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ memcpy(\ m\_ptr,\ \&ptr,\ 4\ );}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ memcpy(\ m\_ptr+4,\ ((\textcolor{keywordtype}{char}*)\&ptr)+4,\ 2\ );}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ tracy\_force\_inline\ T*\ get()}
+\DoxyCodeLine{00036\ \ \ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ uint32\_t\ lo;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ uint16\_t\ hi;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ memcpy(\ \&lo,\ m\_ptr,\ 4\ );}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ memcpy(\ \&hi,\ m\_ptr+4,\ 2\ );}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (T*)(\ uint64\_t(\ lo\ )\ |\ (\ (\ uint64\_t(\ hi\ )\ <<\ 32\ )\ )\ );}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T*\ get()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00045\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ uint32\_t\ lo;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ uint16\_t\ hi;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ memcpy(\ \&lo,\ m\_ptr,\ 4\ );}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ memcpy(\ \&hi,\ m\_ptr+4,\ 2\ );}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (T*)(\ uint64\_t(\ lo\ )\ |\ (\ (\ uint64\_t(\ hi\ )\ <<\ 32\ )\ )\ );}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00054\ \ \ \ \ uint8\_t\ m\_ptr[6];}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00057\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00058\ \textcolor{keyword}{class\ }short\_ptr}
+\DoxyCodeLine{00059\ \{}
+\DoxyCodeLine{00060\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00061\ \ \ \ \ tracy\_force\_inline\ short\_ptr()\ \{\}}
+\DoxyCodeLine{00062\ \ \ \ \ tracy\_force\_inline\ short\_ptr(\ \textcolor{keyword}{const}\ T*\ ptr\ )\ \{\ memcpy(\ \&m\_ptr,\ \&ptr,\ \textcolor{keyword}{sizeof}(\ T*\ )\ );\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{operator}\ T*()\ \{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00065\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{operator}\ \textcolor{keyword}{const}\ T*()\ \textcolor{keyword}{const}\ \{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00066\ \ \ \ \ tracy\_force\_inline\ T\&\ operator*()\ \{\ \textcolor{keywordflow}{return}\ *m\_ptr;\ \}}
+\DoxyCodeLine{00067\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T\&\ operator*()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *m\_ptr;\ \}}
+\DoxyCodeLine{00068\ \ \ \ \ tracy\_force\_inline\ T*\ operator-\/>()\ \{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00069\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T*\ operator-\/>()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ set(\ \textcolor{keyword}{const}\ T*\ ptr\ )\ \{\ m\_ptr\ =\ ptr;\ \}}
+\DoxyCodeLine{00072\ \ \ \ \ tracy\_force\_inline\ T*\ get()\ \{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00073\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T*\ get()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00076\ \ \ \ \ T*\ m\_ptr;}
+\DoxyCodeLine{00077\ \};}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

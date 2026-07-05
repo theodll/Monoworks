@@ -1,0 +1,42 @@
+\doxysection{Tracy\+Llm\+Embeddings.\+hpp}
+\hypertarget{_tracy_llm_embeddings_8hpp_source}{}\label{_tracy_llm_embeddings_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlmEmbeddings.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlmEmbeddings.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYLLMEMBEDDINGS\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYLLMEMBEDDINGS\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <usearch/index\_dense.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }TracyLlmEmbeddings}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_tracy_llm_embeddings_1_1_result}{Result}}}
+\DoxyCodeLine{00015\ \ \ \ \ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ idx;}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ distance;}
+\DoxyCodeLine{00018\ \ \ \ \ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{explicit}\ TracyLlmEmbeddings(\ \textcolor{keywordtype}{size\_t}\ length,\ \textcolor{keywordtype}{size\_t}\ reserve\ =\ 0\ );}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{explicit}\ TracyLlmEmbeddings(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ uint64\_t\ \doxymbox{\hyperlink{structtracy_1_1hash}{hash}}\ );}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ Add(\ uint32\_t\ idx,\ \textcolor{keyword}{const}\ std::vector<float>\&\ embedding\ );}
+\DoxyCodeLine{00024\ \ \ \ \ [[nodiscard]]\ std::vector<Result>\ Search(\ \textcolor{keyword}{const}\ std::vector<float>\&\ embedding,\ \textcolor{keywordtype}{size\_t}\ k\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00025\ \ \ \ \ [[nodiscard]]\ uint32\_t\ Get(\ \textcolor{keywordtype}{size\_t}\ idx\ )\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_data[idx];\ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{bool}\ Save(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ file,\ uint64\_t\ \doxymbox{\hyperlink{structtracy_1_1hash}{hash}}\ )\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00030\ \ \ \ \ unum::usearch::index\_dense\_t\ m\_index;}
+\DoxyCodeLine{00031\ \ \ \ \ std::vector<uint32\_t>\ m\_data;}
+\DoxyCodeLine{00032\ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

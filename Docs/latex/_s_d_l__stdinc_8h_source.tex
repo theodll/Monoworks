@@ -1,0 +1,1160 @@
+\doxysection{SDL\+\_\+stdinc.\+h}
+\hypertarget{_s_d_l__stdinc_8h_source}{}\label{_s_d_l__stdinc_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_stdinc.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_stdinc.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#ifndef\ SDL\_stdinc\_h\_}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ SDL\_stdinc\_h\_}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_platform\_defines.h>}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ <stdarg.h>}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ <wchar.h>}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{/*\ Most\ everything\ except\ Visual\ Studio\ 2008\ and\ earlier\ has\ stdint.h\ now\ */}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)\ \&\&\ (\_MSC\_VER\ <\ 1600)}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{signed}\ \_\_int8\ int8\_t;}
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int8\ uint8\_t;}
+\DoxyCodeLine{00061\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{signed}\ \_\_int16\ int16\_t;}
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int16\ uint16\_t;}
+\DoxyCodeLine{00063\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{signed}\ \_\_int32\ int32\_t;}
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int32\ uint32\_t;}
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{signed}\ \_\_int64\ int64\_t;}
+\DoxyCodeLine{00066\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int64\ uint64\_t;}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#ifndef\ \_INTPTR\_T\_DEFINED}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifdef\ \_WIN64}}
+\DoxyCodeLine{00069\ \textcolor{keyword}{typedef}\ \_\_int64\ intptr\_t;}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ intptr\_t;}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#ifndef\ \_UINTPTR\_T\_DEFINED}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#ifdef\ \_WIN64}}
+\DoxyCodeLine{00076\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int64\ uintptr\_t;}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ uintptr\_t;}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#if\ (defined(\_\_STDC\_VERSION\_\_)\ \&\&\ \_\_STDC\_VERSION\_\_\ >=\ 199901L)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ defined(SDL\_INCLUDE\_INTTYPES\_H)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#include\ <inttypes.h>}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#if\ defined(\_\_has\_include)\ \&\&\ !defined(SDL\_INCLUDE\_STDBOOL\_H)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#if\ \_\_has\_include(<stdbool.h>)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ SDL\_INCLUDE\_STDBOOL\_H}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#if\ (defined(\_\_STDC\_VERSION\_\_)\ \&\&\ \_\_STDC\_VERSION\_\_\ >=\ 199901L)\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\ \ \ \ (defined(\_MSC\_VER)\ \&\&\ (\_MSC\_VER\ >=\ 1910\ }\textcolor{comment}{/*\ Visual\ Studio\ 2017\ */}\textcolor{preprocessor}{))\ ||\ \(\backslash\)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\ \ \ \ defined(SDL\_INCLUDE\_STDBOOL\_H)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#elif\ !defined(\_\_bool\_true\_false\_are\_defined)\ \&\&\ !defined(bool)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ bool\ \ unsigned\ char}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ false\ 0}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ true\ \ 1}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ \_\_bool\_true\_false\_are\_defined\ 1}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !\_\_cplusplus\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#ifndef\ SDL\_DISABLE\_ALLOCA}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#\ ifndef\ alloca}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#\ \ ifdef\ HAVE\_ALLOCA\_H}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#\ \ \ include\ <alloca.h>}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#\ \ elif\ defined(SDL\_PLATFORM\_NETBSD)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#\ \ \ if\ defined(\_\_STRICT\_ANSI\_\_)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#\ \ \ \ define\ SDL\_DISABLE\_ALLOCA}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#\ \ \ \ include\ <stdlib.h>}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#\ \ elif\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#\ \ \ define\ alloca\ \_\_builtin\_alloca}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#\ \ elif\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#\ \ \ include\ <malloc.h>}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#\ \ \ define\ alloca\ \_alloca}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#\ \ elif\ defined(\_\_WATCOMC\_\_)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#\ \ \ include\ <malloc.h>}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#\ \ elif\ defined(\_\_BORLANDC\_\_)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#\ \ \ include\ <malloc.h>}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#\ \ elif\ defined(\_\_DMC\_\_)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#\ \ \ include\ <stdlib.h>}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#\ \ elif\ defined(SDL\_PLATFORM\_AIX)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#\ pragma\ alloca}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#\ \ elif\ defined(\_\_MRC\_\_)}}
+\DoxyCodeLine{00132\ \textcolor{keywordtype}{void}\ *alloca(\textcolor{keywordtype}{unsigned});}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00134\ \textcolor{keywordtype}{void}\ *alloca(\textcolor{keywordtype}{size\_t});}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ SDL\_NOLONGLONG\ 1}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)\ \&\&\ (\_MSC\_VER\ <\ 1310)\ \ }\textcolor{comment}{/*\ long\ long\ introduced\ in\ Visual\ Studio.NET\ 2003\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#\ \ define\ SDL\_NOLONGLONG\ 1}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ SDL\_SIZE\_MAX\ SIZE\_MAX}}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#elif\ defined(SIZE\_MAX)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#\ define\ SDL\_SIZE\_MAX\ SIZE\_MAX}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#\ define\ SDL\_SIZE\_MAX\ ((size\_t)\ -\/1)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#ifndef\ SDL\_COMPILE\_TIME\_ASSERT}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ SDL\_COMPILE\_TIME\_ASSERT(name,\ x)\ FailToCompileIf\_x\_IsFalse(x)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#elif\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00225\ \textcolor{comment}{/*\ Keep\ C++\ case\ alone:\ Some\ versions\ of\ gcc\ will\ define\ \_\_STDC\_VERSION\_\_\ even\ when\ compiling\ in\ C++\ mode.\ */}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#if\ (\_\_cplusplus\ >=\ 201103L)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ SDL\_COMPILE\_TIME\_ASSERT(name,\ x)\ \ static\_assert(x,\ \#x)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#elif\ defined(\_\_STDC\_VERSION\_\_)\ \&\&\ (\_\_STDC\_VERSION\_\_\ >=\ 202311L)}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ SDL\_COMPILE\_TIME\_ASSERT(name,\ x)\ \ static\_assert(x,\ \#x)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#elif\ defined(\_\_STDC\_VERSION\_\_)\ \&\&\ (\_\_STDC\_VERSION\_\_\ >=\ 201112L)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ SDL\_COMPILE\_TIME\_ASSERT(name,\ x)\ \_Static\_assert(x,\ \#x)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_COMPILE\_TIME\_ASSERT\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#ifndef\ SDL\_COMPILE\_TIME\_ASSERT}}
+\DoxyCodeLine{00237\ \textcolor{comment}{/*\ universal,\ but\ may\ trigger\ -\/Wunused-\/local-\/typedefs\ */}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ SDL\_COMPILE\_TIME\_ASSERT(name,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\ \ \ \ \ \ \ typedef\ int\ SDL\_compile\_time\_assert\_\ \#\#\ name[(x)\ *\ 2\ -\/\ 1]}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ SDL\_arraysize(array)\ (sizeof(array)/sizeof(array[0]))\ \ }\textcolor{comment}{/*\ or\ \`{}\_Countof(array)`\ on\ recent\ gcc\ and\ clang\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#if\ !defined(\_\_cplusplus)\ \&\&\ ((defined(\_\_GNUC\_\_)\ \&\&\ \_\_GNUC\_\_\ >=\ 16)\ ||\ SDL\_HAS\_EXTENSION(c\_countof))\ \(\backslash\)}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\ \ \ \ \&\&\ (defined(\_\_STDC\_VERSION\_\_)\ \&\&\ \_\_STDC\_VERSION\_\_\ >=\ 202500L)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ SDL\_arraysize(array)\ \_Countof(array)}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ SDL\_arraysize(array)\ (sizeof(array)/sizeof(array[0]))}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#define\ SDL\_STRINGIFY\_ARG(arg)\ \ \#arg}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00282\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#define\ SDL\_reinterpret\_cast(type,\ expression)\ reinterpret\_cast<type>(expression)\ \ }\textcolor{comment}{/*\ or\ \`{}((type)(expression))`\ in\ C\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ SDL\_static\_cast(type,\ expression)\ static\_cast<type>(expression)\ \ }\textcolor{comment}{/*\ or\ \`{}((type)(expression))`\ in\ C\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#define\ SDL\_const\_cast(type,\ expression)\ const\_cast<type>(expression)\ \ }\textcolor{comment}{/*\ or\ \`{}((type)(expression))`\ in\ C\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#elif\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#define\ SDL\_reinterpret\_cast(type,\ expression)\ reinterpret\_cast<type>(expression)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ SDL\_static\_cast(type,\ expression)\ static\_cast<type>(expression)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#define\ SDL\_const\_cast(type,\ expression)\ const\_cast<type>(expression)}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#define\ SDL\_reinterpret\_cast(type,\ expression)\ ((type)(expression))}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#define\ SDL\_static\_cast(type,\ expression)\ ((type)(expression))}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\#define\ SDL\_const\_cast(type,\ expression)\ ((type)(expression))}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Cast\ operators\ */}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#define\ SDL\_FOURCC(A,\ B,\ C,\ D)\ \(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\ \ \ \ ((SDL\_static\_cast(Uint32,\ SDL\_static\_cast(Uint8,\ (A)))\ <<\ 0)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\ \ \ \ \ (SDL\_static\_cast(Uint32,\ SDL\_static\_cast(Uint8,\ (B)))\ <<\ 8)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\ \ \ \ \ (SDL\_static\_cast(Uint32,\ SDL\_static\_cast(Uint8,\ (C)))\ <<\ 16)\ |\ \(\backslash\)}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\ \ \ \ \ (SDL\_static\_cast(Uint32,\ SDL\_static\_cast(Uint8,\ (D)))\ <<\ 24))}}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#define\ SDL\_SINT64\_C(c)\ \ c\ \#\#\ LL\ \ }\textcolor{comment}{/*\ or\ whatever\ the\ current\ compiler\ uses.\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#define\ SDL\_UINT64\_C(c)\ \ c\ \#\#\ ULL\ }\textcolor{comment}{/*\ or\ whatever\ the\ current\ compiler\ uses.\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{/*\ !SDL\_WIKI\_DOCUMENTATION\_SECTION\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\#ifndef\ SDL\_SINT64\_C}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#if\ defined(INT64\_C)}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#define\ SDL\_SINT64\_C(c)\ \ INT64\_C(c)}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#define\ SDL\_SINT64\_C(c)\ \ c\ \#\#\ i64}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#elif\ defined(\_\_LP64\_\_)\ ||\ defined(\_LP64)}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\#define\ SDL\_SINT64\_C(c)\ \ c\ \#\#\ L}}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#define\ SDL\_SINT64\_C(c)\ \ c\ \#\#\ LL}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_SINT64\_C\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#ifndef\ SDL\_UINT64\_C}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#if\ defined(UINT64\_C)}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#define\ SDL\_UINT64\_C(c)\ \ UINT64\_C(c)}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#define\ SDL\_UINT64\_C(c)\ \ c\ \#\#\ ui64}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#elif\ defined(\_\_LP64\_\_)\ ||\ defined(\_LP64)}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#define\ SDL\_UINT64\_C(c)\ \ c\ \#\#\ UL}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#define\ SDL\_UINT64\_C(c)\ \ c\ \#\#\ ULL}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_UINT64\_C\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00437\ }
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_WIKI\_DOCUMENTATION\_SECTION\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00443\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00444\ }
+\DoxyCodeLine{00450\ \textcolor{keyword}{typedef}\ int8\_t\ Sint8;}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_SINT8\ \ \ ((Sint8)0x7F)\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 127\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_SINT8\ \ \ ((Sint8)(\string~0x7F))\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ -\/128\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00459\ \textcolor{keyword}{typedef}\ uint8\_t\ Uint8;}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_UINT8\ \ \ ((Uint8)0xFF)\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 255\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_UINT8\ \ \ ((Uint8)0x00)\ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 0\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00468\ \textcolor{keyword}{typedef}\ int16\_t\ Sint16;}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_SINT16\ \ ((Sint16)0x7FFF)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 32767\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_SINT16\ \ ((Sint16)(\string~0x7FFF))\ \ \ \ \ }\textcolor{comment}{/*\ -\/32768\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00471\ }
+\DoxyCodeLine{00477\ \textcolor{keyword}{typedef}\ uint16\_t\ Uint16;}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_UINT16\ \ ((Uint16)0xFFFF)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 65535\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_UINT16\ \ ((Uint16)0x0000)\ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ 0\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00486\ \textcolor{keyword}{typedef}\ int32\_t\ Sint32;}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_SINT32\ \ ((Sint32)0x7FFFFFFF)\ \ \ \ }\textcolor{comment}{/*\ 2147483647\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_SINT32\ \ ((Sint32)(\string~0x7FFFFFFF))\ }\textcolor{comment}{/*\ -\/2147483648\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00495\ \textcolor{keyword}{typedef}\ uint32\_t\ Uint32;}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_UINT32\ \ ((Uint32)0xFFFFFFFFu)\ \ \ }\textcolor{comment}{/*\ 4294967295\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_UINT32\ \ ((Uint32)0x00000000)\ \ \ \ }\textcolor{comment}{/*\ 0\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00498\ }
+\DoxyCodeLine{00506\ \textcolor{keyword}{typedef}\ int64\_t\ Sint64;}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_SINT64\ \ SDL\_SINT64\_C(0x7FFFFFFFFFFFFFFF)\ \ \ }\textcolor{comment}{/*\ 9223372036854775807\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_SINT64\ \ \string~SDL\_SINT64\_C(0x7FFFFFFFFFFFFFFF)\ \ }\textcolor{comment}{/*\ -\/9223372036854775808\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00509\ }
+\DoxyCodeLine{00517\ \textcolor{keyword}{typedef}\ uint64\_t\ Uint64;}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_UINT64\ \ SDL\_UINT64\_C(0xFFFFFFFFFFFFFFFF)\ \ \ }\textcolor{comment}{/*\ 18446744073709551615\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_UINT64\ \ SDL\_UINT64\_C(0x0000000000000000)\ \ \ }\textcolor{comment}{/*\ 0\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00534\ \textcolor{keyword}{typedef}\ Sint64\ SDL\_Time;}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\#define\ SDL\_MAX\_TIME\ SDL\_MAX\_SINT64}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#define\ SDL\_MIN\_TIME\ SDL\_MIN\_SINT64}}
+\DoxyCodeLine{00537\ }
+\DoxyCodeLine{00538\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Basic\ data\ types\ */}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00543\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{\#ifdef\ FLT\_EPSILON}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#define\ SDL\_FLT\_EPSILON\ FLT\_EPSILON}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#define\ SDL\_FLT\_EPSILON\ 1.1920928955078125e-\/07F\ }\textcolor{comment}{/*\ 0x0.000002p0\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Floating-\/point\ constants\ */}}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#define\ SDL\_PRIs64\ "{}lld"{}}}
+\DoxyCodeLine{00576\ }
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#define\ SDL\_PRIu64\ "{}llu"{}}}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\#define\ SDL\_PRIx64\ "{}llx"{}}}
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#define\ SDL\_PRIX64\ "{}llX"{}}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\#define\ SDL\_PRIs32\ "{}d"{}}}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#define\ SDL\_PRIu32\ "{}u"{}}}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{\#define\ SDL\_PRIx32\ "{}x"{}}}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#define\ SDL\_PRIX32\ "{}X"{}}}
+\DoxyCodeLine{00667\ }
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#define\ SDL\_PRILL\_PREFIX\ "{}ll"{}}}
+\DoxyCodeLine{00683\ }
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#define\ SDL\_PRILLd\ SDL\_PRILL\_PREFIX\ "{}d"{}}}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#define\ SDL\_PRILLu\ SDL\_PRILL\_PREFIX\ "{}u"{}}}
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#define\ SDL\_PRILLx\ SDL\_PRILL\_PREFIX\ "{}x"{}}}
+\DoxyCodeLine{00723\ }
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#define\ SDL\_PRILLX\ SDL\_PRILL\_PREFIX\ "{}X"{}}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_WIKI\_DOCUMENTATION\_SECTION\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00739\ \textcolor{comment}{/*\ Make\ sure\ we\ have\ macros\ for\ printing\ width-\/based\ integers.}}
+\DoxyCodeLine{00740\ \textcolor{comment}{\ *\ <inttypes.h>\ should\ define\ these\ but\ this\ is\ not\ true\ all\ platforms.}}
+\DoxyCodeLine{00741\ \textcolor{comment}{\ *\ (for\ example\ win32)\ */}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIs64}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)\ \&\&\ !defined(SDL\_PLATFORM\_CYGWIN)}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#define\ SDL\_PRIs64\ "{}I64d"{}}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\#elif\ defined(PRId64)}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#define\ SDL\_PRIs64\ PRId64}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#elif\ defined(\_\_LP64\_\_)\ \&\&\ !defined(SDL\_PLATFORM\_APPLE)\ \&\&\ !defined(\_\_EMSCRIPTEN\_\_)}}
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{\#define\ SDL\_PRIs64\ "{}ld"{}}}
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#define\ SDL\_PRIs64\ "{}lld"{}}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIu64}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)\ \&\&\ !defined(SDL\_PLATFORM\_CYGWIN)}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#define\ SDL\_PRIu64\ "{}I64u"{}}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#elif\ defined(PRIu64)}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\#define\ SDL\_PRIu64\ PRIu64}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#elif\ defined(\_\_LP64\_\_)\ \&\&\ !defined(SDL\_PLATFORM\_APPLE)\ \&\&\ !defined(\_\_EMSCRIPTEN\_\_)}}
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#define\ SDL\_PRIu64\ "{}lu"{}}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#define\ SDL\_PRIu64\ "{}llu"{}}}
+\DoxyCodeLine{00762\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIx64}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)\ \&\&\ !defined(SDL\_PLATFORM\_CYGWIN)}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#define\ SDL\_PRIx64\ "{}I64x"{}}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\#elif\ defined(PRIx64)}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#define\ SDL\_PRIx64\ PRIx64}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#elif\ defined(\_\_LP64\_\_)\ \&\&\ !defined(SDL\_PLATFORM\_APPLE)}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\#define\ SDL\_PRIx64\ "{}lx"{}}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00772\ \textcolor{preprocessor}{\#define\ SDL\_PRIx64\ "{}llx"{}}}
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIX64}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)\ \&\&\ !defined(SDL\_PLATFORM\_CYGWIN)}}
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\#define\ SDL\_PRIX64\ "{}I64X"{}}}
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\#elif\ defined(PRIX64)}}
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\#define\ SDL\_PRIX64\ PRIX64}}
+\DoxyCodeLine{00780\ \textcolor{preprocessor}{\#elif\ defined(\_\_LP64\_\_)\ \&\&\ !defined(SDL\_PLATFORM\_APPLE)}}
+\DoxyCodeLine{00781\ \textcolor{preprocessor}{\#define\ SDL\_PRIX64\ "{}lX"{}}}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\#define\ SDL\_PRIX64\ "{}llX"{}}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIs32}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\#ifdef\ PRId32}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\#define\ SDL\_PRIs32\ PRId32}}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\#define\ SDL\_PRIs32\ "{}d"{}}}
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIu32}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#ifdef\ PRIu32}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\#define\ SDL\_PRIu32\ PRIu32}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\#define\ SDL\_PRIu32\ "{}u"{}}}
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIx32}}
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\#ifdef\ PRIx32}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#define\ SDL\_PRIx32\ PRIx32}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\#define\ SDL\_PRIx32\ "{}x"{}}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRIX32}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\#ifdef\ PRIX32}}
+\DoxyCodeLine{00809\ \textcolor{preprocessor}{\#define\ SDL\_PRIX32\ PRIX32}}
+\DoxyCodeLine{00810\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#define\ SDL\_PRIX32\ "{}X"{}}}
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00814\ \textcolor{comment}{/*\ Specifically\ for\ the\ \`{}long\ long`\ -\/-\/\ SDL-\/specific.\ */}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)\ \&\&\ !defined(SDL\_PLATFORM\_CYGWIN)}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\#ifndef\ SDL\_NOLONGLONG}}
+\DoxyCodeLine{00817\ SDL\_COMPILE\_TIME\_ASSERT(longlong\_size64,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})\ ==\ 8);\ \textcolor{comment}{/*\ using\ I64\ for\ windows\ -\/\ make\ sure\ \`{}long\ long`\ is\ 64\ bits.\ */}}
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\#define\ SDL\_PRILL\_PREFIX\ "{}I64"{}}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00821\ \textcolor{preprocessor}{\#define\ SDL\_PRILL\_PREFIX\ "{}ll"{}}}
+\DoxyCodeLine{00822\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00823\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRILLd}}
+\DoxyCodeLine{00824\ \textcolor{preprocessor}{\#define\ SDL\_PRILLd\ SDL\_PRILL\_PREFIX\ "{}d"{}}}
+\DoxyCodeLine{00825\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00826\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRILLu}}
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#define\ SDL\_PRILLu\ SDL\_PRILL\_PREFIX\ "{}u"{}}}
+\DoxyCodeLine{00828\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRILLx}}
+\DoxyCodeLine{00830\ \textcolor{preprocessor}{\#define\ SDL\_PRILLx\ SDL\_PRILL\_PREFIX\ "{}x"{}}}
+\DoxyCodeLine{00831\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00832\ \textcolor{preprocessor}{\#ifndef\ SDL\_PRILLX}}
+\DoxyCodeLine{00833\ \textcolor{preprocessor}{\#define\ SDL\_PRILLX\ SDL\_PRILL\_PREFIX\ "{}X"{}}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00835\ }
+\DoxyCodeLine{00836\ \textcolor{comment}{/*\ Annotations\ to\ help\ code\ analysis\ tools\ */}}
+\DoxyCodeLine{00837\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{00838\ }
+\DoxyCodeLine{00856\ \textcolor{preprocessor}{\#define\ SDL\_IN\_BYTECAP(x)\ \_In\_bytecount\_(x)}}
+\DoxyCodeLine{00857\ }
+\DoxyCodeLine{00876\ \textcolor{preprocessor}{\#define\ SDL\_INOUT\_Z\_CAP(x)\ \_Inout\_z\_cap\_(x)}}
+\DoxyCodeLine{00877\ }
+\DoxyCodeLine{00895\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_CAP(x)\ \_Out\_z\_cap\_(x)}}
+\DoxyCodeLine{00896\ }
+\DoxyCodeLine{00917\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_CAP(x)\ \_Out\_cap\_(x)}}
+\DoxyCodeLine{00918\ }
+\DoxyCodeLine{00936\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_BYTECAP(x)\ \_Out\_bytecap\_(x)}}
+\DoxyCodeLine{00937\ }
+\DoxyCodeLine{00955\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_BYTECAP(x)\ \_Out\_z\_bytecap\_(x)}}
+\DoxyCodeLine{00956\ }
+\DoxyCodeLine{00973\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_FORMAT\_STRING\ \_Printf\_format\_string\_}}
+\DoxyCodeLine{00974\ }
+\DoxyCodeLine{00991\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_FORMAT\_STRING\ \_Scanf\_format\_string\_impl\_}}
+\DoxyCodeLine{00992\ }
+\DoxyCodeLine{01013\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNC(\ fmtargnumber\ )\ \_\_attribute\_\_\ ((\ format(\ \_\_printf\_\_,\ fmtargnumber,\ fmtargnumber+1\ )))}}
+\DoxyCodeLine{01014\ }
+\DoxyCodeLine{01035\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )\ \_\_attribute\_\_((\ format(\ \_\_printf\_\_,\ fmtargnumber,\ 0\ )))}}
+\DoxyCodeLine{01036\ }
+\DoxyCodeLine{01057\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNC(\ fmtargnumber\ )\ \_\_attribute\_\_\ ((\ format(\ \_\_scanf\_\_,\ fmtargnumber,\ fmtargnumber+1\ )))}}
+\DoxyCodeLine{01058\ }
+\DoxyCodeLine{01079\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNCV(\ fmtargnumber\ )\ \_\_attribute\_\_((\ format(\ \_\_scanf\_\_,\ fmtargnumber,\ 0\ )))}}
+\DoxyCodeLine{01080\ }
+\DoxyCodeLine{01101\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNC(\ fmtargnumber\ )\ }\textcolor{comment}{/*\ \_\_attribute\_\_\ ((\ format(\ \_\_wprintf\_\_,\ fmtargnumber,\ fmtargnumber+1\ )))\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01102\ }
+\DoxyCodeLine{01123\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )\ }\textcolor{comment}{/*\ \_\_attribute\_\_\ ((\ format(\ \_\_wprintf\_\_,\ fmtargnumber,\ 0\ )))\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01124\ }
+\DoxyCodeLine{01125\ \textcolor{preprocessor}{\#elif\ defined(SDL\_DISABLE\_ANALYZE\_MACROS)}}
+\DoxyCodeLine{01126\ \textcolor{preprocessor}{\#define\ SDL\_IN\_BYTECAP(x)}}
+\DoxyCodeLine{01127\ \textcolor{preprocessor}{\#define\ SDL\_INOUT\_Z\_CAP(x)}}
+\DoxyCodeLine{01128\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_CAP(x)}}
+\DoxyCodeLine{01129\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_CAP(x)}}
+\DoxyCodeLine{01130\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_BYTECAP(x)}}
+\DoxyCodeLine{01131\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_BYTECAP(x)}}
+\DoxyCodeLine{01132\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_FORMAT\_STRING}}
+\DoxyCodeLine{01133\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_FORMAT\_STRING}}
+\DoxyCodeLine{01134\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNC(\ fmtargnumber\ )}}
+\DoxyCodeLine{01135\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )}}
+\DoxyCodeLine{01136\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNC(\ fmtargnumber\ )}}
+\DoxyCodeLine{01137\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNCV(\ fmtargnumber\ )}}
+\DoxyCodeLine{01138\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNC(\ fmtargnumber\ )}}
+\DoxyCodeLine{01139\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )}}
+\DoxyCodeLine{01140\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01141\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)\ \&\&\ (\_MSC\_VER\ >=\ 1600)\ }\textcolor{comment}{/*\ VS\ 2010\ and\ above\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01142\ \textcolor{preprocessor}{\#include\ <sal.h>}}
+\DoxyCodeLine{01143\ }
+\DoxyCodeLine{01144\ \textcolor{preprocessor}{\#define\ SDL\_IN\_BYTECAP(x)\ \_In\_bytecount\_(x)}}
+\DoxyCodeLine{01145\ \textcolor{preprocessor}{\#define\ SDL\_INOUT\_Z\_CAP(x)\ \_Inout\_z\_cap\_(x)}}
+\DoxyCodeLine{01146\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_CAP(x)\ \_Out\_z\_cap\_(x)}}
+\DoxyCodeLine{01147\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_CAP(x)\ \_Out\_cap\_(x)}}
+\DoxyCodeLine{01148\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_BYTECAP(x)\ \_Out\_bytecap\_(x)}}
+\DoxyCodeLine{01149\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_BYTECAP(x)\ \_Out\_z\_bytecap\_(x)}}
+\DoxyCodeLine{01150\ }
+\DoxyCodeLine{01151\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_FORMAT\_STRING\ \_Printf\_format\_string\_}}
+\DoxyCodeLine{01152\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_FORMAT\_STRING\ \_Scanf\_format\_string\_impl\_}}
+\DoxyCodeLine{01153\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01154\ \textcolor{preprocessor}{\#define\ SDL\_IN\_BYTECAP(x)}}
+\DoxyCodeLine{01155\ \textcolor{preprocessor}{\#define\ SDL\_INOUT\_Z\_CAP(x)}}
+\DoxyCodeLine{01156\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_CAP(x)}}
+\DoxyCodeLine{01157\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_CAP(x)}}
+\DoxyCodeLine{01158\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_BYTECAP(x)}}
+\DoxyCodeLine{01159\ \textcolor{preprocessor}{\#define\ SDL\_OUT\_Z\_BYTECAP(x)}}
+\DoxyCodeLine{01160\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_FORMAT\_STRING}}
+\DoxyCodeLine{01161\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_FORMAT\_STRING}}
+\DoxyCodeLine{01162\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01163\ \textcolor{preprocessor}{\#if\ defined(\_\_GNUC\_\_)\ ||\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{01164\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNC(\ fmtargnumber\ )\ \_\_attribute\_\_\ ((\ format(\ \_\_printf\_\_,\ fmtargnumber,\ fmtargnumber+1\ )))}}
+\DoxyCodeLine{01165\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )\ \_\_attribute\_\_((\ format(\ \_\_printf\_\_,\ fmtargnumber,\ 0\ )))}}
+\DoxyCodeLine{01166\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNC(\ fmtargnumber\ )\ \_\_attribute\_\_\ ((\ format(\ \_\_scanf\_\_,\ fmtargnumber,\ fmtargnumber+1\ )))}}
+\DoxyCodeLine{01167\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNCV(\ fmtargnumber\ )\ \_\_attribute\_\_((\ format(\ \_\_scanf\_\_,\ fmtargnumber,\ 0\ )))}}
+\DoxyCodeLine{01168\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNC(\ fmtargnumber\ )\ }\textcolor{comment}{/*\ \_\_attribute\_\_\ ((\ format(\ \_\_wprintf\_\_,\ fmtargnumber,\ fmtargnumber+1\ )))\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01169\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )\ }\textcolor{comment}{/*\ \_\_attribute\_\_\ ((\ format(\ \_\_wprintf\_\_,\ fmtargnumber,\ 0\ )))\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01170\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01171\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNC(\ fmtargnumber\ )}}
+\DoxyCodeLine{01172\ \textcolor{preprocessor}{\#define\ SDL\_PRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )}}
+\DoxyCodeLine{01173\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNC(\ fmtargnumber\ )}}
+\DoxyCodeLine{01174\ \textcolor{preprocessor}{\#define\ SDL\_SCANF\_VARARG\_FUNCV(\ fmtargnumber\ )}}
+\DoxyCodeLine{01175\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNC(\ fmtargnumber\ )}}
+\DoxyCodeLine{01176\ \textcolor{preprocessor}{\#define\ SDL\_WPRINTF\_VARARG\_FUNCV(\ fmtargnumber\ )}}
+\DoxyCodeLine{01177\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01178\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_DISABLE\_ANALYZE\_MACROS\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01179\ }
+\DoxyCodeLine{01181\ \textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SHOULD\_IGNORE\_THIS}}
+\DoxyCodeLine{01182\ SDL\_COMPILE\_TIME\_ASSERT(bool\_size,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{bool})\ ==\ 1);}
+\DoxyCodeLine{01183\ SDL\_COMPILE\_TIME\_ASSERT(uint8\_size,\ \textcolor{keyword}{sizeof}(Uint8)\ ==\ 1);}
+\DoxyCodeLine{01184\ SDL\_COMPILE\_TIME\_ASSERT(sint8\_size,\ \textcolor{keyword}{sizeof}(Sint8)\ ==\ 1);}
+\DoxyCodeLine{01185\ SDL\_COMPILE\_TIME\_ASSERT(uint16\_size,\ \textcolor{keyword}{sizeof}(Uint16)\ ==\ 2);}
+\DoxyCodeLine{01186\ SDL\_COMPILE\_TIME\_ASSERT(sint16\_size,\ \textcolor{keyword}{sizeof}(Sint16)\ ==\ 2);}
+\DoxyCodeLine{01187\ SDL\_COMPILE\_TIME\_ASSERT(uint32\_size,\ \textcolor{keyword}{sizeof}(Uint32)\ ==\ 4);}
+\DoxyCodeLine{01188\ SDL\_COMPILE\_TIME\_ASSERT(sint32\_size,\ \textcolor{keyword}{sizeof}(Sint32)\ ==\ 4);}
+\DoxyCodeLine{01189\ SDL\_COMPILE\_TIME\_ASSERT(uint64\_size,\ \textcolor{keyword}{sizeof}(Uint64)\ ==\ 8);}
+\DoxyCodeLine{01190\ SDL\_COMPILE\_TIME\_ASSERT(sint64\_size,\ \textcolor{keyword}{sizeof}(Sint64)\ ==\ 8);}
+\DoxyCodeLine{01191\ \textcolor{preprocessor}{\#ifndef\ SDL\_NOLONGLONG}}
+\DoxyCodeLine{01192\ SDL\_COMPILE\_TIME\_ASSERT(uint64\_longlong,\ \textcolor{keyword}{sizeof}(Uint64)\ <=\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}));}
+\DoxyCodeLine{01193\ SDL\_COMPILE\_TIME\_ASSERT(size\_t\_longlong,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{size\_t})\ <=\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}));}
+\DoxyCodeLine{01194\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01195\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_alignment\_test}
+\DoxyCodeLine{01196\ \{}
+\DoxyCodeLine{01197\ \ \ \ \ Uint8\ a;}
+\DoxyCodeLine{01198\ \ \ \ \ \textcolor{keywordtype}{void}\ *b;}
+\DoxyCodeLine{01199\ \}\ SDL\_alignment\_test;}
+\DoxyCodeLine{01200\ SDL\_COMPILE\_TIME\_ASSERT(struct\_alignment,\ \textcolor{keyword}{sizeof}(SDL\_alignment\_test)\ ==\ (2\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{void}\ *)));}
+\DoxyCodeLine{01201\ SDL\_COMPILE\_TIME\_ASSERT(two\_s\_complement,\ SDL\_static\_cast(\textcolor{keywordtype}{int},\ \string~SDL\_static\_cast(\textcolor{keywordtype}{int},\ 0))\ ==\ SDL\_static\_cast(\textcolor{keywordtype}{int},\ -\/1));}
+\DoxyCodeLine{01202\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ DOXYGEN\_SHOULD\_IGNORE\_THIS\ */}\textcolor{preprocessor}{}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01204\ }
+\DoxyCodeLine{01205\ \textcolor{comment}{/*\ Check\ to\ make\ sure\ enums\ are\ the\ size\ of\ ints,\ for\ structure\ packing.}}
+\DoxyCodeLine{01206\ \textcolor{comment}{\ \ \ For\ both\ Watcom\ C/C++\ and\ Borland\ C/C++\ the\ compiler\ option\ that\ makes}}
+\DoxyCodeLine{01207\ \textcolor{comment}{\ \ \ enums\ having\ the\ size\ of\ an\ int\ must\ be\ enabled.}}
+\DoxyCodeLine{01208\ \textcolor{comment}{\ \ \ This\ is\ "{}-\/b"{}\ for\ Borland\ C/C++\ and\ "{}-\/ei"{}\ for\ Watcom\ C/C++\ (v11).}}
+\DoxyCodeLine{01209\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01210\ }
+\DoxyCodeLine{01212\ \textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SHOULD\_IGNORE\_THIS}}
+\DoxyCodeLine{01213\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_VITA)\ \&\&\ !defined(SDL\_PLATFORM\_3DS)}}
+\DoxyCodeLine{01214\ \textcolor{comment}{/*\ TODO:\ include/SDL\_stdinc.h:390:\ error:\ size\ of\ array\ 'SDL\_dummy\_enum'\ is\ negative\ */}}
+\DoxyCodeLine{01215\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_DUMMY\_ENUM}
+\DoxyCodeLine{01216\ \{}
+\DoxyCodeLine{01217\ \ \ \ \ DUMMY\_ENUM\_VALUE}
+\DoxyCodeLine{01218\ \}\ SDL\_DUMMY\_ENUM;}
+\DoxyCodeLine{01219\ }
+\DoxyCodeLine{01220\ SDL\_COMPILE\_TIME\_ASSERT(\textcolor{keyword}{enum},\ \textcolor{keyword}{sizeof}(SDL\_DUMMY\_ENUM)\ ==\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
+\DoxyCodeLine{01221\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01222\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ DOXYGEN\_SHOULD\_IGNORE\_THIS\ */}\textcolor{preprocessor}{}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01224\ }
+\DoxyCodeLine{01225\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{01226\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01227\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{01228\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01229\ }
+\DoxyCodeLine{01268\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_INTERFACE(iface)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01269\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01270\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ SDL\_zerop(iface);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01271\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ (iface)-\/>version\ =\ sizeof(*(iface));\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{01272\ \textcolor{preprocessor}{\ \ \ \ \}\ while\ (0)}}
+\DoxyCodeLine{01273\ }
+\DoxyCodeLine{01274\ }
+\DoxyCodeLine{01275\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{01276\ }
+\DoxyCodeLine{01300\ \textcolor{preprocessor}{\#define\ SDL\_stack\_alloc(type,\ count)\ \ \ \ (type*)alloca(sizeof(type)*(count))}}
+\DoxyCodeLine{01301\ }
+\DoxyCodeLine{01319\ \textcolor{preprocessor}{\#define\ SDL\_stack\_free(data)\ ((void)(data))}}
+\DoxyCodeLine{01320\ \textcolor{preprocessor}{\#elif\ !defined(SDL\_DISABLE\_ALLOCA)}}
+\DoxyCodeLine{01321\ \textcolor{preprocessor}{\#define\ SDL\_stack\_alloc(type,\ count)\ \ \ \ (type*)alloca(sizeof(type)*(count))}}
+\DoxyCodeLine{01322\ \textcolor{preprocessor}{\#define\ SDL\_stack\_free(data)\ \ \ \ \ \ \ \ \ \ \ \ ((void)(data))}}
+\DoxyCodeLine{01323\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{01324\ \textcolor{preprocessor}{\#define\ SDL\_stack\_alloc(type,\ count)\ \ \ \ (type*)SDL\_malloc(sizeof(type)*(count))}}
+\DoxyCodeLine{01325\ \textcolor{preprocessor}{\#define\ SDL\_stack\_free(data)\ \ \ \ \ \ \ \ \ \ \ \ SDL\_free(data)}}
+\DoxyCodeLine{01326\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01327\ }
+\DoxyCodeLine{01354\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_MALLOC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_malloc(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01355\ }
+\DoxyCodeLine{01381\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_MALLOC\ SDL\_ALLOC\_SIZE2(1,\ 2)\ void\ *\ SDLCALL\ SDL\_calloc(\textcolor{keywordtype}{size\_t}\ nmemb,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01382\ }
+\DoxyCodeLine{01421\ extern\ SDL\_DECLSPEC\ SDL\_ALLOC\_SIZE(2)\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_realloc(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01422\ }
+\DoxyCodeLine{01441\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_free(\textcolor{keywordtype}{void}\ *mem);}
+\DoxyCodeLine{01442\ }
+\DoxyCodeLine{01460\ typedef\ \textcolor{keywordtype}{void}\ *(SDLCALL\ *SDL\_malloc\_func)(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01461\ }
+\DoxyCodeLine{01481\ typedef\ \textcolor{keywordtype}{void}\ *(SDLCALL\ *SDL\_calloc\_func)(\textcolor{keywordtype}{size\_t}\ nmemb,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01482\ }
+\DoxyCodeLine{01502\ typedef\ \textcolor{keywordtype}{void}\ *(SDLCALL\ *SDL\_realloc\_func)(\textcolor{keywordtype}{void}\ *mem,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01503\ }
+\DoxyCodeLine{01520\ typedef\ \textcolor{keywordtype}{void}\ (SDLCALL\ *SDL\_free\_func)(\textcolor{keywordtype}{void}\ *mem);}
+\DoxyCodeLine{01521\ }
+\DoxyCodeLine{01539\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GetOriginalMemoryFunctions(SDL\_malloc\_func\ *malloc\_func,}
+\DoxyCodeLine{01540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_calloc\_func\ *calloc\_func,}
+\DoxyCodeLine{01541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_realloc\_func\ *realloc\_func,}
+\DoxyCodeLine{01542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_free\_func\ *free\_func);}
+\DoxyCodeLine{01543\ }
+\DoxyCodeLine{01561\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GetMemoryFunctions(SDL\_malloc\_func\ *malloc\_func,}
+\DoxyCodeLine{01562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_calloc\_func\ *calloc\_func,}
+\DoxyCodeLine{01563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_realloc\_func\ *realloc\_func,}
+\DoxyCodeLine{01564\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_free\_func\ *free\_func);}
+\DoxyCodeLine{01565\ }
+\DoxyCodeLine{01598\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetMemoryFunctions(SDL\_malloc\_func\ malloc\_func,}
+\DoxyCodeLine{01599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_calloc\_func\ calloc\_func,}
+\DoxyCodeLine{01600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_realloc\_func\ realloc\_func,}
+\DoxyCodeLine{01601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_free\_func\ free\_func);}
+\DoxyCodeLine{01602\ }
+\DoxyCodeLine{01625\ extern\ SDL\_DECLSPEC\ SDL\_MALLOC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_aligned\_alloc(\textcolor{keywordtype}{size\_t}\ alignment,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01626\ }
+\DoxyCodeLine{01649\ extern\ SDL\_DECLSPEC\ SDL\_MALLOC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_aligned\_alloc\_zero(\textcolor{keywordtype}{size\_t}\ alignment,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{01650\ }
+\DoxyCodeLine{01667\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_aligned\_free(\textcolor{keywordtype}{void}\ *mem);}
+\DoxyCodeLine{01668\ }
+\DoxyCodeLine{01679\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetNumAllocations(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01680\ }
+\DoxyCodeLine{01694\ typedef\ struct\ \doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ \doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}};}
+\DoxyCodeLine{01695\ }
+\DoxyCodeLine{01717\ extern\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ *\ SDLCALL\ SDL\_GetEnvironment(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01718\ }
+\DoxyCodeLine{01739\ extern\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ *\ SDLCALL\ SDL\_CreateEnvironment(\textcolor{keywordtype}{bool}\ populated);}
+\DoxyCodeLine{01740\ }
+\DoxyCodeLine{01759\ extern\ SDL\_DECLSPEC\ const\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetEnvironmentVariable(\doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ *env,\ const\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{01760\ }
+\DoxyCodeLine{01780\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ **\ SDLCALL\ SDL\_GetEnvironmentVariables(\doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ *env);}
+\DoxyCodeLine{01781\ }
+\DoxyCodeLine{01804\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetEnvironmentVariable(\doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ *env,\ const\ \textcolor{keywordtype}{char}\ *name,\ const\ \textcolor{keywordtype}{char}\ *value,\ \textcolor{keywordtype}{bool}\ overwrite);}
+\DoxyCodeLine{01805\ }
+\DoxyCodeLine{01825\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_UnsetEnvironmentVariable(\doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ *env,\ const\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{01826\ }
+\DoxyCodeLine{01839\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyEnvironment(\doxymbox{\hyperlink{struct_s_d_l___environment}{SDL\_Environment}}\ *env);}
+\DoxyCodeLine{01840\ }
+\DoxyCodeLine{01856\ extern\ SDL\_DECLSPEC\ const\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_getenv(const\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{01857\ }
+\DoxyCodeLine{01880\ extern\ SDL\_DECLSPEC\ const\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_getenv\_unsafe(const\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{01881\ }
+\DoxyCodeLine{01898\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_setenv\_unsafe(const\ \textcolor{keywordtype}{char}\ *name,\ const\ \textcolor{keywordtype}{char}\ *value,\ \textcolor{keywordtype}{int}\ overwrite);}
+\DoxyCodeLine{01899\ }
+\DoxyCodeLine{01913\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_unsetenv\_unsafe(const\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{01914\ }
+\DoxyCodeLine{01929\ typedef\ \textcolor{keywordtype}{int}\ (SDLCALL\ *SDL\_CompareCallback)(const\ \textcolor{keywordtype}{void}\ *a,\ const\ \textcolor{keywordtype}{void}\ *b);}
+\DoxyCodeLine{01930\ }
+\DoxyCodeLine{01975\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_qsort(\textcolor{keywordtype}{void}\ *base,\ \textcolor{keywordtype}{size\_t}\ nmemb,\ \textcolor{keywordtype}{size\_t}\ size,\ SDL\_CompareCallback\ compare);}
+\DoxyCodeLine{01976\ }
+\DoxyCodeLine{02025\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_bsearch(const\ \textcolor{keywordtype}{void}\ *key,\ const\ \textcolor{keywordtype}{void}\ *base,\ \textcolor{keywordtype}{size\_t}\ nmemb,\ \textcolor{keywordtype}{size\_t}\ size,\ SDL\_CompareCallback\ compare);}
+\DoxyCodeLine{02026\ }
+\DoxyCodeLine{02042\ typedef\ \textcolor{keywordtype}{int}\ (SDLCALL\ *SDL\_CompareCallback\_r)(\textcolor{keywordtype}{void}\ *userdata,\ const\ \textcolor{keywordtype}{void}\ *a,\ const\ \textcolor{keywordtype}{void}\ *b);}
+\DoxyCodeLine{02043\ }
+\DoxyCodeLine{02095\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_qsort\_r(\textcolor{keywordtype}{void}\ *base,\ \textcolor{keywordtype}{size\_t}\ nmemb,\ \textcolor{keywordtype}{size\_t}\ size,\ SDL\_CompareCallback\_r\ compare,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{02096\ }
+\DoxyCodeLine{02153\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_bsearch\_r(const\ \textcolor{keywordtype}{void}\ *key,\ const\ \textcolor{keywordtype}{void}\ *base,\ \textcolor{keywordtype}{size\_t}\ nmemb,\ \textcolor{keywordtype}{size\_t}\ size,\ SDL\_CompareCallback\_r\ compare,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{02154\ }
+\DoxyCodeLine{02165\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_abs(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02166\ }
+\DoxyCodeLine{02183\ \textcolor{preprocessor}{\#define\ SDL\_min(x,\ y)\ (((x)\ <\ (y))\ ?\ (x)\ :\ (y))}}
+\DoxyCodeLine{02184\ }
+\DoxyCodeLine{02201\ \textcolor{preprocessor}{\#define\ SDL\_max(x,\ y)\ (((x)\ >\ (y))\ ?\ (x)\ :\ (y))}}
+\DoxyCodeLine{02202\ }
+\DoxyCodeLine{02225\ \textcolor{preprocessor}{\#define\ SDL\_clamp(x,\ a,\ b)\ (((x)\ <\ (a))\ ?\ (a)\ :\ (((x)\ >\ (b))\ ?\ (b)\ :\ (x)))}}
+\DoxyCodeLine{02226\ }
+\DoxyCodeLine{02240\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isalpha(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02241\ }
+\DoxyCodeLine{02255\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isalnum(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02256\ }
+\DoxyCodeLine{02270\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isblank(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02271\ }
+\DoxyCodeLine{02285\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_iscntrl(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02286\ }
+\DoxyCodeLine{02300\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isdigit(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02301\ }
+\DoxyCodeLine{02315\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isxdigit(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02316\ }
+\DoxyCodeLine{02333\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_ispunct(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02334\ }
+\DoxyCodeLine{02355\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isspace(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02356\ }
+\DoxyCodeLine{02370\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isupper(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02371\ }
+\DoxyCodeLine{02385\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_islower(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02386\ }
+\DoxyCodeLine{02404\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isprint(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02405\ }
+\DoxyCodeLine{02425\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isgraph(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02426\ }
+\DoxyCodeLine{02443\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_toupper(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02444\ }
+\DoxyCodeLine{02461\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_tolower(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{02462\ }
+\DoxyCodeLine{02482\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_crc16(Uint16\ crc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{02483\ }
+\DoxyCodeLine{02503\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_crc32(Uint32\ crc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{02504\ }
+\DoxyCodeLine{02529\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_murmur3\_32(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ \textcolor{keywordtype}{size\_t}\ len,\ Uint32\ seed);}
+\DoxyCodeLine{02530\ }
+\DoxyCodeLine{02549\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_memcpy(SDL\_OUT\_BYTECAP(len)\ \textcolor{keywordtype}{void}\ *dst,\ SDL\_IN\_BYTECAP(len)\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{02550\ }
+\DoxyCodeLine{02551\ \textcolor{comment}{/*\ Take\ advantage\ of\ compiler\ optimizations\ for\ memcpy\ */}}
+\DoxyCodeLine{02552\ \textcolor{preprocessor}{\#ifndef\ SDL\_SLOW\_MEMCPY}}
+\DoxyCodeLine{02553\ \textcolor{preprocessor}{\#ifdef\ SDL\_memcpy}}
+\DoxyCodeLine{02554\ \textcolor{preprocessor}{\#undef\ SDL\_memcpy}}
+\DoxyCodeLine{02555\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02556\ \textcolor{preprocessor}{\#define\ SDL\_memcpy\ \ memcpy}}
+\DoxyCodeLine{02557\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02558\ }
+\DoxyCodeLine{02559\ }
+\DoxyCodeLine{02584\ \textcolor{preprocessor}{\#define\ SDL\_copyp(dst,\ src)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{02585\ \textcolor{preprocessor}{\ \ \ \ \{\ SDL\_COMPILE\_TIME\_ASSERT(SDL\_copyp,\ sizeof\ (*(dst))\ ==\ sizeof\ (*(src)));\ \}\ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{02586\ \textcolor{preprocessor}{\ \ \ \ SDL\_memcpy((dst),\ (src),\ sizeof(*(src)))}}
+\DoxyCodeLine{02587\ }
+\DoxyCodeLine{02605\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_memmove(SDL\_OUT\_BYTECAP(len)\ \textcolor{keywordtype}{void}\ *dst,\ SDL\_IN\_BYTECAP(len)\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{02606\ }
+\DoxyCodeLine{02607\ \textcolor{comment}{/*\ Take\ advantage\ of\ compiler\ optimizations\ for\ memmove\ */}}
+\DoxyCodeLine{02608\ \textcolor{preprocessor}{\#ifndef\ SDL\_SLOW\_MEMMOVE}}
+\DoxyCodeLine{02609\ \textcolor{preprocessor}{\#ifdef\ SDL\_memmove}}
+\DoxyCodeLine{02610\ \textcolor{preprocessor}{\#undef\ SDL\_memmove}}
+\DoxyCodeLine{02611\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02612\ \textcolor{preprocessor}{\#define\ SDL\_memmove\ memmove}}
+\DoxyCodeLine{02613\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02614\ }
+\DoxyCodeLine{02633\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_memset(SDL\_OUT\_BYTECAP(len)\ \textcolor{keywordtype}{void}\ *dst,\ \textcolor{keywordtype}{int}\ c,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{02634\ }
+\DoxyCodeLine{02653\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_memset4(\textcolor{keywordtype}{void}\ *dst,\ Uint32\ val,\ \textcolor{keywordtype}{size\_t}\ dwords);}
+\DoxyCodeLine{02654\ }
+\DoxyCodeLine{02655\ \textcolor{comment}{/*\ Take\ advantage\ of\ compiler\ optimizations\ for\ memset\ */}}
+\DoxyCodeLine{02656\ \textcolor{preprocessor}{\#ifndef\ SDL\_SLOW\_MEMSET}}
+\DoxyCodeLine{02657\ \textcolor{preprocessor}{\#ifdef\ SDL\_memset}}
+\DoxyCodeLine{02658\ \textcolor{preprocessor}{\#undef\ SDL\_memset}}
+\DoxyCodeLine{02659\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02660\ \textcolor{preprocessor}{\#define\ SDL\_memset\ \ memset}}
+\DoxyCodeLine{02661\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{02662\ }
+\DoxyCodeLine{02680\ \textcolor{preprocessor}{\#define\ SDL\_zero(x)\ SDL\_memset(\&(x),\ 0,\ sizeof((x)))}}
+\DoxyCodeLine{02681\ }
+\DoxyCodeLine{02699\ \textcolor{preprocessor}{\#define\ SDL\_zerop(x)\ SDL\_memset((x),\ 0,\ sizeof(*(x)))}}
+\DoxyCodeLine{02700\ }
+\DoxyCodeLine{02718\ \textcolor{preprocessor}{\#define\ SDL\_zeroa(x)\ SDL\_memset((x),\ 0,\ sizeof((x)))}}
+\DoxyCodeLine{02719\ }
+\DoxyCodeLine{02720\ }
+\DoxyCodeLine{02735\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_memcmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *s1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *s2,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{02736\ }
+\DoxyCodeLine{02762\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_wcslen(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *wstr);}
+\DoxyCodeLine{02763\ }
+\DoxyCodeLine{02793\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_wcsnlen(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *wstr,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{02794\ }
+\DoxyCodeLine{02820\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_wcslcpy(SDL\_OUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{wchar\_t}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *src,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{02821\ }
+\DoxyCodeLine{02849\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_wcslcat(SDL\_INOUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{wchar\_t}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *src,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{02850\ }
+\DoxyCodeLine{02867\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{wchar\_t}\ *\ SDLCALL\ SDL\_wcsdup(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *wstr);}
+\DoxyCodeLine{02868\ }
+\DoxyCodeLine{02887\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{wchar\_t}\ *\ SDLCALL\ SDL\_wcsstr(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *haystack,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *needle);}
+\DoxyCodeLine{02888\ }
+\DoxyCodeLine{02912\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{wchar\_t}\ *\ SDLCALL\ SDL\_wcsnstr(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *haystack,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *needle,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{02913\ }
+\DoxyCodeLine{02931\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_wcscmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str2);}
+\DoxyCodeLine{02932\ }
+\DoxyCodeLine{02962\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_wcsncmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str2,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{02963\ }
+\DoxyCodeLine{02992\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_wcscasecmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str2);}
+\DoxyCodeLine{02993\ }
+\DoxyCodeLine{03034\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_wcsncasecmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str2,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{03035\ }
+\DoxyCodeLine{03061\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_wcstol(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str,\ \textcolor{keywordtype}{wchar\_t}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03062\ }
+\DoxyCodeLine{03088\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_wcstoul(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str,\ \textcolor{keywordtype}{wchar\_t}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03089\ }
+\DoxyCodeLine{03090\ \textcolor{preprocessor}{\#ifndef\ SDL\_NOLONGLONG}}
+\DoxyCodeLine{03091\ }
+\DoxyCodeLine{03117\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_wcstoll(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str,\ \textcolor{keywordtype}{wchar\_t}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03118\ }
+\DoxyCodeLine{03146\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_wcstoull(\textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *str,\ \textcolor{keywordtype}{wchar\_t}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03147\ }
+\DoxyCodeLine{03148\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_NOLONGLONG\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{03149\ }
+\DoxyCodeLine{03168\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_strlen(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03169\ }
+\DoxyCodeLine{03192\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_strnlen(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{03193\ }
+\DoxyCodeLine{03221\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_strlcpy(SDL\_OUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{char}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *src,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{03222\ }
+\DoxyCodeLine{03249\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_utf8strlcpy(SDL\_OUT\_Z\_CAP(dst\_bytes)\ \textcolor{keywordtype}{char}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *src,\ \textcolor{keywordtype}{size\_t}\ dst\_bytes);}
+\DoxyCodeLine{03250\ }
+\DoxyCodeLine{03277\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_strlcat(SDL\_INOUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{char}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *src,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{03278\ }
+\DoxyCodeLine{03295\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_MALLOC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strdup(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03296\ }
+\DoxyCodeLine{03320\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_MALLOC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strndup(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{03321\ }
+\DoxyCodeLine{03341\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strrev(\textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03342\ }
+\DoxyCodeLine{03362\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strupr(\textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03363\ }
+\DoxyCodeLine{03383\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strlwr(\textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03384\ }
+\DoxyCodeLine{03403\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strchr(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ c);}
+\DoxyCodeLine{03404\ }
+\DoxyCodeLine{03422\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strrchr(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ c);}
+\DoxyCodeLine{03423\ }
+\DoxyCodeLine{03442\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strstr(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *haystack,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *needle);}
+\DoxyCodeLine{03443\ }
+\DoxyCodeLine{03465\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strnstr(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *haystack,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *needle,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{03466\ }
+\DoxyCodeLine{03493\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strcasestr(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *haystack,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *needle);}
+\DoxyCodeLine{03494\ }
+\DoxyCodeLine{03522\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strtok\_r(\textcolor{keywordtype}{char}\ *str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *delim,\ \textcolor{keywordtype}{char}\ **saveptr);}
+\DoxyCodeLine{03523\ }
+\DoxyCodeLine{03550\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_utf8strlen(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03551\ }
+\DoxyCodeLine{03583\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_utf8strnlen(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{structbytes}{bytes}});}
+\DoxyCodeLine{03584\ }
+\DoxyCodeLine{03611\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_itoa(\textcolor{keywordtype}{int}\ value,\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ radix);}
+\DoxyCodeLine{03612\ }
+\DoxyCodeLine{03639\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_uitoa(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ value,\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ radix);}
+\DoxyCodeLine{03640\ }
+\DoxyCodeLine{03667\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_ltoa(\textcolor{keywordtype}{long}\ value,\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ radix);}
+\DoxyCodeLine{03668\ }
+\DoxyCodeLine{03695\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_ultoa(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ value,\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ radix);}
+\DoxyCodeLine{03696\ }
+\DoxyCodeLine{03697\ \textcolor{preprocessor}{\#ifndef\ SDL\_NOLONGLONG}}
+\DoxyCodeLine{03698\ }
+\DoxyCodeLine{03725\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_lltoa(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ value,\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ radix);}
+\DoxyCodeLine{03726\ }
+\DoxyCodeLine{03753\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_ulltoa(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ value,\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{int}\ radix);}
+\DoxyCodeLine{03754\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{03755\ }
+\DoxyCodeLine{03777\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_atoi(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03778\ }
+\DoxyCodeLine{03799\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_atof(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{03800\ }
+\DoxyCodeLine{03833\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_strtol(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03834\ }
+\DoxyCodeLine{03866\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_strtoul(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03867\ }
+\DoxyCodeLine{03868\ \textcolor{preprocessor}{\#ifndef\ SDL\_NOLONGLONG}}
+\DoxyCodeLine{03869\ }
+\DoxyCodeLine{03901\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_strtoll(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03902\ }
+\DoxyCodeLine{03935\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_strtoull(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ **endp,\ \textcolor{keywordtype}{int}\ base);}
+\DoxyCodeLine{03936\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{03937\ }
+\DoxyCodeLine{03965\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_strtod(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keywordtype}{char}\ **endp);}
+\DoxyCodeLine{03966\ }
+\DoxyCodeLine{03985\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_strcmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str2);}
+\DoxyCodeLine{03986\ }
+\DoxyCodeLine{04015\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_strncmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str2,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{04016\ }
+\DoxyCodeLine{04043\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_strcasecmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str2);}
+\DoxyCodeLine{04044\ }
+\DoxyCodeLine{04045\ }
+\DoxyCodeLine{04083\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_strncasecmp(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str1,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str2,\ \textcolor{keywordtype}{size\_t}\ maxlen);}
+\DoxyCodeLine{04084\ }
+\DoxyCodeLine{04101\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_strpbrk(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *breakset);}
+\DoxyCodeLine{04102\ }
+\DoxyCodeLine{04116\ \textcolor{preprocessor}{\#define\ SDL\_INVALID\_UNICODE\_CODEPOINT\ 0xFFFD}}
+\DoxyCodeLine{04117\ }
+\DoxyCodeLine{04161\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_StepUTF8(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **pstr,\ \textcolor{keywordtype}{size\_t}\ *pslen);}
+\DoxyCodeLine{04162\ }
+\DoxyCodeLine{04192\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_StepBackUTF8(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *start,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **pstr);}
+\DoxyCodeLine{04193\ }
+\DoxyCodeLine{04221\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_UCS4ToUTF8(Uint32\ codepoint,\ \textcolor{keywordtype}{char}\ *dst);}
+\DoxyCodeLine{04222\ }
+\DoxyCodeLine{04238\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_sscanf(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text,\ SDL\_SCANF\_FORMAT\_STRING\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fmt,\ ...)\ SDL\_SCANF\_VARARG\_FUNC(2);}
+\DoxyCodeLine{04239\ }
+\DoxyCodeLine{04257\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_vsscanf(const\ \textcolor{keywordtype}{char}\ *text,\ SDL\_SCANF\_FORMAT\_STRING\ const\ \textcolor{keywordtype}{char}\ *fmt,\ va\_list\ ap)\ SDL\_SCANF\_VARARG\_FUNCV(2);}
+\DoxyCodeLine{04258\ }
+\DoxyCodeLine{04290\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_snprintf(SDL\_OUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{size\_t}\ maxlen,\ SDL\_PRINTF\_FORMAT\_STRING\ const\ \textcolor{keywordtype}{char}\ *fmt,\ ...)\ SDL\_PRINTF\_VARARG\_FUNC(3);}
+\DoxyCodeLine{04291\ }
+\DoxyCodeLine{04324\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_swprintf(SDL\_OUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{wchar\_t}\ *text,\ \textcolor{keywordtype}{size\_t}\ maxlen,\ SDL\_PRINTF\_FORMAT\_STRING\ const\ \textcolor{keywordtype}{wchar\_t}\ *fmt,\ ...)\ SDL\_WPRINTF\_VARARG\_FUNC(3);}
+\DoxyCodeLine{04325\ }
+\DoxyCodeLine{04344\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_vsnprintf(SDL\_OUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{size\_t}\ maxlen,\ SDL\_PRINTF\_FORMAT\_STRING\ const\ \textcolor{keywordtype}{char}\ *fmt,\ va\_list\ ap)\ SDL\_PRINTF\_VARARG\_FUNCV(3);}
+\DoxyCodeLine{04345\ }
+\DoxyCodeLine{04365\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_vswprintf(SDL\_OUT\_Z\_CAP(maxlen)\ \textcolor{keywordtype}{wchar\_t}\ *text,\ \textcolor{keywordtype}{size\_t}\ maxlen,\ SDL\_PRINTF\_FORMAT\_STRING\ const\ \textcolor{keywordtype}{wchar\_t}\ *fmt,\ va\_list\ ap)\ SDL\_WPRINTF\_VARARG\_FUNCV(3);}
+\DoxyCodeLine{04366\ }
+\DoxyCodeLine{04394\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_asprintf(\textcolor{keywordtype}{char}\ **strp,\ SDL\_PRINTF\_FORMAT\_STRING\ const\ \textcolor{keywordtype}{char}\ *fmt,\ ...)\ SDL\_PRINTF\_VARARG\_FUNC(2);}
+\DoxyCodeLine{04395\ }
+\DoxyCodeLine{04413\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_vasprintf(\textcolor{keywordtype}{char}\ **strp,\ SDL\_PRINTF\_FORMAT\_STRING\ const\ \textcolor{keywordtype}{char}\ *fmt,\ va\_list\ ap)\ SDL\_PRINTF\_VARARG\_FUNCV(2);}
+\DoxyCodeLine{04414\ }
+\DoxyCodeLine{04433\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_srand(Uint64\ seed);}
+\DoxyCodeLine{04434\ }
+\DoxyCodeLine{04467\ extern\ SDL\_DECLSPEC\ Sint32\ SDLCALL\ SDL\_rand(Sint32\ n);}
+\DoxyCodeLine{04468\ }
+\DoxyCodeLine{04490\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_randf(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{04491\ }
+\DoxyCodeLine{04513\ extern\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_rand\_bits(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{04514\ }
+\DoxyCodeLine{04548\ extern\ SDL\_DECLSPEC\ Sint32\ SDLCALL\ SDL\_rand\_r(Uint64\ *state,\ Sint32\ n);}
+\DoxyCodeLine{04549\ }
+\DoxyCodeLine{04572\ extern\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_randf\_r(Uint64\ *state);}
+\DoxyCodeLine{04573\ }
+\DoxyCodeLine{04597\ extern\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_rand\_bits\_r(Uint64\ *state);}
+\DoxyCodeLine{04598\ }
+\DoxyCodeLine{04599\ \textcolor{preprocessor}{\#ifndef\ SDL\_PI\_D}}
+\DoxyCodeLine{04600\ }
+\DoxyCodeLine{04608\ \textcolor{preprocessor}{\#define\ SDL\_PI\_D\ \ \ 3.141592653589793238462643383279502884\ \ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{04609\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{04610\ }
+\DoxyCodeLine{04611\ \textcolor{preprocessor}{\#ifndef\ SDL\_PI\_F}}
+\DoxyCodeLine{04612\ }
+\DoxyCodeLine{04620\ \textcolor{preprocessor}{\#define\ SDL\_PI\_F\ \ \ 3.141592653589793238462643383279502884F\ \ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{04621\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{04622\ }
+\DoxyCodeLine{04651\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_acos(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{04652\ }
+\DoxyCodeLine{04681\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_acosf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{04682\ }
+\DoxyCodeLine{04711\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_asin(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{04712\ }
+\DoxyCodeLine{04741\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_asinf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{04742\ }
+\DoxyCodeLine{04773\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_atan(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{04774\ }
+\DoxyCodeLine{04805\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_atanf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{04806\ }
+\DoxyCodeLine{04841\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_atan2(\textcolor{keywordtype}{double}\ y,\ \textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{04842\ }
+\DoxyCodeLine{04877\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_atan2f(\textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{04878\ }
+\DoxyCodeLine{04905\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_ceil(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{04906\ }
+\DoxyCodeLine{04933\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_ceilf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{04934\ }
+\DoxyCodeLine{04959\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_copysign(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y);}
+\DoxyCodeLine{04960\ }
+\DoxyCodeLine{04985\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_copysignf(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{04986\ }
+\DoxyCodeLine{05013\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_cos(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05014\ }
+\DoxyCodeLine{05041\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_cosf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05042\ }
+\DoxyCodeLine{05073\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_exp(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05074\ }
+\DoxyCodeLine{05105\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_expf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05106\ }
+\DoxyCodeLine{05126\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_fabs(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05127\ }
+\DoxyCodeLine{05147\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_fabsf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05148\ }
+\DoxyCodeLine{05175\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_floor(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05176\ }
+\DoxyCodeLine{05203\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_floorf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05204\ }
+\DoxyCodeLine{05232\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_trunc(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05233\ }
+\DoxyCodeLine{05261\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_truncf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05262\ }
+\DoxyCodeLine{05291\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_fmod(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y);}
+\DoxyCodeLine{05292\ }
+\DoxyCodeLine{05321\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_fmodf(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{05322\ }
+\DoxyCodeLine{05335\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isinf(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05336\ }
+\DoxyCodeLine{05349\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isinff(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05350\ }
+\DoxyCodeLine{05363\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isnan(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05364\ }
+\DoxyCodeLine{05377\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_isnanf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05378\ }
+\DoxyCodeLine{05407\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_log(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05408\ }
+\DoxyCodeLine{05436\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_logf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05437\ }
+\DoxyCodeLine{05466\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_log10(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05467\ }
+\DoxyCodeLine{05496\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_log10f(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05497\ }
+\DoxyCodeLine{05516\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_modf(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ *y);}
+\DoxyCodeLine{05517\ }
+\DoxyCodeLine{05536\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_modff(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ *y);}
+\DoxyCodeLine{05537\ }
+\DoxyCodeLine{05568\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_pow(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{double}\ y);}
+\DoxyCodeLine{05569\ }
+\DoxyCodeLine{05600\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_powf(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{05601\ }
+\DoxyCodeLine{05629\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_round(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05630\ }
+\DoxyCodeLine{05658\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_roundf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05659\ }
+\DoxyCodeLine{05687\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_lround(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05688\ }
+\DoxyCodeLine{05716\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{long}\ SDLCALL\ SDL\_lroundf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05717\ }
+\DoxyCodeLine{05741\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_scalbn(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{05742\ }
+\DoxyCodeLine{05766\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_scalbnf(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{05767\ }
+\DoxyCodeLine{05794\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_sin(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05795\ }
+\DoxyCodeLine{05822\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_sinf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05823\ }
+\DoxyCodeLine{05848\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_sqrt(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05849\ }
+\DoxyCodeLine{05874\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_sqrtf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05875\ }
+\DoxyCodeLine{05904\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{double}\ SDLCALL\ SDL\_tan(\textcolor{keywordtype}{double}\ x);}
+\DoxyCodeLine{05905\ }
+\DoxyCodeLine{05934\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_tanf(\textcolor{keywordtype}{float}\ x);}
+\DoxyCodeLine{05935\ }
+\DoxyCodeLine{05943\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l__iconv__data__t}{SDL\_iconv\_data\_t}}\ *SDL\_iconv\_t;}
+\DoxyCodeLine{05944\ }
+\DoxyCodeLine{05962\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_iconv\_t\ SDLCALL\ SDL\_iconv\_open(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tocode,}
+\DoxyCodeLine{05963\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fromcode);}
+\DoxyCodeLine{05964\ }
+\DoxyCodeLine{05979\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_iconv\_close(SDL\_iconv\_t\ cd);}
+\DoxyCodeLine{05980\ }
+\DoxyCodeLine{06019\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{size\_t}\ SDLCALL\ SDL\_iconv(SDL\_iconv\_t\ cd,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **inbuf,}
+\DoxyCodeLine{06020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *inbytesleft,\ \textcolor{keywordtype}{char}\ **outbuf,}
+\DoxyCodeLine{06021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *outbytesleft);}
+\DoxyCodeLine{06022\ }
+\DoxyCodeLine{06023\ \textcolor{preprocessor}{\#define\ SDL\_ICONV\_ERROR\ \ \ \ \ (size\_t)-\/1\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{06024\ \textcolor{preprocessor}{\#define\ SDL\_ICONV\_E2BIG\ \ \ \ \ (size\_t)-\/2\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{06025\ \textcolor{preprocessor}{\#define\ SDL\_ICONV\_EILSEQ\ \ \ \ (size\_t)-\/3\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{06026\ \textcolor{preprocessor}{\#define\ SDL\_ICONV\_EINVAL\ \ \ \ (size\_t)-\/4\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{06027\ }
+\DoxyCodeLine{06028\ }
+\DoxyCodeLine{06056\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_iconv\_string(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *tocode,}
+\DoxyCodeLine{06057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fromcode,}
+\DoxyCodeLine{06058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *inbuf,}
+\DoxyCodeLine{06059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ inbytesleft);}
+\DoxyCodeLine{06060\ }
+\DoxyCodeLine{06061\ \textcolor{comment}{/*\ Some\ helper\ macros\ for\ common\ SDL\_iconv\_string\ cases...\ */}}
+\DoxyCodeLine{06062\ }
+\DoxyCodeLine{06077\ \textcolor{preprocessor}{\#define\ SDL\_iconv\_utf8\_locale(S)\ \ \ \ SDL\_iconv\_string("{}"{},\ "{}UTF-\/8"{},\ S,\ SDL\_strlen(S)+1)}}
+\DoxyCodeLine{06078\ }
+\DoxyCodeLine{06093\ \textcolor{preprocessor}{\#define\ SDL\_iconv\_utf8\_ucs2(S)\ \ \ \ \ \ SDL\_reinterpret\_cast(Uint16\ *,\ SDL\_iconv\_string("{}UCS-\/2"{},\ "{}UTF-\/8"{},\ S,\ SDL\_strlen(S)+1))}}
+\DoxyCodeLine{06094\ }
+\DoxyCodeLine{06109\ \textcolor{preprocessor}{\#define\ SDL\_iconv\_utf8\_ucs4(S)\ \ \ \ \ \ SDL\_reinterpret\_cast(Uint32\ *,\ SDL\_iconv\_string("{}UCS-\/4"{},\ "{}UTF-\/8"{},\ S,\ SDL\_strlen(S)+1))}}
+\DoxyCodeLine{06110\ }
+\DoxyCodeLine{06125\ \textcolor{preprocessor}{\#define\ SDL\_iconv\_wchar\_utf8(S)\ \ \ \ \ SDL\_iconv\_string("{}UTF-\/8"{},\ "{}WCHAR\_T"{},\ SDL\_reinterpret\_cast(const\ char\ *,\ S),\ (SDL\_wcslen(S)+1)*sizeof(wchar\_t))}}
+\DoxyCodeLine{06126\ }
+\DoxyCodeLine{06127\ }
+\DoxyCodeLine{06128\ \textcolor{comment}{/*\ force\ builds\ using\ Clang's\ static\ analysis\ tools\ to\ use\ literal\ C\ runtime}}
+\DoxyCodeLine{06129\ \textcolor{comment}{\ \ \ here,\ since\ there\ are\ possibly\ tests\ that\ are\ ineffective\ otherwise.\ */}}
+\DoxyCodeLine{06130\ \textcolor{preprocessor}{\#if\ defined(\_\_clang\_analyzer\_\_)\ \&\&\ !defined(SDL\_DISABLE\_ANALYZE\_MACROS)}}
+\DoxyCodeLine{06131\ }
+\DoxyCodeLine{06132\ \textcolor{comment}{/*\ The\ analyzer\ knows\ about\ strlcpy\ even\ when\ the\ system\ doesn't\ provide\ it\ */}}
+\DoxyCodeLine{06133\ \textcolor{preprocessor}{\#if\ !defined(HAVE\_STRLCPY)\ \&\&\ !defined(strlcpy)}}
+\DoxyCodeLine{06134\ \textcolor{keywordtype}{size\_t}\ strlcpy(\textcolor{keywordtype}{char}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *src,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{06135\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06136\ }
+\DoxyCodeLine{06137\ \textcolor{comment}{/*\ The\ analyzer\ knows\ about\ strlcat\ even\ when\ the\ system\ doesn't\ provide\ it\ */}}
+\DoxyCodeLine{06138\ \textcolor{preprocessor}{\#if\ !defined(HAVE\_STRLCAT)\ \&\&\ !defined(strlcat)}}
+\DoxyCodeLine{06139\ \textcolor{keywordtype}{size\_t}\ strlcat(\textcolor{keywordtype}{char}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *src,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{06140\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06141\ }
+\DoxyCodeLine{06142\ \textcolor{preprocessor}{\#if\ !defined(HAVE\_WCSLCPY)\ \&\&\ !defined(wcslcpy)}}
+\DoxyCodeLine{06143\ \textcolor{keywordtype}{size\_t}\ wcslcpy(\textcolor{keywordtype}{wchar\_t}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *src,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{06144\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06145\ }
+\DoxyCodeLine{06146\ \textcolor{preprocessor}{\#if\ !defined(HAVE\_WCSLCAT)\ \&\&\ !defined(wcslcat)}}
+\DoxyCodeLine{06147\ \textcolor{keywordtype}{size\_t}\ wcslcat(\textcolor{keywordtype}{wchar\_t}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{wchar\_t}\ *src,\ \textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{06148\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06149\ }
+\DoxyCodeLine{06150\ \textcolor{preprocessor}{\#if\ !defined(HAVE\_STRTOK\_R)\ \&\&\ !defined(strtok\_r)}}
+\DoxyCodeLine{06151\ \textcolor{keywordtype}{char}\ *strtok\_r(\textcolor{keywordtype}{char}\ *str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *delim,\ \textcolor{keywordtype}{char}\ **saveptr);}
+\DoxyCodeLine{06152\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06153\ }
+\DoxyCodeLine{06154\ \textcolor{preprocessor}{\#ifndef\ \_WIN32}}
+\DoxyCodeLine{06155\ \textcolor{comment}{/*\ strdup\ is\ not\ ANSI\ but\ POSIX,\ and\ its\ prototype\ might\ be\ hidden...\ */}}
+\DoxyCodeLine{06156\ \textcolor{comment}{/*\ not\ for\ windows:\ might\ conflict\ with\ string.h\ where\ strdup\ may\ have}}
+\DoxyCodeLine{06157\ \textcolor{comment}{\ *\ dllimport\ attribute:\ https://github.com/libsdl-\/org/SDL/issues/12948\ */}}
+\DoxyCodeLine{06158\ \textcolor{keywordtype}{char}\ *strdup(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{06159\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06160\ }
+\DoxyCodeLine{06161\ \textcolor{comment}{/*\ Starting\ LLVM\ 16,\ the\ analyser\ errors\ out\ if\ these\ functions\ do\ not\ have}}
+\DoxyCodeLine{06162\ \textcolor{comment}{\ \ \ their\ prototype\ defined\ (clang-\/diagnostic-\/implicit-\/function-\/declaration)\ */}}
+\DoxyCodeLine{06163\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{06164\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{06165\ }
+\DoxyCodeLine{06166\ \textcolor{preprocessor}{\#define\ SDL\_malloc\ malloc}}
+\DoxyCodeLine{06167\ \textcolor{preprocessor}{\#define\ SDL\_calloc\ calloc}}
+\DoxyCodeLine{06168\ \textcolor{preprocessor}{\#define\ SDL\_realloc\ realloc}}
+\DoxyCodeLine{06169\ \textcolor{preprocessor}{\#define\ SDL\_free\ free}}
+\DoxyCodeLine{06170\ \textcolor{preprocessor}{\#ifndef\ SDL\_memcpy}}
+\DoxyCodeLine{06171\ \textcolor{preprocessor}{\#define\ SDL\_memcpy\ memcpy}}
+\DoxyCodeLine{06172\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06173\ \textcolor{preprocessor}{\#ifndef\ SDL\_memmove}}
+\DoxyCodeLine{06174\ \textcolor{preprocessor}{\#define\ SDL\_memmove\ memmove}}
+\DoxyCodeLine{06175\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06176\ \textcolor{preprocessor}{\#ifndef\ SDL\_memset}}
+\DoxyCodeLine{06177\ \textcolor{preprocessor}{\#define\ SDL\_memset\ memset}}
+\DoxyCodeLine{06178\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06179\ \textcolor{preprocessor}{\#define\ SDL\_memcmp\ memcmp}}
+\DoxyCodeLine{06180\ \textcolor{preprocessor}{\#define\ SDL\_strlcpy\ strlcpy}}
+\DoxyCodeLine{06181\ \textcolor{preprocessor}{\#define\ SDL\_strlcat\ strlcat}}
+\DoxyCodeLine{06182\ \textcolor{preprocessor}{\#define\ SDL\_strlen\ strlen}}
+\DoxyCodeLine{06183\ \textcolor{preprocessor}{\#define\ SDL\_wcslen\ wcslen}}
+\DoxyCodeLine{06184\ \textcolor{preprocessor}{\#define\ SDL\_wcslcpy\ wcslcpy}}
+\DoxyCodeLine{06185\ \textcolor{preprocessor}{\#define\ SDL\_wcslcat\ wcslcat}}
+\DoxyCodeLine{06186\ \textcolor{preprocessor}{\#define\ SDL\_strdup\ strdup}}
+\DoxyCodeLine{06187\ \textcolor{preprocessor}{\#define\ SDL\_wcsdup\ wcsdup}}
+\DoxyCodeLine{06188\ \textcolor{preprocessor}{\#define\ SDL\_strchr\ strchr}}
+\DoxyCodeLine{06189\ \textcolor{preprocessor}{\#define\ SDL\_strrchr\ strrchr}}
+\DoxyCodeLine{06190\ \textcolor{preprocessor}{\#define\ SDL\_strstr\ strstr}}
+\DoxyCodeLine{06191\ \textcolor{preprocessor}{\#define\ SDL\_wcsstr\ wcsstr}}
+\DoxyCodeLine{06192\ \textcolor{preprocessor}{\#define\ SDL\_strtok\_r\ strtok\_r}}
+\DoxyCodeLine{06193\ \textcolor{preprocessor}{\#define\ SDL\_strcmp\ strcmp}}
+\DoxyCodeLine{06194\ \textcolor{preprocessor}{\#define\ SDL\_wcscmp\ wcscmp}}
+\DoxyCodeLine{06195\ \textcolor{preprocessor}{\#define\ SDL\_strncmp\ strncmp}}
+\DoxyCodeLine{06196\ \textcolor{preprocessor}{\#define\ SDL\_wcsncmp\ wcsncmp}}
+\DoxyCodeLine{06197\ \textcolor{preprocessor}{\#define\ SDL\_strcasecmp\ strcasecmp}}
+\DoxyCodeLine{06198\ \textcolor{preprocessor}{\#define\ SDL\_strncasecmp\ strncasecmp}}
+\DoxyCodeLine{06199\ \textcolor{preprocessor}{\#define\ SDL\_strpbrk\ strpbrk}}
+\DoxyCodeLine{06200\ \textcolor{preprocessor}{\#define\ SDL\_sscanf\ sscanf}}
+\DoxyCodeLine{06201\ \textcolor{preprocessor}{\#define\ SDL\_vsscanf\ vsscanf}}
+\DoxyCodeLine{06202\ \textcolor{preprocessor}{\#define\ SDL\_snprintf\ snprintf}}
+\DoxyCodeLine{06203\ \textcolor{preprocessor}{\#define\ SDL\_vsnprintf\ vsnprintf}}
+\DoxyCodeLine{06204\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06205\ }
+\DoxyCodeLine{06223\ SDL\_FORCE\_INLINE\ \textcolor{keywordtype}{bool}\ SDL\_size\_mul\_check\_overflow(\textcolor{keywordtype}{size\_t}\ a,\ \textcolor{keywordtype}{size\_t}\ b,\ \textcolor{keywordtype}{size\_t}\ *ret)}
+\DoxyCodeLine{06224\ \{}
+\DoxyCodeLine{06225\ \ \ \ \ \textcolor{keywordflow}{if}\ (a\ !=\ 0\ \&\&\ b\ >\ SDL\_SIZE\_MAX\ /\ a)\ \{}
+\DoxyCodeLine{06226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{06227\ \ \ \ \ \}}
+\DoxyCodeLine{06228\ \ \ \ \ *ret\ =\ a\ *\ b;}
+\DoxyCodeLine{06229\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{06230\ \}}
+\DoxyCodeLine{06231\ }
+\DoxyCodeLine{06232\ \textcolor{preprocessor}{\#ifndef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{06233\ \textcolor{preprocessor}{\#if\ SDL\_HAS\_BUILTIN(\_\_builtin\_mul\_overflow)}}
+\DoxyCodeLine{06234\ \textcolor{comment}{/*\ This\ needs\ to\ be\ wrapped\ in\ an\ inline\ rather\ than\ being\ a\ direct\ \#define,}}
+\DoxyCodeLine{06235\ \textcolor{comment}{\ *\ because\ \_\_builtin\_mul\_overflow()\ is\ type-\/generic,\ but\ we\ want\ to\ be}}
+\DoxyCodeLine{06236\ \textcolor{comment}{\ *\ consistent\ about\ interpreting\ a\ and\ b\ as\ size\_t.\ */}}
+\DoxyCodeLine{06237\ SDL\_FORCE\_INLINE\ \textcolor{keywordtype}{bool}\ SDL\_size\_mul\_check\_overflow\_builtin(\textcolor{keywordtype}{size\_t}\ a,\ \textcolor{keywordtype}{size\_t}\ b,\ \textcolor{keywordtype}{size\_t}\ *ret)}
+\DoxyCodeLine{06238\ \{}
+\DoxyCodeLine{06239\ \ \ \ \ \textcolor{keywordflow}{return}\ (\_\_builtin\_mul\_overflow(a,\ b,\ ret)\ ==\ 0);}
+\DoxyCodeLine{06240\ \}}
+\DoxyCodeLine{06241\ \textcolor{preprocessor}{\#define\ SDL\_size\_mul\_check\_overflow(a,\ b,\ ret)\ SDL\_size\_mul\_check\_overflow\_builtin(a,\ b,\ ret)}}
+\DoxyCodeLine{06242\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06243\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06244\ }
+\DoxyCodeLine{06262\ SDL\_FORCE\_INLINE\ \textcolor{keywordtype}{bool}\ SDL\_size\_add\_check\_overflow(\textcolor{keywordtype}{size\_t}\ a,\ \textcolor{keywordtype}{size\_t}\ b,\ \textcolor{keywordtype}{size\_t}\ *ret)}
+\DoxyCodeLine{06263\ \{}
+\DoxyCodeLine{06264\ \ \ \ \ \textcolor{keywordflow}{if}\ (b\ >\ SDL\_SIZE\_MAX\ -\/\ a)\ \{}
+\DoxyCodeLine{06265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{06266\ \ \ \ \ \}}
+\DoxyCodeLine{06267\ \ \ \ \ *ret\ =\ a\ +\ b;}
+\DoxyCodeLine{06268\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{06269\ \}}
+\DoxyCodeLine{06270\ }
+\DoxyCodeLine{06271\ \textcolor{preprocessor}{\#ifndef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{06272\ \textcolor{preprocessor}{\#if\ SDL\_HAS\_BUILTIN(\_\_builtin\_add\_overflow)}}
+\DoxyCodeLine{06273\ \textcolor{comment}{/*\ This\ needs\ to\ be\ wrapped\ in\ an\ inline\ rather\ than\ being\ a\ direct\ \#define,}}
+\DoxyCodeLine{06274\ \textcolor{comment}{\ *\ the\ same\ as\ the\ call\ to\ \_\_builtin\_mul\_overflow()\ above.\ */}}
+\DoxyCodeLine{06275\ SDL\_FORCE\_INLINE\ \textcolor{keywordtype}{bool}\ SDL\_size\_add\_check\_overflow\_builtin(\textcolor{keywordtype}{size\_t}\ a,\ \textcolor{keywordtype}{size\_t}\ b,\ \textcolor{keywordtype}{size\_t}\ *ret)}
+\DoxyCodeLine{06276\ \{}
+\DoxyCodeLine{06277\ \ \ \ \ \textcolor{keywordflow}{return}\ (\_\_builtin\_add\_overflow(a,\ b,\ ret)\ ==\ 0);}
+\DoxyCodeLine{06278\ \}}
+\DoxyCodeLine{06279\ \textcolor{preprocessor}{\#define\ SDL\_size\_add\_check\_overflow(a,\ b,\ ret)\ SDL\_size\_add\_check\_overflow\_builtin(a,\ b,\ ret)}}
+\DoxyCodeLine{06280\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06281\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06282\ }
+\DoxyCodeLine{06283\ \textcolor{comment}{/*\ This\ is\ a\ generic\ function\ pointer\ which\ should\ be\ cast\ to\ the\ type\ you\ expect\ */}}
+\DoxyCodeLine{06284\ \textcolor{preprocessor}{\#ifdef\ SDL\_WIKI\_DOCUMENTATION\_SECTION}}
+\DoxyCodeLine{06285\ }
+\DoxyCodeLine{06301\ \textcolor{keyword}{typedef}\ void\ (*SDL\_FunctionPointer)(void);}
+\DoxyCodeLine{06302\ \textcolor{preprocessor}{\#elif\ defined(SDL\_FUNCTION\_POINTER\_IS\_VOID\_POINTER)}}
+\DoxyCodeLine{06303\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *SDL\_FunctionPointer;}
+\DoxyCodeLine{06304\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{06305\ \textcolor{keyword}{typedef}\ void\ (*SDL\_FunctionPointer)(void);}
+\DoxyCodeLine{06306\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06307\ }
+\DoxyCodeLine{06308\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{06309\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{06310\ \}}
+\DoxyCodeLine{06311\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{06312\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{06313\ }
+\DoxyCodeLine{06314\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_stdinc\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

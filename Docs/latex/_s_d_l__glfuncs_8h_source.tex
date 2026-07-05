@@ -1,0 +1,482 @@
+\doxysection{SDL\+\_\+glfuncs.\+h}
+\hypertarget{_s_d_l__glfuncs_8h_source}{}\label{_s_d_l__glfuncs_8h_source}\index{MonoRuntime/extern/sdl/src/render/opengl/SDL\_glfuncs.h@{MonoRuntime/extern/sdl/src/render/opengl/SDL\_glfuncs.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ list\ of\ OpenGL\ functions\ sorted\ alphabetically}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ \ \ If\ you\ need\ to\ use\ a\ GL\ function\ from\ the\ SDL\ video\ subsystem,}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ change\ its\ entry\ from\ SDL\_PROC\_UNUSED\ to\ SDL\_PROC\ and\ rebuild.}}
+\DoxyCodeLine{00025\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ SDL\_PROC\_UNUSED(ret,\ func,\ params)}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glAccum,\ (GLenum,\ GLfloat))}
+\DoxyCodeLine{00029\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glAlphaFunc,\ (GLenum,\ GLclampf))}
+\DoxyCodeLine{00030\ SDL\_PROC\_UNUSED(GLboolean,\ glAreTexturesResident,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLsizei,\ \textcolor{keyword}{const}\ GLuint\ *,\ GLboolean\ *))}
+\DoxyCodeLine{00032\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glArrayElement,\ (GLint))}
+\DoxyCodeLine{00033\ SDL\_PROC(\textcolor{keywordtype}{void},\ glBegin,\ (GLenum))}
+\DoxyCodeLine{00034\ SDL\_PROC(\textcolor{keywordtype}{void},\ glBindTexture,\ (GLenum,\ GLuint))}
+\DoxyCodeLine{00035\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glBitmap,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLsizei,\ GLsizei,\ GLfloat,\ GLfloat,\ GLfloat,\ GLfloat,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLubyte\ *))}
+\DoxyCodeLine{00038\ SDL\_PROC(\textcolor{keywordtype}{void},\ glBlendEquation,\ (GLenum))}
+\DoxyCodeLine{00039\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glBlendFunc,\ (GLenum,\ GLenum))}
+\DoxyCodeLine{00040\ SDL\_PROC(\textcolor{keywordtype}{void},\ glBlendFuncSeparate,\ (GLenum,\ GLenum,\ GLenum,\ GLenum))}
+\DoxyCodeLine{00041\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCallList,\ (GLuint))}
+\DoxyCodeLine{00042\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCallLists,\ (GLsizei,\ GLenum,\ \textcolor{keyword}{const}\ GLvoid\ *))}
+\DoxyCodeLine{00043\ SDL\_PROC(\textcolor{keywordtype}{void},\ glClear,\ (GLbitfield))}
+\DoxyCodeLine{00044\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glClearAccum,\ (GLfloat,\ GLfloat,\ GLfloat,\ GLfloat))}
+\DoxyCodeLine{00045\ SDL\_PROC(\textcolor{keywordtype}{void},\ glClearColor,\ (GLclampf,\ GLclampf,\ GLclampf,\ GLclampf))}
+\DoxyCodeLine{00046\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glClearDepth,\ (GLclampd))}
+\DoxyCodeLine{00047\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glClearIndex,\ (GLfloat))}
+\DoxyCodeLine{00048\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glClearStencil,\ (GLint))}
+\DoxyCodeLine{00049\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glClipPlane,\ (GLenum,\ \textcolor{keyword}{const}\ GLdouble\ *))}
+\DoxyCodeLine{00050\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3b,\ (GLbyte,\ GLbyte,\ GLbyte))}
+\DoxyCodeLine{00051\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3bv,\ (\textcolor{keyword}{const}\ GLbyte\ *))}
+\DoxyCodeLine{00052\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3d,\ (GLdouble,\ GLdouble,\ GLdouble))}
+\DoxyCodeLine{00053\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3dv,\ (\textcolor{keyword}{const}\ GLdouble\ *))}
+\DoxyCodeLine{00054\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3f,\ (GLfloat,\ GLfloat,\ GLfloat))}
+\DoxyCodeLine{00055\ SDL\_PROC(\textcolor{keywordtype}{void},\ glColor3fv,\ (\textcolor{keyword}{const}\ GLfloat\ *))}
+\DoxyCodeLine{00056\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3i,\ (GLint,\ GLint,\ GLint))}
+\DoxyCodeLine{00057\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3iv,\ (\textcolor{keyword}{const}\ GLint\ *))}
+\DoxyCodeLine{00058\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3s,\ (GLshort,\ GLshort,\ GLshort))}
+\DoxyCodeLine{00059\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3sv,\ (\textcolor{keyword}{const}\ GLshort\ *))}
+\DoxyCodeLine{00060\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3ub,\ (GLubyte,\ GLubyte,\ GLubyte))}
+\DoxyCodeLine{00061\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3ubv,\ (\textcolor{keyword}{const}\ GLubyte\ *))}
+\DoxyCodeLine{00062\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3ui,\ (GLuint,\ GLuint,\ GLuint))}
+\DoxyCodeLine{00063\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3uiv,\ (\textcolor{keyword}{const}\ GLuint\ *))}
+\DoxyCodeLine{00064\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3us,\ (GLushort,\ GLushort,\ GLushort))}
+\DoxyCodeLine{00065\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor3usv,\ (\textcolor{keyword}{const}\ GLushort\ *))}
+\DoxyCodeLine{00066\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4b,\ (GLbyte,\ GLbyte,\ GLbyte,\ GLbyte))}
+\DoxyCodeLine{00067\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4bv,\ (\textcolor{keyword}{const}\ GLbyte\ *))}
+\DoxyCodeLine{00068\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4d,\ (GLdouble,\ GLdouble,\ GLdouble,\ GLdouble))}
+\DoxyCodeLine{00069\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4dv,\ (\textcolor{keyword}{const}\ GLdouble\ *))}
+\DoxyCodeLine{00070\ SDL\_PROC(\textcolor{keywordtype}{void},\ glColor4f,\ (GLfloat,\ GLfloat,\ GLfloat,\ GLfloat))}
+\DoxyCodeLine{00071\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4fv,\ (\textcolor{keyword}{const}\ GLfloat\ *))}
+\DoxyCodeLine{00072\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4i,\ (GLint,\ GLint,\ GLint,\ GLint))}
+\DoxyCodeLine{00073\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4iv,\ (\textcolor{keyword}{const}\ GLint\ *))}
+\DoxyCodeLine{00074\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4s,\ (GLshort,\ GLshort,\ GLshort,\ GLshort))}
+\DoxyCodeLine{00075\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4sv,\ (\textcolor{keyword}{const}\ GLshort\ *))}
+\DoxyCodeLine{00076\ SDL\_PROC(\textcolor{keywordtype}{void},\ glColor4ub,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ (GLubyte\ red,\ GLubyte\ green,\ GLubyte\ blue,\ GLubyte\ alpha))}
+\DoxyCodeLine{00078\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4ubv,\ (\textcolor{keyword}{const}\ GLubyte\ *v))}
+\DoxyCodeLine{00079\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4ui,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLuint\ red,\ GLuint\ green,\ GLuint\ blue,\ GLuint\ alpha))}
+\DoxyCodeLine{00081\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4uiv,\ (\textcolor{keyword}{const}\ GLuint\ *v))}
+\DoxyCodeLine{00082\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4us,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLushort\ red,\ GLushort\ green,\ GLushort\ blue,\ GLushort\ alpha))}
+\DoxyCodeLine{00084\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColor4usv,\ (\textcolor{keyword}{const}\ GLushort\ *v))}
+\DoxyCodeLine{00085\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColorMask,}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLboolean\ red,\ GLboolean\ green,\ GLboolean\ blue,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLboolean\ alpha))}
+\DoxyCodeLine{00088\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glColorMaterial,\ (GLenum\ face,\ GLenum\ mode))}
+\DoxyCodeLine{00089\ SDL\_PROC(\textcolor{keywordtype}{void},\ glColorPointer,}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ (GLint\ size,\ GLenum\ type,\ GLsizei\ stride,}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *pointer))}
+\DoxyCodeLine{00092\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCopyPixels,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLint\ x,\ GLint\ y,\ GLsizei\ width,\ GLsizei\ height,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLenum\ type))}
+\DoxyCodeLine{00095\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCopyTexImage1D,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLenum\ internalFormat,\ GLint\ x,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ y,\ GLsizei\ width,\ GLint\ border))}
+\DoxyCodeLine{00098\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCopyTexImage2D,}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLenum\ internalFormat,\ GLint\ x,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ y,\ GLsizei\ width,\ GLsizei\ height,\ GLint\ border))}
+\DoxyCodeLine{00101\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCopyTexSubImage1D,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLint\ xoffset,\ GLint\ x,\ GLint\ y,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLsizei\ width))}
+\DoxyCodeLine{00104\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCopyTexSubImage2D,}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLint\ xoffset,\ GLint\ yoffset,}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ x,\ GLint\ y,\ GLsizei\ width,\ GLsizei\ height))}
+\DoxyCodeLine{00107\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glCullFace,\ (GLenum\ mode))}
+\DoxyCodeLine{00108\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glDeleteLists,\ (GLuint\ list,\ GLsizei\ range))}
+\DoxyCodeLine{00109\ SDL\_PROC(\textcolor{keywordtype}{void},\ glDeleteTextures,\ (GLsizei\ n,\ \textcolor{keyword}{const}\ GLuint\ *textures))}
+\DoxyCodeLine{00110\ SDL\_PROC(\textcolor{keywordtype}{void},\ glDepthFunc,\ (GLenum\ func))}
+\DoxyCodeLine{00111\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glDepthMask,\ (GLboolean\ flag))}
+\DoxyCodeLine{00112\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glDepthRange,\ (GLclampd\ zNear,\ GLclampd\ zFar))}
+\DoxyCodeLine{00113\ SDL\_PROC(\textcolor{keywordtype}{void},\ glDisable,\ (GLenum\ cap))}
+\DoxyCodeLine{00114\ SDL\_PROC(\textcolor{keywordtype}{void},\ glDisableClientState,\ (GLenum\ array))}
+\DoxyCodeLine{00115\ SDL\_PROC(\textcolor{keywordtype}{void},\ glDrawArrays,\ (GLenum\ mode,\ GLint\ first,\ GLsizei\ count))}
+\DoxyCodeLine{00116\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glDrawBuffer,\ (GLenum\ mode))}
+\DoxyCodeLine{00117\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glDrawElements,}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ mode,\ GLsizei\ count,\ GLenum\ type,}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *indices))}
+\DoxyCodeLine{00120\ SDL\_PROC(\textcolor{keywordtype}{void},\ glDrawPixels,}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ (GLsizei\ width,\ GLsizei\ height,\ GLenum\ format,\ GLenum\ type,}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *pixels))}
+\DoxyCodeLine{00123\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEdgeFlag,\ (GLboolean\ flag))}
+\DoxyCodeLine{00124\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEdgeFlagPointer,}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLsizei\ stride,\ \textcolor{keyword}{const}\ GLvoid\ *pointer))}
+\DoxyCodeLine{00126\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEdgeFlagv,\ (\textcolor{keyword}{const}\ GLboolean\ *flag))}
+\DoxyCodeLine{00127\ SDL\_PROC(\textcolor{keywordtype}{void},\ glEnable,\ (GLenum\ cap))}
+\DoxyCodeLine{00128\ SDL\_PROC(\textcolor{keywordtype}{void},\ glEnableClientState,\ (GLenum\ array))}
+\DoxyCodeLine{00129\ SDL\_PROC(\textcolor{keywordtype}{void},\ glEnd,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00130\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEndList,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00131\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord1d,\ (GLdouble\ u))}
+\DoxyCodeLine{00132\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord1dv,\ (\textcolor{keyword}{const}\ GLdouble\ *u))}
+\DoxyCodeLine{00133\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord1f,\ (GLfloat\ u))}
+\DoxyCodeLine{00134\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord1fv,\ (\textcolor{keyword}{const}\ GLfloat\ *u))}
+\DoxyCodeLine{00135\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord2d,\ (GLdouble\ u,\ GLdouble\ v))}
+\DoxyCodeLine{00136\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord2dv,\ (\textcolor{keyword}{const}\ GLdouble\ *u))}
+\DoxyCodeLine{00137\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord2f,\ (GLfloat\ u,\ GLfloat\ v))}
+\DoxyCodeLine{00138\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalCoord2fv,\ (\textcolor{keyword}{const}\ GLfloat\ *u))}
+\DoxyCodeLine{00139\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalMesh1,\ (GLenum\ mode,\ GLint\ i1,\ GLint\ i2))}
+\DoxyCodeLine{00140\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalMesh2,}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ mode,\ GLint\ i1,\ GLint\ i2,\ GLint\ j1,\ GLint\ j2))}
+\DoxyCodeLine{00142\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalPoint1,\ (GLint\ i))}
+\DoxyCodeLine{00143\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glEvalPoint2,\ (GLint\ i,\ GLint\ j))}
+\DoxyCodeLine{00144\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFeedbackBuffer,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLsizei\ size,\ GLenum\ type,\ GLfloat\ *buffer))}
+\DoxyCodeLine{00146\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFinish,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00147\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFlush,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00148\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFogf,\ (GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00149\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFogfv,\ (GLenum\ pname,\ \textcolor{keyword}{const}\ GLfloat\ *params))}
+\DoxyCodeLine{00150\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFogi,\ (GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00151\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFogiv,\ (GLenum\ pname,\ \textcolor{keyword}{const}\ GLint\ *params))}
+\DoxyCodeLine{00152\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFrontFace,\ (GLenum\ mode))}
+\DoxyCodeLine{00153\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glFrustum,}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLdouble\ left,\ GLdouble\ right,\ GLdouble\ bottom,}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLdouble\ top,\ GLdouble\ zNear,\ GLdouble\ zFar))}
+\DoxyCodeLine{00156\ SDL\_PROC\_UNUSED(GLuint,\ glGenLists,\ (GLsizei\ range))}
+\DoxyCodeLine{00157\ SDL\_PROC(\textcolor{keywordtype}{void},\ glGenTextures,\ (GLsizei\ n,\ GLuint\ *textures))}
+\DoxyCodeLine{00158\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetBooleanv,\ (GLenum\ pname,\ GLboolean\ *params))}
+\DoxyCodeLine{00159\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetClipPlane,\ (GLenum\ plane,\ GLdouble\ *equation))}
+\DoxyCodeLine{00160\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetDoublev,\ (GLenum\ pname,\ GLdouble\ *params))}
+\DoxyCodeLine{00161\ SDL\_PROC(GLenum,\ glGetError,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00162\ SDL\_PROC(\textcolor{keywordtype}{void},\ glGetFloatv,\ (GLenum\ pname,\ GLfloat\ *params))}
+\DoxyCodeLine{00163\ SDL\_PROC(\textcolor{keywordtype}{void},\ glGetIntegerv,\ (GLenum\ pname,\ GLint\ *params))}
+\DoxyCodeLine{00164\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetLightfv,}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ light,\ GLenum\ pname,\ GLfloat\ *params))}
+\DoxyCodeLine{00166\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetLightiv,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ light,\ GLenum\ pname,\ GLint\ *params))}
+\DoxyCodeLine{00168\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetMapdv,\ (GLenum\ target,\ GLenum\ query,\ GLdouble\ *v))}
+\DoxyCodeLine{00169\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetMapfv,\ (GLenum\ target,\ GLenum\ query,\ GLfloat\ *v))}
+\DoxyCodeLine{00170\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetMapiv,\ (GLenum\ target,\ GLenum\ query,\ GLint\ *v))}
+\DoxyCodeLine{00171\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetMaterialfv,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ face,\ GLenum\ pname,\ GLfloat\ *params))}
+\DoxyCodeLine{00173\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetMaterialiv,}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ face,\ GLenum\ pname,\ GLint\ *params))}
+\DoxyCodeLine{00175\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetPixelMapfv,\ (GLenum\ map,\ GLfloat\ *values))}
+\DoxyCodeLine{00176\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetPixelMapuiv,\ (GLenum\ map,\ GLuint\ *values))}
+\DoxyCodeLine{00177\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetPixelMapusv,\ (GLenum\ map,\ GLushort\ *values))}
+\DoxyCodeLine{00178\ SDL\_PROC(\textcolor{keywordtype}{void},\ glGetPointerv,\ (GLenum\ pname,\ GLvoid\ **params))}
+\DoxyCodeLine{00179\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetPolygonStipple,\ (GLubyte\ *\ mask))}
+\DoxyCodeLine{00180\ SDL\_PROC(\textcolor{keyword}{const}\ GLubyte\ *,\ glGetString,\ (GLenum\ name))}
+\DoxyCodeLine{00181\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexEnvfv,}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ GLfloat\ *params))}
+\DoxyCodeLine{00183\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexEnviv,}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ GLint\ *params))}
+\DoxyCodeLine{00185\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexGendv,}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ coord,\ GLenum\ pname,\ GLdouble\ *params))}
+\DoxyCodeLine{00187\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexGenfv,}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ coord,\ GLenum\ pname,\ GLfloat\ *params))}
+\DoxyCodeLine{00189\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexGeniv,}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ coord,\ GLenum\ pname,\ GLint\ *params))}
+\DoxyCodeLine{00191\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexImage,}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLenum\ format,\ GLenum\ type,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLvoid\ *pixels))}
+\DoxyCodeLine{00194\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexLevelParameterfv,}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLenum\ pname,\ GLfloat\ *params))}
+\DoxyCodeLine{00196\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexLevelParameteriv,}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLenum\ pname,\ GLint\ *params))}
+\DoxyCodeLine{00198\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexParameterfv,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ GLfloat\ *params))}
+\DoxyCodeLine{00200\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glGetTexParameteriv,}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ GLint\ *params))}
+\DoxyCodeLine{00202\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glHint,\ (GLenum\ target,\ GLenum\ mode))}
+\DoxyCodeLine{00203\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexMask,\ (GLuint\ mask))}
+\DoxyCodeLine{00204\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexPointer,}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ type,\ GLsizei\ stride,\ \textcolor{keyword}{const}\ GLvoid\ *pointer))}
+\DoxyCodeLine{00206\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexd,\ (GLdouble\ c))}
+\DoxyCodeLine{00207\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexdv,\ (\textcolor{keyword}{const}\ GLdouble\ *c))}
+\DoxyCodeLine{00208\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexf,\ (GLfloat\ c))}
+\DoxyCodeLine{00209\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexfv,\ (\textcolor{keyword}{const}\ GLfloat\ *c))}
+\DoxyCodeLine{00210\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexi,\ (GLint\ c))}
+\DoxyCodeLine{00211\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexiv,\ (\textcolor{keyword}{const}\ GLint\ *c))}
+\DoxyCodeLine{00212\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexs,\ (GLshort\ c))}
+\DoxyCodeLine{00213\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexsv,\ (\textcolor{keyword}{const}\ GLshort\ *c))}
+\DoxyCodeLine{00214\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexub,\ (GLubyte\ c))}
+\DoxyCodeLine{00215\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glIndexubv,\ (\textcolor{keyword}{const}\ GLubyte\ *c))}
+\DoxyCodeLine{00216\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glInitNames,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00217\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glInterleavedArrays,}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ format,\ GLsizei\ stride,\ \textcolor{keyword}{const}\ GLvoid\ *pointer))}
+\DoxyCodeLine{00219\ SDL\_PROC\_UNUSED(GLboolean,\ glIsEnabled,\ (GLenum\ cap))}
+\DoxyCodeLine{00220\ SDL\_PROC\_UNUSED(GLboolean,\ glIsList,\ (GLuint\ list))}
+\DoxyCodeLine{00221\ SDL\_PROC\_UNUSED(GLboolean,\ glIsTexture,\ (GLuint\ texture))}
+\DoxyCodeLine{00222\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLightModelf,\ (GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00223\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLightModelfv,\ (GLenum\ pname,\ \textcolor{keyword}{const}\ GLfloat\ *params))}
+\DoxyCodeLine{00224\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLightModeli,\ (GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00225\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLightModeliv,\ (GLenum\ pname,\ \textcolor{keyword}{const}\ GLint\ *params))}
+\DoxyCodeLine{00226\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLightf,\ (GLenum\ light,\ GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00227\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLightfv,}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ light,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLfloat\ *params))}
+\DoxyCodeLine{00229\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLighti,\ (GLenum\ light,\ GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00230\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLightiv,}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ light,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLint\ *params))}
+\DoxyCodeLine{00232\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLineStipple,\ (GLint\ factor,\ GLushort\ pattern))}
+\DoxyCodeLine{00233\ SDL\_PROC(\textcolor{keywordtype}{void},\ glLineWidth,\ (GLfloat\ width))}
+\DoxyCodeLine{00234\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glListBase,\ (GLuint\ base))}
+\DoxyCodeLine{00235\ SDL\_PROC(\textcolor{keywordtype}{void},\ glLoadIdentity,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00236\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLoadMatrixd,\ (\textcolor{keyword}{const}\ GLdouble\ *\doxymbox{\hyperlink{structm}{m}}))}
+\DoxyCodeLine{00237\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLoadMatrixf,\ (\textcolor{keyword}{const}\ GLfloat\ *\doxymbox{\hyperlink{structm}{m}}))}
+\DoxyCodeLine{00238\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLoadName,\ (GLuint\ name))}
+\DoxyCodeLine{00239\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glLogicOp,\ (GLenum\ opcode))}
+\DoxyCodeLine{00240\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMap1d,}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLdouble\ u1,\ GLdouble\ u2,\ GLint\ stride,}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ order,\ \textcolor{keyword}{const}\ GLdouble\ *points))}
+\DoxyCodeLine{00243\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMap1f,}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLfloat\ u1,\ GLfloat\ u2,\ GLint\ stride,}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ order,\ \textcolor{keyword}{const}\ GLfloat\ *points))}
+\DoxyCodeLine{00246\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMap2d,}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLdouble\ u1,\ GLdouble\ u2,\ GLint\ ustride,}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ uorder,\ GLdouble\ v1,\ GLdouble\ v2,\ GLint\ vstride,}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ vorder,\ \textcolor{keyword}{const}\ GLdouble\ *points))}
+\DoxyCodeLine{00250\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMap2f,}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLfloat\ u1,\ GLfloat\ u2,\ GLint\ ustride,}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ uorder,\ GLfloat\ v1,\ GLfloat\ v2,\ GLint\ vstride,}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ vorder,\ \textcolor{keyword}{const}\ GLfloat\ *points))}
+\DoxyCodeLine{00254\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMapGrid1d,\ (GLint\ un,\ GLdouble\ u1,\ GLdouble\ u2))}
+\DoxyCodeLine{00255\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMapGrid1f,\ (GLint\ un,\ GLfloat\ u1,\ GLfloat\ u2))}
+\DoxyCodeLine{00256\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMapGrid2d,}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLint\ un,\ GLdouble\ u1,\ GLdouble\ u2,\ GLint\ vn,\ GLdouble\ v1,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLdouble\ v2))}
+\DoxyCodeLine{00259\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMapGrid2f,}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLint\ un,\ GLfloat\ u1,\ GLfloat\ u2,\ GLint\ vn,\ GLfloat\ v1,}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLfloat\ v2))}
+\DoxyCodeLine{00262\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMaterialf,\ (GLenum\ face,\ GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00263\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMaterialfv,}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ face,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLfloat\ *params))}
+\DoxyCodeLine{00265\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMateriali,\ (GLenum\ face,\ GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00266\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMaterialiv,}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ face,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLint\ *params))}
+\DoxyCodeLine{00268\ SDL\_PROC(\textcolor{keywordtype}{void},\ glMatrixMode,\ (GLenum\ mode))}
+\DoxyCodeLine{00269\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMultMatrixd,\ (\textcolor{keyword}{const}\ GLdouble\ *\doxymbox{\hyperlink{structm}{m}}))}
+\DoxyCodeLine{00270\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glMultMatrixf,\ (\textcolor{keyword}{const}\ GLfloat\ *\doxymbox{\hyperlink{structm}{m}}))}
+\DoxyCodeLine{00271\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNewList,\ (GLuint\ list,\ GLenum\ mode))}
+\DoxyCodeLine{00272\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3b,\ (GLbyte\ nx,\ GLbyte\ ny,\ GLbyte\ nz))}
+\DoxyCodeLine{00273\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3bv,\ (\textcolor{keyword}{const}\ GLbyte\ *v))}
+\DoxyCodeLine{00274\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3d,\ (GLdouble\ nx,\ GLdouble\ ny,\ GLdouble\ nz))}
+\DoxyCodeLine{00275\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00276\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3f,\ (GLfloat\ nx,\ GLfloat\ ny,\ GLfloat\ nz))}
+\DoxyCodeLine{00277\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00278\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3i,\ (GLint\ nx,\ GLint\ ny,\ GLint\ nz))}
+\DoxyCodeLine{00279\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00280\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3s,\ (GLshort\ nx,\ GLshort\ ny,\ GLshort\ nz))}
+\DoxyCodeLine{00281\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormal3sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00282\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glNormalPointer,}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ type,\ GLsizei\ stride,\ \textcolor{keyword}{const}\ GLvoid\ *pointer))}
+\DoxyCodeLine{00284\ SDL\_PROC(\textcolor{keywordtype}{void},\ glOrtho,}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ (GLdouble\ left,\ GLdouble\ right,\ GLdouble\ bottom,\ GLdouble\ top,}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ GLdouble\ zNear,\ GLdouble\ zFar))}
+\DoxyCodeLine{00287\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPassThrough,\ (GLfloat\ token))}
+\DoxyCodeLine{00288\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPixelMapfv,}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ map,\ GLsizei\ mapsize,\ \textcolor{keyword}{const}\ GLfloat\ *values))}
+\DoxyCodeLine{00290\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPixelMapuiv,}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ map,\ GLsizei\ mapsize,\ \textcolor{keyword}{const}\ GLuint\ *values))}
+\DoxyCodeLine{00292\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPixelMapusv,}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ map,\ GLsizei\ mapsize,\ \textcolor{keyword}{const}\ GLushort\ *values))}
+\DoxyCodeLine{00294\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPixelStoref,\ (GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00295\ SDL\_PROC(\textcolor{keywordtype}{void},\ glPixelStorei,\ (GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00296\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPixelTransferf,\ (GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00297\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPixelTransferi,\ (GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00298\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPixelZoom,\ (GLfloat\ xfactor,\ GLfloat\ yfactor))}
+\DoxyCodeLine{00299\ SDL\_PROC(\textcolor{keywordtype}{void},\ glPointSize,\ (GLfloat\ size))}
+\DoxyCodeLine{00300\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPolygonMode,\ (GLenum\ face,\ GLenum\ mode))}
+\DoxyCodeLine{00301\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPolygonOffset,\ (GLfloat\ factor,\ GLfloat\ units))}
+\DoxyCodeLine{00302\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPolygonStipple,\ (\textcolor{keyword}{const}\ GLubyte\ *mask))}
+\DoxyCodeLine{00303\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPopAttrib,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00304\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPopClientAttrib,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00305\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPopMatrix,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00306\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPopName,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00307\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPrioritizeTextures,}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLsizei\ n,\ \textcolor{keyword}{const}\ GLuint\ *textures,}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLclampf\ *priorities))}
+\DoxyCodeLine{00310\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPushAttrib,\ (GLbitfield\ mask))}
+\DoxyCodeLine{00311\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPushClientAttrib,\ (GLbitfield\ mask))}
+\DoxyCodeLine{00312\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPushMatrix,\ (\textcolor{keywordtype}{void}))}
+\DoxyCodeLine{00313\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glPushName,\ (GLuint\ name))}
+\DoxyCodeLine{00314\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos2d,\ (GLdouble\ x,\ GLdouble\ y))}
+\DoxyCodeLine{00315\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos2dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00316\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos2f,\ (GLfloat\ x,\ GLfloat\ y))}
+\DoxyCodeLine{00317\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos2fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00318\ SDL\_PROC(\textcolor{keywordtype}{void},\ glRasterPos2i,\ (GLint\ x,\ GLint\ y))}
+\DoxyCodeLine{00319\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos2iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00320\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos2s,\ (GLshort\ x,\ GLshort\ y))}
+\DoxyCodeLine{00321\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos2sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00322\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3d,\ (GLdouble\ x,\ GLdouble\ y,\ GLdouble\ z))}
+\DoxyCodeLine{00323\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00324\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3f,\ (GLfloat\ x,\ GLfloat\ y,\ GLfloat\ z))}
+\DoxyCodeLine{00325\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00326\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3i,\ (GLint\ x,\ GLint\ y,\ GLint\ z))}
+\DoxyCodeLine{00327\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00328\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3s,\ (GLshort\ x,\ GLshort\ y,\ GLshort\ z))}
+\DoxyCodeLine{00329\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos3sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00330\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4d,}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLdouble\ x,\ GLdouble\ y,\ GLdouble\ z,\ GLdouble\ w))}
+\DoxyCodeLine{00332\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00333\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4f,}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLfloat\ x,\ GLfloat\ y,\ GLfloat\ z,\ GLfloat\ w))}
+\DoxyCodeLine{00335\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00336\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4i,\ (GLint\ x,\ GLint\ y,\ GLint\ z,\ GLint\ w))}
+\DoxyCodeLine{00337\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00338\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4s,}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLshort\ x,\ GLshort\ y,\ GLshort\ z,\ GLshort\ w))}
+\DoxyCodeLine{00340\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRasterPos4sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00341\ SDL\_PROC(\textcolor{keywordtype}{void},\ glReadBuffer,\ (GLenum\ mode))}
+\DoxyCodeLine{00342\ SDL\_PROC(\textcolor{keywordtype}{void},\ glReadPixels,}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ (GLint\ x,\ GLint\ y,\ GLsizei\ width,\ GLsizei\ height,}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ GLenum\ format,\ GLenum\ type,\ GLvoid\ *pixels))}
+\DoxyCodeLine{00345\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRectd,}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLdouble\ x1,\ GLdouble\ y1,\ GLdouble\ x2,\ GLdouble\ y2))}
+\DoxyCodeLine{00347\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRectdv,\ (\textcolor{keyword}{const}\ GLdouble\ *v1,\ \textcolor{keyword}{const}\ GLdouble\ *v2))}
+\DoxyCodeLine{00348\ SDL\_PROC(\textcolor{keywordtype}{void},\ glRectf,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ (GLfloat\ x1,\ GLfloat\ y1,\ GLfloat\ x2,\ GLfloat\ y2))}
+\DoxyCodeLine{00350\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRectfv,\ (\textcolor{keyword}{const}\ GLfloat\ *v1,\ \textcolor{keyword}{const}\ GLfloat\ *v2))}
+\DoxyCodeLine{00351\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRecti,\ (GLint\ x1,\ GLint\ y1,\ GLint\ x2,\ GLint\ y2))}
+\DoxyCodeLine{00352\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRectiv,\ (\textcolor{keyword}{const}\ GLint\ *v1,\ \textcolor{keyword}{const}\ GLint\ *v2))}
+\DoxyCodeLine{00353\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRects,}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLshort\ x1,\ GLshort\ y1,\ GLshort\ x2,\ GLshort\ y2))}
+\DoxyCodeLine{00355\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRectsv,\ (\textcolor{keyword}{const}\ GLshort\ *v1,\ \textcolor{keyword}{const}\ GLshort\ *v2))}
+\DoxyCodeLine{00356\ SDL\_PROC\_UNUSED(GLint,\ glRenderMode,\ (GLenum\ mode))}
+\DoxyCodeLine{00357\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glRotated,}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLdouble\ angle,\ GLdouble\ x,\ GLdouble\ y,\ GLdouble\ z))}
+\DoxyCodeLine{00359\ SDL\_PROC(\textcolor{keywordtype}{void},\ glRotatef,}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ (GLfloat\ angle,\ GLfloat\ x,\ GLfloat\ y,\ GLfloat\ z))}
+\DoxyCodeLine{00361\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glScaled,\ (GLdouble\ x,\ GLdouble\ y,\ GLdouble\ z))}
+\DoxyCodeLine{00362\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glScalef,\ (GLfloat\ x,\ GLfloat\ y,\ GLfloat\ z))}
+\DoxyCodeLine{00363\ SDL\_PROC(\textcolor{keywordtype}{void},\ glScissor,\ (GLint\ x,\ GLint\ y,\ GLsizei\ width,\ GLsizei\ height))}
+\DoxyCodeLine{00364\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glSelectBuffer,\ (GLsizei\ size,\ GLuint\ *buffer))}
+\DoxyCodeLine{00365\ SDL\_PROC(\textcolor{keywordtype}{void},\ glShadeModel,\ (GLenum\ mode))}
+\DoxyCodeLine{00366\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glStencilFunc,\ (GLenum\ func,\ GLint\ ref,\ GLuint\ mask))}
+\DoxyCodeLine{00367\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glStencilMask,\ (GLuint\ mask))}
+\DoxyCodeLine{00368\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glStencilOp,\ (GLenum\ fail,\ GLenum\ zfail,\ GLenum\ zpass))}
+\DoxyCodeLine{00369\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1d,\ (GLdouble\ s))}
+\DoxyCodeLine{00370\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00371\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1f,\ (GLfloat\ s))}
+\DoxyCodeLine{00372\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00373\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1i,\ (GLint\ s))}
+\DoxyCodeLine{00374\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00375\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1s,\ (GLshort\ s))}
+\DoxyCodeLine{00376\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord1sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00377\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord2d,\ (GLdouble\ s,\ GLdouble\ t))}
+\DoxyCodeLine{00378\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord2dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00379\ SDL\_PROC(\textcolor{keywordtype}{void},\ glTexCoord2f,\ (GLfloat\ s,\ GLfloat\ t))}
+\DoxyCodeLine{00380\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord2fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00381\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord2i,\ (GLint\ s,\ GLint\ t))}
+\DoxyCodeLine{00382\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord2iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00383\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord2s,\ (GLshort\ s,\ GLshort\ t))}
+\DoxyCodeLine{00384\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord2sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00385\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3d,\ (GLdouble\ s,\ GLdouble\ t,\ GLdouble\ r))}
+\DoxyCodeLine{00386\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00387\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3f,\ (GLfloat\ s,\ GLfloat\ t,\ GLfloat\ r))}
+\DoxyCodeLine{00388\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00389\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3i,\ (GLint\ s,\ GLint\ t,\ GLint\ r))}
+\DoxyCodeLine{00390\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00391\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3s,\ (GLshort\ s,\ GLshort\ t,\ GLshort\ r))}
+\DoxyCodeLine{00392\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord3sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00393\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4d,}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLdouble\ s,\ GLdouble\ t,\ GLdouble\ r,\ GLdouble\ q))}
+\DoxyCodeLine{00395\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00396\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4f,}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLfloat\ s,\ GLfloat\ t,\ GLfloat\ r,\ GLfloat\ q))}
+\DoxyCodeLine{00398\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00399\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4i,\ (GLint\ s,\ GLint\ t,\ GLint\ r,\ GLint\ q))}
+\DoxyCodeLine{00400\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00401\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4s,}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLshort\ s,\ GLshort\ t,\ GLshort\ r,\ GLshort\ q))}
+\DoxyCodeLine{00403\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexCoord4sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00404\ SDL\_PROC(\textcolor{keywordtype}{void},\ glTexCoordPointer,}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ (GLint\ size,\ GLenum\ type,\ GLsizei\ stride,}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *pointer))}
+\DoxyCodeLine{00407\ SDL\_PROC(\textcolor{keywordtype}{void},\ glTexEnvf,\ (GLenum\ target,\ GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00408\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexEnvfv,}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLfloat\ *params))}
+\DoxyCodeLine{00410\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexEnvi,\ (GLenum\ target,\ GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00411\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexEnviv,}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLint\ *params))}
+\DoxyCodeLine{00413\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexGend,\ (GLenum\ coord,\ GLenum\ pname,\ GLdouble\ param))}
+\DoxyCodeLine{00414\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexGendv,}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ coord,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLdouble\ *params))}
+\DoxyCodeLine{00416\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexGenf,\ (GLenum\ coord,\ GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00417\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexGenfv,}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ coord,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLfloat\ *params))}
+\DoxyCodeLine{00419\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexGeni,\ (GLenum\ coord,\ GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00420\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexGeniv,}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ coord,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLint\ *params))}
+\DoxyCodeLine{00422\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexImage1D,}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLint\ internalformat,}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLsizei\ width,\ GLint\ border,\ GLenum\ format,\ GLenum\ type,}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *pixels))}
+\DoxyCodeLine{00426\ SDL\_PROC(\textcolor{keywordtype}{void},\ glTexImage2D,}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLint\ internalformat,\ GLsizei\ width,}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ GLsizei\ height,\ GLint\ border,\ GLenum\ format,\ GLenum\ type,}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *pixels))}
+\DoxyCodeLine{00430\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexParameterf,}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ GLfloat\ param))}
+\DoxyCodeLine{00432\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexParameterfv,}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLfloat\ *params))}
+\DoxyCodeLine{00434\ SDL\_PROC(\textcolor{keywordtype}{void},\ glTexParameteri,\ (GLenum\ target,\ GLenum\ pname,\ GLint\ param))}
+\DoxyCodeLine{00435\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexParameteriv,}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLenum\ pname,\ \textcolor{keyword}{const}\ GLint\ *params))}
+\DoxyCodeLine{00437\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTexSubImage1D,}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLint\ xoffset,\ GLsizei\ width,}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GLenum\ format,\ GLenum\ type,\ \textcolor{keyword}{const}\ GLvoid\ *pixels))}
+\DoxyCodeLine{00440\ SDL\_PROC(\textcolor{keywordtype}{void},\ glTexSubImage2D,}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ (GLenum\ target,\ GLint\ level,\ GLint\ xoffset,\ GLint\ yoffset,}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ GLsizei\ width,\ GLsizei\ height,\ GLenum\ format,\ GLenum\ type,}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *pixels))}
+\DoxyCodeLine{00444\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTranslated,\ (GLdouble\ x,\ GLdouble\ y,\ GLdouble\ z))}
+\DoxyCodeLine{00445\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glTranslatef,\ (GLfloat\ x,\ GLfloat\ y,\ GLfloat\ z))}
+\DoxyCodeLine{00446\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex2d,\ (GLdouble\ x,\ GLdouble\ y))}
+\DoxyCodeLine{00447\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex2dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00448\ SDL\_PROC(\textcolor{keywordtype}{void},\ glVertex2f,\ (GLfloat\ x,\ GLfloat\ y))}
+\DoxyCodeLine{00449\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex2fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00450\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex2i,\ (GLint\ x,\ GLint\ y))}
+\DoxyCodeLine{00451\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex2iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00452\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex2s,\ (GLshort\ x,\ GLshort\ y))}
+\DoxyCodeLine{00453\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex2sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00454\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex3d,\ (GLdouble\ x,\ GLdouble\ y,\ GLdouble\ z))}
+\DoxyCodeLine{00455\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex3dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00456\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex3f,\ (GLfloat\ x,\ GLfloat\ y,\ GLfloat\ z))}
+\DoxyCodeLine{00457\ SDL\_PROC(\textcolor{keywordtype}{void},\ glVertex3fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00458\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex3i,\ (GLint\ x,\ GLint\ y,\ GLint\ z))}
+\DoxyCodeLine{00459\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex3iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00460\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex3s,\ (GLshort\ x,\ GLshort\ y,\ GLshort\ z))}
+\DoxyCodeLine{00461\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex3sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00462\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4d,}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLdouble\ x,\ GLdouble\ y,\ GLdouble\ z,\ GLdouble\ w))}
+\DoxyCodeLine{00464\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4dv,\ (\textcolor{keyword}{const}\ GLdouble\ *v))}
+\DoxyCodeLine{00465\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4f,}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLfloat\ x,\ GLfloat\ y,\ GLfloat\ z,\ GLfloat\ w))}
+\DoxyCodeLine{00467\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4fv,\ (\textcolor{keyword}{const}\ GLfloat\ *v))}
+\DoxyCodeLine{00468\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4i,\ (GLint\ x,\ GLint\ y,\ GLint\ z,\ GLint\ w))}
+\DoxyCodeLine{00469\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4iv,\ (\textcolor{keyword}{const}\ GLint\ *v))}
+\DoxyCodeLine{00470\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4s,}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (GLshort\ x,\ GLshort\ y,\ GLshort\ z,\ GLshort\ w))}
+\DoxyCodeLine{00472\ SDL\_PROC\_UNUSED(\textcolor{keywordtype}{void},\ glVertex4sv,\ (\textcolor{keyword}{const}\ GLshort\ *v))}
+\DoxyCodeLine{00473\ SDL\_PROC(\textcolor{keywordtype}{void},\ glVertexPointer,}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ (GLint\ size,\ GLenum\ type,\ GLsizei\ stride,}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ GLvoid\ *pointer))}
+\DoxyCodeLine{00476\ SDL\_PROC(\textcolor{keywordtype}{void},\ glViewport,\ (GLint\ x,\ GLint\ y,\ GLsizei\ width,\ GLsizei\ height))}
+
+\end{DoxyCode}

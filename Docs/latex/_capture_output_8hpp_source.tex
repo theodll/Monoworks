@@ -1,0 +1,39 @@
+\doxysection{Capture\+Output.\+hpp}
+\hypertarget{_capture_output_8hpp_source}{}\label{_capture_output_8hpp_source}\index{MonoEngine/thirdparty/tracy/capture/src/CaptureOutput.hpp@{MonoEngine/thirdparty/tracy/capture/src/CaptureOutput.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_CAPTUREOUTPUT\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_CAPTUREOUTPUT\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ ANSI\_RESET\ "{}\(\backslash\)033[0m"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ ANSI\_BOLD\ "{}\(\backslash\)033[1m"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ ANSI\_BLACK\ "{}\(\backslash\)033[30m"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ ANSI\_RED\ "{}\(\backslash\)033[31m"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ ANSI\_GREEN\ "{}\(\backslash\)033[32m"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ ANSI\_YELLOW\ "{}\(\backslash\)033[33m"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ ANSI\_BLUE\ "{}\(\backslash\)033[34m"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ ANSI\_MAGENTA\ "{}\(\backslash\)033[35m"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ ANSI\_CYAN\ "{}\(\backslash\)033[36m"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ ANSI\_ERASE\_LINE\ "{}\(\backslash\)033[2K"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }tracy\ \{\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}};\ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keywordtype}{void}\ InitTerminalDetection();}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{bool}\ IsTerminal();}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifdef\ \_\_GNUC\_\_}}
+\DoxyCodeLine{00023\ [[gnu::format(\ \_\_printf\_\_,\ 2,\ 3\ )]]}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ \textcolor{keywordtype}{void}\ AnsiPrintf(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ ansiEscape,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ format,\ ...\ );}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{int}\ WaitForConnection(\ \doxymbox{\hyperlink{classtracy_1_1_worker}{tracy::Worker}}\&\ worker\ );}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keywordtype}{void}\ PrintWorkerFailure(\ \doxymbox{\hyperlink{classtracy_1_1_worker}{tracy::Worker}}\&\ worker\ );}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keywordtype}{void}\ PrintCaptureProgress(\ \doxymbox{\hyperlink{classtracy_1_1_worker}{tracy::Worker}}\&\ worker,\ int64\_t\ firstTime,\ int64\_t\ memoryLimit\ );}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

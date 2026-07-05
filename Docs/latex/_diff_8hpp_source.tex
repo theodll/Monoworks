@@ -1,0 +1,622 @@
+\doxysection{Diff.\+hpp}
+\hypertarget{_diff_8hpp_source}{}\label{_diff_8hpp_source}\index{MonoEngine/thirdparty/tracy/dtl/Diff.hpp@{MonoEngine/thirdparty/tracy/dtl/Diff.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*\ If\ you\ use\ this\ library,\ you\ must\ include\ dtl.hpp\ only.\ */}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifndef\ DTL\_DIFF\_H}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ DTL\_DIFF\_H}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedtl}{dtl}}\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ elem,\ \textcolor{keyword}{typename}\ sequence\ =\ vector<\ elem\ >,\ \textcolor{keyword}{typename}\ comparator\ =\ Compare<\ elem\ >\ >}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{class\ }Diff}
+\DoxyCodeLine{00049\ \ \ \ \ \{}
+\DoxyCodeLine{00050\ \ \ \ \ private\ :}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ dtl\_typedefs(elem,\ sequence)}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ sequence\ \ \ \ \ \ \ \ \ \ \ A;}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ sequence\ \ \ \ \ \ \ \ \ \ \ B;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ M;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ N;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ delta;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \ \ \ \ \ \ \ \ \ \ \ \ offset;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ *fp;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ editDistance;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_lcs}{Lcs<\ elem\ >}}\ \ \ \ \ \ \ \ lcs;}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_ses}{Ses<\ elem\ >}}\ \ \ \ \ \ \ \ ses;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ editPath\ \ \ \ \ \ \ \ \ \ \ path;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ editPathCordinates\ pathCordinates;}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ swapped;}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ huge;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trivial;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ editDistanceOnly;}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ uniHunkVec\ \ \ \ \ \ \ \ \ uniHunks;}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ comparator\ \ \ \ \ \ \ \ \ cmp;}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ ox;}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ oy;}
+\DoxyCodeLine{00072\ \ \ \ \ public\ :}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ Diff\ ()\ \{\}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ Diff\ (\textcolor{keyword}{const}\ sequence\&\ a,\ }
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sequence\&\ b)\ :\ A(a),\ B(b),\ ses(\textcolor{keyword}{false})\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ init();}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ Diff\ (\textcolor{keyword}{const}\ sequence\&\ a,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sequence\&\ b,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ deletesFirst)\ :\ A(a),\ B(b),\ ses(deletesFirst)\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ init();}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ Diff\ (\textcolor{keyword}{const}\ sequence\&\ a,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sequence\&\ b,\ }
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ comparator\&\ comp)\ :\ A(a),\ B(b),\ ses(\textcolor{keyword}{false}),\ cmp(comp)\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ init();}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ Diff\ (\textcolor{keyword}{const}\ sequence\&\ a,\ }
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ sequence\&\ b,\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ deleteFirst,}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ comparator\&\ comp)\ :\ A(a),\ B(b),\ ses(deleteFirst),\ cmp(comp)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ init();}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \string~Diff()\ \{\}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ getEditDistance\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ editDistance;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_lcs}{Lcs<\ elem\ >}}\ getLcs\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ lcs;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ elemVec\ getLcsVec\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ lcs.getSequence();}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_ses}{Ses<\ elem\ >}}\ getSes\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ses;}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ uniHunkVec\ getUniHunks\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ uniHunks;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ These\ should\ be\ deprecated\ */}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isHuge\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ huge;}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ onHuge\ ()\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>huge\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ offHuge\ ()\ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>huge\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isUnserious\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ trivial;}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ onUnserious\ ()\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>trivial\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ offUnserious\ ()\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>trivial\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ onOnlyEditDistance\ ()\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>editDistanceOnly\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ These\ are\ the\ replacements\ for\ the\ above\ */}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ hugeEnabled\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ huge;}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ enableHuge\ ()\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>huge\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ disableHuge\ ()\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>huge\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ trivialEnabled\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ trivial;}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ enableTrivial\ ()\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>trivial\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ disableTrivial\ ()\ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>trivial\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ editDistanceOnlyEnabled\ ()\ \{}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>editDistanceOnly\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ sequence\ \doxymbox{\hyperlink{classdtl_1_1_diff_a92993f18a93a04e4c5ffd806d32946f1}{uniPatch}}\ (\textcolor{keyword}{const}\ sequence\&\ seq)\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ elemList\ \ \ \ \ \ \ \ seqLst(seq.begin(),\ seq.end());}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ \ \ \ \ \ shunk;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\_iter\ vsesIt;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ elemList\_iter\ \ \ lstIt\ \ \ \ \ \ \ \ \ =\ seqLst.begin();}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ inc\_dec\_total\ =\ 0;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ gap\ \ \ \ \ \ \ \ \ \ \ =\ 1;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uniHunkVec\_iter\ it=uniHunks.begin();it!=uniHunks.end();++it)\ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(shunk,\ it-\/>common[0]);}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(shunk,\ it-\/>change);}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(shunk,\ it-\/>common[1]);}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ it-\/>a\ \ \ \ \ \ \ \ \ +=\ inc\_dec\_total;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inc\_dec\_total\ +=\ it-\/>inc\_dec\_count;}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i=0;i<it-\/>a\ -\/\ gap;++i)\ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++lstIt;}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gap\ =\ it-\/>a\ +\ it-\/>b\ +\ it-\/>inc\_dec\_count;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vsesIt\ =\ shunk.begin();}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (vsesIt!=shunk.end())\ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (vsesIt-\/>second.type)\ \{}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_ADD\ :}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ seqLst.insert(lstIt,\ vsesIt-\/>first);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_DELETE\ :}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lstIt\ !=\ seqLst.end())\ \{}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lstIt\ =\ seqLst.erase(lstIt);}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_COMMON\ :}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (lstIt\ !=\ seqLst.end())\ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++lstIt;}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\ :}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ fall-\/through}}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++vsesIt;}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ shunk.clear();}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ sequence\ patchedSeq(seqLst.begin(),\ seqLst.end());}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ patchedSeq;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ sequence\ \doxymbox{\hyperlink{classdtl_1_1_diff_a6ee81c353053a817a4f978c86db001c1}{patch}}\ (\textcolor{keyword}{const}\ sequence\&\ seq)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ \ \ \ sesSeq\ =\ ses.getSequence();}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ elemList\ \ \ \ \ \ seqLst(seq.begin(),\ seq.end());}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ elemList\_iter\ lstIt\ \ =\ seqLst.begin();}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (sesElemVec\_iter\ sesIt=sesSeq.begin();sesIt!=sesSeq.end();++sesIt)\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (sesIt-\/>second.type)\ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_ADD\ :}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ seqLst.insert(lstIt,\ sesIt-\/>first);}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_DELETE\ :}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lstIt\ =\ seqLst.erase(lstIt);}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_COMMON\ :}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++lstIt;}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\ :}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ through}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ sequence\ patchedSeq(seqLst.begin(),\ seqLst.end());}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ patchedSeq;}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a6f9e63500de11569c0e2117e552aafab}{compose}}()\ \{}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isHuge())\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pathCordinates.reserve(\doxymbox{\hyperlink{namespacedtl_a9498a1a85f2641b461635c86d3e30bc2}{MAX\_CORDINATES\_SIZE}});}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ ox\ =\ 0;}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ oy\ =\ 0;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ p\ =\ -\/1;}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ fp\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}[M\ +\ N\ +\ 3];}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ fill(\&fp[0],\ \&fp[M\ +\ N\ +\ 3],\ -\/1);}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ path\ =\ editPath(M\ +\ N\ +\ 3);}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ fill(path.begin(),\ path.end(),\ -\/1);}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ ONP:}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++p;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ k=-\/p;k<=static\_cast<long\ long>(delta)-\/1;++k)\ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp[k+offset]\ =\ snake(k,\ fp[k-\/1+offset]+1,\ fp[k+1+offset]);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ k=\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(delta)+p;k>=\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(delta)+1;-\/-\/k)\ \{}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp[k+offset]\ =\ snake(k,\ fp[k-\/1+offset]+1,\ fp[k+1+offset]);}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp[delta+offset]\ =\ snake(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(delta),\ fp[delta-\/1+offset]+1,\ fp[delta+1+offset]);}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (fp[delta+offset]\ !=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(N)\ \&\&\ pathCordinates.size()\ <\ \doxymbox{\hyperlink{namespacedtl_a9498a1a85f2641b461635c86d3e30bc2}{MAX\_CORDINATES\_SIZE}});}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ editDistance\ +=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(delta)\ +\ 2\ *\ p;}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ r\ =\ path[delta+offset];}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespacedtl_a455e4ca671960f7815be6d0b8f6339f9}{P}}\ cordinate;}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ editPathCordinates\ epc(0);}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ recording\ edit\ distance\ only}}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (editDistanceOnly)\ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ this-\/>fp;}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(r\ !=\ -\/1)\ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cordinate.x\ =\ pathCordinates[(size\_t)r].x;}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cordinate.y\ =\ pathCordinates[(size\_t)r].y;}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ epc.push\_back(cordinate);}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ pathCordinates[(size\_t)r].k;}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ record\ Longest\ Common\ Subsequence\ \&\ Shortest\ Edit\ Script}}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!recordSequence(epc))\ \{}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pathCordinates.resize(0);}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ epc.resize(0);}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ =\ -\/1;}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{goto}\ ONP;}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ this-\/>fp;}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ stream\ >}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_aa446506530b187d51f2df04586ac3149}{printSES}}\ (stream\&\ out)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ ses\_v\ =\ ses.getSequence();}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(ses\_v.begin(),\ ses\_v.end(),\ \doxymbox{\hyperlink{classdtl_1_1_change_printer}{ChangePrinter<\ sesElem,\ stream\ >}}(out));}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_aa446506530b187d51f2df04586ac3149}{printSES}}\ (ostream\&\ out\ =\ cout)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_diff_aa446506530b187d51f2df04586ac3149}{printSES<\ ostream\ >}}(out);}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ stream\ >}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a8e42b1b0df50caee2608326386bb13a1}{printSES}}\ (\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classdtl_1_1_ses}{Ses<\ elem\ >}}\&\ s,\ stream\&\ out)\ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ ses\_v\ =\ s.getSequence();}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(ses\_v.begin(),\ ses\_v.end(),\ \doxymbox{\hyperlink{classdtl_1_1_change_printer}{ChangePrinter<\ sesElem,\ stream\ >}}(out));}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_aa446506530b187d51f2df04586ac3149}{printSES}}\ (\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classdtl_1_1_ses}{Ses<\ elem\ >}}\&\ s,\ ostream\&\ out\ =\ cout)\ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_diff_aa446506530b187d51f2df04586ac3149}{printSES<\ ostream\ >}}(s,\ out);}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ stream,\ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ SEET,\ \textcolor{keyword}{typename}\ STRT\ >\ \textcolor{keyword}{class\ }PT\ >}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_aa47ae3037fd277e61a70e4f334e2d8a1}{printSES}}\ (stream\&\ out)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ ses\_v\ =\ ses.getSequence\ ();}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each\ (ses\_v.begin\ (),\ ses\_v.end(),\ PT\ <\ sesElem,\ stream\ >\ (out));}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ storedData,\ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ SEET,\ \textcolor{keyword}{typename}\ STRT\ >\ \textcolor{keyword}{class\ }ST\ >}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a92028584dc47b928d34f0e7fa0e5d3d3}{storeSES}}(storedData\&\ sd)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ ses\_v\ =\ ses.getSequence();}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(ses\_v.begin(),\ ses\_v.end(),\ ST\ <\ sesElem,\ storedData\ >(sd));}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ stream\ >}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a1aa46bc93ef0fc729ec2c8630b90673b}{printUnifiedFormat}}\ (stream\&\ out)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(uniHunks.begin(),\ uniHunks.end(),\ \doxymbox{\hyperlink{classdtl_1_1_uni_hunk_printer}{UniHunkPrinter<\ sesElem,\ stream\ >}}(out));}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a1aa46bc93ef0fc729ec2c8630b90673b}{printUnifiedFormat}}\ (ostream\&\ out\ =\ cout)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_diff_a1aa46bc93ef0fc729ec2c8630b90673b}{printUnifiedFormat<\ ostream\ >}}(out);}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\ \textcolor{keyword}{typename}\ stream\ >}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a501e7da3346488d3ccc94ca0fd9429fc}{printUnifiedFormat}}\ (\textcolor{keyword}{const}\ uniHunkVec\&\ hunks,\ stream\&\ out)\ \{}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(hunks.begin(),\ hunks.end(),\ \doxymbox{\hyperlink{classdtl_1_1_uni_hunk_printer}{UniHunkPrinter<\ sesElem\ >}}(out));}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a1aa46bc93ef0fc729ec2c8630b90673b}{printUnifiedFormat}}\ (\textcolor{keyword}{const}\ uniHunkVec\&\ hunks,\ ostream\&\ out\ =\ cout)\ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_diff_a1aa46bc93ef0fc729ec2c8630b90673b}{printUnifiedFormat<\ ostream\ >}}(hunks,\ out);}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a58fe74b499eaa0b12e8fb4dfb0e5abf9}{composeUnifiedHunks}}\ ()\ \{}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ \ \ \ \ \ \ \ \ common[2];}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ \ \ \ \ \ \ \ \ change;}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ \ \ \ \ \ \ \ \ ses\_v\ \ =\ ses.getSequence();}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ l\_cnt\ \ =\ 1;}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ length\ =\ distance(ses\_v.begin(),\ ses\_v.end());}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ middle\ =\ 0;}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isMiddle,\ isAfter;}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespacedtl_a2c2290d197ffa4a9de9369043ee15aa1}{elemInfo}}\ \ \ \ \ \ \ \ \ \ \ einfo;}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ a,\ b,\ c,\ d;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ @@\ -\/a,b\ +c,d\ @@}}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ inc\_dec\_count\ =\ 0;}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structdtl_1_1uni_hunk}{uniHunk<\ sesElem\ >}}\ hunk;}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ \ \ \ \ \ \ \ \ adds;}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\ \ \ \ \ \ \ \ \ deletes;}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ isMiddle\ =\ isAfter\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ a\ =\ b\ =\ c\ =\ d\ =\ 0;}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (sesElemVec\_iter\ it=ses\_v.begin();it!=ses\_v.end();++it,\ ++l\_cnt)\ \{}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ einfo\ =\ it-\/>second;}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (einfo.type)\ \{}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_ADD\ :}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ middle\ =\ 0;}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++inc\_dec\_count;}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ adds.push\_back(*it);}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isMiddle)\ \ \ \ \ \ \ isMiddle\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isMiddle)\ \ \ \ \ \ \ \ ++d;}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (l\_cnt\ >=\ length)\ \{}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(change,\ deletes);}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(change,\ adds);}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isAfter\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_DELETE\ :}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ middle\ =\ 0;}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/inc\_dec\_count;}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deletes.push\_back(*it);}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isMiddle)\ \ \ \ \ \ \ isMiddle\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isMiddle)\ \ \ \ \ \ \ \ ++b;}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (l\_cnt\ >=\ length)\ \{}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(change,\ deletes);}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(change,\ adds);}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isAfter\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_COMMON\ :}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++b;++d;}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (common[1].empty()\ \&\&\ adds.empty()\ \&\&\ deletes.empty()\ \&\&\ change.empty())\ \{}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(common[0].size())\ <\ DTL\_CONTEXT\_SIZE)\ \{}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a\ ==\ 0\ \&\&\ c\ ==\ 0)\ \{}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!wasSwapped())\ \{}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ =\ einfo.beforeIdx;}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ einfo.afterIdx;}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ =\ einfo.afterIdx;}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ einfo.beforeIdx;}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[0].push\_back(*it);}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotate(common[0].begin(),\ common[0].begin()\ +\ 1,\ common[0].end());}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[0].pop\_back();}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[0].push\_back(*it);}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++a;++c;}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/b;-\/-\/d;}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isMiddle\ \&\&\ !isAfter)\ \{}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++middle;}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(change,\ deletes);}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ joinSesVec(change,\ adds);}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ change.push\_back(*it);}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (middle\ >=\ DTL\_SEPARATE\_SIZE\ ||\ l\_cnt\ >=\ length)\ \{}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isAfter\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ adds.clear();}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deletes.clear();}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ default\ :}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ no\ through}}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ compose\ unified\ format\ hunk}}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isAfter\ \&\&\ !change.empty())\ \{}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec\_iter\ cit\ =\ it;}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ cnt\ =\ 0;}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i=0;i<DTL\_SEPARATE\_SIZE\ \&\&\ (cit\ !=\ ses\_v.end());++i,\ ++cit)\ \{}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cit-\/>second.type\ ==\ SES\_COMMON)\ \{}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++cnt;}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cnt\ <\ DTL\_SEPARATE\_SIZE\ \&\&\ l\_cnt\ <\ length)\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ middle\ =\ 0;}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isAfter\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(common[0].size())\ >=\ DTL\_SEPARATE\_SIZE)\ \{}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ c0size\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(common[0].size());}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rotate(common[0].begin(),\ }
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[0].begin()\ +\ (\textcolor{keywordtype}{size\_t})c0size\ -\/\ DTL\_SEPARATE\_SIZE,\ }
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[0].end());}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ i=0;i<c0size\ -\/\ DTL\_SEPARATE\_SIZE;++i)\ \{}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[0].pop\_back();}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ +=\ c0size\ -\/\ DTL\_SEPARATE\_SIZE;}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\ +=\ c0size\ -\/\ DTL\_SEPARATE\_SIZE;}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a\ ==\ 0)\ ++a;}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (c\ ==\ 0)\ ++c;}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wasSwapped())\ swap(a,\ c);}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.a\ =\ a;}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.b\ =\ b;}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.c\ =\ c;}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.d\ =\ d;}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.common[0]\ \ \ \ \ =\ common[0];}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.change\ \ \ \ \ \ \ \ =\ change;}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.common[1]\ \ \ \ \ =\ common[1];}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hunk.inc\_dec\_count\ =\ inc\_dec\_count;}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uniHunks.push\_back(hunk);}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isMiddle\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isAfter\ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[0].clear();}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ common[1].clear();}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ adds.clear();}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deletes.clear();}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ change.clear();}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ =\ b\ =\ c\ =\ d\ =\ middle\ =\ inc\_dec\_count\ =\ 0;}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ stream>}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{classdtl_1_1_ses}{Ses<\ elem\ >}}\ \doxymbox{\hyperlink{classdtl_1_1_diff_a0b1c7cdc8a1ad2633c26a6113c2fd66c}{composeSesFromStream}}\ (stream\&\ st)}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \ \ \ \ elem\ \ \ \ \ \ \ \ line;}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_ses}{Ses<\ elem\ >}}\ ret;}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ x\_idx,\ y\_idx;}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ x\_idx\ =\ y\_idx\ =\ 1;}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (getline(st,\ line))\ \{}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elem\ mark(line.begin(),\ line.begin()\ +\ 1);}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elem\ e(line.begin()\ +\ 1,\ line.end());}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (mark\ ==\ SES\_MARK\_DELETE)\ \{}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret.addSequence(e,\ x\_idx,\ 0,\ SES\_DELETE);}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++x\_idx;}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (mark\ ==\ SES\_MARK\_ADD)\ \{}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret.addSequence(e,\ y\_idx,\ 0,\ SES\_ADD);}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++y\_idx;}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (mark\ ==\ SES\_MARK\_COMMON)\ \{}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ret.addSequence(e,\ x\_idx,\ y\_idx,\ SES\_COMMON);}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++x\_idx;}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++y\_idx;}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00543\ \ \ \ \ private\ :}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ init\ ()\ \{}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ M\ =\ distance(A.begin(),\ A.end());}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ N\ =\ distance(B.begin(),\ B.end());}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (M\ <\ N)\ \{}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ swapped\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ swap(A,\ B);}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ swap(M,\ N);}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ swapped\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \ \ \ \ editDistance\ \ \ \ \ =\ 0;}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ delta\ \ \ \ \ \ \ \ \ \ \ \ =\ N\ -\/\ M;}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ offset\ \ \ \ \ \ \ \ \ \ \ =\ M\ +\ 1;}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ huge\ \ \ \ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ trivial\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \ \ \ \ editDistanceOnly\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \ \ \ \ fp\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ NULL;}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ snake(\textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\&\ k,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\&\ above,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\&\ below)\ \{}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ r\ =\ above\ >\ below\ ?\ path[(size\_t)k-\/1+offset]\ :\ path[(size\_t)k+1+offset];}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ y\ =\ \doxymbox{\hyperlink{group__core__func__common_gae02d42887fc5570451f880e3c624b9ac}{max}}(above,\ below);}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ x\ =\ y\ -\/\ k;}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ ((\textcolor{keywordtype}{size\_t})x\ <\ M\ \&\&\ (\textcolor{keywordtype}{size\_t})y\ <\ N\ \&\&\ (swapped\ ?\ cmp.impl(B[(\textcolor{keywordtype}{size\_t})y],\ A[(\textcolor{keywordtype}{size\_t})x])\ :\ cmp.impl(A[(\textcolor{keywordtype}{size\_t})x],\ B[(\textcolor{keywordtype}{size\_t})y])))\ \{}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++x;++y;}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ path[(size\_t)k+offset]\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(pathCordinates.size());}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!editDistanceOnly)\ \{}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespacedtl_a455e4ca671960f7815be6d0b8f6339f9}{P}}\ p;}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p.x\ =\ x;p.y\ =\ y;p.k\ =\ r;}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pathCordinates.push\_back(p);\ \ \ \ \ \ }
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ y;}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ recordSequence\ (\textcolor{keyword}{const}\ editPathCordinates\&\ v)\ \{}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \ \ \ \ sequence\_const\_iter\ x(A.begin());}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ sequence\_const\_iter\ y(B.begin());}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ \ x\_idx,\ \ y\_idx;\ \ \textcolor{comment}{//\ line\ number\ for\ Unified\ Format}}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \ \ \ \ \ \ \ \ \ \ px\_idx,\ py\_idx;\ \textcolor{comment}{//\ cordinates}}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ complete\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ \ x\_idx\ \ =\ y\_idx\ \ =\ 1;}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ px\_idx\ =\ py\_idx\ =\ 0;}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i=v.size()-\/1;!complete;-\/-\/i)\ \{}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(px\_idx\ <\ v[i].x\ ||\ py\_idx\ <\ v[i].y)\ \{}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (v[i].y\ -\/\ v[i].x\ >\ py\_idx\ -\/\ px\_idx)\ \{}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!wasSwapped())\ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*y,\ 0,\ y\_idx\ +\ oy,\ SES\_ADD);}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*y,\ y\_idx\ +\ oy,\ 0,\ SES\_DELETE);}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++y;}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++y\_idx;}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++py\_idx;}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (v[i].y\ -\/\ v[i].x\ <\ py\_idx\ -\/\ px\_idx)\ \{}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!wasSwapped())\ \{}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*x,\ x\_idx\ +\ ox,\ 0,\ SES\_DELETE);}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*x,\ 0,\ x\_idx\ +\ ox,\ SES\_ADD);}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++x;}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++x\_idx;}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++px\_idx;}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!wasSwapped())\ \{}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lcs.addSequence(*x);}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*x,\ x\_idx\ +\ ox,\ y\_idx\ +\ oy,\ SES\_COMMON);}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lcs.addSequence(*y);}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*y,\ y\_idx\ +\ oy,\ x\_idx\ +\ ox,\ SES\_COMMON);}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++x;}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++y;}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++x\_idx;}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++y\_idx;}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++px\_idx;}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++py\_idx;}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 0)\ complete\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (x\_idx\ >\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(M)\ \&\&\ y\_idx\ >\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\textcolor{keyword}{>}(N))\ \{}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ all\ recording\ succeeded}}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ trivial\ difference}}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trivialEnabled())\ \{}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!wasSwapped())\ \{}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ recordOddSequence(x\_idx,\ M,\ x,\ SES\_DELETE);}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ recordOddSequence(y\_idx,\ N,\ y,\ SES\_ADD);}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ recordOddSequence(x\_idx,\ M,\ x,\ SES\_ADD);}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ recordOddSequence(y\_idx,\ N,\ y,\ SES\_DELETE);}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ nontrivial\ difference}}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sequence\ A\_(A.begin()\ +\ (\textcolor{keywordtype}{size\_t})x\_idx\ -\/\ 1,\ A.end());}
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sequence\ B\_(B.begin()\ +\ (\textcolor{keywordtype}{size\_t})y\_idx\ -\/\ 1,\ B.end());}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ A\ \ \ \ \ \ \ \ =\ A\_;}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ B\ \ \ \ \ \ \ \ =\ B\_;}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ M\ \ \ \ \ \ \ \ =\ distance(A.begin(),\ A.end());}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ N\ \ \ \ \ \ \ \ =\ distance(B.begin(),\ B.end());}
+\DoxyCodeLine{00658\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\ \ \ \ =\ N\ -\/\ M;}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ offset\ \ \ =\ M\ +\ 1;}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ fp;}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fp\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}[M\ +\ N\ +\ 3];}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fill(\&fp[0],\ \&fp[M\ +\ N\ +\ 3],\ -\/1);}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fill(path.begin(),\ path.end(),\ -\/1);}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ox\ =\ x\_idx\ -\/\ 1;}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oy\ =\ y\_idx\ -\/\ 1;}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \textcolor{keyword}{inline}\ recordOddSequence\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ idx,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ length,\ sequence\_const\_iter\ it,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{namespacedtl_a399af224ebf382cbabc14b093f4f6a3a}{edit\_t}}\ et)\ \{}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(idx\ <\ length)\{}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*it,\ idx,\ 0,\ et);}
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++it;}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++idx;}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++editDistance;}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ ses.addSequence(*it,\ idx,\ 0,\ et);}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ ++editDistance;}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \textcolor{keyword}{inline}\ joinSesVec\ (sesElemVec\&\ s1,\ sesElemVec\&\ s2)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!s2.empty())\ \{}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (sesElemVec\_iter\ vit=s2.begin();vit!=s2.end();++vit)\ \{}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s1.push\_back(*vit);}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \ \ \ \ \ }
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \textcolor{keyword}{inline}\ wasSwapped\ ()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ swapped;}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ \ \ \ \ \};}
+\DoxyCodeLine{00704\ \}}
+\DoxyCodeLine{00705\ }
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DTL\_DIFF\_H}}
+
+\end{DoxyCode}

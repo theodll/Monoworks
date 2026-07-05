@@ -1,0 +1,116 @@
+\doxysection{ansicolor\+\_\+sink.\+h}
+\hypertarget{ansicolor__sink_8h_source}{}\label{ansicolor__sink_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/ansicolor\_sink.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/ansicolor\_sink.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <spdlog/details/console\_globals.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <spdlog/details/null\_mutex.h>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/sink.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ ConsoleMutex>}
+\DoxyCodeLine{00025\ \textcolor{keyword}{class\ }ansicolor\_sink\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classsinks_1_1sink}{sink}}\ \{}
+\DoxyCodeLine{00026\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{using\ }mutex\_t\ =\ \textcolor{keyword}{typename}\ ConsoleMutex::mutex\_t;}
+\DoxyCodeLine{00028\ \ \ \ \ ansicolor\_sink(FILE\ *target\_file,\ color\_mode\ mode);}
+\DoxyCodeLine{00029\ \ \ \ \ \string~ansicolor\_sink()\ \textcolor{keyword}{override}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ ansicolor\_sink(\textcolor{keyword}{const}\ ansicolor\_sink\ \&other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00032\ \ \ \ \ ansicolor\_sink(ansicolor\_sink\ \&\&other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ ansicolor\_sink\ \&operator=(\textcolor{keyword}{const}\ ansicolor\_sink\ \&other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00035\ \ \ \ \ ansicolor\_sink\ \&operator=(ansicolor\_sink\ \&\&other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_color(level::level\_enum\ color\_level,\ string\_view\_t\ color);}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_color\_mode(color\_mode\ mode);}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{bool}\ should\_color()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ log(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ flush()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_pattern(\textcolor{keyword}{const}\ std::string\ \&pattern)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_formatter(std::unique\_ptr<formatter>\ sink\_formatter)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//\ Formatting\ codes}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ reset\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[m"{}};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ bold\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[1m"{}};}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ dark\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[2m"{}};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ underline\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[4m"{}};}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ blink\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[5m"{}};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ reverse\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[7m"{}};}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ concealed\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[8m"{}};}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ clear\_line\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[K"{}};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ Foreground\ colors}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ black\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[30m"{}};}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ red\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[31m"{}};}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ green\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[32m"{}};}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ yellow\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[33m"{}};}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ blue\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[34m"{}};}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ magenta\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[35m"{}};}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ cyan\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[36m"{}};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ white\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[37m"{}};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ \doxymbox{\hyperlink{classsinks_1_1ansicolor__sink_a049388c063e110cfc750467f9f8cd933}{on\_black}}\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[40m"{}};}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ on\_red\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[41m"{}};}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ on\_green\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[42m"{}};}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ on\_yellow\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[43m"{}};}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ on\_blue\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[44m"{}};}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ on\_magenta\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[45m"{}};}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ on\_cyan\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[46m"{}};}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ on\_white\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[47m"{}};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ \doxymbox{\hyperlink{classsinks_1_1ansicolor__sink_aa71feff1c047e5705ed626a578a2ed6a}{yellow\_bold}}\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[33m\(\backslash\)033[1m"{}};}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ red\_bold\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[31m\(\backslash\)033[1m"{}};}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{const}\ string\_view\_t\ bold\_on\_red\ =\ \textcolor{stringliteral}{"{}\(\backslash\)033[1m\(\backslash\)033[41m"{}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00082\ \ \ \ \ FILE\ *target\_file\_;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00085\ \ \ \ \ mutex\_t\ \&mutex\_;}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{bool}\ should\_do\_colors\_;}
+\DoxyCodeLine{00087\ \ \ \ \ std::unique\_ptr<formatter>\ formatter\_;}
+\DoxyCodeLine{00088\ \ \ \ \ std::array<std::string,\ level::n\_levels>\ colors\_;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{void}\ set\_color\_mode\_(color\_mode\ mode);}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{void}\ print\_ccode\_(\textcolor{keyword}{const}\ string\_view\_t\ \&color\_code)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{void}\ print\_range\_(\textcolor{keyword}{const}\ memory\_buf\_t\ \&formatted,\ \textcolor{keywordtype}{size\_t}\ start,\ \textcolor{keywordtype}{size\_t}\ end)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ to\_string\_(\textcolor{keyword}{const}\ string\_view\_t\ \&sv);}
+\DoxyCodeLine{00093\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ ConsoleMutex>}
+\DoxyCodeLine{00096\ \textcolor{keyword}{class\ }ansicolor\_stdout\_sink\ :\ \textcolor{keyword}{public}\ ansicolor\_sink<ConsoleMutex>\ \{}
+\DoxyCodeLine{00097\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{explicit}\ ansicolor\_stdout\_sink(color\_mode\ mode\ =\ color\_mode::automatic);}
+\DoxyCodeLine{00099\ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ ConsoleMutex>}
+\DoxyCodeLine{00102\ \textcolor{keyword}{class\ }ansicolor\_stderr\_sink\ :\ \textcolor{keyword}{public}\ ansicolor\_sink<ConsoleMutex>\ \{}
+\DoxyCodeLine{00103\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{explicit}\ ansicolor\_stderr\_sink(color\_mode\ mode\ =\ color\_mode::automatic);}
+\DoxyCodeLine{00105\ \};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{using\ }ansicolor\_stdout\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1ansicolor__stdout__sink}{ansicolor\_stdout\_sink<details::console\_mutex>}};}
+\DoxyCodeLine{00108\ \textcolor{keyword}{using\ }ansicolor\_stdout\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1ansicolor__stdout__sink}{ansicolor\_stdout\_sink<details::console\_nullmutex>}};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{keyword}{using\ }ansicolor\_stderr\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1ansicolor__stderr__sink}{ansicolor\_stderr\_sink<details::console\_mutex>}};}
+\DoxyCodeLine{00111\ \textcolor{keyword}{using\ }ansicolor\_stderr\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1ansicolor__stderr__sink}{ansicolor\_stderr\_sink<details::console\_nullmutex>}};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00114\ SPDLOG\_NAMESPACE\_END}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#ifdef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#include\ "{}ansicolor\_sink-\/inl.h"{}}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

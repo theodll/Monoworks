@@ -1,0 +1,53 @@
+\doxysection{SDL\+\_\+dosaudio\+\_\+sb.\+h}
+\hypertarget{_s_d_l__dosaudio__sb_8h_source}{}\label{_s_d_l__dosaudio__sb_8h_source}\index{MonoRuntime/extern/sdl/src/audio/dos/SDL\_dosaudio\_sb.h@{MonoRuntime/extern/sdl/src/audio/dos/SDL\_dosaudio\_sb.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_dosaudio\_sb\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_dosaudio\_sb\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../../core/dos/SDL\_dos.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysaudio.h"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___private_audio_data}{SDL\_PrivateAudioData}}}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ Uint8\ *dma\_buffer;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ dma\_buflen;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{int}\ dma\_channel;}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_16bit;}
+\DoxyCodeLine{00035\ \ \ \ \ \_go32\_dpmi\_seginfo\ dma\_seginfo;}
+\DoxyCodeLine{00036\ \ \ \ \ DOS\_InterruptHook\ interrupt\_hook;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ IRQ-\/driven\ ring\ buffer}}
+\DoxyCodeLine{00039\ \ \ \ \ Uint8\ *ring\_buffer;\ \ \ \ \ \ \textcolor{comment}{//\ pre-\/allocated,\ memory-\/locked\ ring\ buffer}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{volatile}\ \textcolor{keywordtype}{int}\ ring\_read;\ \ \textcolor{comment}{//\ read\ position\ (advanced\ by\ IRQ\ handler\ only)}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{volatile}\ \textcolor{keywordtype}{int}\ ring\_write;\ \textcolor{comment}{//\ write\ position\ (advanced\ by\ audio\ thread\ only)}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ ring\_size;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ total\ ring\ buffer\ size\ (power-\/of-\/2,\ multiple\ of\ chunk\_size)}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{int}\ chunk\_size;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ==\ device-\/>buffer\_size\ (one\ DMA\ half-\/buffer\ worth)}}
+\DoxyCodeLine{00044\ \ \ \ \ Uint8\ *staging\_buffer;\ \ \ \textcolor{comment}{//\ audio\ thread\ writes\ here,\ then\ commits\ to\ ring}}
+\DoxyCodeLine{00045\ \};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_dosaudio\_sb\_h\_}}
+
+\end{DoxyCode}

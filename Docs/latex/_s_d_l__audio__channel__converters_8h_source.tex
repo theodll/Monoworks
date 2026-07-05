@@ -1,0 +1,1074 @@
+\doxysection{SDL\+\_\+audio\+\_\+channel\+\_\+converters.\+h}
+\hypertarget{_s_d_l__audio__channel__converters_8h_source}{}\label{_s_d_l__audio__channel__converters_8h_source}\index{MonoRuntime/extern/sdl/src/audio/SDL\_audio\_channel\_converters.h@{MonoRuntime/extern/sdl/src/audio/SDL\_audio\_channel\_converters.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ DO\ NOT\ EDIT,\ THIS\ FILE\ WAS\ GENERATED\ BY\ build-\/scripts/gen\_audio\_channel\_conversion.c}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{typedef}\ void\ (*SDL\_AudioChannelConverter)(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertMonoToStereo(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}mono"{}},\ \textcolor{stringliteral}{"{}stereo"{}});}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00034\ \ \ \ \ src\ +=\ (num\_frames-\/1);}
+\DoxyCodeLine{00035\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 2;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src-\/-\/,\ dst\ -\/=\ 2)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[0];}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ srcFC;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ srcFC;}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertMonoTo21(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00045\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}mono"{}},\ \textcolor{stringliteral}{"{}2.1"{}});}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00051\ \ \ \ \ src\ +=\ (num\_frames-\/1);}
+\DoxyCodeLine{00052\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 3;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src-\/-\/,\ dst\ -\/=\ 3)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[0];}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ srcFC;}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ srcFC;}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertMonoToQuad(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}mono"{}},\ \textcolor{stringliteral}{"{}quad"{}});}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00069\ \ \ \ \ src\ +=\ (num\_frames-\/1);}
+\DoxyCodeLine{00070\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 4;}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src-\/-\/,\ dst\ -\/=\ 4)\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[0];}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ srcFC;}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ srcFC;}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertMonoTo41(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00082\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}mono"{}},\ \textcolor{stringliteral}{"{}4.1"{}});}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00088\ \ \ \ \ src\ +=\ (num\_frames-\/1);}
+\DoxyCodeLine{00089\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 5;}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src-\/-\/,\ dst\ -\/=\ 5)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[0];}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ srcFC;}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ srcFC;}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertMonoTo51(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00102\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}mono"{}},\ \textcolor{stringliteral}{"{}5.1"{}});}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00108\ \ \ \ \ src\ +=\ (num\_frames-\/1);}
+\DoxyCodeLine{00109\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 6;}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src-\/-\/,\ dst\ -\/=\ 6)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[0];}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ srcFC;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ srcFC;}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertMonoTo61(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00123\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}mono"{}},\ \textcolor{stringliteral}{"{}6.1"{}});}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00129\ \ \ \ \ src\ +=\ (num\_frames-\/1);}
+\DoxyCodeLine{00130\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 7;}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src-\/-\/,\ dst\ -\/=\ 7)\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[0];}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ srcFC;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ srcFC;}
+\DoxyCodeLine{00140\ \ \ \ \ \}}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertMonoTo71(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00145\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}mono"{}},\ \textcolor{stringliteral}{"{}7.1"{}});}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00151\ \ \ \ \ src\ +=\ (num\_frames-\/1);}
+\DoxyCodeLine{00152\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 8;}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src-\/-\/,\ dst\ -\/=\ 8)\ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[0];}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ dst[7]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ srcFC;}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ srcFC;}
+\DoxyCodeLine{00163\ \ \ \ \ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertStereoToMono(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00168\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}stereo"{}},\ \textcolor{stringliteral}{"{}mono"{}});}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 2,\ dst++)\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[0]\ *\ 0.500000000f)\ +\ (src[1]\ *\ 0.500000000f);}
+\DoxyCodeLine{00175\ \ \ \ \ \}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertStereoTo21(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00180\ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}stereo"{}},\ \textcolor{stringliteral}{"{}2.1"{}});}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00186\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 2;}
+\DoxyCodeLine{00187\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 3;}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 2,\ dst\ -\/=\ 3)\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00192\ \ \ \ \ \}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \}}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertStereoToQuad(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00197\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}stereo"{}},\ \textcolor{stringliteral}{"{}quad"{}});}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00203\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 2;}
+\DoxyCodeLine{00204\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 4;}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 2,\ dst\ -\/=\ 4)\ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00210\ \ \ \ \ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertStereoTo41(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00215\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}stereo"{}},\ \textcolor{stringliteral}{"{}4.1"{}});}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00221\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 2;}
+\DoxyCodeLine{00222\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 5;}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 2,\ dst\ -\/=\ 5)\ \{}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00229\ \ \ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \}}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertStereoTo51(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00234\ \{}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}stereo"{}},\ \textcolor{stringliteral}{"{}5.1"{}});}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00240\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 2;}
+\DoxyCodeLine{00241\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 6;}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 2,\ dst\ -\/=\ 6)\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00249\ \ \ \ \ \}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertStereoTo61(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00254\ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}stereo"{}},\ \textcolor{stringliteral}{"{}6.1"{}});}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00260\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 2;}
+\DoxyCodeLine{00261\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 7;}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 2,\ dst\ -\/=\ 7)\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00270\ \ \ \ \ \}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00272\ \}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertStereoTo71(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00275\ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}stereo"{}},\ \textcolor{stringliteral}{"{}7.1"{}});}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00281\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 2;}
+\DoxyCodeLine{00282\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 8;}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 2,\ dst\ -\/=\ 8)\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ dst[7]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00292\ \ \ \ \ \}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert21ToMono(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00297\ \{}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}2.1"{}},\ \textcolor{stringliteral}{"{}mono"{}});}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 3,\ dst++)\ \{}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[0]\ *\ 0.333333343f)\ +\ (src[1]\ *\ 0.333333343f)\ +\ (src[2]\ *\ 0.333333343f);}
+\DoxyCodeLine{00304\ \ \ \ \ \}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert21ToStereo(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00309\ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}2.1"{}},\ \textcolor{stringliteral}{"{}stereo"{}});}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 3,\ dst\ +=\ 2)\ \{}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[2];}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.800000012f)\ +\ (srcLFE\ *\ 0.200000003f);}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.800000012f)\ +\ (srcLFE\ *\ 0.200000003f);}
+\DoxyCodeLine{00318\ \ \ \ \ \}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert21ToQuad(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00323\ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}2.1"{}},\ \textcolor{stringliteral}{"{}quad"{}});}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00329\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 3;}
+\DoxyCodeLine{00330\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 4;}
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 3,\ dst\ -\/=\ 4)\ \{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[2];}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcLFE\ *\ 0.111111112f);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcLFE\ *\ 0.111111112f);}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (srcLFE\ *\ 0.111111112f)\ +\ (src[1]\ *\ 0.888888896f);}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (srcLFE\ *\ 0.111111112f)\ +\ (src[0]\ *\ 0.888888896f);}
+\DoxyCodeLine{00337\ \ \ \ \ \}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert21To41(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00342\ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}2.1"{}},\ \textcolor{stringliteral}{"{}4.1"{}});}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00348\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 3;}
+\DoxyCodeLine{00349\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 5;}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 3,\ dst\ -\/=\ 5)\ \{}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00356\ \ \ \ \ \}}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert21To51(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00361\ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}2.1"{}},\ \textcolor{stringliteral}{"{}5.1"{}});}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00367\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 3;}
+\DoxyCodeLine{00368\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 6;}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 3,\ dst\ -\/=\ 6)\ \{}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00376\ \ \ \ \ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert21To61(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00381\ \{}
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}2.1"{}},\ \textcolor{stringliteral}{"{}6.1"{}});}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00387\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 3;}
+\DoxyCodeLine{00388\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 7;}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 3,\ dst\ -\/=\ 7)\ \{}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00397\ \ \ \ \ \}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert21To71(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00402\ \{}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}2.1"{}},\ \textcolor{stringliteral}{"{}7.1"{}});}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00408\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 3;}
+\DoxyCodeLine{00409\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 8;}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 3,\ dst\ -\/=\ 8)\ \{}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ dst[7]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00419\ \ \ \ \ \}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \}}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertQuadToMono(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00424\ \{}
+\DoxyCodeLine{00425\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}quad"{}},\ \textcolor{stringliteral}{"{}mono"{}});}
+\DoxyCodeLine{00428\ }
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 4,\ dst++)\ \{}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[0]\ *\ 0.250000000f)\ +\ (src[1]\ *\ 0.250000000f)\ +\ (src[2]\ *\ 0.250000000f)\ +\ (src[3]\ *\ 0.250000000f);}
+\DoxyCodeLine{00431\ \ \ \ \ \}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertQuadToStereo(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00436\ \{}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}quad"{}},\ \textcolor{stringliteral}{"{}stereo"{}});}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 4,\ dst\ +=\ 2)\ \{}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[2];}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[3];}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.421000004f)\ +\ (srcBL\ *\ 0.358999997f)\ +\ (srcBR\ *\ 0.219999999f);}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.421000004f)\ +\ (srcBL\ *\ 0.219999999f)\ +\ (srcBR\ *\ 0.358999997f);}
+\DoxyCodeLine{00446\ \ \ \ \ \}}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertQuadTo21(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00451\ \{}
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}quad"{}},\ \textcolor{stringliteral}{"{}2.1"{}});}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 4,\ dst\ +=\ 3)\ \{}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[2];}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[3];}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.421000004f)\ +\ (srcBL\ *\ 0.358999997f)\ +\ (srcBR\ *\ 0.219999999f);}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.421000004f)\ +\ (srcBL\ *\ 0.219999999f)\ +\ (srcBR\ *\ 0.358999997f);}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00462\ \ \ \ \ \}}
+\DoxyCodeLine{00463\ }
+\DoxyCodeLine{00464\ \}}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertQuadTo41(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00467\ \{}
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}quad"{}},\ \textcolor{stringliteral}{"{}4.1"{}});}
+\DoxyCodeLine{00471\ }
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00473\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 4;}
+\DoxyCodeLine{00474\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 5;}
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 4,\ dst\ -\/=\ 5)\ \{}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BR\ */}\ =\ src[3];}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BL\ */}\ =\ src[2];}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00481\ \ \ \ \ \}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \}}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertQuadTo51(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00486\ \{}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}quad"{}},\ \textcolor{stringliteral}{"{}5.1"{}});}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00492\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 4;}
+\DoxyCodeLine{00493\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 6;}
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 4,\ dst\ -\/=\ 6)\ \{}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ src[3];}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ src[2];}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00501\ \ \ \ \ \}}
+\DoxyCodeLine{00502\ }
+\DoxyCodeLine{00503\ \}}
+\DoxyCodeLine{00504\ }
+\DoxyCodeLine{00505\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertQuadTo61(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00506\ \{}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00509\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}quad"{}},\ \textcolor{stringliteral}{"{}6.1"{}});}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00512\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 4;}
+\DoxyCodeLine{00513\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 7;}
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 4,\ dst\ -\/=\ 7)\ \{}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[2];}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[3];}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SR\ */}\ =\ (srcBR\ *\ 0.796000004f);}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ SL\ */}\ =\ (srcBL\ *\ 0.796000004f);}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BC\ */}\ =\ (srcBR\ *\ 0.500000000f)\ +\ (srcBL\ *\ 0.500000000f);}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.939999998f);}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.939999998f);}
+\DoxyCodeLine{00524\ \ \ \ \ \}}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \}}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00528\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_ConvertQuadTo71(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00529\ \{}
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00531\ }
+\DoxyCodeLine{00532\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}quad"{}},\ \textcolor{stringliteral}{"{}7.1"{}});}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00535\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 4;}
+\DoxyCodeLine{00536\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 8;}
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 4,\ dst\ -\/=\ 8)\ \{}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ dst[7]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ src[3];}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ src[2];}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00546\ \ \ \ \ \}}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ \}}
+\DoxyCodeLine{00549\ }
+\DoxyCodeLine{00550\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert41ToMono(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00551\ \{}
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}4.1"{}},\ \textcolor{stringliteral}{"{}mono"{}});}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 5,\ dst++)\ \{}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[0]\ *\ 0.200000003f)\ +\ (src[1]\ *\ 0.200000003f)\ +\ (src[2]\ *\ 0.200000003f)\ +\ (src[3]\ *\ 0.200000003f)\ +\ (src[4]\ *\ 0.200000003f);}
+\DoxyCodeLine{00558\ \ \ \ \ \}}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \}}
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00562\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert41ToStereo(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00563\ \{}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}4.1"{}},\ \textcolor{stringliteral}{"{}stereo"{}});}
+\DoxyCodeLine{00567\ }
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 5,\ dst\ +=\ 2)\ \{}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[2];}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[3];}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[4];}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.374222219f)\ +\ (srcLFE\ *\ 0.111111112f)\ +\ (srcBL\ *\ 0.319111109f)\ +\ (srcBR\ *\ 0.195555553f);}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.374222219f)\ +\ (srcLFE\ *\ 0.111111112f)\ +\ (srcBL\ *\ 0.195555553f)\ +\ (srcBR\ *\ 0.319111109f);}
+\DoxyCodeLine{00574\ \ \ \ \ \}}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00576\ \}}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert41To21(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00579\ \{}
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}4.1"{}},\ \textcolor{stringliteral}{"{}2.1"{}});}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 5,\ dst\ +=\ 3)\ \{}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[3];}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[4];}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.421000004f)\ +\ (srcBL\ *\ 0.358999997f)\ +\ (srcBR\ *\ 0.219999999f);}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.421000004f)\ +\ (srcBL\ *\ 0.219999999f)\ +\ (srcBR\ *\ 0.358999997f);}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00590\ \ \ \ \ \}}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \}}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00594\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert41ToQuad(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00595\ \{}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}4.1"{}},\ \textcolor{stringliteral}{"{}quad"{}});}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 5,\ dst\ +=\ 4)\ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[2];}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.941176474f)\ +\ (srcLFE\ *\ 0.058823530f);}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.941176474f)\ +\ (srcLFE\ *\ 0.058823530f);}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcLFE\ *\ 0.058823530f)\ +\ (src[3]\ *\ 0.941176474f);}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcLFE\ *\ 0.058823530f)\ +\ (src[4]\ *\ 0.941176474f);}
+\DoxyCodeLine{00606\ \ \ \ \ \}}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \}}
+\DoxyCodeLine{00609\ }
+\DoxyCodeLine{00610\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert41To51(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00611\ \{}
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00613\ }
+\DoxyCodeLine{00614\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}4.1"{}},\ \textcolor{stringliteral}{"{}5.1"{}});}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00617\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 5;}
+\DoxyCodeLine{00618\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 6;}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 5,\ dst\ -\/=\ 6)\ \{}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ src[4];}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ src[3];}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00626\ \ \ \ \ \}}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \}}
+\DoxyCodeLine{00629\ }
+\DoxyCodeLine{00630\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert41To61(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00631\ \{}
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00633\ }
+\DoxyCodeLine{00634\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}4.1"{}},\ \textcolor{stringliteral}{"{}6.1"{}});}
+\DoxyCodeLine{00635\ }
+\DoxyCodeLine{00636\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00637\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 5;}
+\DoxyCodeLine{00638\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 7;}
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 5,\ dst\ -\/=\ 7)\ \{}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[3];}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[4];}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SR\ */}\ =\ (srcBR\ *\ 0.796000004f);}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ SL\ */}\ =\ (srcBL\ *\ 0.796000004f);}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BC\ */}\ =\ (srcBR\ *\ 0.500000000f)\ +\ (srcBL\ *\ 0.500000000f);}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.939999998f);}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.939999998f);}
+\DoxyCodeLine{00649\ \ \ \ \ \}}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \}}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert41To71(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00654\ \{}
+\DoxyCodeLine{00655\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00656\ }
+\DoxyCodeLine{00657\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}4.1"{}},\ \textcolor{stringliteral}{"{}7.1"{}});}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00660\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 5;}
+\DoxyCodeLine{00661\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 8;}
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 5,\ dst\ -\/=\ 8)\ \{}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ dst[7]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ src[4];}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ src[3];}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[2];}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00671\ \ \ \ \ \}}
+\DoxyCodeLine{00672\ }
+\DoxyCodeLine{00673\ \}}
+\DoxyCodeLine{00674\ }
+\DoxyCodeLine{00675\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert51ToMono(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00676\ \{}
+\DoxyCodeLine{00677\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}5.1"{}},\ \textcolor{stringliteral}{"{}mono"{}});}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00681\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 6,\ dst++)\ \{}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[0]\ *\ 0.166666672f)\ +\ (src[1]\ *\ 0.166666672f)\ +\ (src[2]\ *\ 0.166666672f)\ +\ (src[3]\ *\ 0.166666672f)\ +\ (src[4]\ *\ 0.166666672f)\ +\ (src[5]\ *\ 0.166666672f);}
+\DoxyCodeLine{00683\ \ \ \ \ \}}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ \}}
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert51ToStereo(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00688\ \{}
+\DoxyCodeLine{00689\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00690\ }
+\DoxyCodeLine{00691\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}5.1"{}},\ \textcolor{stringliteral}{"{}stereo"{}});}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 6,\ dst\ +=\ 2)\ \{}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[3];}
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[4];}
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[5];}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.294545442f)\ +\ (srcFC\ *\ 0.208181813f)\ +\ (srcLFE\ *\ 0.090909094f)\ +\ (srcBL\ *\ 0.251818180f)\ +\ (srcBR\ *\ 0.154545456f);}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.294545442f)\ +\ (srcFC\ *\ 0.208181813f)\ +\ (srcLFE\ *\ 0.090909094f)\ +\ (srcBL\ *\ 0.154545456f)\ +\ (srcBR\ *\ 0.251818180f);}
+\DoxyCodeLine{00700\ \ \ \ \ \}}
+\DoxyCodeLine{00701\ }
+\DoxyCodeLine{00702\ \}}
+\DoxyCodeLine{00703\ }
+\DoxyCodeLine{00704\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert51To21(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00705\ \{}
+\DoxyCodeLine{00706\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}5.1"{}},\ \textcolor{stringliteral}{"{}2.1"{}});}
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00710\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 6,\ dst\ +=\ 3)\ \{}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[4];}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[5];}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.324000001f)\ +\ (srcFC\ *\ 0.229000002f)\ +\ (srcBL\ *\ 0.277000010f)\ +\ (srcBR\ *\ 0.170000002f);}
+\DoxyCodeLine{00715\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.324000001f)\ +\ (srcFC\ *\ 0.229000002f)\ +\ (srcBL\ *\ 0.170000002f)\ +\ (srcBR\ *\ 0.277000010f);}
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00717\ \ \ \ \ \}}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \}}
+\DoxyCodeLine{00720\ }
+\DoxyCodeLine{00721\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert51ToQuad(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00722\ \{}
+\DoxyCodeLine{00723\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00724\ }
+\DoxyCodeLine{00725\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}5.1"{}},\ \textcolor{stringliteral}{"{}quad"{}});}
+\DoxyCodeLine{00726\ }
+\DoxyCodeLine{00727\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 6,\ dst\ +=\ 4)\ \{}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[3];}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.558095276f)\ +\ (srcFC\ *\ 0.394285709f)\ +\ (srcLFE\ *\ 0.047619049f);}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.558095276f)\ +\ (srcFC\ *\ 0.394285709f)\ +\ (srcLFE\ *\ 0.047619049f);}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcLFE\ *\ 0.047619049f)\ +\ (src[4]\ *\ 0.558095276f);}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcLFE\ *\ 0.047619049f)\ +\ (src[5]\ *\ 0.558095276f);}
+\DoxyCodeLine{00734\ \ \ \ \ \}}
+\DoxyCodeLine{00735\ }
+\DoxyCodeLine{00736\ \}}
+\DoxyCodeLine{00737\ }
+\DoxyCodeLine{00738\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert51To41(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00739\ \{}
+\DoxyCodeLine{00740\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00741\ }
+\DoxyCodeLine{00742\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}5.1"{}},\ \textcolor{stringliteral}{"{}4.1"{}});}
+\DoxyCodeLine{00743\ }
+\DoxyCodeLine{00744\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 6,\ dst\ +=\ 5)\ \{}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.586000025f)\ +\ (srcFC\ *\ 0.414000005f);}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.586000025f)\ +\ (srcFC\ *\ 0.414000005f);}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BL\ */}\ =\ (src[4]\ *\ 0.586000025f);}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BR\ */}\ =\ (src[5]\ *\ 0.586000025f);}
+\DoxyCodeLine{00751\ \ \ \ \ \}}
+\DoxyCodeLine{00752\ }
+\DoxyCodeLine{00753\ \}}
+\DoxyCodeLine{00754\ }
+\DoxyCodeLine{00755\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert51To61(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00756\ \{}
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00759\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}5.1"{}},\ \textcolor{stringliteral}{"{}6.1"{}});}
+\DoxyCodeLine{00760\ }
+\DoxyCodeLine{00761\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00762\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 6;}
+\DoxyCodeLine{00763\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 7;}
+\DoxyCodeLine{00764\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 6,\ dst\ -\/=\ 7)\ \{}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[4];}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[5];}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SR\ */}\ =\ (srcBR\ *\ 0.796000004f);}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ SL\ */}\ =\ (srcBL\ *\ 0.796000004f);}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BC\ */}\ =\ (srcBR\ *\ 0.500000000f)\ +\ (srcBL\ *\ 0.500000000f);}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[2]\ *\ 0.939999998f);}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.939999998f);}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.939999998f);}
+\DoxyCodeLine{00774\ \ \ \ \ \}}
+\DoxyCodeLine{00775\ }
+\DoxyCodeLine{00776\ \}}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert51To71(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00779\ \{}
+\DoxyCodeLine{00780\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00781\ }
+\DoxyCodeLine{00782\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}5.1"{}},\ \textcolor{stringliteral}{"{}7.1"{}});}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00785\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 6;}
+\DoxyCodeLine{00786\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 8;}
+\DoxyCodeLine{00787\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 6,\ dst\ -\/=\ 8)\ \{}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ dst[7]\ \textcolor{comment}{/*\ SR\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SL\ */}\ =\ 0.0f;}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ src[5];}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ src[4];}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ src[2];}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00796\ \ \ \ \ \}}
+\DoxyCodeLine{00797\ }
+\DoxyCodeLine{00798\ \}}
+\DoxyCodeLine{00799\ }
+\DoxyCodeLine{00800\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert61ToMono(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00801\ \{}
+\DoxyCodeLine{00802\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00803\ }
+\DoxyCodeLine{00804\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}6.1"{}},\ \textcolor{stringliteral}{"{}mono"{}});}
+\DoxyCodeLine{00805\ }
+\DoxyCodeLine{00806\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 7,\ dst++)\ \{}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[0]\ *\ 0.143142849f)\ +\ (src[1]\ *\ 0.143142849f)\ +\ (src[2]\ *\ 0.143142849f)\ +\ (src[3]\ *\ 0.142857149f)\ +\ (src[4]\ *\ 0.143142849f)\ +\ (src[5]\ *\ 0.143142849f)\ +\ (src[6]\ *\ 0.143142849f);}
+\DoxyCodeLine{00808\ \ \ \ \ \}}
+\DoxyCodeLine{00809\ }
+\DoxyCodeLine{00810\ \}}
+\DoxyCodeLine{00811\ }
+\DoxyCodeLine{00812\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert61ToStereo(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00813\ \{}
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00815\ }
+\DoxyCodeLine{00816\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}6.1"{}},\ \textcolor{stringliteral}{"{}stereo"{}});}
+\DoxyCodeLine{00817\ }
+\DoxyCodeLine{00818\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 7,\ dst\ +=\ 2)\ \{}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[3];}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBC\ =\ src[4];}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[5];}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[6];}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.247384623f)\ +\ (srcFC\ *\ 0.174461529f)\ +\ (srcLFE\ *\ 0.076923080f)\ +\ (srcBC\ *\ 0.174461529f)\ +\ (srcSL\ *\ 0.226153851f)\ +\ (srcSR\ *\ 0.100615382f);}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.247384623f)\ +\ (srcFC\ *\ 0.174461529f)\ +\ (srcLFE\ *\ 0.076923080f)\ +\ (srcBC\ *\ 0.174461529f)\ +\ (srcSL\ *\ 0.100615382f)\ +\ (srcSR\ *\ 0.226153851f);}
+\DoxyCodeLine{00826\ \ \ \ \ \}}
+\DoxyCodeLine{00827\ }
+\DoxyCodeLine{00828\ \}}
+\DoxyCodeLine{00829\ }
+\DoxyCodeLine{00830\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert61To21(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00831\ \{}
+\DoxyCodeLine{00832\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00833\ }
+\DoxyCodeLine{00834\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}6.1"{}},\ \textcolor{stringliteral}{"{}2.1"{}});}
+\DoxyCodeLine{00835\ }
+\DoxyCodeLine{00836\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 7,\ dst\ +=\ 3)\ \{}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBC\ =\ src[4];}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[5];}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[6];}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.268000007f)\ +\ (srcFC\ *\ 0.188999996f)\ +\ (srcBC\ *\ 0.188999996f)\ +\ (srcSL\ *\ 0.245000005f)\ +\ (srcSR\ *\ 0.108999997f);}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.268000007f)\ +\ (srcFC\ *\ 0.188999996f)\ +\ (srcBC\ *\ 0.188999996f)\ +\ (srcSL\ *\ 0.108999997f)\ +\ (srcSR\ *\ 0.245000005f);}
+\DoxyCodeLine{00843\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00844\ \ \ \ \ \}}
+\DoxyCodeLine{00845\ }
+\DoxyCodeLine{00846\ \}}
+\DoxyCodeLine{00847\ }
+\DoxyCodeLine{00848\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert61ToQuad(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00849\ \{}
+\DoxyCodeLine{00850\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00851\ }
+\DoxyCodeLine{00852\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}6.1"{}},\ \textcolor{stringliteral}{"{}quad"{}});}
+\DoxyCodeLine{00853\ }
+\DoxyCodeLine{00854\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 7,\ dst\ +=\ 4)\ \{}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[3];}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBC\ =\ src[4];}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[5];}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[6];}
+\DoxyCodeLine{00860\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.463679999f)\ +\ (srcFC\ *\ 0.327360004f)\ +\ (srcLFE\ *\ 0.040000003f)\ +\ (srcSL\ *\ 0.168960005f);}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.463679999f)\ +\ (srcFC\ *\ 0.327360004f)\ +\ (srcLFE\ *\ 0.040000003f)\ +\ (srcSR\ *\ 0.168960005f);}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcLFE\ *\ 0.040000003f)\ +\ (srcBC\ *\ 0.327360004f)\ +\ (srcSL\ *\ 0.431039989f);}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcLFE\ *\ 0.040000003f)\ +\ (srcBC\ *\ 0.327360004f)\ +\ (srcSR\ *\ 0.431039989f);}
+\DoxyCodeLine{00864\ \ \ \ \ \}}
+\DoxyCodeLine{00865\ }
+\DoxyCodeLine{00866\ \}}
+\DoxyCodeLine{00867\ }
+\DoxyCodeLine{00868\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert61To41(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00869\ \{}
+\DoxyCodeLine{00870\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00871\ }
+\DoxyCodeLine{00872\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}6.1"{}},\ \textcolor{stringliteral}{"{}4.1"{}});}
+\DoxyCodeLine{00873\ }
+\DoxyCodeLine{00874\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 7,\ dst\ +=\ 5)\ \{}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBC\ =\ src[4];}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[5];}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[6];}
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.483000010f)\ +\ (srcFC\ *\ 0.340999991f)\ +\ (srcSL\ *\ 0.175999999f);}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.483000010f)\ +\ (srcFC\ *\ 0.340999991f)\ +\ (srcSR\ *\ 0.175999999f);}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcBC\ *\ 0.340999991f)\ +\ (srcSL\ *\ 0.449000001f);}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcBC\ *\ 0.340999991f)\ +\ (srcSR\ *\ 0.449000001f);}
+\DoxyCodeLine{00884\ \ \ \ \ \}}
+\DoxyCodeLine{00885\ }
+\DoxyCodeLine{00886\ \}}
+\DoxyCodeLine{00887\ }
+\DoxyCodeLine{00888\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert61To51(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00889\ \{}
+\DoxyCodeLine{00890\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00891\ }
+\DoxyCodeLine{00892\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}6.1"{}},\ \textcolor{stringliteral}{"{}5.1"{}});}
+\DoxyCodeLine{00893\ }
+\DoxyCodeLine{00894\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 7,\ dst\ +=\ 6)\ \{}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBC\ =\ src[4];}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[5];}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[6];}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.611000001f)\ +\ (srcSL\ *\ 0.223000005f);}
+\DoxyCodeLine{00899\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.611000001f)\ +\ (srcSR\ *\ 0.223000005f);}
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[2]\ *\ 0.611000001f);}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcBC\ *\ 0.432000011f)\ +\ (srcSL\ *\ 0.568000019f);}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcBC\ *\ 0.432000011f)\ +\ (srcSR\ *\ 0.568000019f);}
+\DoxyCodeLine{00904\ \ \ \ \ \}}
+\DoxyCodeLine{00905\ }
+\DoxyCodeLine{00906\ \}}
+\DoxyCodeLine{00907\ }
+\DoxyCodeLine{00908\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert61To71(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00909\ \{}
+\DoxyCodeLine{00910\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00911\ }
+\DoxyCodeLine{00912\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}6.1"{}},\ \textcolor{stringliteral}{"{}7.1"{}});}
+\DoxyCodeLine{00913\ }
+\DoxyCodeLine{00914\ \ \ \ \ \textcolor{comment}{//\ convert\ backwards,\ since\ output\ is\ growing\ in-\/place.}}
+\DoxyCodeLine{00915\ \ \ \ \ src\ +=\ (num\_frames-\/1)\ *\ 7;}
+\DoxyCodeLine{00916\ \ \ \ \ dst\ +=\ (num\_frames-\/1)\ *\ 8;}
+\DoxyCodeLine{00917\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ -\/=\ 7,\ dst\ -\/=\ 8)\ \{}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBC\ =\ src[4];}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ dst[7]\ \textcolor{comment}{/*\ SR\ */}\ =\ src[6];}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SL\ */}\ =\ src[5];}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcBC\ *\ 0.707000017f);}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcBC\ *\ 0.707000017f);}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00924\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ src[2];}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ src[1];}
+\DoxyCodeLine{00926\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ src[0];}
+\DoxyCodeLine{00927\ \ \ \ \ \}}
+\DoxyCodeLine{00928\ }
+\DoxyCodeLine{00929\ \}}
+\DoxyCodeLine{00930\ }
+\DoxyCodeLine{00931\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert71ToMono(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00932\ \{}
+\DoxyCodeLine{00933\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00934\ }
+\DoxyCodeLine{00935\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}7.1"{}},\ \textcolor{stringliteral}{"{}mono"{}});}
+\DoxyCodeLine{00936\ }
+\DoxyCodeLine{00937\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 8,\ dst++)\ \{}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[0]\ *\ 0.125125006f)\ +\ (src[1]\ *\ 0.125125006f)\ +\ (src[2]\ *\ 0.125125006f)\ +\ (src[3]\ *\ 0.125000000f)\ +\ (src[4]\ *\ 0.125125006f)\ +\ (src[5]\ *\ 0.125125006f)\ +\ (src[6]\ *\ 0.125125006f)\ +\ (src[7]\ *\ 0.125125006f);}
+\DoxyCodeLine{00939\ \ \ \ \ \}}
+\DoxyCodeLine{00940\ }
+\DoxyCodeLine{00941\ \}}
+\DoxyCodeLine{00942\ }
+\DoxyCodeLine{00943\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert71ToStereo(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00944\ \{}
+\DoxyCodeLine{00945\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00946\ }
+\DoxyCodeLine{00947\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}7.1"{}},\ \textcolor{stringliteral}{"{}stereo"{}});}
+\DoxyCodeLine{00948\ }
+\DoxyCodeLine{00949\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 8,\ dst\ +=\ 2)\ \{}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[3];}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[4];}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[5];}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[6];}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[7];}
+\DoxyCodeLine{00956\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.211866662f)\ +\ (srcFC\ *\ 0.150266662f)\ +\ (srcLFE\ *\ 0.066666670f)\ +\ (srcBL\ *\ 0.181066677f)\ +\ (srcBR\ *\ 0.111066669f)\ +\ (srcSL\ *\ 0.194133341f)\ +\ (srcSR\ *\ 0.085866667f);}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.211866662f)\ +\ (srcFC\ *\ 0.150266662f)\ +\ (srcLFE\ *\ 0.066666670f)\ +\ (srcBL\ *\ 0.111066669f)\ +\ (srcBR\ *\ 0.181066677f)\ +\ (srcSL\ *\ 0.085866667f)\ +\ (srcSR\ *\ 0.194133341f);}
+\DoxyCodeLine{00958\ \ \ \ \ \}}
+\DoxyCodeLine{00959\ }
+\DoxyCodeLine{00960\ \}}
+\DoxyCodeLine{00961\ }
+\DoxyCodeLine{00962\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert71To21(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00963\ \{}
+\DoxyCodeLine{00964\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00965\ }
+\DoxyCodeLine{00966\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}7.1"{}},\ \textcolor{stringliteral}{"{}2.1"{}});}
+\DoxyCodeLine{00967\ }
+\DoxyCodeLine{00968\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 8,\ dst\ +=\ 3)\ \{}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[4];}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[5];}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[6];}
+\DoxyCodeLine{00973\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[7];}
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.226999998f)\ +\ (srcFC\ *\ 0.160999998f)\ +\ (srcBL\ *\ 0.194000006f)\ +\ (srcBR\ *\ 0.119000003f)\ +\ (srcSL\ *\ 0.208000004f)\ +\ (srcSR\ *\ 0.092000000f);}
+\DoxyCodeLine{00975\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.226999998f)\ +\ (srcFC\ *\ 0.160999998f)\ +\ (srcBL\ *\ 0.119000003f)\ +\ (srcBR\ *\ 0.194000006f)\ +\ (srcSL\ *\ 0.092000000f)\ +\ (srcSR\ *\ 0.208000004f);}
+\DoxyCodeLine{00976\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{00977\ \ \ \ \ \}}
+\DoxyCodeLine{00978\ }
+\DoxyCodeLine{00979\ \}}
+\DoxyCodeLine{00980\ }
+\DoxyCodeLine{00981\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert71ToQuad(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{00982\ \{}
+\DoxyCodeLine{00983\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{00984\ }
+\DoxyCodeLine{00985\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}7.1"{}},\ \textcolor{stringliteral}{"{}quad"{}});}
+\DoxyCodeLine{00986\ }
+\DoxyCodeLine{00987\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 8,\ dst\ +=\ 4)\ \{}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcLFE\ =\ src[3];}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[6];}
+\DoxyCodeLine{00991\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[7];}
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.466344833f)\ +\ (srcFC\ *\ 0.329241365f)\ +\ (srcLFE\ *\ 0.034482758f)\ +\ (srcSL\ *\ 0.169931039f);}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.466344833f)\ +\ (srcFC\ *\ 0.329241365f)\ +\ (srcLFE\ *\ 0.034482758f)\ +\ (srcSR\ *\ 0.169931039f);}
+\DoxyCodeLine{00994\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ BL\ */}\ =\ (srcLFE\ *\ 0.034482758f)\ +\ (src[4]\ *\ 0.466344833f)\ +\ (srcSL\ *\ 0.433517247f);}
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BR\ */}\ =\ (srcLFE\ *\ 0.034482758f)\ +\ (src[5]\ *\ 0.466344833f)\ +\ (srcSR\ *\ 0.433517247f);}
+\DoxyCodeLine{00996\ \ \ \ \ \}}
+\DoxyCodeLine{00997\ }
+\DoxyCodeLine{00998\ \}}
+\DoxyCodeLine{00999\ }
+\DoxyCodeLine{01000\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert71To41(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{01001\ \{}
+\DoxyCodeLine{01002\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{01003\ }
+\DoxyCodeLine{01004\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}7.1"{}},\ \textcolor{stringliteral}{"{}4.1"{}});}
+\DoxyCodeLine{01005\ }
+\DoxyCodeLine{01006\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 8,\ dst\ +=\ 5)\ \{}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcFC\ =\ src[2];}
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[6];}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[7];}
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.483000010f)\ +\ (srcFC\ *\ 0.340999991f)\ +\ (srcSL\ *\ 0.175999999f);}
+\DoxyCodeLine{01011\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.483000010f)\ +\ (srcFC\ *\ 0.340999991f)\ +\ (srcSR\ *\ 0.175999999f);}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ BL\ */}\ =\ (src[4]\ *\ 0.483000010f)\ +\ (srcSL\ *\ 0.449000001f);}
+\DoxyCodeLine{01014\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BR\ */}\ =\ (src[5]\ *\ 0.483000010f)\ +\ (srcSR\ *\ 0.449000001f);}
+\DoxyCodeLine{01015\ \ \ \ \ \}}
+\DoxyCodeLine{01016\ }
+\DoxyCodeLine{01017\ \}}
+\DoxyCodeLine{01018\ }
+\DoxyCodeLine{01019\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert71To51(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{01020\ \{}
+\DoxyCodeLine{01021\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{01022\ }
+\DoxyCodeLine{01023\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}7.1"{}},\ \textcolor{stringliteral}{"{}5.1"{}});}
+\DoxyCodeLine{01024\ }
+\DoxyCodeLine{01025\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 8,\ dst\ +=\ 6)\ \{}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSL\ =\ src[6];}
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcSR\ =\ src[7];}
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.518000007f)\ +\ (srcSL\ *\ 0.188999996f);}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.518000007f)\ +\ (srcSR\ *\ 0.188999996f);}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[2]\ *\ 0.518000007f);}
+\DoxyCodeLine{01031\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{01032\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BL\ */}\ =\ (src[4]\ *\ 0.518000007f)\ +\ (srcSL\ *\ 0.481999993f);}
+\DoxyCodeLine{01033\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ BR\ */}\ =\ (src[5]\ *\ 0.518000007f)\ +\ (srcSR\ *\ 0.481999993f);}
+\DoxyCodeLine{01034\ \ \ \ \ \}}
+\DoxyCodeLine{01035\ }
+\DoxyCodeLine{01036\ \}}
+\DoxyCodeLine{01037\ }
+\DoxyCodeLine{01038\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ SDL\_Convert71To61(\textcolor{keywordtype}{float}\ *dst,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *src,\ \textcolor{keywordtype}{int}\ num\_frames)}
+\DoxyCodeLine{01039\ \{}
+\DoxyCodeLine{01040\ \ \ \ \ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{01041\ }
+\DoxyCodeLine{01042\ \ \ \ \ LOG\_DEBUG\_AUDIO\_CONVERT(\textcolor{stringliteral}{"{}7.1"{}},\ \textcolor{stringliteral}{"{}6.1"{}});}
+\DoxyCodeLine{01043\ }
+\DoxyCodeLine{01044\ \ \ \ \ \textcolor{keywordflow}{for}\ (i\ =\ num\_frames;\ i;\ i-\/-\/,\ src\ +=\ 8,\ dst\ +=\ 7)\ \{}
+\DoxyCodeLine{01045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBL\ =\ src[4];}
+\DoxyCodeLine{01046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ srcBR\ =\ src[5];}
+\DoxyCodeLine{01047\ \ \ \ \ \ \ \ \ dst[0]\ \textcolor{comment}{/*\ FL\ */}\ =\ (src[0]\ *\ 0.541000009f);}
+\DoxyCodeLine{01048\ \ \ \ \ \ \ \ \ dst[1]\ \textcolor{comment}{/*\ FR\ */}\ =\ (src[1]\ *\ 0.541000009f);}
+\DoxyCodeLine{01049\ \ \ \ \ \ \ \ \ dst[2]\ \textcolor{comment}{/*\ FC\ */}\ =\ (src[2]\ *\ 0.541000009f);}
+\DoxyCodeLine{01050\ \ \ \ \ \ \ \ \ dst[3]\ \textcolor{comment}{/*\ LFE\ */}\ =\ src[3];}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ dst[4]\ \textcolor{comment}{/*\ BC\ */}\ =\ (srcBL\ *\ 0.287999988f)\ +\ (srcBR\ *\ 0.287999988f);}
+\DoxyCodeLine{01052\ \ \ \ \ \ \ \ \ dst[5]\ \textcolor{comment}{/*\ SL\ */}\ =\ (srcBL\ *\ 0.458999991f)\ +\ (src[6]\ *\ 0.541000009f);}
+\DoxyCodeLine{01053\ \ \ \ \ \ \ \ \ dst[6]\ \textcolor{comment}{/*\ SR\ */}\ =\ (srcBR\ *\ 0.458999991f)\ +\ (src[7]\ *\ 0.541000009f);}
+\DoxyCodeLine{01054\ \ \ \ \ \}}
+\DoxyCodeLine{01055\ }
+\DoxyCodeLine{01056\ \}}
+\DoxyCodeLine{01057\ }
+\DoxyCodeLine{01058\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ SDL\_AudioChannelConverter\ channel\_converters[8][8]\ =\ \{\ \ \ \textcolor{comment}{//\ [from][to]}}
+\DoxyCodeLine{01059\ \ \ \ \ \{\ NULL,\ SDL\_ConvertMonoToStereo,\ SDL\_ConvertMonoTo21,\ SDL\_ConvertMonoToQuad,\ SDL\_ConvertMonoTo41,\ SDL\_ConvertMonoTo51,\ SDL\_ConvertMonoTo61,\ SDL\_ConvertMonoTo71\ \},}
+\DoxyCodeLine{01060\ \ \ \ \ \{\ SDL\_ConvertStereoToMono,\ NULL,\ SDL\_ConvertStereoTo21,\ SDL\_ConvertStereoToQuad,\ SDL\_ConvertStereoTo41,\ SDL\_ConvertStereoTo51,\ SDL\_ConvertStereoTo61,\ SDL\_ConvertStereoTo71\ \},}
+\DoxyCodeLine{01061\ \ \ \ \ \{\ SDL\_Convert21ToMono,\ SDL\_Convert21ToStereo,\ NULL,\ SDL\_Convert21ToQuad,\ SDL\_Convert21To41,\ SDL\_Convert21To51,\ SDL\_Convert21To61,\ SDL\_Convert21To71\ \},}
+\DoxyCodeLine{01062\ \ \ \ \ \{\ SDL\_ConvertQuadToMono,\ SDL\_ConvertQuadToStereo,\ SDL\_ConvertQuadTo21,\ NULL,\ SDL\_ConvertQuadTo41,\ SDL\_ConvertQuadTo51,\ SDL\_ConvertQuadTo61,\ SDL\_ConvertQuadTo71\ \},}
+\DoxyCodeLine{01063\ \ \ \ \ \{\ SDL\_Convert41ToMono,\ SDL\_Convert41ToStereo,\ SDL\_Convert41To21,\ SDL\_Convert41ToQuad,\ NULL,\ SDL\_Convert41To51,\ SDL\_Convert41To61,\ SDL\_Convert41To71\ \},}
+\DoxyCodeLine{01064\ \ \ \ \ \{\ SDL\_Convert51ToMono,\ SDL\_Convert51ToStereo,\ SDL\_Convert51To21,\ SDL\_Convert51ToQuad,\ SDL\_Convert51To41,\ NULL,\ SDL\_Convert51To61,\ SDL\_Convert51To71\ \},}
+\DoxyCodeLine{01065\ \ \ \ \ \{\ SDL\_Convert61ToMono,\ SDL\_Convert61ToStereo,\ SDL\_Convert61To21,\ SDL\_Convert61ToQuad,\ SDL\_Convert61To41,\ SDL\_Convert61To51,\ NULL,\ SDL\_Convert61To71\ \},}
+\DoxyCodeLine{01066\ \ \ \ \ \{\ SDL\_Convert71ToMono,\ SDL\_Convert71ToStereo,\ SDL\_Convert71To21,\ SDL\_Convert71ToQuad,\ SDL\_Convert71To41,\ SDL\_Convert71To51,\ SDL\_Convert71To61,\ NULL\ \}}
+\DoxyCodeLine{01067\ \};}
+\DoxyCodeLine{01068\ }
+
+\end{DoxyCode}

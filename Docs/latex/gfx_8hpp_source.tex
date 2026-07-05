@@ -1,0 +1,65 @@
+\doxysection{gfx.\+hpp}
+\hypertarget{gfx_8hpp_source}{}\label{gfx_8hpp_source}\index{MonoEngine/thirdparty/tracy/examples/dyna/src/gfx.hpp@{MonoEngine/thirdparty/tracy/examples/dyna/src/gfx.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <glad/gl.h>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }dyna}
+\DoxyCodeLine{00006\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Screen\ dimensions,\ matching\ the\ original\ 13x11\ grid\ of\ 64px\ tiles.}}
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }Gfx}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ w\ =\ 832;}
+\DoxyCodeLine{00012\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ h\ =\ 704;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keywordtype}{void}\ clear();}
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ swap();}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ Drawing\ primitives\ ported\ from\ gfx.cs.\ They\ render\ with\ the\ currently}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ bound\ texture\ (see\ Texture::bind)\ and\ the\ current\ alpha.\ The\ coordinate}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ system\ is\ bottom-\/left\ origin\ with\ y\ growing\ upward,\ exactly\ as\ the\ C\#}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ gluOrtho2D\ setup;\ draw\_sprite/draw\_square\ take\ y\ measured\ from\ the\ top}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ and\ flip\ internally,\ so\ game-\/side\ coordinates\ stay\ top-\/left\ based.}}
+\DoxyCodeLine{00022\ \textcolor{keywordtype}{void}\ alpha(\ \textcolor{keywordtype}{float}\ a\ );}
+\DoxyCodeLine{00023\ \textcolor{keywordtype}{void}\ draw\_sprite(\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y\ );\ \ \ \textcolor{comment}{//\ pixel\ position\ of\ the\ top-\/left\ corner}}
+\DoxyCodeLine{00024\ \textcolor{keywordtype}{void}\ draw\_square(\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y\ );\ \ \ \textcolor{comment}{//\ grid\ position\ (multiplied\ by\ 64)}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ A\ single\ textured\ quad\ given\ four\ explicit\ (position,\ texcoord)\ corners,}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ used\ by\ the\ menu/help\ screens\ which\ sample\ rotated\ regions\ of\ the\ atlas.}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdyna_1_1_gfx_1_1_vertex}{Vertex}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{float}\ x,\ y,\ u,\ v;}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ \textcolor{keywordtype}{void}\ draw\_quad(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdyna_1_1_gfx_1_1_vertex}{Vertex}}\ corners[4]\ );}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keywordtype}{void}\ show\_help();}
+\DoxyCodeLine{00035\ \textcolor{keywordtype}{void}\ show\_menu();}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ Renderer\ back\ end\ shared\ by\ the\ texture\ loaders.}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{namespace\ }Render}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \textcolor{keywordtype}{bool}\ init();\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ shaders\ +\ streaming\ VBO/VAO}}
+\DoxyCodeLine{00042\ \textcolor{keywordtype}{void}\ shutdown();\ \ \ \ \ \textcolor{comment}{//\ delete\ the\ program\ and\ buffers}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{comment}{//\ Select\ the\ array\ texture\ (and\ layer\ within\ it)\ used\ by\ subsequent\ draws.}}
+\DoxyCodeLine{00045\ \textcolor{keywordtype}{void}\ use\_texture(\ GLuint\ tex,\ \textcolor{keywordtype}{int}\ layer\ );}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ Upload\ \`{}layers`\ tightly\ packed\ RGBA8\ images\ of\ size\ w*h\ as\ one}}
+\DoxyCodeLine{00048\ \textcolor{comment}{//\ GL\_TEXTURE\_2D\_ARRAY\ and\ return\ its\ name\ (0\ on\ failure).}}
+\DoxyCodeLine{00049\ GLuint\ make\_texture(\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ \textcolor{keywordtype}{int}\ layers,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ rgba\ );}
+\DoxyCodeLine{00050\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ One-\/time\ startup/shutdown,\ ported\ from\ the\ Init\ class\ in\ gfx.cs.}}
+\DoxyCodeLine{00053\ \textcolor{keyword}{namespace\ }Init}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \textcolor{keywordtype}{bool}\ all();\ \ \ \ \ \ \ \ \textcolor{comment}{//\ SDL,\ GL\ context,\ renderer,\ textures,\ timer}}
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{void}\ shutdown();}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \}}
+
+\end{DoxyCode}

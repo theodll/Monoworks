@@ -1,0 +1,67 @@
+\doxysection{SDL\+\_\+sysjoystick\+\_\+c.\+h}
+\hypertarget{emscripten_2_s_d_l__sysjoystick__c_8h_source}{}\label{emscripten_2_s_d_l__sysjoystick__c_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/emscripten/SDL\_sysjoystick\_c.h@{MonoRuntime/extern/sdl/src/joystick/emscripten/SDL\_sysjoystick\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifdef\ SDL\_JOYSTICK\_EMSCRIPTEN}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysjoystick.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <emscripten/html5.h>}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ A\ linked\ list\ of\ available\ joysticks}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_joylist\_item}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{int}\ index;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{char}\ *mapping;}
+\DoxyCodeLine{00035\ \ \ \ \ SDL\_JoystickID\ device\_instance;}
+\DoxyCodeLine{00036\ \ \ \ \ SDL\_Joystick\ *joystick;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{int}\ first\_hat\_button;}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ first\_trigger\_button;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{bool}\ triggers\_are\_buttons;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{int}\ nhats;}
+\DoxyCodeLine{00041\ \ \ \ \ SDL\_GUID\ guid;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ nbuttons;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{int}\ naxes;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{double}\ timestamp;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{double}\ \doxymbox{\hyperlink{group__ext__quaternion__trigonometric_gac2b65b953ea72827e172fc39035964a7}{axis}}[64];\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ !!!\ FIXME:\ don't\ hardcode\ 64\ on\ all\ of\ these.}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{double}\ analogButton[64];}
+\DoxyCodeLine{00047\ \ \ \ \ EM\_BOOL\ digitalButton[64];}
+\DoxyCodeLine{00048\ \ \ \ \ Uint8\ hat;\ \ \textcolor{comment}{//\ there\ is\ (currently)\ only\ ever\ one\ of\ these,\ faked\ from\ the\ d-\/pad\ buttons.}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{bool}\ rumble\_available;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ trigger\_rumble\_available;}
+\DoxyCodeLine{00051\ \ \ \ \ Uint16\ weak\_magnitude\_rumble;}
+\DoxyCodeLine{00052\ \ \ \ \ Uint16\ strong\_magnitude\_rumble;}
+\DoxyCodeLine{00053\ \ \ \ \ Uint16\ left\_trigger\_rumble;}
+\DoxyCodeLine{00054\ \ \ \ \ Uint16\ right\_trigger\_rumble;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_joylist\_item\ *next;}
+\DoxyCodeLine{00057\ \}\ SDL\_joylist\_item;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ SDL\_joylist\_item\ \doxymbox{\hyperlink{structjoystick__hwdata}{joystick\_hwdata}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_JOYSTICK\_EMSCRIPTEN}}
+
+\end{DoxyCode}

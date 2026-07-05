@@ -1,0 +1,69 @@
+\chapter{Program optimization }
+\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization}{}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization}\index{Program optimization@{Program optimization}}
+\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1124}%
+\Hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1124}%
+
+
+The user may ask you to optimize a particular functionality, routine, or code fragment. While doing so, the user may include attachments of various types:\+
+
+
+\begin{DoxyItemize}
+\item Source code listings, with or without per-\/line performance data.
+\item A machine instructions list (disassembly of binary code), accompanied by per-\/instruction performance data.
+\end{DoxyItemize}
+
+You should try to find where the optimization opportunities are. Note that some code may already be optimized very well, and there may be little or nothing left to gain.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1125}{}\doxysection{\texorpdfstring{Symbols}{Symbols}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1125}
+When a source code function is compiled, the compiler may inline multiple auxiliary functions into the produced machine code block. This block is called a {\itshape symbol}. The symbol may contain multiple source-\/level functions (some of which may be repeated multiple times), which may come from multiple source files.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1126}{}\doxysection{\texorpdfstring{Assembly listings}{Assembly listings}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1126}
+The assembly instruction listing of a symbol must be mapped to the source code. The assembly attachment contains the code itself, and an array of source files named {\ttfamily files}. The format of an assembly line is:\+
+
+file\+Idx:\+line:\+offset:\+cost:\+call\+Cost:\+assembly
+
+To identify the source file name of any assembly instruction, you must access {\ttfamily files\+[file\+Idx]\+}. The {\ttfamily file\+Idx} value is strictly internal and should never be presented to the user. Always show the source file name and line number in your answers. Since symbols can be constructed from multiple source files, you must specify both the source file name and line number, or user won\textquotesingle{}t know which file you refer to.
+
+The {\ttfamily offset} value represents the byte offset at which the machine instruction lies in the symbol code.
+
+The {\ttfamily cost} value shows how much time the CPU spent executing the given machine instruction. If the cost is not present, the profiler recorded no activity for the given instruction. The {\ttfamily call\+Cost} value shows how much time was spent executing the called external functions. The cost values are percentages relative to the total execution cost of an entire symbol, including external function calls.
+
+The {\ttfamily assembly} value is the actual disassembled machine code. It may also contain a comment with:\+
+\begin{DoxyItemize}
+\item Local jump target, {\ttfamily label}, for example {\ttfamily .L6}.
+\item Name of the external function call, {\ttfamily destination}.
+\end{DoxyItemize}\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1127}{}\doxysubsection{\texorpdfstring{Measurement skid}{Measurement skid}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1127}
+The measurements present in the attachment may be slightly imprecise due to the way the profiler infrastructure or the CPU works, especially considering out-\/of-\/order architectures. As a result, some cost value may be wrongly attributed to the instruction in the immediate vicinity of the instruction that produced the cost.
+
+Take the following example:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{5\%\ mov\ rax,\ [rbx]}
+\DoxyCodeLine{40\%\ inc\ rax}
+
+\end{DoxyCode}
+
+
+The first instruction that loads the value from memory is the high-\/latency one, but it can be dispatched for execution fairly quickly. The second instruction, which needs the output of the first instruction, is actually very fast to execute but is blocked by the slow memory access of the first instruction, taking the majority of the cost on itself.
+
+A careful investigation of the cost attribution is thus needed.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1128}{}\doxysection{\texorpdfstring{Symbols vs source code}{Symbols vs source code}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1128}
+Analyzing a user program can be done in two complementary ways.
+
+
+\begin{DoxyEnumerate}
+\item You can retrieve the function source code and look at what it does. This is enough for simple checks.
+\item Alternatively, you can get the disassembly of the binary code of a symbol. This method of analysis contains source line information, which can be used to match the assembly against the source code, as well as CPU usage data, allowing you to see which individual assembly instructions have the most performance cost associated with them. Doing this deep dive is important for thorough analysis of code performance characteristics.
+\end{DoxyEnumerate}\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1129}{}\doxysection{\texorpdfstring{Which code paths are important}{Which code paths are important}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1129}
+When looking at code, you may find many places that use inefficient algorithms or implementations. While pointing out such cases may sometimes be useful, you must check whether the problematic code is actually on the hot path, as indicated by the profiling data included with the disassembly. The profiling data the user provides are highly targeted at specific workflows, and the primary optimization target should be the code that was actually executing, not something that could run theoretically. Avoid including optimization advice for code paths that might run but did not.\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1130}{}\doxysection{\texorpdfstring{Context is important}{Context is important}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1130}
+When reasoning about the performance of a symbol, you should look at the environment where it is used. You can do this by:\+
+\begin{DoxyEnumerate}
+\item Following function calls and inspecting the source code and disassembly performance data. Maybe there\textquotesingle{}s some important insight that shows an inefficiency in how the symbol is used?
+\item Looking at the entry call stacks, which show how the symbol is reached in the program. Maybe the key to optimization is not the symbol itself but how it is called by the parent function?
+\end{DoxyEnumerate}\hypertarget{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1131}{}\doxysection{\texorpdfstring{General optimization procedure}{General optimization procedure}}\label{md__mono_engine_2thirdparty_2tracy_2profiler_2src_2llm_2skill_8optimization_autotoc_md1131}
+
+\begin{DoxyEnumerate}
+\item Start by mapping the assembly instructions to the source code. All reasoning should be performed with source code first. The assembly can only be used as a supplementary source.
+\item Analyze the available data, looking for where the majority of the run time is spent. Always look at the code as a whole. Do not stop after finding a bunch of interesting spots.
+\item Consider the external calls the function is making. If appropriate, look at the performance characteristics of the called code.
+\item Figure out what algorithms are in use, how the data is structured, how it flows, and reason about trade-\/offs taken.
+\item Determine whether the code can be made to perform better. Note that some code will already be optimal, despite having hot spots.
+\item Formulate the optimization opportunities and present them to the user. Tell the user where the problems are, what causes them, and the potential solutions.
+\item Do not provide concrete speedup percentages. It is only possible to know how much faster the code is by measuring it after the changes. You can\textquotesingle{}t do that. 
+\end{DoxyEnumerate}

@@ -1,0 +1,119 @@
+\doxysection{iteration.\+inl}
+\hypertarget{iteration_8inl_source}{}\label{iteration_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/iteration.inl@{MonoEngine/thirdparty/glm/glm/gtx/iteration.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00002\ \{}
+\DoxyCodeLine{00003\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ \ \ \ namespace\ details\ \{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ \ \ \ \ \ \ template<typename\ T,\ glm::length\_t\ L>}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ \ \ \ \ \ \ struct\ known\_length\_iterator;}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00013\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T*\ begin(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&v.x;}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00017\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T*\ begin(\doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&m[0].x;}
+\DoxyCodeLine{00019\ \ \ \ \ \}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00021\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T*\ begin(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&q[0];}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00025\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{const}\ T*\ begin(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&v.x;}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00029\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{const}\ T*\ begin(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&m[0].x;}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00033\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{const}\ T*\ begin(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&q[0];}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00038\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T*\ end(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&v.x)\ +\ L;}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00042\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T*\ end(\doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&m[0].x)\ +\ C*R;}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00046\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ T*\ end(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&q[0])\ +\ 4;}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00050\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{const}\ T*\ end(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&v.x)\ +\ L;}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00054\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{const}\ T*\ end(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&m[0].x)\ +\ C*R;}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00058\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{const}\ T*\ end(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&q[0])\ +\ 4;}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ Reverse\ iteration}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ rbegin,rend}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00065\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<T*>\ rbegin(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<T*>(end(v));}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00069\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<T*>\ rbegin(\doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<T*>(end(m));}
+\DoxyCodeLine{00071\ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00073\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<T*>\ rbegin(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<T*>(end(q));}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00077\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<const\ T*>\ rbegin(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<const\ T*>(end(v));}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00081\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<const\ T*>\ rbegin(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<const\ T*>(end(m));}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00085\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<const\ T*>\ rbegin(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<const\ T*>(end(q));}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00090\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<T*>\ rend(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<T*>(begin(v));}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00094\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<T*>\ rend(\doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<T*>(begin(m));}
+\DoxyCodeLine{00096\ \ \ \ \ \}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00098\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<T*>\ rend(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<T*>(begin(q));}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00102\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<const\ T*>\ rend(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,T,Q>}}\&\ v)\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<const\ T*>(begin(v));}
+\DoxyCodeLine{00104\ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ C,length\_t\ R,\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00106\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<const\ T*>\ rend(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<C,R,T,Q>}}\&\ m)\ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<const\ T*>(begin(m));}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,qualifier\ Q>}
+\DoxyCodeLine{00110\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ std::reverse\_iterator<const\ T*>\ rend(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,Q>}}\&\ q)\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::reverse\_iterator<const\ T*>(begin(q));}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00116\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

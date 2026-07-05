@@ -1,0 +1,313 @@
+\doxysection{SDL\+\_\+waylandevents\+\_\+c.\+h}
+\hypertarget{_s_d_l__waylandevents__c_8h_source}{}\label{_s_d_l__waylandevents__c_8h_source}\index{MonoRuntime/extern/sdl/src/video/wayland/SDL\_waylandevents\_c.h@{MonoRuntime/extern/sdl/src/video/wayland/SDL\_waylandevents\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_waylandevents\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_waylandevents\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../../events/SDL\_keymap\_c.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../../events/SDL\_mouse\_c.h"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../../events/SDL\_pen\_c.h"{}}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#include\ "{}SDL\_waylandvideo.h"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ "{}SDL\_waylandwindow.h"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}SDL\_waylanddatamanager.h"{}}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{enum}\ SDL\_WaylandAxisEvent}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ SDL\_WAYLAND\_AXIS\_EVENT\_CONTINUOUS\ =\ 0,}
+\DoxyCodeLine{00038\ \ \ \ \ SDL\_WAYLAND\_AXIS\_EVENT\_DISCRETE,}
+\DoxyCodeLine{00039\ \ \ \ \ SDL\_WAYLAND\_AXIS\_EVENT\_VALUE120}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ Sint32\ repeat\_rate;\ \ \ \ \ \textcolor{comment}{//\ Repeat\ rate\ in\ range\ of\ [1,\ 1000]\ character(s)\ per\ second}}
+\DoxyCodeLine{00045\ \ \ \ \ Sint32\ repeat\_delay\_ms;\ \textcolor{comment}{//\ Time\ to\ first\ repeat\ event\ in\ milliseconds}}
+\DoxyCodeLine{00046\ \ \ \ \ Uint32\ keyboard\_id;\ \ \ \ \ \textcolor{comment}{//\ ID\ of\ the\ source\ keyboard.}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_initialized;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_key\_down;}
+\DoxyCodeLine{00050\ \ \ \ \ Uint32\ key;}
+\DoxyCodeLine{00051\ \ \ \ \ Uint32\ wl\_press\_time\_ms;\ \ \textcolor{comment}{//\ Key\ press\ time\ as\ reported\ by\ the\ Wayland\ API\ in\ milliseconds}}
+\DoxyCodeLine{00052\ \ \ \ \ Uint64\ base\_time\_ns;\ \ \ \ \ \ \textcolor{comment}{//\ Key\ press\ time\ as\ reported\ by\ the\ Wayland\ API\ in\ nanoseconds}}
+\DoxyCodeLine{00053\ \ \ \ \ Uint64\ sdl\_press\_time\_ns;\ \textcolor{comment}{//\ Key\ press\ time\ expressed\ in\ SDL\ ticks}}
+\DoxyCodeLine{00054\ \ \ \ \ Uint64\ next\_repeat\_ns;\ \ \ \ \textcolor{comment}{//\ Next\ repeat\ event\ in\ nanoseconds}}
+\DoxyCodeLine{00055\ \ \ \ \ Uint32\ scancode;}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{char}\ text[8];}
+\DoxyCodeLine{00057\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_keyboard_repeat}{SDL\_WaylandKeyboardRepeat}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_cursor_state}{SDL\_WaylandCursorState}}}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor_data}{SDL\_CursorData}}\ *current\_cursor;}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{struct\ }wp\_cursor\_shape\_device\_v1\ *cursor\_shape;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_surface\ *surface;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{struct\ }wp\_viewport\ *viewport;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{double}\ scale;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ Pointer\ to\ the\ internal\ data\ for\ system\ cursors.}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ *system\_cursor\_handle;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ The\ cursor\ animation\ thread\ lock\ must\ be\ held\ when\ modifying\ this.}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_callback\ *frame\_callback;}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ Uint64\ last\_frame\_callback\_time\_ms;}
+\DoxyCodeLine{00075\ \ \ \ \ Uint32\ current\_frame\_time\_ms;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ 0\ or\ greater\ if\ a\ buffer\ is\ attached,\ -\/1\ if\ in\ the\ reset\ state.}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{int}\ current\_frame;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ SDL\_HitTestResult\ hit\_test\_result;}
+\DoxyCodeLine{00081\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_cursor_state}{SDL\_WaylandCursorState}};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_pen_tool}{SDL\_WaylandPenTool}}\ \ \textcolor{comment}{//\ a\ stylus,\ etc,\ on\ a\ tablet.}}
+\DoxyCodeLine{00084\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ SDL\_PenID\ instance\_id;}
+\DoxyCodeLine{00086\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___pen_info}{SDL\_PenInfo}}\ info;}
+\DoxyCodeLine{00087\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}\ *focus;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_tablet\_tool\_v2\ *wltool;}
+\DoxyCodeLine{00089\ \ \ \ \ Uint32\ proximity\_serial;}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00092\ \ \ \ \ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ axes[SDL\_PEN\_AXIS\_COUNT];}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ Uint32\ axes\_set;}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ WAYLAND\_TABLET\_TOOL\_BUTTON\_NONE\ =\ 0,}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ WAYLAND\_TABLET\_TOOL\_BUTTON\_DOWN,}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ WAYLAND\_TABLET\_TOOL\_BUTTON\_UP}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \}\ buttons[3];}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ WAYLAND\_TABLET\_TOOL\_STATE\_NONE\ =\ 0,}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ WAYLAND\_TABLET\_TOOL\_STATE\_DOWN,}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ WAYLAND\_TABLET\_TOOL\_STATE\_UP}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}\ tool\_state;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ in\_proximity;}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ have\_motion;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ have\_proximity;}
+\DoxyCodeLine{00117\ \ \ \ \ \}\ frame;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_cursor_state}{SDL\_WaylandCursorState}}\ cursor\_state;}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_list\ link;}
+\DoxyCodeLine{00121\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_pen_tool}{SDL\_WaylandPenTool}};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}}}
+\DoxyCodeLine{00124\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display;}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_seat\ *wl\_seat;}
+\DoxyCodeLine{00127\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ *data\_device;}
+\DoxyCodeLine{00128\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}\ *primary\_selection\_device;}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_list\ link;}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ Uint32\ last\_implicit\_grab\_serial;\ \textcolor{comment}{//\ The\ serial\ of\ the\ last\ implicit\ grab\ event\ for\ window\ activation\ and\ selection\ data.}}
+\DoxyCodeLine{00133\ \ \ \ \ Uint32\ registry\_id;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ ID\ of\ the\ Wayland\ seat\ object,}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00136\ \ \ \ \ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_keyboard\ *wl\_keyboard;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_input\_timestamps\_v1\ *timestamps;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_keyboard\_shortcuts\_inhibitor\_v1\ *key\_inhibitor;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}\ *focus;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___keymap}{SDL\_Keymap}}\ **sdl\_keymap;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *current\_locale;}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_keyboard_repeat}{SDL\_WaylandKeyboardRepeat}}\ repeat;}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ Uint64\ highres\_timestamp\_ns;}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ SDL\ modifier\ flags}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ SDL\_Keymod\ pressed\_modifiers;}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ SDL\_Keymod\ locked\_modifiers;}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ SDL\_KeyboardID\ sdl\_id;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_virtual;}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }xkb\_keymap\ *keymap;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }xkb\_state\ *state;}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }xkb\_compose\_table\ *compose\_table;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }xkb\_compose\_state\ *compose\_state;}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ keyboard\ layout\ (aka\ 'group')}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_layout\_index\_t\ num\_layouts;}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_layout\_index\_t\ current\_layout;}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Modifier\ bitshift\ values}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ shift\_mask;}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ ctrl\_mask;}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ alt\_mask;}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ gui\_mask;}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ level3\_mask;}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ level5\_mask;}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ num\_mask;}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ caps\_mask;}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ system\ modifier\ flags}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ wl\_pressed\_modifiers;}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ wl\_latched\_modifiers;}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ xkb\_mod\_mask\_t\ wl\_locked\_modifiers;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \}\ xkb;}
+\DoxyCodeLine{00180\ \ \ \ \ \}\ keyboard;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00183\ \ \ \ \ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_pointer\ *wl\_pointer;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_relative\_pointer\_v1\ *relative\_pointer;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_input\_timestamps\_v1\ *timestamps;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_locked\_pointer\_v1\ *locked\_pointer;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_confined\_pointer\_v1\ *confined\_pointer;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_pointer\_gesture\_pinch\_v1\ *gesture\_pinch;}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}\ *focus;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_surface\ *focus\_surface;}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ According\ to\ the\ spec,\ a\ seat\ can\ only\ have\ one\ active\ gesture\ of\ any\ type\ at\ a\ time.}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}\ *gesture\_focus;}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ Uint64\ highres\_timestamp\_ns;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ Uint32\ enter\_serial;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ SDL\_MouseButtonFlags\ buttons\_pressed;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___point}{SDL\_Point}}\ last\_motion;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_confined;}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ SDL\_MouseID\ sdl\_id;}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Information\ about\ axis\ events\ on\ the\ current\ frame}}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ have\_absolute;}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ have\_relative;}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ have\_axis;}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ Uint32\ buttons\_pressed;}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ Uint32\ buttons\_released;}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wl\_fixed\_t\ sx;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wl\_fixed\_t\ sy;}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ absolute;}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wl\_fixed\_t\ dx;}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wl\_fixed\_t\ dy;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wl\_fixed\_t\ dx\_unaccel;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wl\_fixed\_t\ dy\_unaccel;}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ relative;}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ SDL\_WaylandAxisEvent\ x\_axis\_type;}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ SDL\_WaylandAxisEvent\ y\_axis\_type;}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_MouseWheelDirection\ direction;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ axis;}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_surface\ *enter\_surface;}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_surface\ *leave\_surface;}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Event\ timestamp\ in\ nanoseconds}}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ Uint64\ timestamp\_ns;}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \}\ pending\_frame;}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_cursor_state}{SDL\_WaylandCursorState}}\ cursor\_state;}
+\DoxyCodeLine{00248\ \ \ \ \ \}\ pointer;}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00251\ \ \ \ \ \{}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_touch\ *wl\_touch;}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_input\_timestamps\_v1\ *timestamps;}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ Uint64\ highres\_timestamp\_ns;}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_list\ points;}
+\DoxyCodeLine{00256\ \ \ \ \ \}\ touch;}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00259\ \ \ \ \ \{}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_text\_input\_v3\ *zwp\_text\_input;}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ text\_input\_rect;}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ text\_input\_cursor;}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ enabled;}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_preedit;}
+\DoxyCodeLine{00265\ \ \ \ \ \}\ text\_input;}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00268\ \ \ \ \ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_tablet\_seat\_v2\ *wl\_tablet\_seat;}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }wl\_list\ tool\_list;}
+\DoxyCodeLine{00271\ \ \ \ \ \}\ tablet;}
+\DoxyCodeLine{00272\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}};}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \textcolor{keyword}{extern}\ Uint64\ Wayland\_GetTouchTimestamp(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}}\ *seat,\ Uint32\ wl\_timestamp\_ms);}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_PumpEvents(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00278\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_SendWakeupEvent(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00279\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ Wayland\_WaitEventTimeout(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ Sint64\ timeoutNS);}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayInitInputTimestampManager(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display);}
+\DoxyCodeLine{00282\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayInitCursorShapeManager(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display);}
+\DoxyCodeLine{00283\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayInitPointerGestureManager(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display);}
+\DoxyCodeLine{00284\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayInitTabletManager(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display);}
+\DoxyCodeLine{00285\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayInitDataDeviceManager(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display);}
+\DoxyCodeLine{00286\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayInitPrimarySelectionDeviceManager(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display);}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayInitTextInputManager(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *d,\ uint32\_t\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayCreateSeat(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display,\ \textcolor{keyword}{struct}\ wl\_seat\ *wl\_seat,\ Uint32\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00291\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_SeatDestroy(\doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}}\ *seat,\ \textcolor{keywordtype}{bool}\ shutting\_down);}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_SeatUpdatePointerGrab(\doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}}\ *seat);}
+\DoxyCodeLine{00294\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayUpdatePointerGrabs(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display,\ \doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}\ *window);}
+\DoxyCodeLine{00295\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayUpdateKeyboardGrabs(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display,\ \doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}\ *window);}
+\DoxyCodeLine{00296\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_DisplayRemoveWindowReferencesFromSeats(\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *display,\ \doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}\ *window);}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00298\ \textcolor{comment}{/*\ The\ implicit\ grab\ serial\ needs\ to\ be\ updated\ on:}}
+\DoxyCodeLine{00299\ \textcolor{comment}{\ *\ -\/\ Keyboard\ key\ down/up}}
+\DoxyCodeLine{00300\ \textcolor{comment}{\ *\ -\/\ Mouse\ button\ down}}
+\DoxyCodeLine{00301\ \textcolor{comment}{\ *\ -\/\ Touch\ event\ down}}
+\DoxyCodeLine{00302\ \textcolor{comment}{\ *\ -\/\ Tablet\ tool\ down}}
+\DoxyCodeLine{00303\ \textcolor{comment}{\ *\ -\/\ Tablet\ tool\ button\ down/up}}
+\DoxyCodeLine{00304\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00305\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_UpdateImplicitGrabSerial(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}}\ *seat,\ Uint32\ serial);}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_waylandevents\_h\_}}
+
+\end{DoxyCode}

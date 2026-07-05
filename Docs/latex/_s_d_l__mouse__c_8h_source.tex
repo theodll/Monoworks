@@ -1,0 +1,248 @@
+\doxysection{SDL\+\_\+mouse\+\_\+c.\+h}
+\hypertarget{_s_d_l__mouse__c_8h_source}{}\label{_s_d_l__mouse__c_8h_source}\index{MonoRuntime/extern/sdl/src/events/SDL\_mouse\_c.h@{MonoRuntime/extern/sdl/src/events/SDL\_mouse\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_mouse\_c\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_mouse\_c\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Mouse\ events\ not\ associated\ with\ a\ specific\ input\ device}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ SDL\_GLOBAL\_MOUSE\_ID\ \ \ \ \ 0}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ The\ default\ mouse\ input\ device,\ for\ platforms\ that\ don't\ have\ multiple\ mice}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ SDL\_DEFAULT\_MOUSE\_ID\ \ \ \ 1}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___cursor_data}{SDL\_CursorData}}\ \doxymbox{\hyperlink{struct_s_d_l___cursor_data}{SDL\_CursorData}};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ Uint64\ last\_update;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_frames;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{int}\ current\_frame;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ **frames;}
+\DoxyCodeLine{00042\ \ \ \ \ Uint32\ *durations;}
+\DoxyCodeLine{00043\ \}\ \doxymbox{\hyperlink{struct_s_d_l___cursor_animation}{SDL\_CursorAnimation}};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor_animation}{SDL\_CursorAnimation}}\ *animation;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ SDL\_CursorData\ *internal;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *next;}
+\DoxyCodeLine{00052\ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00055\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ Uint64\ last\_timestamp;}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{double}\ click\_motion\_x;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{double}\ click\_motion\_y;}
+\DoxyCodeLine{00059\ \ \ \ \ Uint8\ click\_count;}
+\DoxyCodeLine{00060\ \}\ \doxymbox{\hyperlink{struct_s_d_l___mouse_click_state}{SDL\_MouseClickState}};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ SDL\_MouseID\ mouseID;}
+\DoxyCodeLine{00065\ \ \ \ \ Uint32\ buttonstate;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ Data\ for\ double-\/click\ tracking}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_clickstates;}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___mouse_click_state}{SDL\_MouseClickState}}\ *clickstate;}
+\DoxyCodeLine{00070\ \}\ \doxymbox{\hyperlink{struct_s_d_l___mouse_input_source}{SDL\_MouseInputSource}};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ Create\ a\ cursor\ from\ a\ surface}}
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *(*CreateCursor)(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ hot\_x,\ \textcolor{keywordtype}{int}\ hot\_y);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{//\ Create\ an\ animated\ cursor\ from\ a\ sequence\ of\ surfaces}}
+\DoxyCodeLine{00078\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *(*CreateAnimatedCursor)(\doxymbox{\hyperlink{struct_s_d_l___cursor_frame_info}{SDL\_CursorFrameInfo}}\ *frames,\ \textcolor{keywordtype}{int}\ frame\_count,\ \textcolor{keywordtype}{int}\ hot\_x,\ \textcolor{keywordtype}{int}\ hot\_y);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ Create\ a\ system\ cursor}}
+\DoxyCodeLine{00081\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *(*CreateSystemCursor)(SDL\_SystemCursor\ id);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ Show\ the\ specified\ cursor,\ or\ hide\ if\ cursor\ is\ NULL}}
+\DoxyCodeLine{00084\ \ \ \ \ bool\ (*ShowCursor)(\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *cursor);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{//\ This\ is\ called\ when\ a\ mouse\ motion\ event\ occurs}}
+\DoxyCodeLine{00087\ \ \ \ \ bool\ (*MoveCursor)(\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *cursor);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ Free\ a\ window\ manager\ cursor}}
+\DoxyCodeLine{00090\ \ \ \ \ void\ (*FreeCursor)(\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *cursor);}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ Warp\ the\ mouse\ to\ (x,y)\ within\ a\ window}}
+\DoxyCodeLine{00093\ \ \ \ \ bool\ (*WarpMouse)(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{//\ Warp\ the\ mouse\ to\ (x,y)\ in\ screen\ space}}
+\DoxyCodeLine{00096\ \ \ \ \ bool\ (*WarpMouseGlobal)(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{//\ Set\ relative\ mode}}
+\DoxyCodeLine{00099\ \ \ \ \ bool\ (*SetRelativeMouseMode)(\textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{comment}{//\ Set\ mouse\ capture}}
+\DoxyCodeLine{00102\ \ \ \ \ bool\ (*CaptureMouse)(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{//\ Get\ absolute\ mouse\ coordinates.\ (x)\ and\ (y)\ are\ never\ NULL\ and\ set\ to\ zero\ before\ call.}}
+\DoxyCodeLine{00105\ \ \ \ \ SDL\_MouseButtonFlags\ (*GetGlobalMouseState)(\textcolor{keywordtype}{float}\ *x,\ \textcolor{keywordtype}{float}\ *y);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ Platform-\/specific\ system\ mouse\ transform\ applied\ in\ relative\ mode}}
+\DoxyCodeLine{00108\ \ \ \ \ SDL\_MouseMotionTransformCallback\ ApplySystemScale;}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ *system\_scale\_data;}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{//\ User-\/defined\ mouse\ input\ transform\ applied\ in\ relative\ mode}}
+\DoxyCodeLine{00112\ \ \ \ \ SDL\_MouseMotionTransformCallback\ InputTransform;}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{void}\ *input\_transform\_data;}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ integer\ mode\ data}}
+\DoxyCodeLine{00116\ \ \ \ \ Uint8\ integer\_mode\_flags;\ \textcolor{comment}{//\ 1\ to\ enable\ mouse\ quantization,\ 2\ to\ enable\ wheel\ quantization}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{float}\ integer\_mode\_residual\_motion\_x;}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{float}\ integer\_mode\_residual\_motion\_y;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{//\ Data\ common\ to\ all\ mice}}
+\DoxyCodeLine{00121\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *focus;}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{float}\ x;}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{float}\ y;}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordtype}{float}\ x\_accu;}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keywordtype}{float}\ y\_accu;}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{float}\ last\_x,\ last\_y;\ \textcolor{comment}{//\ the\ last\ reported\ x\ and\ y\ coordinates}}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{float}\ residual\_scroll\_x;}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordtype}{float}\ residual\_scroll\_y;}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keywordtype}{double}\ click\_motion\_x;}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{keywordtype}{double}\ click\_motion\_y;}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_position;}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{bool}\ relative\_mode;}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{bool}\ relative\_mode\_warp\_motion;}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keywordtype}{bool}\ relative\_mode\_hide\_cursor;}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{bool}\ relative\_mode\_center;}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keywordtype}{bool}\ warp\_emulation\_hint;}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{bool}\ warp\_emulation\_active;}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordtype}{bool}\ warp\_emulation\_prohibited;}
+\DoxyCodeLine{00139\ \ \ \ \ Uint64\ last\_center\_warp\_time\_ns;}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_normal\_speed\_scale;}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{keywordtype}{float}\ normal\_speed\_scale;}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_relative\_speed\_scale;}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{float}\ relative\_speed\_scale;}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_relative\_system\_scale;}
+\DoxyCodeLine{00145\ \ \ \ \ Uint32\ double\_click\_time;}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keywordtype}{int}\ double\_click\_radius;}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{bool}\ touch\_mouse\_events;}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{bool}\ mouse\_touch\_events;}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{bool}\ pen\_mouse\_events;}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{bool}\ pen\_touch\_events;}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{bool}\ was\_touch\_mouse\_events;\ \textcolor{comment}{//\ Was\ a\ touch-\/mouse\ event\ pending?}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{bool}\ added\_mouse\_touch\_device;\ \ \textcolor{comment}{//\ did\ we\ SDL\_AddTouch()\ a\ virtual\ touch\ device\ for\ the\ mouse?}}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{bool}\ added\_pen\_touch\_device;\ \ \textcolor{comment}{//\ did\ we\ SDL\_AddTouch()\ a\ virtual\ touch\ device\ for\ pens?}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#ifdef\ SDL\_PLATFORM\_VITA}}
+\DoxyCodeLine{00155\ \ \ \ \ Uint8\ vita\_touch\_mouse\_device;}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{bool}\ auto\_capture;}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{bool}\ capture\_desired;}
+\DoxyCodeLine{00159\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *capture\_window;}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{comment}{//\ Data\ for\ input\ source\ state}}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_sources;}
+\DoxyCodeLine{00163\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___mouse_input_source}{SDL\_MouseInputSource}}\ *sources;}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *cursors;}
+\DoxyCodeLine{00166\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *def\_cursor;}
+\DoxyCodeLine{00167\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *cur\_cursor;}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{bool}\ cursor\_visible;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//\ Driver-\/dependent\ data.}}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keywordtype}{void}\ *internal;}
+\DoxyCodeLine{00172\ \}\ \doxymbox{\hyperlink{struct_s_d_l___mouse}{SDL\_Mouse}};}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{comment}{//\ Initialize\ the\ mouse\ subsystem,\ called\ before\ the\ main\ video\ driver\ is\ initialized}}
+\DoxyCodeLine{00175\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_PreInitMouse(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{comment}{//\ Finish\ initializing\ the\ mouse\ subsystem,\ called\ after\ the\ main\ video\ driver\ was\ initialized}}
+\DoxyCodeLine{00178\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_PostInitMouse(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{comment}{//\ Return\ whether\ a\ device\ is\ actually\ a\ mouse}}
+\DoxyCodeLine{00181\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_IsMouse(Uint16\ vendor,\ Uint16\ product);}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00183\ \textcolor{comment}{//\ A\ mouse\ has\ been\ added\ to\ the\ system}}
+\DoxyCodeLine{00184\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_AddMouse(SDL\_MouseID\ mouseID,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{comment}{//\ A\ mouse\ has\ been\ removed\ from\ the\ system}}
+\DoxyCodeLine{00187\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_RemoveMouse(SDL\_MouseID\ mouseID);}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{comment}{//\ Get\ the\ mouse\ state\ structure}}
+\DoxyCodeLine{00190\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___mouse}{SDL\_Mouse}}\ *SDL\_GetMouse(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{comment}{//\ Set\ the\ default\ mouse\ cursor}}
+\DoxyCodeLine{00193\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_RedrawCursor(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{comment}{//\ Set\ the\ default\ mouse\ cursor}}
+\DoxyCodeLine{00196\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SetDefaultCursor(\doxymbox{\hyperlink{struct_s_d_l___cursor}{SDL\_Cursor}}\ *cursor);}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{comment}{//\ Get\ the\ preferred\ default\ system\ cursor}}
+\DoxyCodeLine{00199\ \textcolor{keyword}{extern}\ SDL\_SystemCursor\ SDL\_GetDefaultSystemCursor(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{comment}{//\ Update\ the\ current\ cursor\ animation\ if\ needed}}
+\DoxyCodeLine{00202\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_UpdateCursorAnimation(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{comment}{//\ Set\ the\ mouse\ focus\ window}}
+\DoxyCodeLine{00205\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SetMouseFocus(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \textcolor{comment}{//\ Update\ the\ mouse\ capture\ window}}
+\DoxyCodeLine{00208\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_UpdateMouseCapture(\textcolor{keywordtype}{bool}\ force\_release);}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \textcolor{comment}{//\ Send\ a\ mouse\ motion\ event}}
+\DoxyCodeLine{00211\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendMouseMotion(Uint64\ timestamp,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_MouseID\ mouseID,\ \textcolor{keywordtype}{bool}\ relative,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \textcolor{comment}{//\ Send\ a\ mouse\ button\ event}}
+\DoxyCodeLine{00214\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendMouseButton(Uint64\ timestamp,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_MouseID\ mouseID,\ Uint8\ button,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00216\ \textcolor{comment}{//\ Send\ a\ mouse\ button\ event\ with\ a\ click\ count}}
+\DoxyCodeLine{00217\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendMouseButtonClicks(Uint64\ timestamp,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_MouseID\ mouseID,\ Uint8\ button,\ \textcolor{keywordtype}{bool}\ down,\ \textcolor{keywordtype}{int}\ clicks);}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \textcolor{comment}{//\ Send\ a\ mouse\ wheel\ event}}
+\DoxyCodeLine{00220\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendMouseWheel(Uint64\ timestamp,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_MouseID\ mouseID,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ SDL\_MouseWheelDirection\ direction);}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{comment}{//\ Warp\ the\ mouse\ within\ the\ window,\ potentially\ overriding\ relative\ mode}}
+\DoxyCodeLine{00223\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_PerformWarpMouseInWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{bool}\ ignore\_relative\_mode);}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \textcolor{comment}{//\ Relative\ mouse\ mode}}
+\DoxyCodeLine{00226\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SetRelativeMouseMode(\textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00227\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_GetRelativeMouseMode(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00228\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_UpdateRelativeMouseMode(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00229\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_DisableMouseWarpEmulation(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{comment}{//\ TODO\ RECONNECT:\ Set\ mouse\ state\ to\ "{}zero"{}}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#if\ 0}}
+\DoxyCodeLine{00233\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_ResetMouse(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ 0}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \textcolor{comment}{//\ Check\ if\ mouse\ position\ is\ within\ window\ or\ captured\ by\ window}}
+\DoxyCodeLine{00237\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_MousePositionInWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \textcolor{comment}{//\ Shutdown\ the\ mouse\ subsystem}}
+\DoxyCodeLine{00240\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_QuitMouse(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_mouse\_c\_h\_}}
+
+\end{DoxyCode}

@@ -1,0 +1,83 @@
+\doxysection{SDL\+\_\+systhread.\+h}
+\hypertarget{_s_d_l__systhread_8h_source}{}\label{_s_d_l__systhread_8h_source}\index{MonoRuntime/extern/sdl/src/thread/SDL\_systhread.h@{MonoRuntime/extern/sdl/src/thread/SDL\_systhread.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ These\ are\ functions\ that\ need\ to\ be\ implemented\ by\ a\ port\ of\ SDL}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#ifndef\ SDL\_systhread\_h\_}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ SDL\_systhread\_h\_}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}SDL\_thread\_c.h"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{/*\ This\ function\ creates\ a\ thread,\ passing\ args\ to\ SDL\_RunThread(),}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ \ \ saves\ a\ system-\/dependent\ thread\ id\ in\ thread-\/>id,\ and\ returns\ 0}}
+\DoxyCodeLine{00037\ \textcolor{comment}{\ \ \ on\ success.}}
+\DoxyCodeLine{00038\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_CreateThread(\doxymbox{\hyperlink{struct_s_d_l___thread}{SDL\_Thread}}\ *thread,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_FunctionPointer\ pfnBeginThread,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_FunctionPointer\ pfnEndThread);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ This\ function\ does\ any\ necessary\ setup\ in\ the\ child\ thread}}
+\DoxyCodeLine{00044\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SYS\_SetupThread(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ This\ function\ sets\ the\ current\ thread\ priority}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_SetThreadPriority(SDL\_ThreadPriority\ priority);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{/*\ This\ function\ waits\ for\ the\ thread\ to\ finish\ and\ frees\ any\ data}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ \ \ allocated\ by\ SDL\_SYS\_CreateThread()}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SYS\_WaitThread(\doxymbox{\hyperlink{struct_s_d_l___thread}{SDL\_Thread}}\ *thread);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ Mark\ thread\ as\ cleaned\ up\ as\ soon\ as\ it\ exits,\ without\ joining.}}
+\DoxyCodeLine{00055\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SYS\_DetachThread(\doxymbox{\hyperlink{struct_s_d_l___thread}{SDL\_Thread}}\ *thread);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ Initialize\ the\ global\ TLS\ data}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SYS\_InitTLSData(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ Get\ the\ thread\ local\ storage\ for\ this\ thread}}
+\DoxyCodeLine{00061\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___t_l_s_data}{SDL\_TLSData}}\ *SDL\_SYS\_GetTLSData(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Set\ the\ thread\ local\ storage\ for\ this\ thread}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_SetTLSData(\doxymbox{\hyperlink{struct_s_d_l___t_l_s_data}{SDL\_TLSData}}\ *data);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ Quit\ the\ global\ TLS\ data}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SYS\_QuitTLSData(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ A\ helper\ function\ for\ setting\ up\ a\ thread\ with\ a\ stack\ size.}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___thread}{SDL\_Thread}}\ *SDL\_CreateThreadWithStackSize(SDL\_ThreadFunction\ fn,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{size\_t}\ stacksize,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ Ends\ C\ function\ definitions\ when\ using\ C++}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00074\ \}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_systhread\_h\_}}
+
+\end{DoxyCode}

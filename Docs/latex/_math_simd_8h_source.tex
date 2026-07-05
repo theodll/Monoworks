@@ -1,0 +1,204 @@
+\doxysection{Math\+Simd.\+h}
+\hypertarget{_math_simd_8h_source}{}\label{_math_simd_8h_source}\index{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/MathSimd.h@{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/MathSimd.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ VM\_INLINE\ \_\_forceinline}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ VM\_INLINE\ \_\_attribute\_\_((unused,\ always\_inline,\ nodebug))\ inline}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ kSimdWidth\ 4}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#if\ !defined(\_\_arm\_\_)\ \&\&\ !defined(\_\_arm64\_\_)\ \&\&\ !defined(\_\_EMSCRIPTEN\_\_)\ \&\&\ !defined(\_M\_ARM64)}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ -\/-\/-\/-\/\ SSE\ implementation}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <xmmintrin.h>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <emmintrin.h>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <smmintrin.h>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ SHUFFLE4(V,\ X,Y,Z,W)\ float4(\_mm\_shuffle\_ps((V).m,\ (V).m,\ \_MM\_SHUFFLE(W,Z,Y,X)))}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }float4}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ VM\_INLINE\ float4()\ \{\}}
+\DoxyCodeLine{00024\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *p)\ \{\ m\ =\ \_mm\_loadu\_ps(p);\ \}}
+\DoxyCodeLine{00025\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z,\ \textcolor{keywordtype}{float}\ w)\ \{\ m\ =\ \_mm\_set\_ps(w,\ z,\ y,\ x);\ \}}
+\DoxyCodeLine{00026\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(\textcolor{keywordtype}{float}\ v)\ \{\ m\ =\ \_mm\_set\_ps1(v);\ \}}
+\DoxyCodeLine{00027\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(\_\_m128\ v)\ \{\ m\ =\ v;\ \}}
+\DoxyCodeLine{00028\ \ \ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getX()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(m);\ \}}
+\DoxyCodeLine{00030\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getY()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(\_mm\_shuffle\_ps(m,\ m,\ \_MM\_SHUFFLE(1,\ 1,\ 1,\ 1)));\ \}}
+\DoxyCodeLine{00031\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getZ()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(\_mm\_shuffle\_ps(m,\ m,\ \_MM\_SHUFFLE(2,\ 2,\ 2,\ 2)));\ \}}
+\DoxyCodeLine{00032\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getW()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(\_mm\_shuffle\_ps(m,\ m,\ \_MM\_SHUFFLE(3,\ 3,\ 3,\ 3)));\ \}}
+\DoxyCodeLine{00033\ \ \ \ \ }
+\DoxyCodeLine{00034\ \ \ \ \ \_\_m128\ m;}
+\DoxyCodeLine{00035\ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{structfloat4}{float4}}\ bool4;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator+\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_add\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00040\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_sub\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00041\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator*\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_mul\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00042\ VM\_INLINE\ bool4\ operator==(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_cmpeq\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00043\ VM\_INLINE\ bool4\ operator!=(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_cmpneq\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00044\ VM\_INLINE\ bool4\ operator<\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_cmplt\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00045\ VM\_INLINE\ bool4\ operator>\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_cmpgt\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00046\ VM\_INLINE\ bool4\ operator<=(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_cmple\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00047\ VM\_INLINE\ bool4\ operator>=(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_cmpge\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00048\ VM\_INLINE\ bool4\ operator\&(bool4\ a,\ bool4\ b)\ \{\ a.m\ =\ \_mm\_and\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00049\ VM\_INLINE\ bool4\ operator|(bool4\ a,\ bool4\ b)\ \{\ a.m\ =\ \_mm\_or\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00050\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a)\ \{\ a.m\ =\ \_mm\_xor\_ps(a.m,\ \_mm\_set1\_ps(-\/0.0f));\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00051\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ min(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_min\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00052\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ max(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ \_mm\_max\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ VM\_INLINE\ \textcolor{keywordtype}{float}\ hmin(\doxymbox{\hyperlink{structfloat4}{float4}}\ v)}
+\DoxyCodeLine{00055\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ v\ =\ min(v,\ SHUFFLE4(v,\ 2,\ 3,\ 0,\ 0));}
+\DoxyCodeLine{00057\ \ \ \ \ v\ =\ min(v,\ SHUFFLE4(v,\ 1,\ 0,\ 0,\ 0));}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{return}\ v.getX();}
+\DoxyCodeLine{00059\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Returns\ a\ 4-\/bit\ code\ where\ bit0..bit3\ is\ X..W}}
+\DoxyCodeLine{00062\ VM\_INLINE\ \textcolor{keywordtype}{unsigned}\ mask(\doxymbox{\hyperlink{structfloat4}{float4}}\ v)\ \{\ \textcolor{keywordflow}{return}\ \_mm\_movemask\_ps(v.m);\ \}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Once\ we\ have\ a\ comparison,\ we\ can\ branch\ based\ on\ its\ results:}}
+\DoxyCodeLine{00064\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ any(bool4\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ !=\ 0;\ \}}
+\DoxyCodeLine{00065\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ all(bool4\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ ==\ 15;\ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ "{}select"{},\ i.e.\ hibit(cond)\ ?\ b\ :\ a}}
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ on\ SSE4.1\ and\ up\ this\ can\ be\ done\ easily\ via\ "{}blend"{}\ instruction;}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ on\ older\ SSEs\ has\ to\ do\ a\ bunch\ of\ hoops,\ see}}
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ https://fgiesen.wordpress.com/2016/04/03/sse-\/mind-\/the-\/gap/}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ select(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b,\ bool4\ cond)}
+\DoxyCodeLine{00073\ \{}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#if\ defined(\_\_SSE4\_1\_\_)\ ||\ defined(\_MSC\_VER)\ }\textcolor{comment}{//\ on\ windows\ assume\ we\ always\ have\ SSE4.1}}
+\DoxyCodeLine{00075\ \ \ \ \ a.m\ =\ \_mm\_blendv\_ps(a.m,\ b.m,\ cond.m);}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00077\ \ \ \ \ \_\_m128\ d\ =\ \_mm\_castsi128\_ps(\_mm\_srai\_epi32(\_mm\_castps\_si128(cond.m),\ 31));}
+\DoxyCodeLine{00078\ \ \ \ \ a.m\ =\ \_mm\_or\_ps(\_mm\_and\_ps(d,\ b.m),\ \_mm\_andnot\_ps(d,\ a.m));}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ VM\_INLINE\ \_\_m128i\ select(\_\_m128i\ a,\ \_\_m128i\ b,\ bool4\ cond)}
+\DoxyCodeLine{00083\ \{}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#if\ defined(\_\_SSE4\_1\_\_)\ ||\ defined(\_MSC\_VER)\ }\textcolor{comment}{//\ on\ windows\ assume\ we\ always\ have\ SSE4.1}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_blendv\_epi8(a,\ b,\ \_mm\_castps\_si128(cond.m));}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00087\ \ \ \ \ \_\_m128i\ d\ =\ \_mm\_srai\_epi32(\_mm\_castps\_si128(cond.m),\ 31);}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_or\_si128(\_mm\_and\_si128(d,\ b),\ \_mm\_andnot\_si128(d,\ a));}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ sqrtf(\doxymbox{\hyperlink{structfloat4}{float4}}\ v)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat4}{float4}}(\_mm\_sqrt\_ps(v.m));\ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#elif\ !defined(\_\_EMSCRIPTEN\_\_)}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{comment}{//\ -\/-\/-\/-\/\ NEON\ implementation}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ USE\_NEON\ 1}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#include\ <arm\_neon.h>}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structfloat4}{float4}}}
+\DoxyCodeLine{00102\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ VM\_INLINE\ float4()\ \{\}}
+\DoxyCodeLine{00104\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *p)\ \{\ m\ =\ vld1q\_f32(p);\ \}}
+\DoxyCodeLine{00105\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z,\ \textcolor{keywordtype}{float}\ w)\ \{\ \textcolor{keywordtype}{float}\ v[4]\ =\ \{x,\ y,\ z,\ w\};\ m\ =\ vld1q\_f32(v);\ \}}
+\DoxyCodeLine{00106\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(\textcolor{keywordtype}{float}\ v)\ \{\ m\ =\ vdupq\_n\_f32(v);\ \}}
+\DoxyCodeLine{00107\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float4(float32x4\_t\ v)\ \{\ m\ =\ v;\ \}}
+\DoxyCodeLine{00108\ \ \ \ \ }
+\DoxyCodeLine{00109\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getX()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(m,\ 0);\ \}}
+\DoxyCodeLine{00110\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getY()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(m,\ 1);\ \}}
+\DoxyCodeLine{00111\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getZ()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(m,\ 2);\ \}}
+\DoxyCodeLine{00112\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getW()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(m,\ 3);\ \}}
+\DoxyCodeLine{00113\ \ \ \ \ }
+\DoxyCodeLine{00114\ \ \ \ \ float32x4\_t\ m;}
+\DoxyCodeLine{00115\ \};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{structfloat4}{float4}}\ bool4;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator+\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vaddq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00120\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vsubq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00121\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator*\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vmulq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00122\ VM\_INLINE\ bool4\ operator==(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vceqq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00123\ VM\_INLINE\ bool4\ operator!=(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ a.m\ =\ vmvnq\_u32(vceqq\_f32(a.m,\ b.m));\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00124\ VM\_INLINE\ bool4\ operator<\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vcltq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00125\ VM\_INLINE\ bool4\ operator>\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vcgtq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00126\ VM\_INLINE\ bool4\ operator<=(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vcleq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00127\ VM\_INLINE\ bool4\ operator>=(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vcgeq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00128\ VM\_INLINE\ bool4\ operator\&(bool4\ a,\ bool4\ b)\ \{\ a.m\ =\ vandq\_u32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00129\ VM\_INLINE\ bool4\ operator|(bool4\ a,\ bool4\ b)\ \{\ a.m\ =\ vorrq\_u32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00130\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat4}{float4}}\ a)\ \{\ a.m\ =\ vnegq\_f32(a.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00131\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ min(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vminq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00132\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ max(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b)\ \{\ a.m\ =\ vmaxq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ VM\_INLINE\ \textcolor{keywordtype}{float}\ hmin(\doxymbox{\hyperlink{structfloat4}{float4}}\ v)}
+\DoxyCodeLine{00135\ \{}
+\DoxyCodeLine{00136\ \ \ \ \ float32x2\_t\ minOfHalfs\ =\ vpmin\_f32(vget\_low\_f32(v.m),\ vget\_high\_f32(v.m));}
+\DoxyCodeLine{00137\ \ \ \ \ float32x2\_t\ minOfMinOfHalfs\ =\ vpmin\_f32(minOfHalfs,\ minOfHalfs);}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keywordflow}{return}\ vget\_lane\_f32(minOfMinOfHalfs,\ 0);}
+\DoxyCodeLine{00139\ \}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{comment}{//\ Returns\ a\ 4-\/bit\ code\ where\ bit0..bit3\ is\ X..W}}
+\DoxyCodeLine{00142\ VM\_INLINE\ \textcolor{keywordtype}{unsigned}\ mask(\doxymbox{\hyperlink{structfloat4}{float4}}\ v)}
+\DoxyCodeLine{00143\ \{}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#if\ defined(\_M\_ARM64)}}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32\_t\ values[4]\ =\ \{\ 1u,\ 2u,\ 4u,\ 8u\ \};}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{const}\ uint32x4\_t\ movemask\ =\ vld1q\_u32(\ values\ );}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keyword}{const}\ uint32x4\_t\ highbit\ =\ vdupq\_n\_u32(\ 0x80000000u\ );}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32x4\_t\ movemask\ =\ \{\ 1,\ 2,\ 4,\ 8\ \};}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32x4\_t\ highbit\ =\ \{\ 0x80000000,\ 0x80000000,\ 0x80000000,\ 0x80000000\ \};}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00152\ \ \ \ \ uint32x4\_t\ t0\ =\ vreinterpretq\_u32\_f32(v.m);}
+\DoxyCodeLine{00153\ \ \ \ \ uint32x4\_t\ t1\ =\ vtstq\_u32(t0,\ highbit);}
+\DoxyCodeLine{00154\ \ \ \ \ uint32x4\_t\ t2\ =\ vandq\_u32(t1,\ movemask);}
+\DoxyCodeLine{00155\ \ \ \ \ uint32x2\_t\ t3\ =\ vorr\_u32(vget\_low\_u32(t2),\ vget\_high\_u32(t2));}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keywordflow}{return}\ vget\_lane\_u32(t3,\ 0)\ |\ vget\_lane\_u32(t3,\ 1);}
+\DoxyCodeLine{00157\ \}}
+\DoxyCodeLine{00158\ \textcolor{comment}{//\ Once\ we\ have\ a\ comparison,\ we\ can\ branch\ based\ on\ its\ results:}}
+\DoxyCodeLine{00159\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ any(bool4\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ !=\ 0;\ \}}
+\DoxyCodeLine{00160\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ all(bool4\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ ==\ 15;\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{//\ "{}select"{},\ i.e.\ hibit(cond)\ ?\ b\ :\ a}}
+\DoxyCodeLine{00163\ \textcolor{comment}{//\ on\ SSE4.1\ and\ up\ this\ can\ be\ done\ easily\ via\ "{}blend"{}\ instruction;}}
+\DoxyCodeLine{00164\ \textcolor{comment}{//\ on\ older\ SSEs\ has\ to\ do\ a\ bunch\ of\ hoops,\ see}}
+\DoxyCodeLine{00165\ \textcolor{comment}{//\ https://fgiesen.wordpress.com/2016/04/03/sse-\/mind-\/the-\/gap/}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ select(\doxymbox{\hyperlink{structfloat4}{float4}}\ a,\ \doxymbox{\hyperlink{structfloat4}{float4}}\ b,\ bool4\ cond)}
+\DoxyCodeLine{00168\ \{}
+\DoxyCodeLine{00169\ \ \ \ \ a.m\ =\ vbslq\_f32(cond.m,\ b.m,\ a.m);}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00171\ \}}
+\DoxyCodeLine{00172\ VM\_INLINE\ int32x4\_t\ select(int32x4\_t\ a,\ int32x4\_t\ b,\ bool4\ cond)}
+\DoxyCodeLine{00173\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keywordflow}{return}\ vbslq\_f32(cond.m,\ b,\ a);}
+\DoxyCodeLine{00175\ \}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ sqrtf(\doxymbox{\hyperlink{structfloat4}{float4}}\ v)}
+\DoxyCodeLine{00178\ \{}
+\DoxyCodeLine{00179\ \ \ \ \ float32x4\_t\ V\ =\ v.m;}
+\DoxyCodeLine{00180\ \ \ \ \ float32x4\_t\ S0\ =\ vrsqrteq\_f32(V);}
+\DoxyCodeLine{00181\ \ \ \ \ float32x4\_t\ P0\ =\ vmulq\_f32(\ V,\ S0\ );}
+\DoxyCodeLine{00182\ \ \ \ \ float32x4\_t\ R0\ =\ vrsqrtsq\_f32(\ P0,\ S0\ );}
+\DoxyCodeLine{00183\ \ \ \ \ float32x4\_t\ S1\ =\ vmulq\_f32(\ S0,\ R0\ );}
+\DoxyCodeLine{00184\ \ \ \ \ float32x4\_t\ P1\ =\ vmulq\_f32(\ V,\ S1\ );}
+\DoxyCodeLine{00185\ \ \ \ \ float32x4\_t\ R1\ =\ vrsqrtsq\_f32(\ P1,\ S1\ );}
+\DoxyCodeLine{00186\ \ \ \ \ float32x4\_t\ S2\ =\ vmulq\_f32(\ S1,\ R1\ );}
+\DoxyCodeLine{00187\ \ \ \ \ float32x4\_t\ P2\ =\ vmulq\_f32(\ V,\ S2\ );}
+\DoxyCodeLine{00188\ \ \ \ \ float32x4\_t\ R2\ =\ vrsqrtsq\_f32(\ P2,\ S2\ );}
+\DoxyCodeLine{00189\ \ \ \ \ float32x4\_t\ S3\ =\ vmulq\_f32(\ S2,\ R2\ );}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat4}{float4}}(vmulq\_f32(V,\ S3));}
+\DoxyCodeLine{00191\ \}}
+\DoxyCodeLine{00192\ }
+\DoxyCodeLine{00193\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ splatX(float32x4\_t\ v)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat4}{float4}}(vdupq\_lane\_f32(vget\_low\_f32(v),\ 0));\ \}}
+\DoxyCodeLine{00194\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ splatY(float32x4\_t\ v)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat4}{float4}}(vdupq\_lane\_f32(vget\_low\_f32(v),\ 1));\ \}}
+\DoxyCodeLine{00195\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ splatZ(float32x4\_t\ v)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat4}{float4}}(vdupq\_lane\_f32(vget\_high\_f32(v),\ 0));\ \}}
+\DoxyCodeLine{00196\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat4}{float4}}\ splatW(float32x4\_t\ v)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat4}{float4}}(vdupq\_lane\_f32(vget\_high\_f32(v),\ 1));\ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,66 @@
+\doxysection{SDL\+\_\+fribidi.\+h}
+\hypertarget{_s_d_l__fribidi_8h_source}{}\label{_s_d_l__fribidi_8h_source}\index{MonoRuntime/extern/sdl/src/core/unix/SDL\_fribidi.h@{MonoRuntime/extern/sdl/src/core/unix/SDL\_fribidi.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_fribidi\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_fribidi\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ HAVE\_FRIBIDI\_H}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <sys/types.h>}\ \textcolor{comment}{//\ for\ ssize\_t}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <fribidi.h>}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ FriBidiStrIndex\ (*SDL\_FriBidiUnicodeToCharset)(FriBidiCharSet,\ \textcolor{keyword}{const}\ FriBidiChar\ *,\ FriBidiStrIndex,\ \textcolor{keywordtype}{char}\ *);}
+\DoxyCodeLine{00032\ \textcolor{keyword}{typedef}\ FriBidiStrIndex\ (*SDL\_FriBidiCharsetToUnicode)(FriBidiCharSet,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *,\ FriBidiStrIndex,\ FriBidiChar\ *);}
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ void\ (*SDL\_FriBidiGetBidiTypes)(\textcolor{keyword}{const}\ FriBidiChar\ *,\ \textcolor{keyword}{const}\ FriBidiStrIndex,\ FriBidiCharType\ *);}
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ FriBidiParType\ (*SDL\_FriBidiGetParDirection)(\textcolor{keyword}{const}\ FriBidiCharType\ *,\ \textcolor{keyword}{const}\ FriBidiStrIndex);}
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ FriBidiLevel\ (*SDL\_FriBidiGetParEmbeddingLevels)(\textcolor{keyword}{const}\ FriBidiCharType\ *,\ \textcolor{keyword}{const}\ FriBidiStrIndex,\ FriBidiParType\ *,\ FriBidiLevel\ *);}
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ void\ (*SDL\_FriBidiGetJoiningTypes)(\textcolor{keyword}{const}\ FriBidiChar\ *,\ \textcolor{keyword}{const}\ FriBidiStrIndex,\ FriBidiJoiningType\ *);}
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ void\ (*SDL\_FriBidiJoinArabic)(\textcolor{keyword}{const}\ FriBidiCharType\ *,\ \textcolor{keyword}{const}\ FriBidiStrIndex,\ \textcolor{keyword}{const}\ FriBidiLevel\ *,\ FriBidiArabicProp\ *);}
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ void\ (*SDL\_FriBidiShape)(FriBidiFlags\ flags,\ \textcolor{keyword}{const}\ FriBidiLevel\ *,\ \textcolor{keyword}{const}\ FriBidiStrIndex,\ FriBidiArabicProp\ *,\ FriBidiChar\ *str);}
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ FriBidiLevel\ (*SDL\_FriBidiReorderLine)(FriBidiFlags\ flags,\ \textcolor{keyword}{const}\ FriBidiCharType\ *,\ \textcolor{keyword}{const}\ FriBidiStrIndex,\ \textcolor{keyword}{const}\ FriBidiStrIndex,\ \textcolor{keyword}{const}\ FriBidiParType,\ FriBidiLevel\ *,\ FriBidiChar\ *,\ FriBidiStrIndex\ *);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_FriBidi\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ SDL\_SharedObject\ *lib;}
+\DoxyCodeLine{00043\ \ \ \ \ SDL\_FriBidiUnicodeToCharset\ unicode\_to\_charset;}
+\DoxyCodeLine{00044\ \ \ \ \ SDL\_FriBidiCharsetToUnicode\ charset\_to\_unicode;}
+\DoxyCodeLine{00045\ \ \ \ \ SDL\_FriBidiGetBidiTypes\ get\_bidi\_types;}
+\DoxyCodeLine{00046\ \ \ \ \ SDL\_FriBidiGetParDirection\ get\_par\_direction;}
+\DoxyCodeLine{00047\ \ \ \ \ SDL\_FriBidiGetParEmbeddingLevels\ get\_par\_embedding\_levels;}
+\DoxyCodeLine{00048\ \ \ \ \ SDL\_FriBidiGetJoiningTypes\ get\_joining\_types;}
+\DoxyCodeLine{00049\ \ \ \ \ SDL\_FriBidiJoinArabic\ join\_arabic;}
+\DoxyCodeLine{00050\ \ \ \ \ SDL\_FriBidiShape\ shape;}
+\DoxyCodeLine{00051\ \ \ \ \ SDL\_FriBidiReorderLine\ reorder\_line;}
+\DoxyCodeLine{00052\ \}\ SDL\_FriBidi;}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{extern}\ SDL\_FriBidi\ *SDL\_FriBidi\_Create(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00055\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}\ *SDL\_FriBidi\_Process(SDL\_FriBidi\ *fribidi,\ \textcolor{keywordtype}{char}\ *utf8,\ ssize\_t\ utf8\_len,\ \textcolor{keywordtype}{bool}\ shaping,\ FriBidiParType\ *out\_par\_type);}
+\DoxyCodeLine{00056\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_FriBidi\_Destroy(SDL\_FriBidi\ *fribidi);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HAVE\_FRIBIDI\_H}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_fribidi\_h\_}}
+
+\end{DoxyCode}

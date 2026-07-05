@@ -1,0 +1,65 @@
+\doxysection{getopt.\+h}
+\hypertarget{getopt_8h_source}{}\label{getopt_8h_source}\index{MonoEngine/thirdparty/tracy/getopt/getopt.h@{MonoEngine/thirdparty/tracy/getopt/getopt.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*******************************************************************************}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ (c)\ 2012-\/2023,\ Kim\ Grasman\ <kim.grasman@gmail.com>}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *\ All\ rights\ reserved.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ Redistribution\ and\ use\ in\ source\ and\ binary\ forms,\ with\ or\ without}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ modification,\ are\ permitted\ provided\ that\ the\ following\ conditions\ are\ met:}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ \ \ *\ Redistributions\ of\ source\ code\ must\ retain\ the\ above\ copyright}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ \ \ \ \ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ \ \ *\ Redistributions\ in\ binary\ form\ must\ reproduce\ the\ above\ copyright}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ \ \ \ \ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer\ in\ the}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ \ \ \ \ documentation\ and/or\ other\ materials\ provided\ with\ the\ distribution.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ \ \ *\ Neither\ the\ name\ of\ Kim\ Grasman\ nor\ the}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ \ \ \ \ names\ of\ contributors\ may\ be\ used\ to\ endorse\ or\ promote\ products}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ \ \ \ \ derived\ from\ this\ software\ without\ specific\ prior\ written\ permission.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ THIS\ SOFTWARE\ IS\ PROVIDED\ BY\ THE\ COPYRIGHT\ HOLDERS\ AND\ CONTRIBUTORS\ "{}AS\ IS"{}}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ AND\ ANY\ EXPRESS\ OR\ IMPLIED\ WARRANTIES,\ INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ THE}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ IMPLIED\ WARRANTIES\ OF\ MERCHANTABILITY\ AND\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ ARE\ DISCLAIMED.\ IN\ NO\ EVENT\ SHALL\ KIM\ GRASMAN\ BE\ LIABLE\ FOR\ ANY}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ DIRECT,\ INDIRECT,\ INCIDENTAL,\ SPECIAL,\ EXEMPLARY,\ OR\ CONSEQUENTIAL\ DAMAGES}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ *\ (INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ PROCUREMENT\ OF\ SUBSTITUTE\ GOODS\ OR\ SERVICES;}}
+\DoxyCodeLine{00022\ \textcolor{comment}{\ *\ LOSS\ OF\ USE,\ DATA,\ OR\ PROFITS;\ OR\ BUSINESS\ INTERRUPTION)\ HOWEVER\ CAUSED\ AND}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ ON\ ANY\ THEORY\ OF\ LIABILITY,\ WHETHER\ IN\ CONTRACT,\ STRICT\ LIABILITY,\ OR\ TORT}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ *\ (INCLUDING\ NEGLIGENCE\ OR\ OTHERWISE)\ ARISING\ IN\ ANY\ WAY\ OUT\ OF\ THE\ USE\ OF\ THIS}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ SOFTWARE,\ EVEN\ IF\ ADVISED\ OF\ THE\ POSSIBILITY\ OF\ SUCH\ DAMAGE.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ ******************************************************************************/}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifndef\ INCLUDED\_GETOPT\_PORT\_H}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ INCLUDED\_GETOPT\_PORT\_H}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00033\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ no\_argument\ 1}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ required\_argument\ 2}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ optional\_argument\ 3}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}*\ optarg;}
+\DoxyCodeLine{00041\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ optind,\ opterr,\ optopt;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structoption}{option}}\ \{}
+\DoxyCodeLine{00044\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name;}
+\DoxyCodeLine{00045\ \ \ \textcolor{keywordtype}{int}\ has\_arg;}
+\DoxyCodeLine{00046\ \ \ \textcolor{keywordtype}{int}*\ flag;}
+\DoxyCodeLine{00047\ \ \ \textcolor{keywordtype}{int}\ val;}
+\DoxyCodeLine{00048\ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{keywordtype}{int}\ getopt(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}*\ \textcolor{keyword}{const}\ argv[],\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ optstring);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keywordtype}{int}\ getopt\_long(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}*\ \textcolor{keyword}{const}\ argv[],}
+\DoxyCodeLine{00053\ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ optstring,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structoption}{option}}*\ longopts,\ \textcolor{keywordtype}{int}*\ longindex);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#if\ defined(\_\_cplusplus)}}
+\DoxyCodeLine{00056\ \}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ INCLUDED\_GETOPT\_PORT\_H}}
+
+\end{DoxyCode}

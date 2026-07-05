@@ -1,0 +1,32 @@
+\doxysection{sink-\/inl.h}
+\hypertarget{sink-inl_8h_source}{}\label{sink-inl_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/sink-\/inl.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/sink-\/inl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/sink.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ SPDLOG\_INLINE\ \textcolor{keywordtype}{bool}\ sinks::sink::should\_log(level::level\_enum\ msg\_level)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordflow}{return}\ msg\_level\ >=\ level\_.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00016\ \}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ sinks::sink::set\_level(level::level\_enum\ log\_level)\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ level\_.store(log\_level,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00020\ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ SPDLOG\_INLINE\ level::level\_enum\ sinks::sink::level()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}level::level\_enum\textcolor{keyword}{>}(level\_.load(std::memory\_order\_relaxed));}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

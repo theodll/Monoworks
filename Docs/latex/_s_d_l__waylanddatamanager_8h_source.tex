@@ -1,0 +1,183 @@
+\doxysection{SDL\+\_\+waylanddatamanager.\+h}
+\hypertarget{_s_d_l__waylanddatamanager_8h_source}{}\label{_s_d_l__waylanddatamanager_8h_source}\index{MonoRuntime/extern/sdl/src/video/wayland/SDL\_waylanddatamanager.h@{MonoRuntime/extern/sdl/src/video/wayland/SDL\_waylanddatamanager.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}SDL\_waylandevents\_c.h"{}}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#ifndef\ SDL\_waylanddatamanager\_h\_}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ SDL\_waylanddatamanager\_h\_}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}SDL\_waylandvideo.h"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}SDL\_waylandwindow.h"{}}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ TEXT\_MIME\ "{}text/plain;charset=utf-\/8"{}}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ FILE\_MIME\ "{}text/uri-\/list"{}}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ FILE\_PORTAL\_MIME\ "{}application/vnd.portal.filetransfer"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ SDL\_DATA\_ORIGIN\_MIME\ "{}application/x-\/sdl3-\/source-\/id"{}}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}};}
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{char}\ *mime\_type;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ *data;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ length;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_list\ link;}
+\DoxyCodeLine{00045\ \}\ \doxymbox{\hyperlink{struct_s_d_l___mime_data_list}{SDL\_MimeDataList}};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_userdata}{SDL\_WaylandUserdata}}}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ Uint32\ sequence;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ *data;}
+\DoxyCodeLine{00051\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_userdata}{SDL\_WaylandUserdata}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_data\_source\ *source;}
+\DoxyCodeLine{00056\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ *data\_device;}
+\DoxyCodeLine{00057\ \ \ \ \ SDL\_ClipboardDataCallback\ callback;}
+\DoxyCodeLine{00058\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_userdata}{SDL\_WaylandUserdata}}\ userdata;}
+\DoxyCodeLine{00059\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00062\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_primary\_selection\_source\_v1\ *source;}
+\DoxyCodeLine{00064\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ *data\_device;}
+\DoxyCodeLine{00065\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}\ *primary\_selection\_device;}
+\DoxyCodeLine{00066\ \ \ \ \ SDL\_ClipboardDataCallback\ callback;}
+\DoxyCodeLine{00067\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_userdata}{SDL\_WaylandUserdata}}\ userdata;}
+\DoxyCodeLine{00068\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00071\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_data\_offer\ *offer;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_list\ mimes;}
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ *data\_device;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ Callback\ data\ for\ queued\ receive.}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_callback\ *callback;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{int}\ read\_fd;}
+\DoxyCodeLine{00079\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00082\ \{}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_primary\_selection\_offer\_v1\ *offer;}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_list\ mimes;}
+\DoxyCodeLine{00085\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}\ *primary\_selection\_device;}
+\DoxyCodeLine{00086\ \}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_offer}{SDL\_WaylandPrimarySelectionOffer}};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}}
+\DoxyCodeLine{00089\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_data\_device\ *data\_device;}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}}\ *seat;}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{char}\ *id\_str;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{//\ Drag\ and\ Drop}}
+\DoxyCodeLine{00095\ \ \ \ \ uint32\_t\ drag\_serial;}
+\DoxyCodeLine{00096\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}}\ *drag\_offer;}
+\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}}\ *selection\_offer;}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type;}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_mime\_file,\ has\_mime\_text;}
+\DoxyCodeLine{00100\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *dnd\_window;}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{struct\ }wl\_surface\ *dnd\_surface;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ Clipboard\ and\ Primary\ Selection}}
+\DoxyCodeLine{00104\ \ \ \ \ uint32\_t\ selection\_serial;}
+\DoxyCodeLine{00105\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}}\ *selection\_source;}
+\DoxyCodeLine{00106\ \};}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}}
+\DoxyCodeLine{00109\ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{struct\ }zwp\_primary\_selection\_device\_v1\ *primary\_selection\_device;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___wayland_seat}{SDL\_WaylandSeat}}\ *seat;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ uint32\_t\ selection\_serial;}
+\DoxyCodeLine{00114\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}}\ *selection\_source;}
+\DoxyCodeLine{00115\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_offer}{SDL\_WaylandPrimarySelectionOffer}}\ *selection\_offer;}
+\DoxyCodeLine{00116\ \};}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ Wayland\ Data\ Source\ /\ Primary\ Selection\ Source\ -\/\ (Sending)}}
+\DoxyCodeLine{00119\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}}\ *Wayland\_data\_source\_create(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00120\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}}\ *Wayland\_primary\_selection\_source\_create(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00121\ \textcolor{keyword}{extern}\ ssize\_t\ Wayland\_data\_source\_send(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}}\ *source,}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type,\ \textcolor{keywordtype}{int}\ fd);}
+\DoxyCodeLine{00123\ \textcolor{keyword}{extern}\ ssize\_t\ Wayland\_primary\_selection\_source\_send(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}}\ *source,}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type,\ \textcolor{keywordtype}{int}\ fd);}
+\DoxyCodeLine{00125\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_data\_source\_set\_callback(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}}\ *source,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_ClipboardDataCallback\ callback,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *userdata,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Uint32\ sequence);}
+\DoxyCodeLine{00129\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_primary\_selection\_source\_set\_callback(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}}\ *source,}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_ClipboardDataCallback\ callback,}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00132\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ *Wayland\_data\_source\_get\_data(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}}\ *source,}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type,}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *length);}
+\DoxyCodeLine{00135\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ *Wayland\_primary\_selection\_source\_get\_data(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}}\ *source,}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type,}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *length);}
+\DoxyCodeLine{00138\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_data\_source\_destroy(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}}\ *source);}
+\DoxyCodeLine{00139\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_primary\_selection\_source\_destroy(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}}\ *source);}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{comment}{//\ Wayland\ Data\ /\ Primary\ Selection\ Offer\ -\/\ (Receiving)}}
+\DoxyCodeLine{00142\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ *Wayland\_data\_offer\_receive(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}}\ *offer,}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type,}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *length,}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ extended\_timeout);}
+\DoxyCodeLine{00146\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ *Wayland\_primary\_selection\_offer\_receive(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_offer}{SDL\_WaylandPrimarySelectionOffer}}\ *offer,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type,}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ *length);}
+\DoxyCodeLine{00149\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_data\_offer\_has\_mime(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}}\ *offer,}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type);}
+\DoxyCodeLine{00151\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_data\_offer\_notify\_from\_mimes(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}}\ *offer,}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ check\_origin);}
+\DoxyCodeLine{00153\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_primary\_selection\_offer\_has\_mime(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_offer}{SDL\_WaylandPrimarySelectionOffer}}\ *offer,}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type);}
+\DoxyCodeLine{00155\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_data\_offer\_add\_mime(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}}\ *offer,}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type);}
+\DoxyCodeLine{00157\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_primary\_selection\_offer\_add\_mime(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_offer}{SDL\_WaylandPrimarySelectionOffer}}\ *offer,}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mime\_type);}
+\DoxyCodeLine{00159\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_data\_offer\_destroy(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_offer}{SDL\_WaylandDataOffer}}\ *offer);}
+\DoxyCodeLine{00160\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_primary\_selection\_offer\_destroy(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_offer}{SDL\_WaylandPrimarySelectionOffer}}\ *offer);}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{comment}{//\ Clipboard\ /\ Primary\ Selection}}
+\DoxyCodeLine{00163\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_data\_device\_clear\_selection(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ *device);}
+\DoxyCodeLine{00164\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_primary\_selection\_device\_clear\_selection(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}\ *device);}
+\DoxyCodeLine{00165\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_data\_device\_set\_selection(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ *device,}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_data_source}{SDL\_WaylandDataSource}}\ *source,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ **mime\_types,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ mime\_count);}
+\DoxyCodeLine{00169\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Wayland\_primary\_selection\_device\_set\_selection(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}\ *device,}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_source}{SDL\_WaylandPrimarySelectionSource}}\ *source,}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\textcolor{keyword}{const}\ *mime\_types,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ mime\_count);}
+\DoxyCodeLine{00173\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_data\_device\_set\_serial(\doxymbox{\hyperlink{struct_s_d_l___wayland_data_device}{SDL\_WaylandDataDevice}}\ *device,}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ serial);}
+\DoxyCodeLine{00175\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Wayland\_primary\_selection\_device\_set\_serial(\doxymbox{\hyperlink{struct_s_d_l___wayland_primary_selection_device}{SDL\_WaylandPrimarySelectionDevice}}\ *device,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ serial);}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_waylanddatamanager\_h\_}}
+
+\end{DoxyCode}

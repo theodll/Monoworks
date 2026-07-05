@@ -1,0 +1,860 @@
+\doxysection{openxr\+\_\+reflection\+\_\+structs.\+h}
+\hypertarget{openxr__reflection__structs_8h_source}{}\label{openxr__reflection__structs_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/openxr/openxr\_reflection\_structs.h@{MonoRuntime/extern/sdl/src/video/khronos/openxr/openxr\_reflection\_structs.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ OPENXR\_REFLECTION\_STRUCTS\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ OPENXR\_REFLECTION\_STRUCTS\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ (c)\ 2017-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ OpenXR\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}openxr.h"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00018\ \textcolor{comment}{This\ file\ contains\ expansion\ macros\ (X\ Macros)\ for\ OpenXR\ structures.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ XR\_LIST\_ALL\_STRUCTURE\_TYPES(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_CORE(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_D3D11(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_D3D12(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_METAL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_WAYLAND(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_WIN32(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_XCB(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_XLIB(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_ES(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_ES\_XR\_USE\_PLATFORM\_ANDROID(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_VULKAN(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_ANDROID(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_EGL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_ML(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_WIN32(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ Implementation\ detail\ of\ XR\_LIST\_ALL\_STRUCTURE\_TYPES()}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_CORE(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrApiLayerProperties,\ XR\_TYPE\_API\_LAYER\_PROPERTIES)\ \(\backslash\)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrExtensionProperties,\ XR\_TYPE\_EXTENSION\_PROPERTIES)\ \(\backslash\)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInstanceCreateInfo,\ XR\_TYPE\_INSTANCE\_CREATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInstanceProperties,\ XR\_TYPE\_INSTANCE\_PROPERTIES)\ \(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataBuffer,\ XR\_TYPE\_EVENT\_DATA\_BUFFER)\ \(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemGetInfo,\ XR\_TYPE\_SYSTEM\_GET\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemProperties,\ XR\_TYPE\_SYSTEM\_PROPERTIES)\ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSessionCreateInfo,\ XR\_TYPE\_SESSION\_CREATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceVelocity,\ XR\_TYPE\_SPACE\_VELOCITY)\ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrReferenceSpaceCreateInfo,\ XR\_TYPE\_REFERENCE\_SPACE\_CREATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionSpaceCreateInfo,\ XR\_TYPE\_ACTION\_SPACE\_CREATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceLocation,\ XR\_TYPE\_SPACE\_LOCATION)\ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViewConfigurationProperties,\ XR\_TYPE\_VIEW\_CONFIGURATION\_PROPERTIES)\ \(\backslash\)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViewConfigurationView,\ XR\_TYPE\_VIEW\_CONFIGURATION\_VIEW)\ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainCreateInfo,\ XR\_TYPE\_SWAPCHAIN\_CREATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageAcquireInfo,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_ACQUIRE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageWaitInfo,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_WAIT\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageReleaseInfo,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_RELEASE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSessionBeginInfo,\ XR\_TYPE\_SESSION\_BEGIN\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFrameWaitInfo,\ XR\_TYPE\_FRAME\_WAIT\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFrameState,\ XR\_TYPE\_FRAME\_STATE)\ \(\backslash\)}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFrameBeginInfo,\ XR\_TYPE\_FRAME\_BEGIN\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFrameEndInfo,\ XR\_TYPE\_FRAME\_END\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViewLocateInfo,\ XR\_TYPE\_VIEW\_LOCATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViewState,\ XR\_TYPE\_VIEW\_STATE)\ \(\backslash\)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrView,\ XR\_TYPE\_VIEW)\ \(\backslash\)}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionSetCreateInfo,\ XR\_TYPE\_ACTION\_SET\_CREATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionCreateInfo,\ XR\_TYPE\_ACTION\_CREATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInteractionProfileSuggestedBinding,\ XR\_TYPE\_INTERACTION\_PROFILE\_SUGGESTED\_BINDING)\ \(\backslash\)}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSessionActionSetsAttachInfo,\ XR\_TYPE\_SESSION\_ACTION\_SETS\_ATTACH\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInteractionProfileState,\ XR\_TYPE\_INTERACTION\_PROFILE\_STATE)\ \(\backslash\)}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionStateGetInfo,\ XR\_TYPE\_ACTION\_STATE\_GET\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionStateBoolean,\ XR\_TYPE\_ACTION\_STATE\_BOOLEAN)\ \(\backslash\)}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionStateFloat,\ XR\_TYPE\_ACTION\_STATE\_FLOAT)\ \(\backslash\)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionStateVector2f,\ XR\_TYPE\_ACTION\_STATE\_VECTOR2F)\ \(\backslash\)}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionStatePose,\ XR\_TYPE\_ACTION\_STATE\_POSE)\ \(\backslash\)}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActionsSyncInfo,\ XR\_TYPE\_ACTIONS\_SYNC\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBoundSourcesForActionEnumerateInfo,\ XR\_TYPE\_BOUND\_SOURCES\_FOR\_ACTION\_ENUMERATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInputSourceLocalizedNameGetInfo,\ XR\_TYPE\_INPUT\_SOURCE\_LOCALIZED\_NAME\_GET\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHapticActionInfo,\ XR\_TYPE\_HAPTIC\_ACTION\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerProjectionView,\ XR\_TYPE\_COMPOSITION\_LAYER\_PROJECTION\_VIEW)\ \(\backslash\)}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerProjection,\ XR\_TYPE\_COMPOSITION\_LAYER\_PROJECTION)\ \(\backslash\)}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerQuad,\ XR\_TYPE\_COMPOSITION\_LAYER\_QUAD)\ \(\backslash\)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataEventsLost,\ XR\_TYPE\_EVENT\_DATA\_EVENTS\_LOST)\ \(\backslash\)}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataInstanceLossPending,\ XR\_TYPE\_EVENT\_DATA\_INSTANCE\_LOSS\_PENDING)\ \(\backslash\)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSessionStateChanged,\ XR\_TYPE\_EVENT\_DATA\_SESSION\_STATE\_CHANGED)\ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataReferenceSpaceChangePending,\ XR\_TYPE\_EVENT\_DATA\_REFERENCE\_SPACE\_CHANGE\_PENDING)\ \(\backslash\)}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataInteractionProfileChanged,\ XR\_TYPE\_EVENT\_DATA\_INTERACTION\_PROFILE\_CHANGED)\ \(\backslash\)}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHapticVibration,\ XR\_TYPE\_HAPTIC\_VIBRATION)\ \(\backslash\)}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpacesLocateInfo,\ XR\_TYPE\_SPACES\_LOCATE\_INFO)\ \(\backslash\)}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceLocations,\ XR\_TYPE\_SPACE\_LOCATIONS)\ \(\backslash\)}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceVelocities,\ XR\_TYPE\_SPACE\_VELOCITIES)\ \(\backslash\)}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerCubeKHR,\ XR\_TYPE\_COMPOSITION\_LAYER\_CUBE\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerDepthInfoKHR,\ XR\_TYPE\_COMPOSITION\_LAYER\_DEPTH\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerCylinderKHR,\ XR\_TYPE\_COMPOSITION\_LAYER\_CYLINDER\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerEquirectKHR,\ XR\_TYPE\_COMPOSITION\_LAYER\_EQUIRECT\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVisibilityMaskKHR,\ XR\_TYPE\_VISIBILITY\_MASK\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataVisibilityMaskChangedKHR,\ XR\_TYPE\_EVENT\_DATA\_VISIBILITY\_MASK\_CHANGED\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerColorScaleBiasKHR,\ XR\_TYPE\_COMPOSITION\_LAYER\_COLOR\_SCALE\_BIAS\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerEquirect2KHR,\ XR\_TYPE\_COMPOSITION\_LAYER\_EQUIRECT2\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBindingModificationsKHR,\ XR\_TYPE\_BINDING\_MODIFICATIONS\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataPerfSettingsEXT,\ XR\_TYPE\_EVENT\_DATA\_PERF\_SETTINGS\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDebugUtilsObjectNameInfoEXT,\ XR\_TYPE\_DEBUG\_UTILS\_OBJECT\_NAME\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDebugUtilsLabelEXT,\ XR\_TYPE\_DEBUG\_UTILS\_LABEL\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDebugUtilsMessengerCallbackDataEXT,\ XR\_TYPE\_DEBUG\_UTILS\_MESSENGER\_CALLBACK\_DATA\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDebugUtilsMessengerCreateInfoEXT,\ XR\_TYPE\_DEBUG\_UTILS\_MESSENGER\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemEyeGazeInteractionPropertiesEXT,\ XR\_TYPE\_SYSTEM\_EYE\_GAZE\_INTERACTION\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEyeGazeSampleTimeEXT,\ XR\_TYPE\_EYE\_GAZE\_SAMPLE\_TIME\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSessionCreateInfoOverlayEXTX,\ XR\_TYPE\_SESSION\_CREATE\_INFO\_OVERLAY\_EXTX)\ \(\backslash\)}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataMainSessionVisibilityChangedEXTX,\ XR\_TYPE\_EVENT\_DATA\_MAIN\_SESSION\_VISIBILITY\_CHANGED\_EXTX)\ \(\backslash\)}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorCreateInfoMSFT,\ XR\_TYPE\_SPATIAL\_ANCHOR\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorSpaceCreateInfoMSFT,\ XR\_TYPE\_SPATIAL\_ANCHOR\_SPACE\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerImageLayoutFB,\ XR\_TYPE\_COMPOSITION\_LAYER\_IMAGE\_LAYOUT\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerAlphaBlendFB,\ XR\_TYPE\_COMPOSITION\_LAYER\_ALPHA\_BLEND\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViewConfigurationDepthRangeEXT,\ XR\_TYPE\_VIEW\_CONFIGURATION\_DEPTH\_RANGE\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialGraphNodeSpaceCreateInfoMSFT,\ XR\_TYPE\_SPATIAL\_GRAPH\_NODE\_SPACE\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialGraphStaticNodeBindingCreateInfoMSFT,\ XR\_TYPE\_SPATIAL\_GRAPH\_STATIC\_NODE\_BINDING\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialGraphNodeBindingPropertiesGetInfoMSFT,\ XR\_TYPE\_SPATIAL\_GRAPH\_NODE\_BINDING\_PROPERTIES\_GET\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialGraphNodeBindingPropertiesMSFT,\ XR\_TYPE\_SPATIAL\_GRAPH\_NODE\_BINDING\_PROPERTIES\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemHandTrackingPropertiesEXT,\ XR\_TYPE\_SYSTEM\_HAND\_TRACKING\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandTrackerCreateInfoEXT,\ XR\_TYPE\_HAND\_TRACKER\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandJointsLocateInfoEXT,\ XR\_TYPE\_HAND\_JOINTS\_LOCATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandJointLocationsEXT,\ XR\_TYPE\_HAND\_JOINT\_LOCATIONS\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandJointVelocitiesEXT,\ XR\_TYPE\_HAND\_JOINT\_VELOCITIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemHandTrackingMeshPropertiesMSFT,\ XR\_TYPE\_SYSTEM\_HAND\_TRACKING\_MESH\_PROPERTIES\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandMeshSpaceCreateInfoMSFT,\ XR\_TYPE\_HAND\_MESH\_SPACE\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandMeshUpdateInfoMSFT,\ XR\_TYPE\_HAND\_MESH\_UPDATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandMeshMSFT,\ XR\_TYPE\_HAND\_MESH\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandPoseTypeInfoMSFT,\ XR\_TYPE\_HAND\_POSE\_TYPE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSecondaryViewConfigurationSessionBeginInfoMSFT,\ XR\_TYPE\_SECONDARY\_VIEW\_CONFIGURATION\_SESSION\_BEGIN\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSecondaryViewConfigurationStateMSFT,\ XR\_TYPE\_SECONDARY\_VIEW\_CONFIGURATION\_STATE\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSecondaryViewConfigurationFrameStateMSFT,\ XR\_TYPE\_SECONDARY\_VIEW\_CONFIGURATION\_FRAME\_STATE\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSecondaryViewConfigurationLayerInfoMSFT,\ XR\_TYPE\_SECONDARY\_VIEW\_CONFIGURATION\_LAYER\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSecondaryViewConfigurationFrameEndInfoMSFT,\ XR\_TYPE\_SECONDARY\_VIEW\_CONFIGURATION\_FRAME\_END\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSecondaryViewConfigurationSwapchainCreateInfoMSFT,\ XR\_TYPE\_SECONDARY\_VIEW\_CONFIGURATION\_SWAPCHAIN\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrControllerModelKeyStateMSFT,\ XR\_TYPE\_CONTROLLER\_MODEL\_KEY\_STATE\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrControllerModelNodePropertiesMSFT,\ XR\_TYPE\_CONTROLLER\_MODEL\_NODE\_PROPERTIES\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrControllerModelPropertiesMSFT,\ XR\_TYPE\_CONTROLLER\_MODEL\_PROPERTIES\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrControllerModelNodeStateMSFT,\ XR\_TYPE\_CONTROLLER\_MODEL\_NODE\_STATE\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrControllerModelStateMSFT,\ XR\_TYPE\_CONTROLLER\_MODEL\_STATE\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViewConfigurationViewFovEPIC,\ XR\_TYPE\_VIEW\_CONFIGURATION\_VIEW\_FOV\_EPIC)\ \(\backslash\)}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerReprojectionInfoMSFT,\ XR\_TYPE\_COMPOSITION\_LAYER\_REPROJECTION\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerReprojectionPlaneOverrideMSFT,\ XR\_TYPE\_COMPOSITION\_LAYER\_REPROJECTION\_PLANE\_OVERRIDE\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerSecureContentFB,\ XR\_TYPE\_COMPOSITION\_LAYER\_SECURE\_CONTENT\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemBodyTrackingPropertiesFB,\ XR\_TYPE\_SYSTEM\_BODY\_TRACKING\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyTrackerCreateInfoFB,\ XR\_TYPE\_BODY\_TRACKER\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodySkeletonFB,\ XR\_TYPE\_BODY\_SKELETON\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyJointsLocateInfoFB,\ XR\_TYPE\_BODY\_JOINTS\_LOCATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyJointLocationsFB,\ XR\_TYPE\_BODY\_JOINT\_LOCATIONS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInteractionProfileDpadBindingEXT,\ XR\_TYPE\_INTERACTION\_PROFILE\_DPAD\_BINDING\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInteractionProfileAnalogThresholdVALVE,\ XR\_TYPE\_INTERACTION\_PROFILE\_ANALOG\_THRESHOLD\_VALVE)\ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandJointsMotionRangeInfoEXT,\ XR\_TYPE\_HAND\_JOINTS\_MOTION\_RANGE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneObserverCreateInfoMSFT,\ XR\_TYPE\_SCENE\_OBSERVER\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneCreateInfoMSFT,\ XR\_TYPE\_SCENE\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrNewSceneComputeInfoMSFT,\ XR\_TYPE\_NEW\_SCENE\_COMPUTE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVisualMeshComputeLodInfoMSFT,\ XR\_TYPE\_VISUAL\_MESH\_COMPUTE\_LOD\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneComponentsMSFT,\ XR\_TYPE\_SCENE\_COMPONENTS\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneComponentsGetInfoMSFT,\ XR\_TYPE\_SCENE\_COMPONENTS\_GET\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneComponentLocationsMSFT,\ XR\_TYPE\_SCENE\_COMPONENT\_LOCATIONS\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneComponentsLocateInfoMSFT,\ XR\_TYPE\_SCENE\_COMPONENTS\_LOCATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneObjectsMSFT,\ XR\_TYPE\_SCENE\_OBJECTS\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneComponentParentFilterInfoMSFT,\ XR\_TYPE\_SCENE\_COMPONENT\_PARENT\_FILTER\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneObjectTypesFilterInfoMSFT,\ XR\_TYPE\_SCENE\_OBJECT\_TYPES\_FILTER\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrScenePlanesMSFT,\ XR\_TYPE\_SCENE\_PLANES\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrScenePlaneAlignmentFilterInfoMSFT,\ XR\_TYPE\_SCENE\_PLANE\_ALIGNMENT\_FILTER\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshesMSFT,\ XR\_TYPE\_SCENE\_MESHES\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshBuffersGetInfoMSFT,\ XR\_TYPE\_SCENE\_MESH\_BUFFERS\_GET\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshBuffersMSFT,\ XR\_TYPE\_SCENE\_MESH\_BUFFERS\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshVertexBufferMSFT,\ XR\_TYPE\_SCENE\_MESH\_VERTEX\_BUFFER\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshIndicesUint32MSFT,\ XR\_TYPE\_SCENE\_MESH\_INDICES\_UINT32\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshIndicesUint16MSFT,\ XR\_TYPE\_SCENE\_MESH\_INDICES\_UINT16\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSerializedSceneFragmentDataGetInfoMSFT,\ XR\_TYPE\_SERIALIZED\_SCENE\_FRAGMENT\_DATA\_GET\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneDeserializeInfoMSFT,\ XR\_TYPE\_SCENE\_DESERIALIZE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataDisplayRefreshRateChangedFB,\ XR\_TYPE\_EVENT\_DATA\_DISPLAY\_REFRESH\_RATE\_CHANGED\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViveTrackerPathsHTCX,\ XR\_TYPE\_VIVE\_TRACKER\_PATHS\_HTCX)\ \(\backslash\)}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataViveTrackerConnectedHTCX,\ XR\_TYPE\_EVENT\_DATA\_VIVE\_TRACKER\_CONNECTED\_HTCX)\ \(\backslash\)}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFacialTrackingPropertiesHTC,\ XR\_TYPE\_SYSTEM\_FACIAL\_TRACKING\_PROPERTIES\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFacialExpressionsHTC,\ XR\_TYPE\_FACIAL\_EXPRESSIONS\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFacialTrackerCreateInfoHTC,\ XR\_TYPE\_FACIAL\_TRACKER\_CREATE\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemColorSpacePropertiesFB,\ XR\_TYPE\_SYSTEM\_COLOR\_SPACE\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandTrackingMeshFB,\ XR\_TYPE\_HAND\_TRACKING\_MESH\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandTrackingScaleFB,\ XR\_TYPE\_HAND\_TRACKING\_SCALE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandTrackingAimStateFB,\ XR\_TYPE\_HAND\_TRACKING\_AIM\_STATE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandTrackingCapsulesStateFB,\ XR\_TYPE\_HAND\_TRACKING\_CAPSULES\_STATE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialEntityPropertiesFB,\ XR\_TYPE\_SYSTEM\_SPATIAL\_ENTITY\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorCreateInfoFB,\ XR\_TYPE\_SPATIAL\_ANCHOR\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceComponentStatusSetInfoFB,\ XR\_TYPE\_SPACE\_COMPONENT\_STATUS\_SET\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceComponentStatusFB,\ XR\_TYPE\_SPACE\_COMPONENT\_STATUS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpatialAnchorCreateCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SPATIAL\_ANCHOR\_CREATE\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceSetStatusCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_SET\_STATUS\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveationProfileCreateInfoFB,\ XR\_TYPE\_FOVEATION\_PROFILE\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainCreateInfoFoveationFB,\ XR\_TYPE\_SWAPCHAIN\_CREATE\_INFO\_FOVEATION\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainStateFoveationFB,\ XR\_TYPE\_SWAPCHAIN\_STATE\_FOVEATION\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveationLevelProfileCreateInfoFB,\ XR\_TYPE\_FOVEATION\_LEVEL\_PROFILE\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemKeyboardTrackingPropertiesFB,\ XR\_TYPE\_SYSTEM\_KEYBOARD\_TRACKING\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrKeyboardSpaceCreateInfoFB,\ XR\_TYPE\_KEYBOARD\_SPACE\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrKeyboardTrackingQueryFB,\ XR\_TYPE\_KEYBOARD\_TRACKING\_QUERY\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTriangleMeshCreateInfoFB,\ XR\_TYPE\_TRIANGLE\_MESH\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPassthroughPropertiesFB,\ XR\_TYPE\_SYSTEM\_PASSTHROUGH\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPassthroughProperties2FB,\ XR\_TYPE\_SYSTEM\_PASSTHROUGH\_PROPERTIES2\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughCreateInfoFB,\ XR\_TYPE\_PASSTHROUGH\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughLayerCreateInfoFB,\ XR\_TYPE\_PASSTHROUGH\_LAYER\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerPassthroughFB,\ XR\_TYPE\_COMPOSITION\_LAYER\_PASSTHROUGH\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGeometryInstanceCreateInfoFB,\ XR\_TYPE\_GEOMETRY\_INSTANCE\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGeometryInstanceTransformFB,\ XR\_TYPE\_GEOMETRY\_INSTANCE\_TRANSFORM\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughStyleFB,\ XR\_TYPE\_PASSTHROUGH\_STYLE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughColorMapMonoToRgbaFB,\ XR\_TYPE\_PASSTHROUGH\_COLOR\_MAP\_MONO\_TO\_RGBA\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughColorMapMonoToMonoFB,\ XR\_TYPE\_PASSTHROUGH\_COLOR\_MAP\_MONO\_TO\_MONO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughBrightnessContrastSaturationFB,\ XR\_TYPE\_PASSTHROUGH\_BRIGHTNESS\_CONTRAST\_SATURATION\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataPassthroughStateChangedFB,\ XR\_TYPE\_EVENT\_DATA\_PASSTHROUGH\_STATE\_CHANGED\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelPathInfoFB,\ XR\_TYPE\_RENDER\_MODEL\_PATH\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelPropertiesFB,\ XR\_TYPE\_RENDER\_MODEL\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelBufferFB,\ XR\_TYPE\_RENDER\_MODEL\_BUFFER\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelLoadInfoFB,\ XR\_TYPE\_RENDER\_MODEL\_LOAD\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemRenderModelPropertiesFB,\ XR\_TYPE\_SYSTEM\_RENDER\_MODEL\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelCapabilitiesRequestFB,\ XR\_TYPE\_RENDER\_MODEL\_CAPABILITIES\_REQUEST\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrViewLocateFoveatedRenderingVARJO,\ XR\_TYPE\_VIEW\_LOCATE\_FOVEATED\_RENDERING\_VARJO)\ \(\backslash\)}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveatedViewConfigurationViewVARJO,\ XR\_TYPE\_FOVEATED\_VIEW\_CONFIGURATION\_VIEW\_VARJO)\ \(\backslash\)}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFoveatedRenderingPropertiesVARJO,\ XR\_TYPE\_SYSTEM\_FOVEATED\_RENDERING\_PROPERTIES\_VARJO)\ \(\backslash\)}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerDepthTestVARJO,\ XR\_TYPE\_COMPOSITION\_LAYER\_DEPTH\_TEST\_VARJO)\ \(\backslash\)}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemMarkerTrackingPropertiesVARJO,\ XR\_TYPE\_SYSTEM\_MARKER\_TRACKING\_PROPERTIES\_VARJO)\ \(\backslash\)}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataMarkerTrackingUpdateVARJO,\ XR\_TYPE\_EVENT\_DATA\_MARKER\_TRACKING\_UPDATE\_VARJO)\ \(\backslash\)}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerSpaceCreateInfoVARJO,\ XR\_TYPE\_MARKER\_SPACE\_CREATE\_INFO\_VARJO)\ \(\backslash\)}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFrameEndInfoML,\ XR\_TYPE\_FRAME\_END\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGlobalDimmerFrameEndInfoML,\ XR\_TYPE\_GLOBAL\_DIMMER\_FRAME\_END\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemMarkerUnderstandingPropertiesML,\ XR\_TYPE\_SYSTEM\_MARKER\_UNDERSTANDING\_PROPERTIES\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerDetectorCreateInfoML,\ XR\_TYPE\_MARKER\_DETECTOR\_CREATE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerDetectorArucoInfoML,\ XR\_TYPE\_MARKER\_DETECTOR\_ARUCO\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerDetectorSizeInfoML,\ XR\_TYPE\_MARKER\_DETECTOR\_SIZE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerDetectorAprilTagInfoML,\ XR\_TYPE\_MARKER\_DETECTOR\_APRIL\_TAG\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerDetectorCustomProfileInfoML,\ XR\_TYPE\_MARKER\_DETECTOR\_CUSTOM\_PROFILE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerDetectorSnapshotInfoML,\ XR\_TYPE\_MARKER\_DETECTOR\_SNAPSHOT\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerDetectorStateML,\ XR\_TYPE\_MARKER\_DETECTOR\_STATE\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMarkerSpaceCreateInfoML,\ XR\_TYPE\_MARKER\_SPACE\_CREATE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLocalizationMapML,\ XR\_TYPE\_LOCALIZATION\_MAP\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataLocalizationChangedML,\ XR\_TYPE\_EVENT\_DATA\_LOCALIZATION\_CHANGED\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrMapLocalizationRequestInfoML,\ XR\_TYPE\_MAP\_LOCALIZATION\_REQUEST\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLocalizationMapImportInfoML,\ XR\_TYPE\_LOCALIZATION\_MAP\_IMPORT\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLocalizationEnableEventsInfoML,\ XR\_TYPE\_LOCALIZATION\_ENABLE\_EVENTS\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsCreateInfoFromPoseML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_CREATE\_INFO\_FROM\_POSE\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCreateSpatialAnchorsCompletionML,\ XR\_TYPE\_CREATE\_SPATIAL\_ANCHORS\_COMPLETION\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorStateML,\ XR\_TYPE\_SPATIAL\_ANCHOR\_STATE\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsCreateStorageInfoML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_CREATE\_STORAGE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsQueryInfoRadiusML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_QUERY\_INFO\_RADIUS\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsQueryCompletionML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_QUERY\_COMPLETION\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsCreateInfoFromUuidsML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_CREATE\_INFO\_FROM\_UUIDS\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsPublishInfoML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_PUBLISH\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsPublishCompletionML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_PUBLISH\_COMPLETION\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsDeleteInfoML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_DELETE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsDeleteCompletionML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_DELETE\_COMPLETION\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsUpdateExpirationInfoML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_UPDATE\_EXPIRATION\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsUpdateExpirationCompletionML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_UPDATE\_EXPIRATION\_COMPLETION\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsPublishCompletionDetailsML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_PUBLISH\_COMPLETION\_DETAILS\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsDeleteCompletionDetailsML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_DELETE\_COMPLETION\_DETAILS\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorsUpdateExpirationCompletionDetailsML,\ XR\_TYPE\_SPATIAL\_ANCHORS\_UPDATE\_EXPIRATION\_COMPLETION\_DETAILS\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorPersistenceInfoMSFT,\ XR\_TYPE\_SPATIAL\_ANCHOR\_PERSISTENCE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorFromPersistedAnchorCreateInfoMSFT,\ XR\_TYPE\_SPATIAL\_ANCHOR\_FROM\_PERSISTED\_ANCHOR\_CREATE\_INFO\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMarkersMSFT,\ XR\_TYPE\_SCENE\_MARKERS\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMarkerTypeFilterMSFT,\ XR\_TYPE\_SCENE\_MARKER\_TYPE\_FILTER\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMarkerQRCodesMSFT,\ XR\_TYPE\_SCENE\_MARKER\_QR\_CODES\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceQueryInfoFB,\ XR\_TYPE\_SPACE\_QUERY\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceStorageLocationFilterInfoFB,\ XR\_TYPE\_SPACE\_STORAGE\_LOCATION\_FILTER\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceUuidFilterInfoFB,\ XR\_TYPE\_SPACE\_UUID\_FILTER\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceComponentFilterInfoFB,\ XR\_TYPE\_SPACE\_COMPONENT\_FILTER\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceQueryResultsFB,\ XR\_TYPE\_SPACE\_QUERY\_RESULTS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceQueryResultsAvailableFB,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_QUERY\_RESULTS\_AVAILABLE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceQueryCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_QUERY\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceSaveInfoFB,\ XR\_TYPE\_SPACE\_SAVE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceEraseInfoFB,\ XR\_TYPE\_SPACE\_ERASE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceSaveCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_SAVE\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceEraseCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_ERASE\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceShareInfoFB,\ XR\_TYPE\_SPACE\_SHARE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceShareCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_SHARE\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerSpaceWarpInfoFB,\ XR\_TYPE\_COMPOSITION\_LAYER\_SPACE\_WARP\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpaceWarpPropertiesFB,\ XR\_TYPE\_SYSTEM\_SPACE\_WARP\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHapticAmplitudeEnvelopeVibrationFB,\ XR\_TYPE\_HAPTIC\_AMPLITUDE\_ENVELOPE\_VIBRATION\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSemanticLabelsFB,\ XR\_TYPE\_SEMANTIC\_LABELS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRoomLayoutFB,\ XR\_TYPE\_ROOM\_LAYOUT\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBoundary2DFB,\ XR\_TYPE\_BOUNDARY\_2D\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSemanticLabelsSupportInfoFB,\ XR\_TYPE\_SEMANTIC\_LABELS\_SUPPORT\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDigitalLensControlALMALENCE,\ XR\_TYPE\_DIGITAL\_LENS\_CONTROL\_ALMALENCE)\ \(\backslash\)}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSceneCaptureCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SCENE\_CAPTURE\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneCaptureRequestInfoFB,\ XR\_TYPE\_SCENE\_CAPTURE\_REQUEST\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceContainerFB,\ XR\_TYPE\_SPACE\_CONTAINER\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveationEyeTrackedProfileCreateInfoMETA,\ XR\_TYPE\_FOVEATION\_EYE\_TRACKED\_PROFILE\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveationEyeTrackedStateMETA,\ XR\_TYPE\_FOVEATION\_EYE\_TRACKED\_STATE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFoveationEyeTrackedPropertiesMETA,\ XR\_TYPE\_SYSTEM\_FOVEATION\_EYE\_TRACKED\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFaceTrackingPropertiesFB,\ XR\_TYPE\_SYSTEM\_FACE\_TRACKING\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceTrackerCreateInfoFB,\ XR\_TYPE\_FACE\_TRACKER\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceExpressionInfoFB,\ XR\_TYPE\_FACE\_EXPRESSION\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceExpressionWeightsFB,\ XR\_TYPE\_FACE\_EXPRESSION\_WEIGHTS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEyeTrackerCreateInfoFB,\ XR\_TYPE\_EYE\_TRACKER\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEyeGazesInfoFB,\ XR\_TYPE\_EYE\_GAZES\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemEyeTrackingPropertiesFB,\ XR\_TYPE\_SYSTEM\_EYE\_TRACKING\_PROPERTIES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEyeGazesFB,\ XR\_TYPE\_EYE\_GAZES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughKeyboardHandsIntensityFB,\ XR\_TYPE\_PASSTHROUGH\_KEYBOARD\_HANDS\_INTENSITY\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerSettingsFB,\ XR\_TYPE\_COMPOSITION\_LAYER\_SETTINGS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHapticPcmVibrationFB,\ XR\_TYPE\_HAPTIC\_PCM\_VIBRATION\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDevicePcmSampleRateStateFB,\ XR\_TYPE\_DEVICE\_PCM\_SAMPLE\_RATE\_STATE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFrameSynthesisInfoEXT,\ XR\_TYPE\_FRAME\_SYNTHESIS\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFrameSynthesisConfigViewEXT,\ XR\_TYPE\_FRAME\_SYNTHESIS\_CONFIG\_VIEW\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerDepthTestFB,\ XR\_TYPE\_COMPOSITION\_LAYER\_DEPTH\_TEST\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLocalDimmingFrameEndInfoMETA,\ XR\_TYPE\_LOCAL\_DIMMING\_FRAME\_END\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughPreferencesMETA,\ XR\_TYPE\_PASSTHROUGH\_PREFERENCES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemVirtualKeyboardPropertiesMETA,\ XR\_TYPE\_SYSTEM\_VIRTUAL\_KEYBOARD\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardCreateInfoMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardSpaceCreateInfoMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_SPACE\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardLocationInfoMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_LOCATION\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardModelVisibilitySetInfoMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_MODEL\_VISIBILITY\_SET\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardAnimationStateMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_ANIMATION\_STATE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardModelAnimationStatesMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_MODEL\_ANIMATION\_STATES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardTextureDataMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_TEXTURE\_DATA\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardInputInfoMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_INPUT\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVirtualKeyboardTextContextChangeInfoMETA,\ XR\_TYPE\_VIRTUAL\_KEYBOARD\_TEXT\_CONTEXT\_CHANGE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataVirtualKeyboardCommitTextMETA,\ XR\_TYPE\_EVENT\_DATA\_VIRTUAL\_KEYBOARD\_COMMIT\_TEXT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataVirtualKeyboardBackspaceMETA,\ XR\_TYPE\_EVENT\_DATA\_VIRTUAL\_KEYBOARD\_BACKSPACE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataVirtualKeyboardEnterMETA,\ XR\_TYPE\_EVENT\_DATA\_VIRTUAL\_KEYBOARD\_ENTER\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataVirtualKeyboardShownMETA,\ XR\_TYPE\_EVENT\_DATA\_VIRTUAL\_KEYBOARD\_SHOWN\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataVirtualKeyboardHiddenMETA,\ XR\_TYPE\_EVENT\_DATA\_VIRTUAL\_KEYBOARD\_HIDDEN\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrExternalCameraOCULUS,\ XR\_TYPE\_EXTERNAL\_CAMERA\_OCULUS)\ \(\backslash\)}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPerformanceMetricsStateMETA,\ XR\_TYPE\_PERFORMANCE\_METRICS\_STATE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPerformanceMetricsCounterMETA,\ XR\_TYPE\_PERFORMANCE\_METRICS\_COUNTER\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceListSaveInfoFB,\ XR\_TYPE\_SPACE\_LIST\_SAVE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceListSaveCompleteFB,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_LIST\_SAVE\_COMPLETE\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceUserCreateInfoFB,\ XR\_TYPE\_SPACE\_USER\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemHeadsetIdPropertiesMETA,\ XR\_TYPE\_SYSTEM\_HEADSET\_ID\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpaceDiscoveryPropertiesMETA,\ XR\_TYPE\_SYSTEM\_SPACE\_DISCOVERY\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceDiscoveryInfoMETA,\ XR\_TYPE\_SPACE\_DISCOVERY\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceFilterUuidMETA,\ XR\_TYPE\_SPACE\_FILTER\_UUID\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceFilterComponentMETA,\ XR\_TYPE\_SPACE\_FILTER\_COMPONENT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceDiscoveryResultsMETA,\ XR\_TYPE\_SPACE\_DISCOVERY\_RESULTS\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceDiscoveryResultsAvailableMETA,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_DISCOVERY\_RESULTS\_AVAILABLE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpaceDiscoveryCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_SPACE\_DISCOVERY\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRecommendedLayerResolutionMETA,\ XR\_TYPE\_RECOMMENDED\_LAYER\_RESOLUTION\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRecommendedLayerResolutionGetInfoMETA,\ XR\_TYPE\_RECOMMENDED\_LAYER\_RESOLUTION\_GET\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpacePersistencePropertiesMETA,\ XR\_TYPE\_SYSTEM\_SPACE\_PERSISTENCE\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpacesSaveInfoMETA,\ XR\_TYPE\_SPACES\_SAVE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpacesSaveResultMETA,\ XR\_TYPE\_EVENT\_DATA\_SPACES\_SAVE\_RESULT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpacesEraseInfoMETA,\ XR\_TYPE\_SPACES\_ERASE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00346\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpacesEraseResultMETA,\ XR\_TYPE\_EVENT\_DATA\_SPACES\_ERASE\_RESULT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughColorLutCreateInfoMETA,\ XR\_TYPE\_PASSTHROUGH\_COLOR\_LUT\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00348\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughColorLutUpdateInfoMETA,\ XR\_TYPE\_PASSTHROUGH\_COLOR\_LUT\_UPDATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00349\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughColorMapLutMETA,\ XR\_TYPE\_PASSTHROUGH\_COLOR\_MAP\_LUT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughColorMapInterpolatedLutMETA,\ XR\_TYPE\_PASSTHROUGH\_COLOR\_MAP\_INTERPOLATED\_LUT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPassthroughColorLutPropertiesMETA,\ XR\_TYPE\_SYSTEM\_PASSTHROUGH\_COLOR\_LUT\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceTriangleMeshGetInfoMETA,\ XR\_TYPE\_SPACE\_TRIANGLE\_MESH\_GET\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceTriangleMeshMETA,\ XR\_TYPE\_SPACE\_TRIANGLE\_MESH\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPropertiesBodyTrackingFullBodyMETA,\ XR\_TYPE\_SYSTEM\_PROPERTIES\_BODY\_TRACKING\_FULL\_BODY\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataPassthroughLayerResumedMETA,\ XR\_TYPE\_EVENT\_DATA\_PASSTHROUGH\_LAYER\_RESUMED\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyTrackingCalibrationStatusMETA,\ XR\_TYPE\_BODY\_TRACKING\_CALIBRATION\_STATUS\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyTrackingCalibrationInfoMETA,\ XR\_TYPE\_BODY\_TRACKING\_CALIBRATION\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPropertiesBodyTrackingCalibrationMETA,\ XR\_TYPE\_SYSTEM\_PROPERTIES\_BODY\_TRACKING\_CALIBRATION\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPropertiesBodyTrackingFidelityMETA,\ XR\_TYPE\_SYSTEM\_PROPERTIES\_BODY\_TRACKING\_FIDELITY\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyTrackingFidelityStatusMETA,\ XR\_TYPE\_BODY\_TRACKING\_FIDELITY\_STATUS\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFaceTrackingProperties2FB,\ XR\_TYPE\_SYSTEM\_FACE\_TRACKING\_PROPERTIES2\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceTrackerCreateInfo2FB,\ XR\_TYPE\_FACE\_TRACKER\_CREATE\_INFO2\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceExpressionInfo2FB,\ XR\_TYPE\_FACE\_EXPRESSION\_INFO2\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceExpressionWeights2FB,\ XR\_TYPE\_FACE\_EXPRESSION\_WEIGHTS2\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialEntitySharingPropertiesMETA,\ XR\_TYPE\_SYSTEM\_SPATIAL\_ENTITY\_SHARING\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00366\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrShareSpacesInfoMETA,\ XR\_TYPE\_SHARE\_SPACES\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00367\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataShareSpacesCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_SHARE\_SPACES\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthProviderCreateInfoMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_PROVIDER\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthSwapchainCreateInfoMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_SWAPCHAIN\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00370\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthSwapchainStateMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_SWAPCHAIN\_STATE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00371\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthImageAcquireInfoMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_IMAGE\_ACQUIRE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthImageViewMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_IMAGE\_VIEW\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthImageMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_IMAGE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthImageTimestampMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_IMAGE\_TIMESTAMP\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentDepthHandRemovalSetInfoMETA,\ XR\_TYPE\_ENVIRONMENT\_DEPTH\_HAND\_REMOVAL\_SET\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemEnvironmentDepthPropertiesMETA,\ XR\_TYPE\_SYSTEM\_ENVIRONMENT\_DEPTH\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelCreateInfoEXT,\ XR\_TYPE\_RENDER\_MODEL\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelPropertiesGetInfoEXT,\ XR\_TYPE\_RENDER\_MODEL\_PROPERTIES\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelPropertiesEXT,\ XR\_TYPE\_RENDER\_MODEL\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelSpaceCreateInfoEXT,\ XR\_TYPE\_RENDER\_MODEL\_SPACE\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelStateGetInfoEXT,\ XR\_TYPE\_RENDER\_MODEL\_STATE\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelStateEXT,\ XR\_TYPE\_RENDER\_MODEL\_STATE\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelAssetCreateInfoEXT,\ XR\_TYPE\_RENDER\_MODEL\_ASSET\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelAssetDataGetInfoEXT,\ XR\_TYPE\_RENDER\_MODEL\_ASSET\_DATA\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelAssetDataEXT,\ XR\_TYPE\_RENDER\_MODEL\_ASSET\_DATA\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelAssetPropertiesGetInfoEXT,\ XR\_TYPE\_RENDER\_MODEL\_ASSET\_PROPERTIES\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRenderModelAssetPropertiesEXT,\ XR\_TYPE\_RENDER\_MODEL\_ASSET\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInteractionRenderModelIdsEnumerateInfoEXT,\ XR\_TYPE\_INTERACTION\_RENDER\_MODEL\_IDS\_ENUMERATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInteractionRenderModelSubactionPathInfoEXT,\ XR\_TYPE\_INTERACTION\_RENDER\_MODEL\_SUBACTION\_PATH\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInteractionRenderModelTopLevelUserPathGetInfoEXT,\ XR\_TYPE\_INTERACTION\_RENDER\_MODEL\_TOP\_LEVEL\_USER\_PATH\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataInteractionRenderModelsChangedEXT,\ XR\_TYPE\_EVENT\_DATA\_INTERACTION\_RENDER\_MODELS\_CHANGED\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughCreateInfoHTC,\ XR\_TYPE\_PASSTHROUGH\_CREATE\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughColorHTC,\ XR\_TYPE\_PASSTHROUGH\_COLOR\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughMeshTransformInfoHTC,\ XR\_TYPE\_PASSTHROUGH\_MESH\_TRANSFORM\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerPassthroughHTC,\ XR\_TYPE\_COMPOSITION\_LAYER\_PASSTHROUGH\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveationApplyInfoHTC,\ XR\_TYPE\_FOVEATION\_APPLY\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveationDynamicModeInfoHTC,\ XR\_TYPE\_FOVEATION\_DYNAMIC\_MODE\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFoveationCustomModeInfoHTC,\ XR\_TYPE\_FOVEATION\_CUSTOM\_MODE\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemAnchorPropertiesHTC,\ XR\_TYPE\_SYSTEM\_ANCHOR\_PROPERTIES\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorCreateInfoHTC,\ XR\_TYPE\_SPATIAL\_ANCHOR\_CREATE\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemBodyTrackingPropertiesHTC,\ XR\_TYPE\_SYSTEM\_BODY\_TRACKING\_PROPERTIES\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyTrackerCreateInfoHTC,\ XR\_TYPE\_BODY\_TRACKER\_CREATE\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyJointsLocateInfoHTC,\ XR\_TYPE\_BODY\_JOINTS\_LOCATE\_INFO\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyJointLocationsHTC,\ XR\_TYPE\_BODY\_JOINT\_LOCATIONS\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodySkeletonHTC,\ XR\_TYPE\_BODY\_SKELETON\_HTC)\ \(\backslash\)}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrActiveActionSetPrioritiesEXT,\ XR\_TYPE\_ACTIVE\_ACTION\_SET\_PRIORITIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemForceFeedbackCurlPropertiesMNDX,\ XR\_TYPE\_SYSTEM\_FORCE\_FEEDBACK\_CURL\_PROPERTIES\_MNDX)\ \(\backslash\)}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrForceFeedbackCurlApplyLocationsMNDX,\ XR\_TYPE\_FORCE\_FEEDBACK\_CURL\_APPLY\_LOCATIONS\_MNDX)\ \(\backslash\)}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemBodyTrackingPropertiesBD,\ XR\_TYPE\_SYSTEM\_BODY\_TRACKING\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyTrackerCreateInfoBD,\ XR\_TYPE\_BODY\_TRACKER\_CREATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyJointsLocateInfoBD,\ XR\_TYPE\_BODY\_JOINTS\_LOCATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBodyJointLocationsBD,\ XR\_TYPE\_BODY\_JOINT\_LOCATIONS\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFacialSimulationPropertiesBD,\ XR\_TYPE\_SYSTEM\_FACIAL\_SIMULATION\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceTrackerCreateInfoBD,\ XR\_TYPE\_FACE\_TRACKER\_CREATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFacialSimulationDataGetInfoBD,\ XR\_TYPE\_FACIAL\_SIMULATION\_DATA\_GET\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFacialSimulationDataBD,\ XR\_TYPE\_FACIAL\_SIMULATION\_DATA\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLipExpressionDataBD,\ XR\_TYPE\_LIP\_EXPRESSION\_DATA\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialSensingPropertiesBD,\ XR\_TYPE\_SYSTEM\_SPATIAL\_SENSING\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentGetInfoBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_GET\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityLocationGetInfoBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_LOCATION\_GET\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentDataLocationBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_DATA\_LOCATION\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentDataSemanticBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_DATA\_SEMANTIC\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentDataBoundingBox2DBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_DATA\_BOUNDING\_BOX\_2D\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentDataPolygonBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_DATA\_POLYGON\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentDataBoundingBox3DBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_DATA\_BOUNDING\_BOX\_3D\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentDataTriangleMeshBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_DATA\_TRIANGLE\_MESH\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataProviderCreateInfoBD,\ XR\_TYPE\_SENSE\_DATA\_PROVIDER\_CREATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataProviderStartInfoBD,\ XR\_TYPE\_SENSE\_DATA\_PROVIDER\_START\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSenseDataProviderStateChangedBD,\ XR\_TYPE\_EVENT\_DATA\_SENSE\_DATA\_PROVIDER\_STATE\_CHANGED\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSenseDataUpdatedBD,\ XR\_TYPE\_EVENT\_DATA\_SENSE\_DATA\_UPDATED\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataQueryInfoBD,\ XR\_TYPE\_SENSE\_DATA\_QUERY\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataQueryCompletionBD,\ XR\_TYPE\_SENSE\_DATA\_QUERY\_COMPLETION\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrQueriedSenseDataGetInfoBD,\ XR\_TYPE\_QUERIED\_SENSE\_DATA\_GET\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityStateBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_STATE\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrQueriedSenseDataBD,\ XR\_TYPE\_QUERIED\_SENSE\_DATA\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataFilterUuidBD,\ XR\_TYPE\_SENSE\_DATA\_FILTER\_UUID\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataFilterSemanticBD,\ XR\_TYPE\_SENSE\_DATA\_FILTER\_SEMANTIC\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityAnchorCreateInfoBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_ANCHOR\_CREATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrAnchorSpaceCreateInfoBD,\ XR\_TYPE\_ANCHOR\_SPACE\_CREATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00440\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFutureCompletionEXT,\ XR\_TYPE\_FUTURE\_COMPLETION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialAnchorPropertiesBD,\ XR\_TYPE\_SYSTEM\_SPATIAL\_ANCHOR\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorCreateInfoBD,\ XR\_TYPE\_SPATIAL\_ANCHOR\_CREATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorCreateCompletionBD,\ XR\_TYPE\_SPATIAL\_ANCHOR\_CREATE\_COMPLETION\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorPersistInfoBD,\ XR\_TYPE\_SPATIAL\_ANCHOR\_PERSIST\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00445\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorUnpersistInfoBD,\ XR\_TYPE\_SPATIAL\_ANCHOR\_UNPERSIST\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialAnchorSharingPropertiesBD,\ XR\_TYPE\_SYSTEM\_SPATIAL\_ANCHOR\_SHARING\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorShareInfoBD,\ XR\_TYPE\_SPATIAL\_ANCHOR\_SHARE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSharedSpatialAnchorDownloadInfoBD,\ XR\_TYPE\_SHARED\_SPATIAL\_ANCHOR\_DOWNLOAD\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00449\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialScenePropertiesBD,\ XR\_TYPE\_SYSTEM\_SPATIAL\_SCENE\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneCaptureInfoBD,\ XR\_TYPE\_SCENE\_CAPTURE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialMeshPropertiesBD,\ XR\_TYPE\_SYSTEM\_SPATIAL\_MESH\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00452\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataProviderCreateInfoSpatialMeshBD,\ XR\_TYPE\_SENSE\_DATA\_PROVIDER\_CREATE\_INFO\_SPATIAL\_MESH\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFuturePollResultProgressBD,\ XR\_TYPE\_FUTURE\_POLL\_RESULT\_PROGRESS\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00454\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialPlanePropertiesBD,\ XR\_TYPE\_SYSTEM\_SPATIAL\_PLANE\_PROPERTIES\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00455\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityComponentDataPlaneOrientationBD,\ XR\_TYPE\_SPATIAL\_ENTITY\_COMPONENT\_DATA\_PLANE\_ORIENTATION\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSenseDataFilterPlaneOrientationBD,\ XR\_TYPE\_SENSE\_DATA\_FILTER\_PLANE\_ORIENTATION\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00457\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAudioRendererCreateInfoBD,\ XR\_TYPE\_SPATIAL\_AUDIO\_RENDERER\_CREATE\_INFO\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrAudioBufferBD,\ XR\_TYPE\_AUDIO\_BUFFER\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundObjectDirectivityCardioidBD,\ XR\_TYPE\_SOUND\_OBJECT\_DIRECTIVITY\_CARDIOID\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00460\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundObjectShapeSphereBD,\ XR\_TYPE\_SOUND\_OBJECT\_SHAPE\_SPHERE\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundObjectDistanceAttenuationCurveBD,\ XR\_TYPE\_SOUND\_OBJECT\_DISTANCE\_ATTENUATION\_CURVE\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundObjectDistanceAttenuationBD,\ XR\_TYPE\_SOUND\_OBJECT\_DISTANCE\_ATTENUATION\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundObjectConfigBD,\ XR\_TYPE\_SOUND\_OBJECT\_CONFIG\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundFieldConfigBD,\ XR\_TYPE\_SOUND\_FIELD\_CONFIG\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundFieldChannelDefinitionSurroundBD,\ XR\_TYPE\_SOUND\_FIELD\_CHANNEL\_DEFINITION\_SURROUND\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundFieldChannelDefinitionAmbixBD,\ XR\_TYPE\_SOUND\_FIELD\_CHANNEL\_DEFINITION\_AMBIX\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00467\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundFieldChannelDefinitionFumaBD,\ XR\_TYPE\_SOUND\_FIELD\_CHANNEL\_DEFINITION\_FUMA\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundTriangleMeshBD,\ XR\_TYPE\_SOUND\_TRIANGLE\_MESH\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00469\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundObstacleConfigBD,\ XR\_TYPE\_SOUND\_OBSTACLE\_CONFIG\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSoundObstacleMaterialConfigBD,\ XR\_TYPE\_SOUND\_OBSTACLE\_MATERIAL\_CONFIG\_BD)\ \(\backslash\)}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandTrackingDataSourceInfoEXT,\ XR\_TYPE\_HAND\_TRACKING\_DATA\_SOURCE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHandTrackingDataSourceStateEXT,\ XR\_TYPE\_HAND\_TRACKING\_DATA\_SOURCE\_STATE\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPlaneDetectionPropertiesEXT,\ XR\_TYPE\_SYSTEM\_PLANE\_DETECTION\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPlaneDetectorCreateInfoEXT,\ XR\_TYPE\_PLANE\_DETECTOR\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPlaneDetectorBeginInfoEXT,\ XR\_TYPE\_PLANE\_DETECTOR\_BEGIN\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPlaneDetectorGetInfoEXT,\ XR\_TYPE\_PLANE\_DETECTOR\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPlaneDetectorLocationEXT,\ XR\_TYPE\_PLANE\_DETECTOR\_LOCATION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPlaneDetectorLocationsEXT,\ XR\_TYPE\_PLANE\_DETECTOR\_LOCATIONS\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPlaneDetectorPolygonBufferEXT,\ XR\_TYPE\_PLANE\_DETECTOR\_POLYGON\_BUFFER\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableTrackerCreateInfoANDROID,\ XR\_TYPE\_TRACKABLE\_TRACKER\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableGetInfoANDROID,\ XR\_TYPE\_TRACKABLE\_GET\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00482\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackablePlaneANDROID,\ XR\_TYPE\_TRACKABLE\_PLANE\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrAnchorSpaceCreateInfoANDROID,\ XR\_TYPE\_ANCHOR\_SPACE\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemTrackablesPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_TRACKABLES\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00485\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemEyeTrackingPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_EYE\_TRACKING\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEyesANDROID,\ XR\_TYPE\_EYES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEyesGetInfoANDROID,\ XR\_TYPE\_EYES\_GET\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEyeTrackerCreateInfoANDROID,\ XR\_TYPE\_EYE\_TRACKER\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDeviceAnchorPersistenceCreateInfoANDROID,\ XR\_TYPE\_DEVICE\_ANCHOR\_PERSISTENCE\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPersistedAnchorSpaceCreateInfoANDROID,\ XR\_TYPE\_PERSISTED\_ANCHOR\_SPACE\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPersistedAnchorSpaceInfoANDROID,\ XR\_TYPE\_PERSISTED\_ANCHOR\_SPACE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemDeviceAnchorPersistencePropertiesANDROID,\ XR\_TYPE\_SYSTEM\_DEVICE\_ANCHOR\_PERSISTENCE\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceTrackerCreateInfoANDROID,\ XR\_TYPE\_FACE\_TRACKER\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceStateGetInfoANDROID,\ XR\_TYPE\_FACE\_STATE\_GET\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceStateANDROID,\ XR\_TYPE\_FACE\_STATE\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFaceTrackingPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_FACE\_TRACKING\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPassthroughCameraStatePropertiesANDROID,\ XR\_TYPE\_SYSTEM\_PASSTHROUGH\_CAMERA\_STATE\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughCameraStateGetInfoANDROID,\ XR\_TYPE\_PASSTHROUGH\_CAMERA\_STATE\_GET\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataRecommendedResolutionChangedANDROID,\ XR\_TYPE\_EVENT\_DATA\_RECOMMENDED\_RESOLUTION\_CHANGED\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughLayerCreateInfoANDROID,\ XR\_TYPE\_PASSTHROUGH\_LAYER\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPassthroughLayerMeshANDROID,\ XR\_TYPE\_PASSTHROUGH\_LAYER\_MESH\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCompositionLayerPassthroughANDROID,\ XR\_TYPE\_COMPOSITION\_LAYER\_PASSTHROUGH\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemPassthroughLayerPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_PASSTHROUGH\_LAYER\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRaycastInfoANDROID,\ XR\_TYPE\_RAYCAST\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRaycastHitResultsANDROID,\ XR\_TYPE\_RAYCAST\_HIT\_RESULTS\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPerformanceMetricsStateANDROID,\ XR\_TYPE\_PERFORMANCE\_METRICS\_STATE\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPerformanceMetricsCounterANDROID,\ XR\_TYPE\_PERFORMANCE\_METRICS\_COUNTER\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00508\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableObjectANDROID,\ XR\_TYPE\_TRACKABLE\_OBJECT\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00509\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableObjectConfigurationANDROID,\ XR\_TYPE\_TRACKABLE\_OBJECT\_CONFIGURATION\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00510\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFutureCancelInfoEXT,\ XR\_TYPE\_FUTURE\_CANCEL\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00511\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFuturePollInfoEXT,\ XR\_TYPE\_FUTURE\_POLL\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFuturePollResultEXT,\ XR\_TYPE\_FUTURE\_POLL\_RESULT\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataUserPresenceChangedEXT,\ XR\_TYPE\_EVENT\_DATA\_USER\_PRESENCE\_CHANGED\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00514\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemUserPresencePropertiesEXT,\ XR\_TYPE\_SYSTEM\_USER\_PRESENCE\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataHeadsetFitChangedML,\ XR\_TYPE\_EVENT\_DATA\_HEADSET\_FIT\_CHANGED\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataEyeCalibrationChangedML,\ XR\_TYPE\_EVENT\_DATA\_EYE\_CALIBRATION\_CHANGED\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00517\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrUserCalibrationEnableEventsInfoML,\ XR\_TYPE\_USER\_CALIBRATION\_ENABLE\_EVENTS\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00518\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemNotificationsSetInfoML,\ XR\_TYPE\_SYSTEM\_NOTIFICATIONS\_SET\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshDetectorCreateInfoML,\ XR\_TYPE\_WORLD\_MESH\_DETECTOR\_CREATE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshBlockStateML,\ XR\_TYPE\_WORLD\_MESH\_BLOCK\_STATE\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshStateRequestInfoML,\ XR\_TYPE\_WORLD\_MESH\_STATE\_REQUEST\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshStateRequestCompletionML,\ XR\_TYPE\_WORLD\_MESH\_STATE\_REQUEST\_COMPLETION\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00523\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshBufferRecommendedSizeInfoML,\ XR\_TYPE\_WORLD\_MESH\_BUFFER\_RECOMMENDED\_SIZE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshBufferSizeML,\ XR\_TYPE\_WORLD\_MESH\_BUFFER\_SIZE\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshBufferML,\ XR\_TYPE\_WORLD\_MESH\_BUFFER\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshBlockRequestML,\ XR\_TYPE\_WORLD\_MESH\_BLOCK\_REQUEST\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshGetInfoML,\ XR\_TYPE\_WORLD\_MESH\_GET\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshBlockML,\ XR\_TYPE\_WORLD\_MESH\_BLOCK\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshRequestCompletionInfoML,\ XR\_TYPE\_WORLD\_MESH\_REQUEST\_COMPLETION\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrWorldMeshRequestCompletionML,\ XR\_TYPE\_WORLD\_MESH\_REQUEST\_COMPLETION\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFacialExpressionPropertiesML,\ XR\_TYPE\_SYSTEM\_FACIAL\_EXPRESSION\_PROPERTIES\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFacialExpressionClientCreateInfoML,\ XR\_TYPE\_FACIAL\_EXPRESSION\_CLIENT\_CREATE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFacialExpressionBlendShapeGetInfoML,\ XR\_TYPE\_FACIAL\_EXPRESSION\_BLEND\_SHAPE\_GET\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFacialExpressionBlendShapePropertiesML,\ XR\_TYPE\_FACIAL\_EXPRESSION\_BLEND\_SHAPE\_PROPERTIES\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00535\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemBoundaryVisibilityPropertiesMETA,\ XR\_TYPE\_SYSTEM\_BOUNDARY\_VISIBILITY\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataBoundaryVisibilityChangedMETA,\ XR\_TYPE\_EVENT\_DATA\_BOUNDARY\_VISIBILITY\_CHANGED\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00537\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSimultaneousHandsAndControllersPropertiesMETA,\ XR\_TYPE\_SYSTEM\_SIMULTANEOUS\_HANDS\_AND\_CONTROLLERS\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSimultaneousHandsAndControllersTrackingResumeInfoMETA,\ XR\_TYPE\_SIMULTANEOUS\_HANDS\_AND\_CONTROLLERS\_TRACKING\_RESUME\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSimultaneousHandsAndControllersTrackingPauseInfoMETA,\ XR\_TYPE\_SIMULTANEOUS\_HANDS\_AND\_CONTROLLERS\_TRACKING\_PAUSE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00540\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrFaceTrackingVisemesMETA,\ XR\_TYPE\_FACE\_TRACKING\_VISEMES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemFaceTrackingVisemesPropertiesMETA,\ XR\_TYPE\_SYSTEM\_FACE\_TRACKING\_VISEMES\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRoomMeshFaceIndicesMETA,\ XR\_TYPE\_ROOM\_MESH\_FACE\_INDICES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00543\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceRoomMeshGetInfoMETA,\ XR\_TYPE\_SPACE\_ROOM\_MESH\_GET\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrRoomMeshMETA,\ XR\_TYPE\_ROOM\_MESH\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrColocationDiscoveryStartInfoMETA,\ XR\_TYPE\_COLOCATION\_DISCOVERY\_START\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrColocationDiscoveryStopInfoMETA,\ XR\_TYPE\_COLOCATION\_DISCOVERY\_STOP\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrColocationAdvertisementStartInfoMETA,\ XR\_TYPE\_COLOCATION\_ADVERTISEMENT\_START\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrColocationAdvertisementStopInfoMETA,\ XR\_TYPE\_COLOCATION\_ADVERTISEMENT\_STOP\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataStartColocationAdvertisementCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_START\_COLOCATION\_ADVERTISEMENT\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataStopColocationAdvertisementCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_STOP\_COLOCATION\_ADVERTISEMENT\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataColocationAdvertisementCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_COLOCATION\_ADVERTISEMENT\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataStartColocationDiscoveryCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_START\_COLOCATION\_DISCOVERY\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00553\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataColocationDiscoveryResultMETA,\ XR\_TYPE\_EVENT\_DATA\_COLOCATION\_DISCOVERY\_RESULT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataColocationDiscoveryCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_COLOCATION\_DISCOVERY\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataStopColocationDiscoveryCompleteMETA,\ XR\_TYPE\_EVENT\_DATA\_STOP\_COLOCATION\_DISCOVERY\_COMPLETE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemColocationDiscoveryPropertiesMETA,\ XR\_TYPE\_SYSTEM\_COLOCATION\_DISCOVERY\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSpatialEntityGroupSharingPropertiesMETA,\ XR\_TYPE\_SYSTEM\_SPATIAL\_ENTITY\_GROUP\_SHARING\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrShareSpacesRecipientGroupsMETA,\ XR\_TYPE\_SHARE\_SPACES\_RECIPIENT\_GROUPS\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpaceGroupUuidFilterInfoMETA,\ XR\_TYPE\_SPACE\_GROUP\_UUID\_FILTER\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemEnvironmentRaycastPropertiesMETA,\ XR\_TYPE\_SYSTEM\_ENVIRONMENT\_RAYCAST\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentRaycasterCreateInfoMETA,\ XR\_TYPE\_ENVIRONMENT\_RAYCASTER\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentRaycasterCreateCompletionMETA,\ XR\_TYPE\_ENVIRONMENT\_RAYCASTER\_CREATE\_COMPLETION\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00563\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentRaycastHitGetInfoMETA,\ XR\_TYPE\_ENVIRONMENT\_RAYCAST\_HIT\_GET\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentRaycastHitMETA,\ XR\_TYPE\_ENVIRONMENT\_RAYCAST\_HIT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEnvironmentRaycastFilterDistanceMETA,\ XR\_TYPE\_ENVIRONMENT\_RAYCAST\_FILTER\_DISTANCE\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTilePropertiesMETA,\ XR\_TYPE\_TILE\_PROPERTIES\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTilePropertiesHintMETA,\ XR\_TYPE\_TILE\_PROPERTIES\_HINT\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemLightEstimationPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_LIGHT\_ESTIMATION\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLightEstimatorCreateInfoANDROID,\ XR\_TYPE\_LIGHT\_ESTIMATOR\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLightEstimateGetInfoANDROID,\ XR\_TYPE\_LIGHT\_ESTIMATE\_GET\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLightEstimateANDROID,\ XR\_TYPE\_LIGHT\_ESTIMATE\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrDirectionalLightANDROID,\ XR\_TYPE\_DIRECTIONAL\_LIGHT\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrAmbientLightANDROID,\ XR\_TYPE\_AMBIENT\_LIGHT\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00574\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSphericalHarmonicsANDROID,\ XR\_TYPE\_SPHERICAL\_HARMONICS\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemMarkerTrackingPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_MARKER\_TRACKING\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableMarkerConfigurationANDROID,\ XR\_TYPE\_TRACKABLE\_MARKER\_CONFIGURATION\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableMarkerANDROID,\ XR\_TYPE\_TRACKABLE\_MARKER\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemQrCodeTrackingPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_QR\_CODE\_TRACKING\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableQrCodeConfigurationANDROID,\ XR\_TYPE\_TRACKABLE\_QR\_CODE\_CONFIGURATION\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableQrCodeANDROID,\ XR\_TYPE\_TRACKABLE\_QR\_CODE\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemImageTrackingPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_IMAGE\_TRACKING\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableImageDatabaseEntryANDROID,\ XR\_TYPE\_TRACKABLE\_IMAGE\_DATABASE\_ENTRY\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableImageDatabaseCreateInfoANDROID,\ XR\_TYPE\_TRACKABLE\_IMAGE\_DATABASE\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCreateTrackableImageDatabaseCompletionANDROID,\ XR\_TYPE\_CREATE\_TRACKABLE\_IMAGE\_DATABASE\_COMPLETION\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableImageConfigurationANDROID,\ XR\_TYPE\_TRACKABLE\_IMAGE\_CONFIGURATION\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00586\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrTrackableImageANDROID,\ XR\_TYPE\_TRACKABLE\_IMAGE\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataImageTrackingLostANDROID,\ XR\_TYPE\_EVENT\_DATA\_IMAGE\_TRACKING\_LOST\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemSceneMeshingPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_SCENE\_MESHING\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshingTrackerCreateInfoANDROID,\ XR\_TYPE\_SCENE\_MESHING\_TRACKER\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00590\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshSnapshotCreateInfoANDROID,\ XR\_TYPE\_SCENE\_MESH\_SNAPSHOT\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneMeshSnapshotCreationResultANDROID,\ XR\_TYPE\_SCENE\_MESH\_SNAPSHOT\_CREATION\_RESULT\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneSubmeshStateANDROID,\ XR\_TYPE\_SCENE\_SUBMESH\_STATE\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSceneSubmeshDataANDROID,\ XR\_TYPE\_SCENE\_SUBMESH\_DATA\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00594\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityComponentTypesEXT,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_COMPONENT\_TYPES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialContextCreateInfoEXT,\ XR\_TYPE\_SPATIAL\_CONTEXT\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCreateSpatialContextCompletionEXT,\ XR\_TYPE\_CREATE\_SPATIAL\_CONTEXT\_COMPLETION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialDiscoverySnapshotCreateInfoEXT,\ XR\_TYPE\_SPATIAL\_DISCOVERY\_SNAPSHOT\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCreateSpatialDiscoverySnapshotCompletionInfoEXT,\ XR\_TYPE\_CREATE\_SPATIAL\_DISCOVERY\_SNAPSHOT\_COMPLETION\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCreateSpatialDiscoverySnapshotCompletionEXT,\ XR\_TYPE\_CREATE\_SPATIAL\_DISCOVERY\_SNAPSHOT\_COMPLETION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00600\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentDataQueryConditionEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_DATA\_QUERY\_CONDITION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentDataQueryResultEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_DATA\_QUERY\_RESULT\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialBufferGetInfoEXT,\ XR\_TYPE\_SPATIAL\_BUFFER\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentBounded2DListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_BOUNDED\_2D\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentBounded3DListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_BOUNDED\_3D\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00605\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentParentListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_PARENT\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentMesh3DListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_MESH\_3D\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityFromIdCreateInfoEXT,\ XR\_TYPE\_SPATIAL\_ENTITY\_FROM\_ID\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialUpdateSnapshotCreateInfoEXT,\ XR\_TYPE\_SPATIAL\_UPDATE\_SNAPSHOT\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataSpatialDiscoveryRecommendedEXT,\ XR\_TYPE\_EVENT\_DATA\_SPATIAL\_DISCOVERY\_RECOMMENDED\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00610\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialFilterTrackingStateEXT,\ XR\_TYPE\_SPATIAL\_FILTER\_TRACKING\_STATE\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationPlaneTrackingEXT,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_PLANE\_TRACKING\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentPlaneAlignmentListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_PLANE\_ALIGNMENT\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentMesh2DListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_MESH\_2D\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentPolygon2DListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_POLYGON\_2D\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentPlaneSemanticLabelListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_PLANE\_SEMANTIC\_LABEL\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrStationaryReferenceSpaceGenerationIdGetInfoEXT,\ XR\_TYPE\_STATIONARY\_REFERENCE\_SPACE\_GENERATION\_ID\_GET\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrStationaryReferenceSpaceGenerationIdResultEXT,\ XR\_TYPE\_STATIONARY\_REFERENCE\_SPACE\_GENERATION\_ID\_RESULT\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationQrCodeEXT,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_QR\_CODE\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationMicroQrCodeEXT,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_MICRO\_QR\_CODE\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00620\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationArucoMarkerEXT,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_ARUCO\_MARKER\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationAprilTagEXT,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_APRIL\_TAG\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialMarkerSizeEXT,\ XR\_TYPE\_SPATIAL\_MARKER\_SIZE\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialMarkerStaticOptimizationEXT,\ XR\_TYPE\_SPATIAL\_MARKER\_STATIC\_OPTIMIZATION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00624\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentMarkerListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_MARKER\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationAnchorEXT,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_ANCHOR\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentAnchorListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_ANCHOR\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorCreateInfoEXT,\ XR\_TYPE\_SPATIAL\_ANCHOR\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialPersistenceContextCreateInfoEXT,\ XR\_TYPE\_SPATIAL\_PERSISTENCE\_CONTEXT\_CREATE\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00629\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCreateSpatialPersistenceContextCompletionEXT,\ XR\_TYPE\_CREATE\_SPATIAL\_PERSISTENCE\_CONTEXT\_COMPLETION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialContextPersistenceConfigEXT,\ XR\_TYPE\_SPATIAL\_CONTEXT\_PERSISTENCE\_CONFIG\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00631\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialDiscoveryPersistenceUuidFilterEXT,\ XR\_TYPE\_SPATIAL\_DISCOVERY\_PERSISTENCE\_UUID\_FILTER\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentPersistenceListEXT,\ XR\_TYPE\_SPATIAL\_COMPONENT\_PERSISTENCE\_LIST\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHapticParametricPropertiesEXT,\ XR\_TYPE\_HAPTIC\_PARAMETRIC\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00634\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHapticParametricVibrationEXT,\ XR\_TYPE\_HAPTIC\_PARAMETRIC\_VIBRATION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemHapticParametricPropertiesEXT,\ XR\_TYPE\_SYSTEM\_HAPTIC\_PARAMETRIC\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityPersistInfoEXT,\ XR\_TYPE\_SPATIAL\_ENTITY\_PERSIST\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrPersistSpatialEntityCompletionEXT,\ XR\_TYPE\_PERSIST\_SPATIAL\_ENTITY\_COMPLETION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialEntityUnpersistInfoEXT,\ XR\_TYPE\_SPATIAL\_ENTITY\_UNPERSIST\_INFO\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrUnpersistSpatialEntityCompletionEXT,\ XR\_TYPE\_UNPERSIST\_SPATIAL\_ENTITY\_COMPLETION\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationObjectTrackingANDROID,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_OBJECT\_TRACKING\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00641\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentObjectSemanticLabelListANDROID,\ XR\_TYPE\_SPATIAL\_COMPONENT\_OBJECT\_SEMANTIC\_LABEL\_LIST\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00642\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialCapabilityConfigurationDepthRaycastANDROID,\ XR\_TYPE\_SPATIAL\_CAPABILITY\_CONFIGURATION\_DEPTH\_RAYCAST\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00643\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialRaycastInfoANDROID,\ XR\_TYPE\_SPATIAL\_RAYCAST\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00644\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentRaycastResultListANDROID,\ XR\_TYPE\_SPATIAL\_COMPONENT\_RAYCAST\_RESULT\_LIST\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00645\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialRaycastSnapshotCreateInfoANDROID,\ XR\_TYPE\_SPATIAL\_RAYCAST\_SNAPSHOT\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00646\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorParentANDROID,\ XR\_TYPE\_SPATIAL\_ANCHOR\_PARENT\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00647\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialDiscoveryUniqueEntitiesFilterANDROID,\ XR\_TYPE\_SPATIAL\_DISCOVERY\_UNIQUE\_ENTITIES\_FILTER\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialComponentSubsumedByListANDROID,\ XR\_TYPE\_SPATIAL\_COMPONENT\_SUBSUMED\_BY\_LIST\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSpatialAnchorSpaceFromIdCreateInfoANDROID,\ XR\_TYPE\_SPATIAL\_ANCHOR\_SPACE\_FROM\_ID\_CREATE\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00650\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrBatteryStateDisplayEXT,\ XR\_TYPE\_BATTERY\_STATE\_DISPLAY\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00651\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLoaderInitInfoPropertiesEXT,\ XR\_TYPE\_LOADER\_INIT\_INFO\_PROPERTIES\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00652\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrEventDataViewConfigurationViewsChangedEXT,\ XR\_TYPE\_EVENT\_DATA\_VIEW\_CONFIGURATION\_VIEWS\_CHANGED\_EXT)\ \(\backslash\)}}
+\DoxyCodeLine{00653\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00654\ }
+\DoxyCodeLine{00655\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_D3D11)}}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_D3D11(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingD3D11KHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_D3D11\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00658\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageD3D11KHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_D3D11\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsRequirementsD3D11KHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_D3D11\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_D3D11(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00663\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingD3D11KHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_D3D11\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainImageD3D11KHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_D3D11\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsRequirementsD3D11KHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_D3D11\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00668\ }
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_D3D12)}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_D3D12(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00671\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingD3D12KHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_D3D12\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageD3D12KHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_D3D12\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsRequirementsD3D12KHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_D3D12\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00674\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_D3D12(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingD3D12KHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_D3D12\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00678\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainImageD3D12KHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_D3D12\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00679\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsRequirementsD3D12KHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_D3D12\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00680\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00681\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_METAL)}}
+\DoxyCodeLine{00684\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_METAL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00685\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingMetalKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_METAL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00686\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageMetalKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_METAL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsRequirementsMetalKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_METAL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00689\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_METAL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingMetalKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_METAL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainImageMetalKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_METAL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsRequirementsMetalKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_METAL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00695\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_OPENGL)}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageOpenGLKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_OPENGL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsRequirementsOpenGLKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_OPENGL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainImageOpenGLKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_OPENGL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsRequirementsOpenGLKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_OPENGL\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00708\ }
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_OPENGL)\ \&\&\ defined(XR\_USE\_PLATFORM\_WAYLAND)}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_WAYLAND(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingOpenGLWaylandKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_WAYLAND\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_WAYLAND(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingOpenGLWaylandKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_WAYLAND\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_OPENGL)\ \&\&\ defined(XR\_USE\_PLATFORM\_WIN32)}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_WIN32(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingOpenGLWin32KHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_WIN32\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_WIN32(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingOpenGLWin32KHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_WIN32\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00728\ }
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_OPENGL)\ \&\&\ defined(XR\_USE\_PLATFORM\_XCB)}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_XCB(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingOpenGLXcbKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_XCB\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_XCB(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingOpenGLXcbKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_XCB\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_OPENGL)\ \&\&\ defined(XR\_USE\_PLATFORM\_XLIB)}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_XLIB(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingOpenGLXlibKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_XLIB\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_XR\_USE\_PLATFORM\_XLIB(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00745\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingOpenGLXlibKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_XLIB\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_OPENGL\_ES)}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_ES(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageOpenGLESKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_OPENGL\_ES\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00752\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsRequirementsOpenGLESKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_OPENGL\_ES\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainStateSamplerOpenGLESFB,\ XR\_TYPE\_SWAPCHAIN\_STATE\_SAMPLER\_OPENGL\_ES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_ES(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00757\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainImageOpenGLESKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_OPENGL\_ES\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsRequirementsOpenGLESKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_OPENGL\_ES\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainStateSamplerOpenGLESFB,\ XR\_TYPE\_SWAPCHAIN\_STATE\_SAMPLER\_OPENGL\_ES\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_OPENGL\_ES)\ \&\&\ defined(XR\_USE\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_ES\_XR\_USE\_PLATFORM\_ANDROID(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingOpenGLESAndroidKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_ES\_ANDROID\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00767\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_OPENGL\_ES\_XR\_USE\_PLATFORM\_ANDROID(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingOpenGLESAndroidKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_OPENGL\_ES\_ANDROID\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_GRAPHICS\_API\_VULKAN)}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_VULKAN(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVulkanSwapchainFormatListCreateInfoKHR,\ XR\_TYPE\_VULKAN\_SWAPCHAIN\_FORMAT\_LIST\_CREATE\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingVulkanKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_VULKAN\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00777\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageVulkanKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_VULKAN\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsRequirementsVulkanKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_VULKAN\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVulkanInstanceCreateInfoKHR,\ XR\_TYPE\_VULKAN\_INSTANCE\_CREATE\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00780\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVulkanDeviceCreateInfoKHR,\ XR\_TYPE\_VULKAN\_DEVICE\_CREATE\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00781\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVulkanGraphicsDeviceGetInfoKHR,\ XR\_TYPE\_VULKAN\_GRAPHICS\_DEVICE\_GET\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00782\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainImageFoveationVulkanFB,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_FOVEATION\_VULKAN\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainStateSamplerVulkanFB,\ XR\_TYPE\_SWAPCHAIN\_STATE\_SAMPLER\_VULKAN\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrVulkanSwapchainCreateInfoMETA,\ XR\_TYPE\_VULKAN\_SWAPCHAIN\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00787\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_GRAPHICS\_API\_VULKAN(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrVulkanSwapchainFormatListCreateInfoKHR,\ XR\_TYPE\_VULKAN\_SWAPCHAIN\_FORMAT\_LIST\_CREATE\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingVulkanKHR,\ XR\_TYPE\_GRAPHICS\_BINDING\_VULKAN\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainImageVulkanKHR,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_VULKAN\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsRequirementsVulkanKHR,\ XR\_TYPE\_GRAPHICS\_REQUIREMENTS\_VULKAN\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00792\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrVulkanInstanceCreateInfoKHR,\ XR\_TYPE\_VULKAN\_INSTANCE\_CREATE\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrVulkanDeviceCreateInfoKHR,\ XR\_TYPE\_VULKAN\_DEVICE\_CREATE\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrVulkanGraphicsDeviceGetInfoKHR,\ XR\_TYPE\_VULKAN\_GRAPHICS\_DEVICE\_GET\_INFO\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainImageFoveationVulkanFB,\ XR\_TYPE\_SWAPCHAIN\_IMAGE\_FOVEATION\_VULKAN\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainStateSamplerVulkanFB,\ XR\_TYPE\_SWAPCHAIN\_STATE\_SAMPLER\_VULKAN\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrVulkanSwapchainCreateInfoMETA,\ XR\_TYPE\_VULKAN\_SWAPCHAIN\_CREATE\_INFO\_META)\ \(\backslash\)}}
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00800\ }
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_ANDROID(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrInstanceCreateInfoAndroidKHR,\ XR\_TYPE\_INSTANCE\_CREATE\_INFO\_ANDROID\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrLoaderInitInfoAndroidKHR,\ XR\_TYPE\_LOADER\_INIT\_INFO\_ANDROID\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrAndroidSurfaceSwapchainCreateInfoFB,\ XR\_TYPE\_ANDROID\_SURFACE\_SWAPCHAIN\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSwapchainStateAndroidSurfaceDimensionsFB,\ XR\_TYPE\_SWAPCHAIN\_STATE\_ANDROID\_SURFACE\_DIMENSIONS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrAnchorSharingInfoANDROID,\ XR\_TYPE\_ANCHOR\_SHARING\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrAnchorSharingTokenANDROID,\ XR\_TYPE\_ANCHOR\_SHARING\_TOKEN\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00809\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrSystemAnchorSharingExportPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_ANCHOR\_SHARING\_EXPORT\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00810\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_ANDROID(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrInstanceCreateInfoAndroidKHR,\ XR\_TYPE\_INSTANCE\_CREATE\_INFO\_ANDROID\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00814\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrLoaderInitInfoAndroidKHR,\ XR\_TYPE\_LOADER\_INIT\_INFO\_ANDROID\_KHR)\ \(\backslash\)}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrAndroidSurfaceSwapchainCreateInfoFB,\ XR\_TYPE\_ANDROID\_SURFACE\_SWAPCHAIN\_CREATE\_INFO\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSwapchainStateAndroidSurfaceDimensionsFB,\ XR\_TYPE\_SWAPCHAIN\_STATE\_ANDROID\_SURFACE\_DIMENSIONS\_FB)\ \(\backslash\)}}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrAnchorSharingInfoANDROID,\ XR\_TYPE\_ANCHOR\_SHARING\_INFO\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00818\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrAnchorSharingTokenANDROID,\ XR\_TYPE\_ANCHOR\_SHARING\_TOKEN\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrSystemAnchorSharingExportPropertiesANDROID,\ XR\_TYPE\_SYSTEM\_ANCHOR\_SHARING\_EXPORT\_PROPERTIES\_ANDROID)\ \(\backslash\)}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00821\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00822\ }
+\DoxyCodeLine{00823\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_PLATFORM\_EGL)}}
+\DoxyCodeLine{00824\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_EGL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00825\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrGraphicsBindingEGLMNDX,\ XR\_TYPE\_GRAPHICS\_BINDING\_EGL\_MNDX)\ \(\backslash\)}}
+\DoxyCodeLine{00826\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00828\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_EGL(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrGraphicsBindingEGLMNDX,\ XR\_TYPE\_GRAPHICS\_BINDING\_EGL\_MNDX)\ \(\backslash\)}}
+\DoxyCodeLine{00830\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00831\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00832\ }
+\DoxyCodeLine{00833\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_PLATFORM\_ML)}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_ML(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00835\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrCoordinateSpaceCreateInfoML,\ XR\_TYPE\_COORDINATE\_SPACE\_CREATE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00836\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00837\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00838\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_ML(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00839\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrCoordinateSpaceCreateInfoML,\ XR\_TYPE\_COORDINATE\_SPACE\_CREATE\_INFO\_ML)\ \(\backslash\)}}
+\DoxyCodeLine{00840\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00841\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00842\ }
+\DoxyCodeLine{00843\ \textcolor{preprocessor}{\#if\ defined(XR\_USE\_PLATFORM\_WIN32)}}
+\DoxyCodeLine{00844\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_WIN32(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00845\ \textcolor{preprocessor}{\ \ \ \ \_avail(XrHolographicWindowAttachmentMSFT,\ XR\_TYPE\_HOLOGRAPHIC\_WINDOW\_ATTACHMENT\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00846\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00847\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00848\ \textcolor{preprocessor}{\#define\ \_impl\_XR\_LIST\_ALL\_STRUCTURE\_TYPES\_XR\_USE\_PLATFORM\_WIN32(\_avail,\ \_unavail)\ \(\backslash\)}}
+\DoxyCodeLine{00849\ \textcolor{preprocessor}{\ \ \ \ \_unavail(XrHolographicWindowAttachmentMSFT,\ XR\_TYPE\_HOLOGRAPHIC\_WINDOW\_ATTACHMENT\_MSFT)\ \(\backslash\)}}
+\DoxyCodeLine{00850\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{00851\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00852\ }
+\DoxyCodeLine{00853\ }
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ }
+\DoxyCodeLine{00856\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00857\ }
+
+\end{DoxyCode}

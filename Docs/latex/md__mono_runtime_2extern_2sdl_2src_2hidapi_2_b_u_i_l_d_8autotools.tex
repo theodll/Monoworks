@@ -1,0 +1,104 @@
+\chapter{Building HIDAPI using Autotools (deprecated) }
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools}{}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools}\index{Building HIDAPI using Autotools (deprecated)@{Building HIDAPI using Autotools (deprecated)}}
+\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1625}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1625}%
+
+
+\DoxyHorRuler{0}
+ {\bfseries{NOTE}}:\+ for all intentions and purposes the Autotools build scripts for HIDAPI are {\itshape deprecated} and going to be obsolete in the future. HIDAPI Team recommends using CMake build for HIDAPI. If you are already using Autotools build scripts provided by HIDAPI, consider switching to CMake build scripts as soon as possible.
+
+\DoxyHorRuler{0}
+
+
+To be able to use Autotools to build HIDAPI, it has to be installedinstalled/\+available in the system.
+
+Make sure you\textquotesingle{}ve checked \href{BUILD.md\#prerequisites}{\texttt{prerequisites}} and installed all required dependencies.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1628}{}\doxysection{\texorpdfstring{Installing Autotools}{Installing Autotools}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1628}
+HIDAPI uses few specific tools/\+packages from Autotools:\+ {\ttfamily autoconf}, {\ttfamily automake}, {\ttfamily libtool}.
+
+On different platforms or package managers, those could be named a bit differently or packaged together. You\textquotesingle{}ll have to check the documentation/\+package list for your specific package manager.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1629}{}\doxysubsection{\texorpdfstring{Linux}{Linux}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1629}
+On Ubuntu the tools are available via APT:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ apt\ install\ autoconf\ automake\ libtool}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1630}{}\doxysubsection{\texorpdfstring{Free\+BSD}{Free\+BSD}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1630}
+Free\+BSD Autotools can be installed as:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pkg\_add\ -\/r\ autotools}
+
+\end{DoxyCode}
+
+
+Additionally, on Free\+BSD you will need to install GNU make:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pkg\_add\ -\/r\ gmake}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1631}{}\doxysection{\texorpdfstring{Building HIDAPI with Autotools}{Building HIDAPI with Autotools}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1631}
+A simple command list, to build HIDAPI with Autotools as a {\itshape shared library} and install in into your system:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./bootstrap\ \#\ this\ prepares\ the\ configure\ script}
+\DoxyCodeLine{./configure}
+\DoxyCodeLine{make\ \#\ build\ the\ library}
+\DoxyCodeLine{make\ install\ \#\ as\ root,\ or\ using\ sudo,\ this\ will\ install\ hidapi\ into\ your\ system}
+
+\end{DoxyCode}
+
+
+{\ttfamily ./\+configure} can take several arguments which control the build. A few commonly used options:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{-\/-\/enable-\/testgui}
+\DoxyCodeLine{\ \ \ \ \#\ Enable\ the\ build\ of\ Foxit-\/based\ Test\ GUI.\ This\ requires\ Fox\ toolkit\ to}
+\DoxyCodeLine{\ \ \ \ \#\ be\ installed/available.\ See\ README.md\#test-\/gui\ for\ remarks.}
+\DoxyCodeLine{}
+\DoxyCodeLine{-\/-\/prefix=/usr}
+\DoxyCodeLine{\ \ \ \ \#\ Specify\ where\ you\ want\ the\ output\ headers\ and\ libraries\ to}
+\DoxyCodeLine{\ \ \ \ \#\ be\ installed.\ The\ example\ above\ will\ put\ the\ headers\ in}
+\DoxyCodeLine{\ \ \ \ \#\ /usr/include\ and\ the\ binaries\ in\ /usr/lib.\ The\ default\ is\ to}
+\DoxyCodeLine{\ \ \ \ \#\ install\ into\ /usr/local\ which\ is\ fine\ on\ most\ systems.}
+\DoxyCodeLine{}
+\DoxyCodeLine{-\/-\/disable-\/shared}
+\DoxyCodeLine{\ \ \ \ \#\ By\ default,\ both\ shared\ and\ static\ libraries\ are\ going\ to\ be\ built/installed.}
+\DoxyCodeLine{\ \ \ \ \#\ This\ option\ disables\ shared\ library\ build,\ if\ only\ static\ library\ is\ required.}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1632}{}\doxysection{\texorpdfstring{Cross Compiling}{Cross Compiling}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1632}
+This section talks about cross compiling HIDAPI for Linux using Autotools. This is useful for using HIDAPI on embedded Linux targets. These instructions assume the most raw kind of embedded Linux build, where all prerequisites will need to be built first. This process will of course vary based on your embedded Linux build system if you are using one, such as Open\+Embedded or Buildroot.
+
+For the purpose of this section, it will be assumed that the following environment variables are exported. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$\ export\ STAGING=\$HOME/out}
+\DoxyCodeLine{\$\ export\ HOST=arm-\/linux}
+
+\end{DoxyCode}
+
+
+{\ttfamily STAGING} and {\ttfamily HOST} can be modified to suit your setup.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1633}{}\doxysubsection{\texorpdfstring{Prerequisites}{Prerequisites}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1633}
+Depending on what backend you want to cross-\/compile, you also need to prepare the dependencies:\+ {\ttfamily libusb} for libusb HIDAPI backend, or {\ttfamily libudev} for hidraw HIDAPI backend.
+
+An example of cross-\/compiling {\ttfamily libusb}. From {\ttfamily libusb} source directory, run:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./configure\ -\/-\/host=\$HOST\ -\/-\/prefix=\$STAGING}
+\DoxyCodeLine{make}
+\DoxyCodeLine{make\ install}
+
+\end{DoxyCode}
+
+
+An example of cross-\/comping {\ttfamily libudev} is not covered by this section. Check {\ttfamily libudev}\textquotesingle{}s documentation for details.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1634}{}\doxysubsection{\texorpdfstring{Building HIDAPI}{Building HIDAPI}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools_autotoc_md1634}
+Build HIDAPI:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{PKG\_CONFIG\_DIR=\ \(\backslash\)}
+\DoxyCodeLine{PKG\_CONFIG\_LIBDIR=\$STAGING/lib/pkgconfig:\$STAGING/share/pkgconfig\ \(\backslash\)}
+\DoxyCodeLine{PKG\_CONFIG\_SYSROOT\_DIR=\$STAGING\ \(\backslash\)}
+\DoxyCodeLine{./configure\ -\/-\/host=\$HOST\ -\/-\/prefix=\$STAGING}
+\DoxyCodeLine{\#\ make\ /\ make\ install\ -\/\ same\ as\ for\ a\ regular\ build}
+
+\end{DoxyCode}
+ 

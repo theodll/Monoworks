@@ -1,0 +1,76 @@
+\doxysection{SDL\+\_\+hidapihaptic\+\_\+c.\+h}
+\hypertarget{_s_d_l__hidapihaptic__c_8h_source}{}\label{_s_d_l__hidapihaptic__c_8h_source}\index{MonoRuntime/extern/sdl/src/haptic/hidapi/SDL\_hidapihaptic\_c.h@{MonoRuntime/extern/sdl/src/haptic/hidapi/SDL\_hidapihaptic\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 2025\ Katharine\ Chui\ <katharine.chui@gmail.com>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_hidapihaptic\_c\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_hidapihaptic\_c\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}SDL3/SDL\_haptic.h"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}SDL3/SDL\_joystick.h"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../SDL\_syshaptic.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../../joystick/SDL\_joystick\_c.h"{}}\ \textcolor{comment}{//\ accessing\ \_SDL\_JoystickDriver}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../../joystick/SDL\_sysjoystick.h"{}}\ \textcolor{comment}{//\ accessing\ \_SDL\_Joystick}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_HIDAPI\_LG4FF}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_driver}{SDL\_HIDAPI\_HapticDriver}}\ \doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_driver}{SDL\_HIDAPI\_HapticDriver}};}
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic;\ \textcolor{comment}{/*\ related\ haptic\ ref\ */}}
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick;\ \textcolor{comment}{/*\ related\ hidapi\ joystick\ */}}
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_driver}{SDL\_HIDAPI\_HapticDriver}}\ *driver;\ \textcolor{comment}{/*\ driver\ to\ use\ */}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ *ctx;\ \textcolor{comment}{/*\ driver\ specific\ context\ */}}
+\DoxyCodeLine{00040\ \}\ \doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_driver}{SDL\_HIDAPI\_HapticDriver}}}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ bool\ (*JoystickSupported)(\doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);\ \textcolor{comment}{/*\ return\ true\ if\ haptic\ can\ be\ opened\ from\ the\ joystick\ */}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ *(*Open)(\doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);\ \textcolor{comment}{/*\ returns\ a\ driver\ context\ allocated\ with\ SDL\_malloc,\ or\ null\ if\ it\ cannot\ be\ allocated\ */}}
+\DoxyCodeLine{00046\ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{/*\ functions\ below\ need\ to\ handle\ the\ possibility\ of\ a\ null\ joystick\ instance,\ indicating\ the\ absence\ of\ the\ joystick\ */}}
+\DoxyCodeLine{00048\ \ \ \ \ void\ (*Close)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ cleanup\ resources\ allocated\ during\ Open,\ do\ NOT\ free\ driver\ context\ created\ in\ Open\ */}}
+\DoxyCodeLine{00049\ \ \ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{/*\ below\ mirror\ SDL\_haptic.h\ effect\ interfaces\ */}}
+\DoxyCodeLine{00051\ \ \ \ \ int\ (*NumEffects)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ returns\ supported\ number\ of\ effects\ the\ device\ can\ store\ */}}
+\DoxyCodeLine{00052\ \ \ \ \ int\ (*NumEffectsPlaying)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ returns\ supported\ number\ of\ effects\ the\ device\ can\ play\ concurrently\ */}}
+\DoxyCodeLine{00053\ \ \ \ \ Uint32\ (*GetFeatures)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ returns\ supported\ effects\ in\ a\ bitmask\ */}}
+\DoxyCodeLine{00054\ \ \ \ \ int\ (*NumAxes)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ returns\ the\ number\ of\ haptic\ axes\ */}}
+\DoxyCodeLine{00055\ \ \ \ \ SDL\_HapticEffectID\ (*CreateEffect)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}\ *data);\ \textcolor{comment}{/*\ returns\ effect\ id\ if\ created\ correctly,\ negative\ number\ on\ error\ */}}
+\DoxyCodeLine{00056\ \ \ \ \ bool\ (*UpdateEffect)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ SDL\_HapticEffectID\ id,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}\ *data);\ \textcolor{comment}{/*\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00057\ \ \ \ \ bool\ (*RunEffect)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ SDL\_HapticEffectID\ id,\ Uint32\ iterations);\ \textcolor{comment}{/*\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00058\ \ \ \ \ bool\ (*StopEffect)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ SDL\_HapticEffectID\ id);\ \textcolor{comment}{/*\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00059\ \ \ \ \ void\ (*DestroyEffect)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ SDL\_HapticEffectID\ id);}
+\DoxyCodeLine{00060\ \ \ \ \ bool\ (*GetEffectStatus)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ SDL\_HapticEffectID\ id);\ \textcolor{comment}{/*\ returns\ true\ if\ playing,\ false\ if\ not\ playing\ or\ on\ error\ */}}
+\DoxyCodeLine{00061\ \ \ \ \ bool\ (*SetGain)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ \textcolor{keywordtype}{int}\ gain);\ \textcolor{comment}{/*\ gain\ 0\ -\/\ 100,\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00062\ \ \ \ \ bool\ (*SetAutocenter)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device,\ \textcolor{keywordtype}{int}\ autocenter);\ \textcolor{comment}{/*\ autocenter\ 0\ -\/\ 100,\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00063\ \ \ \ \ bool\ (*Pause)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00064\ \ \ \ \ bool\ (*Resume)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00065\ \ \ \ \ bool\ (*StopEffects)(\doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_device}{SDL\_HIDAPI\_HapticDevice}}\ *device);\ \textcolor{comment}{/*\ returns\ true\ on\ success,\ false\ on\ error\ */}}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___h_i_d_a_p_i___haptic_driver}{SDL\_HIDAPI\_HapticDriver}}\ SDL\_HIDAPI\_HapticDriverLg4ff;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//SDL\_hidapihaptic\_c\_h\_}}
+
+\end{DoxyCode}

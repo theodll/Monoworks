@@ -1,0 +1,82 @@
+\doxysection{SDL\+\_\+evdev\+\_\+capabilities.\+h}
+\hypertarget{_s_d_l__evdev__capabilities_8h_source}{}\label{_s_d_l__evdev__capabilities_8h_source}\index{MonoRuntime/extern/sdl/src/core/linux/SDL\_evdev\_capabilities.h@{MonoRuntime/extern/sdl/src/core/linux/SDL\_evdev\_capabilities.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ \ Copyright\ (C)\ 2020\ Collabora\ Ltd.}}
+\DoxyCodeLine{00005\ \textcolor{comment}{}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00013\ \textcolor{comment}{}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_evdev\_capabilities\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_evdev\_capabilities\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ HAVE\_LINUX\_INPUT\_H}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <linux/input.h>}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#ifndef\ INPUT\_PROP\_SEMI\_MT}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ INPUT\_PROP\_SEMI\_MT\ \ \ \ \ \ \ \ \ \ 0x03}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#ifndef\ INPUT\_PROP\_TOPBUTTONPAD}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ INPUT\_PROP\_TOPBUTTONPAD\ \ \ \ \ 0x04}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifndef\ INPUT\_PROP\_POINTING\_STICK}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ INPUT\_PROP\_POINTING\_STICK\ \ \ 0x05}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#ifndef\ INPUT\_PROP\_ACCELEROMETER}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ INPUT\_PROP\_ACCELEROMETER\ \ \ \ 0x06}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#ifndef\ INPUT\_PROP\_MAX}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ INPUT\_PROP\_MAX\ 0x1f}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ A\ device\ can\ be\ any\ combination\ of\ these\ classes}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ SDL\_UDEV\_DEVICE\_UNKNOWN\ =\ 0x0000,}
+\DoxyCodeLine{00051\ \ \ \ \ SDL\_UDEV\_DEVICE\_MOUSE\ =\ 0x0001,}
+\DoxyCodeLine{00052\ \ \ \ \ SDL\_UDEV\_DEVICE\_KEYBOARD\ =\ 0x0002,}
+\DoxyCodeLine{00053\ \ \ \ \ SDL\_UDEV\_DEVICE\_JOYSTICK\ =\ 0x0004,}
+\DoxyCodeLine{00054\ \ \ \ \ SDL\_UDEV\_DEVICE\_SOUND\ =\ 0x0008,}
+\DoxyCodeLine{00055\ \ \ \ \ SDL\_UDEV\_DEVICE\_TOUCHSCREEN\ =\ 0x0010,}
+\DoxyCodeLine{00056\ \ \ \ \ SDL\_UDEV\_DEVICE\_ACCELEROMETER\ =\ 0x0020,}
+\DoxyCodeLine{00057\ \ \ \ \ SDL\_UDEV\_DEVICE\_TOUCHPAD\ =\ 0x0040,}
+\DoxyCodeLine{00058\ \ \ \ \ SDL\_UDEV\_DEVICE\_HAS\_KEYS\ =\ 0x0080,}
+\DoxyCodeLine{00059\ \ \ \ \ SDL\_UDEV\_DEVICE\_VIDEO\_CAPTURE\ =\ 0x0100,}
+\DoxyCodeLine{00060\ \}\ SDL\_UDEV\_deviceclass;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ BITS\_PER\_LONG\ \ \ \ \ \ \ \ (sizeof(unsigned\ long)\ *\ 8)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ NBITS(x)\ \ \ \ \ \ \ \ \ \ \ \ \ ((((x)-\/1)\ /\ BITS\_PER\_LONG)\ +\ 1)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ EVDEV\_OFF(x)\ \ \ \ \ \ \ \ \ ((x)\ \%\ BITS\_PER\_LONG)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ EVDEV\_LONG(x)\ \ \ \ \ \ \ \ ((x)\ /\ BITS\_PER\_LONG)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ test\_bit(bit,\ array)\ ((array[EVDEV\_LONG(bit)]\ >>\ EVDEV\_OFF(bit))\ \&\ 1)}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ SDL\_EVDEV\_GuessDeviceClass(\textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ bitmask\_props[NBITS(INPUT\_PROP\_MAX)],}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ bitmask\_ev[NBITS(EV\_MAX)],}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ bitmask\_abs[NBITS(ABS\_MAX)],}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ bitmask\_key[NBITS(KEY\_MAX)],}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ bitmask\_rel[NBITS(REL\_MAX)]);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ HAVE\_LINUX\_INPUT\_H}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_evdev\_capabilities\_h\_}}
+
+\end{DoxyCode}

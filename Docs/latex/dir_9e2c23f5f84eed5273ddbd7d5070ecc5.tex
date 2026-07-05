@@ -1,0 +1,83 @@
+\doxysection{Mono\+Runtime/\+extern/\+sdl/\+src/\+video/\+yuv2rgb Directory Reference}
+\hypertarget{dir_9e2c23f5f84eed5273ddbd7d5070ecc5}{}\label{dir_9e2c23f5f84eed5273ddbd7d5070ecc5}\index{MonoRuntime/extern/sdl/src/video/yuv2rgb Directory Reference@{MonoRuntime/extern/sdl/src/video/yuv2rgb Directory Reference}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries yuv\+\_\+rgb.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+common.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+internal.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+lsx.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+lsx\+\_\+func.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+sse.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+sse\+\_\+func.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+std.\+h}
+\item 
+file {\bfseries yuv\+\_\+rgb\+\_\+std\+\_\+func.\+h}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+From:\+ \href{https://github.com/descampsa/yuv2rgb}{\texttt{https:\+/\+/\+github.\+com/\+descampsa/\+yuv2rgb}} \hypertarget{dir_9e2c23f5f84eed5273ddbd7d5070ecc5_autotoc_md1674}{}\doxysubsection{\texorpdfstring{yuv2rgb}{yuv2rgb}}\label{dir_9e2c23f5f84eed5273ddbd7d5070ecc5_autotoc_md1674}
+C library for fast image conversion between yuv420p and rgb24.
+
+This is a simple library for optimized image conversion between YUV420p and rgb24. It was done mainly as an exercise to learn to use sse intrinsics, so there may still be room for optimization.
+
+For each conversion, a standard c optimized function and two sse function (with aligned and unaligned memory) are implemented. The sse version requires only SSE2, which is available on any reasonably recent CPU. The library also supports the three different YUV (YCr\+Cb to be correct) color spaces that exist (see comments in code), and others can be added simply.
+
+There is a simple test program, that convert a raw YUV file to rgb ppm format, and measure computation time. Optionally, it also compares the result and computation time with the ffmpeg implementation (that uses MMX), and with the IPP functions.
+
+To compile, simply do :\+ \begin{DoxyVerb}mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+\end{DoxyVerb}
+
+
+The test program only support raw YUV files for the YUV420 format, and ppm for the RGB24 format. To generate a raw yuv file, you can use avconv:\+ \begin{DoxyVerb}avconv -i example.jpg -c:v rawvideo -pix_fmt yuv420p example.yuv
+\end{DoxyVerb}
+
+
+To generate the rgb file, you can use the Image\+Magick convert program:\+ \begin{DoxyVerb}convert example.jpg example.ppm
+\end{DoxyVerb}
+
+
+Then, for YUV420 to RGB24 conversion, use the test program like that:\+ \begin{DoxyVerb}./test_yuv_rgb yuv2rgb image.yuv 4096 2160 image
+\end{DoxyVerb}
+
+
+The second and third parameters are image width and height (that are needed because not available in the raw YUV file), and fourth parameter is the output filename template (several output files will be generated, named for example output\+\_\+sse.\+ppm, output\+\_\+av.\+ppm, etc.)
+
+Similarly, for RGB24 to YUV420 conversion:\+ \begin{DoxyVerb}./test_yuv_rgb yuv2rgb image.ppm image
+\end{DoxyVerb}
+
+
+On my computer, the test program on a 4K image give the following for yuv2rgb:\+ \begin{DoxyVerb}Time will be measured in each configuration for 100 iterations...
+Processing time (std) : 2.630193 sec
+Processing time (sse2_unaligned) : 0.704394 sec
+Processing time (ffmpeg_unaligned) : 1.221432 sec
+Processing time (ipp_unaligned) : 0.636274 sec
+Processing time (sse2_aligned) : 0.606648 sec
+Processing time (ffmpeg_aligned) : 1.227100 sec
+Processing time (ipp_aligned) : 0.636951 sec
+\end{DoxyVerb}
+
+
+And for rgb2yuv:\+ \begin{DoxyVerb}Time will be measured in each configuration for 100 iterations...
+Processing time (std) : 2.588675 sec
+Processing time (sse2_unaligned) : 0.676625 sec
+Processing time (ffmpeg_unaligned) : 3.385816 sec
+Processing time (ipp_unaligned) : 0.593890 sec
+Processing time (sse2_aligned) : 0.640630 sec
+Processing time (ffmpeg_aligned) : 3.397952 sec
+Processing time (ipp_aligned) : 0.579043 sec
+\end{DoxyVerb}
+
+
+configuration :\+ gcc 4.\+9.\+2, swscale 3.\+0.\+0, IPP 9.\+0.\+1, intel i7-\/5500U 

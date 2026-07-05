@@ -1,0 +1,480 @@
+\doxysection{Tracy\+Open\+GL.\+hpp}
+\hypertarget{_tracy_open_g_l_8hpp_source}{}\label{_tracy_open_g_l_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/tracy/TracyOpenGL.hpp@{MonoEngine/thirdparty/tracy/public/tracy/TracyOpenGL.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYOPENGL\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYOPENGL\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifdef\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#define\ TRACY\_OPENGL\_DISABLE}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#warning\ "{}OpenGL\ timestamps\ are\ unreliable\ on\ Apple\ devices\ that\ still\ run\ OpenGL."{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#if\ !defined\ TRACY\_ENABLE\ ||\ defined\ TRACY\_OPENGL\_DISABLE}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ TracyGpuContext}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ TracyGpuContextName(x,y)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ TracyGpuNamedZone(x,y,z)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ TracyGpuNamedZoneC(x,y,z,w)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ TracyGpuZone(x)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ TracyGpuZoneC(x,y)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ TracyGpuZoneTransient(x,y,z)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ TracyGpuCollect}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ TracyGpuNamedZoneS(x,y,z,w)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ TracyGpuNamedZoneCS(x,y,z,w,a)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ TracyGpuZoneS(x,y)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ TracyGpuZoneCS(x,y,z)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ TracyGpuZoneTransientS(x,y,z,w)}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}};}
+\DoxyCodeLine{00029\ \textcolor{keyword}{class\ }GpuCtxScope}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \ \ GpuCtxScope(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*,\ \textcolor{keywordtype}{bool}\ )\ \{\}}
+\DoxyCodeLine{00033\ \ \ \ \ GpuCtxScope(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_source_location_data}{SourceLocationData}}*,\ int32\_t,\ \textcolor{keywordtype}{bool}\ )\ \{\}}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#ifdef\ TRACY\_OPENGL\_AUTO\_CALIBRATION}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#\ \ include\ <chrono>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ "{}Tracy.hpp"{}}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ "{}../client/TracyProfiler.hpp"{}}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#include\ "{}../client/TracyCallstack.hpp"{}}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlign.hpp"{}}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlloc.hpp"{}}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#if\ !defined\ GL\_TIMESTAMP\ \&\&\ defined\ GL\_TIMESTAMP\_EXT}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#\ \ define\ GL\_TIMESTAMP\ GL\_TIMESTAMP\_EXT}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ \ define\ GL\_QUERY\_COUNTER\_BITS\ GL\_QUERY\_COUNTER\_BITS\_EXT}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ \ define\ GL\_QUERY\_RESULT\ GL\_QUERY\_RESULT\_EXT}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#\ \ define\ GL\_QUERY\_RESULT\_AVAILABLE\ GL\_QUERY\_RESULT\_AVAILABLE\_EXT}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ \ define\ glGenQueries\ glGenQueriesEXT}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ \ define\ glGetQueryiv\ glGetQueryivEXT}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ define\ glGetQueryObjectiv\ glGetQueryObjectivEXT}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ define\ glGetQueryObjectui64v\ glGetQueryObjectui64vEXT}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ \ define\ glGetInteger64v\ glGetInteger64vEXT}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#\ \ define\ glQueryCounter\ glQueryCounterEXT}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#ifndef\ GL\_MAJOR\_VERSION}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#\ \ define\ GL\_MAJOR\_VERSION\ 0x821B}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifndef\ GL\_NUM\_EXTENSIONS}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#\ \ define\ GL\_NUM\_EXTENSIONS\ 0x821D}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#ifndef\ GL\_QUERY\_RESULT\_NO\_WAIT}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#\ \ define\ GL\_QUERY\_RESULT\_NO\_WAIT\ 0x9194}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ TracyGpuContext\ tracy::GetGpuCtx().ptr\ =\ (tracy::GpuCtx*)tracy::tracy\_malloc(\ sizeof(\ tracy::GpuCtx\ )\ );\ new(tracy::GetGpuCtx().ptr)\ tracy::GpuCtx;}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ TracyGpuContextName(\ name,\ size\ )\ tracy::GetGpuCtx().ptr-\/>Name(\ name,\ size\ );}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CALLSTACK\ \&\&\ defined\ TRACY\_CALLSTACK}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZone(\ varname,\ name,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::GpuCtxScope\ varname(\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ );}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZoneC(\ varname,\ name,\ color,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::GpuCtxScope\ varname(\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ );}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZone(\ name\ )\ TracyGpuNamedZoneS(\ \_\_\_tracy\_gpu\_zone,\ name,\ TRACY\_CALLSTACK,\ true\ )}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneC(\ name,\ color\ )\ TracyGpuNamedZoneCS(\ \_\_\_tracy\_gpu\_zone,\ name,\ color,\ TRACY\_CALLSTACK,\ true\ )}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneTransient(\ varname,\ name,\ active\ )\ tracy::GpuCtxScope\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ TRACY\_CALLSTACK,\ active\ );}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZone(\ varname,\ name,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::GpuCtxScope\ varname(\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ active\ );}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZoneC(\ varname,\ name,\ color,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::GpuCtxScope\ varname(\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ active\ );}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZone(\ name\ )\ TracyGpuNamedZone(\ \_\_\_tracy\_gpu\_zone,\ name,\ true\ )}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneC(\ name,\ color\ )\ TracyGpuNamedZoneC(\ \_\_\_tracy\_gpu\_zone,\ name,\ color,\ true\ )}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneTransient(\ varname,\ name,\ active\ )\ tracy::GpuCtxScope\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ active\ );}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ TracyGpuCollect\ tracy::GetGpuCtx().ptr-\/>Collect();}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#ifdef\ TRACY\_HAS\_CALLSTACK}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZoneS(\ varname,\ name,\ depth,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::GpuCtxScope\ varname(\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ depth,\ active\ );}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZoneCS(\ varname,\ name,\ color,\ depth,\ active\ )\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ \ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::GpuCtxScope\ varname(\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ depth,\ active\ );}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneS(\ name,\ depth\ )\ TracyGpuNamedZoneS(\ \_\_\_tracy\_gpu\_zone,\ name,\ depth,\ true\ )}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneCS(\ name,\ color,\ depth\ )\ TracyGpuNamedZoneCS(\ \_\_\_tracy\_gpu\_zone,\ name,\ color,\ depth,\ true\ )}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneTransientS(\ varname,\ name,\ depth,\ active\ )\ tracy::GpuCtxScope\ varname(\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ depth,\ active\ );}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZoneS(\ varname,\ name,\ depth,\ active\ )\ TracyGpuNamedZone(\ varname,\ name,\ active\ )}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuNamedZoneCS(\ varname,\ name,\ color,\ depth,\ active\ )\ TracyGpuNamedZoneC(\ varname,\ name,\ color,\ active\ )}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneS(\ name,\ depth\ )\ TracyGpuZone(\ name\ )}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneCS(\ name,\ color,\ depth\ )\ TracyGpuZoneC(\ name,\ color\ )}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#\ \ define\ TracyGpuZoneTransientS(\ varname,\ name,\ depth,\ active\ )\ TracyGpuZoneTransient(\ varname,\ name,\ active\ )}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00107\ \{}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{keyword}{class\ }GpuCtx}
+\DoxyCodeLine{00110\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }GpuCtxScope;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ QueryCount\ =\ 64\ *\ 1024;}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00116\ \ \ \ \ GpuCtx()}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ :\ m\_context(\ GetGpuCtxCounter().fetch\_add(\ 1,\ std::memory\_order\_relaxed\ )\ )}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ ,\ m\_head(\ 0\ )}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ ,\ m\_tail(\ 0\ )}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ ,\ m\_supportsQueryBufferObject(\ false\ )}
+\DoxyCodeLine{00121\ \ \ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ ZoneScopedC(\ Color::Red4\ );}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ assert(\ m\_context\ !=\ 255\ );}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !CheckFeature(\ \textcolor{stringliteral}{"{}GL\_ARB\_timer\_query"{}}\ )\ \&\&\ !CheckFeature(\ \textcolor{stringliteral}{"{}GL\_EXT\_disjoint\_timer\_query"{}}\ )\ )}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::LogString(\ MessageSourceType::Tracy,\ MessageSeverity::Warning,\ Color::Tomato,\ 0,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}OpenGL\ context\ does\ not\ support\ timer\ queries."{}}\ );}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ for\ GL\_QUERY\_RESULT\_NO\_WAIT\ support}}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ m\_supportsQueryBufferObject\ =\ CheckFeature(\ \textcolor{stringliteral}{"{}GL\_ARB\_query\_buffer\_object"{}}\ );}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_supportsQueryBufferObject\ )}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::LogString(\ MessageSourceType::Tracy,\ MessageSeverity::Info,\ 0,\ 0,}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}OpenGL\ context\ does\ not\ support\ GL\_ARB\_query\_buffer\_object."{}}\ );}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ GLint\ bits;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ glGetQueryiv(\ GL\_TIMESTAMP,\ GL\_QUERY\_COUNTER\_BITS,\ \&bits\ );}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ bits\ ==\ 0\ )}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ all\ timestamp\ queries\ would\ resolve\ to\ 0\ (and\ produce\ 0ns\ GPU\ zones).}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (this\ is\ the\ case\ for\ many\ TBDR\ GPUs,\ including\ Apple\ Silicon)}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::LogString(\ MessageSourceType::Tracy,\ MessageSeverity::Warning,\ Color::Tomato,\ 0,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}OpenGL\ driver\ does\ not\ implement\ GL\_TIMESTAMP\ precision."{}}\ );}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ assert(\ bits\ >\ 0\ );}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ int64\_t\ tgpu;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ glGetInteger64v(\ GL\_TIMESTAMP,\ \&tgpu\ );}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ int64\_t\ tcpu\ =\ Profiler::GetTime();}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#ifdef\ TRACY\_OPENGL\_AUTO\_CALIBRATION}}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ anchor\ above\ is\ never\ refreshed;\ advertise\ calibration\ and\ emit\ periodic}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ GpuCalibration\ events\ to\ correct\ CPU/GPU\ drift\ (see\ Recalibrate).\ Opt-\/in,}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ because\ Recalibrate()\ calls\ glGetInteger64v(\ GL\_TIMESTAMP\ ),\ which\ forces\ a}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ CPU/GPU\ sync.}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ m\_prevCalibration\ =\ GetHostTimeNs();}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ glGenQueries(\ QueryCount,\ m\_query\ );}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ period\ =\ 1.f;}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ thread\ =\ GetThreadHandle();}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuNewContext\ );}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.cpuTime,\ tcpu\ );}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.gpuTime,\ tgpu\ );}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.thread,\ thread\ );}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.period,\ period\ );}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.context,\ m\_context\ );}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#ifdef\ TRACY\_OPENGL\_AUTO\_CALIBRATION}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.flags,\ GpuContextFlags(\ GpuContextCalibration\ )\ );}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.flags,\ GpuContextFlags(\ 0\ )\ );}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuNewContext.type,\ GpuContextType::OpenGl\ );}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00185\ \ \ \ \ \}}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{keywordtype}{void}\ Name(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ uint16\_t\ len\ )}
+\DoxyCodeLine{00188\ \ \ \ \ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ len\ );}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ memcpy(\ ptr,\ name,\ len\ );}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuContextName\ );}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.context,\ m\_context\ );}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.ptr,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.size,\ len\ );}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00200\ \ \ \ \ \}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{keywordtype}{void}\ Collect()}
+\DoxyCodeLine{00203\ \ \ \ \ \{}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ ZoneScopedC(\ Color::Red4\ );}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ m\_head\ =\ m\_tail\ =\ 0;}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#ifdef\ TRACY\_OPENGL\_AUTO\_CALIBRATION}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Before\ the\ drain's\ early-\/returns,\ so\ it\ runs\ even\ on\ frames\ with\ no}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ completed\ queries.}}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ Recalibrate();}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_tail\ ==\ m\_head\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ m\_tail\ !=\ m\_head\ )}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ time;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !GetTimestamp(time,\ m\_tail)\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuTime\ );}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuTime.gpuTime,\ (int64\_t)time\ );}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuTime.queryId,\ (uint16\_t)m\_tail\ );}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuTime.context,\ m\_context\ );}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ m\_tail\ =\ (\ m\_tail\ +\ 1\ )\ \%\ QueryCount;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00235\ \ \ \ \ \}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{comment}{//\ Returns\ whether\ the\ driver\ advertises\ a\ single\ extension\ (full\ GL\_-\/prefixed\ token).}}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ CheckFeature(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ feature\ )}
+\DoxyCodeLine{00240\ \ \ \ \ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ GLint\ major\ =\ 0;}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ glGetIntegerv(\ GL\_MAJOR\_VERSION,\ \&major\ );}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ glGetError()\ !=\ GL\_NO\_ERROR\ )\ major\ =\ 0;\ \ \ \textcolor{comment}{//\ pre-\/3.0:\ enum\ not\ supported}}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#if\ defined(GL\_VERSION\_3\_0)\ ||\ defined(GL\_ES\_VERSION\_3\_0)}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ GL\ 3\ onwards:\ glGetStringi}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ major\ >=\ 3\ )}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ numExt\ =\ 0;}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ glGetIntegerv(\ GL\_NUM\_EXTENSIONS,\ \&numExt\ );}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ GLint\ i\ =\ 0;\ i\ <\ numExt;\ i++\ )}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ext\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*)glGetStringi(\ GL\_EXTENSIONS,\ i\ );}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ext\ \&\&\ strcmp(\ ext,\ feature\ )\ ==\ 0\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ pre\ GL3\ fallback:}}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ exts\ =\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*)glGetString(\ GL\_EXTENSIONS\ );}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ exts\ \&\&\ strstr(\ exts,\ feature\ )\ !=\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00263\ \ \ \ \ \}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ GetTimestamp(\ uint64\_t\&\ timestamp,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ queryId\ )}
+\DoxyCodeLine{00266\ \ \ \ \ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_supportsQueryBufferObject\ )}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{constexpr}\ uint64\_t\ sentinel\ =\ \string~uint64\_t(0);}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ time\ =\ sentinel;}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ glGetQueryObjectui64v(\ m\_query[queryId],\ GL\_QUERY\_RESULT\_NO\_WAIT,\ \&time\ );}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ time\ ==\ sentinel\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ timestamp\ =\ time;}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ GLint\ available;}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ glGetQueryObjectiv(\ m\_query[queryId],\ GL\_QUERY\_RESULT\_AVAILABLE,\ \&available\ );}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ available\ ==\ GL\_FALSE\ )\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ time;}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ glGetQueryObjectui64v(\ m\_query[queryId],\ GL\_QUERY\_RESULT,\ \&time\ );}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ timestamp\ =\ time;}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00285\ \ \ \ \ \}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#ifdef\ TRACY\_OPENGL\_AUTO\_CALIBRATION}}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{comment}{//\ Monotonic\ host\ ns\ for\ the\ inter-\/calibration\ interval\ (cpuDelta),\ kept}}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{comment}{//\ separate\ from\ Profiler::GetTime()\ as\ in\ the\ D3D12/Vulkan\ backends.}}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{static}\ tracy\_force\_inline\ int64\_t\ GetHostTimeNs()}
+\DoxyCodeLine{00291\ \ \ \ \ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::chrono::duration\_cast<std::chrono::nanoseconds>(}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::now().time\_since\_epoch()\ ).count();}
+\DoxyCodeLine{00294\ \ \ \ \ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{comment}{//\ OpenGL\ has\ no\ atomic\ CPU+GPU\ timestamp\ query,\ so\ sample\ back-\/to-\/back;\ the}}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{comment}{//\ gap\ is\ negligible\ against\ the\ recalibration\ interval\ below.\ Note\ this\ forces}}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{comment}{//\ a\ CPU/GPU\ sync,\ which\ is\ why\ the\ whole\ path\ is\ opt-\/in\ (TRACY\_OPENGL\_AUTO\_CALIBRATION).}}
+\DoxyCodeLine{00299\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ Recalibrate()}
+\DoxyCodeLine{00300\ \ \ \ \ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ hostNow\ =\ GetHostTimeNs();}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ delta\ =\ hostNow\ -\/\ m\_prevCalibration;}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ delta\ <\ 1000ll\ *\ 1000\ *\ 1000\ )\ \textcolor{keywordflow}{return};\ \textcolor{comment}{//\ throttle:\ \string~once\ per\ second}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ int64\_t\ tgpu;}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ glGetInteger64v(\ GL\_TIMESTAMP,\ \&tgpu\ );}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ int64\_t\ refCpu\ =\ Profiler::GetTime();}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ m\_prevCalibration\ =\ hostNow;}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuCalibration\ );}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuCalibration.gpuTime,\ tgpu\ );}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuCalibration.cpuTime,\ refCpu\ );}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuCalibration.cpuDelta,\ delta\ );}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuCalibration.context,\ m\_context\ );}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00316\ \ \ \ \ \}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ NextQueryId()}
+\DoxyCodeLine{00320\ \ \ \ \ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \textcolor{keywordtype}{id}\ =\ m\_head;}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ m\_head\ =\ (\ m\_head\ +\ 1\ )\ \%\ QueryCount;}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ assert(\ m\_head\ !=\ m\_tail\ );}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ id;}
+\DoxyCodeLine{00325\ \ \ \ \ \}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ TranslateOpenGlQueryId(\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ )}
+\DoxyCodeLine{00328\ \ \ \ \ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_query[id];}
+\DoxyCodeLine{00330\ \ \ \ \ \}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ tracy\_force\_inline\ uint8\_t\ GetId()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00333\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_context;}
+\DoxyCodeLine{00335\ \ \ \ \ \}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ m\_query[QueryCount];}
+\DoxyCodeLine{00338\ \ \ \ \ uint8\_t\ m\_context;}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ m\_head;}
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ m\_tail;}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#ifdef\ TRACY\_OPENGL\_AUTO\_CALIBRATION}}
+\DoxyCodeLine{00344\ \ \ \ \ int64\_t\ m\_prevCalibration;\ \textcolor{comment}{//\ host-\/ns\ timestamp\ of\ the\ last\ emitted\ calibration}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_supportsQueryBufferObject;}
+\DoxyCodeLine{00348\ \};}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_gpu_ctx_scope}{GpuCtxScope}}}
+\DoxyCodeLine{00351\ \{}
+\DoxyCodeLine{00352\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00353\ \ \ \ \ tracy\_force\_inline\ GpuCtxScope(\ \textcolor{keyword}{const}\ SourceLocationData*\ srcloc,\ \textcolor{keywordtype}{bool}\ is\_active\ )}
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ \&\&\ GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00356\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ )}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00359\ \ \ \ \ \{}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ GetGpuCtx().ptr-\/>NextQueryId();}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ glQueryCounter(\ GetGpuCtx().ptr-\/>TranslateOpenGlQueryId(\ queryId\ ),\ GL\_TIMESTAMP\ );}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuZoneBegin\ );}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ memset(\ \&item-\/>gpuZoneBegin.thread,\ 0,\ \textcolor{keyword}{sizeof}(\ item-\/>gpuZoneBegin.thread\ )\ );}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.queryId,\ uint16\_t(\ queryId\ )\ );}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.context,\ GetGpuCtx().ptr-\/>GetId()\ );}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.srcloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00372\ \ \ \ \ \}}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \ \ \ \ tracy\_force\_inline\ GpuCtxScope(\ \textcolor{keyword}{const}\ SourceLocationData*\ srcloc,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ is\_active\ )}
+\DoxyCodeLine{00375\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ \&\&\ GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ )}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00380\ \ \ \ \ \{}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ GetGpuCtx().ptr-\/>NextQueryId();}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ glQueryCounter(\ GetGpuCtx().ptr-\/>TranslateOpenGlQueryId(\ queryId\ ),\ GL\_TIMESTAMP\ );}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#ifdef\ TRACY\_FIBERS}}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuZoneBegin\ );}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ memset(\ \&item-\/>gpuZoneBegin.thread,\ 0,\ \textcolor{keyword}{sizeof}(\ item-\/>gpuZoneBegin.thread\ )\ );}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ GetProfiler().SendCallstack(\ depth\ );}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuZoneBeginCallstack\ );}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.queryId,\ uint16\_t(\ queryId\ )\ );}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.context,\ GetGpuCtx().ptr-\/>GetId()\ );}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.srcloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00399\ \ \ \ \ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ tracy\_force\_inline\ GpuCtxScope(\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ \textcolor{keywordtype}{bool}\ is\_active\ )}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ \&\&\ GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ )}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00407\ \ \ \ \ \{}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ GetGpuCtx().ptr-\/>NextQueryId();}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ glQueryCounter(\ GetGpuCtx().ptr-\/>TranslateOpenGlQueryId(\ queryId\ ),\ GL\_TIMESTAMP\ );}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuZoneBeginAllocSrcLoc\ );}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz\ );}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ memset(\ \&item-\/>gpuZoneBegin.thread,\ 0,\ \textcolor{keyword}{sizeof}(\ item-\/>gpuZoneBegin.thread\ )\ );}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.queryId,\ uint16\_t(\ queryId\ )\ );}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.context,\ GetGpuCtx().ptr-\/>GetId()\ );}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.srcloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00421\ \ \ \ \ \}}
+\DoxyCodeLine{00422\ }
+\DoxyCodeLine{00423\ \ \ \ \ tracy\_force\_inline\ GpuCtxScope(\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ is\_active\ )}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ \&\&\ GetProfiler().IsConnected()\ )}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ :\ m\_active(\ is\_active\ )}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00429\ \ \ \ \ \{}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ GetGpuCtx().ptr-\/>NextQueryId();}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ glQueryCounter(\ GetGpuCtx().ptr-\/>TranslateOpenGlQueryId(\ queryId\ ),\ GL\_TIMESTAMP\ );}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#ifdef\ TRACY\_FIBERS}}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuZoneBeginAllocSrcLoc\ );}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ memset(\ \&item-\/>gpuZoneBegin.thread,\ 0,\ \textcolor{keyword}{sizeof}(\ item-\/>gpuZoneBegin.thread\ )\ );}
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ GetProfiler().SendCallstack(\ depth\ );}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuZoneBeginAllocSrcLocCallstack\ );}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz\ );}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.queryId,\ uint16\_t(\ queryId\ )\ );}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.context,\ GetGpuCtx().ptr-\/>GetId()\ );}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.srcloc,\ (uint64\_t)srcloc\ );}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00449\ \ \ \ \ \}}
+\DoxyCodeLine{00450\ }
+\DoxyCodeLine{00451\ \ \ \ \ tracy\_force\_inline\ \string~GpuCtxScope()}
+\DoxyCodeLine{00452\ \ \ \ \ \{}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ !m\_active\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ GetGpuCtx().ptr-\/>NextQueryId();}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ glQueryCounter(\ GetGpuCtx().ptr-\/>TranslateOpenGlQueryId(\ queryId\ ),\ GL\_TIMESTAMP\ );}
+\DoxyCodeLine{00457\ }
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ TracyLfqPrepare(\ QueueType::GpuZoneEnd\ );}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneEnd.cpuTime,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ memset(\ \&item-\/>gpuZoneEnd.thread,\ 0,\ \textcolor{keyword}{sizeof}(\ item-\/>gpuZoneEnd.thread\ )\ );}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneEnd.queryId,\ uint16\_t(\ queryId\ )\ );}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneEnd.context,\ GetGpuCtx().ptr-\/>GetId()\ );}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ TracyLfqCommit;}
+\DoxyCodeLine{00464\ \ \ \ \ \}}
+\DoxyCodeLine{00465\ }
+\DoxyCodeLine{00466\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ m\_active;}
+\DoxyCodeLine{00468\ \};}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \}}
+\DoxyCodeLine{00471\ }
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

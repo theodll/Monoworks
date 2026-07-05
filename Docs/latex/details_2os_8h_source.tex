@@ -1,0 +1,133 @@
+\doxysection{os.\+h}
+\hypertarget{details_2os_8h_source}{}\label{details_2os_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/details/os.h@{MonoEngine/thirdparty/spdlog/include/spdlog/details/os.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <ctime>}\ \ \textcolor{comment}{//\ std::time\_t}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }os\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ SPDLOG\_API\ log\_clock::time\_point\ now()\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ SPDLOG\_API\ std::tm\ localtime(const\ std::time\_t\ \&time\_tt)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ SPDLOG\_API\ std::tm\ localtime()\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ SPDLOG\_API\ std::tm\ gmtime(const\ std::time\_t\ \&time\_tt)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ SPDLOG\_API\ std::tm\ gmtime()\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ eol\ definition}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ !defined(SPDLOG\_EOL)}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ SPDLOG\_EOL\ "{}\(\backslash\)r\(\backslash\)n"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ SPDLOG\_EOL\ "{}\(\backslash\)n"{}}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ SPDLOG\_CONSTEXPR\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *default\_eol\ =\ SPDLOG\_EOL;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ folder\ separator}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#if\ !defined(SPDLOG\_FOLDER\_SEPS)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ SPDLOG\_FOLDER\_SEPS\ "{}\(\backslash\)\(\backslash\)/"{}}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ SPDLOG\_FOLDER\_SEPS\ "{}/"{}}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ SPDLOG\_CONSTEXPR\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ folder\_seps[]\ =\ SPDLOG\_FOLDER\_SEPS;}
+\DoxyCodeLine{00044\ SPDLOG\_CONSTEXPR\ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ filename\_t::value\_type\ folder\_seps\_filename[]\ =}
+\DoxyCodeLine{00045\ \ \ \ \ SPDLOG\_FILENAME\_T(SPDLOG\_FOLDER\_SEPS);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{comment}{//\ fopen\_s\ on\ non\ windows\ for\ writing}}
+\DoxyCodeLine{00048\ SPDLOG\_API\ \textcolor{keywordtype}{bool}\ fopen\_s(FILE\ **fp,\ \textcolor{keyword}{const}\ filename\_t\ \&filename,\ \textcolor{keyword}{const}\ filename\_t\ \&mode);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ Remove\ filename.\ return\ 0\ on\ success}}
+\DoxyCodeLine{00051\ SPDLOG\_API\ \textcolor{keywordtype}{int}\ remove(\textcolor{keyword}{const}\ filename\_t\ \&filename)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ Remove\ file\ if\ exists.\ return\ 0\ on\ success}}
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ Note:\ Non\ atomic\ (might\ return\ failure\ to\ delete\ if\ concurrently\ deleted\ by\ other\ process/thread)}}
+\DoxyCodeLine{00055\ SPDLOG\_API\ \textcolor{keywordtype}{int}\ remove\_if\_exists(\textcolor{keyword}{const}\ filename\_t\ \&filename)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ SPDLOG\_API\ \textcolor{keywordtype}{int}\ rename(\textcolor{keyword}{const}\ filename\_t\ \&filename1,\ \textcolor{keyword}{const}\ filename\_t\ \&filename2)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ Return\ if\ file\ exists.}}
+\DoxyCodeLine{00060\ SPDLOG\_API\ \textcolor{keywordtype}{bool}\ path\_exists(\textcolor{keyword}{const}\ filename\_t\ \&filename)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ Return\ file\ size\ according\ to\ open\ FILE*\ object}}
+\DoxyCodeLine{00063\ SPDLOG\_API\ \textcolor{keywordtype}{size\_t}\ filesize(FILE\ *f);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ Return\ utc\ offset\ in\ minutes\ or\ throw\ spdlog\_ex\ on\ failure}}
+\DoxyCodeLine{00066\ SPDLOG\_API\ \textcolor{keywordtype}{int}\ utc\_minutes\_offset(\textcolor{keyword}{const}\ std::tm\ \&tm\ =\ details::os::localtime());}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{//\ Return\ current\ thread\ id\ as\ size\_t}}
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ It\ exists\ because\ the\ std::this\_thread::get\_id()\ is\ much\ slower(especially}}
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ under\ VS\ 2013)}}
+\DoxyCodeLine{00071\ SPDLOG\_API\ \textcolor{keywordtype}{size\_t}\ \_thread\_id()\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ Return\ current\ thread\ id\ as\ size\_t\ (from\ thread\ local\ storage)}}
+\DoxyCodeLine{00074\ SPDLOG\_API\ \textcolor{keywordtype}{size\_t}\ thread\_id()\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ This\ is\ avoid\ msvc\ issue\ in\ sleep\_for\ that\ happens\ if\ the\ clock\ changes.}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//\ See\ https://github.com/gabime/spdlog/issues/609}}
+\DoxyCodeLine{00078\ SPDLOG\_API\ \textcolor{keywordtype}{void}\ sleep\_for\_millis(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ milliseconds)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ SPDLOG\_API\ std::\textcolor{keywordtype}{string}\ filename\_to\_str(const\ filename\_t\ \&filename);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ SPDLOG\_API\ \textcolor{keywordtype}{int}\ pid()\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{comment}{//\ Determine\ if\ the\ terminal\ supports\ colors}}
+\DoxyCodeLine{00085\ \textcolor{comment}{//\ Source:\ https://github.com/agauniyal/rang/}}
+\DoxyCodeLine{00086\ SPDLOG\_API\ \textcolor{keywordtype}{bool}\ is\_color\_terminal()\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{comment}{//\ Determine\ if\ the\ terminal\ attached}}
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ Source:\ https://github.com/agauniyal/rang/}}
+\DoxyCodeLine{00090\ SPDLOG\_API\ \textcolor{keywordtype}{bool}\ in\_terminal(FILE\ *file)\ SPDLOG\_NOEXCEPT;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#if\ (defined(SPDLOG\_WCHAR\_TO\_UTF8\_SUPPORT)\ ||\ defined(SPDLOG\_WCHAR\_FILENAMES))\ \&\&\ defined(\_WIN32)}}
+\DoxyCodeLine{00093\ SPDLOG\_API\ \textcolor{keywordtype}{void}\ wstr\_to\_utf8buf(wstring\_view\_t\ wstr,\ memory\_buf\_t\ \&target);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ SPDLOG\_API\ \textcolor{keywordtype}{void}\ utf8\_to\_wstrbuf(string\_view\_t\ str,\ wmemory\_buf\_t\ \&target);}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{comment}{//\ Return\ directory\ name\ from\ given\ path\ or\ empty\ string}}
+\DoxyCodeLine{00099\ \textcolor{comment}{//\ "{}abc/file"{}\ =>\ "{}abc"{}}}
+\DoxyCodeLine{00100\ \textcolor{comment}{//\ "{}abc/"{}\ =>\ "{}abc"{}}}
+\DoxyCodeLine{00101\ \textcolor{comment}{//\ "{}abc"{}\ =>\ "{}"{}}}
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ "{}abc///"{}\ =>\ "{}abc//"{}}}
+\DoxyCodeLine{00103\ SPDLOG\_API\ filename\_t\ dir\_name(\textcolor{keyword}{const}\ filename\_t\ \&path);}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ Create\ a\ dir\ from\ the\ given\ path.}}
+\DoxyCodeLine{00106\ \textcolor{comment}{//\ Return\ true\ if\ succeeded\ or\ if\ this\ dir\ already\ exists.}}
+\DoxyCodeLine{00107\ SPDLOG\_API\ \textcolor{keywordtype}{bool}\ create\_dir(\textcolor{keyword}{const}\ filename\_t\ \&path);}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{comment}{//\ non\ thread\ safe,\ cross\ platform\ getenv/getenv\_s}}
+\DoxyCodeLine{00110\ \textcolor{comment}{//\ return\ empty\ string\ if\ field\ not\ found}}
+\DoxyCodeLine{00111\ SPDLOG\_API\ std::string\ getenv(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *field);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{comment}{//\ Do\ fsync\ by\ FILE\ objectpointer.}}
+\DoxyCodeLine{00114\ \textcolor{comment}{//\ Return\ true\ on\ success.}}
+\DoxyCodeLine{00115\ SPDLOG\_API\ \textcolor{keywordtype}{bool}\ fsync(FILE\ *fp);}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{comment}{//\ Do\ non-\/locking\ fwrite\ if\ possible\ by\ the\ os\ or\ use\ the\ regular\ locking\ fwrite}}
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ Return\ true\ on\ success.}}
+\DoxyCodeLine{00119\ SPDLOG\_API\ \textcolor{keywordtype}{bool}\ fwrite\_bytes(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *ptr,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ n\_bytes,\ FILE\ *fp);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \}\ \ \textcolor{comment}{//\ namespace\ os}}
+\DoxyCodeLine{00122\ \}\ \ \textcolor{comment}{//\ namespace\ details}}
+\DoxyCodeLine{00123\ SPDLOG\_NAMESPACE\_END}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#ifdef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#include\ "{}os-\/inl.h"{}}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

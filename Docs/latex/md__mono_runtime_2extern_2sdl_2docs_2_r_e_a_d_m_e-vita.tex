@@ -1,0 +1,26 @@
+\chapter{PS Vita }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-vita}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-vita}\index{PS Vita@{PS Vita}}
+SDL port for the Sony Playstation Vita and Sony Playstation TV
+
+Credit to
+\begin{DoxyItemize}
+\item xerpi, cpasjuste and rsn8887 for initial (vita2d) port
+\item vitasdk/\+dolcesdk devs
+\item CBPS discord (Namely Graphene and Sonic\+Mastr)
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-vita_autotoc_md1462}{}\doxysection{\texorpdfstring{Building}{Building}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-vita_autotoc_md1462}
+To build for the PSVita, make sure you have vitasdk and cmake installed and run:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/S.\ -\/Bbuild\ -\/DCMAKE\_TOOLCHAIN\_FILE=\$\{VITASDK\}/share/vita.toolchain.cmake\ -\/DCMAKE\_BUILD\_TYPE=Release}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+\DoxyCodeLine{cmake\ -\/-\/install\ build}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-vita_autotoc_md1463}{}\doxysection{\texorpdfstring{Notes}{Notes}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-vita_autotoc_md1463}
+
+\begin{DoxyItemize}
+\item gles1/\+gles2 support and renderers are disabled by default and can be enabled by configuring with {\ttfamily -\/DVIDEO\+\_\+\+VITA\+\_\+\+PVR=ON} These renderers support 720p and 1080i resolutions. These can be specified with:\+ {\ttfamily SDL\+\_\+\+Set\+Hint(SDL\+\_\+\+HINT\+\_\+\+VITA\+\_\+\+RESOLUTION, "{}720"{});} and {\ttfamily SDL\+\_\+\+Set\+Hint(SDL\+\_\+\+HINT\+\_\+\+VITA\+\_\+\+RESOLUTION, "{}1080"{});}
+\item Desktop GL 1.\+X and 2.\+X support and renderers are also disabled by default and also can be enabled with {\ttfamily -\/DVIDEO\+\_\+\+VITA\+\_\+\+PVR=ON} as long as gl4es4vita is present in your SDK. They support the same resolutions as the gles1/\+gles2 backends and require specifying {\ttfamily SDL\+\_\+\+Set\+Hint(SDL\+\_\+\+HINT\+\_\+\+VITA\+\_\+\+PVR\+\_\+\+OPENGL, "{}1"{});} anytime before video subsystem initialization.
+\item gles2 support via PIB is disabled by default and can be enabled by configuring with {\ttfamily -\/DVIDEO\+\_\+\+VITA\+\_\+\+PIB=ON}
+\item By default SDL emits mouse events for touch events on every touchscreen. Vita has two touchscreens, so it\textquotesingle{}s recommended to use {\ttfamily SDL\+\_\+\+Set\+Hint(SDL\+\_\+\+HINT\+\_\+\+TOUCH\+\_\+\+MOUSE\+\_\+\+EVENTS, "{}0"{});} and handle touch events instead. Individual touchscreens can be disabled with:\+ {\ttfamily SDL\+\_\+\+Set\+Hint(SDL\+\_\+\+HINT\+\_\+\+VITA\+\_\+\+ENABLE\+\_\+\+FRONT\+\_\+\+TOUCH, "{}0"{});} and {\ttfamily SDL\+\_\+\+Set\+Hint(SDL\+\_\+\+HINT\+\_\+\+VITA\+\_\+\+ENABLE\+\_\+\+BACK\+\_\+\+TOUCH, "{}0"{});}
+\item Support for L2/\+\+R2/\+\+R3/\+\+R3 buttons, haptic feedback and gamepad led only available on PSTV, or when using external ds4 gamepad on vita. 
+\end{DoxyItemize}

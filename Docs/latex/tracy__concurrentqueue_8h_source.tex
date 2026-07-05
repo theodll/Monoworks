@@ -1,0 +1,1446 @@
+\doxysection{tracy\+\_\+concurrentqueue.\+h}
+\hypertarget{tracy__concurrentqueue_8h_source}{}\label{tracy__concurrentqueue_8h_source}\index{MonoEngine/thirdparty/tracy/public/client/tracy\_concurrentqueue.h@{MonoEngine/thirdparty/tracy/public/client/tracy\_concurrentqueue.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Provides\ a\ C++11\ implementation\ of\ a\ multi-\/producer,\ multi-\/consumer\ lock-\/free\ queue.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ An\ overview,\ including\ benchmark\ results,\ is\ provided\ here:}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ \ \ \ \ http://moodycamel.com/blog/2014/a-\/fast-\/general-\/purpose-\/lock-\/free-\/queue-\/for-\/c++}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ The\ full\ design\ is\ also\ described\ in\ excruciating\ detail\ at:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ \ \ \ http://moodycamel.com/blog/2014/detailed-\/design-\/of-\/a-\/lock-\/free-\/queue}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Simplified\ BSD\ license:}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Copyright\ (c)\ 2013-\/2016,\ Cameron\ Desrochers.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ All\ rights\ reserved.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ Redistribution\ and\ use\ in\ source\ and\ binary\ forms,\ with\ or\ without\ modification,}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ are\ permitted\ provided\ that\ the\ following\ conditions\ are\ met:}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ -\/\ Redistributions\ of\ source\ code\ must\ retain\ the\ above\ copyright\ notice,\ this\ list\ of}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ conditions\ and\ the\ following\ disclaimer.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ -\/\ Redistributions\ in\ binary\ form\ must\ reproduce\ the\ above\ copyright\ notice,\ this\ list\ of}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ conditions\ and\ the\ following\ disclaimer\ in\ the\ documentation\ and/or\ other\ materials}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ provided\ with\ the\ distribution.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ THIS\ SOFTWARE\ IS\ PROVIDED\ BY\ THE\ COPYRIGHT\ HOLDERS\ AND\ CONTRIBUTORS\ "{}AS\ IS"{}\ AND\ ANY}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ EXPRESS\ OR\ IMPLIED\ WARRANTIES,\ INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ THE\ IMPLIED\ WARRANTIES\ OF}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ MERCHANTABILITY\ AND\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ ARE\ DISCLAIMED.\ IN\ NO\ EVENT\ SHALL}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ THE\ COPYRIGHT\ HOLDER\ OR\ CONTRIBUTORS\ BE\ LIABLE\ FOR\ ANY\ DIRECT,\ INDIRECT,\ INCIDENTAL,}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ SPECIAL,\ EXEMPLARY,\ OR\ CONSEQUENTIAL\ DAMAGES\ (INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ PROCUREMENT}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ OF\ SUBSTITUTE\ GOODS\ OR\ SERVICES;\ LOSS\ OF\ USE,\ DATA,\ OR\ PROFITS;\ OR\ BUSINESS\ INTERRUPTION)}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ HOWEVER\ CAUSED\ AND\ ON\ ANY\ THEORY\ OF\ LIABILITY,\ WHETHER\ IN\ CONTRACT,\ STRICT\ LIABILITY,\ OR}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ TORT\ (INCLUDING\ NEGLIGENCE\ OR\ OTHERWISE)\ ARISING\ IN\ ANY\ WAY\ OUT\ OF\ THE\ USE\ OF\ THIS\ SOFTWARE,}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ EVEN\ IF\ ADVISED\ OF\ THE\ POSSIBILITY\ OF\ SUCH\ DAMAGE.}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlloc.hpp"{}}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ "{}../common/TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}../common/TracySystem.hpp"{}}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#if\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ Disable\ -\/Wconversion\ warnings\ (spuriously\ triggered\ when\ Traits::size\_t\ and}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ Traits::index\_t\ are\ set\ to\ <\ 32\ bits,\ causing\ integer\ promotion,\ causing\ warnings}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ upon\ assigning\ any\ computed\ values)}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ push}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ ignored\ "{}-\/Wconversion"{}}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#if\ defined(\_\_APPLE\_\_)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ "{}TargetConditionals.h"{}}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ <atomic>}\ \ \ \ \ \ \ \textcolor{comment}{//\ Requires\ C++11.\ Sorry\ VS2010.}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ <cstddef>}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ max\_align\_t}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#include\ <climits>}\ \ \ \ \ \ \textcolor{comment}{//\ for\ CHAR\_BIT}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#include\ <array>}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#include\ <thread>}\ \ \ \ \ \ \ \textcolor{comment}{//\ partly\ for\ \_\_WINPTHREADS\_VERSION\ if\ on\ MinGW-\/w64\ w/\ POSIX\ threading}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ Compiler-\/specific\ likely/unlikely\ hints}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{namespace\ }moodycamel\ \{\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#if\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ cqLikely(\textcolor{keywordtype}{bool}\ x)\ \{\ \textcolor{keywordflow}{return}\ \_\_builtin\_expect((x),\ \textcolor{keyword}{true});\ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ cqUnlikely(\textcolor{keywordtype}{bool}\ x)\ \{\ \textcolor{keywordflow}{return}\ \_\_builtin\_expect((x),\ \textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ cqLikely(\textcolor{keywordtype}{bool}\ x)\ \{\ \textcolor{keywordflow}{return}\ x;\ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ cqUnlikely(\textcolor{keywordtype}{bool}\ x)\ \{\ \textcolor{keywordflow}{return}\ x;\ \}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ \}\ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{namespace}}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ to\ avoid\ MSVC\ warning\ 4127:\ conditional\ expression\ is\ constant}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}>}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{struct\ }compile\_time\_condition}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ value\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00083\ \ \ \ \ \};}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{struct\ }compile\_time\_condition<true>}
+\DoxyCodeLine{00086\ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ value\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00088\ \ \ \ \ \};}
+\DoxyCodeLine{00089\ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{namespace\ }moodycamel\ \{}
+\DoxyCodeLine{00092\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1const__numeric__max}{const\_numeric\_max}}\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_integral<T>::value,\ \textcolor{stringliteral}{"{}const\_numeric\_max\ can\ only\ be\ used\ with\ integers"{}});}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ T\ value\ =\ std::numeric\_limits<T>::is\_signed}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ ?\ (\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ <<\ (\textcolor{keyword}{sizeof}(T)\ *\ CHAR\_BIT\ -\/\ 1))\ -\/\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ :\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(-\/1);}
+\DoxyCodeLine{00099\ \ \ \ \ \};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#if\ defined(\_\_GLIBCXX\_\_)}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{uniontracy_1_1moodycamel_1_1details_1_1max__align__t}{::max\_align\_t}}\ std\_max\_align\_t;\ \ \ \ \ \ \textcolor{comment}{//\ libstdc++\ forgot\ to\ add\ it\ to\ std::\ for\ a\ while}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{typedef}\ std::max\_align\_t\ std\_max\_align\_t;\ \ \ \textcolor{comment}{//\ Others\ (e.g.\ MSVC)\ insist\ it\ can\ *only*\ be\ accessed\ via\ std::}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ Some\ platforms\ have\ incorrectly\ set\ max\_align\_t\ to\ a\ type\ with\ <8\ bytes\ alignment\ even\ while\ supporting}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ 8-\/byte\ aligned\ scalar\ values\ (*cough*\ 32-\/bit\ iOS).\ Work\ around\ this\ with\ our\ own\ union.\ See\ issue\ \#64.}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ std\_max\_align\_t\ x;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ y;}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ z;}
+\DoxyCodeLine{00113\ \ \ \ \ \}\ \doxymbox{\hyperlink{uniontracy_1_1moodycamel_1_1details_1_1max__align__t}{max\_align\_t}};}
+\DoxyCodeLine{00114\ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{comment}{//\ Default\ traits\ for\ the\ ConcurrentQueue.\ To\ change\ some\ of\ the}}
+\DoxyCodeLine{00117\ \textcolor{comment}{//\ traits\ without\ re-\/implementing\ all\ of\ them,\ inherit\ from\ this}}
+\DoxyCodeLine{00118\ \textcolor{comment}{//\ struct\ and\ shadow\ the\ declarations\ you\ wish\ to\ be\ different;}}
+\DoxyCodeLine{00119\ \textcolor{comment}{//\ since\ the\ traits\ are\ used\ as\ a\ template\ type\ parameter,\ the}}
+\DoxyCodeLine{00120\ \textcolor{comment}{//\ shadowed\ declarations\ will\ be\ used\ where\ defined,\ and\ the\ defaults}}
+\DoxyCodeLine{00121\ \textcolor{comment}{//\ otherwise.}}
+\DoxyCodeLine{00122\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_default_traits}{ConcurrentQueueDefaultTraits}}}
+\DoxyCodeLine{00123\ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{comment}{//\ General-\/purpose\ size\ type.\ std::size\_t\ is\ strongly\ recommended.}}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{typedef}\ std::size\_t\ size\_t;}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{//\ The\ type\ used\ for\ the\ enqueue\ and\ dequeue\ indices.\ Must\ be\ at\ least\ as}}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ large\ as\ size\_t.\ Should\ be\ significantly\ larger\ than\ the\ number\ of\ elements}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{//\ you\ expect\ to\ hold\ at\ once,\ especially\ if\ you\ have\ a\ high\ turnover\ rate;}}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{comment}{//\ for\ example,\ on\ 32-\/bit\ x86,\ if\ you\ expect\ to\ have\ over\ a\ hundred\ million}}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{//\ elements\ or\ pump\ several\ million\ elements\ through\ your\ queue\ in\ a\ very}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{//\ short\ space\ of\ time,\ using\ a\ 32-\/bit\ type\ *may*\ trigger\ a\ race\ condition.}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{comment}{//\ A\ 64-\/bit\ int\ type\ is\ recommended\ in\ that\ case,\ and\ in\ practice\ will}}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//\ prevent\ a\ race\ condition\ no\ matter\ the\ usage\ of\ the\ queue.\ Note\ that}}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{//\ whether\ the\ queue\ is\ lock-\/free\ with\ a\ 64-\/int\ type\ depends\ on\ the\ whether}}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//\ std::atomic<std::uint64\_t>\ is\ lock-\/free,\ which\ is\ platform-\/specific.}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{typedef}\ std::size\_t\ index\_t;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{//\ Internally,\ all\ elements\ are\ enqueued\ and\ dequeued\ from\ multi-\/element}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{//\ blocks;\ this\ is\ the\ smallest\ controllable\ unit.\ If\ you\ expect\ few\ elements}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ but\ many\ producers,\ a\ smaller\ block\ size\ should\ be\ favoured.\ For\ few\ producers}}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{comment}{//\ and/or\ many\ elements,\ a\ larger\ block\ size\ is\ preferred.\ A\ sane\ default}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{comment}{//\ is\ provided.\ Must\ be\ a\ power\ of\ 2.}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ BLOCK\_SIZE\ =\ 64*1024;}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{//\ For\ explicit\ producers\ (i.e.\ when\ using\ a\ producer\ token),\ the\ block\ is}}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{//\ checked\ for\ being\ empty\ by\ iterating\ through\ a\ list\ of\ flags,\ one\ per\ element.}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{comment}{//\ For\ large\ block\ sizes,\ this\ is\ too\ inefficient,\ and\ switching\ to\ an\ atomic}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{comment}{//\ counter-\/based\ approach\ is\ faster.\ The\ switch\ is\ made\ for\ block\ sizes\ strictly}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ larger\ than\ this\ threshold.}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD\ =\ 32;}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{comment}{//\ How\ many\ full\ blocks\ can\ be\ expected\ for\ a\ single\ explicit\ producer?\ This\ should}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{//\ reflect\ that\ number's\ maximum\ for\ optimal\ performance.\ Must\ be\ a\ power\ of\ 2.}}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ EXPLICIT\_INITIAL\_INDEX\_SIZE\ =\ 32;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{//\ Controls\ the\ number\ of\ items\ that\ an\ explicit\ consumer\ (i.e.\ one\ with\ a\ token)}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{//\ must\ consume\ before\ it\ causes\ all\ consumers\ to\ rotate\ and\ move\ on\ to\ the\ next}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ internal\ queue.}}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::uint32\_t\ EXPLICIT\_CONSUMER\_CONSUMPTION\_QUOTA\_BEFORE\_ROTATE\ =\ 256;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{//\ The\ maximum\ number\ of\ elements\ (inclusive)\ that\ can\ be\ enqueued\ to\ a\ sub-\/queue.}}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{comment}{//\ Enqueue\ operations\ that\ would\ cause\ this\ limit\ to\ be\ surpassed\ will\ fail.\ Note}}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{comment}{//\ that\ this\ limit\ is\ enforced\ at\ the\ block\ level\ (for\ performance\ reasons),\ i.e.}}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{//\ it's\ rounded\ up\ to\ the\ nearest\ block\ size.}}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ MAX\_SUBQUEUE\_SIZE\ =\ details::const\_numeric\_max<size\_t>::value;}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{//\ Memory\ allocation\ can\ be\ customized\ if\ needed.}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{//\ malloc\ should\ return\ nullptr\ on\ failure,\ and\ handle\ alignment\ like\ std::malloc.}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#if\ defined(malloc)\ ||\ defined(free)}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{//\ Gah,\ this\ is\ 2015,\ stop\ defining\ macros\ that\ break\ standard\ code\ already!}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ Work\ around\ malloc/free\ being\ special\ macros:}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}*\ WORKAROUND\_malloc(\textcolor{keywordtype}{size\_t}\ size)\ \{\ \textcolor{keywordflow}{return}\ tracy::tracy\_malloc(size);\ \}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ WORKAROUND\_free(\textcolor{keywordtype}{void}*\ ptr)\ \{\ \textcolor{keywordflow}{return}\ tracy::tracy\_free(ptr);\ \}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}*\ (malloc)(\textcolor{keywordtype}{size\_t}\ size)\ \{\ \textcolor{keywordflow}{return}\ WORKAROUND\_malloc(size);\ \}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ void\ (free)(\textcolor{keywordtype}{void}*\ ptr)\ \{\ \textcolor{keywordflow}{return}\ WORKAROUND\_free(ptr);\ \}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}*\ malloc(\textcolor{keywordtype}{size\_t}\ size)\ \{\ \textcolor{keywordflow}{return}\ tracy::tracy\_malloc(size);\ \}}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ free(\textcolor{keywordtype}{void}*\ ptr)\ \{\ \textcolor{keywordflow}{return}\ tracy::tracy\_free(ptr);\ \}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00182\ \};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \textcolor{comment}{//\ When\ producing\ or\ consuming\ many\ elements,\ the\ most\ efficient\ way\ is\ to:}}
+\DoxyCodeLine{00186\ \textcolor{comment}{//\ \ \ \ 1)\ Use\ one\ of\ the\ bulk-\/operation\ methods\ of\ the\ queue\ with\ a\ token}}
+\DoxyCodeLine{00187\ \textcolor{comment}{//\ \ \ \ 2)\ Failing\ that,\ use\ the\ bulk-\/operation\ methods\ without\ a\ token}}
+\DoxyCodeLine{00188\ \textcolor{comment}{//\ \ \ \ 3)\ Failing\ that,\ create\ a\ token\ and\ use\ that\ with\ the\ single-\/item\ methods}}
+\DoxyCodeLine{00189\ \textcolor{comment}{//\ \ \ \ 4)\ Failing\ that,\ use\ the\ single-\/parameter\ methods\ of\ the\ queue}}
+\DoxyCodeLine{00190\ \textcolor{comment}{//\ Having\ said\ that,\ don't\ create\ tokens\ willy-\/nilly\ -\/-\/\ ideally\ there\ should\ be}}
+\DoxyCodeLine{00191\ \textcolor{comment}{//\ a\ maximum\ of\ one\ token\ per\ thread\ (of\ each\ kind).}}
+\DoxyCodeLine{00192\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_producer_token}{ProducerToken}};}
+\DoxyCodeLine{00193\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_consumer_token}{ConsumerToken}};}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1moodycamel_1_1_concurrent_queue}{ConcurrentQueue}};}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \textcolor{keyword}{namespace\ }details}
+\DoxyCodeLine{00199\ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{struct\ }ConcurrentQueueProducerTypelessBase}
+\DoxyCodeLine{00201\ \ \ \ \ \{}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ ConcurrentQueueProducerTypelessBase*\ next;}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ std::atomic<bool>\ inactive;}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_producer_token}{ProducerToken}}*\ token;}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ uint32\_t\ threadId;}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ ConcurrentQueueProducerTypelessBase()}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ :\ next(\textcolor{keyword}{nullptr}),\ inactive(\textcolor{keyword}{false}),\ token(\textcolor{keyword}{nullptr}),\ threadId(0)}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00211\ \ \ \ \ \};}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ circular\_less\_than(T\ a,\ T\ b)}
+\DoxyCodeLine{00215\ \ \ \ \ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_integral<T>::value\ \&\&\ !std::numeric\_limits<T>::is\_signed,\ \textcolor{stringliteral}{"{}circular\_less\_than\ is\ intended\ to\ be\ used\ only\ with\ unsigned\ integer\ types"{}});}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(a\ -\/\ b)\ >\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ <<\ (\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(\textcolor{keyword}{sizeof}(T)\ *\ CHAR\_BIT\ -\/\ 1)));}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ extra\ parens\ around\ rhs\ of\ operator<<\ is\ MSVC\ bug:\ https://developercommunity2.visualstudio.com/t/C4554-\/triggers-\/when-\/both-\/lhs-\/and-\/rhs-\/is/10034931}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ silencing\ the\ bug\ requires\ \#pragma\ warning(disable:\ 4554)\ around\ the\ calling\ code\ and\ has\ no\ effect\ when\ done\ here.}}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{char}*\ align\_for(\textcolor{keywordtype}{char}*\ ptr)}
+\DoxyCodeLine{00224\ \ \ \ \ \{}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::size\_t\ alignment\ =\ std::alignment\_of<U>::value;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ptr\ +\ (alignment\ -\/\ (\textcolor{keyword}{reinterpret\_cast<}std::uintptr\_t\textcolor{keyword}{>}(ptr)\ \%\ alignment))\ \%\ alignment;}
+\DoxyCodeLine{00227\ \ \ \ \ \}}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ T\ ceil\_to\_pow\_2(T\ x)}
+\DoxyCodeLine{00231\ \ \ \ \ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_integral<T>::value\ \&\&\ !std::numeric\_limits<T>::is\_signed,\ \textcolor{stringliteral}{"{}ceil\_to\_pow\_2\ is\ intended\ to\ be\ used\ only\ with\ unsigned\ integer\ types"{}});}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Adapted\ from\ http://graphics.stanford.edu/\string~seander/bithacks.html\#RoundUpPowerOf2}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ -\/-\/x;}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ x\ |=\ x\ >>\ 1;}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ x\ |=\ x\ >>\ 2;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ x\ |=\ x\ >>\ 4;}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (std::size\_t\ i\ =\ 1;\ i\ <\ \textcolor{keyword}{sizeof}(T);\ i\ <<=\ 1)\ \{}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ x\ |=\ x\ >>\ (i\ <<\ 3);}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ ++x;}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00244\ \ \ \ \ \}}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ swap\_relaxed(std::atomic<T>\&\ left,\ std::atomic<T>\&\ right)}
+\DoxyCodeLine{00248\ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ T\ temp\ =\ std::move(left.load(std::memory\_order\_relaxed));}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ left.store(std::move(right.load(std::memory\_order\_relaxed)),\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ right.store(std::move(temp),\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00252\ \ \ \ \ \}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ T\ \textcolor{keyword}{const}\&\ nomove(T\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00256\ \ \ \ \ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00258\ \ \ \ \ \}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keywordtype}{bool}\ Enable>}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1nomove__if}{nomove\_if}}}
+\DoxyCodeLine{00262\ \ \ \ \ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ T\ \textcolor{keyword}{const}\&\ eval(T\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00268\ \ \ \ \ \};}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1nomove__if}{nomove\_if}}<false>}
+\DoxyCodeLine{00272\ \ \ \ \ \{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ eval(U\&\&\ x)}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ -\/>\ \textcolor{keyword}{decltype}(std::forward<U>(x))}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::forward<U>(x);}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00279\ \ \ \ \ \};}
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ It>}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keyword}{auto}\ deref\_noexcept(It\&\ it)\ \textcolor{keyword}{noexcept}\ -\/>\ \textcolor{keyword}{decltype}(*it)}
+\DoxyCodeLine{00283\ \ \ \ \ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *it;}
+\DoxyCodeLine{00285\ \ \ \ \ \}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#if\ defined(\_\_clang\_\_)\ ||\ !defined(\_\_GNUC\_\_)\ ||\ \_\_GNUC\_\_\ >\ 4\ ||\ (\_\_GNUC\_\_\ ==\ 4\ \&\&\ \_\_GNUC\_MINOR\_\_\ >=\ 8)}}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1is__trivially__destructible}{is\_trivially\_destructible}}\ :\ std::is\_trivially\_destructible<T>\ \{\ \};}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1is__trivially__destructible}{is\_trivially\_destructible}}\ :\ std::has\_trivial\_destructor<T>\ \{\ \};}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free__num}{static\_is\_lock\_free\_num}}\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ 0\ \};\ \};}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free__num}{static\_is\_lock\_free\_num}}<signed\ char>\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ ATOMIC\_CHAR\_LOCK\_FREE\ \};\ \};}
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free__num}{static\_is\_lock\_free\_num}}<short>\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ ATOMIC\_SHORT\_LOCK\_FREE\ \};\ \};}
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free__num}{static\_is\_lock\_free\_num}}<int>\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ ATOMIC\_INT\_LOCK\_FREE\ \};\ \};}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free__num}{static\_is\_lock\_free\_num}}<long>\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ ATOMIC\_LONG\_LOCK\_FREE\ \};\ \};}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free__num}{static\_is\_lock\_free\_num}}<long\ long>\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ ATOMIC\_LLONG\_LOCK\_FREE\ \};\ \};}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free}{static\_is\_lock\_free}}\ :\ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free__num}{static\_is\_lock\_free\_num}}<typename\ std::make\_signed<T>::type>\ \{\ \ \};}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{template}<>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free}{static\_is\_lock\_free}}<bool>\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ ATOMIC\_BOOL\_LOCK\_FREE\ \};\ \};}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1static__is__lock__free}{static\_is\_lock\_free}}<U*>\ \{\ \textcolor{keyword}{enum}\ \{\ value\ =\ ATOMIC\_POINTER\_LOCK\_FREE\ \};\ \};}
+\DoxyCodeLine{00302\ \}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{keyword}{struct\ }ProducerToken}
+\DoxyCodeLine{00306\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keyword}{explicit}\ ProducerToken(ConcurrentQueue<T,\ Traits>\&\ queue);}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ ProducerToken(ProducerToken\&\&\ other)\ noexcept}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ :\ producer(other.producer)}
+\DoxyCodeLine{00312\ \ \ \ \ \{}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ other.producer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (producer\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ producer-\/>token\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00317\ \ \ \ \ \}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keyword}{inline}\ ProducerToken\&\ operator=(ProducerToken\&\&\ other)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00320\ \ \ \ \ \{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ swap(other);}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00323\ \ \ \ \ \}}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordtype}{void}\ swap(ProducerToken\&\ other)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00326\ \ \ \ \ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ std::swap(producer,\ other.producer);}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (producer\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ producer-\/>token\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (other.producer\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ other.producer-\/>token\ =\ \&other;}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00334\ \ \ \ \ \}}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{comment}{//\ A\ token\ is\ always\ valid\ unless:}}
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ 1)\ Memory\ allocation\ failed\ during\ construction}}
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ 2)\ It\ was\ moved\ via\ the\ move\ constructor}}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ \ (Note:\ assignment\ does\ a\ swap,\ leaving\ both\ potentially\ valid)}}
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ 3)\ The\ associated\ queue\ was\ destroyed}}
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{comment}{//\ Note\ that\ if\ valid()\ returns\ true,\ that\ only\ indicates}}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{comment}{//\ that\ the\ token\ is\ valid\ for\ use\ with\ a\ specific\ queue,}}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{comment}{//\ but\ not\ which\ one;\ that's\ up\ to\ the\ user\ to\ track.}}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ valid()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ producer\ !=\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \string~ProducerToken()}
+\DoxyCodeLine{00347\ \ \ \ \ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (producer\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ producer-\/>token\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ producer-\/>inactive.store(\textcolor{keyword}{true},\ std::memory\_order\_release);}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00352\ \ \ \ \ \}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{comment}{//\ Disable\ copying\ and\ assignment}}
+\DoxyCodeLine{00355\ \ \ \ \ ProducerToken(ProducerToken\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00356\ \ \ \ \ ProducerToken\&\ operator=(ProducerToken\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>\ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }ConcurrentQueue;}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00362\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1_concurrent_queue_producer_typeless_base}{details::ConcurrentQueueProducerTypelessBase}}*\ producer;}
+\DoxyCodeLine{00363\ \};}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \textcolor{keyword}{struct\ }ConsumerToken}
+\DoxyCodeLine{00367\ \{}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keyword}{explicit}\ ConsumerToken(ConcurrentQueue<T,\ Traits>\&\ q);}
+\DoxyCodeLine{00370\ }
+\DoxyCodeLine{00371\ \ \ \ \ ConsumerToken(ConsumerToken\&\&\ other)\ noexcept}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ :\ initialOffset(other.initialOffset),\ lastKnownGlobalOffset(other.lastKnownGlobalOffset),\ itemsConsumedFromCurrent(other.itemsConsumedFromCurrent),\ currentProducer(other.currentProducer),\ desiredProducer(other.desiredProducer)}
+\DoxyCodeLine{00373\ \ \ \ \ \{}
+\DoxyCodeLine{00374\ \ \ \ \ \}}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{keyword}{inline}\ ConsumerToken\&\ operator=(ConsumerToken\&\&\ other)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00377\ \ \ \ \ \{}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ swap(other);}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00380\ \ \ \ \ \}}
+\DoxyCodeLine{00381\ }
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordtype}{void}\ swap(ConsumerToken\&\ other)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00383\ \ \ \ \ \{}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ std::swap(initialOffset,\ other.initialOffset);}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ std::swap(lastKnownGlobalOffset,\ other.lastKnownGlobalOffset);}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ std::swap(itemsConsumedFromCurrent,\ other.itemsConsumedFromCurrent);}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ std::swap(currentProducer,\ other.currentProducer);}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ std::swap(desiredProducer,\ other.desiredProducer);}
+\DoxyCodeLine{00389\ \ \ \ \ \}}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{comment}{//\ Disable\ copying\ and\ assignment}}
+\DoxyCodeLine{00392\ \ \ \ \ ConsumerToken(ConsumerToken\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00393\ \ \ \ \ ConsumerToken\&\ operator=(ConsumerToken\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>\ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }ConcurrentQueue;}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ \textcolor{keyword}{private}:\ \textcolor{comment}{//\ but\ shared\ with\ ConcurrentQueue}}
+\DoxyCodeLine{00399\ \ \ \ \ std::uint32\_t\ initialOffset;}
+\DoxyCodeLine{00400\ \ \ \ \ std::uint32\_t\ lastKnownGlobalOffset;}
+\DoxyCodeLine{00401\ \ \ \ \ std::uint32\_t\ itemsConsumedFromCurrent;}
+\DoxyCodeLine{00402\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1_concurrent_queue_producer_typeless_base}{details::ConcurrentQueueProducerTypelessBase}}*\ currentProducer;}
+\DoxyCodeLine{00403\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1_concurrent_queue_producer_typeless_base}{details::ConcurrentQueueProducerTypelessBase}}*\ desiredProducer;}
+\DoxyCodeLine{00404\ \};}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits\ =\ ConcurrentQueueDefaultTraits>}
+\DoxyCodeLine{00408\ \textcolor{keyword}{class\ }ConcurrentQueue}
+\DoxyCodeLine{00409\ \{}
+\DoxyCodeLine{00410\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{ExplicitProducer}};}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_producer_token}{moodycamel::ProducerToken}}\ producer\_token\_t;}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_consumer_token}{moodycamel::ConsumerToken}}\ consumer\_token\_t;}
+\DoxyCodeLine{00415\ }
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ Traits::index\_t\ index\_t;}
+\DoxyCodeLine{00417\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{typename}\ Traits::size\_t\ size\_t;}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ BLOCK\_SIZE\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(Traits::BLOCK\_SIZE);}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(Traits::EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD);}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ EXPLICIT\_INITIAL\_INDEX\_SIZE\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(Traits::EXPLICIT\_INITIAL\_INDEX\_SIZE);}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::uint32\_t\ EXPLICIT\_CONSUMER\_CONSUMPTION\_QUOTA\_BEFORE\_ROTATE\ =\ \textcolor{keyword}{static\_cast<}std::uint32\_t\textcolor{keyword}{>}(Traits::EXPLICIT\_CONSUMER\_CONSUMPTION\_QUOTA\_BEFORE\_ROTATE);}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#pragma\ warning(push)}}
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4307)\ \ \ \ \ \ }\textcolor{comment}{//\ +\ integral\ constant\ overflow\ (that's\ what\ the\ ternary\ expression\ is\ for!)}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4309)\ \ \ \ \ \ }\textcolor{comment}{//\ static\_cast:\ Truncation\ of\ constant\ value}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ MAX\_SUBQUEUE\_SIZE\ =\ (details::const\_numeric\_max<size\_t>::value\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(Traits::MAX\_SUBQUEUE\_SIZE)\ <\ BLOCK\_SIZE)\ ?\ details::const\_numeric\_max<size\_t>::value\ :\ ((\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(Traits::MAX\_SUBQUEUE\_SIZE)\ +\ (BLOCK\_SIZE\ -\/\ 1))\ /\ BLOCK\_SIZE\ *\ BLOCK\_SIZE);}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#pragma\ warning(pop)}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \ \ \ \ \textcolor{keyword}{static\_assert}(!std::numeric\_limits<size\_t>::is\_signed\ \&\&\ std::is\_integral<size\_t>::value,\ \textcolor{stringliteral}{"{}Traits::size\_t\ must\ be\ an\ unsigned\ integral\ type"{}});}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{keyword}{static\_assert}(!std::numeric\_limits<index\_t>::is\_signed\ \&\&\ std::is\_integral<index\_t>::value,\ \textcolor{stringliteral}{"{}Traits::index\_t\ must\ be\ an\ unsigned\ integral\ type"{}});}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keyword}{static\_assert}(\textcolor{keyword}{sizeof}(index\_t)\ >=\ \textcolor{keyword}{sizeof}(size\_t),\ \textcolor{stringliteral}{"{}Traits::index\_t\ must\ be\ at\ least\ as\ wide\ as\ Traits::size\_t"{}});}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{keyword}{static\_assert}((BLOCK\_SIZE\ >\ 1)\ \&\&\ !(BLOCK\_SIZE\ \&\ (BLOCK\_SIZE\ -\/\ 1)),\ \textcolor{stringliteral}{"{}Traits::BLOCK\_SIZE\ must\ be\ a\ power\ of\ 2\ (and\ at\ least\ 2)"{}});}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{static\_assert}((EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD\ >\ 1)\ \&\&\ !(EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD\ \&\ (EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD\ -\/\ 1)),\ \textcolor{stringliteral}{"{}Traits::EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD\ must\ be\ a\ power\ of\ 2\ (and\ greater\ than\ 1)"{}});}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keyword}{static\_assert}((EXPLICIT\_INITIAL\_INDEX\_SIZE\ >\ 1)\ \&\&\ !(EXPLICIT\_INITIAL\_INDEX\_SIZE\ \&\ (EXPLICIT\_INITIAL\_INDEX\_SIZE\ -\/\ 1)),\ \textcolor{stringliteral}{"{}Traits::EXPLICIT\_INITIAL\_INDEX\_SIZE\ must\ be\ a\ power\ of\ 2\ (and\ greater\ than\ 1)"{}});}
+\DoxyCodeLine{00439\ }
+\DoxyCodeLine{00440\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{comment}{//\ Creates\ a\ queue\ with\ at\ least\ \`{}capacity`\ element\ slots;\ note\ that\ the}}
+\DoxyCodeLine{00442\ \ \ \ \ \textcolor{comment}{//\ actual\ number\ of\ elements\ that\ can\ be\ inserted\ without\ additional\ memory}}
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{comment}{//\ allocation\ depends\ on\ the\ number\ of\ producers\ and\ the\ block\ size\ (e.g.\ if}}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{comment}{//\ the\ block\ size\ is\ equal\ to\ \`{}capacity`,\ only\ a\ single\ block\ will\ be\ allocated}}
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{comment}{//\ up-\/front,\ which\ means\ only\ a\ single\ producer\ will\ be\ able\ to\ enqueue\ elements}}
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{comment}{//\ without\ an\ extra\ allocation\ -\/-\/\ blocks\ aren't\ shared\ between\ producers).}}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{comment}{//\ This\ method\ is\ not\ thread\ safe\ -\/-\/\ it\ is\ up\ to\ the\ user\ to\ ensure\ that\ the}}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{comment}{//\ queue\ is\ fully\ constructed\ before\ it\ starts\ being\ used\ by\ other\ threads\ (this}}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{comment}{//\ includes\ making\ the\ memory\ effects\ of\ construction\ visible,\ possibly\ with\ a}}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{comment}{//\ memory\ barrier).}}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{keyword}{explicit}\ ConcurrentQueue(\textcolor{keywordtype}{size\_t}\ capacity\ =\ 6\ *\ BLOCK\_SIZE)}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ :\ producerListTail(\textcolor{keyword}{nullptr}),}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ producerCount(0),}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ initialBlockPoolIndex(0),}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ nextExplicitConsumerId(0),}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ globalExplicitConsumerOffset(0)}
+\DoxyCodeLine{00457\ \ \ \ \ \{}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ populate\_initial\_block\_list(capacity\ /\ BLOCK\_SIZE\ +\ ((capacity\ \&\ (BLOCK\_SIZE\ -\/\ 1))\ ==\ 0\ ?\ 0\ :\ 1));}
+\DoxyCodeLine{00459\ \ \ \ \ \}}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{comment}{//\ Computes\ the\ correct\ amount\ of\ pre-\/allocated\ blocks\ for\ you\ based}}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{comment}{//\ on\ the\ minimum\ number\ of\ elements\ you\ want\ available\ at\ any\ given}}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{comment}{//\ time,\ and\ the\ maximum\ concurrent\ number\ of\ each\ type\ of\ producer.}}
+\DoxyCodeLine{00464\ \ \ \ \ ConcurrentQueue(\textcolor{keywordtype}{size\_t}\ minCapacity,\ \textcolor{keywordtype}{size\_t}\ maxExplicitProducers)}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ :\ producerListTail(\textcolor{keyword}{nullptr}),}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ producerCount(0),}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ initialBlockPoolIndex(0),}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ nextExplicitConsumerId(0),}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ globalExplicitConsumerOffset(0)}
+\DoxyCodeLine{00470\ \ \ \ \ \{}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ blocks\ =\ (((minCapacity\ +\ BLOCK\_SIZE\ -\/\ 1)\ /\ BLOCK\_SIZE)\ -\/\ 1)\ *\ (maxExplicitProducers\ +\ 1)\ +\ 2\ *\ (maxExplicitProducers);}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ populate\_initial\_block\_list(blocks);}
+\DoxyCodeLine{00473\ \ \ \ \ \}}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{comment}{//\ Note:\ The\ queue\ should\ not\ be\ accessed\ concurrently\ while\ it's}}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{comment}{//\ being\ deleted.\ It's\ up\ to\ the\ user\ to\ synchronize\ this.}}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{comment}{//\ This\ method\ is\ not\ thread\ safe.}}
+\DoxyCodeLine{00478\ \ \ \ \ \string~ConcurrentQueue()}
+\DoxyCodeLine{00479\ \ \ \ \ \{}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Destroy\ producers}}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ producerListTail.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (ptr\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ next\ =\ ptr-\/>next\_prod();}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr-\/>token\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ptr-\/>token-\/>producer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ destroy(ptr);}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ ptr\ =\ next;}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Destroy\ global\ free\ list}}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ block\ =\ freeList.head\_unsafe();}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (block\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ next\ =\ block-\/>freeListNext.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (block-\/>dynamicallyAllocated)\ \{}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ destroy(block);}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ block\ =\ next;}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Destroy\ initial\ free\ list}}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ destroy\_array(initialBlockPool,\ initialBlockPoolSize);}
+\DoxyCodeLine{00503\ \ \ \ \ \}}
+\DoxyCodeLine{00504\ }
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{comment}{//\ Disable\ copying\ and\ copy\ assignment}}
+\DoxyCodeLine{00506\ \ \ \ \ ConcurrentQueue(ConcurrentQueue\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00507\ \ \ \ \ ConcurrentQueue(ConcurrentQueue\&\&\ other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00508\ \ \ \ \ ConcurrentQueue\&\ operator=(ConcurrentQueue\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00509\ \ \ \ \ ConcurrentQueue\&\ operator=(ConcurrentQueue\&\&\ other)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00512\ \ \ \ \ tracy\_force\_inline\ T*\ enqueue\_begin(producer\_token\_t\ \textcolor{keyword}{const}\&\ token,\ index\_t\&\ currentTailIndex)}
+\DoxyCodeLine{00513\ \ \ \ \ \{}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{ExplicitProducer}}*\textcolor{keyword}{>}(token.producer)-\/>ConcurrentQueue::ExplicitProducer::enqueue\_begin(currentTailIndex);}
+\DoxyCodeLine{00515\ \ \ \ \ \}}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ NotifyThread,\ \textcolor{keyword}{class}\ ProcessData>}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ try\_dequeue\_bulk\_single(consumer\_token\_t\&\ token,\ NotifyThread\ notifyThread,\ ProcessData\ processData\ )}
+\DoxyCodeLine{00519\ \ \ \ \ \{}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (token.desiredProducer\ ==\ \textcolor{keyword}{nullptr}\ ||\ token.lastKnownGlobalOffset\ !=\ globalExplicitConsumerOffset.load(std::memory\_order\_relaxed))\ \{}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!update\_current\_producer\_after\_rotation(token))\ \{}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ count\ =\ \textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(token.currentProducer)-\/>dequeue\_bulk(notifyThread,\ processData);}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ token.itemsConsumedFromCurrent\ +=\ \textcolor{keyword}{static\_cast<}std::uint32\_t\textcolor{keyword}{>}(count);}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ tail\ =\ producerListTail.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ \textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(token.currentProducer)-\/>next\_prod();}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ ptr\ =\ tail;}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ count\ ==\ 0\ )}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (ptr\ !=\ \textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(token.currentProducer))\ \{}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ dequeued\ =\ ptr-\/>dequeue\_bulk(notifyThread,\ processData);}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dequeued\ !=\ 0)\ \{}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ token.currentProducer\ =\ ptr;}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ token.itemsConsumedFromCurrent\ =\ \textcolor{keyword}{static\_cast<}std::uint32\_t\textcolor{keyword}{>}(dequeued);}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ dequeued;}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ptr\ =\ ptr-\/>next\_prod();}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ptr\ =\ tail;}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ token.currentProducer\ =\ ptr;}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \ \ \ \ token.itemsConsumedFromCurrent\ =\ 0;}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ count;}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00556\ \ \ \ \ \}}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{comment}{//\ Returns\ an\ estimate\ of\ the\ total\ number\ of\ elements\ currently\ in\ the\ queue.\ This}}
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{comment}{//\ estimate\ is\ only\ accurate\ if\ the\ queue\ has\ completely\ stabilized\ before\ it\ is\ called}}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{comment}{//\ (i.e.\ all\ enqueue\ and\ dequeue\ operations\ have\ completed\ and\ their\ memory\ effects\ are}}
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{comment}{//\ visible\ on\ the\ calling\ thread,\ and\ no\ further\ operations\ start\ while\ this\ method\ is}}
+\DoxyCodeLine{00563\ \ \ \ \ \textcolor{comment}{//\ being\ called).}}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{comment}{//\ Thread-\/safe.}}
+\DoxyCodeLine{00565\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size\_approx()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00566\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size\ =\ 0;}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ ptr\ =\ producerListTail.load(std::memory\_order\_acquire);\ ptr\ !=\ \textcolor{keyword}{nullptr};\ ptr\ =\ ptr-\/>next\_prod())\ \{}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \ \ \ \ size\ +=\ ptr-\/>size\_approx();}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ size;}
+\DoxyCodeLine{00572\ \ \ \ \ \}}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ underlying\ atomic\ variables\ used\ by}}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{comment}{//\ the\ queue\ are\ lock-\/free\ (they\ should\ be\ on\ most\ platforms).}}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{comment}{//\ Thread-\/safe.}}
+\DoxyCodeLine{00578\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ is\_lock\_free()}
+\DoxyCodeLine{00579\ \ \ \ \ \{}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ details::static\_is\_lock\_free<bool>::value\ ==\ 2\ \&\&}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ details::static\_is\_lock\_free<size\_t>::value\ ==\ 2\ \&\&}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ details::static\_is\_lock\_free<std::uint32\_t>::value\ ==\ 2\ \&\&}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ details::static\_is\_lock\_free<index\_t>::value\ ==\ 2\ \&\&}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \ \ \ \ details::static\_is\_lock\_free<void*>::value\ ==\ 2;}
+\DoxyCodeLine{00586\ \ \ \ \ \}}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00590\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{struct\ }ProducerToken;}
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{struct\ }ConsumerToken;}
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{ExplicitProducer}};}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{comment}{//\ Queue\ methods}}
+\DoxyCodeLine{00598\ }
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ update\_current\_producer\_after\_rotation(consumer\_token\_t\&\ token)}
+\DoxyCodeLine{00600\ \ \ \ \ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ah,\ there's\ been\ a\ rotation,\ figure\ out\ where\ we\ should\ be!}}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ tail\ =\ producerListTail.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (token.desiredProducer\ ==\ \textcolor{keyword}{nullptr}\ \&\&\ tail\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ prodCount\ =\ producerCount.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ globalOffset\ =\ globalExplicitConsumerOffset.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (details::cqUnlikely(token.desiredProducer\ ==\ \textcolor{keyword}{nullptr}))\ \{}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Aha,\ first\ time\ we're\ dequeueing\ anything.}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Figure\ out\ our\ local\ position}}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ offset\ is\ from\ start,\ not\ end,\ but\ we're\ traversing\ from\ end\ -\/-\/\ subtract\ from\ count\ first}}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ std::uint32\_t\ offset\ =\ prodCount\ -\/\ 1\ -\/\ (token.initialOffset\ \%\ prodCount);}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ token.desiredProducer\ =\ tail;}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (std::uint32\_t\ i\ =\ 0;\ i\ !=\ offset;\ ++i)\ \{}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ token.desiredProducer\ =\ \textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(token.desiredProducer)-\/>next\_prod();}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (token.desiredProducer\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ token.desiredProducer\ =\ tail;}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ std::uint32\_t\ delta\ =\ globalOffset\ -\/\ token.lastKnownGlobalOffset;}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (delta\ >=\ prodCount)\ \{}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ delta\ =\ delta\ \%\ prodCount;}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (std::uint32\_t\ i\ =\ 0;\ i\ !=\ delta;\ ++i)\ \{}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \ \ \ \ token.desiredProducer\ =\ \textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(token.desiredProducer)-\/>next\_prod();}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (token.desiredProducer\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ token.desiredProducer\ =\ tail;}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00632\ }
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ token.lastKnownGlobalOffset\ =\ globalOffset;}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ token.currentProducer\ =\ token.desiredProducer;}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ token.itemsConsumedFromCurrent\ =\ 0;}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00637\ \ \ \ \ \}}
+\DoxyCodeLine{00638\ }
+\DoxyCodeLine{00639\ }
+\DoxyCodeLine{00641\ \ \ \ \ \textcolor{comment}{//\ Free\ list}}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ N>}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keyword}{struct\ }FreeListNode}
+\DoxyCodeLine{00646\ \ \ \ \ \{}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ FreeListNode()\ :\ freeListRefs(0),\ freeListNext(\textcolor{keyword}{nullptr})\ \{\ \}}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ std::atomic<std::uint32\_t>\ freeListRefs;}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ std::atomic<N*>\ freeListNext;}
+\DoxyCodeLine{00651\ \ \ \ \ \};}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \ \ \ \ \textcolor{comment}{//\ A\ simple\ CAS-\/based\ lock-\/free\ free\ list.\ Not\ the\ fastest\ thing\ in\ the\ world\ under\ heavy\ contention,\ but}}
+\DoxyCodeLine{00654\ \ \ \ \ \textcolor{comment}{//\ simple\ and\ correct\ (assuming\ nodes\ are\ never\ freed\ until\ after\ the\ free\ list\ is\ destroyed),\ and\ fairly}}
+\DoxyCodeLine{00655\ \ \ \ \ \textcolor{comment}{//\ speedy\ under\ low\ contention.}}
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ N>\ \ \ \ \ \ \ \ \textcolor{comment}{//\ N\ must\ inherit\ FreeListNode\ or\ have\ the\ same\ fields\ (and\ initialization\ of\ them)}}
+\DoxyCodeLine{00657\ \ \ \ \ \textcolor{keyword}{struct\ }FreeList}
+\DoxyCodeLine{00658\ \ \ \ \ \{}
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ FreeList()\ :\ freeListHead(\textcolor{keyword}{nullptr})\ \{\ \}}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ FreeList(FreeList\&\&\ other)\ :\ freeListHead(other.freeListHead.load(std::memory\_order\_relaxed))\ \{\ other.freeListHead.store(\textcolor{keyword}{nullptr},\ std::memory\_order\_relaxed);\ \}}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ swap(FreeList\&\ other)\ \{\ details::swap\_relaxed(freeListHead,\ other.freeListHead);\ \}}
+\DoxyCodeLine{00662\ }
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ FreeList(FreeList\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ FreeList\&\ operator=(FreeList\ \textcolor{keyword}{const}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ add(N*\ node)}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ know\ that\ the\ should-\/be-\/on-\/freelist\ bit\ is\ 0\ at\ this\ point,\ so\ it's\ safe\ to}}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ set\ it\ using\ a\ fetch\_add}}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>freeListRefs.fetch\_add(SHOULD\_BE\_ON\_FREELIST,\ std::memory\_order\_acq\_rel)\ ==\ 0)\ \{}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Oh\ look!\ We\ were\ the\ last\ ones\ referencing\ this\ node,\ and\ we\ know}}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ want\ to\ add\ it\ to\ the\ free\ list,\ so\ let's\ do\ it!}}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ add\_knowing\_refcount\_is\_zero(node);}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00676\ }
+\DoxyCodeLine{00677\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ N*\ try\_get()}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ head\ =\ freeListHead.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (head\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ prevHead\ =\ head;}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ refs\ =\ head-\/>freeListRefs.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((refs\ \&\ REFS\_MASK)\ ==\ 0\ ||\ !head-\/>freeListRefs.compare\_exchange\_strong(refs,\ refs\ +\ 1,\ std::memory\_order\_acquire,\ std::memory\_order\_relaxed))\ \{}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ head\ =\ freeListHead.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Good,\ reference\ count\ has\ been\ incremented\ (it\ wasn't\ at\ zero),\ which\ means\ we\ can\ read\ the}}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ next\ and\ not\ worry\ about\ it\ changing\ between\ now\ and\ the\ time\ we\ do\ the\ CAS}}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ next\ =\ head-\/>freeListNext.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (freeListHead.compare\_exchange\_strong(head,\ next,\ std::memory\_order\_acquire,\ std::memory\_order\_relaxed))\ \{}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Yay,\ got\ the\ node.\ This\ means\ it\ was\ on\ the\ list,\ which\ means\ shouldBeOnFreeList\ must\ be\ false\ no}}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ matter\ the\ refcount\ (because\ nobody\ else\ knows\ it's\ been\ taken\ off\ yet,\ it\ can't\ have\ been\ put\ back\ on).}}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert((head-\/>freeListRefs.load(std::memory\_order\_relaxed)\ \&\ SHOULD\_BE\_ON\_FREELIST)\ ==\ 0);}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Decrease\ refcount\ twice,\ once\ for\ our\ ref,\ and\ once\ for\ the\ list's\ ref}}
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ head-\/>freeListRefs.fetch\_sub(2,\ std::memory\_order\_release);}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ head;}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ OK,\ the\ head\ must\ have\ changed\ on\ us,\ but\ we\ still\ need\ to\ decrease\ the\ refcount\ we\ increased.}}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ that\ we\ don't\ need\ to\ release\ any\ memory\ effects,\ but\ we\ do\ need\ to\ ensure\ that\ the\ reference}}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ count\ decrement\ happens-\/after\ the\ CAS\ on\ the\ head.}}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ refs\ =\ prevHead-\/>freeListRefs.fetch\_sub(1,\ std::memory\_order\_acq\_rel);}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (refs\ ==\ SHOULD\_BE\_ON\_FREELIST\ +\ 1)\ \{}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ add\_knowing\_refcount\_is\_zero(prevHead);}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00709\ }
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00712\ }
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Useful\ for\ traversing\ the\ list\ when\ there's\ no\ contention\ (e.g.\ to\ destroy\ remaining\ nodes)}}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ N*\ head\_unsafe()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ freeListHead.load(std::memory\_order\_relaxed);\ \}}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ add\_knowing\_refcount\_is\_zero(N*\ node)}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Since\ the\ refcount\ is\ zero,\ and\ nobody\ can\ increase\ it\ once\ it's\ zero\ (except\ us,\ and\ we\ run}}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ only\ one\ copy\ of\ this\ method\ per\ node\ at\ a\ time,\ i.e.\ the\ single\ thread\ case),\ then\ we\ know}}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ can\ safely\ change\ the\ next\ pointer\ of\ the\ node;\ however,\ once\ the\ refcount\ is\ back\ above}}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ zero,\ then\ other\ threads\ could\ increase\ it\ (happens\ under\ heavy\ contention,\ when\ the\ refcount}}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ goes\ to\ zero\ in\ between\ a\ load\ and\ a\ refcount\ increment\ of\ a\ node\ in\ try\_get,\ then\ back\ up\ to}}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ something\ non-\/zero,\ then\ the\ refcount\ increment\ is\ done\ by\ the\ other\ thread)\ -\/-\/\ so,\ if\ the\ CAS}}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ add\ the\ node\ to\ the\ actual\ list\ fails,\ decrease\ the\ refcount\ and\ leave\ the\ add\ operation\ to}}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ next\ thread\ who\ puts\ the\ refcount\ back\ at\ zero\ (which\ could\ be\ us,\ hence\ the\ loop).}}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ head\ =\ freeListHead.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node-\/>freeListNext.store(head,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ node-\/>freeListRefs.store(1,\ std::memory\_order\_release);}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!freeListHead.compare\_exchange\_strong(head,\ node,\ std::memory\_order\_release,\ std::memory\_order\_relaxed))\ \{}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Hmm,\ the\ add\ failed,\ but\ we\ can\ only\ try\ again\ when\ the\ refcount\ goes\ back\ to\ zero}}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (node-\/>freeListRefs.fetch\_add(SHOULD\_BE\_ON\_FREELIST\ -\/\ 1,\ std::memory\_order\_release)\ ==\ 1)\ \{}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00740\ }
+\DoxyCodeLine{00741\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Implemented\ like\ a\ stack,\ but\ where\ node\ order\ doesn't\ matter\ (nodes\ are\ inserted\ out\ of\ order\ under\ contention)}}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ std::atomic<N*>\ freeListHead;}
+\DoxyCodeLine{00744\ }
+\DoxyCodeLine{00745\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::uint32\_t\ REFS\_MASK\ =\ 0x7FFFFFFF;}
+\DoxyCodeLine{00746\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::uint32\_t\ SHOULD\_BE\_ON\_FREELIST\ =\ 0x80000000;}
+\DoxyCodeLine{00747\ \ \ \ \ \};}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00751\ \ \ \ \ \textcolor{comment}{//\ Block}}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{keyword}{struct\ }Block}
+\DoxyCodeLine{00755\ \ \ \ \ \{}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ Block()}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \ \ \ \ :\ next(\textcolor{keyword}{nullptr}),\ elementsCompletelyDequeued(0),\ freeListRefs(0),\ freeListNext(\textcolor{keyword}{nullptr}),\ shouldBeOnFreeList(\textcolor{keyword}{false}),\ dynamicallyAllocated(\textcolor{keyword}{true})}
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00760\ }
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ is\_empty()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00762\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (compile\_time\_condition<BLOCK\_SIZE\ <=\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD>::value)\ \{}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ flags}}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ BLOCK\_SIZE;\ ++i)\ \{}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!emptyFlags[i].load(std::memory\_order\_relaxed))\ \{}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00770\ }
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Aha,\ empty;\ make\ sure\ we\ have\ all\ other\ memory\ effects\ that\ happened\ before\ the\ empty\ flags\ were\ set}}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic\_thread\_fence(std::memory\_order\_acquire);}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ counter}}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (elementsCompletelyDequeued.load(std::memory\_order\_relaxed)\ ==\ BLOCK\_SIZE)\ \{}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic\_thread\_fence(std::memory\_order\_acquire);}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(elementsCompletelyDequeued.load(std::memory\_order\_relaxed)\ <=\ BLOCK\_SIZE);}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00785\ }
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ block\ is\ now\ empty\ (does\ not\ apply\ in\ explicit\ context)}}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ set\_empty(index\_t\ i)}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (BLOCK\_SIZE\ <=\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD)\ \{}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ flag}}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(!emptyFlags[BLOCK\_SIZE\ -\/\ 1\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(i\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1))].load(std::memory\_order\_relaxed));}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ emptyFlags[BLOCK\_SIZE\ -\/\ 1\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(i\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1))].store(\textcolor{keyword}{true},\ std::memory\_order\_release);}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increment\ counter}}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ prevVal\ =\ elementsCompletelyDequeued.fetch\_add(1,\ std::memory\_order\_release);}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(prevVal\ <\ BLOCK\_SIZE);}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ prevVal\ ==\ BLOCK\_SIZE\ -\/\ 1;}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Sets\ multiple\ contiguous\ item\ statuses\ to\ 'empty'\ (assumes\ no\ wrapping\ and\ count\ >\ 0).}}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Returns\ true\ if\ the\ block\ is\ now\ empty\ (does\ not\ apply\ in\ explicit\ context).}}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ set\_many\_empty(index\_t\ i,\ \textcolor{keywordtype}{size\_t}\ count)}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (compile\_time\_condition<BLOCK\_SIZE\ <=\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD>::value)\ \{}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ flags}}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic\_thread\_fence(std::memory\_order\_release);}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ BLOCK\_SIZE\ -\/\ 1\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(i\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1))\ -\/\ count\ +\ 1;}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ j\ =\ 0;\ j\ !=\ count;\ ++j)\ \{}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(!emptyFlags[i\ +\ j].load(std::memory\_order\_relaxed));}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ emptyFlags[i\ +\ j].store(\textcolor{keyword}{true},\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00814\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increment\ counter}}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ prevVal\ =\ elementsCompletelyDequeued.fetch\_add(count,\ std::memory\_order\_release);}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(prevVal\ +\ count\ <=\ BLOCK\_SIZE);}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ prevVal\ +\ count\ ==\ BLOCK\_SIZE;}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00824\ }
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ set\_all\_empty()}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (BLOCK\_SIZE\ <=\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD)\ \{}
+\DoxyCodeLine{00828\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ all\ flags}}
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ !=\ BLOCK\_SIZE;\ ++i)\ \{}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ emptyFlags[i].store(\textcolor{keyword}{true},\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00834\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reset\ counter}}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elementsCompletelyDequeued.store(BLOCK\_SIZE,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00836\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00838\ }
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ reset\_empty()}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (compile\_time\_condition<BLOCK\_SIZE\ <=\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD>::value)\ \{}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reset\ flags}}
+\DoxyCodeLine{00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ !=\ BLOCK\_SIZE;\ ++i)\ \{}
+\DoxyCodeLine{00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ emptyFlags[i].store(\textcolor{keyword}{false},\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00845\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reset\ counter}}
+\DoxyCodeLine{00849\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elementsCompletelyDequeued.store(0,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00852\ }
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T*\ operator[](index\_t\ idx)\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T*\textcolor{keyword}{>}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(elements))\ +\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(idx\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1));\ \}}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ T\ \textcolor{keyword}{const}*\ operator[](index\_t\ idx)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\ const*\textcolor{keyword}{>}(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{void}\ const*\textcolor{keyword}{>}(elements))\ +\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(idx\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1));\ \}}
+\DoxyCodeLine{00855\ }
+\DoxyCodeLine{00856\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ IMPORTANT:\ This\ must\ be\ the\ first\ member\ in\ Block,\ so\ that\ if\ T\ depends\ on\ the\ alignment\ of}}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ addresses\ returned\ by\ malloc,\ that\ alignment\ will\ be\ preserved.\ Apparently\ clang\ actually}}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ generates\ code\ that\ uses\ this\ assumption\ for\ AVX\ instructions\ in\ some\ cases.\ Ideally,\ we}}
+\DoxyCodeLine{00860\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ should\ also\ align\ Block\ to\ the\ alignment\ of\ T\ in\ case\ it's\ higher\ than\ malloc's\ 16-\/byte}}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ alignment,\ but\ this\ is\ hard\ to\ do\ in\ a\ cross-\/platform\ way.\ Assert\ for\ this\ case:}}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::alignment\_of<T>::value\ <=\ std::alignment\_of<details::max\_align\_t>::value,\ \textcolor{stringliteral}{"{}The\ queue\ does\ not\ support\ super-\/aligned\ types\ at\ this\ time"{}});}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Additionally,\ we\ need\ the\ alignment\ of\ Block\ itself\ to\ be\ a\ multiple\ of\ max\_align\_t\ since}}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ otherwise\ the\ appropriate\ padding\ will\ not\ be\ added\ at\ the\ end\ of\ Block\ in\ order\ to\ make}}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ arrays\ of\ Blocks\ all\ be\ properly\ aligned\ (not\ just\ the\ first\ one).\ We\ use\ a\ union\ to\ force}}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this.}}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00868\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ elements[\textcolor{keyword}{sizeof}(T)\ *\ BLOCK\_SIZE];}
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{uniontracy_1_1moodycamel_1_1details_1_1max__align__t}{details::max\_align\_t}}\ dummy;}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00871\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ Block*\ next;}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ std::atomic<size\_t>\ elementsCompletelyDequeued;}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ std::atomic<bool>\ emptyFlags[BLOCK\_SIZE\ <=\ EXPLICIT\_BLOCK\_EMPTY\_COUNTER\_THRESHOLD\ ?\ BLOCK\_SIZE\ :\ 1];}
+\DoxyCodeLine{00875\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ std::atomic<std::uint32\_t>\ freeListRefs;}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ std::atomic<Block*>\ freeListNext;}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ std::atomic<bool>\ shouldBeOnFreeList;}
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ dynamicallyAllocated;\ \ \ \ \ \ \textcolor{comment}{//\ Perhaps\ a\ better\ name\ for\ this\ would\ be\ 'isNotPartOfInitialBlockPool'}}
+\DoxyCodeLine{00880\ \ \ \ \ \};}
+\DoxyCodeLine{00881\ \ \ \ \ \textcolor{keyword}{static\_assert}(std::alignment\_of<Block>::value\ >=\ std::alignment\_of<details::max\_align\_t>::value,\ \textcolor{stringliteral}{"{}Internal\ error:\ Blocks\ must\ be\ at\ least\ as\ aligned\ as\ the\ type\ they\ are\ wrapping"{}});}
+\DoxyCodeLine{00882\ }
+\DoxyCodeLine{00883\ }
+\DoxyCodeLine{00885\ \ \ \ \ \textcolor{comment}{//\ Producer\ base}}
+\DoxyCodeLine{00887\ }
+\DoxyCodeLine{00888\ \ \ \ \ \textcolor{keyword}{struct\ }ProducerBase\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1_concurrent_queue_producer_typeless_base}{details::ConcurrentQueueProducerTypelessBase}}}
+\DoxyCodeLine{00889\ \ \ \ \ \{}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ ProducerBase(ConcurrentQueue*\ parent\_)\ :}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \ \ \ \ tailIndex(0),}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ \ \ \ \ headIndex(0),}
+\DoxyCodeLine{00893\ \ \ \ \ \ \ \ \ \ \ \ \ dequeueOptimisticCount(0),}
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ \ \ \ \ dequeueOvercommit(0),}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \ \ \ \ tailBlock(\textcolor{keyword}{nullptr}),}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \ \ \ \ parent(parent\_)}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00899\ }
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \string~ProducerBase()\ \{\ \};}
+\DoxyCodeLine{00901\ }
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ NotifyThread,\ \textcolor{keyword}{class}\ ProcessData>}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ dequeue\_bulk(NotifyThread\ notifyThread,\ ProcessData\ processData)}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{ExplicitProducer}}*\textcolor{keyword}{>}(\textcolor{keyword}{this})-\/>dequeue\_bulk(notifyThread,\ processData);}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00907\ }
+\DoxyCodeLine{00908\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ ProducerBase*\ next\_prod()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(next);\ \}}
+\DoxyCodeLine{00909\ }
+\DoxyCodeLine{00910\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{size\_t}\ size\_approx()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00911\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ tail\ =\ tailIndex.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ head\ =\ headIndex.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ details::circular\_less\_than(head,\ tail)\ ?\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(tail\ -\/\ head)\ :\ 0;}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00916\ }
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ index\_t\ getTail()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ tailIndex.load(std::memory\_order\_relaxed);\ \}}
+\DoxyCodeLine{00918\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ std::atomic<index\_t>\ tailIndex;\ \ \ \ \ \textcolor{comment}{//\ Where\ to\ enqueue\ to\ next}}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ std::atomic<index\_t>\ headIndex;\ \ \ \ \ \textcolor{comment}{//\ Where\ to\ dequeue\ from\ next}}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ std::atomic<index\_t>\ dequeueOptimisticCount;}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ std::atomic<index\_t>\ dequeueOvercommit;}
+\DoxyCodeLine{00924\ }
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ Block*\ tailBlock;}
+\DoxyCodeLine{00926\ }
+\DoxyCodeLine{00927\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ ConcurrentQueue*\ parent;}
+\DoxyCodeLine{00929\ \ \ \ \ \};}
+\DoxyCodeLine{00930\ }
+\DoxyCodeLine{00931\ }
+\DoxyCodeLine{00932\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00934\ \ \ \ \ \textcolor{comment}{//\ Explicit\ queue}}
+\DoxyCodeLine{00936\ \ \ \ \ \textcolor{keyword}{struct\ }ExplicitProducer\ :\ \textcolor{keyword}{public}\ ProducerBase}
+\DoxyCodeLine{00937\ \ \ \ \ \{}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ ExplicitProducer(ConcurrentQueue*\ \_parent)\ :}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ \ \ \ \ \ \ ProducerBase(\_parent),}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \ \ \ \ blockIndex(\textcolor{keyword}{nullptr}),}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexSlotsUsed(0),}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexSize(EXPLICIT\_INITIAL\_INDEX\_SIZE\ >>\ 1),}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexFront(0),}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexEntries(\textcolor{keyword}{nullptr}),}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexRaw(\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ poolBasedIndexSize\ =\ details::ceil\_to\_pow\_2(\_parent-\/>initialBlockPoolSize)\ >>\ 1;}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (poolBasedIndexSize\ >\ pr\_blockIndexSize)\ \{}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexSize\ =\ poolBasedIndexSize;}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00951\ }
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ new\_block\_index(0);\ \ \ \ \ \textcolor{comment}{//\ This\ creates\ an\ index\ with\ double\ the\ number\ of\ current\ entries,\ i.e.\ EXPLICIT\_INITIAL\_INDEX\_SIZE}}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00954\ }
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \string~ExplicitProducer()}
+\DoxyCodeLine{00956\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Destruct\ any\ elements\ not\ yet\ dequeued.}}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Since\ we're\ in\ the\ destructor,\ we\ can\ assume\ all\ elements}}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ are\ either\ completely\ dequeued\ or\ completely\ not\ (no\ halfways).}}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>tailBlock\ !=\ \textcolor{keyword}{nullptr})\ \{\ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ this\ means\ there\ must\ be\ a\ block\ index\ too}}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ First\ find\ the\ block\ that's\ partially\ dequeued,\ if\ any}}
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Block*\ halfDequeuedBlock\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((this-\/>headIndex.load(std::memory\_order\_relaxed)\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1))\ !=\ 0)\ \{}
+\DoxyCodeLine{00964\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ head's\ not\ on\ a\ block\ boundary,\ meaning\ a\ block\ somewhere\ is\ partially\ dequeued}}
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (or\ the\ head\ block\ is\ the\ tail\ block\ and\ was\ fully\ dequeued,\ but\ the\ head/tail\ are\ still\ not\ on\ a\ boundary)}}
+\DoxyCodeLine{00966\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ (pr\_blockIndexFront\ -\/\ pr\_blockIndexSlotsUsed)\ \&\ (pr\_blockIndexSize\ -\/\ 1);}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (details::circular\_less\_than<index\_t>(pr\_blockIndexEntries[i].base\ +\ BLOCK\_SIZE,\ this-\/>headIndex.load(std::memory\_order\_relaxed)))\ \{}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ (i\ +\ 1)\ \&\ (pr\_blockIndexSize\ -\/\ 1);}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(details::circular\_less\_than<index\_t>(pr\_blockIndexEntries[i].base,\ this-\/>headIndex.load(std::memory\_order\_relaxed)));}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ halfDequeuedBlock\ =\ pr\_blockIndexEntries[i].block;}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00973\ }
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Start\ at\ the\ head\ block\ (note\ the\ first\ line\ in\ the\ loop\ gives\ us\ the\ head\ from\ the\ tail\ on\ the\ first\ iteration)}}
+\DoxyCodeLine{00975\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ block\ =\ this-\/>tailBlock;}
+\DoxyCodeLine{00976\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00977\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\ =\ block-\/>next;}
+\DoxyCodeLine{00978\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (block-\/>is\_empty())\ \{}
+\DoxyCodeLine{00979\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00980\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00981\ }
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ \ \ \textcolor{comment}{//\ Offset\ into\ block}}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (block\ ==\ halfDequeuedBlock)\ \{}
+\DoxyCodeLine{00984\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(this-\/>headIndex.load(std::memory\_order\_relaxed)\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1));}
+\DoxyCodeLine{00985\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00986\ }
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Walk\ through\ all\ the\ items\ in\ the\ block;\ if\ this\ is\ the\ tail\ block,\ we\ need\ to\ stop\ when\ we\ reach\ the\ tail\ index}}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ lastValidIndex\ =\ (this-\/>tailIndex.load(std::memory\_order\_relaxed)\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1))\ ==\ 0\ ?\ BLOCK\_SIZE\ :\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(this-\/>tailIndex.load(std::memory\_order\_relaxed)\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1));}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (i\ !=\ BLOCK\_SIZE\ \&\&\ (block\ !=\ this-\/>tailBlock\ ||\ i\ !=\ lastValidIndex))\ \{}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*block)[i++]-\/>\string~T();}
+\DoxyCodeLine{00991\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (block\ !=\ this-\/>tailBlock);}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Destroy\ all\ blocks\ that\ we\ own}}
+\DoxyCodeLine{00996\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>tailBlock\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00997\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ block\ =\ this-\/>tailBlock;}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ nextBlock\ =\ block-\/>next;}
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (block-\/>dynamicallyAllocated)\ \{}
+\DoxyCodeLine{01001\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ destroy(block);}
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01003\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>parent-\/>add\_block\_to\_free\_list(block);}
+\DoxyCodeLine{01005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block\ =\ nextBlock;}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (block\ !=\ this-\/>tailBlock);}
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01009\ }
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Destroy\ the\ block\ indices}}
+\DoxyCodeLine{01011\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ header\ =\ \textcolor{keyword}{static\_cast<}BlockIndexHeader*\textcolor{keyword}{>}(pr\_blockIndexRaw);}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (header\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ prev\ =\ \textcolor{keyword}{static\_cast<}BlockIndexHeader*\textcolor{keyword}{>}(header-\/>prev);}
+\DoxyCodeLine{01014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ header-\/>\string~BlockIndexHeader();}
+\DoxyCodeLine{01015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (Traits::free)(header);}
+\DoxyCodeLine{01016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ header\ =\ prev;}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01018\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01019\ }
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ enqueue\_begin\_alloc(index\_t\ currentTailIndex)}
+\DoxyCodeLine{01021\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ reached\ the\ end\ of\ a\ block,\ start\ a\ new\ one}}
+\DoxyCodeLine{01023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>tailBlock\ !=\ \textcolor{keyword}{nullptr}\ \&\&\ this-\/>tailBlock-\/>next-\/>is\_empty())\ \{}
+\DoxyCodeLine{01024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ can\ re-\/use\ the\ block\ ahead\ of\ us,\ it's\ empty!}}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>tailBlock\ =\ this-\/>tailBlock-\/>next;}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>tailBlock-\/>reset\_empty();}
+\DoxyCodeLine{01027\ }
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We'll\ put\ the\ block\ on\ the\ block\ index\ (guaranteed\ to\ be\ room\ since\ we're\ conceptually\ removing\ the}}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ last\ block\ from\ it\ first\ -\/-\/\ except\ instead\ of\ removing\ then\ adding,\ we\ can\ just\ overwrite).}}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note\ that\ there\ must\ be\ a\ valid\ block\ index\ here,\ since\ even\ if\ allocation\ failed\ in\ the\ ctor,}}
+\DoxyCodeLine{01031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ it\ would\ have\ been\ re-\/attempted\ when\ adding\ the\ first\ block\ to\ the\ queue;\ since\ there\ is\ such}}
+\DoxyCodeLine{01032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a\ block,\ a\ block\ index\ must\ have\ been\ successfully\ allocated.}}
+\DoxyCodeLine{01033\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We're\ going\ to\ need\ a\ new\ block;\ check\ that\ the\ block\ index\ has\ room}}
+\DoxyCodeLine{01036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pr\_blockIndexRaw\ ==\ \textcolor{keyword}{nullptr}\ ||\ pr\_blockIndexSlotsUsed\ ==\ pr\_blockIndexSize)\ \{}
+\DoxyCodeLine{01037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Hmm,\ the\ circular\ block\ index\ is\ already\ full\ -\/-\/\ we'll\ need}}
+\DoxyCodeLine{01038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ allocate\ a\ new\ index.\ Note\ pr\_blockIndexRaw\ can\ only\ be\ nullptr\ if}}
+\DoxyCodeLine{01039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ initial\ allocation\ failed\ in\ the\ constructor.}}
+\DoxyCodeLine{01040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_block\_index(pr\_blockIndexSlotsUsed);}
+\DoxyCodeLine{01041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01042\ }
+\DoxyCodeLine{01043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Insert\ a\ new\ block\ in\ the\ circular\ linked\ list}}
+\DoxyCodeLine{01044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ newBlock\ =\ this-\/>parent-\/>ConcurrentQueue::requisition\_block();}
+\DoxyCodeLine{01045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newBlock-\/>reset\_empty();}
+\DoxyCodeLine{01046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this-\/>tailBlock\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newBlock-\/>next\ =\ newBlock;}
+\DoxyCodeLine{01048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newBlock-\/>next\ =\ this-\/>tailBlock-\/>next;}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>tailBlock-\/>next\ =\ newBlock;}
+\DoxyCodeLine{01052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>tailBlock\ =\ newBlock;}
+\DoxyCodeLine{01054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++pr\_blockIndexSlotsUsed;}
+\DoxyCodeLine{01055\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01056\ }
+\DoxyCodeLine{01057\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ block\ to\ block\ index}}
+\DoxyCodeLine{01058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\ entry\ =\ blockIndex.load(std::memory\_order\_relaxed)-\/>entries[pr\_blockIndexFront];}
+\DoxyCodeLine{01059\ \ \ \ \ \ \ \ \ \ \ \ \ entry.base\ =\ currentTailIndex;}
+\DoxyCodeLine{01060\ \ \ \ \ \ \ \ \ \ \ \ \ entry.block\ =\ this-\/>tailBlock;}
+\DoxyCodeLine{01061\ \ \ \ \ \ \ \ \ \ \ \ \ blockIndex.load(std::memory\_order\_relaxed)-\/>front.store(pr\_blockIndexFront,\ std::memory\_order\_release);}
+\DoxyCodeLine{01062\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexFront\ =\ (pr\_blockIndexFront\ +\ 1)\ \&\ (pr\_blockIndexSize\ -\/\ 1);}
+\DoxyCodeLine{01063\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01064\ }
+\DoxyCodeLine{01065\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ T*\ enqueue\_begin(index\_t\&\ currentTailIndex)}
+\DoxyCodeLine{01066\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01067\ \ \ \ \ \ \ \ \ \ \ \ \ currentTailIndex\ =\ this-\/>tailIndex.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{01068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (details::cqUnlikely((currentTailIndex\ \&\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE\ -\/\ 1))\ ==\ 0))\ \{}
+\DoxyCodeLine{01069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>enqueue\_begin\_alloc(currentTailIndex);}
+\DoxyCodeLine{01070\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*this-\/>tailBlock)[currentTailIndex];}
+\DoxyCodeLine{01072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01073\ }
+\DoxyCodeLine{01074\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ std::atomic<index\_t>\&\ get\_tail\_index()}
+\DoxyCodeLine{01075\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>tailIndex;}
+\DoxyCodeLine{01077\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01078\ }
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ NotifyThread,\ \textcolor{keyword}{class}\ ProcessData>}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ dequeue\_bulk(NotifyThread\ notifyThread,\ ProcessData\ processData)}
+\DoxyCodeLine{01081\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ tail\ =\ this-\/>tailIndex.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{01083\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ overcommit\ =\ this-\/>dequeueOvercommit.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{01084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ desiredCount\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(tail\ -\/\ (this-\/>dequeueOptimisticCount.load(std::memory\_order\_relaxed)\ -\/\ overcommit));}
+\DoxyCodeLine{01085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (details::circular\_less\_than<size\_t>(0,\ desiredCount))\ \{}
+\DoxyCodeLine{01086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ desiredCount\ =\ desiredCount\ <\ 8192\ ?\ desiredCount\ :\ 8192;}
+\DoxyCodeLine{01087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic\_thread\_fence(std::memory\_order\_acquire);}
+\DoxyCodeLine{01088\ }
+\DoxyCodeLine{01089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ myDequeueCount\ =\ this-\/>dequeueOptimisticCount.fetch\_add(desiredCount,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{01090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(overcommit\ <=\ myDequeueCount);}
+\DoxyCodeLine{01091\ }
+\DoxyCodeLine{01092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tail\ =\ this-\/>tailIndex.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{01093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ actualCount\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(tail\ -\/\ (myDequeueCount\ -\/\ overcommit));}
+\DoxyCodeLine{01094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (details::circular\_less\_than<size\_t>(0,\ actualCount))\ \{}
+\DoxyCodeLine{01095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ actualCount\ =\ desiredCount\ <\ actualCount\ ?\ desiredCount\ :\ actualCount;}
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (actualCount\ <\ desiredCount)\ \{}
+\DoxyCodeLine{01097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>dequeueOvercommit.fetch\_add(desiredCount\ -\/\ actualCount,\ std::memory\_order\_release);}
+\DoxyCodeLine{01098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01099\ }
+\DoxyCodeLine{01100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ first\ index.\ Note\ that\ since\ there's\ guaranteed\ to\ be\ at\ least\ actualCount\ elements,\ this}}
+\DoxyCodeLine{01101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ will\ never\ exceed\ tail.}}
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ firstIndex\ =\ this-\/>headIndex.fetch\_add(actualCount,\ std::memory\_order\_acq\_rel);}
+\DoxyCodeLine{01103\ }
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Determine\ which\ block\ the\ first\ element\ is\ in}}
+\DoxyCodeLine{01105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ localBlockIndex\ =\ blockIndex.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{01106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ localBlockIndexHead\ =\ localBlockIndex-\/>front.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{01107\ }
+\DoxyCodeLine{01108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ headBase\ =\ localBlockIndex-\/>entries[localBlockIndexHead].base;}
+\DoxyCodeLine{01109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ firstBlockBaseIndex\ =\ firstIndex\ \&\ \string~static\_cast<index\_t>(BLOCK\_SIZE\ -\/\ 1);}
+\DoxyCodeLine{01110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ offset\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\textcolor{keyword}{static\_cast<}typename\ std::make\_signed<index\_t>::type\textcolor{keyword}{>}(firstBlockBaseIndex\ -\/\ headBase)\ /\ BLOCK\_SIZE);}
+\DoxyCodeLine{01111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ indexIndex\ =\ (localBlockIndexHead\ +\ offset)\ \&\ (localBlockIndex-\/>size\ -\/\ 1);}
+\DoxyCodeLine{01112\ }
+\DoxyCodeLine{01113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ notifyThread(\ this-\/>threadId\ );}
+\DoxyCodeLine{01114\ }
+\DoxyCodeLine{01115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Iterate\ the\ blocks\ and\ dequeue}}
+\DoxyCodeLine{01116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ index\ =\ firstIndex;}
+\DoxyCodeLine{01117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{01118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ firstIndexInBlock\ =\ index;}
+\DoxyCodeLine{01119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ endIndex\ =\ (index\ \&\ \string~static\_cast<index\_t>(BLOCK\_SIZE\ -\/\ 1))\ +\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(BLOCK\_SIZE);}
+\DoxyCodeLine{01120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ endIndex\ =\ details::circular\_less\_than<index\_t>(firstIndex\ +\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(actualCount),\ endIndex)\ ?\ firstIndex\ +\ \textcolor{keyword}{static\_cast<}index\_t\textcolor{keyword}{>}(actualCount)\ :\ endIndex;}
+\DoxyCodeLine{01121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ block\ =\ localBlockIndex-\/>entries[indexIndex].block;}
+\DoxyCodeLine{01122\ }
+\DoxyCodeLine{01123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ sz\ =\ endIndex\ -\/\ index;}
+\DoxyCodeLine{01124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ processData(\ (*block)[index],\ sz\ );}
+\DoxyCodeLine{01125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index\ +=\ sz;}
+\DoxyCodeLine{01126\ }
+\DoxyCodeLine{01127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ block-\/>set\_many\_empty(firstIndexInBlock,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(endIndex\ -\/\ firstIndexInBlock));}
+\DoxyCodeLine{01128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ indexIndex\ =\ (indexIndex\ +\ 1)\ \&\ (localBlockIndex-\/>size\ -\/\ 1);}
+\DoxyCodeLine{01129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (index\ !=\ firstIndex\ +\ actualCount);}
+\DoxyCodeLine{01130\ }
+\DoxyCodeLine{01131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ actualCount;}
+\DoxyCodeLine{01132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{01134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Wasn't\ anything\ to\ dequeue\ after\ all;\ make\ the\ effective\ dequeue\ count\ eventually\ consistent}}
+\DoxyCodeLine{01135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>dequeueOvercommit.fetch\_add(desiredCount,\ std::memory\_order\_release);}
+\DoxyCodeLine{01136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01137\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01138\ }
+\DoxyCodeLine{01139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{01140\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01141\ }
+\DoxyCodeLine{01142\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01143\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }BlockIndexEntry}
+\DoxyCodeLine{01144\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01145\ \ \ \ \ \ \ \ \ \ \ \ \ index\_t\ base;}
+\DoxyCodeLine{01146\ \ \ \ \ \ \ \ \ \ \ \ \ Block*\ block;}
+\DoxyCodeLine{01147\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01148\ }
+\DoxyCodeLine{01149\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }BlockIndexHeader}
+\DoxyCodeLine{01150\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size;}
+\DoxyCodeLine{01152\ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic<size\_t>\ front;\ \ \ \ \ \ \textcolor{comment}{//\ Current\ slot\ (not\ next,\ like\ pr\_blockIndexFront)}}
+\DoxyCodeLine{01153\ \ \ \ \ \ \ \ \ \ \ \ \ BlockIndexEntry*\ entries;}
+\DoxyCodeLine{01154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ prev;}
+\DoxyCodeLine{01155\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{01156\ }
+\DoxyCodeLine{01157\ }
+\DoxyCodeLine{01158\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ new\_block\_index(\textcolor{keywordtype}{size\_t}\ numberOfFilledSlotsToExpose)}
+\DoxyCodeLine{01159\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ prevBlockSizeMask\ =\ pr\_blockIndexSize\ -\/\ 1;}
+\DoxyCodeLine{01161\ }
+\DoxyCodeLine{01162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Create\ the\ new\ block}}
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexSize\ <<=\ 1;}
+\DoxyCodeLine{01164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ newRawPtr\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char}*\textcolor{keyword}{>}((Traits::malloc)(\textcolor{keyword}{sizeof}(BlockIndexHeader)\ +\ std::alignment\_of<BlockIndexEntry>::value\ -\/\ 1\ +\ \textcolor{keyword}{sizeof}(BlockIndexEntry)\ *\ pr\_blockIndexSize));}
+\DoxyCodeLine{01165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (newRawPtr\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexSize\ >>=\ 1;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reset\ to\ allow\ graceful\ retry}}
+\DoxyCodeLine{01167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01169\ }
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ newBlockIndexEntries\ =\ \textcolor{keyword}{reinterpret\_cast<}BlockIndexEntry*\textcolor{keyword}{>}(details::align\_for<BlockIndexEntry>(newRawPtr\ +\ \textcolor{keyword}{sizeof}(BlockIndexHeader)));}
+\DoxyCodeLine{01171\ }
+\DoxyCodeLine{01172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Copy\ in\ all\ the\ old\ indices,\ if\ any}}
+\DoxyCodeLine{01173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ j\ =\ 0;}
+\DoxyCodeLine{01174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pr\_blockIndexSlotsUsed\ !=\ 0)\ \{}
+\DoxyCodeLine{01175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ i\ =\ (pr\_blockIndexFront\ -\/\ pr\_blockIndexSlotsUsed)\ \&\ prevBlockSizeMask;}
+\DoxyCodeLine{01176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{01177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ newBlockIndexEntries[j++]\ =\ pr\_blockIndexEntries[i];}
+\DoxyCodeLine{01178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\ =\ (i\ +\ 1)\ \&\ prevBlockSizeMask;}
+\DoxyCodeLine{01179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (i\ !=\ pr\_blockIndexFront);}
+\DoxyCodeLine{01180\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01181\ }
+\DoxyCodeLine{01182\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ everything}}
+\DoxyCodeLine{01183\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ header\ =\ \textcolor{keyword}{new}\ (newRawPtr)\ BlockIndexHeader;}
+\DoxyCodeLine{01184\ \ \ \ \ \ \ \ \ \ \ \ \ header-\/>size\ =\ pr\_blockIndexSize;}
+\DoxyCodeLine{01185\ \ \ \ \ \ \ \ \ \ \ \ \ header-\/>front.store(numberOfFilledSlotsToExpose\ -\/\ 1,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{01186\ \ \ \ \ \ \ \ \ \ \ \ \ header-\/>entries\ =\ newBlockIndexEntries;}
+\DoxyCodeLine{01187\ \ \ \ \ \ \ \ \ \ \ \ \ header-\/>prev\ =\ pr\_blockIndexRaw;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ link\ the\ new\ block\ to\ the\ old\ one\ so\ we\ can\ free\ it\ later}}
+\DoxyCodeLine{01188\ }
+\DoxyCodeLine{01189\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexFront\ =\ j;}
+\DoxyCodeLine{01190\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexEntries\ =\ newBlockIndexEntries;}
+\DoxyCodeLine{01191\ \ \ \ \ \ \ \ \ \ \ \ \ pr\_blockIndexRaw\ =\ newRawPtr;}
+\DoxyCodeLine{01192\ \ \ \ \ \ \ \ \ \ \ \ \ blockIndex.store(header,\ std::memory\_order\_release);}
+\DoxyCodeLine{01193\ }
+\DoxyCodeLine{01194\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01195\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01196\ }
+\DoxyCodeLine{01197\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01198\ \ \ \ \ \ \ \ \ std::atomic<BlockIndexHeader*>\ blockIndex;}
+\DoxyCodeLine{01199\ }
+\DoxyCodeLine{01200\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ To\ be\ used\ by\ producer\ only\ -\/-\/\ consumer\ must\ use\ the\ ones\ in\ referenced\ by\ blockIndex}}
+\DoxyCodeLine{01201\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pr\_blockIndexSlotsUsed;}
+\DoxyCodeLine{01202\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pr\_blockIndexSize;}
+\DoxyCodeLine{01203\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ pr\_blockIndexFront;\ \ \ \ \ \ \textcolor{comment}{//\ Next\ slot\ (not\ current)}}
+\DoxyCodeLine{01204\ \ \ \ \ \ \ \ \ BlockIndexEntry*\ pr\_blockIndexEntries;}
+\DoxyCodeLine{01205\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ pr\_blockIndexRaw;}
+\DoxyCodeLine{01206\ \ \ \ \ \};}
+\DoxyCodeLine{01207\ }
+\DoxyCodeLine{01208\ \ \ \ \ \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{ExplicitProducer}}*\ get\_explicit\_producer(producer\_token\_t\ \textcolor{keyword}{const}\&\ token)}
+\DoxyCodeLine{01209\ \ \ \ \ \{}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{ExplicitProducer}}*\textcolor{keyword}{>}(token.producer);}
+\DoxyCodeLine{01211\ \ \ \ \ \}}
+\DoxyCodeLine{01212\ }
+\DoxyCodeLine{01213\ \ \ \ \ \textcolor{comment}{//\ If\ a\ producer\ token\ is\ created\ before\ the\ constructor\ of\ a\ statically\ allocated}}
+\DoxyCodeLine{01214\ \ \ \ \ \textcolor{comment}{//\ queue\ runs\ (which\ may\ happen\ due\ to\ the\ undefined\ order\ of\ static\ initialization}}
+\DoxyCodeLine{01215\ \ \ \ \ \textcolor{comment}{//\ across\ module\ boundaries),\ the\ constructor\ will\ orphan\ it\ by\ resetting\ the}}
+\DoxyCodeLine{01216\ \ \ \ \ \textcolor{comment}{//\ producer\ list.\ Such\ a\ producer\ is\ functional,\ as\ producer\ creation\ works\ on\ the}}
+\DoxyCodeLine{01217\ \ \ \ \ \textcolor{comment}{//\ zero-\/initialized\ queue\ memory,\ but\ the\ consumer\ is\ not\ able\ to\ see\ the\ data\ it}}
+\DoxyCodeLine{01218\ \ \ \ \ \textcolor{comment}{//\ enqueues.\ This\ method\ links\ the\ producer\ back\ into\ the\ list.}}
+\DoxyCodeLine{01219\ \ \ \ \ \textcolor{keywordtype}{bool}\ readopt\_orphaned\_producer(ExplicitProducer*\ producer)}
+\DoxyCodeLine{01220\ \ \ \ \ \{}
+\DoxyCodeLine{01221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ ptr\ =\ producerListTail.load(std::memory\_order\_relaxed);\ ptr\ !=\ \textcolor{keyword}{nullptr};\ ptr\ =\ ptr-\/>next\_prod())\ \{}
+\DoxyCodeLine{01222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr\ ==\ \textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(producer))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{01223\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \ \ add\_producer(\textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(producer));}
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01226\ \ \ \ \ \}}
+\DoxyCodeLine{01227\ }
+\DoxyCodeLine{01228\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01229\ }
+\DoxyCodeLine{01231\ \ \ \ \ \textcolor{comment}{//\ Block\ pool\ manipulation}}
+\DoxyCodeLine{01233\ }
+\DoxyCodeLine{01234\ \ \ \ \ \textcolor{keywordtype}{void}\ populate\_initial\_block\_list(\textcolor{keywordtype}{size\_t}\ blockCount)}
+\DoxyCodeLine{01235\ \ \ \ \ \{}
+\DoxyCodeLine{01236\ \ \ \ \ \ \ \ \ initialBlockPoolSize\ =\ blockCount;}
+\DoxyCodeLine{01237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (initialBlockPoolSize\ ==\ 0)\ \{}
+\DoxyCodeLine{01238\ \ \ \ \ \ \ \ \ \ \ \ \ initialBlockPool\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{01240\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01241\ }
+\DoxyCodeLine{01242\ \ \ \ \ \ \ \ \ initialBlockPool\ =\ create\_array<Block>(blockCount);}
+\DoxyCodeLine{01243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (initialBlockPool\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01244\ \ \ \ \ \ \ \ \ \ \ \ \ initialBlockPoolSize\ =\ 0;}
+\DoxyCodeLine{01245\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ initialBlockPoolSize;\ ++i)\ \{}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \ \ \ \ initialBlockPool[i].dynamicallyAllocated\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{01248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01249\ \ \ \ \ \}}
+\DoxyCodeLine{01250\ }
+\DoxyCodeLine{01251\ \ \ \ \ \textcolor{keyword}{inline}\ Block*\ try\_get\_block\_from\_initial\_pool()}
+\DoxyCodeLine{01252\ \ \ \ \ \{}
+\DoxyCodeLine{01253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (initialBlockPoolIndex.load(std::memory\_order\_relaxed)\ >=\ initialBlockPoolSize)\ \{}
+\DoxyCodeLine{01254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01255\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01256\ }
+\DoxyCodeLine{01257\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ index\ =\ initialBlockPoolIndex.fetch\_add(1,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{01258\ }
+\DoxyCodeLine{01259\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ index\ <\ initialBlockPoolSize\ ?\ (initialBlockPool\ +\ index)\ :\ nullptr;}
+\DoxyCodeLine{01260\ \ \ \ \ \}}
+\DoxyCodeLine{01261\ }
+\DoxyCodeLine{01262\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ add\_block\_to\_free\_list(Block*\ block)}
+\DoxyCodeLine{01263\ \ \ \ \ \{}
+\DoxyCodeLine{01264\ \ \ \ \ \ \ \ \ freeList.add(block);}
+\DoxyCodeLine{01265\ \ \ \ \ \}}
+\DoxyCodeLine{01266\ }
+\DoxyCodeLine{01267\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ add\_blocks\_to\_free\_list(Block*\ block)}
+\DoxyCodeLine{01268\ \ \ \ \ \{}
+\DoxyCodeLine{01269\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (block\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01270\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ next\ =\ block-\/>next;}
+\DoxyCodeLine{01271\ \ \ \ \ \ \ \ \ \ \ \ \ add\_block\_to\_free\_list(block);}
+\DoxyCodeLine{01272\ \ \ \ \ \ \ \ \ \ \ \ \ block\ =\ next;}
+\DoxyCodeLine{01273\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01274\ \ \ \ \ \}}
+\DoxyCodeLine{01275\ }
+\DoxyCodeLine{01276\ \ \ \ \ \textcolor{keyword}{inline}\ Block*\ try\_get\_block\_from\_free\_list()}
+\DoxyCodeLine{01277\ \ \ \ \ \{}
+\DoxyCodeLine{01278\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ freeList.try\_get();}
+\DoxyCodeLine{01279\ \ \ \ \ \}}
+\DoxyCodeLine{01280\ }
+\DoxyCodeLine{01281\ \ \ \ \ \textcolor{comment}{//\ Gets\ a\ free\ block\ from\ one\ of\ the\ memory\ pools,\ or\ allocates\ a\ new\ one\ (if\ applicable)}}
+\DoxyCodeLine{01282\ \ \ \ \ Block*\ requisition\_block()}
+\DoxyCodeLine{01283\ \ \ \ \ \{}
+\DoxyCodeLine{01284\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ block\ =\ try\_get\_block\_from\_initial\_pool();}
+\DoxyCodeLine{01285\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (block\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ block;}
+\DoxyCodeLine{01287\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01288\ }
+\DoxyCodeLine{01289\ \ \ \ \ \ \ \ \ block\ =\ try\_get\_block\_from\_free\_list();}
+\DoxyCodeLine{01290\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (block\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ block;}
+\DoxyCodeLine{01292\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01293\ }
+\DoxyCodeLine{01294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ create<Block>();}
+\DoxyCodeLine{01295\ \ \ \ \ \}}
+\DoxyCodeLine{01296\ }
+\DoxyCodeLine{01297\ }
+\DoxyCodeLine{01299\ \ \ \ \ \textcolor{comment}{//\ Producer\ list\ manipulation}}
+\DoxyCodeLine{01301\ }
+\DoxyCodeLine{01302\ \ \ \ \ ProducerBase*\ recycle\_or\_create\_producer()}
+\DoxyCodeLine{01303\ \ \ \ \ \{}
+\DoxyCodeLine{01304\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ recycled;}
+\DoxyCodeLine{01305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ recycle\_or\_create\_producer(recycled);}
+\DoxyCodeLine{01306\ \ \ \ \ \}}
+\DoxyCodeLine{01307\ }
+\DoxyCodeLine{01308\ \ \ \ \ ProducerBase*\ recycle\_or\_create\_producer(\textcolor{keywordtype}{bool}\&\ recycled)}
+\DoxyCodeLine{01309\ \ \ \ \ \{}
+\DoxyCodeLine{01310\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Try\ to\ re-\/use\ one\ first}}
+\DoxyCodeLine{01311\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ ptr\ =\ producerListTail.load(std::memory\_order\_acquire);\ ptr\ !=\ \textcolor{keyword}{nullptr};\ ptr\ =\ ptr-\/>next\_prod())\ \{}
+\DoxyCodeLine{01312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr-\/>inactive.load(std::memory\_order\_relaxed))\ \{}
+\DoxyCodeLine{01313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ptr-\/>size\_approx()\ ==\ 0\ )}
+\DoxyCodeLine{01314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ expected\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ptr-\/>inactive.compare\_exchange\_strong(expected,\ \textcolor{comment}{/*\ desired\ */}\ \textcolor{keyword}{false},\ std::memory\_order\_acquire,\ std::memory\_order\_relaxed))\ \{}
+\DoxyCodeLine{01317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ caught\ one!\ It's\ been\ marked\ as\ activated,\ the\ caller\ can\ have\ it}}
+\DoxyCodeLine{01318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ recycled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ptr;}
+\DoxyCodeLine{01320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01322\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01323\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01324\ }
+\DoxyCodeLine{01325\ \ \ \ \ \ \ \ \ recycled\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{01326\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ add\_producer(\textcolor{keyword}{static\_cast<}ProducerBase*\textcolor{keyword}{>}(create<ExplicitProducer>(\textcolor{keyword}{this})));}
+\DoxyCodeLine{01327\ \ \ \ \ \}}
+\DoxyCodeLine{01328\ }
+\DoxyCodeLine{01329\ \ \ \ \ ProducerBase*\ add\_producer(ProducerBase*\ producer)}
+\DoxyCodeLine{01330\ \ \ \ \ \{}
+\DoxyCodeLine{01331\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ failed\ memory\ allocation}}
+\DoxyCodeLine{01332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (producer\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{01334\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01335\ }
+\DoxyCodeLine{01336\ \ \ \ \ \ \ \ \ producerCount.fetch\_add(1,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{01337\ }
+\DoxyCodeLine{01338\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ it\ to\ the\ lock-\/free\ list}}
+\DoxyCodeLine{01339\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ prevTail\ =\ producerListTail.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{01340\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{01341\ \ \ \ \ \ \ \ \ \ \ \ \ producer-\/>next\ =\ prevTail;}
+\DoxyCodeLine{01342\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}\ (!producerListTail.compare\_exchange\_weak(prevTail,\ producer,\ std::memory\_order\_release,\ std::memory\_order\_relaxed));}
+\DoxyCodeLine{01343\ }
+\DoxyCodeLine{01344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ producer;}
+\DoxyCodeLine{01345\ \ \ \ \ \}}
+\DoxyCodeLine{01346\ }
+\DoxyCodeLine{01347\ \ \ \ \ \textcolor{keywordtype}{void}\ reown\_producers()}
+\DoxyCodeLine{01348\ \ \ \ \ \{}
+\DoxyCodeLine{01349\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ After\ another\ instance\ is\ moved-\/into/swapped-\/with\ this\ one,\ all\ the}}
+\DoxyCodeLine{01350\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ producers\ we\ stole\ still\ think\ their\ parents\ are\ the\ other\ queue.}}
+\DoxyCodeLine{01351\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ So\ fix\ them\ up!}}
+\DoxyCodeLine{01352\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ ptr\ =\ producerListTail.load(std::memory\_order\_relaxed);\ ptr\ !=\ \textcolor{keyword}{nullptr};\ ptr\ =\ ptr-\/>next\_prod())\ \{}
+\DoxyCodeLine{01353\ \ \ \ \ \ \ \ \ \ \ \ \ ptr-\/>parent\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{01354\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01355\ \ \ \ \ \}}
+\DoxyCodeLine{01356\ }
+\DoxyCodeLine{01358\ \ \ \ \ \textcolor{comment}{//\ Utility\ functions}}
+\DoxyCodeLine{01360\ }
+\DoxyCodeLine{01361\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{01362\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ U*\ create\_array(\textcolor{keywordtype}{size\_t}\ count)}
+\DoxyCodeLine{01363\ \ \ \ \ \{}
+\DoxyCodeLine{01364\ \ \ \ \ \ \ \ \ assert(count\ >\ 0);}
+\DoxyCodeLine{01365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}U*\textcolor{keyword}{>}((Traits::malloc)(\textcolor{keyword}{sizeof}(U)\ *\ count));}
+\DoxyCodeLine{01366\ \ \ \ \ \}}
+\DoxyCodeLine{01367\ }
+\DoxyCodeLine{01368\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{01369\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ destroy\_array(U*\ p,\ \textcolor{keywordtype}{size\_t}\ count)}
+\DoxyCodeLine{01370\ \ \ \ \ \{}
+\DoxyCodeLine{01371\ \ \ \ \ \ \ \ \ ((void)count);}
+\DoxyCodeLine{01372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01373\ \ \ \ \ \ \ \ \ \ \ \ \ assert(count\ >\ 0);}
+\DoxyCodeLine{01374\ \ \ \ \ \ \ \ \ \ \ \ \ (Traits::free)(p);}
+\DoxyCodeLine{01375\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01376\ \ \ \ \ \}}
+\DoxyCodeLine{01377\ }
+\DoxyCodeLine{01378\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{01379\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ U*\ create()}
+\DoxyCodeLine{01380\ \ \ \ \ \{}
+\DoxyCodeLine{01381\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ p\ =\ (Traits::malloc)(\textcolor{keyword}{sizeof}(U));}
+\DoxyCodeLine{01382\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ (p)\ U;}
+\DoxyCodeLine{01383\ \ \ \ \ \}}
+\DoxyCodeLine{01384\ }
+\DoxyCodeLine{01385\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U,\ \textcolor{keyword}{typename}\ A1>}
+\DoxyCodeLine{01386\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ U*\ create(A1\&\&\ a1)}
+\DoxyCodeLine{01387\ \ \ \ \ \{}
+\DoxyCodeLine{01388\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ p\ =\ (Traits::malloc)(\textcolor{keyword}{sizeof}(U));}
+\DoxyCodeLine{01389\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ (p)\ U(std::forward<A1>(a1));}
+\DoxyCodeLine{01390\ \ \ \ \ \}}
+\DoxyCodeLine{01391\ }
+\DoxyCodeLine{01392\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{01393\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ destroy(U*\ p)}
+\DoxyCodeLine{01394\ \ \ \ \ \{}
+\DoxyCodeLine{01395\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01396\ \ \ \ \ \ \ \ \ \ \ \ \ p-\/>\string~U();}
+\DoxyCodeLine{01397\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01398\ \ \ \ \ \ \ \ \ (Traits::free)(p);}
+\DoxyCodeLine{01399\ \ \ \ \ \}}
+\DoxyCodeLine{01400\ }
+\DoxyCodeLine{01401\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01402\ \ \ \ \ std::atomic<ProducerBase*>\ producerListTail;}
+\DoxyCodeLine{01403\ \ \ \ \ std::atomic<std::uint32\_t>\ producerCount;}
+\DoxyCodeLine{01404\ }
+\DoxyCodeLine{01405\ \ \ \ \ std::atomic<size\_t>\ initialBlockPoolIndex;}
+\DoxyCodeLine{01406\ \ \ \ \ Block*\ initialBlockPool;}
+\DoxyCodeLine{01407\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ initialBlockPoolSize;}
+\DoxyCodeLine{01408\ }
+\DoxyCodeLine{01409\ \ \ \ \ FreeList<Block>\ freeList;}
+\DoxyCodeLine{01410\ }
+\DoxyCodeLine{01411\ \ \ \ \ std::atomic<std::uint32\_t>\ nextExplicitConsumerId;}
+\DoxyCodeLine{01412\ \ \ \ \ std::atomic<std::uint32\_t>\ globalExplicitConsumerOffset;}
+\DoxyCodeLine{01413\ \};}
+\DoxyCodeLine{01414\ }
+\DoxyCodeLine{01415\ }
+\DoxyCodeLine{01416\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{01417\ ProducerToken::ProducerToken(\doxymbox{\hyperlink{classtracy_1_1moodycamel_1_1_concurrent_queue}{ConcurrentQueue<T,\ Traits>}}\&\ queue)}
+\DoxyCodeLine{01418\ \ \ \ \ :\ producer(queue.recycle\_or\_create\_producer())}
+\DoxyCodeLine{01419\ \{}
+\DoxyCodeLine{01420\ \ \ \ \ \textcolor{keywordflow}{if}\ (producer\ !=\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{01421\ \ \ \ \ \ \ \ \ producer-\/>token\ =\ \textcolor{keyword}{this};}
+\DoxyCodeLine{01422\ \ \ \ \ \ \ \ \ producer-\/>threadId\ =\ detail::GetThreadHandleImpl();}
+\DoxyCodeLine{01423\ \ \ \ \ \}}
+\DoxyCodeLine{01424\ \}}
+\DoxyCodeLine{01425\ }
+\DoxyCodeLine{01426\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{01427\ ConsumerToken::ConsumerToken(ConcurrentQueue<T,\ Traits>\&\ queue)}
+\DoxyCodeLine{01428\ \ \ \ \ :\ itemsConsumedFromCurrent(0),\ currentProducer(nullptr),\ desiredProducer(nullptr)}
+\DoxyCodeLine{01429\ \{}
+\DoxyCodeLine{01430\ \ \ \ \ initialOffset\ =\ queue.nextExplicitConsumerId.fetch\_add(1,\ std::memory\_order\_release);}
+\DoxyCodeLine{01431\ \ \ \ \ lastKnownGlobalOffset\ =\ \textcolor{keyword}{static\_cast<}std::uint32\_t\textcolor{keyword}{>}(-\/1);}
+\DoxyCodeLine{01432\ \}}
+\DoxyCodeLine{01433\ }
+\DoxyCodeLine{01434\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Traits>}
+\DoxyCodeLine{01435\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ swap(ConcurrentQueue<T,\ Traits>\&\ a,\ ConcurrentQueue<T,\ Traits>\&\ b)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{01436\ \{}
+\DoxyCodeLine{01437\ \ \ \ \ a.swap(b);}
+\DoxyCodeLine{01438\ \}}
+\DoxyCodeLine{01439\ }
+\DoxyCodeLine{01440\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ swap(ProducerToken\&\ a,\ ProducerToken\&\ b)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{01441\ \{}
+\DoxyCodeLine{01442\ \ \ \ \ a.swap(b);}
+\DoxyCodeLine{01443\ \}}
+\DoxyCodeLine{01444\ }
+\DoxyCodeLine{01445\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ swap(ConsumerToken\&\ a,\ ConsumerToken\&\ b)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{01446\ \{}
+\DoxyCodeLine{01447\ \ \ \ \ a.swap(b);}
+\DoxyCodeLine{01448\ \}}
+\DoxyCodeLine{01449\ }
+\DoxyCodeLine{01450\ \}}
+\DoxyCodeLine{01451\ }
+\DoxyCodeLine{01452\ \}\ \textcolor{comment}{/*\ namespace\ tracy\ */}}
+\DoxyCodeLine{01453\ }
+\DoxyCodeLine{01454\ \textcolor{preprocessor}{\#if\ defined(\_\_GNUC\_\_)}}
+\DoxyCodeLine{01455\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
+\DoxyCodeLine{01456\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

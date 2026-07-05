@@ -1,0 +1,143 @@
+\chapter{Where an SDL program starts running. }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions}\index{Where an SDL program starts running.@{Where an SDL program starts running.}}
+\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1371}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1371}%
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1372}{}\doxysection{\texorpdfstring{History}{History}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1372}
+SDL has a long, complicated history with starting a program.
+
+In most of the civilized world, an application starts in a C-\/callable function named "{}main"{}. You probably learned it a long time ago:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{int}\ main(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ **argv)}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ printf(\textcolor{stringliteral}{"{}Hello\ world!\(\backslash\)n"{}});}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+But not all platforms work like this. Windows apps might want a different function named "{}\+Win\+Main"{}, for example, so SDL set out to paper over this difference.
+
+Generally how this would work is:\+ your app would always use the "{}standard"{} {\ttfamily main(argc, argv)} function as its entry point, and {\ttfamily \#include} the proper SDL header before that, which did some macro magic. On platforms that used a standard {\ttfamily main}, it would do nothing and what you saw was what you got.
+
+But those other platforms! If they needed something that {\itshape wasn\textquotesingle{}t} {\ttfamily main}, SDL\textquotesingle{}s macro magic would quietly rename your function to {\ttfamily SDL\+\_\+main}, and provide its own entry point that called it. Your app was none the wiser and your code worked everywhere without changes.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1373}{}\doxysection{\texorpdfstring{The main entry point in SDL3}{The main entry point in SDL3}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1373}
+Previous versions of SDL had a static library, SDLmain, that you would link your app against. SDL3 still has the same macro tricks, but the static library is gone. Now it\textquotesingle{}s supplied by a "{}single-\/header library,"{} which means you {\ttfamily \#include \texorpdfstring{$<$}{<}\doxylink{_s_d_l__main_8h_source}{SDL3/\+\+SDL\+\_\+main.\+h}\texorpdfstring{$>$}{>}} and that header will insert a small amount of code into the source file that included it, so you no longer have to worry about linking against an extra library that you might need on some platforms. You just build your app and it works.
+
+You should {\itshape only} include \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h} from one file (the umbrella header, \doxylink{_s_d_l_8h_source}{SDL.\+h}, does {\itshape not} include it), and know that it will {\ttfamily \#define main} to something else, so if you use this symbol elsewhere as a variable name, etc, it can cause you unexpected problems.
+
+\doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h} will also include platform-\/specific code (Win\+Main or whatnot) that calls your {\itshape actual} main function. This is compiled directly into your program.
+
+If for some reason you need to include \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h} in a file but also {\itshape don\textquotesingle{}t} want it to generate this platform-\/specific code, you should define a special macro before including the header:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#define\ SDL\_MAIN\_NOIMPL}}
+
+\end{DoxyCode}
+
+
+If you are moving from SDL2, remove any references to the SDLmain static library from your build system, and you should be done. Things should work as they always have.
+
+If you have never controlled your process\textquotesingle{}s entry point (you are using SDL as a module from a general-\/purpose scripting language interpreter, or you\textquotesingle{}re using SDL in a plugin for some otherwise-\/unrelated app), then there is nothing required of you here; there is no startup code in SDL\textquotesingle{}s entry point code that is required, so using \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h} is completely optional. Just start using the SDL API when you are ready.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1374}{}\doxysection{\texorpdfstring{Main callbacks in SDL3}{Main callbacks in SDL3}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1374}
+There is a second option in SDL3 for how to structure your program. This is completely optional and you can ignore it if you\textquotesingle{}re happy using a standard "{}main"{} function.
+
+Some platforms would rather your program operate in chunks. Most of the time, games tend to look like this at the highest level:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{int}\ main(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ **argv)}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ initialize();}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{while}\ (keep\_running())\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ handle\_new\_events();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ do\_one\_frame\_of\_stuff();}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ deinitialize();}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+There are platforms that would rather be in charge of that {\ttfamily while} loop:\+ i\+OS would rather you return from main() immediately and then it will let you know that it\textquotesingle{}s time to update and draw the next frame of video. Emscripten (programs that run on a web page) absolutely requires this to function at all. Video targets like Wayland can notify the app when to draw a new frame, to save battery life and cooperate with the compositor more closely.
+
+In most cases, you can add special-\/case code to your program to deal with this on different platforms, but SDL3 offers a system to handle this transparently on the app\textquotesingle{}s behalf.
+
+To use this, you have to redesign the highest level of your app a little. Once you do, it\textquotesingle{}ll work on all supported SDL platforms without problems and {\ttfamily \#ifdef}s in your code.
+
+Instead of providing a "{}main"{} function, under this system, you would provide several functions that SDL will call as appropriate.
+
+Using the callback entry points works on every platform, because on platforms that don\textquotesingle{}t require them, we can fake them with a simple loop in an internal implementation of the usual SDL\+\_\+main.
+
+The primary way we expect people to write SDL apps is still with SDL\+\_\+main, and this is not intended to replace it. If the app chooses to use this, it just removes some platform-\/specific details they might have to otherwise manage, and maybe removes a barrier to entry on some future platform. And you might find you enjoy structuring your program like this more!\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1375}{}\doxysection{\texorpdfstring{How to use main callbacks in SDL3}{How to use main callbacks in SDL3}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1375}
+To enable the callback entry points, you include \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h} with an extra define, from a single source file in your project:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#define\ SDL\_MAIN\_USE\_CALLBACKS}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include\ <SDL3/SDL\_main.h>}}
+
+\end{DoxyCode}
+
+
+Once you do this, you do not write a "{}main"{} function at all (and if you do, the app will likely fail to link). Instead, you provide the following functions:\+
+
+First:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{SDL\_AppResult\ SDL\_AppInit(\textcolor{keywordtype}{void}\ **appstate,\ \textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ **argv);}
+
+\end{DoxyCode}
+
+
+This will be called {\itshape once} before anything else. argc/\+argv work like they always do. If this returns SDL\+\_\+\+APP\+\_\+\+CONTINUE, the app runs. If it returns SDL\+\_\+\+APP\+\_\+\+FAILURE, the app calls SDL\+\_\+\+App\+Quit and terminates with an exit code that reports an error to the platform. If it returns SDL\+\_\+\+APP\+\_\+\+SUCCESS, the app calls SDL\+\_\+\+App\+Quit and terminates with an exit code that reports success to the platform. This function should not go into an infinite mainloop; it should do any one-\/time startup it requires and then return.
+
+If you want to, you can assign a pointer to {\ttfamily \texorpdfstring{$\ast$}{*}appstate}, and this pointer will be made available to you in later functions calls in their {\ttfamily appstate} parameter. This allows you to avoid global variables, but is totally optional. If you don\textquotesingle{}t set this, the pointer will be NULL in later function calls.
+
+Then:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{SDL\_AppResult\ SDL\_AppIterate(\textcolor{keywordtype}{void}\ *appstate);}
+
+\end{DoxyCode}
+
+
+This is called over and over, possibly at the refresh rate of the display or some other metric that the platform dictates. This is where the heart of your app runs. It should return as quickly as reasonably possible, but it\textquotesingle{}s not a "{}run one memcpy and that\textquotesingle{}s all the time you have"{} sort of thing. The app should do any game updates, and render a frame of video. If it returns SDL\+\_\+\+APP\+\_\+\+FAILURE, SDL will call SDL\+\_\+\+App\+Quit and terminate the process with an exit code that reports an error to the platform. If it returns SDL\+\_\+\+APP\+\_\+\+SUCCESS, the app calls SDL\+\_\+\+App\+Quit and terminates with an exit code that reports success to the platform. If it returns SDL\+\_\+\+APP\+\_\+\+CONTINUE, then SDL\+\_\+\+App\+Iterate will be called again at some regular frequency. The platform may choose to run this more or less (perhaps less in the background, etc), or it might just call this function in a loop as fast as possible. You do not check the event queue in this function (SDL\+\_\+\+App\+Event exists for that).
+
+Next:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{SDL\_AppResult\ SDL\_AppEvent(\textcolor{keywordtype}{void}\ *appstate,\ \doxymbox{\hyperlink{union_s_d_l___event}{SDL\_Event}}\ *event);}
+
+\end{DoxyCode}
+
+
+This will be called whenever an SDL event arrives. Your app should not call SDL\+\_\+\+Poll\+Event, SDL\+\_\+\+Pump\+Event, etc, as SDL will manage all this for you. Return values are the same as from SDL\+\_\+\+App\+Iterate(), so you can terminate in response to SDL\+\_\+\+EVENT\+\_\+\+QUIT, etc.
+
+Finally:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void}\ SDL\_AppQuit(\textcolor{keywordtype}{void}\ *appstate,\ SDL\_AppResult\ result);}
+
+\end{DoxyCode}
+
+
+This is called once before terminating the app--assuming the app isn\textquotesingle{}t being forcibly killed or crashed--as a last chance to clean up. After this returns, SDL will call SDL\+\_\+\+Quit so the app doesn\textquotesingle{}t have to (but it\textquotesingle{}s safe for the app to call it, too). Process termination proceeds as if the app returned normally from main(), so atexit handles will run, if your platform supports that.
+
+If you set {\ttfamily \texorpdfstring{$\ast$}{*}appstate} during SDL\+\_\+\+App\+Init, this is where you should free that data, as this pointer will not be provided to your app again.
+
+The SDL\+\_\+\+App\+Result value that terminated the app is provided here, in case it\textquotesingle{}s useful to know if this was a successful or failing run of the app.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1376}{}\doxysection{\texorpdfstring{Using main functions from other languages}{Using main functions from other languages}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1376}
+If you\textquotesingle{}re not using C/\+\+C++, using SDL\textquotesingle{}s entry points is still possible but is more complex. Please refer to \href{https://wiki.libsdl.org/SDL3/NonstandardStartup}{\texttt{https:\+/\+/\+wiki.\+libsdl.\+org/\+\+SDL3/\+\+Nonstandard\+Startup}} for the technical details.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1377}{}\doxysection{\texorpdfstring{Summary and Best Practices}{Summary and Best Practices}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-main-functions_autotoc_md1377}
+
+\begin{DoxyItemize}
+\item {\bfseries{Always Include \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h} in One Source File:\+}} When working with SDL, remember that \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h} must only be included in one source file in your project. Including it in multiple files will lead to conflicts and undefined behavior.
+\item {\bfseries{Avoid Redefining main:\+}} If you\textquotesingle{}re using SDL\textquotesingle{}s entry point system (which renames {\ttfamily main} to {\ttfamily SDL\+\_\+main}), do not define {\ttfamily main} yourself. SDL takes care of this for you, and redefining it can cause issues, especially when linking with SDL libraries.
+\item {\bfseries{Using SDL\textquotesingle{}s Callback System:\+}} If you\textquotesingle{}re working with more complex scenarios, such as requiring more control over your application\textquotesingle{}s flow (e.\+g., with games or apps that need extensive event handling), consider using SDL\textquotesingle{}s callback system. Define the necessary callbacks and SDL will handle initialization, event processing, and cleanup automatically.
+\item {\bfseries{Platform-\/\+Specific Considerations:\+}} On platforms like Windows, SDL handles the platform-\/specific entry point (like {\ttfamily Win\+Main}) automatically. This means you don\textquotesingle{}t need to worry about writing platform-\/specific entry code when using SDL.
+\item {\bfseries{When to Skip \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h}:\+}} If you do not require SDL\textquotesingle{}s custom entry point (for example, if you\textquotesingle{}re integrating SDL into an existing application or a scripting environment), you can omit \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h}. However, this will limit SDL\textquotesingle{}s ability to abstract away platform-\/specific entry point details. 
+\end{DoxyItemize}

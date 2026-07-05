@@ -1,0 +1,260 @@
+\doxysection{hidapi\+\_\+descriptor\+\_\+reconstruct.\+h}
+\hypertarget{hidapi__descriptor__reconstruct_8h_source}{}\label{hidapi__descriptor__reconstruct_8h_source}\index{MonoRuntime/extern/sdl/src/hidapi/windows/hidapi\_descriptor\_reconstruct.h@{MonoRuntime/extern/sdl/src/hidapi/windows/hidapi\_descriptor\_reconstruct.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*******************************************************}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ HIDAPI\ -\/\ Multi-\/Platform\ library\ for}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ communication\ with\ HID\ devices.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ libusb/hidapi\ Team}}
+\DoxyCodeLine{00006\ \textcolor{comment}{}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ Copyright\ 2022,\ All\ Rights\ Reserved.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ At\ the\ discretion\ of\ the\ user\ of\ this\ library,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ this\ software\ may\ be\ licensed\ under\ the\ terms\ of\ the}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ GNU\ General\ Public\ License\ v3,\ a\ BSD-\/Style\ license,\ or\ the}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ original\ HIDAPI\ license\ as\ outlined\ in\ the\ LICENSE.txt,}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ LICENSE-\/gpl3.txt,\ LICENSE-\/bsd.txt,\ and\ LICENSE-\/orig.txt}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ files\ located\ at\ the\ root\ of\ the\ source\ distribution.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ These\ files\ may\ also\ be\ found\ in\ the\ public\ source}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ code\ repository\ located\ at:}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ \ \ \ \ https://github.com/libusb/hidapi\ .}}
+\DoxyCodeLine{00018\ \textcolor{comment}{********************************************************/}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifndef\ HIDAPI\_DESCRIPTOR\_RECONSTRUCT\_H\_\_}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ HIDAPI\_DESCRIPTOR\_RECONSTRUCT\_H\_\_}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)\ \&\&\ !defined(\_CRT\_SECURE\_NO\_WARNINGS)}}
+\DoxyCodeLine{00025\ \textcolor{comment}{/*\ Do\ not\ warn\ about\ wcsncpy\ usage.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ \ https://docs.microsoft.com/cpp/c-\/runtime-\/library/security-\/features-\/in-\/the-\/crt\ */}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ \_CRT\_SECURE\_NO\_WARNINGS}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{hidapi__winapi_8h}{hidapi\_winapi.h}}"{}}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#pragma\ warning(push)}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4200)}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4201)}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#pragma\ warning(disable:\ 4214)}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <windows.h>}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ "{}hidapi\_hidsdi.h"{}}}
+\DoxyCodeLine{00042\ \textcolor{comment}{/*\#include\ <assert.h>*/}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ NUM\_OF\_HIDP\_REPORT\_TYPES\ 3}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ rd\_items\_\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ rd\_main\_input\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x80,\ \textcolor{comment}{/*\ 1000\ 00\ nn\ */}}
+\DoxyCodeLine{00048\ \ \ \ \ rd\_main\_output\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x90,\ \textcolor{comment}{/*\ 1001\ 00\ nn\ */}}
+\DoxyCodeLine{00049\ \ \ \ \ rd\_main\_feature\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB0,\ \textcolor{comment}{/*\ 1011\ 00\ nn\ */}}
+\DoxyCodeLine{00050\ \ \ \ \ rd\_main\_collection\ \ \ \ \ \ \ \ \ \ =\ 0xA0,\ \textcolor{comment}{/*\ 1010\ 00\ nn\ */}}
+\DoxyCodeLine{00051\ \ \ \ \ rd\_main\_collection\_end\ \ \ \ \ \ =\ 0xC0,\ \textcolor{comment}{/*\ 1100\ 00\ nn\ */}}
+\DoxyCodeLine{00052\ \ \ \ \ rd\_global\_usage\_page\ \ \ \ \ \ \ \ =\ 0x04,\ \textcolor{comment}{/*\ 0000\ 01\ nn\ */}}
+\DoxyCodeLine{00053\ \ \ \ \ rd\_global\_logical\_minimum\ \ \ =\ 0x14,\ \textcolor{comment}{/*\ 0001\ 01\ nn\ */}}
+\DoxyCodeLine{00054\ \ \ \ \ rd\_global\_logical\_maximum\ \ \ =\ 0x24,\ \textcolor{comment}{/*\ 0010\ 01\ nn\ */}}
+\DoxyCodeLine{00055\ \ \ \ \ rd\_global\_physical\_minimum\ \ =\ 0x34,\ \textcolor{comment}{/*\ 0011\ 01\ nn\ */}}
+\DoxyCodeLine{00056\ \ \ \ \ rd\_global\_physical\_maximum\ \ =\ 0x44,\ \textcolor{comment}{/*\ 0100\ 01\ nn\ */}}
+\DoxyCodeLine{00057\ \ \ \ \ rd\_global\_unit\_exponent\ \ \ \ \ =\ 0x54,\ \textcolor{comment}{/*\ 0101\ 01\ nn\ */}}
+\DoxyCodeLine{00058\ \ \ \ \ rd\_global\_unit\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x64,\ \textcolor{comment}{/*\ 0110\ 01\ nn\ */}}
+\DoxyCodeLine{00059\ \ \ \ \ rd\_global\_report\_size\ \ \ \ \ \ \ =\ 0x74,\ \textcolor{comment}{/*\ 0111\ 01\ nn\ */}}
+\DoxyCodeLine{00060\ \ \ \ \ rd\_global\_report\_id\ \ \ \ \ \ \ \ \ =\ 0x84,\ \textcolor{comment}{/*\ 1000\ 01\ nn\ */}}
+\DoxyCodeLine{00061\ \ \ \ \ rd\_global\_report\_count\ \ \ \ \ \ =\ 0x94,\ \textcolor{comment}{/*\ 1001\ 01\ nn\ */}}
+\DoxyCodeLine{00062\ \ \ \ \ rd\_global\_push\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xA4,\ \textcolor{comment}{/*\ 1010\ 01\ nn\ */}}
+\DoxyCodeLine{00063\ \ \ \ \ rd\_global\_pop\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0xB4,\ \textcolor{comment}{/*\ 1011\ 01\ nn\ */}}
+\DoxyCodeLine{00064\ \ \ \ \ rd\_local\_usage\ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x08,\ \textcolor{comment}{/*\ 0000\ 10\ nn\ */}}
+\DoxyCodeLine{00065\ \ \ \ \ rd\_local\_usage\_minimum\ \ \ \ \ \ =\ 0x18,\ \textcolor{comment}{/*\ 0001\ 10\ nn\ */}}
+\DoxyCodeLine{00066\ \ \ \ \ rd\_local\_usage\_maximum\ \ \ \ \ \ =\ 0x28,\ \textcolor{comment}{/*\ 0010\ 10\ nn\ */}}
+\DoxyCodeLine{00067\ \ \ \ \ rd\_local\_designator\_index\ \ \ =\ 0x38,\ \textcolor{comment}{/*\ 0011\ 10\ nn\ */}}
+\DoxyCodeLine{00068\ \ \ \ \ rd\_local\_designator\_minimum\ =\ 0x48,\ \textcolor{comment}{/*\ 0100\ 10\ nn\ */}}
+\DoxyCodeLine{00069\ \ \ \ \ rd\_local\_designator\_maximum\ =\ 0x58,\ \textcolor{comment}{/*\ 0101\ 10\ nn\ */}}
+\DoxyCodeLine{00070\ \ \ \ \ rd\_local\_string\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0x78,\ \textcolor{comment}{/*\ 0111\ 10\ nn\ */}}
+\DoxyCodeLine{00071\ \ \ \ \ rd\_local\_string\_minimum\ \ \ \ \ =\ 0x88,\ \textcolor{comment}{/*\ 1000\ 10\ nn\ */}}
+\DoxyCodeLine{00072\ \ \ \ \ rd\_local\_string\_maximum\ \ \ \ \ =\ 0x98,\ \textcolor{comment}{/*\ 1001\ 10\ nn\ */}}
+\DoxyCodeLine{00073\ \ \ \ \ rd\_local\_delimiter\ \ \ \ \ \ \ \ \ \ =\ 0xA8\ \ \textcolor{comment}{/*\ 1010\ 10\ nn\ */}}
+\DoxyCodeLine{00074\ \}\ rd\_items;}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ rd\_main\_items\_\ \{}
+\DoxyCodeLine{00077\ \ \ \ \ rd\_input\ =\ HidP\_Input,}
+\DoxyCodeLine{00078\ \ \ \ \ rd\_output\ =\ HidP\_Output,}
+\DoxyCodeLine{00079\ \ \ \ \ rd\_feature\ =\ HidP\_Feature,}
+\DoxyCodeLine{00080\ \ \ \ \ rd\_collection,}
+\DoxyCodeLine{00081\ \ \ \ \ rd\_collection\_end,}
+\DoxyCodeLine{00082\ \ \ \ \ rd\_delimiter\_open,}
+\DoxyCodeLine{00083\ \ \ \ \ rd\_delimiter\_usage,}
+\DoxyCodeLine{00084\ \ \ \ \ rd\_delimiter\_close,}
+\DoxyCodeLine{00085\ \}\ rd\_main\_items;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrd__bit__range__}{rd\_bit\_range\_}}\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{int}\ FirstBit;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{int}\ LastBit;}
+\DoxyCodeLine{00090\ \}\ rd\_bit\_range;}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ rd\_item\_node\_type\_\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ rd\_item\_node\_cap,}
+\DoxyCodeLine{00094\ \ \ \ \ rd\_item\_node\_padding,}
+\DoxyCodeLine{00095\ \ \ \ \ rd\_item\_node\_collection,}
+\DoxyCodeLine{00096\ \}\ rd\_node\_type;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrd__main__item__node}{rd\_main\_item\_node}}\ \{}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{int}\ FirstBit;\ \textcolor{comment}{/*\ Position\ of\ first\ bit\ in\ report\ (counting\ from\ 0)\ */}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{int}\ LastBit;\ \textcolor{comment}{/*\ Position\ of\ last\ bit\ in\ report\ (counting\ from\ 0)\ */}}
+\DoxyCodeLine{00101\ \ \ \ \ rd\_node\_type\ TypeOfNode;\ \textcolor{comment}{/*\ Information\ if\ caps\ index\ refers\ to\ the\ array\ of\ button\ caps,\ value\ caps,}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ or\ if\ the\ node\ is\ just\ a\ padding\ element\ to\ fill\ unused\ bit\ positions.}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ The\ node\ can\ also\ be\ a\ collection\ node\ without\ any\ bits\ in\ the\ report.\ */}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{int}\ CapsIndex;\ \textcolor{comment}{/*\ Index\ in\ the\ array\ of\ caps\ */}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{int}\ CollectionIndex;\ \textcolor{comment}{/*\ Index\ in\ the\ array\ of\ link\ collections\ */}}
+\DoxyCodeLine{00106\ \ \ \ \ rd\_main\_items\ MainItemType;\ \textcolor{comment}{/*\ Input,\ Output,\ Feature,\ Collection\ or\ Collection\ End\ */}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ ReportID;}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrd__main__item__node}{rd\_main\_item\_node}}*\ next;}
+\DoxyCodeLine{00109\ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__pp__caps__info__}{hid\_pp\_caps\_info\_}}\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ USHORT\ FirstCap;}
+\DoxyCodeLine{00113\ \ \ \ \ USHORT\ NumberOfCaps;\ \textcolor{comment}{//\ Includes\ empty\ caps\ after\ LastCap}}
+\DoxyCodeLine{00114\ \ \ \ \ USHORT\ LastCap;}
+\DoxyCodeLine{00115\ \ \ \ \ USHORT\ ReportByteLength;}
+\DoxyCodeLine{00116\ \}\ hid\_pp\_caps\_info,\ *phid\_pp\_caps\_info;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__pp__link__collection__node__}{hid\_pp\_link\_collection\_node\_}}\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ USAGE\ \ LinkUsage;}
+\DoxyCodeLine{00120\ \ \ \ \ USAGE\ \ LinkUsagePage;}
+\DoxyCodeLine{00121\ \ \ \ \ USHORT\ Parent;}
+\DoxyCodeLine{00122\ \ \ \ \ USHORT\ NumberOfChildren;}
+\DoxyCodeLine{00123\ \ \ \ \ USHORT\ NextSibling;}
+\DoxyCodeLine{00124\ \ \ \ \ USHORT\ FirstChild;}
+\DoxyCodeLine{00125\ \ \ \ \ ULONG\ \ CollectionType\ :\ 8;}
+\DoxyCodeLine{00126\ \ \ \ \ ULONG\ \ IsAlias\ :\ 1;}
+\DoxyCodeLine{00127\ \ \ \ \ ULONG\ \ Reserved\ :\ 23;}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{//\ Same\ as\ the\ public\ API\ structure\ HIDP\_LINK\_COLLECTION\_NODE,\ but\ without\ PVOID\ UserContext\ at\ the\ end}}
+\DoxyCodeLine{00129\ \}\ hid\_pp\_link\_collection\_node,\ *phid\_pp\_link\_collection\_node;}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ Note:\ This\ is\ risk-\/reduction-\/measure\ for\ this\ specific\ struct,\ as\ it\ has\ ULONG\ bit-\/field.}}
+\DoxyCodeLine{00132\ \textcolor{comment}{//\ \ \ \ \ \ \ Although\ very\ unlikely,\ it\ might\ still\ be\ possible\ that\ the\ compiler\ creates\ a\ memory\ layout\ that\ is}}
+\DoxyCodeLine{00133\ \textcolor{comment}{//\ \ \ \ \ \ \ not\ binary\ compatile.}}
+\DoxyCodeLine{00134\ \textcolor{comment}{//\ \ \ \ \ \ \ Other\ structs\ are\ not\ checked\ at\ the\ time\ of\ writing.}}
+\DoxyCodeLine{00135\ \textcolor{comment}{//static\_assert(sizeof(struct\ hid\_pp\_link\_collection\_node\_)\ ==\ 16,}}
+\DoxyCodeLine{00136\ \textcolor{comment}{//\ \ \ \ "{}Size\ of\ struct\ hid\_pp\_link\_collection\_node\_\ not\ as\ expected.\ This\ might\ break\ binary\ compatibility"{});}}
+\DoxyCodeLine{00137\ SDL\_COMPILE\_TIME\_ASSERT(\doxymbox{\hyperlink{structhid__pp__link__collection__node__}{hid\_pp\_link\_collection\_node\_}},\ \textcolor{keyword}{sizeof}(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structhid__pp__link__collection__node__}{hid\_pp\_link\_collection\_node\_}})\ ==\ 16);}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhidp__unknown__token__}{hidp\_unknown\_token\_}}\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ UCHAR\ Token;\ \textcolor{comment}{/*\ Specifies\ the\ one-\/byte\ prefix\ of\ a\ global\ item.\ */}}
+\DoxyCodeLine{00141\ \ \ \ \ UCHAR\ Reserved[3];}
+\DoxyCodeLine{00142\ \ \ \ \ ULONG\ BitField;\ \textcolor{comment}{/*\ Specifies\ the\ data\ part\ of\ the\ global\ item.\ */}}
+\DoxyCodeLine{00143\ \}\ hidp\_unknown\_token,\ *\ phidp\_unknown\_token;}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhid__pp__cap__}{hid\_pp\_cap\_}}\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ USAGE\ \ \ UsagePage;}
+\DoxyCodeLine{00147\ \ \ \ \ UCHAR\ \ \ ReportID;}
+\DoxyCodeLine{00148\ \ \ \ \ UCHAR\ \ \ BitPosition;}
+\DoxyCodeLine{00149\ \ \ \ \ USHORT\ \ ReportSize;\ \textcolor{comment}{//\ WIN32\ term\ for\ this\ is\ BitSize}}
+\DoxyCodeLine{00150\ \ \ \ \ USHORT\ \ ReportCount;}
+\DoxyCodeLine{00151\ \ \ \ \ USHORT\ \ BytePosition;}
+\DoxyCodeLine{00152\ \ \ \ \ USHORT\ \ BitCount;}
+\DoxyCodeLine{00153\ \ \ \ \ ULONG\ \ \ BitField;}
+\DoxyCodeLine{00154\ \ \ \ \ USHORT\ \ NextBytePosition;}
+\DoxyCodeLine{00155\ \ \ \ \ USHORT\ \ LinkCollection;}
+\DoxyCodeLine{00156\ \ \ \ \ USAGE\ \ \ LinkUsagePage;}
+\DoxyCodeLine{00157\ \ \ \ \ USAGE\ \ \ LinkUsage;}
+\DoxyCodeLine{00158\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{//\ Start\ of\ 8\ Flags\ in\ one\ byte}}
+\DoxyCodeLine{00160\ \ \ \ \ BOOLEAN\ IsMultipleItemsForArray:1;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \ \ \ \ BOOLEAN\ IsPadding:1;}
+\DoxyCodeLine{00163\ \ \ \ \ BOOLEAN\ IsButtonCap:1;}
+\DoxyCodeLine{00164\ \ \ \ \ BOOLEAN\ IsAbsolute:1;}
+\DoxyCodeLine{00165\ \ \ \ \ BOOLEAN\ IsRange:1;}
+\DoxyCodeLine{00166\ \ \ \ \ BOOLEAN\ IsAlias:1;\ \textcolor{comment}{//\ IsAlias\ is\ set\ to\ TRUE\ in\ the\ first\ n-\/1\ capability\ structures\ added\ to\ the\ capability\ array.\ IsAlias\ set\ to\ FALSE\ in\ the\ nth\ capability\ structure.}}
+\DoxyCodeLine{00167\ \ \ \ \ BOOLEAN\ IsStringRange:1;}
+\DoxyCodeLine{00168\ \ \ \ \ BOOLEAN\ IsDesignatorRange:1;}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{//\ End\ of\ 8\ Flags\ in\ one\ byte}}
+\DoxyCodeLine{00170\ \ \ \ \ BOOLEAN\ Reserved1[3];}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ hidp\_unknown\_token\ UnknownTokens[4];\ \textcolor{comment}{//\ 4\ x\ 8\ Byte}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ USAGE\ \ UsageMin;}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ USAGE\ \ UsageMax;}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ StringMin;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ StringMax;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ DesignatorMin;}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ DesignatorMax;}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ DataIndexMin;}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ DataIndexMax;}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \}\ Range;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ USAGE\ \ Usage;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ USAGE\ \ Reserved1;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ StringIndex;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ Reserved2;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ DesignatorIndex;}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ Reserved3;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ DataIndex;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ USHORT\ Reserved4;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \}\ NotRange;}
+\DoxyCodeLine{00195\ \ \ \ \ \};}
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ LONG\ \ \ \ LogicalMin;}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ LONG\ \ \ \ LogicalMax;}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \}\ Button;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ BOOLEAN\ HasNull;}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ UCHAR\ \ \ Reserved4[3];}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ LONG\ \ \ \ LogicalMin;}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ LONG\ \ \ \ LogicalMax;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ LONG\ \ \ \ PhysicalMin;}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ LONG\ \ \ \ PhysicalMax;}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \}\ NotButton;}
+\DoxyCodeLine{00209\ \ \ \ \ \};}
+\DoxyCodeLine{00210\ \ \ \ \ ULONG\ \ \ Units;}
+\DoxyCodeLine{00211\ \ \ \ \ ULONG\ \ \ UnitsExp;}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \}\ hid\_pp\_cap,\ *phid\_pp\_cap;}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structhidp__preparsed__data__}{hidp\_preparsed\_data\_}}\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ UCHAR\ MagicKey[8];}
+\DoxyCodeLine{00217\ \ \ \ \ USAGE\ Usage;}
+\DoxyCodeLine{00218\ \ \ \ \ USAGE\ UsagePage;}
+\DoxyCodeLine{00219\ \ \ \ \ USHORT\ Reserved[2];}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{comment}{//\ CAPS\ structure\ for\ Input,\ Output\ and\ Feature}}
+\DoxyCodeLine{00222\ \ \ \ \ hid\_pp\_caps\_info\ caps\_info[3];}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ USHORT\ FirstByteOfLinkCollectionArray;}
+\DoxyCodeLine{00225\ \ \ \ \ USHORT\ NumberLinkCollectionNodes;}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#ifndef\ \_MSC\_VER}}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{//\ MINGW\ fails\ with:\ Flexible\ array\ member\ in\ union\ not\ supported}}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{comment}{//\ Solution:\ https://gcc.gnu.org/onlinedocs/gcc/Zero-\/Length.html}}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#ifdef\ HAVE\_GCC\_DIAGNOSTIC\_PRAGMA}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ push}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ ignored\ "{}-\/Wpedantic"{}}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ hid\_pp\_cap\ caps[0];}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ hid\_pp\_link\_collection\_node\ LinkCollectionArray[0];}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#ifdef\ HAVE\_GCC\_DIAGNOSTIC\_PRAGMA}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#pragma\ GCC\ diagnostic\ pop}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00240\ \ \ \ \ \};}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ hid\_pp\_cap\ caps[];}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ hid\_pp\_link\_collection\_node\ LinkCollectionArray[];}
+\DoxyCodeLine{00245\ \ \ \ \ \};}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \}\ hidp\_preparsed\_data;}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#pragma\ warning(pop)}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

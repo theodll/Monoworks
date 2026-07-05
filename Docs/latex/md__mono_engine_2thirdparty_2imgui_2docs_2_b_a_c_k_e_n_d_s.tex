@@ -1,0 +1,381 @@
+\chapter{BACKENDS }
+\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s}{}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s}\index{BACKENDS@{BACKENDS}}
+{\itshape (You may browse this at \href{https://github.com/ocornut/imgui/blob/master/docs/BACKENDS.md}{\texttt{https:\+/\+/\+github.\+com/\+ocornut/\+imgui/\+blob/\+master/\+docs/\+\+BACKENDS.\+md}} or view this file with any Markdown viewer)}\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md512}{}\doxysection{\texorpdfstring{Dear Im\+Gui:\+ Backends}{Dear Im\+Gui:\+ Backends}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md512}
+\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md513}{}\doxysubsection{\texorpdfstring{Index}{Index}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md513}
+
+\begin{DoxyItemize}
+\item IntroductionIntroduction
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Getting StartedGetting Started
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item What are Backends?What are Backends?
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Using standard BackendsUsing standard Backends
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Using third-\/party BackendsUsing third-\/party Backends
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Writing your own BackendWriting your own \doxylink{class_backend}{Backend}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Using a custom engine?Using a custom engine?
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Platform:\+ Implementing your Platform BackendPlatform:\+ Implementing your Platform \doxylink{class_backend}{Backend}
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Rendering:\+ Implementing your Render\+Draw\+Data functionRendering:\+ Implementing your Render\+Draw\+Data function
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Rendering:\+ Adding support for \`{}\+Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures\`{} (1.92+)Rendering:\+ Adding support for {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures} (1.\+92+)
+\end{DoxyItemize}\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md514}{}\doxysubsection{\texorpdfstring{Introduction}{Introduction}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md514}
+\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md515}{}\doxysubsubsection{\texorpdfstring{Getting Started}{Getting Started}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md515}
+💡 The {\bfseries{\href{https://github.com/ocornut/imgui/wiki/Getting-Started}{\texttt{Getting Started}} wiki guide}} has examples of how to integrate Dear Im\+Gui into an existing application. ~\newline
+ The \href{https://github.com/ocornut/imgui/blob/master/docs/EXAMPLES.md}{\texttt{EXAMPLES.\+MD}} documentation may also be worth a read.\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md516}{}\doxysubsubsection{\texorpdfstring{What are Backends?}{What are Backends?}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md516}
+Dear Im\+Gui is highly portable and only requires a few things to run and render, typically:\+
+
+
+\begin{DoxyItemize}
+\item Required:\+ providing mouse/\+keyboard inputs (fed into the {\ttfamily \doxylink{struct_im_gui_i_o}{Im\+Gui\+IO}} structure).
+\item Required:\+ creating, updating and destroying textures.
+\item Required:\+ rendering indexed textured triangles with a clipping rectangle.
+\end{DoxyItemize}
+
+Extra features are opt-\/in, our backends try to support as many as possible:\+
+
+
+\begin{DoxyItemize}
+\item Optional:\+ custom texture binding support.
+\item Optional:\+ clipboard support.
+\item Optional:\+ gamepad support.
+\item Optional:\+ mouse cursor shape support.
+\item Optional:\+ IME support.
+\item Optional:\+ multi-\/viewports support. etc.
+\end{DoxyItemize}
+
+This is essentially what each backend is doing + obligatory portability cruft. Using standard backends ensure you can get all those features including the ones that would be harder to implement on your side (e.\+g. multi-\/viewports support).
+
+It is important to understand the difference between the core Dear Im\+Gui library (files in the root folder) and the backends which we are describing here (backends/\+ folder).
+
+
+\begin{DoxyItemize}
+\item Some issues may only be backend or platform specific.
+\item You should be able to write backends for pretty much any platform and any 3D graphics API. e.\+g. you can get creative and use software rendering or render remotely on a different machine.
+\end{DoxyItemize}\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md517}{}\doxysubsection{\texorpdfstring{Using standard Backends}{Using standard Backends}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md517}
+{\bfseries{The \href{https://github.com/ocornut/imgui/blob/master/backends}{\texttt{backends/\+}} folder contains backends for popular platforms/\+graphics API, which you can use in your application or engine to easily integrate Dear Im\+Gui.}} Each backend is typically self-\/contained in a pair of files:\+ imgui\+\_\+impl\+\_\+\+XXXX.\+cpp + imgui\+\_\+impl\+\_\+\+XXXX.\+h.
+
+
+\begin{DoxyItemize}
+\item The \textquotesingle{}Platform\textquotesingle{} backends are in charge of:\+ mouse/\+keyboard/\+gamepad inputs, cursor shape, timing, and windowing.~\newline
+ e.\+g. Windows (\href{https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_win32.cpp}{\texttt{imgui\+\_\+impl\+\_\+win32.\+cpp}}), SDL3 (\href{https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_sdl3.cpp}{\texttt{imgui\+\_\+impl\+\_\+sdl3.\+cpp}}), GLFW (\href{https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_glfw.cpp}{\texttt{imgui\+\_\+impl\+\_\+glfw.\+cpp}}), etc.
+\item The \textquotesingle{}Renderer\textquotesingle{} backends are in charge of:\+ creating atlas texture, and rendering imgui draw data.~\newline
+ e.\+g. Direct\+X11 (\href{https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_dx11.cpp}{\texttt{imgui\+\_\+impl\+\_\+dx11.\+cpp}}), Open\+GL/\+\+Web\+GL (\href{https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_opengl3.cpp}{\texttt{imgui\+\_\+impl\+\_\+opengl3.\+cpp}}), Vulkan (\href{https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_vulkan.cpp}{\texttt{imgui\+\_\+impl\+\_\+vulkan.\+cpp}}), etc.
+\item For some high-\/level frameworks, a single backend usually handles both \textquotesingle{}Platform\textquotesingle{} and \textquotesingle{}Renderer\textquotesingle{} parts.~\newline
+ e.\+g. Allegro 5 (\href{https://github.com/ocornut/imgui/blob/master/backends/imgui_impl_allegro5.cpp}{\texttt{imgui\+\_\+impl\+\_\+allegro5.\+cpp}}). If you end up creating a custom backend for your engine, you may want to do the same.
+\end{DoxyItemize}
+
+An application usually combines one Platform backend + one Renderer backend + main Dear Im\+Gui sources. For example, the \href{https://github.com/ocornut/imgui/tree/master/examples/example_win32_directx11}{\texttt{example\+\_\+win32\+\_\+directx11}} application combines imgui\+\_\+impl\+\_\+win32.\+cpp + imgui\+\_\+impl\+\_\+dx11.\+cpp. There are 20+ examples in the \href{https://github.com/ocornut/imgui/blob/master/examples/}{\texttt{examples/\+}} folder. See \href{https://github.com/ocornut/imgui/blob/master/docs/EXAMPLES.md}{\texttt{EXAMPLES.\+MD}} for details.
+
+{\bfseries{Once Dear Im\+Gui is setup and running, run and refer to {\ttfamily Im\+Gui::\+\+Show\+Demo\+Window()} in imgui\+\_\+demo.\+cpp for usage of the end-\/user API.}}\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md518}{}\doxysubsubsection{\texorpdfstring{List of standard Backends}{List of standard Backends}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md518}
+In the \href{https://github.com/ocornut/imgui/blob/master/backends}{\texttt{backends/\+}} folder:\+
+
+List of Platforms Backends:\+ \begin{DoxyVerb}imgui_impl_android.cpp      ; Android native app API
+imgui_impl_glfw.cpp         ; GLFW (Windows, macOS, Linux, etc.) http://www.glfw.org/
+imgui_impl_osx.mm           ; macOS native API (not as feature complete as glfw/sdl backends)
+imgui_impl_sdl2.cpp         ; SDL2 (Windows, macOS, Linux, iOS, Android) https://www.libsdl.org
+imgui_impl_sdl3.cpp         ; SDL3 (Windows, macOS, Linux, iOS, Android) https://www.libsdl.org
+imgui_impl_win32.cpp        ; Win32 native API (Windows)
+imgui_impl_glut.cpp         ; GLUT/FreeGLUT (this is prehistoric software and absolutely not recommended today!)
+\end{DoxyVerb}
+
+
+List of Renderer Backends:\+ \begin{DoxyVerb}imgui_impl_dx9.cpp          ; DirectX9
+imgui_impl_dx10.cpp         ; DirectX10
+imgui_impl_dx11.cpp         ; DirectX11
+imgui_impl_dx12.cpp         ; DirectX12
+imgui_impl_metal.mm         ; Metal (ObjC or C++)
+imgui_impl_metal4.mm        ; Metal 4 (ObjC or C++)
+imgui_impl_opengl2.cpp      ; OpenGL 2 (legacy fixed pipeline. Don't use with modern OpenGL code!)
+imgui_impl_opengl3.cpp      ; OpenGL 3/4, OpenGL ES 2/3, WebGL
+imgui_impl_sdlgpu3.cpp      ; SDL_GPU (portable 3D graphics API of SDL3)
+imgui_impl_sdlrenderer2.cpp ; SDL_Renderer (optional component of SDL2 available from SDL 2.0.18+)
+imgui_impl_sdlrenderer3.cpp ; SDL_Renderer (optional component of SDL3. Prefer using SDL_GPU!).
+imgui_impl_vulkan.cpp       ; Vulkan
+imgui_impl_wgpu.cpp         ; WebGPU (web + desktop)
+\end{DoxyVerb}
+
+
+List of high-\/level Frameworks Backends (combining Platform + Renderer):\+ \begin{DoxyVerb}imgui_impl_allegro5.cpp
+imgui_impl_null.cpp
+\end{DoxyVerb}
+
+
+Emscripten is also supported! The SDL2+\+GL, SDL3+\+GL, GLFW+\+GL and GLFW+\+Web\+GPU examples are all ready to build and run with Emscripten.\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md519}{}\doxysubsubsection{\texorpdfstring{Recommended Backends}{Recommended Backends}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md519}
+If you are not sure which backend to use, the recommended platform/\+frameworks for portable applications:\+
+
+
+\begin{DoxyTable}{4}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Library  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Website  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}\doxylink{class_backend}{Backend}  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Note  \\
+SDL3  &\href{https://www.libsdl.org}{\texttt{https:\+/\+/\+www.\+libsdl.\+org}}  &imgui\+\_\+impl\+\_\+sdl3.\+cpp  &Recommended  \\
+SDL2  &\href{https://www.libsdl.org}{\texttt{https:\+/\+/\+www.\+libsdl.\+org}}  &imgui\+\_\+impl\+\_\+sdl2.\+cpp  &\\
+GLFW  &\href{https://github.com/glfw/glfw}{\texttt{https:\+/\+/\+github.\+com/\+glfw/\+glfw}}  &imgui\+\_\+impl\+\_\+glfw.\+cpp  &\\
+Sokol  &\href{https://github.com/floooh/sokol}{\texttt{https:\+/\+/\+github.\+com/\+floooh/\+sokol}}  &\href{https://github.com/floooh/sokol/blob/master/util/sokol_imgui.h}{\texttt{util/\+sokol\+\_\+imgui.\+h}}  &Lower-\/level than GLFW/\+\+SDL  \\
+\end{DoxyTable}
+
+
+If your application runs on Windows or if you are using multi-\/viewport, the win32 backend handles some details a little better than other backends.\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md520}{}\doxysubsection{\texorpdfstring{Using third-\/party Backends}{Using third-\/party Backends}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md520}
+See \href{https://github.com/ocornut/imgui/wiki/Bindings}{\texttt{https:\+/\+/\+github.\+com/\+ocornut/\+imgui/\+wiki/\+\+Bindings}} for the full list (e.\+g. Adventure Game Studio, Cinder, Cocos2d-\/x, Game Maker Studio2, Godot, LÖ\+VE+\+LUA, Magnum, Monogame, Ogre, open\+Frameworks, Open\+Scene\+Graph, SFML, Sokol, Unity, Unreal Engine and many others).\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md521}{}\doxysubsection{\texorpdfstring{Writing your own Backend}{Writing your own Backend}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md521}
+\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md522}{}\doxysubsubsection{\texorpdfstring{Using a custom engine?}{Using a custom engine?}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md522}
+You will likely be tempted to start by rewrite your own backend using your own custom/\+high-\/level facilities...~\newline
+ Think twice!
+
+TL;DR;
+\begin{DoxyItemize}
+\item Writing your own Renderer \doxylink{class_backend}{Backend} is easy.
+\item Writing your own Platform \doxylink{class_backend}{Backend} is harder and you are more likely to introduce bugs.
+\item {\bfseries{It is unlikely you will add value to your project by creating your own backend.}}
+\end{DoxyItemize}
+
+{\bfseries{Consider using the existing backends as-\/is}}. You will save lots of time integrating the library. Standard backends are battle-\/tested and handle subtleties that you are likely to implement incorrectly. You can LATER decide to rewrite yourself a custom backend if you really need to. In most situations, custom backends have fewer features and more bugs than the standard backends we provide. If you want portability, you can use multiple backends and choose between them either at compile time or at runtime.
+
+{\bfseries{Example A}}:\+ your engine is built over Windows + Direct\+X11 but you have your own high-\/level rendering system layered over Direct\+X11.~\newline
+ Suggestion:\+ try using imgui\+\_\+impl\+\_\+win32.\+cpp + imgui\+\_\+impl\+\_\+dx11.\+cpp first. Once it works, if you really need it, you can replace the imgui\+\_\+impl\+\_\+dx11.\+cpp code with a custom renderer using your own rendering functions, and keep using the standard Win32 code etc.
+
+{\bfseries{Example B}}:\+ your engine runs on Windows, Mac, Linux and uses Direct\+X11, Metal, and Vulkan respectively.~\newline
+ Suggestion:\+ use multiple generic backends! Once it works, if you really need it, you can replace parts of backends with your own abstractions.
+
+{\bfseries{Example C}}:\+ your engine runs on platforms we can\textquotesingle{}t provide public backends for (e.\+g. PS4/\+\+PS5, Switch), and you have high-\/level systems everywhere.~\newline
+ Suggestion:\+ try using a non-\/portable backend first (e.\+g. win32 + underlying graphics API) to get your desktop builds working first. This will get you running faster and get your acquainted with how Dear Im\+Gui works and is setup. You can then rewrite a custom backend using your own engine API...
+
+Also:\+ The \href{https://github.com/ocornut/imgui/wiki/Multi-Viewports}{\texttt{multi-\/viewports feature}} of the \textquotesingle{}docking\textquotesingle{} branch allows Dear Im\+Gui windows to be seamlessly detached from the main application window. This is achieved using an extra layer to the Platform and Renderer backends, which allows Dear Im\+Gui to communicate platform-\/specific requests such as:\+ "{}create an additional OS window"{}, "{}create a render context"{}, "{}get the OS position of this window"{}, but some things are more difficult "{}find OS window under mouse position BUT with some windows marked as passthrough"{}. See \textquotesingle{}\doxylink{struct_im_gui_platform_i_o}{Im\+Gui\+Platform\+IO}\textquotesingle{} for details. Supporting the multi-\/viewports feature correctly using 100\% of your own abstractions is more difficult than supporting single-\/viewport. If you decide to use unmodified imgui\+\_\+impl\+\_\+\+XXXX.\+cpp files, you can automatically benefit from improvements and fixes related to viewports and platform windows without extra work on your side.\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md523}{}\doxysubsubsection{\texorpdfstring{Platform:\+ Implementing your Platform Backend}{Platform:\+ Implementing your Platform Backend}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md523}
+The Platform backends in impl\+\_\+impl\+\_\+\+XXX.\+cpp files contain many implementations.
+
+{\bfseries{In your {\ttfamily Im\+Gui\+\_\+\+Impl\+XXX\+\_\+\+Init()} function:\+}}
+\begin{DoxyItemize}
+\item You can allocate your backend data and use {\ttfamily io.\+Backend\+Platform\+User\+Data} to store/\+retrieve it later.
+\item Set {\ttfamily io.\+Backend\+Platform\+Name} to a name {\ttfamily "{}imgui\+\_\+impl\+\_\+xxxx"{}} which will be available in e.\+g. About box.
+\item Set {\ttfamily io.\+Backend\+Platform\+User\+Data} to your backend data.
+\item Set {\ttfamily io.\+Backend\+Flags} with supported optional features:\+
+\begin{DoxyItemize}
+\item {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Has\+Gamepad}:\+ supports gamepad and currently has one connected.
+\item {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Has\+Mouse\+Cursors}:\+ supports honoring Get\+Mouse\+Cursor() value to change the OS cursor shape.
+\item {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Has\+Set\+Mouse\+Pos}:\+ supports io.\+Want\+Set\+Mouse\+Pos requests to reposition the OS mouse position (only used if io.\+Config\+Nav\+Move\+Set\+Mouse\+Pos is set).
+\item {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Platform\+Has\+Viewports} supports multiple viewports. (multi-\/viewports only)
+\item {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Has\+Mouse\+Hovered\+Viewport} supports calling io.\+Add\+Mouse\+Viewport\+Event() with the viewport under the mouse. IF POSSIBLE, ignore viewports with the Im\+Gui\+Viewport\+Flags\+\_\+\+No\+Inputs flag. If this cannot be done, Dear Im\+Gui needs to use a flawed heuristic to find the viewport under mouse position, as it doesn\textquotesingle{}t know about foreign windows. (multi-\/viewports only)
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+{\bfseries{In your {\ttfamily Im\+Gui\+\_\+\+Impl\+XXX\+\_\+\+New\+Frame()} function:\+}}
+\begin{DoxyItemize}
+\item Set {\ttfamily io.\+Delta\+Time} to the time elapsed (in seconds) since last frame.
+\item Set {\ttfamily io.\+Display\+Size} to your window size.
+\item Set {\ttfamily io.\+Display\+Frame\+Buffer\+Size} to your window pixel density (mac\+OS/\+i\+OS only).
+\item Update mouse cursor shape is supported.
+\end{DoxyItemize}
+
+{\bfseries{In your {\ttfamily Im\+Gui\+\_\+\+Impl\+XXX\+\_\+\+New\+Frame()} function or event handlers:\+}}
+\begin{DoxyItemize}
+\item {\bfseries{Mouse Support}}
+\begin{DoxyItemize}
+\item Use {\ttfamily io.\+Add\+Mouse\+Pos\+Event()}, {\ttfamily io.\+Add\+Mouse\+Button\+Event()}, {\ttfamily io.\+Add\+Mouse\+Wheel\+Event()} to pass mouse events.
+\item Use {\ttfamily io.\+Add\+Mouse\+Source\+Event()} if you are able to distinguish Mouse from Touch\+Screen from \doxylink{struct_pen}{Pen} inputs. Touch\+Screen and \doxylink{struct_pen}{Pen} inputs requires different logic for some Dear Im\+Gui features.
+\item Use {\ttfamily io.\+Add\+Mouse\+Viewport\+Event()} to specify which viewport/\+\+OS window is being hovered by the mouse. Read instructions carefully as this is not as simple as it seems! (multi-\/viewports only)
+\end{DoxyItemize}
+\item {\bfseries{Keyboard Support}}
+\begin{DoxyItemize}
+\item Use {\ttfamily io.\+Add\+Key\+Event()} to pass key events.
+\item Use {\ttfamily io.\+Add\+Input\+Character()} to pass text/\+character events.
+\end{DoxyItemize}
+\item {\bfseries{Gamepad Support}}
+\begin{DoxyItemize}
+\item Use {\ttfamily io.\+Add\+Key\+Event()} and {\ttfamily io.\+Add\+Key\+Analog\+Event()} to pass gamepad events, using {\ttfamily Im\+Gui\+Key\+\_\+\+Gamepad\+XXX} values.
+\end{DoxyItemize}
+\item {\bfseries{Miscellaneous}}
+\begin{DoxyItemize}
+\item Clipboard Support:\+ setup {\ttfamily Platform\+\_\+\+Get\+Clipboard\+Text\+Fn()}, {\ttfamily Platform\+\_\+\+Set\+Clipboard\+Text\+Fn()} handlers in {\ttfamily \doxylink{struct_im_gui_platform_i_o}{Im\+Gui\+Platform\+IO}}.
+\item Open in Shell support:\+ setup {\ttfamily Platform\+\_\+\+Open\+In\+Shell\+Fn()} handler in {\ttfamily \doxylink{struct_im_gui_platform_i_o}{Im\+Gui\+Platform\+IO}}.
+\item IME Support:\+ setup {\ttfamily Platform\+\_\+\+Set\+Ime\+Data\+Fn()} handler in {\ttfamily \doxylink{struct_im_gui_platform_i_o}{Im\+Gui\+Platform\+IO}}.
+\item Use {\ttfamily io.\+Add\+Focus\+Event()} to notify when application window gets focused/\+unfocused.
+\end{DoxyItemize}
+\item {\bfseries{Multi-\/viewport Support}}
+\begin{DoxyItemize}
+\item Update monitor list if supported.
+\item Setup all required handlers in {\ttfamily \doxylink{struct_im_gui_platform_i_o}{Im\+Gui\+Platform\+IO}} to create/\+destroy/\+move/\+resize/\+title/\+focus/\+etc. windows.
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md524}{}\doxysubsubsection{\texorpdfstring{Rendering:\+ Implementing your Render\+Draw\+Data function}{Rendering:\+ Implementing your Render\+Draw\+Data function}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md524}
+Note:\+ set {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Vtx\+Offset} to signify your backend can handle rendering with a vertex offset ({\ttfamily Im\+Draw\+Cmd::\+\+Vtx\+Offset} field). Otherwise, rendering will be limited to 64K vertices per window, which may be limiting for advanced plot. As an alternative, you may also use {\ttfamily \#define Im\+Draw\+Idx unsigned int} in your {\ttfamily \doxylink{imconfig_8h_source}{imconfig.\+h}} file to support 32-\/bit indices.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void}\ MyImGuiBackend\_RenderDrawData(\doxymbox{\hyperlink{struct_im_draw_data}{ImDrawData}}*\ draw\_data)}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ TODO:\ Update\ textures.}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ Most\ of\ the\ times,\ the\ list\ will\ have\ 1\ element\ with\ an\ OK\ status,\ aka\ nothing\ to\ do.}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ This\ almost\ always\ points\ to\ ImGui::GetPlatformIO().Textures[]\ but\ is\ part\ of\ ImDrawData\ to\ allow\ overriding\ or\ disabling\ texture\ updates.}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (draw\_data-\/>Textures\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\doxymbox{\hyperlink{struct_im_texture_data}{ImTextureData}}*\ tex\ :\ *draw\_data-\/>Textures)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tex-\/>Status\ !=\ ImTextureStatus\_OK)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MyImGuiBackend\_UpdateTexture(tex);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ TODO:\ Setup\ render\ state:}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ Alpha-\/blending\ enabled}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ No\ backface\ culling}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ No\ depth\ testing,\ no\ depth\ writing}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ Scissor\ enabled}}
+\DoxyCodeLine{\ \ \ \ MyEngineSetupenderState();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ TODO:\ Setup\ texture\ sampling\ state}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ Sample\ with\ bilinear\ filtering\ (NOT\ point/nearest\ filtering).}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ -\/\ Use\ 'io.Fonts-\/>Flags\ |=\ ImFontAtlasFlags\_NoBakedLines;'\ to\ allow\ point/nearest\ filtering.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ TODO:\ Setup\ viewport\ covering\ draw\_data-\/>DisplayPos\ to\ draw\_data-\/>DisplayPos\ +\ draw\_data-\/>DisplaySize}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ TODO:\ Setup\ orthographic\ projection\ matrix\ cover\ draw\_data-\/>DisplayPos\ to\ draw\_data-\/>DisplayPos\ +\ draw\_data-\/>DisplaySize}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ TODO:\ Setup\ shader:\ vertex\ \{\ float2\ pos,\ float2\ uv,\ u32\ color\ \},\ fragment\ shader\ sample\ color\ from\ 1\ texture,\ multiply\ by\ vertex\ color.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ Render\ command\ lists}}
+\DoxyCodeLine{\ \ \ \ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\ clip\_off\ =\ draw\_data-\/>DisplayPos;}
+\DoxyCodeLine{\ \ \ \ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\ clip\_scale\ =\ draw\_data-\/>FramebufferScale;}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_draw_list}{ImDrawList}}*\ draw\_list\ :\ draw\_data-\/>CmdLists)}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_draw_vert}{ImDrawVert}}*\ vtx\_buffer\ =\ cmd\_list-\/>VtxBuffer.Data;\ \ \textcolor{comment}{//\ vertex\ buffer\ generated\ by\ Dear\ ImGui}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ImDrawIdx*\ idx\_buffer\ =\ cmd\_list-\/>IdxBuffer.Data;\ \ \ \textcolor{comment}{//\ index\ buffer\ generated\ by\ Dear\ ImGui}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ cmd\_i\ =\ 0;\ cmd\_i\ <\ cmd\_list-\/>CmdBuffer.Size;\ cmd\_i++)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_draw_cmd}{ImDrawCmd}}*\ pcmd\ =\ \&cmd\_list-\/>CmdBuffer[cmd\_i];}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pcmd-\/>UserCallback)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (pcmd-\/>UserCallback\ ==\ platform\_io.DrawCallback\_ResetRenderState)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MyEngineSetupSenderState();}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pcmd-\/>UserCallback(cmd\_list,\ pcmd);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Project\ scissor/clipping\ rectangles\ into\ framebuffer\ space}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Clipping\ coordinates\ are\ provided\ in\ imgui\ coordinates\ space:}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ For\ a\ given\ viewport,\ draw\_data-\/>DisplayPos\ ==\ viewport-\/>Pos\ and\ draw\_data-\/>DisplaySize\ ==\ viewport-\/>Size}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ In\ a\ single\ viewport\ application,\ draw\_data-\/>DisplayPos\ ==\ (0,0)\ and\ draw\_data-\/>DisplaySize\ ==\ io.DisplaySize,\ but\ always\ use\ GetMainViewport()-\/>Pos/Size\ instead\ of\ hardcoding\ those\ values.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ In\ the\ interest\ of\ supporting\ multi-\/viewport\ applications\ (see\ 'docking'\ branch\ on\ github),}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ always\ subtract\ draw\_data-\/>DisplayPos\ from\ clipping\ bounds\ to\ convert\ them\ to\ your\ viewport\ space.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Note\ that\ pcmd-\/>ClipRect\ contains\ Min+Max\ bounds.\ Some\ graphics\ API\ may\ use\ Min+Max,\ other\ may\ use\ Min+Size\ (size\ being\ Max-\/Min)}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\ clip\_min((pcmd-\/>ClipRect.x\ -\/\ clip\_off.x)\ *\ clip\_scale.x,\ (pcmd-\/>ClipRect.y\ -\/\ clip\_off.y)\ *\ clip\_scale.y);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\ clip\_max((pcmd-\/>ClipRect.z\ -\/\ clip\_off.x)\ *\ clip\_scale.x,\ (pcmd-\/>ClipRect.w\ -\/\ clip\_off.y)\ *\ clip\_scale.y);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (clip\_max.x\ <=\ clip\_min.x\ ||\ clip\_max.y\ <=\ clip\_min.y)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ are\ using\ scissoring\ to\ clip\ some\ objects.\ All\ low-\/level\ graphics\ API\ should\ support\ it.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ If\ your\ engine\ doesn't\ support\ scissoring\ yet,\ you\ may\ ignore\ this\ at\ first.\ You\ will\ get\ some\ small\ glitches}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ (some\ elements\ visible\ outside\ their\ bounds)\ but\ you\ can\ fix\ that\ once\ everything\ else\ works!}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MyEngineSetScissor(clip\_min.x,\ clip\_min.y,\ clip\_max.x,\ clip\_max.y);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ texture\ for\ the\ draw\ call\ is\ specified\ by\ pcmd-\/>GetTexID().}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ vast\ majority\ of\ draw\ calls\ will\ use\ the\ Dear\ ImGui\ texture\ atlas,\ which\ value\ you\ have\ set\ yourself\ during\ initialization.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MyEngineBindTexture((MyTexture*)pcmd-\/>GetTexID());}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Render\ 'pcmd-\/>ElemCount/3'\ indexed\ triangles.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ By\ default\ the\ indices\ ImDrawIdx\ are\ 16-\/bit,\ you\ can\ change\ them\ to\ 32-\/bit\ in\ imconfig.h\ if\ your\ engine\ doesn't\ support\ 16-\/bit\ indices.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MyEngineDrawIndexedTriangles(pcmd-\/>ElemCount,\ \textcolor{keyword}{sizeof}(ImDrawIdx)\ ==\ 2\ ?\ GL\_UNSIGNED\_SHORT\ :\ GL\_UNSIGNED\_INT,\ idx\_buffer\ +\ pcmd-\/>IdxOffset,\ vtx\_buffer,\ pcmd-\/>VtxOffset);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md525}{}\doxysubsubsection{\texorpdfstring{Rendering:\+ Adding support for {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures} (1.\+92+)}{Rendering:\+ Adding support for {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures} (1.\+92+)}}\label{md__mono_engine_2thirdparty_2imgui_2docs_2_b_a_c_k_e_n_d_s_autotoc_md525}
+Version \href{https://github.com/ocornut/imgui/releases/tag/v1.92.0}{\texttt{1.\+92.\+0}} (June 2025), added texture support in Rendering Backends, which is the backbone for supporting dynamic font scaling among other things.
+
+{\bfseries{In order to move forward and take advantage of all new features, support for {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures} will likely be REQUIRED for all backends before June 2026.}}
+
+{\ttfamily \doxylink{struct_im_font_atlas}{Im\+Font\+Atlas}} functions such as {\ttfamily Build()}, {\ttfamily Get\+Tex\+Data\+As\+RGBA32()}, {\ttfamily Get\+Tex\+Data\+As\+Alpha8()}, {\ttfamily Set\+Tex\+ID()}, {\ttfamily Is\+Built()} were obsoleted in favor if iterating a {\ttfamily Textures\+[]\+} array and updating their state when requested by Dear Im\+Gui.
+
+{\bfseries{TD;DR:\+ List of commits which added support for {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures} in standard backends:\+}}
+
+
+\begin{DoxyItemize}
+\item Allegro5:\+ \href{https://github.com/ocornut/imgui/commit/ee8941e}{\texttt{ee8941e}} (+35 lines)
+\item Direct\+X9:\+ \href{https://github.com/ocornut/imgui/commit/75efba7}{\texttt{75efba7}} (+48 lines)
+\item Direct\+X10:\+ \href{https://github.com/ocornut/imgui/commit/2d2b1bc}{\texttt{2d2b1bc}} (+40 lines)
+\item Direct\+X11:\+ \href{https://github.com/ocornut/imgui/commit/372fd27}{\texttt{372fd27}} (+40 lines)
+\item Direct\+X12:\+ \href{https://github.com/ocornut/imgui/commit/eefe5d5}{\texttt{eefe5d5}} (+87 lines)
+\item Metal:\+ \href{https://github.com/ocornut/imgui/commit/26c017d}{\texttt{26c017d}} (+55 lines)
+\item Open\+GL Legacy:\+ \href{https://github.com/ocornut/imgui/commit/0430c55}{\texttt{0430c55}} (+25 lines)
+\item Open\+GL3/\+\+Web\+GL/\+\+ES:\+ \href{https://github.com/ocornut/imgui/commit/dbb91a5}{\texttt{dbb91a5}} (+47 lines)
+\item SDL\+\_\+\+Renderer2:\+ \href{https://github.com/ocornut/imgui/commit/9fa65cd}{\texttt{9fa65cd}} (+20 lines)
+\item SDL\+\_\+\+Renderer3:\+ \href{https://github.com/ocornut/imgui/commit/e538883}{\texttt{e538883}} (+19 lines)
+\item SDL\+\_\+\+GPU:\+ \href{https://github.com/ocornut/imgui/commit/16fe666}{\texttt{16fe666}} (+41 lines)
+\item Vulkan:\+ \href{https://github.com/ocornut/imgui/commit/abe294b}{\texttt{abe294b}} (+33 lines)
+\item WGPU:\+ \href{https://github.com/ocornut/imgui/commit/571dae9}{\texttt{571dae9}} (+30 lines)
+\end{DoxyItemize}
+
+{\bfseries{Instructions:\+}}
+
+
+\begin{DoxyItemize}
+\item Set {\ttfamily Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures} to signify your backend can handle the feature.
+\item During rendering, e.\+g. in your Render\+Draw\+Data function, iterate {\ttfamily Im\+Draw\+Data-\/\texorpdfstring{$>$}{>}Textures} array and process all textures.
+\item During shutdown, iterate the {\ttfamily Im\+Gui::\+\+Get\+Platform\+IO().Textures} and destroy all textures.
+\item (Both arrays are {\ttfamily \doxylink{struct_im_vector}{Im\+Vector}\texorpdfstring{$<$}{<}Im\+Texture\+Data\texorpdfstring{$\ast$}{*}\texorpdfstring{$>$}{>}}. They are only in different location because:\+ to allow advanced users to perform multi-\/threaded rendering, we store a pointer to the texture list in \doxylink{struct_im_draw_data}{Im\+Draw\+Data}, with the aim that multi-\/threaded rendering users replace it with their own pointer.)
+\end{DoxyItemize}
+
+Pseudo-\/code for processing a texture:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordflow}{if}\ (draw\_data-\/>Textures\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{for}\ (\doxymbox{\hyperlink{struct_im_texture_data}{ImTextureData}}*\ tex\ :\ *draw\_data-\/>Textures)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tex-\/>Status\ !=\ ImTextureStatus\_OK)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ MyImGuiBackend\_UpdateTexture(tex);}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void}\ MyImGuiBackend\_UpdateTexture(\doxymbox{\hyperlink{struct_im_texture_data}{ImTextureData}}*\ tex)}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (tex-\/>Status\ ==\ ImTextureStatus\_WantCreate)}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Create\ texture\ based\ on\ tex-\/>Width,\ tex-\/>Height.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Most\ backends\ only\ support\ tex-\/>Format\ ==\ ImTextureFormat\_RGBA32.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Backends\ for\ particularly\ memory\ constrained\ platforms\ may\ support\ tex-\/>Format\ ==\ ImTextureFormat\_Alpha8.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Upload\ all\ texture\ pixels}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Read\ from\ our\ CPU-\/side\ copy\ of\ the\ texture\ and\ copy\ to\ your\ graphics\ API.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Use\ tex-\/>Width,\ tex-\/>Height,\ tex-\/>GetPixels(),\ tex-\/>GetPixelsAt(),\ tex-\/>GetPitch()\ as\ needed.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Store\ your\ data,\ and\ acknowledge\ creation.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tex-\/>SetTexID(xxxx);\ \textcolor{comment}{//\ Specify\ backend-\/specific\ ImTextureID\ identifier\ which\ will\ be\ stored\ in\ ImDrawCmd.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tex-\/>SetStatus(ImTextureStatus\_OK);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tex-\/>BackendUserData\ =\ xxxx;\ \textcolor{comment}{//\ Store\ more\ backend\ data\ if\ needed\ (most\ backend\ allocate\ a\ small\ texture\ to\ store\ data\ in\ there)}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (tex-\/>Status\ ==\ ImTextureStatus\_WantUpdates)}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Upload\ a\ rectangle\ of\ pixels\ to\ the\ existing\ texture}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ We\ only\ ever\ write\ to\ textures\ regions\ which\ have\ never\ been\ used\ before!}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Use\ tex-\/>TexID\ or\ tex-\/>BackendUserData\ to\ retrieve\ your\ stored\ data.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Use\ tex-\/>UpdateRect.x/y,\ tex-\/>UpdateRect.w/h\ to\ obtain\ the\ block\ position\ and\ size.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ -\/\ Use\ tex-\/>Updates[]\ to\ obtain\ individual\ sub-\/regions\ within\ tex-\/>UpdateRect.\ Not\ recommended.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Read\ from\ our\ CPU-\/side\ copy\ of\ the\ texture\ and\ copy\ to\ your\ graphics\ API.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Use\ tex-\/>Width,\ tex-\/>Height,\ tex-\/>GetPixels(),\ tex-\/>GetPixelsAt(),\ tex-\/>GetPitch()\ as\ needed.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Acknowledge\ update}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tex-\/>SetStatus(ImTextureStatus\_OK);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (tex-\/>Status\ ==\ ImTextureStatus\_WantDestroy\ \&\&\ tex-\/>UnusedFrames\ >\ 0)}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ you\ use\ staged\ rendering\ and\ have\ in-\/flight\ renders,\ changed\ tex-\/>UnusedFrames\ >\ 0\ check\ to\ higher\ count\ as\ needed\ e.g.\ >\ 2}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Destroy\ texture}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Use\ tex-\/>TexID\ or\ tex-\/>BackendUserData\ to\ retrieve\ your\ stored\ data.}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/\ Destroy\ texture\ in\ your\ graphics\ API.}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Acknowledge\ destruction}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tex-\/>SetTexID(ImTextureID\_Invalid);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ tex-\/>SetStatus(ImTextureStatus\_Destroyed);}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ Refer to "{}\+List of commits which added support for \`{}\+Im\+Gui\+Backend\+Flags\+\_\+\+Renderer\+Has\+Textures\`{} in standard backends"{} above for concrete examples of this. 

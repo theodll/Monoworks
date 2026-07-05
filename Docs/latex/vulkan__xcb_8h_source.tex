@@ -1,0 +1,66 @@
+\doxysection{vulkan\+\_\+xcb.\+h}
+\hypertarget{vulkan__xcb_8h_source}{}\label{vulkan__xcb_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_xcb.h@{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_xcb.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_XCB\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VULKAN\_XCB\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ 2015-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ Vulkan\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ VK\_KHR\_xcb\_surface\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ VK\_KHR\_xcb\_surface\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ VK\_KHR\_XCB\_SURFACE\_SPEC\_VERSION\ \ \ 6}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ VK\_KHR\_XCB\_SURFACE\_EXTENSION\_NAME\ "{}VK\_KHR\_xcb\_surface"{}}}
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ VkFlags\ VkXcbSurfaceCreateFlagsKHR;}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_xcb_surface_create_info_k_h_r}{VkXcbSurfaceCreateInfoKHR}}\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00030\ \ \ \ \ VkXcbSurfaceCreateFlagsKHR\ \ \ \ flags;}
+\DoxyCodeLine{00031\ \ \ \ \ xcb\_connection\_t*\ \ \ \ \ \ \ \ \ \ \ \ \ connection;}
+\DoxyCodeLine{00032\ \ \ \ \ xcb\_window\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ window;}
+\DoxyCodeLine{00033\ \}\ \doxymbox{\hyperlink{struct_vk_xcb_surface_create_info_k_h_r}{VkXcbSurfaceCreateInfoKHR}};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkCreateXcbSurfaceKHR)(VkInstance\ instance,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_xcb_surface_create_info_k_h_r}{VkXcbSurfaceCreateInfoKHR}}*\ pCreateInfo,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ pAllocator,\ VkSurfaceKHR*\ pSurface);}
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ VkBool32\ (VKAPI\_PTR\ *PFN\_vkGetPhysicalDeviceXcbPresentationSupportKHR)(VkPhysicalDevice\ physicalDevice,\ uint32\_t\ queueFamilyIndex,\ xcb\_connection\_t*\ connection,\ xcb\_visualid\_t\ visual\_id);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00040\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkCreateXcbSurfaceKHR(}
+\DoxyCodeLine{00041\ \ \ \ \ VkInstance\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ instance,}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_xcb_surface_create_info_k_h_r}{VkXcbSurfaceCreateInfoKHR}}*\ \ \ \ \ \ \ \ \ \ \ \ pCreateInfo,}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pAllocator,}
+\DoxyCodeLine{00044\ \ \ \ \ VkSurfaceKHR*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSurface);}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00048\ VKAPI\_ATTR\ VkBool32\ VKAPI\_CALL\ vkGetPhysicalDeviceXcbPresentationSupportKHR(}
+\DoxyCodeLine{00049\ \ \ \ \ VkPhysicalDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ physicalDevice,}
+\DoxyCodeLine{00050\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queueFamilyIndex,}
+\DoxyCodeLine{00051\ \ \ \ \ xcb\_connection\_t*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ connection,}
+\DoxyCodeLine{00052\ \ \ \ \ xcb\_visualid\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ visual\_id);}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

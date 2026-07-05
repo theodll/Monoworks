@@ -1,0 +1,340 @@
+\doxysection{dual\+\_\+quaternion.\+inl}
+\hypertarget{dual__quaternion_8inl_source}{}\label{dual__quaternion_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/dual\_quaternion.inl@{MonoEngine/thirdparty/glm/glm/gtx/dual\_quaternion.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{geometric_8hpp}{../geometric.hpp}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Component\ accesses\ -\/-\/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00011\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{typename}\ tdualquat<T,\ Q>::part\_type\ \&\ tdualquat<T,\ Q>::operator[](\textcolor{keyword}{typename}\ tdualquat<T,\ Q>::length\_type\ i)\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00012\ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ assert(i\ >=\ 0\ \&\&\ i\ <\ this-\/>length());}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&real)[i];}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00018\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ \textcolor{keyword}{typename}\ tdualquat<T,\ Q>::part\_type\ \textcolor{keyword}{const}\&\ tdualquat<T,\ Q>::operator[](\textcolor{keyword}{typename}\ tdualquat<T,\ Q>::length\_type\ i)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00019\ \ \ \ \ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ assert(i\ >=\ 0\ \&\&\ i\ <\ this-\/>length());}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\&real)[i];}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Implicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_CONFIG\_CTOR\_INIT\ ==\ GLM\_ENABLE}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ GLM\_DEFAULTED\_DEFAULT\_CTOR\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat()}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ :\ real(\doxymbox{\hyperlink{structglm_1_1qua}{qua}}<T,\ Q>())}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ dual(\doxymbox{\hyperlink{structglm_1_1qua}{qua}}<T,\ Q>::wxyz(0,\ 0,\ 0,\ 0))}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ P>}
+\DoxyCodeLine{00036\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat(tdualquat<T,\ P>\ \textcolor{keyword}{const}\&\ d)}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ :\ real(d.real)}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ ,\ dual(d.dual)}
+\DoxyCodeLine{00039\ \ \ \ \ \{\}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Explicit\ basic\ constructors\ -\/-\/}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00044\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat(qua<T,\ Q>\ \textcolor{keyword}{const}\&\ r)}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ :\ real(r),\ dual(qua<T,\ Q>::wxyz(0,\ 0,\ 0,\ 0))}
+\DoxyCodeLine{00046\ \ \ \ \ \{\}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00049\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat(qua<T,\ Q>\ \textcolor{keyword}{const}\&\ q,\ vec<3,\ T,\ Q>\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ :\ real(q),\ dual(qua<T,\ Q>::wxyz(}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ T(-\/0.5)\ *\ (\ p.x*q.x\ +\ p.y*q.y\ +\ p.z*q.z),}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ T(+0.5)\ *\ (\ p.x*q.w\ +\ p.y*q.z\ -\/\ p.z*q.y),}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ T(+0.5)\ *\ (-\/p.x*q.z\ +\ p.y*q.w\ +\ p.z*q.x),}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ T(+0.5)\ *\ (\ p.x*q.y\ -\/\ p.y*q.x\ +\ p.z*q.w)))}
+\DoxyCodeLine{00055\ \ \ \ \ \{\}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00058\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat(qua<T,\ Q>\ \textcolor{keyword}{const}\&\ r,\ qua<T,\ Q>\ \textcolor{keyword}{const}\&\ d)}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ :\ real(r),\ dual(d)}
+\DoxyCodeLine{00060\ \ \ \ \ \{\}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Conversion\ constructors\ -\/-\/}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U,\ qualifier\ P>}
+\DoxyCodeLine{00066\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat(tdualquat<U,\ P>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ :\ real(q.real)}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ ,\ dual(q.dual)}
+\DoxyCodeLine{00069\ \ \ \ \ \{\}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00072\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat(mat<2,\ 4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{structm}{m}})}
+\DoxyCodeLine{00073\ \ \ \ \ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{group__gtx__dual__quaternion_ga752ed38a7e05cea2cd8aa5936f7187dc}{dualquat\_cast}}(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00078\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ GLM\_CONSTEXPR\ tdualquat<T,\ Q>::tdualquat(mat<3,\ 4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{structm}{m}})}
+\DoxyCodeLine{00079\ \ \ \ \ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ *\textcolor{keyword}{this}\ =\ \doxymbox{\hyperlink{group__gtx__dual__quaternion_ga752ed38a7e05cea2cd8aa5936f7187dc}{dualquat\_cast}}(\doxymbox{\hyperlink{structm}{m}});}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ arithmetic\ operators\ -\/-\/}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00087\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ \&\ tdualquat<T,\ Q>::operator=(tdualquat<U,\ Q>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00088\ \ \ \ \ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ this-\/>real\ =\ q.real;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ this-\/>dual\ =\ q.dual;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00092\ \ \ \ \ \}}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00096\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ \&\ tdualquat<T,\ Q>::operator*=(U\ s)}
+\DoxyCodeLine{00097\ \ \ \ \ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ this-\/>real\ *=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(s);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ this-\/>dual\ *=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(s);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00101\ \ \ \ \ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00105\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ \&\ tdualquat<T,\ Q>::operator/=(U\ s)}
+\DoxyCodeLine{00106\ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ this-\/>real\ /=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(s);}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ this-\/>dual\ /=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(s);}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00110\ \ \ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Unary\ bit\ operators\ -\/-\/}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00115\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ operator+(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00116\ \ \ \ \ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q;}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00121\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ operator-\/(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00122\ \ \ \ \ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tdualquat<T,\ Q>(-\/q.real,\ -\/q.dual);}
+\DoxyCodeLine{00124\ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Binary\ operators\ -\/-\/}}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00129\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ operator+(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q,\ tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ p)}
+\DoxyCodeLine{00130\ \ \ \ \ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tdualquat<T,\ Q>(q.real\ +\ p.real,q.dual\ +\ p.dual);}
+\DoxyCodeLine{00132\ \ \ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00135\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ operator*(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ p,\ tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ o)}
+\DoxyCodeLine{00136\ \ \ \ \ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tdualquat<T,\ Q>(p.real\ *\ o.real,p.real\ *\ o.dual\ +\ p.dual\ *\ o.real);}
+\DoxyCodeLine{00138\ \ \ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00141\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vec<3,\ T,\ Q>\ operator*(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q,\ vec<3,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00142\ \ \ \ \ \{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ vec<3,\ T,\ Q>\ \textcolor{keyword}{const}\ real\_v3(q.real.x,q.real.y,q.real.z);}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ vec<3,\ T,\ Q>\ \textcolor{keyword}{const}\ dual\_v3(q.dual.x,q.dual.y,q.dual.z);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (cross(real\_v3,\ cross(real\_v3,v)\ +\ v\ *\ q.real.w\ +\ dual\_v3)\ +\ dual\_v3\ *\ q.real.w\ -\/\ real\_v3\ *\ q.dual.w)\ *\ T(2)\ +\ v;}
+\DoxyCodeLine{00146\ \ \ \ \ \}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00149\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vec<3,\ T,\ Q>\ operator*(vec<3,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ \ \ \ tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00150\ \ \ \ \ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__matrix_gace61e11fc177491beeca0c6971e2f3fc}{glm::inverse}}(q)\ *\ v;}
+\DoxyCodeLine{00152\ \ \ \ \ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00155\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vec<4,\ T,\ Q>\ operator*(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q,\ vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00156\ \ \ \ \ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<4,\ T,\ Q>(q\ *\ vec<3,\ T,\ Q>(v),\ v.w);}
+\DoxyCodeLine{00158\ \ \ \ \ \}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00161\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vec<4,\ T,\ Q>\ operator*(vec<4,\ T,\ Q>\ \textcolor{keyword}{const}\&\ v,\ \ \ \ tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00162\ \ \ \ \ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__matrix_gace61e11fc177491beeca0c6971e2f3fc}{glm::inverse}}(q)\ *\ v;}
+\DoxyCodeLine{00164\ \ \ \ \ \}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00167\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ operator*(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q,\ T\ \textcolor{keyword}{const}\&\ s)}
+\DoxyCodeLine{00168\ \ \ \ \ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tdualquat<T,\ Q>(q.real\ *\ s,\ q.dual\ *\ s);}
+\DoxyCodeLine{00170\ \ \ \ \ \}}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00173\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ operator*(T\ \textcolor{keyword}{const}\&\ s,\ tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00174\ \ \ \ \ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q\ *\ s;}
+\DoxyCodeLine{00176\ \ \ \ \ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00179\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ tdualquat<T,\ Q>\ operator/(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q,\ \ T\ \textcolor{keyword}{const}\&\ s)}
+\DoxyCodeLine{00180\ \ \ \ \ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tdualquat<T,\ Q>(q.real\ /\ s,\ q.dual\ /\ s);}
+\DoxyCodeLine{00182\ \ \ \ \ \}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Boolean\ operators\ -\/-\/}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00187\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ operator==(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q1,\ tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q2)}
+\DoxyCodeLine{00188\ \ \ \ \ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (q1.real\ ==\ q2.real)\ \&\&\ (q1.dual\ ==\ q2.dual);}
+\DoxyCodeLine{00190\ \ \ \ \ \}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00193\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{bool}\ operator!=(tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q1,\ tdualquat<T,\ Q>\ \textcolor{keyword}{const}\&\ q2)}
+\DoxyCodeLine{00194\ \ \ \ \ \{}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (q1.real\ !=\ q2.real)\ ||\ (q1.dual\ !=\ q2.dual);}
+\DoxyCodeLine{00196\ \ \ \ \ \}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{//\ -\/-\/\ Operations\ -\/-\/}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00201\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__dual__quaternion_ga41273c54a79788b6a4a5063f557921e4}{dual\_quat\_identity}}()}
+\DoxyCodeLine{00202\ \ \ \ \ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}(}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ qua<T,\ Q>::wxyz(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)),}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ qua<T,\ Q>::wxyz(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0),\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)));}
+\DoxyCodeLine{00206\ \ \ \ \ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00209\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \doxymbox{\hyperlink{group__core__func__geometric_ga5c6c1379961d4589035a390856f2d66c}{normalize}}(\doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00210\ \ \ \ \ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ q\ /\ length(q.real);}
+\DoxyCodeLine{00212\ \ \ \ \ \}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00215\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__quaternion__common_ga0c68ffc0d006bd3300865215dcf744c5}{lerp}}(\doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \textcolor{keyword}{const}\&\ x,\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \textcolor{keyword}{const}\&\ y,\ T\ \textcolor{keyword}{const}\&\ a)}
+\DoxyCodeLine{00216\ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dual\ Quaternion\ Linear\ blend\ aka\ DLB:}}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Lerp\ is\ only\ defined\ in\ [0,\ 1]}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ assert(a\ >=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ assert(a\ <=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1));}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ k\ =\ dot(x.real,y.real)\ <\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0)\ ?\ -\/a\ :\ a;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{group__gtc__constants_ga39c2fb227631ca25894326529bdd1ee5}{one}}(1);}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}(x\ *\ (\doxymbox{\hyperlink{group__gtc__constants_ga39c2fb227631ca25894326529bdd1ee5}{one}}\ -\/\ a)\ +\ y\ *\ k);}
+\DoxyCodeLine{00224\ \ \ \ \ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00227\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \doxymbox{\hyperlink{group__core__func__matrix_gace61e11fc177491beeca0c6971e2f3fc}{inverse}}(\doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \textcolor{keyword}{const}\&\ q)}
+\DoxyCodeLine{00228\ \ \ \ \ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1qua}{glm::qua<T,\ Q>}}\ real\ =\ \doxymbox{\hyperlink{group__ext__quaternion__common_ga7aed59d2ff2512afc860b65c80b5a8e0}{conjugate}}(q.real);}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structglm_1_1qua}{glm::qua<T,\ Q>}}\ dual\ =\ \doxymbox{\hyperlink{group__ext__quaternion__common_ga7aed59d2ff2512afc860b65c80b5a8e0}{conjugate}}(q.dual);}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}(real,\ dual\ +\ (real\ *\ (-\/2.0f\ *\ dot(real,dual))));}
+\DoxyCodeLine{00232\ \ \ \ \ \}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00235\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<2,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__dual__quaternion_ga5a0b3bf8ca6d42e6fbfd590cea3b5795}{mat2x4\_cast}}(\doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00236\ \ \ \ \ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<2,\ 4,\ T,\ Q>}}(\ x[0].x,\ x[0].y,\ x[0].z,\ x[0].w,\ x[1].x,\ x[1].y,\ x[1].z,\ x[1].w\ );}
+\DoxyCodeLine{00238\ \ \ \ \ \}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00241\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__dual__quaternion_gacd7c91027b92e07cc5596145b87027b5}{mat3x4\_cast}}(\doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00242\ \ \ \ \ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ r\ =\ x.real\ /\ \doxymbox{\hyperlink{group__gtx__norm_ga8d1789651050adb7024917984b41c3de}{length2}}(x.real);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\ rr(r.w\ *\ x.real.w,\ r.x\ *\ x.real.x,\ r.y\ *\ x.real.y,\ r.z\ *\ x.real.z);}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ r\ *=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(2);}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ xy\ =\ r.x\ *\ x.real.y;}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ xz\ =\ r.x\ *\ x.real.z;}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ yz\ =\ r.y\ *\ x.real.z;}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ wx\ =\ r.w\ *\ x.real.x;}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ wy\ =\ r.w\ *\ x.real.y;}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ wz\ =\ r.w\ *\ x.real.z;}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \textcolor{keyword}{const}\ a(}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ rr.w\ +\ rr.x\ -\/\ rr.y\ -\/\ rr.z,}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ xy\ -\/\ wz,}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ xz\ +\ wy,}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ -\/(x.dual.w\ *\ r.x\ -\/\ x.dual.x\ *\ r.w\ +\ x.dual.y\ *\ r.z\ -\/\ x.dual.z\ *\ r.y));}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \textcolor{keyword}{const}\ b(}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ xy\ +\ wz,}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ rr.w\ +\ rr.y\ -\/\ rr.x\ -\/\ rr.z,}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ yz\ -\/\ wx,}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ -\/(x.dual.w\ *\ r.y\ -\/\ x.dual.x\ *\ r.z\ -\/\ x.dual.y\ *\ r.w\ +\ x.dual.z\ *\ r.x));}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \textcolor{keyword}{const}\ c(}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ xz\ -\/\ wy,}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ yz\ +\ wx,}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ rr.w\ +\ rr.z\ -\/\ rr.x\ -\/\ rr.y,}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ -\/(x.dual.w\ *\ r.z\ +\ x.dual.x\ *\ r.y\ -\/\ x.dual.y\ *\ r.x\ -\/\ x.dual.z\ *\ r.w));}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 4,\ T,\ Q>}}(a,\ b,\ c);}
+\DoxyCodeLine{00274\ \ \ \ \ \}}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00277\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__dual__quaternion_ga752ed38a7e05cea2cd8aa5936f7187dc}{dualquat\_cast}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<2,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00278\ \ \ \ \ \{}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}(}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ qua<T,\ Q>::wxyz(\ x[0].w,\ x[0].x,\ x[0].y,\ x[0].z\ ),}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ qua<T,\ Q>::wxyz(\ x[1].w,\ x[1].x,\ x[1].y,\ x[1].z\ ));}
+\DoxyCodeLine{00282\ \ \ \ \ \}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00285\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__dual__quaternion_ga752ed38a7e05cea2cd8aa5936f7187dc}{dualquat\_cast}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00286\ \ \ \ \ \{}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ real;}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ trace\ =\ x[0].x\ +\ x[1].y\ +\ x[2].z;}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(trace\ >\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0))}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ r\ =\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(T(1)\ +\ trace);}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ invr\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ /\ r;}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ real.w\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ r;}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ real.x\ =\ (x[2].y\ -\/\ x[1].z)\ *\ invr;}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ real.y\ =\ (x[0].z\ -\/\ x[2].x)\ *\ invr;}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ real.z\ =\ (x[1].x\ -\/\ x[0].y)\ *\ invr;}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(x[0].x\ >\ x[1].y\ \&\&\ x[0].x\ >\ x[2].z)}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ r\ =\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(T(1)\ +\ x[0].x\ -\/\ x[1].y\ -\/\ x[2].z);}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ invr\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ /\ r;}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ real.x\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)*r;}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ real.y\ =\ (x[1].x\ +\ x[0].y)\ *\ invr;}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ real.z\ =\ (x[0].z\ +\ x[2].x)\ *\ invr;}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ real.w\ =\ (x[2].y\ -\/\ x[1].z)\ *\ invr;}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(x[1].y\ >\ x[2].z)}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ r\ =\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(T(1)\ +\ x[1].y\ -\/\ x[0].x\ -\/\ x[2].z);}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ invr\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ /\ r;}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ real.x\ =\ (x[1].x\ +\ x[0].y)\ *\ invr;}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ real.y\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ r;}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ real.z\ =\ (x[2].y\ +\ x[1].z)\ *\ invr;}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ real.w\ =\ (x[0].z\ -\/\ x[2].x)\ *\ invr;}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ r\ =\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(T(1)\ +\ x[2].z\ -\/\ x[0].x\ -\/\ x[1].y);}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ invr\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ /\ r;}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ real.x\ =\ (x[0].z\ +\ x[2].x)\ *\ invr;}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ real.y\ =\ (x[2].y\ +\ x[1].z)\ *\ invr;}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ real.z\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ r;}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ real.w\ =\ (x[1].x\ -\/\ x[0].y)\ *\ invr;}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ dual;}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ dual.x\ =\ \ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ (\ x[0].w\ *\ real.w\ +\ x[1].w\ *\ real.z\ -\/\ x[2].w\ *\ real.y);}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ dual.y\ =\ \ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ (-\/x[0].w\ *\ real.z\ +\ x[1].w\ *\ real.w\ +\ x[2].w\ *\ real.x);}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ dual.z\ =\ \ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ (\ x[0].w\ *\ real.y\ -\/\ x[1].w\ *\ real.x\ +\ x[2].w\ *\ real.w);}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ dual.w\ =\ -\/\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)\ *\ (\ x[0].w\ *\ real.x\ +\ x[1].w\ *\ real.y\ +\ x[2].w\ *\ real.z);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1tdualquat}{tdualquat<T,\ Q>}}(real,\ dual);}
+\DoxyCodeLine{00333\ \ \ \ \ \}}
+\DoxyCodeLine{00334\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

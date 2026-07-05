@@ -1,0 +1,108 @@
+\doxysection{SDL\+\_\+properties.\+h}
+\hypertarget{_s_d_l__properties_8h_source}{}\label{_s_d_l__properties_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_properties.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_properties.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#ifndef\ SDL\_properties\_h\_}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ SDL\_properties\_h\_}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00056\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_PropertiesID;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_PropertyType}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ SDL\_PROPERTY\_TYPE\_INVALID,}
+\DoxyCodeLine{00076\ \ \ \ \ SDL\_PROPERTY\_TYPE\_POINTER,}
+\DoxyCodeLine{00077\ \ \ \ \ SDL\_PROPERTY\_TYPE\_STRING,}
+\DoxyCodeLine{00078\ \ \ \ \ SDL\_PROPERTY\_TYPE\_NUMBER,}
+\DoxyCodeLine{00079\ \ \ \ \ SDL\_PROPERTY\_TYPE\_FLOAT,}
+\DoxyCodeLine{00080\ \ \ \ \ SDL\_PROPERTY\_TYPE\_BOOLEAN}
+\DoxyCodeLine{00081\ \}\ SDL\_PropertyType;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_NAME\_STRING\ "{}SDL.name"{}}}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetGlobalProperties(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00134\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_CreateProperties(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_CopyProperties(SDL\_PropertiesID\ src,\ SDL\_PropertiesID\ dst);}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00179\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_LockProperties(SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00192\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UnlockProperties(SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00216\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDL\_CleanupPropertyCallback)(\textcolor{keywordtype}{void}\ *userdata,\ \textcolor{keywordtype}{void}\ *value);}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00247\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetPointerPropertyWithCleanup(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{void}\ *value,\ SDL\_CleanupPropertyCallback\ cleanup,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00270\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetPointerProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{void}\ *value);}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00290\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetStringProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *value);}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00307\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetNumberProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ Sint64\ value);}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00324\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetFloatProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetBooleanProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{bool}\ value);}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00356\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_HasProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00372\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertyType\ SDLCALL\ SDL\_GetPropertyType(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00405\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_GetPointerProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{void}\ *default\_value);}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00429\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetStringProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *default\_value);}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00451\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Sint64\ SDLCALL\ SDL\_GetNumberProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ Sint64\ default\_value);}
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00473\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_GetFloatProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{float}\ default\_value);}
+\DoxyCodeLine{00474\ }
+\DoxyCodeLine{00495\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetBooleanProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keywordtype}{bool}\ default\_value);}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00509\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ClearProperty(SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00528\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDL\_EnumeratePropertiesCallback)(\textcolor{keywordtype}{void}\ *userdata,\ SDL\_PropertiesID\ props,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00546\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_EnumerateProperties(SDL\_PropertiesID\ props,\ SDL\_EnumeratePropertiesCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00564\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyProperties(SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00568\ \}}
+\DoxyCodeLine{00569\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_properties\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

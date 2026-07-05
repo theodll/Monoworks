@@ -1,0 +1,152 @@
+\doxysection{SDL\+\_\+test\+\_\+harness.\+h}
+\hypertarget{_s_d_l__test__harness_8h_source}{}\label{_s_d_l__test__harness_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_test\_harness.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_test\_harness.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ Defines\ types\ for\ test\ case\ definitions\ and\ the\ test\ execution\ harness\ API.}}
+\DoxyCodeLine{00030\ \textcolor{comment}{}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ Based\ on\ original\ GSOC\ code\ by\ Markus\ Kauppila\ <markus.kauppila@gmail.com>}}
+\DoxyCodeLine{00032\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#ifndef\ SDL\_test\_h\_arness\_h}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ SDL\_test\_h\_arness\_h}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_test\_common.h>}\ \textcolor{comment}{/*\ SDLTest\_CommonState\ */}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00041\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00043\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{/*\ !\ Definitions\ for\ test\ case\ structures\ */}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ TEST\_ENABLED\ \ 1}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ TEST\_DISABLED\ 0}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{/*\ !\ Definition\ of\ all\ the\ possible\ test\ return\ values\ of\ the\ test\ case\ method\ */}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ TEST\_ABORTED\ \ \ \ \ \ \ \ -\/1}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ TEST\_STARTED\ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ TEST\_COMPLETED\ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ TEST\_SKIPPED\ \ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{/*\ !\ Definition\ of\ all\ the\ possible\ test\ results\ for\ the\ harness\ */}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ TEST\_RESULT\_PASSED\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ TEST\_RESULT\_FAILED\ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ TEST\_RESULT\_NO\_ASSERT\ \ \ \ \ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ TEST\_RESULT\_SKIPPED\ \ \ \ \ \ \ \ \ \ \ \ \ 3}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ TEST\_RESULT\_SETUP\_FAILURE\ \ \ \ \ \ \ 4}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{comment}{/*\ !<\ Function\ pointer\ to\ a\ test\ case\ setup\ function\ (run\ before\ every\ test)\ */}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDLTest\_TestCaseSetUpFp)(\textcolor{keywordtype}{void}\ **arg);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{/*\ !<\ Function\ pointer\ to\ a\ test\ case\ function\ */}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{typedef}\ int\ (SDLCALL\ *SDLTest\_TestCaseFp)(\textcolor{keywordtype}{void}\ *arg);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{/*\ !<\ Function\ pointer\ to\ a\ test\ case\ teardown\ function\ (run\ after\ every\ test)\ */}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{typedef}\ void\ \ (SDLCALL\ *SDLTest\_TestCaseTearDownFp)(\textcolor{keywordtype}{void}\ *arg);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ *\ Holds\ information\ about\ a\ single\ test\ case.}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00075\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l_test___test_case_reference}{SDLTest\_TestCaseReference}}\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{/*\ !<\ Func2Stress\ */}}
+\DoxyCodeLine{00077\ \ \ \ \ SDLTest\_TestCaseFp\ testCase;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{/*\ !<\ Short\ name\ (or\ function\ name)\ "{}Func2Stress"{}\ */}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{/*\ !<\ Long\ name\ or\ full\ description\ "{}This\ test\ pushes\ func2()\ to\ the\ limit."{}\ */}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *description;}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{/*\ !<\ Set\ to\ TEST\_ENABLED\ or\ TEST\_DISABLED\ (test\ won't\ be\ run)\ */}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{int}\ enabled;}
+\DoxyCodeLine{00084\ \}\ \doxymbox{\hyperlink{struct_s_d_l_test___test_case_reference}{SDLTest\_TestCaseReference}};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ *\ Holds\ information\ about\ a\ test\ suite\ (multiple\ test\ cases).}}
+\DoxyCodeLine{00088\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00089\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l_test___test_suite_reference}{SDLTest\_TestSuiteReference}}\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{/*\ !<\ "{}PlatformSuite"{}\ */}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{/*\ !<\ The\ function\ that\ is\ run\ before\ each\ test.\ NULL\ skips.\ */}}
+\DoxyCodeLine{00093\ \ \ \ \ SDLTest\_TestCaseSetUpFp\ testSetUp;}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{/*\ !<\ The\ test\ cases\ that\ are\ run\ as\ part\ of\ the\ suite.\ Last\ item\ should\ be\ NULL.\ */}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l_test___test_case_reference}{SDLTest\_TestCaseReference}}\ **testCases;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{/*\ !<\ The\ function\ that\ is\ run\ after\ each\ test.\ NULL\ skips.\ */}}
+\DoxyCodeLine{00097\ \ \ \ \ SDLTest\_TestCaseTearDownFp\ testTearDown;}
+\DoxyCodeLine{00098\ \}\ \doxymbox{\hyperlink{struct_s_d_l_test___test_suite_reference}{SDLTest\_TestSuiteReference}};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ *\ Generates\ a\ random\ run\ seed\ string\ for\ the\ harness.\ The\ generated\ seed}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ *\ will\ contain\ alphanumeric\ characters\ (0-\/9A-\/Z).}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ *\ \(\backslash\)param\ buffer\ Buffer\ in\ which\ to\ generate\ the\ random\ seed.\ Must\ have\ a\ capacity\ of\ at\ least\ length\ +\ 1\ characters.}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ *\ \(\backslash\)param\ length\ Number\ of\ alphanumeric\ characters\ to\ write\ to\ buffer,\ must\ be\ >0}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ *\ \(\backslash\)returns\ A\ null-\/terminated\ seed\ string\ and\ equal\ to\ the\ in\ put\ buffer\ on\ success,\ NULL\ on\ failure}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00110\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDLTest\_GenerateRunSeed(\textcolor{keywordtype}{char}\ *buffer,\ \textcolor{keywordtype}{int}\ length);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ *\ Holds\ information\ about\ the\ execution\ of\ test\ suites.}}
+\DoxyCodeLine{00114\ \textcolor{comment}{\ *\ */}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l_test___test_suite_runner}{SDLTest\_TestSuiteRunner}}\ \doxymbox{\hyperlink{struct_s_d_l_test___test_suite_runner}{SDLTest\_TestSuiteRunner}};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ *\ Create\ a\ new\ test\ suite\ runner,\ that\ will\ execute\ the\ given\ test\ suites.}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ *\ It\ will\ register\ the\ harness\ cli\ arguments\ to\ the\ common\ SDL\ state.}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ *\ \(\backslash\)param\ state\ Common\ SDL\ state\ on\ which\ to\ register\ CLI\ arguments.}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ *\ \(\backslash\)param\ testSuites\ NULL-\/terminated\ test\ suites\ containing\ test\ cases.}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ *\ \(\backslash\)returns\ the\ test\ run\ result:\ 0\ when\ all\ tests\ passed,\ 1\ if\ any\ tests\ failed.}}
+\DoxyCodeLine{00125\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00126\ \doxymbox{\hyperlink{struct_s_d_l_test___test_suite_runner}{SDLTest\_TestSuiteRunner}}\ *\ SDLCALL\ SDLTest\_CreateTestSuiteRunner(\doxymbox{\hyperlink{struct_s_d_l_test___common_state}{SDLTest\_CommonState}}\ *state,\ \doxymbox{\hyperlink{struct_s_d_l_test___test_suite_reference}{SDLTest\_TestSuiteReference}}\ *testSuites[]);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00129\ \textcolor{comment}{\ *\ Destroy\ a\ test\ suite\ runner.}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ *\ It\ will\ unregister\ the\ harness\ cli\ arguments\ to\ the\ common\ SDL\ state.}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ \(\backslash\)param\ runner\ The\ runner\ that\ should\ be\ destroyed.}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00134\ \textcolor{keywordtype}{void}\ SDLCALL\ SDLTest\_DestroyTestSuiteRunner(\doxymbox{\hyperlink{struct_s_d_l_test___test_suite_runner}{SDLTest\_TestSuiteRunner}}\ *runner);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *\ Execute\ a\ test\ suite,\ using\ the\ configured\ run\ seed,\ execution\ key,\ filter,\ etc.}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ *\ \(\backslash\)param\ runner\ The\ runner\ that\ should\ be\ executed.}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ *\ \(\backslash\)returns\ the\ test\ run\ result:\ 0\ when\ all\ tests\ passed,\ 1\ if\ any\ tests\ failed.}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00143\ \textcolor{keywordtype}{int}\ SDLCALL\ SDLTest\_ExecuteTestSuiteRunner(\doxymbox{\hyperlink{struct_s_d_l_test___test_suite_runner}{SDLTest\_TestSuiteRunner}}\ *runner);}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00147\ \}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_test\_h\_arness\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

@@ -1,0 +1,71 @@
+\doxysection{Tracy\+Timeline\+Item\+Thread.\+hpp}
+\hypertarget{_tracy_timeline_item_thread_8hpp_source}{}\label{_tracy_timeline_item_thread_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyTimelineItemThread.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyTimelineItemThread.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYTIMELINEITEMTHREAD\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYTIMELINEITEMTHREAD\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}TracyEvent.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}TracyTimelineDraw.hpp"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}TracyTimelineItem.hpp"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }TimelineItemThread\ final\ :\ \textcolor{keyword}{public}\ TimelineItem}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00014\ \ \ \ \ TimelineItemThread(\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_thread_data}{ThreadData}}*\ plot\ );}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00017\ \ \ \ \ uint32\_t\ HeaderColor()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00018\ \ \ \ \ uint32\_t\ HeaderColorInactive()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00019\ \ \ \ \ uint32\_t\ HeaderLineColor()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ HeaderLabel()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ int64\_t\ RangeBegin()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00023\ \ \ \ \ int64\_t\ RangeEnd()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ HeaderTooltip(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ label\ )\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ HeaderExtraContents(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keywordtype}{int}\ offset,\ \textcolor{keywordtype}{float}\ labelWidth\ )\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{bool}\ DrawContents(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keywordtype}{int}\&\ offset\ )\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ DrawOverlay(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\&\ ul,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\&\ dr\ )\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ DrawExtraPopupItems()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{void}\ DrawFinished()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsEmpty()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ Preprocess(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \doxymbox{\hyperlink{classtracy_1_1_task_dispatch}{TaskDispatch}}\&\ td,\ \textcolor{keywordtype}{bool}\ visible,\ \textcolor{keywordtype}{int}\ yPos\ )\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ PreprocessGhostLevel(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_vector}{Vector<GhostZone>}}\&\ vec,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{bool}\ visible\ );}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ PreprocessZoneLevel(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_vector}{Vector}}<\doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr<ZoneEvent>}}>\&\ vec,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{bool}\ visible,\ \textcolor{keyword}{const}\ uint32\_t\ inheritedColor\ );}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Adapter,\ \textcolor{keyword}{typename}\ V>}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{int}\ PreprocessZoneLevel(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keyword}{const}\ V\&\ vec,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{bool}\ visible,\ \textcolor{keyword}{const}\ uint32\_t\ inheritedColor\ );}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ PreprocessContextSwitches(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_context_switch}{ContextSwitch}}\&\ ctxSwitch,\ \textcolor{keywordtype}{bool}\ visible\ );}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ PreprocessSamples(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_vector}{Vector<SampleData>}}\&\ vec,\ \textcolor{keywordtype}{bool}\ visible,\ \textcolor{keywordtype}{int}\ yPos\ );}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ PreprocessMessages(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_vector}{Vector}}<\doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr<MessageData>}}>\&\ vec,\ uint64\_t\ tid,\ \textcolor{keywordtype}{bool}\ visible,\ \textcolor{keywordtype}{int}\ yPos\ );}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ PreprocessLocks(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keyword}{const}\ unordered\_flat\_map<uint32\_t,\ LockMap*>\&\ locks,\ uint32\_t\ tid,\ \doxymbox{\hyperlink{classtracy_1_1_task_dispatch}{TaskDispatch}}\&\ td,\ \textcolor{keywordtype}{bool}\ visible\ );}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_thread_data}{ThreadData}}*\ m\_thread;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_ghost;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ std::vector<SamplesDraw>\ m\_samplesDraw;}
+\DoxyCodeLine{00053\ \ \ \ \ std::vector<ContextSwitchDraw>\ m\_ctxDraw;}
+\DoxyCodeLine{00054\ \ \ \ \ std::vector<TimelineDraw>\ m\_draw;}
+\DoxyCodeLine{00055\ \ \ \ \ std::vector<MessagesDraw>\ m\_msgDraw;}
+\DoxyCodeLine{00056\ \ \ \ \ std::vector<std::unique\_ptr<LockDraw>>\ m\_lockDraw;}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_depth;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_hasCtxSwitch;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_hasSamples;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_hasMessages;}
+\DoxyCodeLine{00061\ \};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

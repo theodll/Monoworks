@@ -1,0 +1,191 @@
+\doxysection{integer.\+inl}
+\hypertarget{gtx_2integer_8inl_source}{}\label{gtx_2integer_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/integer.inl@{MonoEngine/thirdparty/glm/glm/gtx/integer.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{comment}{//\ pow}}
+\DoxyCodeLine{00006\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__core__func__exponential_ga717a43207fffc8b5e8e66cf56ded5ace}{pow}}(\textcolor{keywordtype}{int}\ x,\ uint\ y)}
+\DoxyCodeLine{00007\ \ \ \ \ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(y\ ==\ 0)}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ >=\ 0\ ?\ 1\ :\ -\/1;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ result\ =\ x;}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(uint\ i\ =\ 1;\ i\ <\ y;\ ++i)}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ result\ *=\ x;}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00015\ \ \ \ \ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//\ sqrt:\ From\ Christopher\ J.\ Musial,\ An\ integer\ square\ root,\ Graphics\ Gems,\ 1990,\ page\ 387}}
+\DoxyCodeLine{00018\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(\textcolor{keywordtype}{int}\ x)}
+\DoxyCodeLine{00019\ \ \ \ \ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x\ <=\ 1)\ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ NextTrial\ =\ x\ >>\ 1;}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ CurrentAnswer;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ CurrentAnswer\ =\ NextTrial;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ NextTrial\ =\ (NextTrial\ +\ x\ /\ NextTrial)\ >>\ 1;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}(NextTrial\ <\ CurrentAnswer);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CurrentAnswer;}
+\DoxyCodeLine{00032\ \ \ \ \ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Henry\ Gordon\ Dietz:\ http://aggregate.org/MAGIC/}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedetail}{detail}}}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ones32(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ x)}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{comment}{/*\ 32-\/bit\ recursive\ reduction\ using\ SWAR...}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ \ \ \ \ \ \ \ but\ first\ step\ is\ mapping\ 2-\/bit\ values}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ \ \ \ \ \ \ \ into\ sum\ of\ 2\ 1-\/bit\ values\ in\ sneaky\ way}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ x\ -\/=\ ((x\ >>\ 1)\ \&\ 0x55555555);}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ x\ =\ (((x\ >>\ 2)\ \&\ 0x33333333)\ +\ (x\ \&\ 0x33333333));}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ x\ =\ (((x\ >>\ 4)\ +\ x)\ \&\ 0x0f0f0f0f);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ x\ +=\ (x\ >>\ 8);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ x\ +=\ (x\ >>\ 16);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}(x\ \&\ 0x0000003f);}
+\DoxyCodeLine{00049\ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{//\ Henry\ Gordon\ Dietz:\ http://aggregate.org/MAGIC/}}
+\DoxyCodeLine{00053\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ unsigned\ int\ floor\_log2(unsigned\ int\ x)}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ |=\ (x\ >>\ 1);}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ |=\ (x\ >>\ 2);}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ |=\ (x\ >>\ 4);}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ |=\ (x\ >>\ 8);}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ |=\ (x\ >>\ 16);}}
+\DoxyCodeLine{00061\ \textcolor{comment}{}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ \_detail::ones32(x)\ >>\ 1;}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00064\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ mod}}
+\DoxyCodeLine{00066\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ mod(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y)}
+\DoxyCodeLine{00067\ \ \ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ((x\ \%\ y)\ +\ y)\ \%\ y;}
+\DoxyCodeLine{00069\ \ \ \ \ \}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ factorial\ (!12\ max,\ integer\ only)}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00073\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(genType\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00074\ \ \ \ \ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ genType\ Temp\ =\ x;}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ genType\ Result;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(Result\ =\ 1;\ Temp\ >\ 1;\ -\/-\/Temp)}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ Result\ *=\ Temp;}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Result;}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00083\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ vec<2,\ T,\ Q>\ factorial(}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ vec<2,\ T,\ Q>\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00085\ \ \ \ \ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vec<2,\ T,\ Q>(}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ factorial(x.x),}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ factorial(x.y));}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00092\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00094\ \ \ \ \ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}(}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(x.x),}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(x.y),}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(x.z));}
+\DoxyCodeLine{00099\ \ \ \ \ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00102\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00104\ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}(}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(x.x),}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(x.y),}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(x.z),}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtx__integer_ga8cbd3120905f398ec321b5d1836e08fb}{factorial}}(x.w));}
+\DoxyCodeLine{00110\ \ \ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ uint\ \doxymbox{\hyperlink{group__core__func__exponential_ga717a43207fffc8b5e8e66cf56ded5ace}{pow}}(uint\ x,\ uint\ y)}
+\DoxyCodeLine{00113\ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (y\ ==\ 0)}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1u;}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ uint\ result\ =\ x;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(uint\ i\ =\ 1;\ i\ <\ y;\ ++i)}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ result\ *=\ x;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00121\ \ \ \ \ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ uint\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(uint\ x)}
+\DoxyCodeLine{00124\ \ \ \ \ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x\ <=\ 1)\ \textcolor{keywordflow}{return}\ x;}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ uint\ NextTrial\ =\ x\ >>\ 1;}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ uint\ CurrentAnswer;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ CurrentAnswer\ =\ NextTrial;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ NextTrial\ =\ (NextTrial\ +\ x\ /\ NextTrial)\ >>\ 1;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}(NextTrial\ <\ CurrentAnswer);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ CurrentAnswer;}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ uint\ mod(uint\ x,\ uint\ y)}
+\DoxyCodeLine{00140\ \ \ \ \ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ -\/\ y\ *\ (x\ /\ y);}
+\DoxyCodeLine{00142\ \ \ \ \ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{comment}{//\#if(GLM\_COMPILER\ \&\ (GLM\_COMPILER\_VC\ |\ GLM\_COMPILER\_GCC))}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{group__gtx__integer_gacbe62fd2384464c16ea30ecc4defc11c}{nlz}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ x)}
+\DoxyCodeLine{00147\ \ \ \ \ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 31u\ -\/\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\textcolor{keyword}{>}(\doxymbox{\hyperlink{group__core__func__integer_ga7e4a794d766861c70bc961630f8ef621}{findMSB}}(x));}
+\DoxyCodeLine{00149\ \ \ \ \ \}}
+\DoxyCodeLine{00150\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\#else}}
+\DoxyCodeLine{00152\ \textcolor{comment}{}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ \ \ \ //\ Hackers\ Delight:\ http://www.hackersdelight.org/HDcode/nlz.c.txt}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ \ \ \ GLM\_FUNC\_QUALIFIER\ unsigned\ int\ nlz(unsigned\ int\ x)}}
+\DoxyCodeLine{00155\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00156\ \textcolor{comment}{\ \ \ \ \ \ \ \ int\ y,\ m,\ n;}}
+\DoxyCodeLine{00157\ \textcolor{comment}{}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ \ \ \ \ \ \ \ y\ =\ -\/int(x\ >>\ 16);\ \ \ \ \ \ //\ If\ left\ half\ of\ x\ is\ 0,}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ \ \ \ \ \ \ \ m\ =\ (y\ >>\ 16)\ \&\ 16;\ \ //\ set\ n\ =\ 16.\ \ If\ left\ half}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ \ \ \ \ \ \ \ n\ =\ 16\ -\/\ m;\ \ \ \ \ \ \ \ \ \ //\ is\ nonzero,\ set\ n\ =\ 0\ and}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ =\ x\ >>\ m;\ \ \ \ \ \ \ \ \ \ //\ shift\ x\ right\ 16.}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Now\ x\ is\ of\ the\ form\ 0000xxxx.}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ \ \ \ \ \ \ \ y\ =\ x\ -\/\ 0x100;\ \ \ \ \ \ \ //\ If\ positions\ 8-\/15\ are\ 0,}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ \ \ \ \ \ \ \ m\ =\ (y\ >>\ 16)\ \&\ 8;\ \ \ //\ add\ 8\ to\ n\ and\ shift\ x\ left\ 8.}}
+\DoxyCodeLine{00165\ \textcolor{comment}{\ \ \ \ \ \ \ \ n\ =\ n\ +\ m;}}
+\DoxyCodeLine{00166\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ =\ x\ <<\ m;}}
+\DoxyCodeLine{00167\ \textcolor{comment}{}}
+\DoxyCodeLine{00168\ \textcolor{comment}{\ \ \ \ \ \ \ \ y\ =\ x\ -\/\ 0x1000;\ \ \ \ \ \ //\ If\ positions\ 12-\/15\ are\ 0,}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ \ \ \ \ \ \ \ m\ =\ (y\ >>\ 16)\ \&\ 4;\ \ \ //\ add\ 4\ to\ n\ and\ shift\ x\ left\ 4.}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ \ \ \ \ \ \ \ n\ =\ n\ +\ m;}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ =\ x\ <<\ m;}}
+\DoxyCodeLine{00172\ \textcolor{comment}{}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ \ \ \ \ \ \ \ y\ =\ x\ -\/\ 0x4000;\ \ \ \ \ \ //\ If\ positions\ 14-\/15\ are\ 0,}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ \ \ \ \ \ \ \ m\ =\ (y\ >>\ 16)\ \&\ 2;\ \ \ //\ add\ 2\ to\ n\ and\ shift\ x\ left\ 2.}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ \ \ \ \ \ \ \ n\ =\ n\ +\ m;}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ \ \ \ \ \ \ \ x\ =\ x\ <<\ m;}}
+\DoxyCodeLine{00177\ \textcolor{comment}{}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ \ \ \ \ \ \ \ y\ =\ x\ >>\ 14;\ \ \ \ \ \ \ \ \ //\ Set\ y\ =\ 0,\ 1,\ 2,\ or\ 3.}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ \ \ \ \ \ \ \ m\ =\ y\ \&\ \string~(y\ >>\ 1);\ \ \ //\ Set\ m\ =\ 0,\ 1,\ 2,\ or\ 2\ resp.}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ unsigned(n\ +\ 2\ -\/\ m);}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{00182\ \textcolor{comment}{}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\#endif//(GLM\_COMPILER)}}
+\DoxyCodeLine{00184\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00185\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

@@ -1,0 +1,63 @@
+\doxysection{Tracy\+Color.\+hpp}
+\hypertarget{profiler_2src_2profiler_2_tracy_color_8hpp_source}{}\label{profiler_2src_2profiler_2_tracy_color_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyColor.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyColor.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYCOLOR\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYCOLOR\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}../public/common/TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ uint32\_t\ GetHsvColor(\ uint64\_t\ hue,\ \textcolor{keywordtype}{int}\ value\ );}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{template}<\textcolor{keywordtype}{int}\ V\ =\ 25>}
+\DoxyCodeLine{00015\ \textcolor{keyword}{static}\ tracy\_force\_inline\ uint32\_t\ HighlightColor(\ uint32\_t\ color\ )}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{return}\ 0xFF000000\ |}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ (\ std::min<int>(\ 0xFF,\ (\ (\ (\ color\ \&\ 0x00FF0000\ )\ >>\ 16\ )\ +\ V\ )\ )\ <<\ 16\ )\ |}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ (\ std::min<int>(\ 0xFF,\ (\ (\ (\ color\ \&\ 0x0000FF00\ )\ >>\ 8\ \ )\ +\ V\ )\ )\ <<\ 8\ \ )\ |}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ (\ std::min<int>(\ 0xFF,\ (\ (\ (\ color\ \&\ 0x000000FF\ )\ \ \ \ \ \ \ )\ +\ V\ )\ )\ \ \ \ \ \ \ );}
+\DoxyCodeLine{00021\ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{static}\ tracy\_force\_inline\ uint32\_t\ DarkenColorSlightly(\ uint32\_t\ color\ )}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordflow}{return}\ 0xFF000000\ |}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x00FF0000\ )\ >>\ 16\ )\ *\ 4\ /\ 5\ )\ <<\ 16\ )\ |}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x0000FF00\ )\ >>\ 8\ \ )\ *\ 4\ /\ 5\ )\ <<\ 8\ \ )\ |}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x000000FF\ )\ \ \ \ \ \ \ )\ *\ 4\ /\ 5\ )\ \ \ \ \ \ \ );}
+\DoxyCodeLine{00029\ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{static}\ tracy\_force\_inline\ uint32\_t\ DarkenColor(\ uint32\_t\ color\ )}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{return}\ 0xFF000000\ |}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x00FF0000\ )\ >>\ 16\ )\ *\ 2\ /\ 3\ )\ <<\ 16\ )\ |}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x0000FF00\ )\ >>\ 8\ \ )\ *\ 2\ /\ 3\ )\ <<\ 8\ \ )\ |}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x000000FF\ )\ \ \ \ \ \ \ )\ *\ 2\ /\ 3\ )\ \ \ \ \ \ \ );}
+\DoxyCodeLine{00037\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{static}\ tracy\_force\_inline\ uint32\_t\ DarkenColorHalf(\ uint32\_t\ color\ )}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{return}\ 0xFF000000\ |}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x00FF0000\ )\ >>\ 16\ )\ /\ 2\ )\ <<\ 16\ )\ |}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x0000FF00\ )\ >>\ 8\ \ )\ /\ 2\ )\ <<\ 8\ \ )\ |}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x000000FF\ )\ \ \ \ \ \ \ )\ /\ 2\ )\ \ \ \ \ \ \ );}
+\DoxyCodeLine{00045\ \}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{static}\ tracy\_force\_inline\ uint32\_t\ DarkenColorMore(\ uint32\_t\ color\ )}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{return}\ 0xFF000000\ |}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x00FF0000\ )\ >>\ 16\ )\ *\ 1\ /\ 4\ )\ <<\ 16\ )\ |}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x0000FF00\ )\ >>\ 8\ \ )\ *\ 1\ /\ 4\ )\ <<\ 8\ \ )\ |}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ (\ (\ (\ (\ color\ \&\ 0x000000FF\ )\ \ \ \ \ \ \ )\ *\ 1\ /\ 4\ )\ \ \ \ \ \ \ );}
+\DoxyCodeLine{00053\ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,36 @@
+\chapter{Nokia N-\/\+Gage }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage}\index{Nokia N-\/Gage@{Nokia N-\/Gage}}
+\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage_autotoc_md1420}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage_autotoc_md1420}%
+
+
+SDL port for the Nokia N-\/\+Gage \href{https://github.com/ngagesdk/ngage-toolchain}{\texttt{Homebrew toolchain}} contributed by:\+
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/mupfdev}{\texttt{Michael Fitzmayer}}
+\item \href{https://github.com/madebr}{\texttt{Anonymous Maarten}}
+\end{DoxyItemize}
+
+Many thanks to:\+
+
+
+\begin{DoxyItemize}
+\item icculus and slouken for always making room for us, even when we show up in 2025 still waving the N-\/\+Gage flag.
+\item The Nokia N-\/\+Gage \href{https://discord.gg/dbUzqJ26vs}{\texttt{Discord community}} who keeps the platform alive.
+\item The staff and supporters of the \href{https://www.vapriikki.fi/nayttelyt/fantastinen-floppi/}{\texttt{Suomen pelimuseo}}, and to Heikki Jungmann, for their ongoing love and dedication for the Nokia N-\/\+Gage -- you guys are awesome!
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage_autotoc_md1421}{}\doxysection{\texorpdfstring{History}{History}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage_autotoc_md1421}
+When SDL support was discontinued due to the lack of C99 support at the time, this version was rebuilt from the ground up after resolving the compiler issues.
+
+In contrast to the earlier SDL2 port, this version features a dedicated rendering backend and a functional, albeit limited, audio interface. Support for the software renderer has been removed.
+
+The outcome is a significantly leaner and more efficient SDL port, which we hope will breathe new life into this beloved yet obscure platform.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage_autotoc_md1422}{}\doxysection{\texorpdfstring{Existing Issues and Limitations}{Existing Issues and Limitations}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ngage_autotoc_md1422}
+
+\begin{DoxyItemize}
+\item For now, the new \href{https://wiki.libsdl.org/SDL3/README-main-functions\#main-callbacks-in-sdl3}{\texttt{SDL3 main callbacks}} are not optional and must be used. This is important as the callbacks are optional on other platforms.
+\item If the application is put in the background while sound is playing, some of the audio is looped until the app is back in focus.
+\item It is recommended initialising SDLs audio sub-\/system even when it is not required. The backend is started at a higher level. Initialising SDLs audio sub-\/system ensures that the backend is properly deinitialised.
+\item Because the audio sample rate can change during phone calls, the sample rate is currently fixed at 8k\+Hz to ensure stable behavior. Although dynamically adjusting the sample rate is theoretically possible, the current implementation doesn\textquotesingle{}t support it yet. This limitation is expected to be resolved in a future update.
+\item Dependency tracking is currently non-\/functional.
+\item The compiler doesn\textquotesingle{}t support aggregate initialization for structs, so each field must be assigned explicitly. 
+\end{DoxyItemize}

@@ -1,0 +1,1536 @@
+\doxysection{eglext.\+h}
+\hypertarget{eglext_8h_source}{}\label{eglext_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/EGL/eglext.h@{MonoRuntime/extern/sdl/src/video/khronos/EGL/eglext.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_eglext\_h\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_eglext\_h\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00005\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00009\ \textcolor{comment}{**\ Copyright\ 2013-\/2020\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ EGL\ XML\ API\ Registry.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{**\ The\ current\ version\ of\ the\ Registry,\ generator\ scripts}}
+\DoxyCodeLine{00014\ \textcolor{comment}{**\ used\ to\ make\ the\ header,\ and\ the\ header\ can\ be\ found\ at}}
+\DoxyCodeLine{00015\ \textcolor{comment}{**\ \ \ http://www.khronos.org/registry/egl}}
+\DoxyCodeLine{00016\ \textcolor{comment}{**}}
+\DoxyCodeLine{00017\ \textcolor{comment}{**\ Khronos\ \$Git\ commit\ SHA1:\ e80a2e0050\ \$\ on\ \$Git\ commit\ date:\ 2026-\/03-\/19\ 06:21:49\ +0100\ \$}}
+\DoxyCodeLine{00018\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <EGL/eglplatform.h>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ EGL\_EGLEXT\_VERSION\ 20260319}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*\ Generated\ C\ header\ for:}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ *\ API:\ egl}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ *\ Versions\ considered:\ .*}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ *\ Versions\ emitted:\ \_nomatch\_\string^}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ *\ Default\ extensions\ included:\ egl}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ *\ Additional\ extensions\ included:\ \_nomatch\_\string^}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ *\ Extensions\ removed:\ \_nomatch\_\string^}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_cl\_event}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_cl\_event\ 1}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ EGL\_CL\_EVENT\_HANDLE\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x309C}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CL\_EVENT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30FE}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CL\_EVENT\_COMPLETE\_KHR\ \ \ \ 0x30FF}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_cl\_event\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_cl\_event2}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_cl\_event2\ 1}}
+\DoxyCodeLine{00042\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLSyncKHR;}
+\DoxyCodeLine{00043\ \textcolor{keyword}{typedef}\ intptr\_t\ EGLAttribKHR;}
+\DoxyCodeLine{00044\ \textcolor{keyword}{typedef}\ EGLSyncKHR\ (EGLAPIENTRYP\ PFNEGLCREATESYNC64KHRPROC)\ (EGLDisplay\ dpy,\ EGLenum\ type,\ \textcolor{keyword}{const}\ EGLAttribKHR\ *attrib\_list);}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00046\ EGLAPI\ EGLSyncKHR\ EGLAPIENTRY\ eglCreateSync64KHR\ (EGLDisplay\ dpy,\ EGLenum\ type,\ \textcolor{keyword}{const}\ EGLAttribKHR\ *attrib\_list);}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_cl\_event2\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_client\_get\_all\_proc\_addresses}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_client\_get\_all\_proc\_addresses\ 1}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_client\_get\_all\_proc\_addresses\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_config\_attribs}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_config\_attribs\ 1}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ EGL\_CONFORMANT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3042}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ EGL\_VG\_COLORSPACE\_LINEAR\_BIT\_KHR\ \ 0x0020}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ EGL\_VG\_ALPHA\_FORMAT\_PRE\_BIT\_KHR\ \ \ 0x0040}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_config\_attribs\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_context\_flush\_control}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_context\_flush\_control\ 1}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_RELEASE\_BEHAVIOR\_NONE\_KHR\ 0}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_RELEASE\_BEHAVIOR\_KHR\ \ 0x2097}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_RELEASE\_BEHAVIOR\_FLUSH\_KHR\ 0x2098}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_context\_flush\_control\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_create\_context}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_create\_context\ 1}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_MAJOR\_VERSION\_KHR\ \ \ \ \ 0x3098}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_MINOR\_VERSION\_KHR\ \ \ \ \ 0x30FB}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_FLAGS\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30FC}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_PROFILE\_MASK\_KHR\ 0x30FD}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_RESET\_NOTIFICATION\_STRATEGY\_KHR\ 0x31BD}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ EGL\_NO\_RESET\_NOTIFICATION\_KHR\ \ \ \ \ 0x31BE}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ EGL\_LOSE\_CONTEXT\_ON\_RESET\_KHR\ \ \ \ \ 0x31BF}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_DEBUG\_BIT\_KHR\ \ 0x00000001}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_FORWARD\_COMPATIBLE\_BIT\_KHR\ 0x00000002}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_ROBUST\_ACCESS\_BIT\_KHR\ 0x00000004}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_CORE\_PROFILE\_BIT\_KHR\ 0x00000001}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_COMPATIBILITY\_PROFILE\_BIT\_KHR\ 0x00000002}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ EGL\_OPENGL\_ES3\_BIT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x00000040}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_create\_context\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_create\_context\_no\_error}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_create\_context\_no\_error\ 1}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_NO\_ERROR\_KHR\ \ \ 0x31B3}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_create\_context\_no\_error\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_debug}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_debug\ 1}}
+\DoxyCodeLine{00092\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLLabelKHR;}
+\DoxyCodeLine{00093\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLObjectKHR;}
+\DoxyCodeLine{00094\ \textcolor{keyword}{typedef}\ void\ (EGLAPIENTRY\ \ *EGLDEBUGPROCKHR)(EGLenum\ error,\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *command,EGLint\ messageType,EGLLabelKHR\ threadLabel,EGLLabelKHR\ objectLabel,\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ message);}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ EGL\_OBJECT\_THREAD\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x33B0}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ EGL\_OBJECT\_DISPLAY\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x33B1}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ EGL\_OBJECT\_CONTEXT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x33B2}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ EGL\_OBJECT\_SURFACE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x33B3}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ EGL\_OBJECT\_IMAGE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x33B4}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ EGL\_OBJECT\_SYNC\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x33B5}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ EGL\_OBJECT\_STREAM\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x33B6}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ EGL\_DEBUG\_MSG\_CRITICAL\_KHR\ \ \ \ \ \ \ \ 0x33B9}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ EGL\_DEBUG\_MSG\_ERROR\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x33BA}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ EGL\_DEBUG\_MSG\_WARN\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x33BB}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ EGL\_DEBUG\_MSG\_INFO\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x33BC}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ EGL\_DEBUG\_CALLBACK\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x33B8}}
+\DoxyCodeLine{00107\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLDEBUGMESSAGECONTROLKHRPROC)\ (EGLDEBUGPROCKHR\ callback,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00108\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDEBUGKHRPROC)\ (EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00109\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLLABELOBJECTKHRPROC)\ (EGLDisplay\ display,\ EGLenum\ objectType,\ EGLObjectKHR\ object,\ EGLLabelKHR\ label);}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00111\ EGLAPI\ EGLint\ EGLAPIENTRY\ eglDebugMessageControlKHR\ (EGLDEBUGPROCKHR\ callback,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00112\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDebugKHR\ (EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00113\ EGLAPI\ EGLint\ EGLAPIENTRY\ eglLabelObjectKHR\ (EGLDisplay\ display,\ EGLenum\ objectType,\ EGLObjectKHR\ \textcolor{keywordtype}{object},\ EGLLabelKHR\ label);}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_debug\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_display\_reference}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_display\_reference\ 1}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ EGL\_TRACK\_REFERENCES\_KHR\ \ \ \ \ \ \ \ \ \ 0x3352}}
+\DoxyCodeLine{00120\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDISPLAYATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ EGLint\ name,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00122\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDisplayAttribKHR\ (EGLDisplay\ dpy,\ EGLint\ name,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_display\_reference\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_fence\_sync}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_fence\_sync\ 1}}
+\DoxyCodeLine{00128\ \textcolor{keyword}{typedef}\ khronos\_utime\_nanoseconds\_t\ EGLTimeKHR;}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#ifdef\ KHRONOS\_SUPPORT\_INT64}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_PRIOR\_COMMANDS\_COMPLETE\_KHR\ 0x30F0}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CONDITION\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x30F8}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_FENCE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30F9}}
+\DoxyCodeLine{00133\ \textcolor{keyword}{typedef}\ EGLSyncKHR\ (EGLAPIENTRYP\ PFNEGLCREATESYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLenum\ type,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00134\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYSYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync);}
+\DoxyCodeLine{00135\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLCLIENTWAITSYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ flags,\ EGLTimeKHR\ timeout);}
+\DoxyCodeLine{00136\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETSYNCATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00138\ EGLAPI\ EGLSyncKHR\ EGLAPIENTRY\ eglCreateSyncKHR\ (EGLDisplay\ dpy,\ EGLenum\ type,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00139\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglDestroySyncKHR\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync);}
+\DoxyCodeLine{00140\ EGLAPI\ EGLint\ EGLAPIENTRY\ eglClientWaitSyncKHR\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ flags,\ EGLTimeKHR\ timeout);}
+\DoxyCodeLine{00141\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetSyncAttribKHR\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ KHRONOS\_SUPPORT\_INT64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_fence\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_get\_all\_proc\_addresses}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_get\_all\_proc\_addresses\ 1}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_get\_all\_proc\_addresses\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_gl\_colorspace}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_gl\_colorspace\ 1}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x309D}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_SRGB\_KHR\ \ \ \ \ \ \ \ 0x3089}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_LINEAR\_KHR\ \ \ \ \ \ 0x308A}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_gl\_colorspace\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_gl\_renderbuffer\_image}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_gl\_renderbuffer\_image\ 1}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ EGL\_GL\_RENDERBUFFER\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x30B9}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_gl\_renderbuffer\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_gl\_texture\_2D\_image}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_gl\_texture\_2D\_image\ 1}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_2D\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30B1}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_LEVEL\_KHR\ \ \ \ \ \ \ \ \ \ 0x30BC}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_gl\_texture\_2D\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_gl\_texture\_3D\_image}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_gl\_texture\_3D\_image\ 1}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_3D\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30B2}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_ZOFFSET\_KHR\ \ \ \ \ \ \ \ 0x30BD}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_gl\_texture\_3D\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_gl\_texture\_cubemap\_image}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_gl\_texture\_cubemap\_image\ 1}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_CUBE\_MAP\_POSITIVE\_X\_KHR\ 0x30B3}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_CUBE\_MAP\_NEGATIVE\_X\_KHR\ 0x30B4}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_CUBE\_MAP\_POSITIVE\_Y\_KHR\ 0x30B5}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_CUBE\_MAP\_NEGATIVE\_Y\_KHR\ 0x30B6}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_CUBE\_MAP\_POSITIVE\_Z\_KHR\ 0x30B7}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ EGL\_GL\_TEXTURE\_CUBE\_MAP\_NEGATIVE\_Z\_KHR\ 0x30B8}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_gl\_texture\_cubemap\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_image}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_image\ 1}}
+\DoxyCodeLine{00186\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLImageKHR;}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_PIXMAP\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30B0}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ EGL\_NO\_IMAGE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLImageKHR,0)}}
+\DoxyCodeLine{00189\ \textcolor{keyword}{typedef}\ EGLImageKHR\ (EGLAPIENTRYP\ PFNEGLCREATEIMAGEKHRPROC)\ (EGLDisplay\ dpy,\ EGLContext\ ctx,\ EGLenum\ target,\ EGLClientBuffer\ buffer,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00190\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYIMAGEKHRPROC)\ (EGLDisplay\ dpy,\ EGLImageKHR\ image);}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00192\ EGLAPI\ EGLImageKHR\ EGLAPIENTRY\ eglCreateImageKHR\ (EGLDisplay\ dpy,\ EGLContext\ ctx,\ EGLenum\ target,\ EGLClientBuffer\ buffer,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00193\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglDestroyImageKHR\ (EGLDisplay\ dpy,\ EGLImageKHR\ image);}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_image\_base}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_image\_base\ 1}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ EGL\_IMAGE\_PRESERVED\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x30D2}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_image\_base\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_image\_pixmap}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_image\_pixmap\ 1}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_image\_pixmap\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_lock\_surface}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_lock\_surface\ 1}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ EGL\_READ\_SURFACE\_BIT\_KHR\ \ \ \ \ \ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ EGL\_WRITE\_SURFACE\_BIT\_KHR\ \ \ \ \ \ \ \ \ 0x0002}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ EGL\_LOCK\_SURFACE\_BIT\_KHR\ \ \ \ \ \ \ \ \ \ 0x0080}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ EGL\_OPTIMAL\_FORMAT\_BIT\_KHR\ \ \ \ \ \ \ \ 0x0100}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ EGL\_MATCH\_FORMAT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3043}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ EGL\_FORMAT\_RGB\_565\_EXACT\_KHR\ \ \ \ \ \ 0x30C0}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ EGL\_FORMAT\_RGB\_565\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x30C1}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ EGL\_FORMAT\_RGBA\_8888\_EXACT\_KHR\ \ \ \ 0x30C2}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ EGL\_FORMAT\_RGBA\_8888\_KHR\ \ \ \ \ \ \ \ \ \ 0x30C3}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ EGL\_MAP\_PRESERVE\_PIXELS\_KHR\ \ \ \ \ \ \ 0x30C4}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ EGL\_LOCK\_USAGE\_HINT\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x30C5}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_POINTER\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x30C6}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_PITCH\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30C7}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_ORIGIN\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30C8}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_PIXEL\_RED\_OFFSET\_KHR\ \ \ 0x30C9}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_PIXEL\_GREEN\_OFFSET\_KHR\ 0x30CA}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_PIXEL\_BLUE\_OFFSET\_KHR\ \ 0x30CB}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_PIXEL\_ALPHA\_OFFSET\_KHR\ 0x30CC}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_PIXEL\_LUMINANCE\_OFFSET\_KHR\ 0x30CD}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ EGL\_LOWER\_LEFT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30CE}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ EGL\_UPPER\_LEFT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30CF}}
+\DoxyCodeLine{00229\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLLOCKSURFACEKHRPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00230\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLUNLOCKSURFACEKHRPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface);}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00232\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglLockSurfaceKHR\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00233\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglUnlockSurfaceKHR\ (EGLDisplay\ dpy,\ EGLSurface\ surface);}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_lock\_surface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_lock\_surface2}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_lock\_surface2\ 1}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ EGL\_BITMAP\_PIXEL\_SIZE\_KHR\ \ \ \ \ \ \ \ \ 0x3110}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_lock\_surface2\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_lock\_surface3}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_lock\_surface3\ 1}}
+\DoxyCodeLine{00244\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSURFACE64KHRPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ attribute,\ EGLAttribKHR\ *value);}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00246\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQuerySurface64KHR\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ attribute,\ EGLAttribKHR\ *value);}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_lock\_surface3\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_mutable\_render\_buffer}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_mutable\_render\_buffer\ 1}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ EGL\_MUTABLE\_RENDER\_BUFFER\_BIT\_KHR\ 0x1000}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_mutable\_render\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_no\_config\_context}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_no\_config\_context\ 1}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ EGL\_NO\_CONFIG\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLConfig,0)}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_no\_config\_context\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_partial\_update}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_partial\_update\ 1}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ EGL\_BUFFER\_AGE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x313D}}
+\DoxyCodeLine{00263\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSETDAMAGEREGIONKHRPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ *rects,\ EGLint\ n\_rects);}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00265\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSetDamageRegionKHR\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ *rects,\ EGLint\ n\_rects);}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_partial\_update\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_platform\_android}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_platform\_android\ 1}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_ANDROID\_KHR\ \ \ \ \ \ \ \ \ \ 0x3141}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_platform\_android\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_platform\_gbm}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_platform\_gbm\ 1}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_GBM\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D7}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_platform\_gbm\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_platform\_wayland}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_platform\_wayland\ 1}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_WAYLAND\_KHR\ \ \ \ \ \ \ \ \ \ 0x31D8}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_platform\_wayland\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_platform\_x11}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_platform\_x11\ 1}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_X11\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D5}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_X11\_SCREEN\_KHR\ \ \ \ \ \ \ 0x31D6}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_platform\_x11\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_reusable\_sync}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_reusable\_sync\ 1}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#ifdef\ KHRONOS\_SUPPORT\_INT64}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_STATUS\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30F1}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ EGL\_SIGNALED\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30F2}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ EGL\_UNSIGNALED\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30F3}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#define\ EGL\_TIMEOUT\_EXPIRED\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x30F5}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ EGL\_CONDITION\_SATISFIED\_KHR\ \ \ \ \ \ \ 0x30F6}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_TYPE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30F7}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_REUSABLE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30FA}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_FLUSH\_COMMANDS\_BIT\_KHR\ \ \ 0x0001}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#define\ EGL\_FOREVER\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0xFFFFFFFFFFFFFFFFull}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#define\ EGL\_NO\_SYNC\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLSyncKHR,0)}}
+\DoxyCodeLine{00303\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSIGNALSYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLenum\ mode);}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00305\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSignalSyncKHR\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLenum\ mode);}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ KHRONOS\_SUPPORT\_INT64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_reusable\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_stream}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_stream\ 1}}
+\DoxyCodeLine{00312\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLStreamKHR;}
+\DoxyCodeLine{00313\ \textcolor{keyword}{typedef}\ khronos\_uint64\_t\ EGLuint64KHR;}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#ifdef\ KHRONOS\_SUPPORT\_INT64}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#define\ EGL\_NO\_STREAM\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLStreamKHR,0)}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#define\ EGL\_CONSUMER\_LATENCY\_USEC\_KHR\ \ \ \ \ 0x3210}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ EGL\_PRODUCER\_FRAME\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x3212}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ EGL\_CONSUMER\_FRAME\_KHR\ \ \ \ \ \ \ \ \ \ \ \ 0x3213}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3214}}
+\DoxyCodeLine{00320\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_CREATED\_KHR\ \ \ \ \ \ 0x3215}}
+\DoxyCodeLine{00321\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_CONNECTING\_KHR\ \ \ 0x3216}}
+\DoxyCodeLine{00322\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_EMPTY\_KHR\ \ \ \ \ \ \ \ 0x3217}}
+\DoxyCodeLine{00323\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_NEW\_FRAME\_AVAILABLE\_KHR\ 0x3218}}
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_OLD\_FRAME\_AVAILABLE\_KHR\ 0x3219}}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_DISCONNECTED\_KHR\ 0x321A}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#define\ EGL\_BAD\_STREAM\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x321B}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ EGL\_BAD\_STATE\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x321C}}
+\DoxyCodeLine{00328\ \textcolor{keyword}{typedef}\ EGLStreamKHR\ (EGLAPIENTRYP\ PFNEGLCREATESTREAMKHRPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00329\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYSTREAMKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00330\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLint\ value);}
+\DoxyCodeLine{00331\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSTREAMKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{00332\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSTREAMU64KHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLuint64KHR\ *value);}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00334\ EGLAPI\ EGLStreamKHR\ EGLAPIENTRY\ eglCreateStreamKHR\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00335\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglDestroyStreamKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00336\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamAttribKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLint\ value);}
+\DoxyCodeLine{00337\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryStreamKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{00338\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryStreamu64KHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLuint64KHR\ *value);}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ KHRONOS\_SUPPORT\_INT64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_stream\_attrib}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_stream\_attrib\ 1}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#ifdef\ KHRONOS\_SUPPORT\_INT64}}
+\DoxyCodeLine{00346\ \textcolor{keyword}{typedef}\ EGLStreamKHR\ (EGLAPIENTRYP\ PFNEGLCREATESTREAMATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00347\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSETSTREAMATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLAttrib\ value);}
+\DoxyCodeLine{00348\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSTREAMATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00349\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMCONSUMERACQUIREATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00350\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMCONSUMERRELEASEATTRIBKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00352\ EGLAPI\ EGLStreamKHR\ EGLAPIENTRY\ eglCreateStreamAttribKHR\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00353\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSetStreamAttribKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLAttrib\ value);}
+\DoxyCodeLine{00354\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryStreamAttribKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00355\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamConsumerAcquireAttribKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00356\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamConsumerReleaseAttribKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00358\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ KHRONOS\_SUPPORT\_INT64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00359\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\_attrib\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_stream\_consumer\_gltexture}}
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_stream\_consumer\_gltexture\ 1}}
+\DoxyCodeLine{00363\ \textcolor{preprocessor}{\#ifdef\ EGL\_KHR\_stream}}
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#define\ EGL\_CONSUMER\_ACQUIRE\_TIMEOUT\_USEC\_KHR\ 0x321E}}
+\DoxyCodeLine{00365\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00366\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMCONSUMERACQUIREKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00367\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMCONSUMERRELEASEKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00368\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00369\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamConsumerGLTextureExternalKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00370\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamConsumerAcquireKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00371\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamConsumerReleaseKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00372\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\_consumer\_gltexture\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_stream\_cross\_process\_fd}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_stream\_cross\_process\_fd\ 1}}
+\DoxyCodeLine{00378\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ EGLNativeFileDescriptorKHR;}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#ifdef\ EGL\_KHR\_stream}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#define\ EGL\_NO\_FILE\_DESCRIPTOR\_KHR\ \ \ \ \ \ \ \ EGL\_CAST(EGLNativeFileDescriptorKHR,-\/1)}}
+\DoxyCodeLine{00381\ \textcolor{keyword}{typedef}\ EGLNativeFileDescriptorKHR\ (EGLAPIENTRYP\ PFNEGLGETSTREAMFILEDESCRIPTORKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00382\ \textcolor{keyword}{typedef}\ EGLStreamKHR\ (EGLAPIENTRYP\ PFNEGLCREATESTREAMFROMFILEDESCRIPTORKHRPROC)\ (EGLDisplay\ dpy,\ EGLNativeFileDescriptorKHR\ file\_descriptor);}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00384\ EGLAPI\ EGLNativeFileDescriptorKHR\ EGLAPIENTRY\ eglGetStreamFileDescriptorKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{00385\ EGLAPI\ EGLStreamKHR\ EGLAPIENTRY\ eglCreateStreamFromFileDescriptorKHR\ (EGLDisplay\ dpy,\ EGLNativeFileDescriptorKHR\ file\_descriptor);}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\_cross\_process\_fd\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00389\ }
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_stream\_fifo}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_stream\_fifo\ 1}}
+\DoxyCodeLine{00392\ \textcolor{preprocessor}{\#ifdef\ EGL\_KHR\_stream}}
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_FIFO\_LENGTH\_KHR\ \ \ \ \ \ \ \ 0x31FC}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_TIME\_NOW\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x31FD}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_TIME\_CONSUMER\_KHR\ \ \ \ \ \ 0x31FE}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_TIME\_PRODUCER\_KHR\ \ \ \ \ \ 0x31FF}}
+\DoxyCodeLine{00397\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSTREAMTIMEKHRPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLTimeKHR\ *value);}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00399\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryStreamTimeKHR\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ attribute,\ EGLTimeKHR\ *value);}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\_fifo\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_stream\_producer\_aldatalocator}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_stream\_producer\_aldatalocator\ 1}}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#ifdef\ EGL\_KHR\_stream}}
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\_producer\_aldatalocator\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_stream\_producer\_eglsurface}}
+\DoxyCodeLine{00411\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_stream\_producer\_eglsurface\ 1}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#ifdef\ EGL\_KHR\_stream}}
+\DoxyCodeLine{00413\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_BIT\_KHR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0800}}
+\DoxyCodeLine{00414\ \textcolor{keyword}{typedef}\ EGLSurface\ (EGLAPIENTRYP\ PFNEGLCREATESTREAMPRODUCERSURFACEKHRPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00415\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00416\ EGLAPI\ EGLSurface\ EGLAPIENTRY\ eglCreateStreamProducerSurfaceKHR\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00417\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_stream\_producer\_eglsurface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_surfaceless\_context}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_surfaceless\_context\ 1}}
+\DoxyCodeLine{00423\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_surfaceless\_context\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_swap\_buffers\_with\_damage}}
+\DoxyCodeLine{00426\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_swap\_buffers\_with\_damage\ 1}}
+\DoxyCodeLine{00427\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSWAPBUFFERSWITHDAMAGEKHRPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ \textcolor{keyword}{const}\ EGLint\ *rects,\ EGLint\ n\_rects);}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00429\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSwapBuffersWithDamageKHR\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ \textcolor{keyword}{const}\ EGLint\ *rects,\ EGLint\ n\_rects);}
+\DoxyCodeLine{00430\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00431\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_swap\_buffers\_with\_damage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_vg\_parent\_image}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_vg\_parent\_image\ 1}}
+\DoxyCodeLine{00435\ \textcolor{preprocessor}{\#define\ EGL\_VG\_PARENT\_IMAGE\_KHR\ \ \ \ \ \ \ \ \ \ \ 0x30BA}}
+\DoxyCodeLine{00436\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_vg\_parent\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00437\ }
+\DoxyCodeLine{00438\ \textcolor{preprocessor}{\#ifndef\ EGL\_KHR\_wait\_sync}}
+\DoxyCodeLine{00439\ \textcolor{preprocessor}{\#define\ EGL\_KHR\_wait\_sync\ 1}}
+\DoxyCodeLine{00440\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLWAITSYNCKHRPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ flags);}
+\DoxyCodeLine{00441\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00442\ EGLAPI\ EGLint\ EGLAPIENTRY\ eglWaitSyncKHR\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync,\ EGLint\ flags);}
+\DoxyCodeLine{00443\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_KHR\_wait\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_GLES\_layers}}
+\DoxyCodeLine{00447\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_GLES\_layers\ 1}}
+\DoxyCodeLine{00448\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_GLES\_layers\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_blob\_cache}}
+\DoxyCodeLine{00451\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_blob\_cache\ 1}}
+\DoxyCodeLine{00452\ \textcolor{keyword}{typedef}\ khronos\_ssize\_t\ EGLsizeiANDROID;}
+\DoxyCodeLine{00453\ \textcolor{keyword}{typedef}\ void\ (*EGLSetBlobFuncANDROID)\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *key,\ EGLsizeiANDROID\ keySize,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *value,\ EGLsizeiANDROID\ valueSize);}
+\DoxyCodeLine{00454\ \textcolor{keyword}{typedef}\ EGLsizeiANDROID\ (*EGLGetBlobFuncANDROID)\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *key,\ EGLsizeiANDROID\ keySize,\ \textcolor{keywordtype}{void}\ *value,\ EGLsizeiANDROID\ valueSize);}
+\DoxyCodeLine{00455\ \textcolor{keyword}{typedef}\ void\ (EGLAPIENTRYP\ PFNEGLSETBLOBCACHEFUNCSANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSetBlobFuncANDROID\ set,\ EGLGetBlobFuncANDROID\ get);}
+\DoxyCodeLine{00456\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00457\ EGLAPI\ \textcolor{keywordtype}{void}\ EGLAPIENTRY\ eglSetBlobCacheFuncsANDROID\ (EGLDisplay\ dpy,\ EGLSetBlobFuncANDROID\ set,\ EGLGetBlobFuncANDROID\ get);}
+\DoxyCodeLine{00458\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00459\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_blob\_cache\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00460\ }
+\DoxyCodeLine{00461\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_create\_native\_client\_buffer}}
+\DoxyCodeLine{00462\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_create\_native\_client\_buffer\ 1}}
+\DoxyCodeLine{00463\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_USAGE\_ANDROID\ \ \ 0x3143}}
+\DoxyCodeLine{00464\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_USAGE\_PROTECTED\_BIT\_ANDROID\ 0x00000001}}
+\DoxyCodeLine{00465\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_USAGE\_RENDERBUFFER\_BIT\_ANDROID\ 0x00000002}}
+\DoxyCodeLine{00466\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_USAGE\_TEXTURE\_BIT\_ANDROID\ 0x00000004}}
+\DoxyCodeLine{00467\ \textcolor{keyword}{typedef}\ EGLClientBuffer\ (EGLAPIENTRYP\ PFNEGLCREATENATIVECLIENTBUFFERANDROIDPROC)\ (\textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00468\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00469\ EGLAPI\ EGLClientBuffer\ EGLAPIENTRY\ eglCreateNativeClientBufferANDROID\ (\textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_create\_native\_client\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_framebuffer\_target}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_framebuffer\_target\ 1}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#define\ EGL\_FRAMEBUFFER\_TARGET\_ANDROID\ \ \ \ 0x3147}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_framebuffer\_target\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_front\_buffer\_auto\_refresh}}
+\DoxyCodeLine{00479\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_front\_buffer\_auto\_refresh\ 1}}
+\DoxyCodeLine{00480\ \textcolor{preprocessor}{\#define\ EGL\_FRONT\_BUFFER\_AUTO\_REFRESH\_ANDROID\ 0x314C}}
+\DoxyCodeLine{00481\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_front\_buffer\_auto\_refresh\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00482\ }
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_get\_frame\_timestamps}}
+\DoxyCodeLine{00484\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_get\_frame\_timestamps\ 1}}
+\DoxyCodeLine{00485\ \textcolor{keyword}{typedef}\ khronos\_stime\_nanoseconds\_t\ EGLnsecsANDROID;}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#define\ EGL\_TIMESTAMP\_PENDING\_ANDROID\ \ \ \ \ EGL\_CAST(EGLnsecsANDROID,-\/2)}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ EGL\_TIMESTAMP\_INVALID\_ANDROID\ \ \ \ \ EGL\_CAST(EGLnsecsANDROID,-\/1)}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#define\ EGL\_TIMESTAMPS\_ANDROID\ \ \ \ \ \ \ \ \ \ \ \ 0x3430}}
+\DoxyCodeLine{00489\ \textcolor{preprocessor}{\#define\ EGL\_COMPOSITE\_DEADLINE\_ANDROID\ \ \ \ 0x3431}}
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#define\ EGL\_COMPOSITE\_INTERVAL\_ANDROID\ \ \ \ 0x3432}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#define\ EGL\_COMPOSITE\_TO\_PRESENT\_LATENCY\_ANDROID\ 0x3433}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#define\ EGL\_REQUESTED\_PRESENT\_TIME\_ANDROID\ 0x3434}}
+\DoxyCodeLine{00493\ \textcolor{preprocessor}{\#define\ EGL\_RENDERING\_COMPLETE\_TIME\_ANDROID\ 0x3435}}
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\#define\ EGL\_COMPOSITION\_LATCH\_TIME\_ANDROID\ 0x3436}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#define\ EGL\_FIRST\_COMPOSITION\_START\_TIME\_ANDROID\ 0x3437}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#define\ EGL\_LAST\_COMPOSITION\_START\_TIME\_ANDROID\ 0x3438}}
+\DoxyCodeLine{00497\ \textcolor{preprocessor}{\#define\ EGL\_FIRST\_COMPOSITION\_GPU\_FINISHED\_TIME\_ANDROID\ 0x3439}}
+\DoxyCodeLine{00498\ \textcolor{preprocessor}{\#define\ EGL\_DISPLAY\_PRESENT\_TIME\_ANDROID\ \ 0x343A}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#define\ EGL\_DEQUEUE\_READY\_TIME\_ANDROID\ \ \ \ 0x343B}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#define\ EGL\_READS\_DONE\_TIME\_ANDROID\ \ \ \ \ \ \ 0x343C}}
+\DoxyCodeLine{00501\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETCOMPOSITORTIMINGSUPPORTEDANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ name);}
+\DoxyCodeLine{00502\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETCOMPOSITORTIMINGANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ numTimestamps,\ \ \textcolor{keyword}{const}\ EGLint\ *names,\ EGLnsecsANDROID\ *values);}
+\DoxyCodeLine{00503\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETNEXTFRAMEIDANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLuint64KHR\ *frameId);}
+\DoxyCodeLine{00504\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETFRAMETIMESTAMPSUPPORTEDANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ timestamp);}
+\DoxyCodeLine{00505\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETFRAMETIMESTAMPSANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLuint64KHR\ frameId,\ EGLint\ numTimestamps,\ \ \textcolor{keyword}{const}\ EGLint\ *timestamps,\ EGLnsecsANDROID\ *values);}
+\DoxyCodeLine{00506\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00507\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetCompositorTimingSupportedANDROID\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ name);}
+\DoxyCodeLine{00508\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetCompositorTimingANDROID\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ numTimestamps,\ \ \textcolor{keyword}{const}\ EGLint\ *names,\ EGLnsecsANDROID\ *values);}
+\DoxyCodeLine{00509\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetNextFrameIdANDROID\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLuint64KHR\ *frameId);}
+\DoxyCodeLine{00510\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetFrameTimestampSupportedANDROID\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ timestamp);}
+\DoxyCodeLine{00511\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetFrameTimestampsANDROID\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLuint64KHR\ frameId,\ EGLint\ numTimestamps,\ \ \textcolor{keyword}{const}\ EGLint\ *timestamps,\ EGLnsecsANDROID\ *values);}
+\DoxyCodeLine{00512\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00513\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_get\_frame\_timestamps\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_get\_native\_client\_buffer}}
+\DoxyCodeLine{00516\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_get\_native\_client\_buffer\ 1}}
+\DoxyCodeLine{00517\ \textcolor{keyword}{struct\ }AHardwareBuffer;}
+\DoxyCodeLine{00518\ \textcolor{keyword}{typedef}\ EGLClientBuffer\ (EGLAPIENTRYP\ PFNEGLGETNATIVECLIENTBUFFERANDROIDPROC)\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }AHardwareBuffer\ *buffer);}
+\DoxyCodeLine{00519\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00520\ EGLAPI\ EGLClientBuffer\ EGLAPIENTRY\ eglGetNativeClientBufferANDROID\ (\textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ AHardwareBuffer\ *buffer);}
+\DoxyCodeLine{00521\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_get\_native\_client\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_image\_native\_buffer}}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_image\_native\_buffer\ 1}}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_ANDROID\ \ \ \ \ \ \ \ \ 0x3140}}
+\DoxyCodeLine{00527\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_image\_native\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_native\_fence\_sync}}
+\DoxyCodeLine{00530\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_native\_fence\_sync\ 1}}
+\DoxyCodeLine{00531\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_NATIVE\_FENCE\_ANDROID\ \ \ \ \ 0x3144}}
+\DoxyCodeLine{00532\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_NATIVE\_FENCE\_FD\_ANDROID\ \ 0x3145}}
+\DoxyCodeLine{00533\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_NATIVE\_FENCE\_SIGNALED\_ANDROID\ 0x3146}}
+\DoxyCodeLine{00534\ \textcolor{preprocessor}{\#define\ EGL\_NO\_NATIVE\_FENCE\_FD\_ANDROID\ \ \ \ -\/1}}
+\DoxyCodeLine{00535\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLDUPNATIVEFENCEFDANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync);}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00537\ EGLAPI\ EGLint\ EGLAPIENTRY\ eglDupNativeFenceFDANDROID\ (EGLDisplay\ dpy,\ EGLSyncKHR\ sync);}
+\DoxyCodeLine{00538\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_native\_fence\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00540\ }
+\DoxyCodeLine{00541\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_presentation\_time}}
+\DoxyCodeLine{00542\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_presentation\_time\ 1}}
+\DoxyCodeLine{00543\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLPRESENTATIONTIMEANDROIDPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLnsecsANDROID\ time);}
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00545\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglPresentationTimeANDROID\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLnsecsANDROID\ time);}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00547\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_presentation\_time\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00549\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_recordable}}
+\DoxyCodeLine{00550\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_recordable\ 1}}
+\DoxyCodeLine{00551\ \textcolor{preprocessor}{\#define\ EGL\_RECORDABLE\_ANDROID\ \ \ \ \ \ \ \ \ \ \ \ 0x3142}}
+\DoxyCodeLine{00552\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_recordable\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANDROID\_telemetry\_hint}}
+\DoxyCodeLine{00555\ \textcolor{preprocessor}{\#define\ EGL\_ANDROID\_telemetry\_hint\ 1}}
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#define\ EGL\_TELEMETRY\_HINT\_ANDROID\ \ \ \ \ \ \ \ 0x3570}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANDROID\_telemetry\_hint\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANGLE\_d3d\_share\_handle\_client\_buffer}}
+\DoxyCodeLine{00560\ \textcolor{preprocessor}{\#define\ EGL\_ANGLE\_d3d\_share\_handle\_client\_buffer\ 1}}
+\DoxyCodeLine{00561\ \textcolor{preprocessor}{\#define\ EGL\_D3D\_TEXTURE\_2D\_SHARE\_HANDLE\_ANGLE\ 0x3200}}
+\DoxyCodeLine{00562\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANGLE\_d3d\_share\_handle\_client\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00563\ }
+\DoxyCodeLine{00564\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANGLE\_device\_d3d}}
+\DoxyCodeLine{00565\ \textcolor{preprocessor}{\#define\ EGL\_ANGLE\_device\_d3d\ 1}}
+\DoxyCodeLine{00566\ \textcolor{preprocessor}{\#define\ EGL\_D3D9\_DEVICE\_ANGLE\ \ \ \ \ \ \ \ \ \ \ \ \ 0x33A0}}
+\DoxyCodeLine{00567\ \textcolor{preprocessor}{\#define\ EGL\_D3D11\_DEVICE\_ANGLE\ \ \ \ \ \ \ \ \ \ \ \ 0x33A1}}
+\DoxyCodeLine{00568\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANGLE\_device\_d3d\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANGLE\_query\_surface\_pointer}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\#define\ EGL\_ANGLE\_query\_surface\_pointer\ 1}}
+\DoxyCodeLine{00572\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSURFACEPOINTERANGLEPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ attribute,\ \textcolor{keywordtype}{void}\ **value);}
+\DoxyCodeLine{00573\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00574\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQuerySurfacePointerANGLE\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ attribute,\ \textcolor{keywordtype}{void}\ **value);}
+\DoxyCodeLine{00575\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00576\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANGLE\_query\_surface\_pointer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANGLE\_surface\_d3d\_texture\_2d\_share\_handle}}
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#define\ EGL\_ANGLE\_surface\_d3d\_texture\_2d\_share\_handle\ 1}}
+\DoxyCodeLine{00580\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANGLE\_surface\_d3d\_texture\_2d\_share\_handle\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00581\ }
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANGLE\_sync\_control\_rate}}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\#define\ EGL\_ANGLE\_sync\_control\_rate\ 1}}
+\DoxyCodeLine{00584\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETMSCRATEANGLEPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ *numerator,\ EGLint\ *denominator);}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00586\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetMscRateANGLE\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ *numerator,\ EGLint\ *denominator);}
+\DoxyCodeLine{00587\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00588\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANGLE\_sync\_control\_rate\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00589\ }
+\DoxyCodeLine{00590\ \textcolor{preprocessor}{\#ifndef\ EGL\_ANGLE\_window\_fixed\_size}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\#define\ EGL\_ANGLE\_window\_fixed\_size\ 1}}
+\DoxyCodeLine{00592\ \textcolor{preprocessor}{\#define\ EGL\_FIXED\_SIZE\_ANGLE\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3201}}
+\DoxyCodeLine{00593\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ANGLE\_window\_fixed\_size\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00594\ }
+\DoxyCodeLine{00595\ \textcolor{preprocessor}{\#ifndef\ EGL\_ARM\_image\_format}}
+\DoxyCodeLine{00596\ \textcolor{preprocessor}{\#define\ EGL\_ARM\_image\_format\ 1}}
+\DoxyCodeLine{00597\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_COMPONENT\_TYPE\_UNSIGNED\_INTEGER\_ARM\ 0x3287}}
+\DoxyCodeLine{00598\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_COMPONENT\_TYPE\_INTEGER\_ARM\ 0x3288}}
+\DoxyCodeLine{00599\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ARM\_image\_format\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00600\ }
+\DoxyCodeLine{00601\ \textcolor{preprocessor}{\#ifndef\ EGL\_ARM\_implicit\_external\_sync}}
+\DoxyCodeLine{00602\ \textcolor{preprocessor}{\#define\ EGL\_ARM\_implicit\_external\_sync\ 1}}
+\DoxyCodeLine{00603\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_PRIOR\_COMMANDS\_IMPLICIT\_EXTERNAL\_ARM\ 0x328A}}
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ARM\_implicit\_external\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00605\ }
+\DoxyCodeLine{00606\ \textcolor{preprocessor}{\#ifndef\ EGL\_ARM\_pixmap\_multisample\_discard}}
+\DoxyCodeLine{00607\ \textcolor{preprocessor}{\#define\ EGL\_ARM\_pixmap\_multisample\_discard\ 1}}
+\DoxyCodeLine{00608\ \textcolor{preprocessor}{\#define\ EGL\_DISCARD\_SAMPLES\_ARM\ \ \ \ \ \ \ \ \ \ \ 0x3286}}
+\DoxyCodeLine{00609\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_ARM\_pixmap\_multisample\_discard\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00610\ }
+\DoxyCodeLine{00611\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_bind\_to\_front}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_bind\_to\_front\ 1}}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\#define\ EGL\_FRONT\_BUFFER\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3464}}
+\DoxyCodeLine{00614\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_bind\_to\_front\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00615\ }
+\DoxyCodeLine{00616\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_buffer\_age}}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_buffer\_age\ 1}}
+\DoxyCodeLine{00618\ \textcolor{preprocessor}{\#define\ EGL\_BUFFER\_AGE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x313D}}
+\DoxyCodeLine{00619\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_buffer\_age\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_client\_extensions}}
+\DoxyCodeLine{00622\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_client\_extensions\ 1}}
+\DoxyCodeLine{00623\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_client\_extensions\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00624\ }
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_client\_sync}}
+\DoxyCodeLine{00626\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_client\_sync\ 1}}
+\DoxyCodeLine{00627\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CLIENT\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3364}}
+\DoxyCodeLine{00628\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CLIENT\_SIGNAL\_EXT\ \ \ \ \ \ \ \ 0x3365}}
+\DoxyCodeLine{00629\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCLIENTSIGNALSYNCEXTPROC)\ (EGLDisplay\ dpy,\ EGLSync\ sync,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00631\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglClientSignalSyncEXT\ (EGLDisplay\ dpy,\ EGLSync\ sync,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00633\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_client\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_compositor}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_compositor\ 1}}
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#define\ EGL\_PRIMARY\_COMPOSITOR\_CONTEXT\_EXT\ 0x3460}}
+\DoxyCodeLine{00638\ \textcolor{preprocessor}{\#define\ EGL\_EXTERNAL\_REF\_ID\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x3461}}
+\DoxyCodeLine{00639\ \textcolor{preprocessor}{\#define\ EGL\_COMPOSITOR\_DROP\_NEWEST\_FRAME\_EXT\ 0x3462}}
+\DoxyCodeLine{00640\ \textcolor{preprocessor}{\#define\ EGL\_COMPOSITOR\_KEEP\_NEWEST\_FRAME\_EXT\ 0x3463}}
+\DoxyCodeLine{00641\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCOMPOSITORSETCONTEXTLISTEXTPROC)\ (\textcolor{keyword}{const}\ EGLint\ *external\_ref\_ids,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00642\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCOMPOSITORSETCONTEXTATTRIBUTESEXTPROC)\ (EGLint\ external\_ref\_id,\ \textcolor{keyword}{const}\ EGLint\ *context\_attributes,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00643\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCOMPOSITORSETWINDOWLISTEXTPROC)\ (EGLint\ external\_ref\_id,\ \textcolor{keyword}{const}\ EGLint\ *external\_win\_ids,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00644\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCOMPOSITORSETWINDOWATTRIBUTESEXTPROC)\ (EGLint\ external\_win\_id,\ \textcolor{keyword}{const}\ EGLint\ *window\_attributes,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00645\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCOMPOSITORBINDTEXWINDOWEXTPROC)\ (EGLint\ external\_win\_id);}
+\DoxyCodeLine{00646\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCOMPOSITORSETSIZEEXTPROC)\ (EGLint\ external\_win\_id,\ EGLint\ width,\ EGLint\ height);}
+\DoxyCodeLine{00647\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLCOMPOSITORSWAPPOLICYEXTPROC)\ (EGLint\ external\_win\_id,\ EGLint\ policy);}
+\DoxyCodeLine{00648\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00649\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglCompositorSetContextListEXT\ (\textcolor{keyword}{const}\ EGLint\ *external\_ref\_ids,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00650\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglCompositorSetContextAttributesEXT\ (EGLint\ external\_ref\_id,\ \textcolor{keyword}{const}\ EGLint\ *context\_attributes,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00651\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglCompositorSetWindowListEXT\ (EGLint\ external\_ref\_id,\ \textcolor{keyword}{const}\ EGLint\ *external\_win\_ids,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00652\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglCompositorSetWindowAttributesEXT\ (EGLint\ external\_win\_id,\ \textcolor{keyword}{const}\ EGLint\ *window\_attributes,\ EGLint\ num\_entries);}
+\DoxyCodeLine{00653\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglCompositorBindTexWindowEXT\ (EGLint\ external\_win\_id);}
+\DoxyCodeLine{00654\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglCompositorSetSizeEXT\ (EGLint\ external\_win\_id,\ EGLint\ width,\ EGLint\ height);}
+\DoxyCodeLine{00655\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglCompositorSwapPolicyEXT\ (EGLint\ external\_win\_id,\ EGLint\ policy);}
+\DoxyCodeLine{00656\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_compositor\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_config\_select\_group}}
+\DoxyCodeLine{00660\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_config\_select\_group\ 1}}
+\DoxyCodeLine{00661\ \textcolor{preprocessor}{\#define\ EGL\_CONFIG\_SELECT\_GROUP\_EXT\ \ \ \ \ \ \ 0x34C0}}
+\DoxyCodeLine{00662\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_config\_select\_group\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00663\ }
+\DoxyCodeLine{00664\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_create\_context\_robustness}}
+\DoxyCodeLine{00665\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_create\_context\_robustness\ 1}}
+\DoxyCodeLine{00666\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_ROBUST\_ACCESS\_EXT\ 0x30BF}}
+\DoxyCodeLine{00667\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_OPENGL\_RESET\_NOTIFICATION\_STRATEGY\_EXT\ 0x3138}}
+\DoxyCodeLine{00668\ \textcolor{preprocessor}{\#define\ EGL\_NO\_RESET\_NOTIFICATION\_EXT\ \ \ \ \ 0x31BE}}
+\DoxyCodeLine{00669\ \textcolor{preprocessor}{\#define\ EGL\_LOSE\_CONTEXT\_ON\_RESET\_EXT\ \ \ \ \ 0x31BF}}
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_create\_context\_robustness\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00671\ }
+\DoxyCodeLine{00672\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_base}}
+\DoxyCodeLine{00673\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_base\ 1}}
+\DoxyCodeLine{00674\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLDeviceEXT;}
+\DoxyCodeLine{00675\ \textcolor{preprocessor}{\#define\ EGL\_NO\_DEVICE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLDeviceEXT,0)}}
+\DoxyCodeLine{00676\ \textcolor{preprocessor}{\#define\ EGL\_BAD\_DEVICE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x322B}}
+\DoxyCodeLine{00677\ \textcolor{preprocessor}{\#define\ EGL\_DEVICE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x322C}}
+\DoxyCodeLine{00678\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDEVICEATTRIBEXTPROC)\ (EGLDeviceEXT\ device,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00679\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *(EGLAPIENTRYP\ PFNEGLQUERYDEVICESTRINGEXTPROC)\ (EGLDeviceEXT\ device,\ EGLint\ name);}
+\DoxyCodeLine{00680\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDEVICESEXTPROC)\ (EGLint\ max\_devices,\ EGLDeviceEXT\ *devices,\ EGLint\ *num\_devices);}
+\DoxyCodeLine{00681\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDISPLAYATTRIBEXTPROC)\ (EGLDisplay\ dpy,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00682\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00683\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDeviceAttribEXT\ (EGLDeviceEXT\ device,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00684\ EGLAPI\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *EGLAPIENTRY\ eglQueryDeviceStringEXT\ (EGLDeviceEXT\ device,\ EGLint\ name);}
+\DoxyCodeLine{00685\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDevicesEXT\ (EGLint\ max\_devices,\ EGLDeviceEXT\ *devices,\ EGLint\ *num\_devices);}
+\DoxyCodeLine{00686\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDisplayAttribEXT\ (EGLDisplay\ dpy,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00687\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00688\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_base\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00690\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_drm}}
+\DoxyCodeLine{00691\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_drm\ 1}}
+\DoxyCodeLine{00692\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_DEVICE\_FILE\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x3233}}
+\DoxyCodeLine{00693\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_MASTER\_FD\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x333C}}
+\DoxyCodeLine{00694\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_drm\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_drm\_render\_node}}
+\DoxyCodeLine{00697\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_drm\_render\_node\ 1}}
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_RENDER\_NODE\_FILE\_EXT\ \ \ \ \ \ 0x3377}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_drm\_render\_node\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_enumeration}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_enumeration\ 1}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_enumeration\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00704\ }
+\DoxyCodeLine{00705\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_openwf}}
+\DoxyCodeLine{00706\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_openwf\ 1}}
+\DoxyCodeLine{00707\ \textcolor{preprocessor}{\#define\ EGL\_OPENWF\_DEVICE\_ID\_EXT\ \ \ \ \ \ \ \ \ \ 0x3237}}
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#define\ EGL\_OPENWF\_DEVICE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x333D}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_openwf\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00710\ }
+\DoxyCodeLine{00711\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_persistent\_id}}
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_persistent\_id\ 1}}
+\DoxyCodeLine{00713\ \textcolor{preprocessor}{\#define\ EGL\_DEVICE\_UUID\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x335C}}
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#define\ EGL\_DRIVER\_UUID\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x335D}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#define\ EGL\_DRIVER\_NAME\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x335E}}
+\DoxyCodeLine{00716\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDEVICEBINARYEXTPROC)\ (EGLDeviceEXT\ device,\ EGLint\ name,\ EGLint\ max\_size,\ \textcolor{keywordtype}{void}\ *value,\ EGLint\ *size);}
+\DoxyCodeLine{00717\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00718\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDeviceBinaryEXT\ (EGLDeviceEXT\ device,\ EGLint\ name,\ EGLint\ max\_size,\ \textcolor{keywordtype}{void}\ *value,\ EGLint\ *size);}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_persistent\_id\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00721\ }
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_query}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_query\ 1}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_query\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00725\ }
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_query\_name}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_query\_name\ 1}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#define\ EGL\_RENDERER\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x335F}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_query\_name\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00730\ }
+\DoxyCodeLine{00731\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_device\_type}}
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_device\_type\ 1}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#define\ EGL\_DEVICE\_TYPE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3590}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#define\ EGL\_DEVICE\_TYPE\_OTHER\_EXT\ \ \ \ \ \ \ \ \ 0x3591}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#define\ EGL\_DEVICE\_TYPE\_INTEGRATED\_GPU\_EXT\ 0x3592}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#define\ EGL\_DEVICE\_TYPE\_DISCRETE\_GPU\_EXT\ \ 0x3593}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\#define\ EGL\_DEVICE\_TYPE\_CPU\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x3594}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_device\_type\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00739\ }
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_display\_alloc}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_display\_alloc\ 1}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#define\ EGL\_ALLOC\_NEW\_DISPLAY\_EXT\ \ \ \ \ \ \ \ \ 0x3379}}
+\DoxyCodeLine{00743\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYDISPLAYEXTPROC)\ (EGLDisplay\ dpy);}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00745\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglDestroyDisplayEXT\ (EGLDisplay\ dpy);}
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00747\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_display\_alloc\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00748\ }
+\DoxyCodeLine{00749\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_explicit\_device}}
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_explicit\_device\ 1}}
+\DoxyCodeLine{00751\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_explicit\_device\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00752\ }
+\DoxyCodeLine{00753\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_bt2020\_hlg}}
+\DoxyCodeLine{00754\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_bt2020\_hlg\ 1}}
+\DoxyCodeLine{00755\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_BT2020\_HLG\_EXT\ \ 0x3540}}
+\DoxyCodeLine{00756\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_bt2020\_hlg\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00757\ }
+\DoxyCodeLine{00758\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_bt2020\_linear}}
+\DoxyCodeLine{00759\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_bt2020\_linear\ 1}}
+\DoxyCodeLine{00760\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_BT2020\_LINEAR\_EXT\ 0x333F}}
+\DoxyCodeLine{00761\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_bt2020\_linear\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_bt2020\_pq}}
+\DoxyCodeLine{00764\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_bt2020\_pq\ 1}}
+\DoxyCodeLine{00765\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_BT2020\_PQ\_EXT\ \ \ 0x3340}}
+\DoxyCodeLine{00766\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_bt2020\_pq\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00767\ }
+\DoxyCodeLine{00768\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_display\_p3}}
+\DoxyCodeLine{00769\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_display\_p3\ 1}}
+\DoxyCodeLine{00770\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_DISPLAY\_P3\_EXT\ \ 0x3363}}
+\DoxyCodeLine{00771\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_display\_p3\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_display\_p3\_linear}}
+\DoxyCodeLine{00774\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_display\_p3\_linear\ 1}}
+\DoxyCodeLine{00775\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_DISPLAY\_P3\_LINEAR\_EXT\ 0x3362}}
+\DoxyCodeLine{00776\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_display\_p3\_linear\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00777\ }
+\DoxyCodeLine{00778\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_display\_p3\_passthrough}}
+\DoxyCodeLine{00779\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_display\_p3\_passthrough\ 1}}
+\DoxyCodeLine{00780\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_DISPLAY\_P3\_PASSTHROUGH\_EXT\ 0x3490}}
+\DoxyCodeLine{00781\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_display\_p3\_passthrough\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00782\ }
+\DoxyCodeLine{00783\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_scrgb}}
+\DoxyCodeLine{00784\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_scrgb\ 1}}
+\DoxyCodeLine{00785\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_SCRGB\_EXT\ \ \ \ \ \ \ 0x3351}}
+\DoxyCodeLine{00786\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_scrgb\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00787\ }
+\DoxyCodeLine{00788\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_gl\_colorspace\_scrgb\_linear}}
+\DoxyCodeLine{00789\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_gl\_colorspace\_scrgb\_linear\ 1}}
+\DoxyCodeLine{00790\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_SCRGB\_LINEAR\_EXT\ 0x3350}}
+\DoxyCodeLine{00791\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_gl\_colorspace\_scrgb\_linear\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00792\ }
+\DoxyCodeLine{00793\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_image\_dma\_buf\_import}}
+\DoxyCodeLine{00794\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_image\_dma\_buf\_import\ 1}}
+\DoxyCodeLine{00795\ \textcolor{preprocessor}{\#define\ EGL\_LINUX\_DMA\_BUF\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3270}}
+\DoxyCodeLine{00796\ \textcolor{preprocessor}{\#define\ EGL\_LINUX\_DRM\_FOURCC\_EXT\ \ \ \ \ \ \ \ \ \ 0x3271}}
+\DoxyCodeLine{00797\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE0\_FD\_EXT\ \ \ \ \ \ \ \ \ 0x3272}}
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE0\_OFFSET\_EXT\ \ \ \ \ 0x3273}}
+\DoxyCodeLine{00799\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE0\_PITCH\_EXT\ \ \ \ \ \ 0x3274}}
+\DoxyCodeLine{00800\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE1\_FD\_EXT\ \ \ \ \ \ \ \ \ 0x3275}}
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE1\_OFFSET\_EXT\ \ \ \ \ 0x3276}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE1\_PITCH\_EXT\ \ \ \ \ \ 0x3277}}
+\DoxyCodeLine{00803\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE2\_FD\_EXT\ \ \ \ \ \ \ \ \ 0x3278}}
+\DoxyCodeLine{00804\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE2\_OFFSET\_EXT\ \ \ \ \ 0x3279}}
+\DoxyCodeLine{00805\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE2\_PITCH\_EXT\ \ \ \ \ \ 0x327A}}
+\DoxyCodeLine{00806\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_COLOR\_SPACE\_HINT\_EXT\ \ \ \ \ \ 0x327B}}
+\DoxyCodeLine{00807\ \textcolor{preprocessor}{\#define\ EGL\_SAMPLE\_RANGE\_HINT\_EXT\ \ \ \ \ \ \ \ \ 0x327C}}
+\DoxyCodeLine{00808\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CHROMA\_HORIZONTAL\_SITING\_HINT\_EXT\ 0x327D}}
+\DoxyCodeLine{00809\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CHROMA\_VERTICAL\_SITING\_HINT\_EXT\ 0x327E}}
+\DoxyCodeLine{00810\ \textcolor{preprocessor}{\#define\ EGL\_ITU\_REC601\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x327F}}
+\DoxyCodeLine{00811\ \textcolor{preprocessor}{\#define\ EGL\_ITU\_REC709\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3280}}
+\DoxyCodeLine{00812\ \textcolor{preprocessor}{\#define\ EGL\_ITU\_REC2020\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3281}}
+\DoxyCodeLine{00813\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_FULL\_RANGE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x3282}}
+\DoxyCodeLine{00814\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_NARROW\_RANGE\_EXT\ \ \ \ \ \ \ \ \ \ 0x3283}}
+\DoxyCodeLine{00815\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CHROMA\_SITING\_0\_EXT\ \ \ \ \ \ \ 0x3284}}
+\DoxyCodeLine{00816\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CHROMA\_SITING\_0\_5\_EXT\ \ \ \ \ 0x3285}}
+\DoxyCodeLine{00817\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_image\_dma\_buf\_import\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00818\ }
+\DoxyCodeLine{00819\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_image\_dma\_buf\_import\_modifiers}}
+\DoxyCodeLine{00820\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_image\_dma\_buf\_import\_modifiers\ 1}}
+\DoxyCodeLine{00821\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE3\_FD\_EXT\ \ \ \ \ \ \ \ \ 0x3440}}
+\DoxyCodeLine{00822\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE3\_OFFSET\_EXT\ \ \ \ \ 0x3441}}
+\DoxyCodeLine{00823\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE3\_PITCH\_EXT\ \ \ \ \ \ 0x3442}}
+\DoxyCodeLine{00824\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE0\_MODIFIER\_LO\_EXT\ 0x3443}}
+\DoxyCodeLine{00825\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE0\_MODIFIER\_HI\_EXT\ 0x3444}}
+\DoxyCodeLine{00826\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE1\_MODIFIER\_LO\_EXT\ 0x3445}}
+\DoxyCodeLine{00827\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE1\_MODIFIER\_HI\_EXT\ 0x3446}}
+\DoxyCodeLine{00828\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE2\_MODIFIER\_LO\_EXT\ 0x3447}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE2\_MODIFIER\_HI\_EXT\ 0x3448}}
+\DoxyCodeLine{00830\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE3\_MODIFIER\_LO\_EXT\ 0x3449}}
+\DoxyCodeLine{00831\ \textcolor{preprocessor}{\#define\ EGL\_DMA\_BUF\_PLANE3\_MODIFIER\_HI\_EXT\ 0x344A}}
+\DoxyCodeLine{00832\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDMABUFFORMATSEXTPROC)\ (EGLDisplay\ dpy,\ EGLint\ max\_formats,\ EGLint\ *formats,\ EGLint\ *num\_formats);}
+\DoxyCodeLine{00833\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDMABUFMODIFIERSEXTPROC)\ (EGLDisplay\ dpy,\ EGLint\ format,\ EGLint\ max\_modifiers,\ EGLuint64KHR\ *modifiers,\ EGLBoolean\ *external\_only,\ EGLint\ *num\_modifiers);}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00835\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDmaBufFormatsEXT\ (EGLDisplay\ dpy,\ EGLint\ max\_formats,\ EGLint\ *formats,\ EGLint\ *num\_formats);}
+\DoxyCodeLine{00836\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDmaBufModifiersEXT\ (EGLDisplay\ dpy,\ EGLint\ format,\ EGLint\ max\_modifiers,\ EGLuint64KHR\ *modifiers,\ EGLBoolean\ *external\_only,\ EGLint\ *num\_modifiers);}
+\DoxyCodeLine{00837\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00838\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_image\_dma\_buf\_import\_modifiers\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00839\ }
+\DoxyCodeLine{00840\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_image\_gl\_colorspace}}
+\DoxyCodeLine{00841\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_image\_gl\_colorspace\ 1}}
+\DoxyCodeLine{00842\ \textcolor{preprocessor}{\#define\ EGL\_GL\_COLORSPACE\_DEFAULT\_EXT\ \ \ \ \ 0x314D}}
+\DoxyCodeLine{00843\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_image\_gl\_colorspace\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00845\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_image\_implicit\_sync\_control}}
+\DoxyCodeLine{00846\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_image\_implicit\_sync\_control\ 1}}
+\DoxyCodeLine{00847\ \textcolor{preprocessor}{\#define\ EGL\_IMPORT\_SYNC\_TYPE\_EXT\ \ \ \ \ \ \ \ \ \ 0x3470}}
+\DoxyCodeLine{00848\ \textcolor{preprocessor}{\#define\ EGL\_IMPORT\_IMPLICIT\_SYNC\_EXT\ \ \ \ \ \ 0x3471}}
+\DoxyCodeLine{00849\ \textcolor{preprocessor}{\#define\ EGL\_IMPORT\_EXPLICIT\_SYNC\_EXT\ \ \ \ \ \ 0x3472}}
+\DoxyCodeLine{00850\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_image\_implicit\_sync\_control\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00851\ }
+\DoxyCodeLine{00852\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_multiview\_window}}
+\DoxyCodeLine{00853\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_multiview\_window\ 1}}
+\DoxyCodeLine{00854\ \textcolor{preprocessor}{\#define\ EGL\_MULTIVIEW\_VIEW\_COUNT\_EXT\ \ \ \ \ \ 0x3134}}
+\DoxyCodeLine{00855\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_multiview\_window\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00856\ }
+\DoxyCodeLine{00857\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_output\_base}}
+\DoxyCodeLine{00858\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_output\_base\ 1}}
+\DoxyCodeLine{00859\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLOutputLayerEXT;}
+\DoxyCodeLine{00860\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLOutputPortEXT;}
+\DoxyCodeLine{00861\ \textcolor{preprocessor}{\#define\ EGL\_NO\_OUTPUT\_LAYER\_EXT\ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLOutputLayerEXT,0)}}
+\DoxyCodeLine{00862\ \textcolor{preprocessor}{\#define\ EGL\_NO\_OUTPUT\_PORT\_EXT\ \ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLOutputPortEXT,0)}}
+\DoxyCodeLine{00863\ \textcolor{preprocessor}{\#define\ EGL\_BAD\_OUTPUT\_LAYER\_EXT\ \ \ \ \ \ \ \ \ \ 0x322D}}
+\DoxyCodeLine{00864\ \textcolor{preprocessor}{\#define\ EGL\_BAD\_OUTPUT\_PORT\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x322E}}
+\DoxyCodeLine{00865\ \textcolor{preprocessor}{\#define\ EGL\_SWAP\_INTERVAL\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x322F}}
+\DoxyCodeLine{00866\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETOUTPUTLAYERSEXTPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list,\ EGLOutputLayerEXT\ *layers,\ EGLint\ max\_layers,\ EGLint\ *num\_layers);}
+\DoxyCodeLine{00867\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETOUTPUTPORTSEXTPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list,\ EGLOutputPortEXT\ *ports,\ EGLint\ max\_ports,\ EGLint\ *num\_ports);}
+\DoxyCodeLine{00868\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLOUTPUTLAYERATTRIBEXTPROC)\ (EGLDisplay\ dpy,\ EGLOutputLayerEXT\ layer,\ EGLint\ attribute,\ EGLAttrib\ value);}
+\DoxyCodeLine{00869\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYOUTPUTLAYERATTRIBEXTPROC)\ (EGLDisplay\ dpy,\ EGLOutputLayerEXT\ layer,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00870\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *(EGLAPIENTRYP\ PFNEGLQUERYOUTPUTLAYERSTRINGEXTPROC)\ (EGLDisplay\ dpy,\ EGLOutputLayerEXT\ layer,\ EGLint\ name);}
+\DoxyCodeLine{00871\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLOUTPUTPORTATTRIBEXTPROC)\ (EGLDisplay\ dpy,\ EGLOutputPortEXT\ port,\ EGLint\ attribute,\ EGLAttrib\ value);}
+\DoxyCodeLine{00872\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYOUTPUTPORTATTRIBEXTPROC)\ (EGLDisplay\ dpy,\ EGLOutputPortEXT\ port,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00873\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *(EGLAPIENTRYP\ PFNEGLQUERYOUTPUTPORTSTRINGEXTPROC)\ (EGLDisplay\ dpy,\ EGLOutputPortEXT\ port,\ EGLint\ name);}
+\DoxyCodeLine{00874\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00875\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetOutputLayersEXT\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list,\ EGLOutputLayerEXT\ *layers,\ EGLint\ max\_layers,\ EGLint\ *num\_layers);}
+\DoxyCodeLine{00876\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetOutputPortsEXT\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list,\ EGLOutputPortEXT\ *ports,\ EGLint\ max\_ports,\ EGLint\ *num\_ports);}
+\DoxyCodeLine{00877\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglOutputLayerAttribEXT\ (EGLDisplay\ dpy,\ EGLOutputLayerEXT\ layer,\ EGLint\ attribute,\ EGLAttrib\ value);}
+\DoxyCodeLine{00878\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryOutputLayerAttribEXT\ (EGLDisplay\ dpy,\ EGLOutputLayerEXT\ layer,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00879\ EGLAPI\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *EGLAPIENTRY\ eglQueryOutputLayerStringEXT\ (EGLDisplay\ dpy,\ EGLOutputLayerEXT\ layer,\ EGLint\ name);}
+\DoxyCodeLine{00880\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglOutputPortAttribEXT\ (EGLDisplay\ dpy,\ EGLOutputPortEXT\ port,\ EGLint\ attribute,\ EGLAttrib\ value);}
+\DoxyCodeLine{00881\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryOutputPortAttribEXT\ (EGLDisplay\ dpy,\ EGLOutputPortEXT\ port,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{00882\ EGLAPI\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *EGLAPIENTRY\ eglQueryOutputPortStringEXT\ (EGLDisplay\ dpy,\ EGLOutputPortEXT\ port,\ EGLint\ name);}
+\DoxyCodeLine{00883\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00884\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_output\_base\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00885\ }
+\DoxyCodeLine{00886\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_output\_drm}}
+\DoxyCodeLine{00887\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_output\_drm\ 1}}
+\DoxyCodeLine{00888\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_CRTC\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3234}}
+\DoxyCodeLine{00889\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_PLANE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3235}}
+\DoxyCodeLine{00890\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_CONNECTOR\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3236}}
+\DoxyCodeLine{00891\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_output\_drm\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00892\ }
+\DoxyCodeLine{00893\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_output\_openwf}}
+\DoxyCodeLine{00894\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_output\_openwf\ 1}}
+\DoxyCodeLine{00895\ \textcolor{preprocessor}{\#define\ EGL\_OPENWF\_PIPELINE\_ID\_EXT\ \ \ \ \ \ \ \ 0x3238}}
+\DoxyCodeLine{00896\ \textcolor{preprocessor}{\#define\ EGL\_OPENWF\_PORT\_ID\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x3239}}
+\DoxyCodeLine{00897\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_output\_openwf\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00898\ }
+\DoxyCodeLine{00899\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_pixel\_format\_float}}
+\DoxyCodeLine{00900\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_pixel\_format\_float\ 1}}
+\DoxyCodeLine{00901\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_COMPONENT\_TYPE\_EXT\ \ \ \ \ \ 0x3339}}
+\DoxyCodeLine{00902\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_COMPONENT\_TYPE\_FIXED\_EXT\ 0x333A}}
+\DoxyCodeLine{00903\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_COMPONENT\_TYPE\_FLOAT\_EXT\ 0x333B}}
+\DoxyCodeLine{00904\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_pixel\_format\_float\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00905\ }
+\DoxyCodeLine{00906\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_platform\_base}}
+\DoxyCodeLine{00907\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_platform\_base\ 1}}
+\DoxyCodeLine{00908\ \textcolor{keyword}{typedef}\ EGLDisplay\ (EGLAPIENTRYP\ PFNEGLGETPLATFORMDISPLAYEXTPROC)\ (EGLenum\ platform,\ \textcolor{keywordtype}{void}\ *native\_display,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00909\ \textcolor{keyword}{typedef}\ EGLSurface\ (EGLAPIENTRYP\ PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keywordtype}{void}\ *native\_window,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00910\ \textcolor{keyword}{typedef}\ EGLSurface\ (EGLAPIENTRYP\ PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keywordtype}{void}\ *native\_pixmap,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00911\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00912\ EGLAPI\ EGLDisplay\ EGLAPIENTRY\ eglGetPlatformDisplayEXT\ (EGLenum\ platform,\ \textcolor{keywordtype}{void}\ *native\_display,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00913\ EGLAPI\ EGLSurface\ EGLAPIENTRY\ eglCreatePlatformWindowSurfaceEXT\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keywordtype}{void}\ *native\_window,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00914\ EGLAPI\ EGLSurface\ EGLAPIENTRY\ eglCreatePlatformPixmapSurfaceEXT\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keywordtype}{void}\ *native\_pixmap,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{00915\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00916\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_platform\_base\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00917\ }
+\DoxyCodeLine{00918\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_platform\_device}}
+\DoxyCodeLine{00919\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_platform\_device\ 1}}
+\DoxyCodeLine{00920\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_DEVICE\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x313F}}
+\DoxyCodeLine{00921\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_platform\_device\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00922\ }
+\DoxyCodeLine{00923\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_platform\_wayland}}
+\DoxyCodeLine{00924\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_platform\_wayland\ 1}}
+\DoxyCodeLine{00925\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_WAYLAND\_EXT\ \ \ \ \ \ \ \ \ \ 0x31D8}}
+\DoxyCodeLine{00926\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_platform\_wayland\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00927\ }
+\DoxyCodeLine{00928\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_platform\_x11}}
+\DoxyCodeLine{00929\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_platform\_x11\ 1}}
+\DoxyCodeLine{00930\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_X11\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D5}}
+\DoxyCodeLine{00931\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_X11\_SCREEN\_EXT\ \ \ \ \ \ \ 0x31D6}}
+\DoxyCodeLine{00932\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_platform\_x11\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00933\ }
+\DoxyCodeLine{00934\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_platform\_xcb}}
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_platform\_xcb\ 1}}
+\DoxyCodeLine{00936\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_XCB\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31DC}}
+\DoxyCodeLine{00937\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_XCB\_SCREEN\_EXT\ \ \ \ \ \ \ 0x31DE}}
+\DoxyCodeLine{00938\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_platform\_xcb\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00939\ }
+\DoxyCodeLine{00940\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_present\_opaque}}
+\DoxyCodeLine{00941\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_present\_opaque\ 1}}
+\DoxyCodeLine{00942\ \textcolor{preprocessor}{\#define\ EGL\_PRESENT\_OPAQUE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x31DF}}
+\DoxyCodeLine{00943\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_present\_opaque\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00944\ }
+\DoxyCodeLine{00945\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_protected\_content}}
+\DoxyCodeLine{00946\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_protected\_content\ 1}}
+\DoxyCodeLine{00947\ \textcolor{preprocessor}{\#define\ EGL\_PROTECTED\_CONTENT\_EXT\ \ \ \ \ \ \ \ \ 0x32C0}}
+\DoxyCodeLine{00948\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_protected\_content\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00949\ }
+\DoxyCodeLine{00950\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_protected\_surface}}
+\DoxyCodeLine{00951\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_protected\_surface\ 1}}
+\DoxyCodeLine{00952\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_protected\_surface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00953\ }
+\DoxyCodeLine{00954\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_query\_reset\_notification\_strategy}}
+\DoxyCodeLine{00955\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_query\_reset\_notification\_strategy\ 1}}
+\DoxyCodeLine{00956\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_query\_reset\_notification\_strategy\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00957\ }
+\DoxyCodeLine{00958\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_stream\_consumer\_egloutput}}
+\DoxyCodeLine{00959\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_stream\_consumer\_egloutput\ 1}}
+\DoxyCodeLine{00960\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMCONSUMEROUTPUTEXTPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLOutputLayerEXT\ layer);}
+\DoxyCodeLine{00961\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{00962\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamConsumerOutputEXT\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLOutputLayerEXT\ layer);}
+\DoxyCodeLine{00963\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00964\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_stream\_consumer\_egloutput\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00965\ }
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_surface\_CTA861\_3\_metadata}}
+\DoxyCodeLine{00967\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_surface\_CTA861\_3\_metadata\ 1}}
+\DoxyCodeLine{00968\ \textcolor{preprocessor}{\#define\ EGL\_CTA861\_3\_MAX\_CONTENT\_LIGHT\_LEVEL\_EXT\ 0x3360}}
+\DoxyCodeLine{00969\ \textcolor{preprocessor}{\#define\ EGL\_CTA861\_3\_MAX\_FRAME\_AVERAGE\_LEVEL\_EXT\ 0x3361}}
+\DoxyCodeLine{00970\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_surface\_CTA861\_3\_metadata\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00971\ }
+\DoxyCodeLine{00972\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_surface\_SMPTE2086\_metadata}}
+\DoxyCodeLine{00973\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_surface\_SMPTE2086\_metadata\ 1}}
+\DoxyCodeLine{00974\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_DISPLAY\_PRIMARY\_RX\_EXT\ 0x3341}}
+\DoxyCodeLine{00975\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_DISPLAY\_PRIMARY\_RY\_EXT\ 0x3342}}
+\DoxyCodeLine{00976\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_DISPLAY\_PRIMARY\_GX\_EXT\ 0x3343}}
+\DoxyCodeLine{00977\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_DISPLAY\_PRIMARY\_GY\_EXT\ 0x3344}}
+\DoxyCodeLine{00978\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_DISPLAY\_PRIMARY\_BX\_EXT\ 0x3345}}
+\DoxyCodeLine{00979\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_DISPLAY\_PRIMARY\_BY\_EXT\ 0x3346}}
+\DoxyCodeLine{00980\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_WHITE\_POINT\_X\_EXT\ \ \ 0x3347}}
+\DoxyCodeLine{00981\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_WHITE\_POINT\_Y\_EXT\ \ \ 0x3348}}
+\DoxyCodeLine{00982\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_MAX\_LUMINANCE\_EXT\ \ \ 0x3349}}
+\DoxyCodeLine{00983\ \textcolor{preprocessor}{\#define\ EGL\_SMPTE2086\_MIN\_LUMINANCE\_EXT\ \ \ 0x334A}}
+\DoxyCodeLine{00984\ \textcolor{preprocessor}{\#define\ EGL\_METADATA\_SCALING\_EXT\ \ \ \ \ \ \ \ \ \ 50000}}
+\DoxyCodeLine{00985\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_surface\_SMPTE2086\_metadata\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00986\ }
+\DoxyCodeLine{00987\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_surface\_compression}}
+\DoxyCodeLine{00988\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_surface\_compression\ 1}}
+\DoxyCodeLine{00989\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_EXT\ \ \ \ \ \ \ 0x34B0}}
+\DoxyCodeLine{00990\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_PLANE1\_EXT\ 0x328E}}
+\DoxyCodeLine{00991\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_PLANE2\_EXT\ 0x328F}}
+\DoxyCodeLine{00992\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_NONE\_EXT\ 0x34B1}}
+\DoxyCodeLine{00993\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_DEFAULT\_EXT\ 0x34B2}}
+\DoxyCodeLine{00994\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_1BPC\_EXT\ 0x34B4}}
+\DoxyCodeLine{00995\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_2BPC\_EXT\ 0x34B5}}
+\DoxyCodeLine{00996\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_3BPC\_EXT\ 0x34B6}}
+\DoxyCodeLine{00997\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_4BPC\_EXT\ 0x34B7}}
+\DoxyCodeLine{00998\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_5BPC\_EXT\ 0x34B8}}
+\DoxyCodeLine{00999\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_6BPC\_EXT\ 0x34B9}}
+\DoxyCodeLine{01000\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_7BPC\_EXT\ 0x34BA}}
+\DoxyCodeLine{01001\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_8BPC\_EXT\ 0x34BB}}
+\DoxyCodeLine{01002\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_9BPC\_EXT\ 0x34BC}}
+\DoxyCodeLine{01003\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_10BPC\_EXT\ 0x34BD}}
+\DoxyCodeLine{01004\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_11BPC\_EXT\ 0x34BE}}
+\DoxyCodeLine{01005\ \textcolor{preprocessor}{\#define\ EGL\_SURFACE\_COMPRESSION\_FIXED\_RATE\_12BPC\_EXT\ 0x34BF}}
+\DoxyCodeLine{01006\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSUPPORTEDCOMPRESSIONRATESEXTPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list,\ EGLint\ *rates,\ EGLint\ rate\_size,\ EGLint\ *num\_rates);}
+\DoxyCodeLine{01007\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01008\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQuerySupportedCompressionRatesEXT\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list,\ EGLint\ *rates,\ EGLint\ rate\_size,\ EGLint\ *num\_rates);}
+\DoxyCodeLine{01009\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01010\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_surface\_compression\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01011\ }
+\DoxyCodeLine{01012\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_swap\_buffers\_with\_damage}}
+\DoxyCodeLine{01013\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_swap\_buffers\_with\_damage\ 1}}
+\DoxyCodeLine{01014\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSWAPBUFFERSWITHDAMAGEEXTPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ \textcolor{keyword}{const}\ EGLint\ *rects,\ EGLint\ n\_rects);}
+\DoxyCodeLine{01015\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01016\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSwapBuffersWithDamageEXT\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ \textcolor{keyword}{const}\ EGLint\ *rects,\ EGLint\ n\_rects);}
+\DoxyCodeLine{01017\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01018\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_swap\_buffers\_with\_damage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01019\ }
+\DoxyCodeLine{01020\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_sync\_reuse}}
+\DoxyCodeLine{01021\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_sync\_reuse\ 1}}
+\DoxyCodeLine{01022\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLUNSIGNALSYNCEXTPROC)\ (EGLDisplay\ dpy,\ EGLSync\ sync,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{01023\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01024\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglUnsignalSyncEXT\ (EGLDisplay\ dpy,\ EGLSync\ sync,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{01025\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01026\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_sync\_reuse\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01027\ }
+\DoxyCodeLine{01028\ \textcolor{preprocessor}{\#ifndef\ EGL\_EXT\_yuv\_surface}}
+\DoxyCodeLine{01029\ \textcolor{preprocessor}{\#define\ EGL\_EXT\_yuv\_surface\ 1}}
+\DoxyCodeLine{01030\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3301}}
+\DoxyCodeLine{01031\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_NUMBER\_OF\_PLANES\_EXT\ \ \ \ \ \ 0x3311}}
+\DoxyCodeLine{01032\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_SUBSAMPLE\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3312}}
+\DoxyCodeLine{01033\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_DEPTH\_RANGE\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x3317}}
+\DoxyCodeLine{01034\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CSC\_STANDARD\_EXT\ \ \ \ \ \ \ \ \ \ 0x330A}}
+\DoxyCodeLine{01035\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_PLANE\_BPP\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x331A}}
+\DoxyCodeLine{01036\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_BUFFER\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3300}}
+\DoxyCodeLine{01037\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_YUV\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3302}}
+\DoxyCodeLine{01038\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_YVU\_EXT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3303}}
+\DoxyCodeLine{01039\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_YUYV\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x3304}}
+\DoxyCodeLine{01040\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_UYVY\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x3305}}
+\DoxyCodeLine{01041\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_YVYU\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x3306}}
+\DoxyCodeLine{01042\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_VYUY\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x3307}}
+\DoxyCodeLine{01043\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_ORDER\_AYUV\_EXT\ \ \ \ \ \ \ \ \ \ \ \ 0x3308}}
+\DoxyCodeLine{01044\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_SUBSAMPLE\_4\_2\_0\_EXT\ \ \ \ \ \ \ 0x3313}}
+\DoxyCodeLine{01045\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_SUBSAMPLE\_4\_2\_2\_EXT\ \ \ \ \ \ \ 0x3314}}
+\DoxyCodeLine{01046\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_SUBSAMPLE\_4\_4\_4\_EXT\ \ \ \ \ \ \ 0x3315}}
+\DoxyCodeLine{01047\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_DEPTH\_RANGE\_LIMITED\_EXT\ \ \ 0x3318}}
+\DoxyCodeLine{01048\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_DEPTH\_RANGE\_FULL\_EXT\ \ \ \ \ \ 0x3319}}
+\DoxyCodeLine{01049\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CSC\_STANDARD\_601\_EXT\ \ \ \ \ \ 0x330B}}
+\DoxyCodeLine{01050\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CSC\_STANDARD\_709\_EXT\ \ \ \ \ \ 0x330C}}
+\DoxyCodeLine{01051\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_CSC\_STANDARD\_2020\_EXT\ \ \ \ \ 0x330D}}
+\DoxyCodeLine{01052\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_PLANE\_BPP\_0\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x331B}}
+\DoxyCodeLine{01053\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_PLANE\_BPP\_8\_EXT\ \ \ \ \ \ \ \ \ \ \ 0x331C}}
+\DoxyCodeLine{01054\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_PLANE\_BPP\_10\_EXT\ \ \ \ \ \ \ \ \ \ 0x331D}}
+\DoxyCodeLine{01055\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_EXT\_yuv\_surface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01056\ }
+\DoxyCodeLine{01057\ \textcolor{preprocessor}{\#ifndef\ EGL\_HI\_clientpixmap}}
+\DoxyCodeLine{01058\ \textcolor{preprocessor}{\#define\ EGL\_HI\_clientpixmap\ 1}}
+\DoxyCodeLine{01059\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_e_g_l_client_pixmap_h_i}{EGLClientPixmapHI}}\ \{}
+\DoxyCodeLine{01060\ \ \ \ \ \textcolor{keywordtype}{void}\ \ *pData;}
+\DoxyCodeLine{01061\ \ \ \ \ EGLint\ iWidth;}
+\DoxyCodeLine{01062\ \ \ \ \ EGLint\ iHeight;}
+\DoxyCodeLine{01063\ \ \ \ \ EGLint\ iStride;}
+\DoxyCodeLine{01064\ \};}
+\DoxyCodeLine{01065\ \textcolor{preprocessor}{\#define\ EGL\_CLIENT\_PIXMAP\_POINTER\_HI\ \ \ \ \ \ 0x8F74}}
+\DoxyCodeLine{01066\ \textcolor{keyword}{typedef}\ EGLSurface\ (EGLAPIENTRYP\ PFNEGLCREATEPIXMAPSURFACEHIPROC)\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_e_g_l_client_pixmap_h_i}{EGLClientPixmapHI}}\ *pixmap);}
+\DoxyCodeLine{01067\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01068\ EGLAPI\ EGLSurface\ EGLAPIENTRY\ eglCreatePixmapSurfaceHI\ (EGLDisplay\ dpy,\ EGLConfig\ config,\ \textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_e_g_l_client_pixmap_h_i}{EGLClientPixmapHI}}\ *pixmap);}
+\DoxyCodeLine{01069\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01070\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_HI\_clientpixmap\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01071\ }
+\DoxyCodeLine{01072\ \textcolor{preprocessor}{\#ifndef\ EGL\_HI\_colorformats}}
+\DoxyCodeLine{01073\ \textcolor{preprocessor}{\#define\ EGL\_HI\_colorformats\ 1}}
+\DoxyCodeLine{01074\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_FORMAT\_HI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x8F70}}
+\DoxyCodeLine{01075\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_RGB\_HI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x8F71}}
+\DoxyCodeLine{01076\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_RGBA\_HI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x8F72}}
+\DoxyCodeLine{01077\ \textcolor{preprocessor}{\#define\ EGL\_COLOR\_ARGB\_HI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x8F73}}
+\DoxyCodeLine{01078\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_HI\_colorformats\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01079\ }
+\DoxyCodeLine{01080\ \textcolor{preprocessor}{\#ifndef\ EGL\_IMG\_context\_priority}}
+\DoxyCodeLine{01081\ \textcolor{preprocessor}{\#define\ EGL\_IMG\_context\_priority\ 1}}
+\DoxyCodeLine{01082\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_PRIORITY\_LEVEL\_IMG\ \ \ \ 0x3100}}
+\DoxyCodeLine{01083\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_PRIORITY\_HIGH\_IMG\ \ \ \ \ 0x3101}}
+\DoxyCodeLine{01084\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_PRIORITY\_MEDIUM\_IMG\ \ \ 0x3102}}
+\DoxyCodeLine{01085\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_PRIORITY\_LOW\_IMG\ \ \ \ \ \ 0x3103}}
+\DoxyCodeLine{01086\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_IMG\_context\_priority\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01087\ }
+\DoxyCodeLine{01088\ \textcolor{preprocessor}{\#ifndef\ EGL\_IMG\_image\_plane\_attribs}}
+\DoxyCodeLine{01089\ \textcolor{preprocessor}{\#define\ EGL\_IMG\_image\_plane\_attribs\ 1}}
+\DoxyCodeLine{01090\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_MULTIPLANE\_SEPARATE\_IMG\ 0x3105}}
+\DoxyCodeLine{01091\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_PLANE\_OFFSET\_IMG\ 0x3106}}
+\DoxyCodeLine{01092\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_IMG\_image\_plane\_attribs\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01093\ }
+\DoxyCodeLine{01094\ \textcolor{preprocessor}{\#ifndef\ EGL\_MESA\_drm\_image}}
+\DoxyCodeLine{01095\ \textcolor{preprocessor}{\#define\ EGL\_MESA\_drm\_image\ 1}}
+\DoxyCodeLine{01096\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_FORMAT\_MESA\ \ \ \ \ \ \ \ 0x31D0}}
+\DoxyCodeLine{01097\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_USE\_MESA\ \ \ \ \ \ \ \ \ \ \ 0x31D1}}
+\DoxyCodeLine{01098\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_FORMAT\_ARGB32\_MESA\ 0x31D2}}
+\DoxyCodeLine{01099\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_MESA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D3}}
+\DoxyCodeLine{01100\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_STRIDE\_MESA\ \ \ \ \ \ \ \ 0x31D4}}
+\DoxyCodeLine{01101\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_USE\_SCANOUT\_MESA\ \ \ 0x00000001}}
+\DoxyCodeLine{01102\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_USE\_SHARE\_MESA\ \ \ \ \ 0x00000002}}
+\DoxyCodeLine{01103\ \textcolor{preprocessor}{\#define\ EGL\_DRM\_BUFFER\_USE\_CURSOR\_MESA\ \ \ \ 0x00000004}}
+\DoxyCodeLine{01104\ \textcolor{keyword}{typedef}\ EGLImageKHR\ (EGLAPIENTRYP\ PFNEGLCREATEDRMIMAGEMESAPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{01105\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLEXPORTDRMIMAGEMESAPROC)\ (EGLDisplay\ dpy,\ EGLImageKHR\ image,\ EGLint\ *name,\ EGLint\ *handle,\ EGLint\ *stride);}
+\DoxyCodeLine{01106\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01107\ EGLAPI\ EGLImageKHR\ EGLAPIENTRY\ eglCreateDRMImageMESA\ (EGLDisplay\ dpy,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{01108\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglExportDRMImageMESA\ (EGLDisplay\ dpy,\ EGLImageKHR\ image,\ EGLint\ *name,\ EGLint\ *handle,\ EGLint\ *stride);}
+\DoxyCodeLine{01109\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01110\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_MESA\_drm\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01111\ }
+\DoxyCodeLine{01112\ \textcolor{preprocessor}{\#ifndef\ EGL\_MESA\_image\_dma\_buf\_export}}
+\DoxyCodeLine{01113\ \textcolor{preprocessor}{\#define\ EGL\_MESA\_image\_dma\_buf\_export\ 1}}
+\DoxyCodeLine{01114\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLEXPORTDMABUFIMAGEQUERYMESAPROC)\ (EGLDisplay\ dpy,\ EGLImageKHR\ image,\ \textcolor{keywordtype}{int}\ *fourcc,\ \textcolor{keywordtype}{int}\ *num\_planes,\ EGLuint64KHR\ *modifiers);}
+\DoxyCodeLine{01115\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLEXPORTDMABUFIMAGEMESAPROC)\ (EGLDisplay\ dpy,\ EGLImageKHR\ image,\ \textcolor{keywordtype}{int}\ *fds,\ EGLint\ *strides,\ EGLint\ *offsets);}
+\DoxyCodeLine{01116\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01117\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglExportDMABUFImageQueryMESA\ (EGLDisplay\ dpy,\ EGLImageKHR\ image,\ \textcolor{keywordtype}{int}\ *fourcc,\ \textcolor{keywordtype}{int}\ *num\_planes,\ EGLuint64KHR\ *modifiers);}
+\DoxyCodeLine{01118\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglExportDMABUFImageMESA\ (EGLDisplay\ dpy,\ EGLImageKHR\ image,\ \textcolor{keywordtype}{int}\ *fds,\ EGLint\ *strides,\ EGLint\ *offsets);}
+\DoxyCodeLine{01119\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01120\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_MESA\_image\_dma\_buf\_export\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01121\ }
+\DoxyCodeLine{01122\ \textcolor{preprocessor}{\#ifndef\ EGL\_MESA\_platform\_gbm}}
+\DoxyCodeLine{01123\ \textcolor{preprocessor}{\#define\ EGL\_MESA\_platform\_gbm\ 1}}
+\DoxyCodeLine{01124\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_GBM\_MESA\ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D7}}
+\DoxyCodeLine{01125\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_MESA\_platform\_gbm\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01126\ }
+\DoxyCodeLine{01127\ \textcolor{preprocessor}{\#ifndef\ EGL\_MESA\_platform\_surfaceless}}
+\DoxyCodeLine{01128\ \textcolor{preprocessor}{\#define\ EGL\_MESA\_platform\_surfaceless\ 1}}
+\DoxyCodeLine{01129\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_SURFACELESS\_MESA\ \ \ \ \ 0x31DD}}
+\DoxyCodeLine{01130\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_MESA\_platform\_surfaceless\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01131\ }
+\DoxyCodeLine{01132\ \textcolor{preprocessor}{\#ifndef\ EGL\_MESA\_query\_driver}}
+\DoxyCodeLine{01133\ \textcolor{preprocessor}{\#define\ EGL\_MESA\_query\_driver\ 1}}
+\DoxyCodeLine{01134\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{char}\ *(EGLAPIENTRYP\ PFNEGLGETDISPLAYDRIVERCONFIGPROC)\ (EGLDisplay\ dpy);}
+\DoxyCodeLine{01135\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *(EGLAPIENTRYP\ PFNEGLGETDISPLAYDRIVERNAMEPROC)\ (EGLDisplay\ dpy);}
+\DoxyCodeLine{01136\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01137\ EGLAPI\ \textcolor{keywordtype}{char}\ *EGLAPIENTRY\ eglGetDisplayDriverConfig\ (EGLDisplay\ dpy);}
+\DoxyCodeLine{01138\ EGLAPI\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *EGLAPIENTRY\ eglGetDisplayDriverName\ (EGLDisplay\ dpy);}
+\DoxyCodeLine{01139\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01140\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_MESA\_query\_driver\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01141\ }
+\DoxyCodeLine{01142\ \textcolor{preprocessor}{\#ifndef\ EGL\_NOK\_swap\_region}}
+\DoxyCodeLine{01143\ \textcolor{preprocessor}{\#define\ EGL\_NOK\_swap\_region\ 1}}
+\DoxyCodeLine{01144\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSWAPBUFFERSREGIONNOKPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ numRects,\ \textcolor{keyword}{const}\ EGLint\ *rects);}
+\DoxyCodeLine{01145\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01146\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSwapBuffersRegionNOK\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ numRects,\ \textcolor{keyword}{const}\ EGLint\ *rects);}
+\DoxyCodeLine{01147\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01148\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NOK\_swap\_region\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01149\ }
+\DoxyCodeLine{01150\ \textcolor{preprocessor}{\#ifndef\ EGL\_NOK\_swap\_region2}}
+\DoxyCodeLine{01151\ \textcolor{preprocessor}{\#define\ EGL\_NOK\_swap\_region2\ 1}}
+\DoxyCodeLine{01152\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSWAPBUFFERSREGION2NOKPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ numRects,\ \textcolor{keyword}{const}\ EGLint\ *rects);}
+\DoxyCodeLine{01153\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01154\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSwapBuffersRegion2NOK\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ numRects,\ \textcolor{keyword}{const}\ EGLint\ *rects);}
+\DoxyCodeLine{01155\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01156\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NOK\_swap\_region2\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01157\ }
+\DoxyCodeLine{01158\ \textcolor{preprocessor}{\#ifndef\ EGL\_NOK\_texture\_from\_pixmap}}
+\DoxyCodeLine{01159\ \textcolor{preprocessor}{\#define\ EGL\_NOK\_texture\_from\_pixmap\ 1}}
+\DoxyCodeLine{01160\ \textcolor{preprocessor}{\#define\ EGL\_Y\_INVERTED\_NOK\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x307F}}
+\DoxyCodeLine{01161\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NOK\_texture\_from\_pixmap\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01162\ }
+\DoxyCodeLine{01163\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_3dvision\_surface}}
+\DoxyCodeLine{01164\ \textcolor{preprocessor}{\#define\ EGL\_NV\_3dvision\_surface\ 1}}
+\DoxyCodeLine{01165\ \textcolor{preprocessor}{\#define\ EGL\_AUTO\_STEREO\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3136}}
+\DoxyCodeLine{01166\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_3dvision\_surface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01167\ }
+\DoxyCodeLine{01168\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_context\_priority\_realtime}}
+\DoxyCodeLine{01169\ \textcolor{preprocessor}{\#define\ EGL\_NV\_context\_priority\_realtime\ 1}}
+\DoxyCodeLine{01170\ \textcolor{preprocessor}{\#define\ EGL\_CONTEXT\_PRIORITY\_REALTIME\_NV\ \ 0x3357}}
+\DoxyCodeLine{01171\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_context\_priority\_realtime\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01172\ }
+\DoxyCodeLine{01173\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_coverage\_sample}}
+\DoxyCodeLine{01174\ \textcolor{preprocessor}{\#define\ EGL\_NV\_coverage\_sample\ 1}}
+\DoxyCodeLine{01175\ \textcolor{preprocessor}{\#define\ EGL\_COVERAGE\_BUFFERS\_NV\ \ \ \ \ \ \ \ \ \ \ 0x30E0}}
+\DoxyCodeLine{01176\ \textcolor{preprocessor}{\#define\ EGL\_COVERAGE\_SAMPLES\_NV\ \ \ \ \ \ \ \ \ \ \ 0x30E1}}
+\DoxyCodeLine{01177\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_coverage\_sample\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01178\ }
+\DoxyCodeLine{01179\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_coverage\_sample\_resolve}}
+\DoxyCodeLine{01180\ \textcolor{preprocessor}{\#define\ EGL\_NV\_coverage\_sample\_resolve\ 1}}
+\DoxyCodeLine{01181\ \textcolor{preprocessor}{\#define\ EGL\_COVERAGE\_SAMPLE\_RESOLVE\_NV\ \ \ \ 0x3131}}
+\DoxyCodeLine{01182\ \textcolor{preprocessor}{\#define\ EGL\_COVERAGE\_SAMPLE\_RESOLVE\_DEFAULT\_NV\ 0x3132}}
+\DoxyCodeLine{01183\ \textcolor{preprocessor}{\#define\ EGL\_COVERAGE\_SAMPLE\_RESOLVE\_NONE\_NV\ 0x3133}}
+\DoxyCodeLine{01184\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_coverage\_sample\_resolve\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01185\ }
+\DoxyCodeLine{01186\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_cuda\_event}}
+\DoxyCodeLine{01187\ \textcolor{preprocessor}{\#define\ EGL\_NV\_cuda\_event\ 1}}
+\DoxyCodeLine{01188\ \textcolor{preprocessor}{\#define\ EGL\_CUDA\_EVENT\_HANDLE\_NV\ \ \ \ \ \ \ \ \ \ 0x323B}}
+\DoxyCodeLine{01189\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CUDA\_EVENT\_NV\ \ \ \ \ \ \ \ \ \ \ \ 0x323C}}
+\DoxyCodeLine{01190\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CUDA\_EVENT\_COMPLETE\_NV\ \ \ 0x323D}}
+\DoxyCodeLine{01191\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_cuda\_event\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01192\ }
+\DoxyCodeLine{01193\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_depth\_nonlinear}}
+\DoxyCodeLine{01194\ \textcolor{preprocessor}{\#define\ EGL\_NV\_depth\_nonlinear\ 1}}
+\DoxyCodeLine{01195\ \textcolor{preprocessor}{\#define\ EGL\_DEPTH\_ENCODING\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30E2}}
+\DoxyCodeLine{01196\ \textcolor{preprocessor}{\#define\ EGL\_DEPTH\_ENCODING\_NONE\_NV\ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{01197\ \textcolor{preprocessor}{\#define\ EGL\_DEPTH\_ENCODING\_NONLINEAR\_NV\ \ \ 0x30E3}}
+\DoxyCodeLine{01198\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_depth\_nonlinear\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01199\ }
+\DoxyCodeLine{01200\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_device\_cuda}}
+\DoxyCodeLine{01201\ \textcolor{preprocessor}{\#define\ EGL\_NV\_device\_cuda\ 1}}
+\DoxyCodeLine{01202\ \textcolor{preprocessor}{\#define\ EGL\_CUDA\_DEVICE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x323A}}
+\DoxyCodeLine{01203\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_device\_cuda\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01204\ }
+\DoxyCodeLine{01205\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_native\_query}}
+\DoxyCodeLine{01206\ \textcolor{preprocessor}{\#define\ EGL\_NV\_native\_query\ 1}}
+\DoxyCodeLine{01207\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYNATIVEDISPLAYNVPROC)\ (EGLDisplay\ dpy,\ EGLNativeDisplayType\ *display\_id);}
+\DoxyCodeLine{01208\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYNATIVEWINDOWNVPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surf,\ EGLNativeWindowType\ *window);}
+\DoxyCodeLine{01209\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYNATIVEPIXMAPNVPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surf,\ EGLNativePixmapType\ *pixmap);}
+\DoxyCodeLine{01210\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01211\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryNativeDisplayNV\ (EGLDisplay\ dpy,\ EGLNativeDisplayType\ *display\_id);}
+\DoxyCodeLine{01212\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryNativeWindowNV\ (EGLDisplay\ dpy,\ EGLSurface\ surf,\ EGLNativeWindowType\ *window);}
+\DoxyCodeLine{01213\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryNativePixmapNV\ (EGLDisplay\ dpy,\ EGLSurface\ surf,\ EGLNativePixmapType\ *pixmap);}
+\DoxyCodeLine{01214\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01215\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_native\_query\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01216\ }
+\DoxyCodeLine{01217\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_post\_convert\_rounding}}
+\DoxyCodeLine{01218\ \textcolor{preprocessor}{\#define\ EGL\_NV\_post\_convert\_rounding\ 1}}
+\DoxyCodeLine{01219\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_post\_convert\_rounding\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01220\ }
+\DoxyCodeLine{01221\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_post\_sub\_buffer}}
+\DoxyCodeLine{01222\ \textcolor{preprocessor}{\#define\ EGL\_NV\_post\_sub\_buffer\ 1}}
+\DoxyCodeLine{01223\ \textcolor{preprocessor}{\#define\ EGL\_POST\_SUB\_BUFFER\_SUPPORTED\_NV\ \ 0x30BE}}
+\DoxyCodeLine{01224\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLPOSTSUBBUFFERNVPROC)\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ x,\ EGLint\ y,\ EGLint\ width,\ EGLint\ height);}
+\DoxyCodeLine{01225\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01226\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglPostSubBufferNV\ (EGLDisplay\ dpy,\ EGLSurface\ surface,\ EGLint\ x,\ EGLint\ y,\ EGLint\ width,\ EGLint\ height);}
+\DoxyCodeLine{01227\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01228\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_post\_sub\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01229\ }
+\DoxyCodeLine{01230\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_quadruple\_buffer}}
+\DoxyCodeLine{01231\ \textcolor{preprocessor}{\#define\ EGL\_NV\_quadruple\_buffer\ 1}}
+\DoxyCodeLine{01232\ \textcolor{preprocessor}{\#define\ EGL\_QUADRUPLE\_BUFFER\_NV\ \ \ \ \ \ \ \ \ \ \ 0x3231}}
+\DoxyCodeLine{01233\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_quadruple\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01234\ }
+\DoxyCodeLine{01235\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_robustness\_video\_memory\_purge}}
+\DoxyCodeLine{01236\ \textcolor{preprocessor}{\#define\ EGL\_NV\_robustness\_video\_memory\_purge\ 1}}
+\DoxyCodeLine{01237\ \textcolor{preprocessor}{\#define\ EGL\_GENERATE\_RESET\_ON\_VIDEO\_MEMORY\_PURGE\_NV\ 0x334C}}
+\DoxyCodeLine{01238\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_robustness\_video\_memory\_purge\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01239\ }
+\DoxyCodeLine{01240\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_consumer\_eglimage}}
+\DoxyCodeLine{01241\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_consumer\_eglimage\ 1}}
+\DoxyCodeLine{01242\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CONSUMER\_IMAGE\_NV\ \ \ \ \ \ 0x3373}}
+\DoxyCodeLine{01243\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_IMAGE\_ADD\_NV\ \ \ \ \ \ \ \ \ \ \ 0x3374}}
+\DoxyCodeLine{01244\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_IMAGE\_REMOVE\_NV\ \ \ \ \ \ \ \ 0x3375}}
+\DoxyCodeLine{01245\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_IMAGE\_AVAILABLE\_NV\ \ \ \ \ 0x3376}}
+\DoxyCodeLine{01246\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMIMAGECONSUMERCONNECTNVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLint\ num\_modifiers,\ \textcolor{keyword}{const}\ EGLuint64KHR\ *modifiers,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{01247\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLQUERYSTREAMCONSUMEREVENTNVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLTime\ timeout,\ EGLenum\ *event,\ EGLAttrib\ *aux);}
+\DoxyCodeLine{01248\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMACQUIREIMAGENVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLImage\ *pImage,\ EGLSync\ sync);}
+\DoxyCodeLine{01249\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMRELEASEIMAGENVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLImage\ image,\ EGLSync\ sync);}
+\DoxyCodeLine{01250\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01251\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamImageConsumerConnectNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLint\ num\_modifiers,\ \textcolor{keyword}{const}\ EGLuint64KHR\ *modifiers,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{01252\ EGLAPI\ EGLint\ EGLAPIENTRY\ eglQueryStreamConsumerEventNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLTime\ timeout,\ EGLenum\ *event,\ EGLAttrib\ *aux);}
+\DoxyCodeLine{01253\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamAcquireImageNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLImage\ *pImage,\ EGLSync\ sync);}
+\DoxyCodeLine{01254\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamReleaseImageNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLImage\ image,\ EGLSync\ sync);}
+\DoxyCodeLine{01255\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01256\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_consumer\_eglimage\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01257\ }
+\DoxyCodeLine{01258\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_consumer\_eglimage\_use\_scanout\_attrib}}
+\DoxyCodeLine{01259\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_consumer\_eglimage\_use\_scanout\_attrib\ 1}}
+\DoxyCodeLine{01260\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CONSUMER\_IMAGE\_USE\_SCANOUT\_NV\ 0x3378}}
+\DoxyCodeLine{01261\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_consumer\_eglimage\_use\_scanout\_attrib\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01262\ }
+\DoxyCodeLine{01263\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_consumer\_gltexture\_yuv}}
+\DoxyCodeLine{01264\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_consumer\_gltexture\_yuv\ 1}}
+\DoxyCodeLine{01265\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_PLANE0\_TEXTURE\_UNIT\_NV\ \ \ \ 0x332C}}
+\DoxyCodeLine{01266\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_PLANE1\_TEXTURE\_UNIT\_NV\ \ \ \ 0x332D}}
+\DoxyCodeLine{01267\ \textcolor{preprocessor}{\#define\ EGL\_YUV\_PLANE2\_TEXTURE\_UNIT\_NV\ \ \ \ 0x332E}}
+\DoxyCodeLine{01268\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMCONSUMERGLTEXTUREEXTERNALATTRIBSNVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{01269\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01270\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamConsumerGLTextureExternalAttribsNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ \textcolor{keyword}{const}\ EGLAttrib\ *attrib\_list);}
+\DoxyCodeLine{01271\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01272\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_consumer\_gltexture\_yuv\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01273\ }
+\DoxyCodeLine{01274\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_cross\_display}}
+\DoxyCodeLine{01275\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_cross\_display\ 1}}
+\DoxyCodeLine{01276\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CROSS\_DISPLAY\_NV\ \ \ \ \ \ \ 0x334E}}
+\DoxyCodeLine{01277\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_cross\_display\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01278\ }
+\DoxyCodeLine{01279\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_cross\_object}}
+\DoxyCodeLine{01280\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_cross\_object\ 1}}
+\DoxyCodeLine{01281\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CROSS\_OBJECT\_NV\ \ \ \ \ \ \ \ 0x334D}}
+\DoxyCodeLine{01282\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_cross\_object\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01283\ }
+\DoxyCodeLine{01284\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_cross\_partition}}
+\DoxyCodeLine{01285\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_cross\_partition\ 1}}
+\DoxyCodeLine{01286\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CROSS\_PARTITION\_NV\ \ \ \ \ 0x323F}}
+\DoxyCodeLine{01287\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_cross\_partition\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01288\ }
+\DoxyCodeLine{01289\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_cross\_process}}
+\DoxyCodeLine{01290\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_cross\_process\ 1}}
+\DoxyCodeLine{01291\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CROSS\_PROCESS\_NV\ \ \ \ \ \ \ 0x3245}}
+\DoxyCodeLine{01292\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_cross\_process\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01293\ }
+\DoxyCodeLine{01294\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_cross\_system}}
+\DoxyCodeLine{01295\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_cross\_system\ 1}}
+\DoxyCodeLine{01296\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CROSS\_SYSTEM\_NV\ \ \ \ \ \ \ \ 0x334F}}
+\DoxyCodeLine{01297\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_cross\_system\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01298\ }
+\DoxyCodeLine{01299\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_dma}}
+\DoxyCodeLine{01300\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_dma\ 1}}
+\DoxyCodeLine{01301\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_DMA\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3371}}
+\DoxyCodeLine{01302\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_DMA\_SERVER\_NV\ \ \ \ \ \ \ \ \ \ 0x3372}}
+\DoxyCodeLine{01303\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_dma\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01304\ }
+\DoxyCodeLine{01305\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_fifo\_next}}
+\DoxyCodeLine{01306\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_fifo\_next\ 1}}
+\DoxyCodeLine{01307\ \textcolor{preprocessor}{\#define\ EGL\_PENDING\_FRAME\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3329}}
+\DoxyCodeLine{01308\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_TIME\_PENDING\_NV\ \ \ \ \ \ \ \ 0x332A}}
+\DoxyCodeLine{01309\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_fifo\_next\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01310\ }
+\DoxyCodeLine{01311\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_fifo\_synchronous}}
+\DoxyCodeLine{01312\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_fifo\_synchronous\ 1}}
+\DoxyCodeLine{01313\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_FIFO\_SYNCHRONOUS\_NV\ \ \ \ 0x3336}}
+\DoxyCodeLine{01314\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_fifo\_synchronous\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01315\ }
+\DoxyCodeLine{01316\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_flush}}
+\DoxyCodeLine{01317\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_flush\ 1}}
+\DoxyCodeLine{01318\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSTREAMFLUSHNVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{01319\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01320\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglStreamFlushNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{01321\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01322\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_flush\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01323\ }
+\DoxyCodeLine{01324\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_frame\_limits}}
+\DoxyCodeLine{01325\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_frame\_limits\ 1}}
+\DoxyCodeLine{01326\ \textcolor{preprocessor}{\#define\ EGL\_PRODUCER\_MAX\_FRAME\_HINT\_NV\ \ \ \ 0x3337}}
+\DoxyCodeLine{01327\ \textcolor{preprocessor}{\#define\ EGL\_CONSUMER\_MAX\_FRAME\_HINT\_NV\ \ \ \ 0x3338}}
+\DoxyCodeLine{01328\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_frame\_limits\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01329\ }
+\DoxyCodeLine{01330\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_metadata}}
+\DoxyCodeLine{01331\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_metadata\ 1}}
+\DoxyCodeLine{01332\ \textcolor{preprocessor}{\#define\ EGL\_MAX\_STREAM\_METADATA\_BLOCKS\_NV\ 0x3250}}
+\DoxyCodeLine{01333\ \textcolor{preprocessor}{\#define\ EGL\_MAX\_STREAM\_METADATA\_BLOCK\_SIZE\_NV\ 0x3251}}
+\DoxyCodeLine{01334\ \textcolor{preprocessor}{\#define\ EGL\_MAX\_STREAM\_METADATA\_TOTAL\_SIZE\_NV\ 0x3252}}
+\DoxyCodeLine{01335\ \textcolor{preprocessor}{\#define\ EGL\_PRODUCER\_METADATA\_NV\ \ \ \ \ \ \ \ \ \ 0x3253}}
+\DoxyCodeLine{01336\ \textcolor{preprocessor}{\#define\ EGL\_CONSUMER\_METADATA\_NV\ \ \ \ \ \ \ \ \ \ 0x3254}}
+\DoxyCodeLine{01337\ \textcolor{preprocessor}{\#define\ EGL\_PENDING\_METADATA\_NV\ \ \ \ \ \ \ \ \ \ \ 0x3328}}
+\DoxyCodeLine{01338\ \textcolor{preprocessor}{\#define\ EGL\_METADATA0\_SIZE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3255}}
+\DoxyCodeLine{01339\ \textcolor{preprocessor}{\#define\ EGL\_METADATA1\_SIZE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3256}}
+\DoxyCodeLine{01340\ \textcolor{preprocessor}{\#define\ EGL\_METADATA2\_SIZE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3257}}
+\DoxyCodeLine{01341\ \textcolor{preprocessor}{\#define\ EGL\_METADATA3\_SIZE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3258}}
+\DoxyCodeLine{01342\ \textcolor{preprocessor}{\#define\ EGL\_METADATA0\_TYPE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3259}}
+\DoxyCodeLine{01343\ \textcolor{preprocessor}{\#define\ EGL\_METADATA1\_TYPE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x325A}}
+\DoxyCodeLine{01344\ \textcolor{preprocessor}{\#define\ EGL\_METADATA2\_TYPE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x325B}}
+\DoxyCodeLine{01345\ \textcolor{preprocessor}{\#define\ EGL\_METADATA3\_TYPE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x325C}}
+\DoxyCodeLine{01346\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYDISPLAYATTRIBNVPROC)\ (EGLDisplay\ dpy,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{01347\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSETSTREAMMETADATANVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLint\ n,\ EGLint\ offset,\ EGLint\ size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{01348\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYSTREAMMETADATANVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ name,\ EGLint\ n,\ EGLint\ offset,\ EGLint\ size,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{01349\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01350\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryDisplayAttribNV\ (EGLDisplay\ dpy,\ EGLint\ attribute,\ EGLAttrib\ *value);}
+\DoxyCodeLine{01351\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSetStreamMetadataNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLint\ n,\ EGLint\ offset,\ EGLint\ size,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{01352\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryStreamMetadataNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ name,\ EGLint\ n,\ EGLint\ offset,\ EGLint\ size,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{01353\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01354\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_metadata\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01355\ }
+\DoxyCodeLine{01356\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_origin}}
+\DoxyCodeLine{01357\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_origin\ 1}}
+\DoxyCodeLine{01358\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_FRAME\_ORIGIN\_X\_NV\ \ \ \ \ \ 0x3366}}
+\DoxyCodeLine{01359\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_FRAME\_ORIGIN\_Y\_NV\ \ \ \ \ \ 0x3367}}
+\DoxyCodeLine{01360\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_FRAME\_MAJOR\_AXIS\_NV\ \ \ \ 0x3368}}
+\DoxyCodeLine{01361\ \textcolor{preprocessor}{\#define\ EGL\_CONSUMER\_AUTO\_ORIENTATION\_NV\ \ 0x3369}}
+\DoxyCodeLine{01362\ \textcolor{preprocessor}{\#define\ EGL\_PRODUCER\_AUTO\_ORIENTATION\_NV\ \ 0x336A}}
+\DoxyCodeLine{01363\ \textcolor{preprocessor}{\#define\ EGL\_LEFT\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x336B}}
+\DoxyCodeLine{01364\ \textcolor{preprocessor}{\#define\ EGL\_RIGHT\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x336C}}
+\DoxyCodeLine{01365\ \textcolor{preprocessor}{\#define\ EGL\_TOP\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x336D}}
+\DoxyCodeLine{01366\ \textcolor{preprocessor}{\#define\ EGL\_BOTTOM\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x336E}}
+\DoxyCodeLine{01367\ \textcolor{preprocessor}{\#define\ EGL\_X\_AXIS\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x336F}}
+\DoxyCodeLine{01368\ \textcolor{preprocessor}{\#define\ EGL\_Y\_AXIS\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3370}}
+\DoxyCodeLine{01369\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_origin\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01370\ }
+\DoxyCodeLine{01371\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_remote}}
+\DoxyCodeLine{01372\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_remote\ 1}}
+\DoxyCodeLine{01373\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_STATE\_INITIALIZING\_NV\ \ 0x3240}}
+\DoxyCodeLine{01374\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_TYPE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3241}}
+\DoxyCodeLine{01375\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_PROTOCOL\_NV\ \ \ \ \ \ \ \ \ \ \ \ 0x3242}}
+\DoxyCodeLine{01376\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_ENDPOINT\_NV\ \ \ \ \ \ \ \ \ \ \ \ 0x3243}}
+\DoxyCodeLine{01377\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_LOCAL\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3244}}
+\DoxyCodeLine{01378\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_PRODUCER\_NV\ \ \ \ \ \ \ \ \ \ \ \ 0x3247}}
+\DoxyCodeLine{01379\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_CONSUMER\_NV\ \ \ \ \ \ \ \ \ \ \ \ 0x3248}}
+\DoxyCodeLine{01380\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_PROTOCOL\_FD\_NV\ \ \ \ \ \ \ \ \ 0x3246}}
+\DoxyCodeLine{01381\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_remote\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01382\ }
+\DoxyCodeLine{01383\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_reset}}
+\DoxyCodeLine{01384\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_reset\ 1}}
+\DoxyCodeLine{01385\ \textcolor{preprocessor}{\#define\ EGL\_SUPPORT\_RESET\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3334}}
+\DoxyCodeLine{01386\ \textcolor{preprocessor}{\#define\ EGL\_SUPPORT\_REUSE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3335}}
+\DoxyCodeLine{01387\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLRESETSTREAMNVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{01388\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01389\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglResetStreamNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream);}
+\DoxyCodeLine{01390\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01391\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_reset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01392\ }
+\DoxyCodeLine{01393\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_socket}}
+\DoxyCodeLine{01394\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_socket\ 1}}
+\DoxyCodeLine{01395\ \textcolor{preprocessor}{\#define\ EGL\_STREAM\_PROTOCOL\_SOCKET\_NV\ \ \ \ \ 0x324B}}
+\DoxyCodeLine{01396\ \textcolor{preprocessor}{\#define\ EGL\_SOCKET\_HANDLE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x324C}}
+\DoxyCodeLine{01397\ \textcolor{preprocessor}{\#define\ EGL\_SOCKET\_TYPE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x324D}}
+\DoxyCodeLine{01398\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_socket\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01399\ }
+\DoxyCodeLine{01400\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_socket\_inet}}
+\DoxyCodeLine{01401\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_socket\_inet\ 1}}
+\DoxyCodeLine{01402\ \textcolor{preprocessor}{\#define\ EGL\_SOCKET\_TYPE\_INET\_NV\ \ \ \ \ \ \ \ \ \ \ 0x324F}}
+\DoxyCodeLine{01403\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_socket\_inet\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01404\ }
+\DoxyCodeLine{01405\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_socket\_unix}}
+\DoxyCodeLine{01406\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_socket\_unix\ 1}}
+\DoxyCodeLine{01407\ \textcolor{preprocessor}{\#define\ EGL\_SOCKET\_TYPE\_UNIX\_NV\ \ \ \ \ \ \ \ \ \ \ 0x324E}}
+\DoxyCodeLine{01408\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_socket\_unix\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01409\ }
+\DoxyCodeLine{01410\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_stream\_sync}}
+\DoxyCodeLine{01411\ \textcolor{preprocessor}{\#define\ EGL\_NV\_stream\_sync\ 1}}
+\DoxyCodeLine{01412\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_NEW\_FRAME\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x321F}}
+\DoxyCodeLine{01413\ \textcolor{keyword}{typedef}\ EGLSyncKHR\ (EGLAPIENTRYP\ PFNEGLCREATESTREAMSYNCNVPROC)\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ type,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{01414\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01415\ EGLAPI\ EGLSyncKHR\ EGLAPIENTRY\ eglCreateStreamSyncNV\ (EGLDisplay\ dpy,\ EGLStreamKHR\ stream,\ EGLenum\ type,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{01416\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01417\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_stream\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01418\ }
+\DoxyCodeLine{01419\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_sync}}
+\DoxyCodeLine{01420\ \textcolor{preprocessor}{\#define\ EGL\_NV\_sync\ 1}}
+\DoxyCodeLine{01421\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *EGLSyncNV;}
+\DoxyCodeLine{01422\ \textcolor{keyword}{typedef}\ khronos\_utime\_nanoseconds\_t\ EGLTimeNV;}
+\DoxyCodeLine{01423\ \textcolor{preprocessor}{\#ifdef\ KHRONOS\_SUPPORT\_INT64}}
+\DoxyCodeLine{01424\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_PRIOR\_COMMANDS\_COMPLETE\_NV\ 0x30E6}}
+\DoxyCodeLine{01425\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_STATUS\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30E7}}
+\DoxyCodeLine{01426\ \textcolor{preprocessor}{\#define\ EGL\_SIGNALED\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30E8}}
+\DoxyCodeLine{01427\ \textcolor{preprocessor}{\#define\ EGL\_UNSIGNALED\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30E9}}
+\DoxyCodeLine{01428\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_FLUSH\_COMMANDS\_BIT\_NV\ \ \ \ 0x0001}}
+\DoxyCodeLine{01429\ \textcolor{preprocessor}{\#define\ EGL\_FOREVER\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0xFFFFFFFFFFFFFFFFull}}
+\DoxyCodeLine{01430\ \textcolor{preprocessor}{\#define\ EGL\_ALREADY\_SIGNALED\_NV\ \ \ \ \ \ \ \ \ \ \ 0x30EA}}
+\DoxyCodeLine{01431\ \textcolor{preprocessor}{\#define\ EGL\_TIMEOUT\_EXPIRED\_NV\ \ \ \ \ \ \ \ \ \ \ \ 0x30EB}}
+\DoxyCodeLine{01432\ \textcolor{preprocessor}{\#define\ EGL\_CONDITION\_SATISFIED\_NV\ \ \ \ \ \ \ \ 0x30EC}}
+\DoxyCodeLine{01433\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_TYPE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30ED}}
+\DoxyCodeLine{01434\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_CONDITION\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ 0x30EE}}
+\DoxyCodeLine{01435\ \textcolor{preprocessor}{\#define\ EGL\_SYNC\_FENCE\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x30EF}}
+\DoxyCodeLine{01436\ \textcolor{preprocessor}{\#define\ EGL\_NO\_SYNC\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EGL\_CAST(EGLSyncNV,0)}}
+\DoxyCodeLine{01437\ \textcolor{keyword}{typedef}\ EGLSyncNV\ (EGLAPIENTRYP\ PFNEGLCREATEFENCESYNCNVPROC)\ (EGLDisplay\ dpy,\ EGLenum\ condition,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{01438\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLDESTROYSYNCNVPROC)\ (EGLSyncNV\ sync);}
+\DoxyCodeLine{01439\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLFENCENVPROC)\ (EGLSyncNV\ sync);}
+\DoxyCodeLine{01440\ \textcolor{keyword}{typedef}\ EGLint\ (EGLAPIENTRYP\ PFNEGLCLIENTWAITSYNCNVPROC)\ (EGLSyncNV\ sync,\ EGLint\ flags,\ EGLTimeNV\ timeout);}
+\DoxyCodeLine{01441\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLSIGNALSYNCNVPROC)\ (EGLSyncNV\ sync,\ EGLenum\ mode);}
+\DoxyCodeLine{01442\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLGETSYNCATTRIBNVPROC)\ (EGLSyncNV\ sync,\ EGLint\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{01443\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01444\ EGLAPI\ EGLSyncNV\ EGLAPIENTRY\ eglCreateFenceSyncNV\ (EGLDisplay\ dpy,\ EGLenum\ condition,\ \textcolor{keyword}{const}\ EGLint\ *attrib\_list);}
+\DoxyCodeLine{01445\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglDestroySyncNV\ (EGLSyncNV\ sync);}
+\DoxyCodeLine{01446\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglFenceNV\ (EGLSyncNV\ sync);}
+\DoxyCodeLine{01447\ EGLAPI\ EGLint\ EGLAPIENTRY\ eglClientWaitSyncNV\ (EGLSyncNV\ sync,\ EGLint\ flags,\ EGLTimeNV\ timeout);}
+\DoxyCodeLine{01448\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglSignalSyncNV\ (EGLSyncNV\ sync,\ EGLenum\ mode);}
+\DoxyCodeLine{01449\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglGetSyncAttribNV\ (EGLSyncNV\ sync,\ EGLint\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{01450\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01451\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ KHRONOS\_SUPPORT\_INT64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01452\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_sync\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01453\ }
+\DoxyCodeLine{01454\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_system\_time}}
+\DoxyCodeLine{01455\ \textcolor{preprocessor}{\#define\ EGL\_NV\_system\_time\ 1}}
+\DoxyCodeLine{01456\ \textcolor{keyword}{typedef}\ khronos\_utime\_nanoseconds\_t\ EGLuint64NV;}
+\DoxyCodeLine{01457\ \textcolor{preprocessor}{\#ifdef\ KHRONOS\_SUPPORT\_INT64}}
+\DoxyCodeLine{01458\ \textcolor{keyword}{typedef}\ EGLuint64NV\ (EGLAPIENTRYP\ PFNEGLGETSYSTEMTIMEFREQUENCYNVPROC)\ (void);}
+\DoxyCodeLine{01459\ \textcolor{keyword}{typedef}\ EGLuint64NV\ (EGLAPIENTRYP\ PFNEGLGETSYSTEMTIMENVPROC)\ (void);}
+\DoxyCodeLine{01460\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01461\ EGLAPI\ EGLuint64NV\ EGLAPIENTRY\ eglGetSystemTimeFrequencyNV\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01462\ EGLAPI\ EGLuint64NV\ EGLAPIENTRY\ eglGetSystemTimeNV\ (\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01463\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01464\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ KHRONOS\_SUPPORT\_INT64\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01465\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_system\_time\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01466\ }
+\DoxyCodeLine{01467\ \textcolor{preprocessor}{\#ifndef\ EGL\_NV\_triple\_buffer}}
+\DoxyCodeLine{01468\ \textcolor{preprocessor}{\#define\ EGL\_NV\_triple\_buffer\ 1}}
+\DoxyCodeLine{01469\ \textcolor{preprocessor}{\#define\ EGL\_TRIPLE\_BUFFER\_NV\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x3230}}
+\DoxyCodeLine{01470\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_NV\_triple\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01471\ }
+\DoxyCodeLine{01472\ \textcolor{preprocessor}{\#ifndef\ EGL\_QNX\_image\_native\_buffer}}
+\DoxyCodeLine{01473\ \textcolor{preprocessor}{\#define\ EGL\_QNX\_image\_native\_buffer\ 1}}
+\DoxyCodeLine{01474\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_QNX\ \ \ \ \ \ \ \ \ \ \ \ \ 0x3551}}
+\DoxyCodeLine{01475\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_QNX\_image\_native\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01476\ }
+\DoxyCodeLine{01477\ \textcolor{preprocessor}{\#ifndef\ EGL\_QNX\_platform\_screen}}
+\DoxyCodeLine{01478\ \textcolor{preprocessor}{\#define\ EGL\_QNX\_platform\_screen\ 1}}
+\DoxyCodeLine{01479\ \textcolor{preprocessor}{\#define\ EGL\_PLATFORM\_SCREEN\_QNX\ \ \ \ \ \ \ \ \ \ \ 0x3550}}
+\DoxyCodeLine{01480\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_QNX\_platform\_screen\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01481\ }
+\DoxyCodeLine{01482\ \textcolor{preprocessor}{\#ifndef\ EGL\_TIZEN\_image\_native\_buffer}}
+\DoxyCodeLine{01483\ \textcolor{preprocessor}{\#define\ EGL\_TIZEN\_image\_native\_buffer\ 1}}
+\DoxyCodeLine{01484\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_BUFFER\_TIZEN\ \ \ \ \ \ \ \ \ \ \ 0x32A0}}
+\DoxyCodeLine{01485\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_TIZEN\_image\_native\_buffer\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01486\ }
+\DoxyCodeLine{01487\ \textcolor{preprocessor}{\#ifndef\ EGL\_TIZEN\_image\_native\_surface}}
+\DoxyCodeLine{01488\ \textcolor{preprocessor}{\#define\ EGL\_TIZEN\_image\_native\_surface\ 1}}
+\DoxyCodeLine{01489\ \textcolor{preprocessor}{\#define\ EGL\_NATIVE\_SURFACE\_TIZEN\ \ \ \ \ \ \ \ \ \ 0x32A1}}
+\DoxyCodeLine{01490\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_TIZEN\_image\_native\_surface\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01491\ }
+\DoxyCodeLine{01492\ \textcolor{preprocessor}{\#ifndef\ EGL\_WL\_bind\_wayland\_display}}
+\DoxyCodeLine{01493\ \textcolor{preprocessor}{\#define\ EGL\_WL\_bind\_wayland\_display\ 1}}
+\DoxyCodeLine{01494\ \textcolor{preprocessor}{\#define\ PFNEGLBINDWAYLANDDISPLAYWL\ PFNEGLBINDWAYLANDDISPLAYWLPROC}}
+\DoxyCodeLine{01495\ \textcolor{preprocessor}{\#define\ PFNEGLUNBINDWAYLANDDISPLAYWL\ PFNEGLUNBINDWAYLANDDISPLAYWLPROC}}
+\DoxyCodeLine{01496\ \textcolor{preprocessor}{\#define\ PFNEGLQUERYWAYLANDBUFFERWL\ PFNEGLQUERYWAYLANDBUFFERWLPROC}}
+\DoxyCodeLine{01497\ \textcolor{keyword}{struct\ }wl\_display;}
+\DoxyCodeLine{01498\ \textcolor{keyword}{struct\ }wl\_resource;}
+\DoxyCodeLine{01499\ \textcolor{preprocessor}{\#define\ EGL\_WAYLAND\_BUFFER\_WL\ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D5}}
+\DoxyCodeLine{01500\ \textcolor{preprocessor}{\#define\ EGL\_WAYLAND\_PLANE\_WL\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D6}}
+\DoxyCodeLine{01501\ \textcolor{preprocessor}{\#define\ EGL\_TEXTURE\_Y\_U\_V\_WL\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D7}}
+\DoxyCodeLine{01502\ \textcolor{preprocessor}{\#define\ EGL\_TEXTURE\_Y\_UV\_WL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D8}}
+\DoxyCodeLine{01503\ \textcolor{preprocessor}{\#define\ EGL\_TEXTURE\_Y\_XUXV\_WL\ \ \ \ \ \ \ \ \ \ \ \ \ 0x31D9}}
+\DoxyCodeLine{01504\ \textcolor{preprocessor}{\#define\ EGL\_TEXTURE\_EXTERNAL\_WL\ \ \ \ \ \ \ \ \ \ \ 0x31DA}}
+\DoxyCodeLine{01505\ \textcolor{preprocessor}{\#define\ EGL\_WAYLAND\_Y\_INVERTED\_WL\ \ \ \ \ \ \ \ \ 0x31DB}}
+\DoxyCodeLine{01506\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLBINDWAYLANDDISPLAYWLPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{struct\ }wl\_display\ *display);}
+\DoxyCodeLine{01507\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLUNBINDWAYLANDDISPLAYWLPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{struct\ }wl\_display\ *display);}
+\DoxyCodeLine{01508\ \textcolor{keyword}{typedef}\ EGLBoolean\ (EGLAPIENTRYP\ PFNEGLQUERYWAYLANDBUFFERWLPROC)\ (EGLDisplay\ dpy,\ \textcolor{keyword}{struct\ }wl\_resource\ *buffer,\ EGLint\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{01509\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01510\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglBindWaylandDisplayWL\ (EGLDisplay\ dpy,\ \textcolor{keyword}{struct}\ wl\_display\ *display);}
+\DoxyCodeLine{01511\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglUnbindWaylandDisplayWL\ (EGLDisplay\ dpy,\ \textcolor{keyword}{struct}\ wl\_display\ *display);}
+\DoxyCodeLine{01512\ EGLAPI\ EGLBoolean\ EGLAPIENTRY\ eglQueryWaylandBufferWL\ (EGLDisplay\ dpy,\ \textcolor{keyword}{struct}\ wl\_resource\ *buffer,\ EGLint\ attribute,\ EGLint\ *value);}
+\DoxyCodeLine{01513\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01514\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_WL\_bind\_wayland\_display\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01515\ }
+\DoxyCodeLine{01516\ \textcolor{preprocessor}{\#ifndef\ EGL\_WL\_create\_wayland\_buffer\_from\_image}}
+\DoxyCodeLine{01517\ \textcolor{preprocessor}{\#define\ EGL\_WL\_create\_wayland\_buffer\_from\_image\ 1}}
+\DoxyCodeLine{01518\ \textcolor{preprocessor}{\#define\ PFNEGLCREATEWAYLANDBUFFERFROMIMAGEWL\ PFNEGLCREATEWAYLANDBUFFERFROMIMAGEWLPROC}}
+\DoxyCodeLine{01519\ \textcolor{keyword}{struct\ }wl\_buffer;}
+\DoxyCodeLine{01520\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }wl\_buffer\ *(EGLAPIENTRYP\ PFNEGLCREATEWAYLANDBUFFERFROMIMAGEWLPROC)\ (EGLDisplay\ dpy,\ EGLImageKHR\ image);}
+\DoxyCodeLine{01521\ \textcolor{preprocessor}{\#ifdef\ EGL\_EGLEXT\_PROTOTYPES}}
+\DoxyCodeLine{01522\ EGLAPI\ \textcolor{keyword}{struct\ }wl\_buffer\ *EGLAPIENTRY\ eglCreateWaylandBufferFromImageWL\ (EGLDisplay\ dpy,\ EGLImageKHR\ image);}
+\DoxyCodeLine{01523\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01524\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ EGL\_WL\_create\_wayland\_buffer\_from\_image\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{01525\ }
+\DoxyCodeLine{01526\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01527\ \}}
+\DoxyCodeLine{01528\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01529\ }
+\DoxyCodeLine{01530\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

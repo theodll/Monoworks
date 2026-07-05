@@ -1,0 +1,85 @@
+\doxysection{SDL\+\_\+audioqueue.\+h}
+\hypertarget{_s_d_l__audioqueue_8h_source}{}\label{_s_d_l__audioqueue_8h_source}\index{MonoRuntime/extern/sdl/src/audio/SDL\_audioqueue.h@{MonoRuntime/extern/sdl/src/audio/SDL\_audioqueue.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_audioqueue\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_audioqueue\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Internal\ functions\ used\ by\ SDL\_AudioStream\ for\ queueing\ audio.}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ SDL\_AudioStreamDataCompleteCallback\ SDL\_ReleaseAudioBufferCallback;}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ \doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}};}
+\DoxyCodeLine{00031\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___audio_track}{SDL\_AudioTrack}}\ \doxymbox{\hyperlink{struct_s_d_l___audio_track}{SDL\_AudioTrack}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Create\ a\ new\ audio\ queue}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *SDL\_CreateAudioQueue(\textcolor{keywordtype}{size\_t}\ chunk\_size);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ Destroy\ an\ audio\ queue}}
+\DoxyCodeLine{00037\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_DestroyAudioQueue(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ Completely\ clear\ the\ queue}}
+\DoxyCodeLine{00040\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_ClearAudioQueue(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{comment}{//\ Mark\ the\ last\ track\ as\ flushed}}
+\DoxyCodeLine{00043\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_FlushAudioQueue(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ Pop\ the\ current\ head\ track}}
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ REQUIRES:\ The\ head\ track\ must\ exist,\ and\ must\ have\ been\ flushed}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_PopAudioQueueHead(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ Write\ data\ to\ the\ end\ of\ queue}}
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ REQUIRES:\ If\ the\ spec\ has\ changed,\ the\ last\ track\ must\ have\ been\ flushed}}
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_WriteToAudioQueue(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___audio_spec}{SDL\_AudioSpec}}\ *spec,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *chmap,\ \textcolor{keyword}{const}\ Uint8\ *data,\ \textcolor{keywordtype}{size\_t}\ len);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ Create\ a\ track\ where\ the\ input\ data\ is\ owned\ by\ the\ caller}}
+\DoxyCodeLine{00054\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_s_d_l___audio_track}{SDL\_AudioTrack}}\ *SDL\_CreateAudioTrack(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___audio_spec}{SDL\_AudioSpec}}\ *spec,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *chmap,\ Uint8\ *data,\ \textcolor{keywordtype}{size\_t}\ len,\ \textcolor{keywordtype}{size\_t}\ capacity,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_ReleaseAudioBufferCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{comment}{//\ Add\ a\ track\ to\ the\ end\ of\ the\ queue}}
+\DoxyCodeLine{00059\ \textcolor{comment}{//\ REQUIRES:\ \`{}track\ !=\ NULL`}}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_AddTrackToAudioQueue(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue,\ \doxymbox{\hyperlink{struct_s_d_l___audio_track}{SDL\_AudioTrack}}\ *track);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ Iterate\ over\ the\ tracks\ in\ the\ queue}}
+\DoxyCodeLine{00063\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ *SDL\_BeginAudioQueueIter(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ Query\ and\ update\ the\ track\ iterator}}
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ REQUIRES:\ \`{}*inout\_iter\ !=\ NULL`\ (a\ valid\ iterator)}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{size\_t}\ SDL\_NextAudioQueueIter(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue,\ \textcolor{keywordtype}{void}\ **inout\_iter,\ \doxymbox{\hyperlink{struct_s_d_l___audio_spec}{SDL\_AudioSpec}}\ *out\_spec,\ \textcolor{keywordtype}{int}\ **out\_chmap,\ \textcolor{keywordtype}{bool}\ *out\_flushed);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ Uint8\ *SDL\_ReadFromAudioQueue(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue,}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Uint8\ *dst,\ SDL\_AudioFormat\ dst\_format,\ \textcolor{keywordtype}{int}\ dst\_channels,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *dst\_map,}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ past\_frames,\ \textcolor{keywordtype}{int}\ present\_frames,\ \textcolor{keywordtype}{int}\ future\_frames,}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Uint8\ *scratch,\ \textcolor{keywordtype}{float}\ gain);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{//\ Get\ the\ total\ number\ of\ bytes\ currently\ queued}}
+\DoxyCodeLine{00075\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{size\_t}\ SDL\_GetAudioQueueQueued(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue);}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_ResetAudioQueueHistory(\doxymbox{\hyperlink{struct_s_d_l___audio_queue}{SDL\_AudioQueue}}\ *queue,\ \textcolor{keywordtype}{int}\ num\_frames);}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_audioqueue\_h\_}}
+
+\end{DoxyCode}

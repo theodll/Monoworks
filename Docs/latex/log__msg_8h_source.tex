@@ -1,0 +1,46 @@
+\doxysection{log\+\_\+msg.\+h}
+\hypertarget{log__msg_8h_source}{}\label{log__msg_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/details/log\_msg.h@{MonoEngine/thirdparty/spdlog/include/spdlog/details/log\_msg.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }SPDLOG\_API\ log\_msg\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ log\_msg()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00013\ \ \ \ \ log\_msg(log\_clock::time\_point\ log\_time,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structsource__loc}{source\_loc}}\ loc,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ string\_view\_t\ logger\_name,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ level::level\_enum\ lvl,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ string\_view\_t\ msg);}
+\DoxyCodeLine{00018\ \ \ \ \ log\_msg(\doxymbox{\hyperlink{structsource__loc}{source\_loc}}\ loc,\ string\_view\_t\ logger\_name,\ level::level\_enum\ lvl,\ string\_view\_t\ msg);}
+\DoxyCodeLine{00019\ \ \ \ \ log\_msg(string\_view\_t\ logger\_name,\ level::level\_enum\ lvl,\ string\_view\_t\ msg);}
+\DoxyCodeLine{00020\ \ \ \ \ log\_msg(\textcolor{keyword}{const}\ log\_msg\ \&other)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00021\ \ \ \ \ log\_msg\ \&operator=(\textcolor{keyword}{const}\ log\_msg\ \&other)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ string\_view\_t\ logger\_name;}
+\DoxyCodeLine{00024\ \ \ \ \ level::level\_enum\ level\{level::off\};}
+\DoxyCodeLine{00025\ \ \ \ \ log\_clock::time\_point\ time;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ thread\_id\{0\};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ wrapping\ the\ formatted\ text\ with\ color\ (updated\ by\ pattern\_formatter).}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{mutable}\ \textcolor{keywordtype}{size\_t}\ color\_range\_start\{0\};}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{mutable}\ \textcolor{keywordtype}{size\_t}\ color\_range\_end\{0\};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{structsource__loc}{source\_loc}}\ source;}
+\DoxyCodeLine{00033\ \ \ \ \ string\_view\_t\ payload;}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ \}\ \ \textcolor{comment}{//\ namespace\ details}}
+\DoxyCodeLine{00036\ SPDLOG\_NAMESPACE\_END}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}log\_msg-\/inl.h"{}}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

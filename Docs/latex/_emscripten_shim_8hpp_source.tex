@@ -1,0 +1,35 @@
+\doxysection{Emscripten\+Shim.\+hpp}
+\hypertarget{_emscripten_shim_8hpp_source}{}\label{_emscripten_shim_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/EmscriptenShim.hpp@{MonoEngine/thirdparty/tracy/profiler/src/EmscriptenShim.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_EMSCRIPTENSHIM\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_EMSCRIPTENSHIM\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#if\ defined\ \_\_EMSCRIPTEN\_\_\ ||\ defined\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }std\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }atomic<shared\_ptr<T>>\ \{}
+\DoxyCodeLine{00010\ \ \ \ \ shared\_ptr<T>\ value;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{bool}\ compare\_exchange\_weak(shared\_ptr<T>\&\ expected,\ \textcolor{keyword}{const}\ shared\_ptr<T>\&\ desired)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ atomic\_compare\_exchange\_weak\_explicit(\&value,\ \&expected,\ \&desired,\ std::memory\_order\_acq\_rel,\ std::memory\_order\_acquire);}
+\DoxyCodeLine{00014\ \ \ \ \ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ shared\_ptr<T>\ load(memory\_order\ order\ =\ std::memory\_order\_seq\_cst)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ atomic\_load\_explicit(\&value,\ order);}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ store(shared\_ptr<T>\ desired,\ memory\_order\ order\ =\ std::memory\_order\_seq\_cst)\ \textcolor{keyword}{noexcept}\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ atomic\_store\_explicit(\&value,\ desired,\ order);}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ \};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \}\ \textcolor{comment}{//\ namespace\ std}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

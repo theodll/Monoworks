@@ -1,0 +1,35 @@
+\doxysection{orthonormalize.\+inl}
+\hypertarget{orthonormalize_8inl_source}{}\label{orthonormalize_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/orthonormalize.inl@{MonoEngine/thirdparty/glm/glm/gtx/orthonormalize.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00006\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__orthonormalize_ga63f33b913d71219449b1aa5e2d68cff5}{orthonormalize}}(\doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{structm}{m}})}
+\DoxyCodeLine{00007\ \ \ \ \ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\ r\ =\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ r[0]\ =\ \doxymbox{\hyperlink{group__core__func__geometric_ga5c6c1379961d4589035a390856f2d66c}{normalize}}(r[0]);}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ T\ d0\ =\ dot(r[0],\ r[1]);}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ r[1]\ -\/=\ r[0]\ *\ d0;}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ r[1]\ =\ \doxymbox{\hyperlink{group__core__func__geometric_ga5c6c1379961d4589035a390856f2d66c}{normalize}}(r[1]);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ T\ d1\ =\ dot(r[1],\ r[2]);}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ d0\ =\ dot(r[0],\ r[2]);}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ r[2]\ -\/=\ r[0]\ *\ d0\ +\ r[1]\ *\ d1;}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ r[2]\ =\ \doxymbox{\hyperlink{group__core__func__geometric_ga5c6c1379961d4589035a390856f2d66c}{normalize}}(r[2]);}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r;}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00025\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__orthonormalize_ga63f33b913d71219449b1aa5e2d68cff5}{orthonormalize}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ y)}
+\DoxyCodeLine{00026\ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__geometric_ga5c6c1379961d4589035a390856f2d66c}{normalize}}(x\ -\/\ y\ *\ dot(y,\ x));}
+\DoxyCodeLine{00028\ \ \ \ \ \}}
+\DoxyCodeLine{00029\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

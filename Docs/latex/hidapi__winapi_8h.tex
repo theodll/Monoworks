@@ -1,0 +1,39 @@
+\doxysection{Mono\+Runtime/\+extern/\+sdl/\+src/\+hidapi/\+windows/\+hidapi\+\_\+winapi.h File Reference}
+\hypertarget{hidapi__winapi_8h}{}\label{hidapi__winapi_8h}\index{MonoRuntime/extern/sdl/src/hidapi/windows/hidapi\_winapi.h@{MonoRuntime/extern/sdl/src/hidapi/windows/hidapi\_winapi.h}}
+{\ttfamily \+\#include $<$stdint.\+h$>$}\newline
+{\ttfamily \+\#include $<$guiddef.\+h$>$}\newline
+{\ttfamily \+\#include "{}../\+hidapi/\+hidapi.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} \doxymbox{\hyperlink{group___a_p_i_gaa1963dc42b282002b4a55e81d9a6e5e5}{hid\+\_\+winapi\+\_\+get\+\_\+container\+\_\+id}} (\doxymbox{\hyperlink{hidapi_8h_aa6da74d5686d198dd3e5440e60088fcc}{hid\+\_\+device}} \texorpdfstring{$\ast$}{*}dev, GUID \texorpdfstring{$\ast$}{*}container\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the container ID for a HID device. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} \doxymbox{\hyperlink{hidapi__winapi_8h_a12f664ba587f2a0bc78875d48f97c8d9}{hid\+\_\+winapi\+\_\+descriptor\+\_\+reconstruct\+\_\+pp\+\_\+data}} (void \texorpdfstring{$\ast$}{*}hidp\+\_\+preparsed\+\_\+data, unsigned char \texorpdfstring{$\ast$}{*}buf, size\+\_\+t buf\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Reconstructs a HID Report Descriptor from a Win32 HIDP\+\_\+\+PREPARSED\+\_\+\+DATA structure. This reconstructed report descriptor is logical identical to the real report descriptor, but not byte wise identical. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{hidapi__winapi_8h_doc-func-members}
+\Hypertarget{hidapi__winapi_8h_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{hidapi__winapi_8h_a12f664ba587f2a0bc78875d48f97c8d9}\index{hidapi\_winapi.h@{hidapi\_winapi.h}!hid\_winapi\_descriptor\_reconstruct\_pp\_data@{hid\_winapi\_descriptor\_reconstruct\_pp\_data}}
+\index{hid\_winapi\_descriptor\_reconstruct\_pp\_data@{hid\_winapi\_descriptor\_reconstruct\_pp\_data}!hidapi\_winapi.h@{hidapi\_winapi.h}}
+\doxysubsubsection{\texorpdfstring{hid\_winapi\_descriptor\_reconstruct\_pp\_data()}{hid\_winapi\_descriptor\_reconstruct\_pp\_data()}}
+{\footnotesize\ttfamily \label{hidapi__winapi_8h_a12f664ba587f2a0bc78875d48f97c8d9} 
+int \doxymbox{\hyperlink{hidapi_8h_a70c49eda5025c1bc455af77da19ca312}{HID\+\_\+\+API\+\_\+\+EXPORT\+\_\+\+CALL}} hid\+\_\+winapi\+\_\+descriptor\+\_\+reconstruct\+\_\+pp\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{hidp\+\_\+preparsed\+\_\+data}{, }\item[{unsigned char \texorpdfstring{$\ast$}{*}}]{buf}{, }\item[{size\+\_\+t}]{buf\+\_\+size}{}\end{DoxyParamCaption})}
+
+
+
+Reconstructs a HID Report Descriptor from a Win32 HIDP\+\_\+\+PREPARSED\+\_\+\+DATA structure. This reconstructed report descriptor is logical identical to the real report descriptor, but not byte wise identical. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{in}}  & {\em hidp\+\_\+preparsed\+\_\+data} & Pointer to the HIDP\+\_\+\+PREPARSED\+\_\+\+DATA to read, i.\+e.:\+ the value of PHIDP\+\_\+\+PREPARSED\+\_\+\+DATA, as returned by Hid\+D\+\_\+\+Get\+Preparsed\+Data Win\+API function. \\
+\hline
+ & {\em buf} & Pointer to the buffer where the report descriptor should be stored. \\
+\hline
+\doxymbox{\texttt{in}}  & {\em buf\+\_\+size} & Size of the buffer. The recommended size for the buffer is \doxylink{group___a_p_i_ga4e861f585ad041d94b142e1c2ee00b3f}{HID\+\_\+\+API\+\_\+\+MAX\+\_\+\+REPORT\+\_\+\+DESCRIPTOR\+\_\+\+SIZE} bytes.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns size of reconstructed report descriptor if successful, -\/1 for error. 
+\end{DoxyReturn}

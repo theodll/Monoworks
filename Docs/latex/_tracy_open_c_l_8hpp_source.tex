@@ -1,0 +1,420 @@
+\doxysection{Tracy\+Open\+CL.\+hpp}
+\hypertarget{_tracy_open_c_l_8hpp_source}{}\label{_tracy_open_c_l_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/tracy/TracyOpenCL.hpp@{MonoEngine/thirdparty/tracy/public/tracy/TracyOpenCL.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYOPENCL\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYOPENCL\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#if\ !defined\ TRACY\_ENABLE}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ TracyCLContext(c,\ x)\ nullptr}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ TracyCLDestroy(c)}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ TracyCLContextName(c,\ x,\ y)}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ TracyCLNamedZone(c,\ x,\ y,\ z)}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ TracyCLNamedZoneC(c,\ x,\ y,\ z,\ w)}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ TracyCLZone(c,\ x)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ TracyCLZoneC(c,\ x,\ y)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ TracyCLZoneTransient(c,x,y,z)}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ TracyCLNamedZoneS(c,\ x,\ y,\ z,\ w)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ TracyCLNamedZoneCS(c,\ x,\ y,\ z,\ w,\ v)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ TracyCLZoneS(c,\ x,\ y)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ TracyCLZoneCS(c,\ x,\ y,\ z)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ TracyCLZoneTransientS(c,x,y,z,w)}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ TracyCLNamedZoneSetEvent(x,\ e)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ TracyCLZoneSetEvent(e)}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ TracyCLCollect(c)}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_open_c_l_ctx_scope}{OpenCLCtxScope}}\ \{\};}
+\DoxyCodeLine{00030\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{using\ }TracyCLCtx\ =\ \textcolor{keywordtype}{void}*;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <CL/cl.h>}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ "{}Tracy.hpp"{}}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}../client/TracyCallstack.hpp"{}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ "{}../client/TracyProfiler.hpp"{}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlloc.hpp"{}}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ TRACY\_CL\_TO\_STRING\_INDIRECT(T)\ \#T}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ TRACY\_CL\_TO\_STRING(T)\ TRACY\_CL\_TO\_STRING\_INDIRECT(T)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ TRACY\_CL\_ASSERT(p)\ if(!(p))\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ TracyMessageL(\ "{}TRACY\_CL\_ASSERT\ failed\ on\ "{}\ TracyFile\ "{}:"{}\ TRACY\_CL\_TO\_STRING(TracyLine)\ );\ \ \(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ assert(false\ \&\&\ "{}TRACY\_CL\_ASSERT\ failed"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ TRACY\_CL\_CHECK\_ERROR(err)\ if(err\ !=\ CL\_SUCCESS)\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ \ std::ostringstream\ oss;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\ \ \ \ oss\ <<\ "{}TRACY\_CL\_CHECK\_ERROR\ failed\ on\ "{}\ <<\ TracyFile\ <<\ "{}:"{}\ <<\ TracyLine\ \ \(\backslash\)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ <<\ "{}:\ error\ code\ "{}\ <<\ err;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\ \ \ \ auto\ msg\ =\ oss.str();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ TracyMessage(msg.data(),\ msg.size());\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ assert(false\ \&\&\ "{}TRACY\_CL\_CHECK\_ERROR\ failed"{});\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\}}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{namespace\ }tracy\ \{}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{enum\ class}\ EventPhase\ :\ uint8\_t}
+\DoxyCodeLine{00065\ \ \ \ \ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ Begin,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ End}
+\DoxyCodeLine{00068\ \ \ \ \ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{struct\ }EventInfo}
+\DoxyCodeLine{00071\ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ cl\_event\ event;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ EventPhase\ phase;}
+\DoxyCodeLine{00074\ \ \ \ \ \};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{class\ }OpenCLCtx}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ QueryCount\ =\ 64\ *\ 1024;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ OpenCLCtx(cl\_context\ context,\ cl\_device\_id\ device)}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_contextId(GetGpuCtxCounter().fetch\_add(1,\ std::memory\_order\_relaxed))}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_head(0)}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_tail(0)}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ tcpu,\ tgpu;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_ASSERT(m\_contextId\ !=\ 255);}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ cl\_int\ err\ =\ CL\_SUCCESS;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ cl\_command\_queue\ queue\ =\ clCreateCommandQueue(context,\ device,\ CL\_QUEUE\_PROFILING\_ENABLE,\ \&err);}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(err)}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ dummyValue\ =\ 42;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ cl\_mem\ dummyBuffer\ =\ clCreateBuffer(context,\ CL\_MEM\_WRITE\_ONLY,\ \textcolor{keyword}{sizeof}(uint32\_t),\ \textcolor{keyword}{nullptr},\ \&err);}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(err)}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ cl\_event\ writeBufferEvent;}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clEnqueueWriteBuffer(queue,\ dummyBuffer,\ CL\_FALSE,\ 0,\ \textcolor{keyword}{sizeof}(uint32\_t),\ \&dummyValue,\ 0,\ \textcolor{keyword}{nullptr},\ \&writeBufferEvent));}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clWaitForEvents(1,\ \&writeBufferEvent));}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ tcpu\ =\ Profiler::GetTime();}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ cl\_int\ eventStatus;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clGetEventInfo(writeBufferEvent,\ CL\_EVENT\_COMMAND\_EXECUTION\_STATUS,\ \textcolor{keyword}{sizeof}(cl\_int),\ \&eventStatus,\ \textcolor{keyword}{nullptr}));}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_ASSERT(eventStatus\ ==\ CL\_COMPLETE);}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clGetEventProfilingInfo(writeBufferEvent,\ CL\_PROFILING\_COMMAND\_END,\ \textcolor{keyword}{sizeof}(cl\_ulong),\ \&tgpu,\ \textcolor{keyword}{nullptr}));}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clReleaseEvent(writeBufferEvent));}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clReleaseMemObject(dummyBuffer));}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clReleaseCommandQueue(queue));}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuNewContext);}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.cpuTime,\ tcpu);}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.gpuTime,\ tgpu);}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ memset(\&item-\/>gpuNewContext.thread,\ 0,\ \textcolor{keyword}{sizeof}(item-\/>gpuNewContext.thread));}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.period,\ 1.0f);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.type,\ GpuContextType::OpenCL);}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.context,\ uint8\_t(m\_contextId));}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.flags,\ GpuContextFlags(0));}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(*item);}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Name(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ uint16\_t\ len\ )}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ len\ );}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ ptr,\ name,\ len\ );}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::GpuContextName\ );}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.context,\ (uint8\_t)m\_contextId\ );}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.ptr,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.size,\ len\ );}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(\ *item\ );}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Collect()}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_tail\ ==\ m\_head)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!GetProfiler().IsConnected())}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_head\ =\ m\_tail\ =\ 0;}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ m\_tail\ !=\ m\_head;\ m\_tail\ =\ (m\_tail\ +\ 1)\ \%\ QueryCount)}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EventInfo\ eventInfo\ =\ GetQuery(m\_tail);}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_int\ eventStatus;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_int\ err\ =\ clGetEventInfo(eventInfo.event,\ CL\_EVENT\_COMMAND\_EXECUTION\_STATUS,\ \textcolor{keyword}{sizeof}(cl\_int),\ \&eventStatus,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ !=\ CL\_SUCCESS)}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::ostringstream\ oss;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ oss\ <<\ \textcolor{stringliteral}{"{}clGetEventInfo\ falied\ with\ error\ code\ "{}}\ <<\ err\ <<\ \textcolor{stringliteral}{"{},\ on\ event\ "{}}\ <<\ eventInfo.event\ <<\ \textcolor{stringliteral}{"{},\ skipping..."{}};}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ msg\ =\ oss.str();}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyMessage(msg.data(),\ msg.size());}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eventInfo.event\ ==\ \textcolor{keyword}{nullptr})\ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyMessageL(\textcolor{stringliteral}{"{}A\ TracyCLZone\ must\ be\ paird\ with\ a\ TracyCLZoneSetEvent,\ check\ your\ code!"{}});}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(\textcolor{keyword}{false}\ \&\&\ \textcolor{stringliteral}{"{}clGetEventInfo\ failed,\ maybe\ a\ TracyCLZone\ is\ not\ paired\ with\ TracyCLZoneSetEvent"{}});}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eventStatus\ !=\ CL\_COMPLETE)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_int\ eventInfoQuery\ =\ (eventInfo.phase\ ==\ EventPhase::Begin)}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ CL\_PROFILING\_COMMAND\_START}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ CL\_PROFILING\_COMMAND\_END;}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cl\_ulong\ eventTimeStamp\ =\ 0;}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ err\ =\ clGetEventProfilingInfo(eventInfo.event,\ eventInfoQuery,\ \textcolor{keyword}{sizeof}(cl\_ulong),\ \&eventTimeStamp,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (err\ ==\ CL\_PROFILING\_INFO\_NOT\_AVAILABLE)}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyMessageL(\textcolor{stringliteral}{"{}command\ queue\ is\ not\ created\ with\ CL\_QUEUE\_PROFILING\_ENABLE\ flag,\ check\ your\ code!"{}});}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(\textcolor{keyword}{false}\ \&\&\ \textcolor{stringliteral}{"{}command\ queue\ is\ not\ created\ with\ CL\_QUEUE\_PROFILING\_ENABLE\ flag"{}});}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(err);}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_ASSERT(eventTimeStamp\ !=\ 0);}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuTime);}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.gpuTime,\ int64\_t(eventTimeStamp));}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.queryId,\ uint16\_t(m\_tail));}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.context,\ uint8\_t(m\_contextId));}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eventInfo.phase\ ==\ EventPhase::End)}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Done\ with\ the\ event,\ so\ release\ it}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clReleaseEvent(eventInfo.event));}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint8\_t\ GetId()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00204\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_contextId;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ NextQueryId(EventInfo\ eventInfo)}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ \textcolor{keywordtype}{id}\ =\ m\_head;}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ m\_head\ =\ (m\_head\ +\ 1)\ \%\ QueryCount;}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_ASSERT(m\_head\ !=\ m\_tail);}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ m\_query[id]\ =\ eventInfo;}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ id;}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ EventInfo\&\ GetQuery(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id})}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_ASSERT(\textcolor{keywordtype}{id}\ <\ QueryCount);}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_query[id];}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ m\_contextId;}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ EventInfo\ m\_query[QueryCount];}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ m\_head;\ \textcolor{comment}{//\ index\ at\ which\ a\ new\ event\ should\ be\ inserted}}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ m\_tail;\ \textcolor{comment}{//\ oldest\ event}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \};}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_open_c_l_ctx_scope}{OpenCLCtxScope}}\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ OpenCLCtxScope(OpenCLCtx*\ ctx,\ \textcolor{keyword}{const}\ SourceLocationData*\ srcLoc,\ \textcolor{keywordtype}{bool}\ is\_active)}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active\&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active)}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_ctx(ctx)}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_event(\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ m\_beginQueryId\ =\ ctx-\/>NextQueryId(EventInfo\{\ \textcolor{keyword}{nullptr},\ EventPhase::Begin\ \});}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuZoneBeginSerial);}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.srcloc,\ (uint64\_t)srcLoc);}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.queryId,\ (uint16\_t)m\_beginQueryId);}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.context,\ ctx-\/>GetId());}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00257\ }
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ OpenCLCtxScope(OpenCLCtx*\ ctx,\ \textcolor{keyword}{const}\ SourceLocationData*\ srcLoc,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ is\_active)}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active\&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active)}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_ctx(ctx)}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_event(\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ m\_beginQueryId\ =\ ctx-\/>NextQueryId(EventInfo\{\ \textcolor{keyword}{nullptr},\ EventPhase::Begin\ \});}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ GetProfiler().SendCallstack(depth);}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuZoneBeginCallstackSerial);}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.srcloc,\ (uint64\_t)srcLoc);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.queryId,\ (uint16\_t)m\_beginQueryId);}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.context,\ ctx-\/>GetId());}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ OpenCLCtxScope(OpenCLCtx*\ ctx,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ \textcolor{keywordtype}{bool}\ is\_active)}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active\ \&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active)}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_ctx(ctx)}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_event(\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ m\_beginQueryId\ =\ ctx-\/>NextQueryId(EventInfo\{\ \textcolor{keyword}{nullptr},\ EventPhase::Begin\ \});}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz\ );}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::GpuZoneBeginAllocSrcLocSerial\ );}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.srcloc,\ srcloc);}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.queryId,\ (uint16\_t)m\_beginQueryId);}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.context,\ ctx-\/>GetId());}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00306\ }
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ OpenCLCtxScope(OpenCLCtx*\ ctx,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ is\_active)}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active\ \&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(is\_active)}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_ctx(ctx)}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_event(\textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ m\_beginQueryId\ =\ ctx-\/>NextQueryId(EventInfo\{\ \textcolor{keyword}{nullptr},\ EventPhase::Begin\ \});}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ srcloc\ =\ Profiler::AllocSourceLocation(\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz\ );}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerialCallstack(\ Callstack(\ depth\ )\ );}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuZoneBeginAllocSrcLocCallstackSerial);}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.srcloc,\ srcloc);}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.queryId,\ (uint16\_t)m\_beginQueryId);}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.context,\ ctx-\/>GetId());}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ SetEvent(cl\_event\ event)}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ m\_event\ =\ event;}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ TRACY\_CL\_CHECK\_ERROR(clRetainEvent(m\_event));}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ m\_ctx-\/>GetQuery(m\_beginQueryId).event\ =\ m\_event;}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \string~OpenCLCtxScope()}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ m\_ctx-\/>NextQueryId(EventInfo\{\ m\_event,\ EventPhase::End\ \});}
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuZoneEndSerial);}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.queryId,\ (uint16\_t)queryId);}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.context,\ m\_ctx-\/>GetId());}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ m\_active;}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ OpenCLCtx*\ m\_ctx;}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ cl\_event\ m\_event;}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ m\_beginQueryId;}
+\DoxyCodeLine{00357\ \ \ \ \ \};}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ OpenCLCtx*\ CreateCLContext(cl\_context\ context,\ cl\_device\_id\ device)}
+\DoxyCodeLine{00360\ \ \ \ \ \{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ctx\ =\ (OpenCLCtx*)tracy\_malloc(\textcolor{keyword}{sizeof}(OpenCLCtx));}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ (ctx)\ OpenCLCtx(context,\ device);}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ctx;}
+\DoxyCodeLine{00364\ \ \ \ \ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ DestroyCLContext(OpenCLCtx*\ ctx)}
+\DoxyCodeLine{00367\ \ \ \ \ \{}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ ctx-\/>\string~OpenCLCtx();}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ tracy\_free(ctx);}
+\DoxyCodeLine{00370\ \ \ \ \ \}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \}\ \ \textcolor{comment}{//\ namespace\ tracy}}
+\DoxyCodeLine{00373\ }
+\DoxyCodeLine{00374\ \textcolor{keyword}{using\ }TracyCLCtx\ =\ tracy::OpenCLCtx*;}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#define\ TracyCLContext(ctx,\ device)\ tracy::CreateCLContext(ctx,\ device);}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#define\ TracyCLDestroy(ctx)\ tracy::DestroyCLContext(ctx);}}
+\DoxyCodeLine{00378\ \textcolor{preprocessor}{\#define\ TracyCLContextName(ctx,\ name,\ size)\ ctx-\/>Name(name,\ size);}}
+\DoxyCodeLine{00379\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CALLSTACK\ \&\&\ defined\ TRACY\_CALLSTACK}}
+\DoxyCodeLine{00380\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZone(ctx,\ varname,\ name,\ active)\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::OpenCLCtxScope\ varname(ctx,\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ );}}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZoneC(ctx,\ varname,\ name,\ color,\ active)\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\ \{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::OpenCLCtxScope\ varname(ctx,\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ TRACY\_CALLSTACK,\ active\ );}}
+\DoxyCodeLine{00382\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZone(ctx,\ name)\ TracyCLNamedZoneS(ctx,\ \_\_tracy\_gpu\_zone,\ name,\ TRACY\_CALLSTACK,\ true)}}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneC(ctx,\ name,\ color)\ TracyCLNamedZoneCS(ctx,\ \_\_tracy\_gpu\_zone,\ name,\ color,\ TRACY\_CALLSTACK,\ true)}}
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneTransient(\ ctx,\ varname,\ name,\ active\ )\ tracy::OpenCLCtxScope\ varname(\ ctx,\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ TRACY\_CALLSTACK,\ active\ );}}
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00386\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZone(ctx,\ varname,\ name,\ active)\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::OpenCLCtxScope\ varname(ctx,\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ active);}}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZoneC(ctx,\ varname,\ name,\ color,\ active)\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::OpenCLCtxScope\ varname(ctx,\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ active);}}
+\DoxyCodeLine{00388\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZone(ctx,\ name)\ TracyCLNamedZone(ctx,\ \_\_tracy\_gpu\_zone,\ name,\ true)}}
+\DoxyCodeLine{00389\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneC(ctx,\ name,\ color)\ TracyCLNamedZoneC(ctx,\ \_\_tracy\_gpu\_zone,\ name,\ color,\ true\ )}}
+\DoxyCodeLine{00390\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneTransient(\ ctx,\ varname,\ name,\ active\ )\ tracy::OpenCLCtxScope\ varname(\ ctx,\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ active\ );}}
+\DoxyCodeLine{00391\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00392\ }
+\DoxyCodeLine{00393\ \textcolor{preprocessor}{\#ifdef\ TRACY\_HAS\_CALLSTACK}}
+\DoxyCodeLine{00394\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZoneS(ctx,\ varname,\ name,\ depth,\ active)\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ 0\ \};\ tracy::OpenCLCtxScope\ varname(ctx,\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ depth,\ active);}}
+\DoxyCodeLine{00395\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZoneCS(ctx,\ varname,\ name,\ color,\ depth,\ active)\ static\ constexpr\ tracy::SourceLocationData\ TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine)\{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};\ tracy::OpenCLCtxScope\ varname(ctx,\ \&TracyConcat(\_\_tracy\_gpu\_source\_location,TracyLine),\ depth,\ active);}}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneS(ctx,\ name,\ depth)\ TracyCLNamedZoneS(ctx,\ \_\_tracy\_gpu\_zone,\ name,\ depth,\ true)}}
+\DoxyCodeLine{00397\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneCS(ctx,\ name,\ color,\ depth)\ TracyCLNamedZoneCS(ctx,\ \_\_tracy\_gpu\_zone,\ name,\ color,\ depth,\ true)}}
+\DoxyCodeLine{00398\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneTransientS(\ ctx,\ varname,\ name,\ depth,\ active\ )\ tracy::OpenCLCtxScope\ varname(\ ctx,\ TracyLine,\ TracyFile,\ strlen(\ TracyFile\ ),\ TracyFunction,\ strlen(\ TracyFunction\ ),\ name,\ strlen(\ name\ ),\ depth,\ active\ );}}
+\DoxyCodeLine{00399\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00400\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZoneS(ctx,\ varname,\ name,\ depth,\ active)\ TracyCLNamedZone(ctx,\ varname,\ name,\ active)}}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#\ \ define\ TracyCLNamedZoneCS(ctx,\ varname,\ name,\ color,\ depth,\ active)\ TracyCLNamedZoneC(ctx,\ varname,\ name,\ color,\ active)}}
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneS(ctx,\ name,\ depth)\ TracyCLZone(ctx,\ name)}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneCS(ctx,\ name,\ color,\ depth)\ TracyCLZoneC(ctx,\ name,\ color)}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#\ \ define\ TracyCLZoneTransientS(\ ctx,\ varname,\ name,\ depth,\ active\ )\ TracyCLZoneTransient(\ ctx,\ varname,\ name,\ active\ )}}
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#define\ TracyCLNamedZoneSetEvent(varname,\ event)\ varname.SetEvent(event)}}
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#define\ TracyCLZoneSetEvent(event)\ \_\_tracy\_gpu\_zone.SetEvent(event)}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \textcolor{preprocessor}{\#define\ TracyCLCollect(ctx)\ ctx-\/>Collect()}}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00413\ }
+\DoxyCodeLine{00414\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

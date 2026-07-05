@@ -1,0 +1,140 @@
+\doxysection{Tracy\+Llm.\+hpp}
+\hypertarget{_tracy_llm_8hpp_source}{}\label{_tracy_llm_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlm.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlm.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYLLM\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYLLM\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}TracyEmbed.hpp"{}}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00017\ \{}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{TracyLlmApi}};}
+\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_tracy_llm_chat}{TracyLlmChat}};}
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_tracy_llm_tools}{TracyLlmTools}};}
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_tracy_manual_data}{TracyManualData}};}
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_view}{View}};}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_llm_skill}{LlmSkill}}}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00029\ \ \ \ \ std::string\ description;}
+\DoxyCodeLine{00030\ \ \ \ \ std::string\ content;}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{class\ }TracyLlm}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{enum\ class}\ Task}
+\DoxyCodeLine{00036\ \ \ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ Connect,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ SendMessage,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ FastMessage,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ Tokenize}
+\DoxyCodeLine{00041\ \ \ \ \ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{struct\ }WorkItem}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ Task\ task;}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ std::function<void()>\ callback;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ std::function<void(nlohmann::json)>\ callback2;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ std::string\ param;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ nlohmann::json\ param2;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ stop;}
+\DoxyCodeLine{00051\ \ \ \ \ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00054\ \ \ \ \ TracyLlm(\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1_tracy_manual_data}{TracyManualData}}\&\ manual\ );}
+\DoxyCodeLine{00055\ \ \ \ \ \string~TracyLlm();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ IsBusy()\textcolor{keyword}{\ const\ }\{\ std::lock\_guard\ lock(\ m\_jobsLock\ );\ \textcolor{keywordflow}{return}\ m\_busy;\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw();}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_show\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ AddAttachmentLocking(\ std::string\&\&\ str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ role\ );}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ AddMessageLocking(\ std::string\&\&\ str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ role\ );}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{bool}\ QueueSendMessageLocking();}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{bool}\ QueueFastMessageLocking(\ \textcolor{keyword}{const}\ nlohmann::json\&\ req,\ std::function<\textcolor{keywordtype}{void}(nlohmann::json)>\ callback\ );}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ AddMessage(\ std::string\&\&\ str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ role\ );}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{bool}\ QueueSendMessage();}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{bool}\ QueueFastMessage(\ \textcolor{keyword}{const}\ nlohmann::json\&\ req,\ std::function<\textcolor{keywordtype}{void}(nlohmann::json)>\ callback\ );}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ WorkerThread();}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateModels();}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{void}\ ResetChat();}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateSystemPrompt();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ QueueConnect();}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ Will\ block,\ cannot\ enter\ with\ a\ taken\ lock}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{void}\ AddMessageBlocking(\ std::string\&\&\ str,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ role\ );}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ AddMessageBlocking(\ nlohmann::json\&\&\ json\ );}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{void}\ ManageContext();}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{void}\ SendMessage();}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ AppendResponse(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keyword}{const}\ nlohmann::json\&\ delta\ );}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{bool}\ OnResponse(\ \textcolor{keyword}{const}\ nlohmann::json\&\ json\ );}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{void}\ AddSkill(\ std::string\&\&\ name,\ std::string\&\&\ description,\ \textcolor{keyword}{const}\ std::shared\_ptr<EmbedData>\&\ content\ );}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ std::unique\_ptr<TracyLlmApi>\ m\_api;}
+\DoxyCodeLine{00094\ \ \ \ \ std::unique\_ptr<TracyLlmChat>\ m\_chatUi;}
+\DoxyCodeLine{00095\ \ \ \ \ std::unique\_ptr<TracyLlmTools>\ m\_tools;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_modelIdx;}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_fastIdx;}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_embedIdx;}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ std::atomic<bool>\ m\_exit;}
+\DoxyCodeLine{00102\ \ \ \ \ std::condition\_variable\ m\_cv;}
+\DoxyCodeLine{00103\ \ \ \ \ std::thread\ m\_thread;}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{mutable}\ std::mutex\ m\_jobsLock;}
+\DoxyCodeLine{00106\ \ \ \ \ std::vector<std::shared\_ptr<WorkItem>>\ m\_jobs;}
+\DoxyCodeLine{00107\ \ \ \ \ std::shared\_ptr<WorkItem>\ m\_currentJob;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_busy\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_focusInput\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00111\ \ \ \ \ std::atomic<int>\ m\_chatId\ \{0\};}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_usedCtx\ =\ 0;}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_temperature\ =\ 1.0f;}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_setTemperature\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_allThinkingRegions\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{char}*\ m\_input;}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{char}*\ m\_apiInput;}
+\DoxyCodeLine{00119\ \ \ \ \ std::mutex\ m\_chatLock;}
+\DoxyCodeLine{00120\ \ \ \ \ std::vector<nlohmann::json>\ m\_chat;}
+\DoxyCodeLine{00121\ \ \ \ \ std::string\ m\_summary;}
+\DoxyCodeLine{00122\ \ \ \ \ std::string\ m\_suggestion;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ std::vector<LlmSkill>\ m\_skills;}
+\DoxyCodeLine{00125\ \ \ \ \ std::shared\_ptr<EmbedData>\ m\_systemPrompt;}
+\DoxyCodeLine{00126\ \ \ \ \ nlohmann::json\ m\_toolsJson;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ m\_worker;}
+\DoxyCodeLine{00129\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ m\_view;}
+\DoxyCodeLine{00130\ \};}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

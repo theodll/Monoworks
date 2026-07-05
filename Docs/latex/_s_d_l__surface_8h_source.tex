@@ -1,0 +1,238 @@
+\doxysection{SDL\+\_\+surface.\+h}
+\hypertarget{_s_d_l__surface_8h_source}{}\label{_s_d_l__surface_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_surface.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_surface.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#ifndef\ SDL\_surface\_h\_}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ SDL\_surface\_h\_}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_blendmode.h>}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_pixels.h>}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_rect.h>}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_iostream.h>}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00056\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_SurfaceFlags;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ SDL\_SURFACE\_PREALLOCATED\ \ \ \ 0x00000001u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ SDL\_SURFACE\_LOCK\_NEEDED\ \ \ \ \ 0x00000002u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ SDL\_SURFACE\_LOCKED\ \ \ \ \ \ \ \ \ \ 0x00000004u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ SDL\_SURFACE\_SIMD\_ALIGNED\ \ \ \ 0x00000008u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ SDL\_MUSTLOCK(S)\ (((S)-\/>flags\ \&\ SDL\_SURFACE\_LOCK\_NEEDED)\ ==\ SDL\_SURFACE\_LOCK\_NEEDED)}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_ScaleMode}
+\DoxyCodeLine{00088\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ SDL\_SCALEMODE\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00090\ \ \ \ \ SDL\_SCALEMODE\_NEAREST,\ \ }
+\DoxyCodeLine{00091\ \ \ \ \ SDL\_SCALEMODE\_LINEAR,\ \ \ }
+\DoxyCodeLine{00092\ \ \ \ \ SDL\_SCALEMODE\_PIXELART\ \ }
+\DoxyCodeLine{00093\ \}\ SDL\_ScaleMode;}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_FlipMode}
+\DoxyCodeLine{00101\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ SDL\_FLIP\_NONE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00103\ \ \ \ \ SDL\_FLIP\_HORIZONTAL,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00104\ \ \ \ \ SDL\_FLIP\_VERTICAL,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00105\ \ \ \ \ SDL\_FLIP\_HORIZONTAL\_AND\_VERTICAL\ =\ (SDL\_FLIP\_HORIZONTAL\ |\ SDL\_FLIP\_VERTICAL)\ \ \ \ }
+\DoxyCodeLine{00106\ \}\ SDL\_FlipMode;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#ifndef\ SDL\_INTERNAL}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00138\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}}
+\DoxyCodeLine{00139\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ SDL\_SurfaceFlags\ \doxymbox{\hyperlink{struct_s_d_l___surface_a1aeaafcb54daf228b138b731b2e9d3f1}{flags}};\ \ \ \ \ }
+\DoxyCodeLine{00141\ \ \ \ \ SDL\_PixelFormat\ \doxymbox{\hyperlink{struct_s_d_l___surface_a727e8fc61fda0f46fb882c5ff866b2c0}{format}};\ \ \ \ \ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___surface_a9b0ec7185dcdb2a3530a9160a6ea83d9}{w}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___surface_af33bcf87a1f5e10a99b3c7e8626b38c8}{h}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___surface_a5fa37325d77d65b2ed64ffc7cd01bb6c}{pitch}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{struct_s_d_l___surface_ada4bbb4e87ef8c52fb5b234ce45b3978}{pixels}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___surface_a03d10628a359c0674f5ceffd574f1641}{refcount}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{void}\ *\doxymbox{\hyperlink{struct_s_d_l___surface_a2759f871dd42c5840f66d9ed7f344aaf}{reserved}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00150\ \};}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ !SDL\_INTERNAL\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}};}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00173\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_CreateSurface(\textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ SDL\_PixelFormat\ format);}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00203\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_CreateSurfaceFrom(\textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ SDL\_PixelFormat\ format,\ \textcolor{keywordtype}{void}\ *pixels,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___surface_a5fa37325d77d65b2ed64ffc7cd01bb6c}{pitch}});}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00219\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroySurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00259\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetSurfaceProperties(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_SURFACE\_SDR\_WHITE\_POINT\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.surface.SDR\_white\_point"{}}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_SURFACE\_HDR\_HEADROOM\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.surface.HDR\_headroom"{}}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_SURFACE\_TONEMAP\_OPERATOR\_STRING\ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.surface.tonemap"{}}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_SURFACE\_HOTSPOT\_X\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.surface.hotspot.x"{}}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_SURFACE\_HOTSPOT\_Y\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.surface.hotspot.y"{}}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_SURFACE\_ROTATION\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.surface.rotation"{}}}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00287\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfaceColorspace(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ SDL\_Colorspace\ colorspace);}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00307\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_Colorspace\ SDLCALL\ SDL\_GetSurfaceColorspace(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00338\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___palette}{SDL\_Palette}}\ *\ SDLCALL\ SDL\_CreateSurfacePalette(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00361\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfacePalette(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \doxymbox{\hyperlink{struct_s_d_l___palette}{SDL\_Palette}}\ *palette);}
+\DoxyCodeLine{00362\ }
+\DoxyCodeLine{00376\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___palette}{SDL\_Palette}}\ *\ SDLCALL\ SDL\_GetSurfacePalette(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00404\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_AddSurfaceAlternateImage(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *image);}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00420\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SurfaceHasAlternateImages(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00421\ }
+\DoxyCodeLine{00448\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ **\ SDLCALL\ SDL\_GetSurfaceImages(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00467\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_RemoveSurfaceAlternateImages(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00495\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_LockSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00496\ }
+\DoxyCodeLine{00510\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UnlockSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00511\ }
+\DoxyCodeLine{00531\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadSurface\_IO(\doxymbox{\hyperlink{struct_s_d_l___i_o_stream}{SDL\_IOStream}}\ *src,\ \textcolor{keywordtype}{bool}\ closeio);}
+\DoxyCodeLine{00532\ }
+\DoxyCodeLine{00550\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadSurface(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00572\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadBMP\_IO(\doxymbox{\hyperlink{struct_s_d_l___i_o_stream}{SDL\_IOStream}}\ *src,\ \textcolor{keywordtype}{bool}\ closeio);}
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00592\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadBMP(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00618\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SaveBMP\_IO(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \doxymbox{\hyperlink{struct_s_d_l___i_o_stream}{SDL\_IOStream}}\ *dst,\ \textcolor{keywordtype}{bool}\ closeio);}
+\DoxyCodeLine{00619\ }
+\DoxyCodeLine{00642\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SaveBMP(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00643\ }
+\DoxyCodeLine{00668\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadPNG\_IO(\doxymbox{\hyperlink{struct_s_d_l___i_o_stream}{SDL\_IOStream}}\ *src,\ \textcolor{keywordtype}{bool}\ closeio);}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00692\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadPNG(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00712\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SavePNG\_IO(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \doxymbox{\hyperlink{struct_s_d_l___i_o_stream}{SDL\_IOStream}}\ *dst,\ \textcolor{keywordtype}{bool}\ closeio);}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00730\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SavePNG(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00731\ }
+\DoxyCodeLine{00755\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadJPG\_IO(\doxymbox{\hyperlink{struct_s_d_l___i_o_stream}{SDL\_IOStream}}\ *src,\ \textcolor{keywordtype}{bool}\ closeio);}
+\DoxyCodeLine{00756\ }
+\DoxyCodeLine{00778\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_LoadJPG(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00779\ }
+\DoxyCodeLine{00800\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfaceRLE(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00801\ }
+\DoxyCodeLine{00816\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SurfaceHasRLE(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00817\ }
+\DoxyCodeLine{00843\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfaceColorKey(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{bool}\ enabled,\ Uint32\ key);}
+\DoxyCodeLine{00844\ }
+\DoxyCodeLine{00860\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SurfaceHasColorKey(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{00861\ }
+\DoxyCodeLine{00882\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetSurfaceColorKey(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ Uint32\ *key);}
+\DoxyCodeLine{00883\ }
+\DoxyCodeLine{00908\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfaceColorMod(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ Uint8\ r,\ Uint8\ g,\ Uint8\ b);}
+\DoxyCodeLine{00909\ }
+\DoxyCodeLine{00910\ }
+\DoxyCodeLine{00929\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetSurfaceColorMod(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ Uint8\ *r,\ Uint8\ *g,\ Uint8\ *b);}
+\DoxyCodeLine{00930\ }
+\DoxyCodeLine{00952\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfaceAlphaMod(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ Uint8\ alpha);}
+\DoxyCodeLine{00953\ }
+\DoxyCodeLine{00969\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetSurfaceAlphaMod(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ Uint8\ *alpha);}
+\DoxyCodeLine{00970\ }
+\DoxyCodeLine{00990\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfaceBlendMode(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ SDL\_BlendMode\ blendMode);}
+\DoxyCodeLine{00991\ }
+\DoxyCodeLine{01006\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetSurfaceBlendMode(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ SDL\_BlendMode\ *blendMode);}
+\DoxyCodeLine{01007\ }
+\DoxyCodeLine{01030\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetSurfaceClipRect(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{01031\ }
+\DoxyCodeLine{01052\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetSurfaceClipRect(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{01053\ }
+\DoxyCodeLine{01067\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_FlipSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ SDL\_FlipMode\ flip);}
+\DoxyCodeLine{01068\ }
+\DoxyCodeLine{01096\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_RotateSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{float}\ angle);}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01117\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_DuplicateSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface);}
+\DoxyCodeLine{01118\ }
+\DoxyCodeLine{01139\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_ScaleSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ SDL\_ScaleMode\ scaleMode);}
+\DoxyCodeLine{01140\ }
+\DoxyCodeLine{01168\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_ConvertSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ SDL\_PixelFormat\ format);}
+\DoxyCodeLine{01169\ }
+\DoxyCodeLine{01197\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_ConvertSurfaceAndColorspace(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ SDL\_PixelFormat\ format,\ \doxymbox{\hyperlink{struct_s_d_l___palette}{SDL\_Palette}}\ *palette,\ SDL\_Colorspace\ colorspace,\ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{01198\ }
+\DoxyCodeLine{01221\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ConvertPixels(\textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ SDL\_PixelFormat\ src\_format,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src,\ \textcolor{keywordtype}{int}\ src\_pitch,\ SDL\_PixelFormat\ dst\_format,\ \textcolor{keywordtype}{void}\ *dst,\ \textcolor{keywordtype}{int}\ dst\_pitch);}
+\DoxyCodeLine{01222\ }
+\DoxyCodeLine{01254\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ConvertPixelsAndColorspace(\textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ SDL\_PixelFormat\ src\_format,\ SDL\_Colorspace\ src\_colorspace,\ SDL\_PropertiesID\ src\_properties,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src,\ \textcolor{keywordtype}{int}\ src\_pitch,\ SDL\_PixelFormat\ dst\_format,\ SDL\_Colorspace\ dst\_colorspace,\ SDL\_PropertiesID\ dst\_properties,\ \textcolor{keywordtype}{void}\ *dst,\ \textcolor{keywordtype}{int}\ dst\_pitch);}
+\DoxyCodeLine{01255\ }
+\DoxyCodeLine{01280\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_PremultiplyAlpha(\textcolor{keywordtype}{int}\ width,\ \textcolor{keywordtype}{int}\ height,\ SDL\_PixelFormat\ src\_format,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *src,\ \textcolor{keywordtype}{int}\ src\_pitch,\ SDL\_PixelFormat\ dst\_format,\ \textcolor{keywordtype}{void}\ *dst,\ \textcolor{keywordtype}{int}\ dst\_pitch,\ \textcolor{keywordtype}{bool}\ linear);}
+\DoxyCodeLine{01281\ }
+\DoxyCodeLine{01298\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_PremultiplySurfaceAlpha(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{bool}\ linear);}
+\DoxyCodeLine{01299\ }
+\DoxyCodeLine{01321\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ClearSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{float}\ r,\ \textcolor{keywordtype}{float}\ g,\ \textcolor{keywordtype}{float}\ b,\ \textcolor{keywordtype}{float}\ a);}
+\DoxyCodeLine{01322\ }
+\DoxyCodeLine{01349\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_FillSurfaceRect(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect,\ Uint32\ color);}
+\DoxyCodeLine{01350\ }
+\DoxyCodeLine{01377\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_FillSurfaceRects(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rects,\ \textcolor{keywordtype}{int}\ count,\ Uint32\ color);}
+\DoxyCodeLine{01378\ }
+\DoxyCodeLine{01450\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_BlitSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect);}
+\DoxyCodeLine{01451\ }
+\DoxyCodeLine{01474\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_BlitSurfaceUnchecked(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect);}
+\DoxyCodeLine{01475\ }
+\DoxyCodeLine{01498\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_BlitSurfaceScaled(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect,\ SDL\_ScaleMode\ scaleMode);}
+\DoxyCodeLine{01499\ }
+\DoxyCodeLine{01523\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_BlitSurfaceUncheckedScaled(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect,\ SDL\_ScaleMode\ scaleMode);}
+\DoxyCodeLine{01524\ }
+\DoxyCodeLine{01546\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_StretchSurface(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect,\ SDL\_ScaleMode\ scaleMode);}
+\DoxyCodeLine{01547\ }
+\DoxyCodeLine{01571\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_BlitSurfaceTiled(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect);}
+\DoxyCodeLine{01572\ }
+\DoxyCodeLine{01600\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_BlitSurfaceTiledWithScale(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \textcolor{keywordtype}{float}\ scale,\ SDL\_ScaleMode\ scaleMode,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect);}
+\DoxyCodeLine{01601\ }
+\DoxyCodeLine{01636\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_BlitSurface9Grid(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *src,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *srcrect,\ \textcolor{keywordtype}{int}\ left\_width,\ \textcolor{keywordtype}{int}\ right\_width,\ \textcolor{keywordtype}{int}\ top\_height,\ \textcolor{keywordtype}{int}\ bottom\_height,\ \textcolor{keywordtype}{float}\ scale,\ SDL\_ScaleMode\ scaleMode,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *dst,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *dstrect);}
+\DoxyCodeLine{01637\ }
+\DoxyCodeLine{01669\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_MapSurfaceRGB(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ Uint8\ r,\ Uint8\ g,\ Uint8\ b);}
+\DoxyCodeLine{01670\ }
+\DoxyCodeLine{01703\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_MapSurfaceRGBA(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ Uint8\ r,\ Uint8\ g,\ Uint8\ b,\ Uint8\ a);}
+\DoxyCodeLine{01704\ }
+\DoxyCodeLine{01733\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ReadSurfacePixel(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ Uint8\ *r,\ Uint8\ *g,\ Uint8\ *b,\ Uint8\ *a);}
+\DoxyCodeLine{01734\ }
+\DoxyCodeLine{01760\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ReadSurfacePixelFloat(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{float}\ *r,\ \textcolor{keywordtype}{float}\ *g,\ \textcolor{keywordtype}{float}\ *b,\ \textcolor{keywordtype}{float}\ *a);}
+\DoxyCodeLine{01761\ }
+\DoxyCodeLine{01786\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WriteSurfacePixel(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ Uint8\ r,\ Uint8\ g,\ Uint8\ b,\ Uint8\ a);}
+\DoxyCodeLine{01787\ }
+\DoxyCodeLine{01809\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WriteSurfacePixelFloat(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y,\ \textcolor{keywordtype}{float}\ r,\ \textcolor{keywordtype}{float}\ g,\ \textcolor{keywordtype}{float}\ b,\ \textcolor{keywordtype}{float}\ a);}
+\DoxyCodeLine{01810\ }
+\DoxyCodeLine{01811\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{01812\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01813\ \}}
+\DoxyCodeLine{01814\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01815\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{01816\ }
+\DoxyCodeLine{01817\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_surface\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

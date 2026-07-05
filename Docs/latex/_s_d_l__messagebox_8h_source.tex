@@ -1,0 +1,106 @@
+\doxysection{SDL\+\_\+messagebox.\+h}
+\hypertarget{_s_d_l__messagebox_8h_source}{}\label{_s_d_l__messagebox_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_messagebox.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_messagebox.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#ifndef\ SDL\_messagebox\_h\_}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ SDL\_messagebox\_h\_}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_video.h>}\ \ \ \ \ \ \textcolor{comment}{/*\ For\ SDL\_Window\ */}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00047\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00049\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_MessageBoxFlags;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ SDL\_MESSAGEBOX\_ERROR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000010u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ SDL\_MESSAGEBOX\_WARNING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000020u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ SDL\_MESSAGEBOX\_INFORMATION\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000040u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ SDL\_MESSAGEBOX\_BUTTONS\_LEFT\_TO\_RIGHT\ \ \ \ 0x00000080u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ SDL\_MESSAGEBOX\_BUTTONS\_RIGHT\_TO\_LEFT\ \ \ \ 0x00000100u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_MessageBoxButtonFlags;}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ SDL\_MESSAGEBOX\_BUTTON\_RETURNKEY\_DEFAULT\ 0x00000001u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ SDL\_MESSAGEBOX\_BUTTON\_ESCAPEKEY\_DEFAULT\ 0x00000002u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___message_box_button_data}{SDL\_MessageBoxButtonData}}}
+\DoxyCodeLine{00083\ \{}
+\DoxyCodeLine{00084\ \ \ \ \ SDL\_MessageBoxButtonFlags\ flags;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_button_data_a7977082debb4544a6aa0aba7e3f38d85}{buttonID}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{struct_s_d_l___message_box_button_data_af35f3062f0577159284c8828caaf08e4}{text}};\ \ \ }
+\DoxyCodeLine{00087\ \}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_button_data}{SDL\_MessageBoxButtonData}};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___message_box_color}{SDL\_MessageBoxColor}}}
+\DoxyCodeLine{00095\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ Uint8\ r,\ g,\ b;}
+\DoxyCodeLine{00097\ \}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_color}{SDL\_MessageBoxColor}};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_MessageBoxColorType}
+\DoxyCodeLine{00104\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ SDL\_MESSAGEBOX\_COLOR\_BACKGROUND,}
+\DoxyCodeLine{00106\ \ \ \ \ SDL\_MESSAGEBOX\_COLOR\_TEXT,}
+\DoxyCodeLine{00107\ \ \ \ \ SDL\_MESSAGEBOX\_COLOR\_BUTTON\_BORDER,}
+\DoxyCodeLine{00108\ \ \ \ \ SDL\_MESSAGEBOX\_COLOR\_BUTTON\_BACKGROUND,}
+\DoxyCodeLine{00109\ \ \ \ \ SDL\_MESSAGEBOX\_COLOR\_BUTTON\_SELECTED,}
+\DoxyCodeLine{00110\ \ \ \ \ SDL\_MESSAGEBOX\_COLOR\_COUNT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00111\ \}\ SDL\_MessageBoxColorType;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___message_box_color_scheme}{SDL\_MessageBoxColorScheme}}}
+\DoxyCodeLine{00119\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___message_box_color}{SDL\_MessageBoxColor}}\ colors[SDL\_MESSAGEBOX\_COLOR\_COUNT];}
+\DoxyCodeLine{00121\ \}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_color_scheme}{SDL\_MessageBoxColorScheme}};}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00128\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___message_box_data}{SDL\_MessageBoxData}}}
+\DoxyCodeLine{00129\ \{}
+\DoxyCodeLine{00130\ \ \ \ \ SDL\_MessageBoxFlags\ flags;}
+\DoxyCodeLine{00131\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\doxymbox{\hyperlink{struct_s_d_l___message_box_data_a5c333bc93705c66068e140bc28daedcb}{window}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{struct_s_d_l___message_box_data_a93ceeafeed20b553ad4c86c9be37f117}{title}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{struct_s_d_l___message_box_data_ada6ae208a1f85adabbd7a7a08ca609c8}{message}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{int}\ numbuttons;}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_button_data}{SDL\_MessageBoxButtonData}}\ *buttons;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_color_scheme}{SDL\_MessageBoxColorScheme}}\ *\doxymbox{\hyperlink{struct_s_d_l___message_box_data_a18744865a3e89e260db5f01aee579e35}{colorScheme}};\ \ \ }
+\DoxyCodeLine{00139\ \}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_data}{SDL\_MessageBoxData}};}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00177\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ShowMessageBox(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_data}{SDL\_MessageBoxData}}\ *messageboxdata,\ \textcolor{keywordtype}{int}\ *buttonid);}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00221\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ShowSimpleMessageBox(SDL\_MessageBoxFlags\ flags,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *title,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *message,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00226\ \}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_messagebox\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

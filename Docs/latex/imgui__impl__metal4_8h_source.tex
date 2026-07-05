@@ -1,0 +1,63 @@
+\doxysection{imgui\+\_\+impl\+\_\+metal4.\+h}
+\hypertarget{imgui__impl__metal4_8h_source}{}\label{imgui__impl__metal4_8h_source}\index{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_metal4.h@{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_metal4.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ dear\ imgui:\ Renderer\ Backend\ for\ Metal\ 4}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ This\ needs\ to\ be\ used\ along\ with\ a\ Platform\ Backend\ (e.g.\ OSX)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Implemented\ features:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ \ [X]\ Renderer:\ User\ texture\ binding.\ Use\ 'MTLTexture.gpuResourceID'\ as\ texture\ identifier.\ Read\ the\ FAQ\ about\ ImTextureID/ImTextureRef!}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Large\ meshes\ support\ (64k+\ vertices)\ even\ with\ 16-\/bit\ indices\ (ImGuiBackendFlags\_RendererHasVtxOffset).}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Texture\ updates\ support\ for\ dynamic\ font\ atlas\ (ImGuiBackendFlags\_RendererHasTextures).}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Missing\ features\ or\ Issues:}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \ [\ ]\ Metal-\/cpp\ support.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ [\ ]\ Texture\ view\ pool\ support?\ Reevaluate\ which\ type\ to\ use\ for\ ImtextureID.}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ You\ can\ use\ unmodified\ imgui\_impl\_*\ files\ in\ your\ project.\ See\ examples/\ folder\ for\ examples\ of\ using\ this.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ Prefer\ including\ the\ entire\ imgui/\ repository\ into\ your\ project\ (either\ as\ a\ copy\ or\ as\ a\ submodule),\ and\ only\ build\ the\ backends\ you\ need.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Learn\ about\ Dear\ ImGui:}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ -\/\ FAQ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ https://dearimgui.com/faq}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ -\/\ Getting\ Started\ \ \ \ \ \ https://dearimgui.com/getting-\/started}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ -\/\ Documentation\ \ \ \ \ \ \ \ https://dearimgui.com/docs\ (same\ as\ your\ local\ docs/\ folder).}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ -\/\ Introduction,\ links\ and\ more\ at\ the\ top\ of\ imgui.cpp}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}imgui.h"{}}\ \ \ \ \ \ \textcolor{comment}{//\ IMGUI\_IMPL\_API}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ IMGUI\_DISABLE}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ ObjC\ API}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#ifdef\ \_\_OBJC\_\_}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{@class}\ MTL4RenderPassDescriptor;}
+\DoxyCodeLine{00031\ \textcolor{keyword}{@protocol\ }MTLDevice,\ MTL4CommandBuffer,\ MTL4RenderCommandEncoder,\ MTL4CommandQueue;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ framesInFlight\ must\ match\ the\ number\ of\ frames\ your\ application\ keeps\ in\ flight\ (e.g.\ the\ size\ of\ your\ own}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ command\ buffer/allocator\ ring).\ The\ backend\ uses\ it\ to\ size\ its\ own\ per-\/frame-\/in-\/flight\ resources\ (constant}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ buffer,\ vertex/index\ buffer\ cache)\ so\ the\ CPU\ never\ overwrites\ a\ slot\ the\ GPU\ may\ still\ be\ reading.}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ Follow\ "{}Getting\ Started"{}\ link\ and\ check\ examples/\ folder\ to\ learn\ about\ using\ backends!}}
+\DoxyCodeLine{00037\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ ImGui\_ImplMetal4\_Init(id<MTLDevice>\ device,\ id<MTL4CommandQueue>\ commandQueue,\ \textcolor{keywordtype}{int}\ framesInFlight);}
+\DoxyCodeLine{00038\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplMetal4\_Shutdown();}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ frameInFlightIndex\ must\ match\ the\ slot\ you\ use\ to\ index\ your\ own\ per-\/frame-\/in-\/flight\ resources}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ (e.g.\ the\ same\ index\ used\ to\ pick\ your\ command\ buffer/allocator),\ and\ must\ be\ <\ framesInFlight\ passed\ to\ Init().}}
+\DoxyCodeLine{00041\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplMetal4\_NewFrame(MTL4RenderPassDescriptor*\ renderPassDescriptor,\ \textcolor{keywordtype}{int}\ frameInFlightIndex);}
+\DoxyCodeLine{00042\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplMetal4\_RenderDrawData(\doxymbox{\hyperlink{struct_im_draw_data}{ImDrawData}}*\ drawData,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ id<MTL4CommandBuffer>\ commandBuffer,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ id<MTL4RenderCommandEncoder>\ commandEncoder);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Called\ by\ Init/NewFrame/Shutdown}}
+\DoxyCodeLine{00047\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ ImGui\_ImplMetal4\_CreateDeviceObjects(id<MTLDevice>\ device);}
+\DoxyCodeLine{00048\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplMetal4\_DestroyDeviceObjects();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{comment}{//\ (Advanced)\ Use\ e.g.\ if\ you\ need\ to\ precisely\ control\ the\ timing\ of\ texture\ updates\ (e.g.\ for\ staged\ rendering),\ by\ setting\ ImDrawData::Textures\ =\ nullptr\ to\ handle\ this\ manually.}}
+\DoxyCodeLine{00051\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ ImGui\_ImplMetal4\_UpdateTexture(\doxymbox{\hyperlink{struct_im_texture_data}{ImTextureData}}*\ tex);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#ifndef\ IMGUI\_DISABLE}}
+
+\end{DoxyCode}

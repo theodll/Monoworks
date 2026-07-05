@@ -1,0 +1,85 @@
+\doxysection{Atomics.\+h}
+\hypertarget{_atomics_8h_source}{}\label{_atomics_8h_source}\index{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/enkiTS/Atomics.h@{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/enkiTS/Atomics.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ (c)\ 2013\ Doug\ Binks}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ warranty.\ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ \ \ \ in\ a\ product,\ an\ acknowledgement\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifdef\ \_WIN32}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\ \ \ \ \#define\ WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\ \ \ \ \#include\ <Windows.h>}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\ \ \ \ \#undef\ GetObject}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\ \ \ \ \#include\ <intrin.h>}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \textcolor{keywordtype}{void}\ \_ReadWriteBarrier();}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ intrinsic(\_ReadWriteBarrier)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ intrinsic(\_InterlockedCompareExchange)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\ \ \ \ \#pragma\ intrinsic(\_InterlockedExchangeAdd)}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Memory\ Barriers\ to\ prevent\ CPU\ and\ Compiler\ re-\/ordering}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\ \ \ \ \#define\ BASE\_MEMORYBARRIER\_ACQUIRE()\ \_ReadWriteBarrier()}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\ \ \ \ \#define\ BASE\_MEMORYBARRIER\_RELEASE()\ \_ReadWriteBarrier()}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\ \ \ \ \#define\ BASE\_ALIGN(x)\ \_\_declspec(\ align(\ x\ )\ )\ }}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\ \ \ \ \#define\ BASE\_MEMORYBARRIER\_ACQUIRE()\ \_\_asm\_\_\ \_\_volatile\_\_("{}"{}:\ :\ :"{}memory"{})\ \ }}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\ \ \ \ \#define\ BASE\_MEMORYBARRIER\_RELEASE()\ \_\_asm\_\_\ \_\_volatile\_\_("{}"{}:\ :\ :"{}memory"{})\ \ }}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\ \ \ \ \#define\ BASE\_ALIGN(x)\ \ \_\_attribute\_\_\ ((aligned(\ x\ )))}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{namespace\ }enki}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ Atomically\ performs:\ if(\ *pDest\ ==\ compareWith\ )\ \{\ *pDest\ =\ swapTo;\ \}}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//\ returns\ old\ *pDest\ (so\ if\ successfull,\ returns\ compareWith)}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{inline}\ uint32\_t\ AtomicCompareAndSwap(\ \textcolor{keyword}{volatile}\ uint32\_t*\ pDest,\ uint32\_t\ swapTo,\ uint32\_t\ compareWith\ )}
+\DoxyCodeLine{00050\ \ \ \ \ \{}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \#ifdef\ \_WIN32}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ assumes\ two's\ complement\ -\/\ unsigned\ /\ signed\ conversion\ leads\ to\ same\ bit\ pattern}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_InterlockedCompareExchange(\ (\textcolor{keyword}{volatile}\ \textcolor{keywordtype}{long}*)pDest,swapTo,\ compareWith\ );}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#else}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_sync\_val\_compare\_and\_swap(\ pDest,\ compareWith,\ swapTo\ );}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#endif\ \ \ \ \ \ }}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{inline}\ uint64\_t\ AtomicCompareAndSwap(\ \textcolor{keyword}{volatile}\ uint64\_t*\ pDest,\ uint64\_t\ swapTo,\ uint64\_t\ compareWith\ )}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \#ifdef\ \_WIN32}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ assumes\ two's\ complement\ -\/\ unsigned\ /\ signed\ conversion\ leads\ to\ same\ bit\ pattern}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_InterlockedCompareExchange64(\ (\_\_int64\ \textcolor{keyword}{volatile}*)pDest,\ swapTo,\ compareWith\ );}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#else}}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_sync\_val\_compare\_and\_swap(\ pDest,\ compareWith,\ swapTo\ );}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#endif\ \ \ \ \ \ }}
+\DoxyCodeLine{00067\ \ \ \ \ \}\ \ \ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ Atomically\ performs:\ tmp\ =\ *pDest;\ *pDest\ +=\ value;\ return\ tmp;}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{inline}\ int32\_t\ AtomicAdd(\ \textcolor{keyword}{volatile}\ int32\_t*\ pDest,\ int32\_t\ value\ )}
+\DoxyCodeLine{00071\ \ \ \ \ \{}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \#ifdef\ \_WIN32}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_InterlockedExchangeAdd(\ (\textcolor{keywordtype}{long}*)pDest,\ value\ );}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#else}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_\_sync\_fetch\_and\_add(\ pDest,\ value\ );}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#endif\ \ \ \ \ \ }}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \}}
+
+\end{DoxyCode}

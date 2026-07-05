@@ -1,0 +1,163 @@
+\doxysection{tracy::\+Context\+Switch\+Data Struct Reference}
+\hypertarget{structtracy_1_1_context_switch_data}{}\label{structtracy_1_1_context_switch_data}\index{tracy::ContextSwitchData@{tracy::ContextSwitchData}}
+
+
+{\ttfamily \+\#include $<$Tracy\+Event.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_afc6612215c92a52e3812b97efe777eeb}\label{structtracy_1_1_context_switch_data_afc6612215c92a52e3812b97efe777eeb} 
+enum {\bfseries CSReason} :\+ int8\+\_\+t \{ \newline
+{\bfseries Wakeup} = -\/2
+, {\bfseries Fiber} = 99
+, {\bfseries No\+State} = 100
+, {\bfseries Win32\+\_\+\+Executive} = 0
+, \newline
+{\bfseries Win32\+\_\+\+Free\+Page} = 1
+, {\bfseries Win32\+\_\+\+Page\+In} = 2
+, {\bfseries Win32\+\_\+\+Pool\+Allocation} = 3
+, {\bfseries Win32\+\_\+\+Delay\+Execution} = 4
+, \newline
+{\bfseries Win32\+\_\+\+Suspended} = 5
+, {\bfseries Win32\+\_\+\+User\+Request} = 6
+, {\bfseries Win32\+\_\+\+Wr\+Executive} = 7
+, {\bfseries Win32\+\_\+\+Wr\+Free\+Page} = 8
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Page\+In} = 9
+, {\bfseries Win32\+\_\+\+Wr\+Pool\+Allocation} = 10
+, {\bfseries Win32\+\_\+\+Wr\+Delay\+Execution} = 11
+, {\bfseries Win32\+\_\+\+Wr\+Suspended} = 12
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+User\+Request} = 13
+, {\bfseries Win32\+\_\+\+Wr\+Event\+Pair} = 14
+, {\bfseries Win32\+\_\+\+Wr\+Queue} = 15
+, {\bfseries Win32\+\_\+\+Wr\+Lpc\+Receive} = 16
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Lpc\+Reply} = 17
+, {\bfseries Win32\+\_\+\+Wr\+Virtual\+Memory} = 18
+, {\bfseries Win32\+\_\+\+Wr\+Page\+Out} = 19
+, {\bfseries Win32\+\_\+\+Wr\+Rendezvous} = 20
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Keyed\+Event} = 21
+, {\bfseries Win32\+\_\+\+Wr\+Terminated} = 22
+, {\bfseries Win32\+\_\+\+Wr\+Process\+In\+Swap} = 23
+, {\bfseries Win32\+\_\+\+Wr\+Cpu\+Rate\+Control} = 24
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Callout\+Stack} = 25
+, {\bfseries Win32\+\_\+\+Wr\+Kernel} = 26
+, {\bfseries Win32\+\_\+\+Wr\+Resource} = 27
+, {\bfseries Win32\+\_\+\+Wr\+Push\+Lock} = 28
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Mutex} = 29
+, {\bfseries Win32\+\_\+\+Wr\+Quantum\+End} = 30
+, {\bfseries Win32\+\_\+\+Wr\+Dispatch\+Int} = 31
+, {\bfseries Win32\+\_\+\+Wr\+Preempted} = 32
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Yield\+Execution} = 33
+, {\bfseries Win32\+\_\+\+Wr\+Fast\+Mutex} = 34
+, {\bfseries Win32\+\_\+\+Wr\+Guarded\+Mutex} = 35
+, {\bfseries Win32\+\_\+\+Wr\+Rundown} = 36
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Alert\+By\+Thread\+Id} = 37
+, {\bfseries Win32\+\_\+\+Wr\+Deferred\+Preempt} = 38
+, {\bfseries Win32\+\_\+\+Wr\+Physical\+Fault} = 39
+, {\bfseries Win32\+\_\+\+Wr\+Io\+Ring} = 40
+, \newline
+{\bfseries Win32\+\_\+\+Wr\+Mdl\+Cache} = 41
+, {\bfseries Win32\+\_\+\+Wr\+Rcu} = 42
+, {\bfseries Win32\+\_\+\+Maximum\+Wait\+Reason}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_aae646e6791a030e59f7f0893ebe21ccb}\label{structtracy_1_1_context_switch_data_aae646e6791a030e59f7f0893ebe21ccb} 
+tracy\+\_\+force\+\_\+inline int64\+\_\+t {\bfseries Start} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a7b110f688d19467e0cc6620d1852c690}\label{structtracy_1_1_context_switch_data_a7b110f688d19467e0cc6620d1852c690} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+Start} (int64\+\_\+t start)
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_ac44328d6f6d3d8a911e36eaebd05eceb}\label{structtracy_1_1_context_switch_data_ac44328d6f6d3d8a911e36eaebd05eceb} 
+tracy\+\_\+force\+\_\+inline int64\+\_\+t {\bfseries End} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_aa33abec17abef49e79f8971d2c3d245a}\label{structtracy_1_1_context_switch_data_aa33abec17abef49e79f8971d2c3d245a} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+End} (int64\+\_\+t end)
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a48afeb954309fcd165452dafc67970bf}\label{structtracy_1_1_context_switch_data_a48afeb954309fcd165452dafc67970bf} 
+tracy\+\_\+force\+\_\+inline bool {\bfseries Is\+End\+Valid} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a9c43f4d974c7f330d70252f17d2639c4}\label{structtracy_1_1_context_switch_data_a9c43f4d974c7f330d70252f17d2639c4} 
+tracy\+\_\+force\+\_\+inline int64\+\_\+t {\bfseries End\+Or\+Start} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_aab3dece82f2de30ff8f759c8c4472c01}\label{structtracy_1_1_context_switch_data_aab3dece82f2de30ff8f759c8c4472c01} 
+tracy\+\_\+force\+\_\+inline uint8\+\_\+t {\bfseries Cpu} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_ae7d9ddda08e328eb57d0f0edc4765aaf}\label{structtracy_1_1_context_switch_data_ae7d9ddda08e328eb57d0f0edc4765aaf} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+Cpu} (uint8\+\_\+t cpu)
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_ae30c2da243b7234b7add6f9a1803b1d8}\label{structtracy_1_1_context_switch_data_ae30c2da243b7234b7add6f9a1803b1d8} 
+tracy\+\_\+force\+\_\+inline uint8\+\_\+t {\bfseries Wakeup\+Cpu} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_aca21952c11a30681f25418810baaef9a}\label{structtracy_1_1_context_switch_data_aca21952c11a30681f25418810baaef9a} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+Wakeup\+Cpu} (uint8\+\_\+t wakeupcpu)
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_af7100ad04ad84c24e502a834d1a9eb86}\label{structtracy_1_1_context_switch_data_af7100ad04ad84c24e502a834d1a9eb86} 
+tracy\+\_\+force\+\_\+inline CSReason {\bfseries Reason} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_afac625225c25be13200de9722d60d9e8}\label{structtracy_1_1_context_switch_data_afac625225c25be13200de9722d60d9e8} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+Reason} (int8\+\_\+t reason)
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a410c9396abbffc494a7cab0984dd68ae}\label{structtracy_1_1_context_switch_data_a410c9396abbffc494a7cab0984dd68ae} 
+tracy\+\_\+force\+\_\+inline int8\+\_\+t {\bfseries State} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_ad4b74d5158e6751a7b03c093fc6f4870}\label{structtracy_1_1_context_switch_data_ad4b74d5158e6751a7b03c093fc6f4870} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+State} (int8\+\_\+t state)
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_aef7f6408ed961a1f86b6bd967928e557}\label{structtracy_1_1_context_switch_data_aef7f6408ed961a1f86b6bd967928e557} 
+tracy\+\_\+force\+\_\+inline int64\+\_\+t {\bfseries Wakeup\+Val} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a9f3f5d56547a00f5e2a918cadbe77e87}\label{structtracy_1_1_context_switch_data_a9f3f5d56547a00f5e2a918cadbe77e87} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+Wakeup} (int64\+\_\+t wakeup)
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_aab246b5a3f2d3049cb474414c3925182}\label{structtracy_1_1_context_switch_data_aab246b5a3f2d3049cb474414c3925182} 
+tracy\+\_\+force\+\_\+inline uint16\+\_\+t {\bfseries Thread} () const
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a95bfd0ae98068327e9612aceb5280b84}\label{structtracy_1_1_context_switch_data_a95bfd0ae98068327e9612aceb5280b84} 
+tracy\+\_\+force\+\_\+inline void {\bfseries Set\+Thread} (uint16\+\_\+t thread)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_acdf023e4dab0aebd49ef0f18127a1e02}\label{structtracy_1_1_context_switch_data_acdf023e4dab0aebd49ef0f18127a1e02} 
+\doxymbox{\hyperlink{classtracy_1_1_int48}{Int48}} {\bfseries \+\_\+start}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a23d607139d3a64426c0b9fbfc7ed7c37}\label{structtracy_1_1_context_switch_data_a23d607139d3a64426c0b9fbfc7ed7c37} 
+uint8\+\_\+t {\bfseries \+\_\+cpu}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a3ce6d52f7f2b375fa1b3862efe939fa9}\label{structtracy_1_1_context_switch_data_a3ce6d52f7f2b375fa1b3862efe939fa9} 
+uint8\+\_\+t {\bfseries \+\_\+wakeupcpu}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_ae5bb2424b7e49ba98573dadb9797b563}\label{structtracy_1_1_context_switch_data_ae5bb2424b7e49ba98573dadb9797b563} 
+\doxymbox{\hyperlink{classtracy_1_1_int48}{Int48}} {\bfseries \+\_\+end}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a13ed9479d9dab1c34296bb5706107b39}\label{structtracy_1_1_context_switch_data_a13ed9479d9dab1c34296bb5706107b39} 
+int8\+\_\+t {\bfseries \+\_\+reason}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a91bdd91573fec3d073fed283401e3029}\label{structtracy_1_1_context_switch_data_a91bdd91573fec3d073fed283401e3029} 
+int8\+\_\+t {\bfseries \+\_\+state}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a421106cb30a951fb4a16515f307a7f68}\label{structtracy_1_1_context_switch_data_a421106cb30a951fb4a16515f307a7f68} 
+\doxymbox{\hyperlink{classtracy_1_1_int48}{Int48}} {\bfseries \+\_\+wakeup}
+\item 
+\Hypertarget{structtracy_1_1_context_switch_data_a97ac0663b8f0f14a93f38466a70041f9}\label{structtracy_1_1_context_switch_data_a97ac0663b8f0f14a93f38466a70041f9} 
+uint16\+\_\+t {\bfseries \+\_\+thread}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a context switch. Start is the when the thread wakes up (if known). End is when the context switch to another thread (or idle) happens. 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Engine/\+thirdparty/\+tracy/\+server/\+Tracy\+Event.\+hpp\end{DoxyCompactItemize}

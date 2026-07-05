@@ -1,0 +1,17 @@
+\chapter{KMSDRM on \texorpdfstring{$\ast$}{*}\+BSD }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd}\index{KMSDRM on \texorpdfstring{$\ast$}{*}BSD@{KMSDRM on \texorpdfstring{$\ast$}{*}BSD}}
+KMSDRM is supported on Free\+BSD and Open\+BSD. Dragon\+Fly\+BSD works but requires being a root user. Net\+BSD isn\textquotesingle{}t supported yet because the application will crash when creating the KMSDRM screen.
+
+WSCONS support has been brought back, but only as an input backend. It will not be brought back as a video backend to ease maintenance.
+
+Open\+BSD note:\+ Note that the video backend assumes that the user has read/\+write permissions to the /\+dev/\+drm\texorpdfstring{$\ast$}{*} devices.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd_autotoc_md1348}{}\doxysection{\texorpdfstring{SDL WSCONS input backend features}{SDL WSCONS input backend features}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd_autotoc_md1348}
+
+\begin{DoxyEnumerate}
+\item It is keymap-\/aware; it will work properly with different keymaps.
+\item It has mouse support.
+\item Accent input is supported.
+\item Compose keys are supported.
+\item Alt\+Gr and Meta Shift keys work as intended.
+\end{DoxyEnumerate}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd_autotoc_md1349}{}\doxysection{\texorpdfstring{Partially working or no input on Open\+BSD/\+\+Net\+BSD.}{Partially working or no input on Open\+BSD/\+\+Net\+BSD.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd_autotoc_md1349}
+The WSCONS input backend needs read/\+write access to the /\+dev/\+wskbd\texorpdfstring{$\ast$}{*} devices, without which it will not work properly. /\+dev/\+wsmouse must also be read/\+write accessible, otherwise mouse input will not work.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd_autotoc_md1350}{}\doxysection{\texorpdfstring{Partially working or no input on Free\+BSD.}{Partially working or no input on Free\+BSD.}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-kmsbsd_autotoc_md1350}
+The evdev devices are only accessible to the root user by default. Edit devfs rules to allow access to such devices. The /\+dev/\+kbd\texorpdfstring{$\ast$}{*} devices are also only accessible to the root user by default. Edit devfs rules to allow access to such devices. 

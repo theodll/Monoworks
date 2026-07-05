@@ -1,0 +1,366 @@
+\doxysection{SDL\+\_\+haptic.\+h}
+\hypertarget{_s_d_l__haptic_8h_source}{}\label{_s_d_l__haptic_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_haptic.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_haptic.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#ifndef\ SDL\_haptic\_h\_}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ SDL\_haptic\_h\_}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_joystick.h>}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00125\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00127\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_cplusplus\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{comment}{/*\ FIXME:}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ *\ At\ the\ moment\ the\ magnitude\ variables\ are\ mixed\ between\ signed/unsigned,\ and}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ *\ it\ is\ also\ not\ made\ clear\ that\ ALL\ of\ those\ variables\ expect\ a\ max\ of\ 0x7FFF.}}
+\DoxyCodeLine{00134\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00135\ \textcolor{comment}{\ *\ Some\ platforms\ may\ have\ higher\ precision\ than\ that\ (Linux\ FF,\ Windows\ XInput)}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ *\ so\ we\ should\ fix\ the\ inconsistency\ in\ favor\ of\ higher\ possible\ precision,}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ *\ adjusting\ for\ platforms\ that\ use\ different\ scales.}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ *\ -\/flibit}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00150\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ \doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ *\ Misc\ defines.}}
+\DoxyCodeLine{00154\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_INFINITY\ \ \ 4294967295U}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00176\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00181\ \textcolor{keyword}{typedef}\ Uint16\ SDL\_HapticEffectType;}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_CONSTANT\ \ \ \ \ (1u<<0)}}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_SINE\ \ \ \ \ \ \ \ \ (1u<<1)}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_SQUARE\ \ \ \ \ \ \ (1u<<2)}}
+\DoxyCodeLine{00215\ }
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_TRIANGLE\ \ \ \ \ (1u<<3)}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_SAWTOOTHUP\ \ \ (1u<<4)}}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_SAWTOOTHDOWN\ (1u<<5)}}
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_RAMP\ \ \ \ \ \ \ \ \ (1u<<6)}}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_SPRING\ \ \ \ \ \ \ (1u<<7)}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_DAMPER\ \ \ \ \ \ \ (1u<<8)}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_INERTIA\ \ \ \ \ \ (1u<<9)}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_FRICTION\ \ \ \ \ (1u<<10)}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_LEFTRIGHT\ \ \ \ (1u<<11)}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00324\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_RESERVED1\ \ \ \ (1u<<12)}}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_RESERVED2\ \ \ \ (1u<<13)}}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_RESERVED3\ \ \ \ (1u<<14)}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_CUSTOM\ \ \ \ \ \ \ (1u<<15)}}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Haptic\ effects\ */}}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{comment}{/*\ These\ last\ few\ are\ features\ the\ device\ has,\ not\ effects\ */}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00362\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_GAIN\ \ \ \ \ \ \ (1u<<16)}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00373\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_AUTOCENTER\ (1u<<17)}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00384\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_STATUS\ \ \ \ \ (1u<<18)}}
+\DoxyCodeLine{00385\ }
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_PAUSE\ \ \ \ \ \ (1u<<19)}}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00402\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00407\ \textcolor{keyword}{typedef}\ Uint8\ SDL\_HapticDirectionType;}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_POLAR\ \ \ \ \ \ 0}}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00425\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_CARTESIAN\ \ 1}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_SPHERICAL\ \ 2}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#define\ SDL\_HAPTIC\_STEERING\_AXIS\ 3}}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Direction\ encodings\ */}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ Haptic\ features\ */}}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ }
+\DoxyCodeLine{00460\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ SDL\_HapticEffectID;}
+\DoxyCodeLine{00461\ }
+\DoxyCodeLine{00462\ }
+\DoxyCodeLine{00566\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic_direction}{SDL\_HapticDirection}}}
+\DoxyCodeLine{00567\ \{}
+\DoxyCodeLine{00568\ \ \ \ \ SDL\_HapticDirectionType\ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction_a2ff7dae9c156d88a85fcf2c65030ff0f}{type}};\ \ }
+\DoxyCodeLine{00569\ \ \ \ \ Sint32\ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction_a6cebd8118a3e61e36bd0c503ae020362}{dir}}[3];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00570\ \}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction}{SDL\_HapticDirection}};}
+\DoxyCodeLine{00571\ }
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00586\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic_constant}{SDL\_HapticConstant}}}
+\DoxyCodeLine{00587\ \{}
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{comment}{/*\ Header\ */}}
+\DoxyCodeLine{00589\ \ \ \ \ SDL\_HapticEffectType\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_afc2f46977113c7f09654223489852a4c}{type}};\ \ \ \ \ \ }
+\DoxyCodeLine{00590\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction}{SDL\_HapticDirection}}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_a3e871debf4e57c35960f019d2605d84f}{direction}};\ \ }
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{comment}{/*\ Replay\ */}}
+\DoxyCodeLine{00593\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_aeb994c356b1d236b060f277d157e98ec}{length}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00594\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_a16a751009893f5412201e3ce91146b25}{delay}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00595\ }
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{comment}{/*\ Trigger\ */}}
+\DoxyCodeLine{00597\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_aa65321f1b002adaab6e629d5bed556e9}{button}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00598\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_ab1f7f0df856f4cf1fdf937cb886226b4}{interval}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ \textcolor{comment}{/*\ Constant\ */}}
+\DoxyCodeLine{00601\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_a5b095eea77464623ed57af15f29f4ca6}{level}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00603\ \ \ \ \ \textcolor{comment}{/*\ Envelope\ */}}
+\DoxyCodeLine{00604\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_a907bade68ab53fb24e7d2651d19b767f}{attack\_length}};\ \ \ }
+\DoxyCodeLine{00605\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_a0928a37f3fab0e5b7daffc7a1d65744c}{attack\_level}};\ \ \ \ }
+\DoxyCodeLine{00606\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_a647a6b761ac6ba16160d0892a12806bc}{fade\_length}};\ \ \ \ \ }
+\DoxyCodeLine{00607\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant_a49f6499c89f3e494efbe92f12277c949}{fade\_level}};\ \ \ \ \ \ }
+\DoxyCodeLine{00608\ \}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant}{SDL\_HapticConstant}};}
+\DoxyCodeLine{00609\ }
+\DoxyCodeLine{00672\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic_periodic}{SDL\_HapticPeriodic}}}
+\DoxyCodeLine{00673\ \{}
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{comment}{/*\ Header\ */}}
+\DoxyCodeLine{00675\ \ \ \ \ SDL\_HapticEffectType\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a812dfaf668c6c68b26fd22316985aa2b}{type}};\ \ \ \ \ \ }
+\DoxyCodeLine{00678\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction}{SDL\_HapticDirection}}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a2c4f27d4583187a7a994e79ad49083d3}{direction}};\ \ }
+\DoxyCodeLine{00679\ }
+\DoxyCodeLine{00680\ \ \ \ \ \textcolor{comment}{/*\ Replay\ */}}
+\DoxyCodeLine{00681\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a0ef0b17c54aaa5c99886c2a618444026}{length}};\ \ \ \ \ \ }
+\DoxyCodeLine{00682\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a8688d1c7ee6270ed290f6b474aef5ec9}{delay}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00683\ }
+\DoxyCodeLine{00684\ \ \ \ \ \textcolor{comment}{/*\ Trigger\ */}}
+\DoxyCodeLine{00685\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a9e0177354f4a285b8c98e4a31cd31752}{button}};\ \ \ \ \ \ }
+\DoxyCodeLine{00686\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a076d266e917098d89b2385b631629162}{interval}};\ \ \ \ }
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \ \ \ \ \textcolor{comment}{/*\ Periodic\ */}}
+\DoxyCodeLine{00689\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a0e7e105b96308129b248d52b56a2a839}{period}};\ \ \ \ \ \ }
+\DoxyCodeLine{00690\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_aad0ad2b00c7e6959da627663d91f7b94}{magnitude}};\ \ \ }
+\DoxyCodeLine{00691\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_abc7aa9e9c0d546cb54189a7812fbe554}{offset}};\ \ \ \ \ \ }
+\DoxyCodeLine{00692\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a25e8c6aebc78bd74b9343fa228d25d8f}{phase}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00694\ \ \ \ \ \textcolor{comment}{/*\ Envelope\ */}}
+\DoxyCodeLine{00695\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_ab35eedce7107edc75640586159fe75bb}{attack\_length}};\ \ \ }
+\DoxyCodeLine{00696\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_a79fc2217fea6db6ab3d89ad905d52ccb}{attack\_level}};\ \ \ \ }
+\DoxyCodeLine{00697\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_ae1c186d02304eae142a62dca72f50fa8}{fade\_length}};\ }
+\DoxyCodeLine{00698\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic_afa7713fc264959873f2a852fca4174fd}{fade\_level}};\ \ }
+\DoxyCodeLine{00699\ \}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic}{SDL\_HapticPeriodic}};}
+\DoxyCodeLine{00700\ }
+\DoxyCodeLine{00728\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic_condition}{SDL\_HapticCondition}}}
+\DoxyCodeLine{00729\ \{}
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{comment}{/*\ Header\ */}}
+\DoxyCodeLine{00731\ \ \ \ \ SDL\_HapticEffectType\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_a154ef1a81151cb1d817f3edf2981fd3d}{type}};\ \ \ \ \ \ }
+\DoxyCodeLine{00733\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction}{SDL\_HapticDirection}}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_a728507d30d18998949313de3a25e5581}{direction}};\ \ }
+\DoxyCodeLine{00734\ }
+\DoxyCodeLine{00735\ \ \ \ \ \textcolor{comment}{/*\ Replay\ */}}
+\DoxyCodeLine{00736\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_ad0efb0a6ddc20f058e87199eaaa95978}{length}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00737\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_aad40417980530ca8d80c62ba864a090b}{delay}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00739\ \ \ \ \ \textcolor{comment}{/*\ Trigger\ */}}
+\DoxyCodeLine{00740\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_acd35a9d432ad122bf7824b16974eac7a}{button}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00741\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_aafc182abea1078bed7e9cf5d0e713ea2}{interval}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00742\ }
+\DoxyCodeLine{00743\ \ \ \ \ \textcolor{comment}{/*\ Condition\ */}}
+\DoxyCodeLine{00744\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_a90427a1e0d464b4b53abc1d419c97b2e}{right\_sat}}[3];\ \ \ \ }
+\DoxyCodeLine{00745\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_a953448774c40818a4f47c6efea21124d}{left\_sat}}[3];\ \ \ \ \ }
+\DoxyCodeLine{00746\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_a3de7f164ef88841255535387d0f100b6}{right\_coeff}}[3];\ \ }
+\DoxyCodeLine{00747\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_a2adf52c32f60f0b6826b1e3add2eae7a}{left\_coeff}}[3];\ \ \ }
+\DoxyCodeLine{00748\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_af684c8eeeb719739a32723c00c5a2bbd}{deadband}}[3];\ \ \ \ \ }
+\DoxyCodeLine{00749\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition_a8a71ec28ff5ab85246cbc59736aa2c53}{center}}[3];\ \ \ \ \ \ \ }
+\DoxyCodeLine{00750\ \}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition}{SDL\_HapticCondition}};}
+\DoxyCodeLine{00751\ }
+\DoxyCodeLine{00767\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic_ramp}{SDL\_HapticRamp}}}
+\DoxyCodeLine{00768\ \{}
+\DoxyCodeLine{00769\ \ \ \ \ \textcolor{comment}{/*\ Header\ */}}
+\DoxyCodeLine{00770\ \ \ \ \ SDL\_HapticEffectType\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a25e4079d2aacb479c2d464d6e60b00fd}{type}};\ \ \ \ \ \ }
+\DoxyCodeLine{00771\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction}{SDL\_HapticDirection}}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a6fb6c67ccf262b8f3ec08bcdf08f9965}{direction}};\ \ }
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \ \ \ \ \textcolor{comment}{/*\ Replay\ */}}
+\DoxyCodeLine{00774\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a57e75237507701405af2a3caf34cdb5a}{length}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00775\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_ac9471016f41919b4a1c786bbd649a777}{delay}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00776\ }
+\DoxyCodeLine{00777\ \ \ \ \ \textcolor{comment}{/*\ Trigger\ */}}
+\DoxyCodeLine{00778\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a2027c6fd88f1ebe652c90c71410ee0bf}{button}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00779\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a4b89d108cfa7e96ea58b58771334c33d}{interval}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00780\ }
+\DoxyCodeLine{00781\ \ \ \ \ \textcolor{comment}{/*\ Ramp\ */}}
+\DoxyCodeLine{00782\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_acc0e813ac6399290fd4a788d2471e8d4}{start}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00783\ \ \ \ \ Sint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a16dd3ee307795248e21ee45ba8fb4c6c}{end}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00784\ }
+\DoxyCodeLine{00785\ \ \ \ \ \textcolor{comment}{/*\ Envelope\ */}}
+\DoxyCodeLine{00786\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_adbcd7ffb05016d442c73e81cc0fcbbd2}{attack\_length}};\ \ \ }
+\DoxyCodeLine{00787\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a755933bbda14ae9b53c574b9fe6291a0}{attack\_level}};\ \ \ \ }
+\DoxyCodeLine{00788\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_ad58a8f7cfdf659b45f0503fc56db7436}{fade\_length}};\ \ \ \ \ }
+\DoxyCodeLine{00789\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp_a66b586f2e6a23a085a7b2854f61752c5}{fade\_level}};\ \ \ \ \ \ }
+\DoxyCodeLine{00790\ \}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp}{SDL\_HapticRamp}};}
+\DoxyCodeLine{00791\ }
+\DoxyCodeLine{00806\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic_left_right}{SDL\_HapticLeftRight}}}
+\DoxyCodeLine{00807\ \{}
+\DoxyCodeLine{00808\ \ \ \ \ \textcolor{comment}{/*\ Header\ */}}
+\DoxyCodeLine{00809\ \ \ \ \ SDL\_HapticEffectType\ \doxymbox{\hyperlink{struct_s_d_l___haptic_left_right_a3291208aa87a01cfc3678c04ce174371}{type}};\ \ }
+\DoxyCodeLine{00810\ }
+\DoxyCodeLine{00811\ \ \ \ \ \textcolor{comment}{/*\ Replay\ */}}
+\DoxyCodeLine{00812\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___haptic_left_right_a5b942fee53f1ec77d3fb91a6e89b0196}{length}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00813\ }
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{comment}{/*\ Rumble\ */}}
+\DoxyCodeLine{00815\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_left_right_a8cd16fe2200ef10cc4f3b4209adef959}{large\_magnitude}};\ }
+\DoxyCodeLine{00816\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_left_right_aaa1f2c1e767a780e447d82efce6cd1cf}{small\_magnitude}};\ }
+\DoxyCodeLine{00817\ \}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_left_right}{SDL\_HapticLeftRight}};}
+\DoxyCodeLine{00818\ }
+\DoxyCodeLine{00836\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___haptic_custom}{SDL\_HapticCustom}}}
+\DoxyCodeLine{00837\ \{}
+\DoxyCodeLine{00838\ \ \ \ \ \textcolor{comment}{/*\ Header\ */}}
+\DoxyCodeLine{00839\ \ \ \ \ SDL\_HapticEffectType\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_a318f6c93c52824b058e60c7ea00521ac}{type}};\ \ \ \ \ \ }
+\DoxyCodeLine{00840\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_direction}{SDL\_HapticDirection}}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_ad7eb84f59404d9e0da07570b4b57dd43}{direction}};\ \ }
+\DoxyCodeLine{00841\ }
+\DoxyCodeLine{00842\ \ \ \ \ \textcolor{comment}{/*\ Replay\ */}}
+\DoxyCodeLine{00843\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_ad70e8bc2cff74b99d704a757c16b363f}{length}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00844\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_a094229466ff4cf695860db664100a2b0}{delay}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00845\ }
+\DoxyCodeLine{00846\ \ \ \ \ \textcolor{comment}{/*\ Trigger\ */}}
+\DoxyCodeLine{00847\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_aa4fbaf7220f3197aa6631b3e64ad6562}{button}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00848\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_afdeb26b1709254545e00a59a0a6c360c}{interval}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00849\ }
+\DoxyCodeLine{00850\ \ \ \ \ \textcolor{comment}{/*\ Custom\ */}}
+\DoxyCodeLine{00851\ \ \ \ \ Uint8\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_a560215762e9096d583d75867d9227cf5}{channels}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00852\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_aba7fafa808e90baddef25f009b8f4817}{period}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00853\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_a5905ea1b6182da846535ca8c80b4fa33}{samples}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00854\ \ \ \ \ Uint16\ *\doxymbox{\hyperlink{struct_s_d_l___haptic_custom_ad5a034f97e1699eacbe3f478538537c5}{data}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00855\ }
+\DoxyCodeLine{00856\ \ \ \ \ \textcolor{comment}{/*\ Envelope\ */}}
+\DoxyCodeLine{00857\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_a018b35d89398c26e10d1fb4315d1dda1}{attack\_length}};\ \ \ }
+\DoxyCodeLine{00858\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_ad6e394e3775372af3eb9e02823987405}{attack\_level}};\ \ \ \ }
+\DoxyCodeLine{00859\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_ab47fac94baeba28a3acd6c706e0b6a5c}{fade\_length}};\ \ \ \ \ }
+\DoxyCodeLine{00860\ \ \ \ \ Uint16\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom_a73a522581eb514d032e500ec6294fe50}{fade\_level}};\ \ \ \ \ \ }
+\DoxyCodeLine{00861\ \}\ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom}{SDL\_HapticCustom}};}
+\DoxyCodeLine{00862\ }
+\DoxyCodeLine{00935\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{union\ }\doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}}
+\DoxyCodeLine{00936\ \{}
+\DoxyCodeLine{00937\ \ \ \ \ \textcolor{comment}{/*\ Common\ for\ all\ force\ feedback\ effects\ */}}
+\DoxyCodeLine{00938\ \ \ \ \ SDL\_HapticEffectType\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect_ae17c961557e5347c4337d01806cc2ff4}{type}};\ \ \ \ \ \ }
+\DoxyCodeLine{00939\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_constant}{SDL\_HapticConstant}}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect_ac435275e9683d6cc5d65b9c7cc2ec659}{constant}};\ \ \ \ }
+\DoxyCodeLine{00940\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_periodic}{SDL\_HapticPeriodic}}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect_a8320ec4db6ec1dc1d30feb62ee2a2f04}{periodic}};\ \ \ \ }
+\DoxyCodeLine{00941\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_condition}{SDL\_HapticCondition}}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect_aa8fdd1ba202ccd7e61f48ef9977080d2}{condition}};\ \ }
+\DoxyCodeLine{00942\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_ramp}{SDL\_HapticRamp}}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect_a1d32ef4c2d1cc89dc938b392f6ad81bd}{ramp}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00943\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_left_right}{SDL\_HapticLeftRight}}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect_a3c254b81c1ff41c7888eee0cd0076a12}{leftright}};\ \ }
+\DoxyCodeLine{00944\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___haptic_custom}{SDL\_HapticCustom}}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect_a0b2d2af28c515cc39896b2b7c23019d2}{custom}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00945\ \}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}};}
+\DoxyCodeLine{00946\ }
+\DoxyCodeLine{00957\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_HapticID;}
+\DoxyCodeLine{00958\ }
+\DoxyCodeLine{00959\ }
+\DoxyCodeLine{00960\ \textcolor{comment}{/*\ Function\ prototypes\ */}}
+\DoxyCodeLine{00961\ }
+\DoxyCodeLine{00975\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_HapticID\ *\ SDLCALL\ SDL\_GetHaptics(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00976\ }
+\DoxyCodeLine{00992\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetHapticNameForID(SDL\_HapticID\ instance\_id);}
+\DoxyCodeLine{00993\ }
+\DoxyCodeLine{01017\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *\ SDLCALL\ SDL\_OpenHaptic(SDL\_HapticID\ instance\_id);}
+\DoxyCodeLine{01018\ }
+\DoxyCodeLine{01019\ }
+\DoxyCodeLine{01029\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *\ SDLCALL\ SDL\_GetHapticFromID(SDL\_HapticID\ instance\_id);}
+\DoxyCodeLine{01030\ }
+\DoxyCodeLine{01040\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_HapticID\ SDLCALL\ SDL\_GetHapticID(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01041\ }
+\DoxyCodeLine{01054\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetHapticName(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01055\ }
+\DoxyCodeLine{01065\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_IsMouseHaptic(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01066\ }
+\DoxyCodeLine{01078\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *\ SDLCALL\ SDL\_OpenHapticFromMouse(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01079\ }
+\DoxyCodeLine{01090\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_IsJoystickHaptic(\doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);}
+\DoxyCodeLine{01091\ }
+\DoxyCodeLine{01112\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *\ SDLCALL\ SDL\_OpenHapticFromJoystick(\doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick);}
+\DoxyCodeLine{01113\ }
+\DoxyCodeLine{01123\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_CloseHaptic(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01124\ }
+\DoxyCodeLine{01141\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetMaxHapticEffects(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01142\ }
+\DoxyCodeLine{01157\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetMaxHapticEffectsPlaying(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01158\ }
+\DoxyCodeLine{01171\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint32\ SDLCALL\ SDL\_GetHapticFeatures(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01172\ }
+\DoxyCodeLine{01185\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetNumHapticAxes(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01186\ }
+\DoxyCodeLine{01199\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_HapticEffectSupported(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}\ *effect);}
+\DoxyCodeLine{01200\ }
+\DoxyCodeLine{01216\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_HapticEffectID\ SDLCALL\ SDL\_CreateHapticEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}\ *effect);}
+\DoxyCodeLine{01217\ }
+\DoxyCodeLine{01238\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_UpdateHapticEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ effect,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{union_s_d_l___haptic_effect}{SDL\_HapticEffect}}\ *data);}
+\DoxyCodeLine{01239\ }
+\DoxyCodeLine{01262\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RunHapticEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ effect,\ Uint32\ iterations);}
+\DoxyCodeLine{01263\ }
+\DoxyCodeLine{01277\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_StopHapticEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ effect);}
+\DoxyCodeLine{01278\ }
+\DoxyCodeLine{01292\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyHapticEffect(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ effect);}
+\DoxyCodeLine{01293\ }
+\DoxyCodeLine{01308\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetHapticEffectStatus(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ SDL\_HapticEffectID\ effect);}
+\DoxyCodeLine{01309\ }
+\DoxyCodeLine{01330\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetHapticGain(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keywordtype}{int}\ gain);}
+\DoxyCodeLine{01331\ }
+\DoxyCodeLine{01349\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetHapticAutocenter(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keywordtype}{int}\ autocenter);}
+\DoxyCodeLine{01350\ }
+\DoxyCodeLine{01368\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_PauseHaptic(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01369\ }
+\DoxyCodeLine{01383\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ResumeHaptic(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01384\ }
+\DoxyCodeLine{01397\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_StopHapticEffects(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01398\ }
+\DoxyCodeLine{01409\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_HapticRumbleSupported(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01410\ }
+\DoxyCodeLine{01424\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_InitHapticRumble(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01425\ }
+\DoxyCodeLine{01440\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_PlayHapticRumble(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic,\ \textcolor{keywordtype}{float}\ strength,\ Uint32\ length);}
+\DoxyCodeLine{01441\ }
+\DoxyCodeLine{01453\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_StopHapticRumble(\doxymbox{\hyperlink{struct_s_d_l___haptic}{SDL\_Haptic}}\ *haptic);}
+\DoxyCodeLine{01454\ }
+\DoxyCodeLine{01455\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{01456\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01457\ \}}
+\DoxyCodeLine{01458\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01459\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{01460\ }
+\DoxyCodeLine{01461\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_haptic\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

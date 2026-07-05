@@ -1,0 +1,113 @@
+\doxysection{SDL\+\_\+windowsjoystick\+\_\+c.\+h}
+\hypertarget{_s_d_l__windowsjoystick__c_8h_source}{}\label{_s_d_l__windowsjoystick__c_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/windows/SDL\_windowsjoystick\_c.h@{MonoRuntime/extern/sdl/src/joystick/windows/SDL\_windowsjoystick\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysjoystick.h"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}../../core/windows/SDL\_windows.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}../../core/windows/SDL\_directx.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ MAX\_INPUTS\ 256\ }\textcolor{comment}{//\ each\ joystick\ can\ have\ up\ to\ 256\ inputs}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00031\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_joy_stick___device_data}{JoyStick\_DeviceData}}}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_u_i_d}{SDL\_GUID}}\ guid;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{char}\ *joystickname;}
+\DoxyCodeLine{00038\ \ \ \ \ Uint8\ send\_add\_event;}
+\DoxyCodeLine{00039\ \ \ \ \ SDL\_JoystickID\ nInstanceID;}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#ifdef\ SDL\_JOYSTICK\_XINPUT}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{bool}\ bXInputDevice;}
+\DoxyCodeLine{00042\ \ \ \ \ BYTE\ SubType;}
+\DoxyCodeLine{00043\ \ \ \ \ Uint8\ XInputUserId;}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ \ \ \ \ \doxymbox{\hyperlink{struct_d_i_d_e_v_i_c_e_i_n_s_t_a_n_c_e}{DIDEVICEINSTANCE}}\ dxdevice;}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{char}\ path[MAX\_PATH];}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{int}\ steam\_virtual\_gamepad\_slot;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_joy_stick___device_data}{JoyStick\_DeviceData}}\ *pNext;}
+\DoxyCodeLine{00049\ \}\ \doxymbox{\hyperlink{struct_joy_stick___device_data}{JoyStick\_DeviceData}};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{extern}\ \doxymbox{\hyperlink{struct_joy_stick___device_data}{JoyStick\_DeviceData}}\ *SYS\_Joystick;\ \textcolor{comment}{//\ array\ to\ hold\ joystick\ ID\ values}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ Type}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ BUTTON,}
+\DoxyCodeLine{00056\ \ \ \ \ AXIS,}
+\DoxyCodeLine{00057\ \ \ \ \ HAT}
+\DoxyCodeLine{00058\ \}\ Type;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structinput__t}{input\_t}}}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{//\ DirectInput\ offset\ for\ this\ input\ type:}}
+\DoxyCodeLine{00063\ \ \ \ \ DWORD\ ofs;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ Button,\ axis\ or\ hat:}}
+\DoxyCodeLine{00066\ \ \ \ \ Type\ type;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{//\ SDL\ input\ offset:}}
+\DoxyCodeLine{00069\ \ \ \ \ Uint8\ num;}
+\DoxyCodeLine{00070\ \}\ \doxymbox{\hyperlink{structinput__t}{input\_t}};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ The\ private\ structure\ used\ to\ keep\ track\ of\ a\ joystick}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata}{joystick\_hwdata}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_u_i_d}{SDL\_GUID}}\ guid;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#ifdef\ SDL\_JOYSTICK\_DINPUT}}
+\DoxyCodeLine{00078\ \ \ \ \ LPDIRECTINPUTDEVICE8\ InputDevice;}
+\DoxyCodeLine{00079\ \ \ \ \ DIDEVCAPS\ Capabilities;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{bool}\ buffered;}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{bool}\ first\_update;}
+\DoxyCodeLine{00082\ \ \ \ \ \doxymbox{\hyperlink{structinput__t}{input\_t}}\ Inputs[MAX\_INPUTS];}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{int}\ NumInputs;}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{int}\ NumSliders;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{bool}\ ff\_initialized;}
+\DoxyCodeLine{00086\ \ \ \ \ DIEFFECT\ *ffeffect;}
+\DoxyCodeLine{00087\ \ \ \ \ LPDIRECTINPUTEFFECT\ ffeffect\_ref;}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#ifdef\ SDL\_JOYSTICK\_XINPUT}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{bool}\ bXInputDevice;\ \textcolor{comment}{//\ true\ if\ this\ device\ supports\ using\ the\ xinput\ API\ rather\ than\ DirectInput}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordtype}{bool}\ bXInputHaptic;\ \textcolor{comment}{//\ Supports\ force\ feedback\ via\ XInput.}}
+\DoxyCodeLine{00093\ \ \ \ \ Uint8\ userid;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ XInput\ userid\ index\ for\ this\ joystick}}
+\DoxyCodeLine{00094\ \ \ \ \ DWORD\ dwPacketNumber;}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00096\ \};}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#ifdef\ SDL\_JOYSTICK\_DINPUT}}
+\DoxyCodeLine{00099\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ DIDATAFORMAT\ SDL\_c\_dfDIJoystick2;}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WINDOWS\_AddJoystickDevice(\doxymbox{\hyperlink{struct_joy_stick___device_data}{JoyStick\_DeviceData}}\ *device);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{comment}{//\ Ends\ C\ function\ definitions\ when\ using\ C++}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00106\ \}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

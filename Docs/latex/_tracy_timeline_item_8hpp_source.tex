@@ -1,0 +1,83 @@
+\doxysection{Tracy\+Timeline\+Item.\+hpp}
+\hypertarget{_tracy_timeline_item_8hpp_source}{}\label{_tracy_timeline_item_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyTimelineItem.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyTimelineItem.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYTIMELINEITEM\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYTIMELINEITEM\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}imgui.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}};}
+\DoxyCodeLine{00013\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_task_dispatch}{TaskDispatch}};}
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_view}{View}};}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }TimelineItem}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ TimelineItem(\ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ view,\ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ worker,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ key,\ \textcolor{keywordtype}{bool}\ wantPreprocess\ );}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~TimelineItem()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ draws\ the\ timeline\ item\ and\ also\ updates\ the\ next\ frame\ height\ value}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ Draw(\ \textcolor{keywordtype}{bool}\ firstFrame,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keywordtype}{int}\ yOffset\ );}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ WantPreprocess()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_wantPreprocess;\ \}}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ Preprocess(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \doxymbox{\hyperlink{classtracy_1_1_task_dispatch}{TaskDispatch}}\&\ td,\ \textcolor{keywordtype}{bool}\ visible,\ \textcolor{keywordtype}{int}\ yPos\ )\ \{\ assert(\ \textcolor{keyword}{false}\ );\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ VisibilityCheckbox();}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ SetVisible(\ \textcolor{keywordtype}{bool}\ visible\ )\ \{\ m\_visible\ =\ visible;\ \}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ IsVisible()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_visible;\ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ SetShowFull(\ \textcolor{keywordtype}{bool}\ showFull\ )\ \{\ m\_showFull\ =\ showFull;\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ returns\ 0\ instead\ of\ the\ correct\ value\ for\ the\ first\ frame}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{int}\ GetHeight()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_height;\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ GetKey()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_key;\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{virtual}\ uint32\_t\ HeaderColor()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ uint32\_t\ HeaderColorInactive()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{virtual}\ uint32\_t\ HeaderLineColor()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ HeaderLabel()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ HeaderTooltip(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ label\ )\textcolor{keyword}{\ const\ }\{\};}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ HeaderExtraContents(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keywordtype}{int}\ offset,\ \textcolor{keywordtype}{float}\ labelWidth\ )\ \{\};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{virtual}\ int64\_t\ RangeBegin()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{virtual}\ int64\_t\ RangeEnd()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ DrawContents(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structtracy_1_1_timeline_context}{TimelineContext}}\&\ ctx,\ \textcolor{keywordtype}{int}\&\ offset\ )\ =\ 0;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ DrawOverlay(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\&\ ul,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_im_vec2}{ImVec2}}\&\ dr\ )\ \{\}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ DrawExtraPopupItems()\ \{\}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ DrawFinished()\ \{\}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ IsEmpty()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_visible;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_showFull;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{void}\ AdjustThreadHeight(\ \textcolor{keywordtype}{bool}\ firstFrame,\ \textcolor{keywordtype}{int}\ yBegin,\ \textcolor{keywordtype}{int}\ yEnd\ );}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_height;}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_wantPreprocess;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ m\_key;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00071\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_view}{View}}\&\ m\_view;}
+\DoxyCodeLine{00072\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_worker}{Worker}}\&\ m\_worker;}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,452 @@
+\doxysection{vulkan\+\_\+video\+\_\+codec\+\_\+h265std.\+h}
+\hypertarget{vulkan__video__codec__h265std_8h_source}{}\label{vulkan__video__codec__h265std_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vk\_video/vulkan\_video\_codec\_h265std.h@{MonoRuntime/extern/sdl/src/video/khronos/vk\_video/vulkan\_video\_codec\_h265std.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_VIDEO\_CODEC\_H265STD\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VULKAN\_VIDEO\_CODEC\_H265STD\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ 2015-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ Vulkan\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ vulkan\_video\_codec\_h265std\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ vulkan\_video\_codec\_h265std\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}vulkan\_video\_codecs\_common.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_CPB\_CNT\_LIST\_SIZE\ \ 32U}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SUBLAYERS\_LIST\_SIZE\ 7U}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_4X4\_NUM\_LISTS\ 6U}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_4X4\_NUM\_ELEMENTS\ 16U}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_8X8\_NUM\_LISTS\ 6U}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_8X8\_NUM\_ELEMENTS\ 64U}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_16X16\_NUM\_LISTS\ 6U}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_16X16\_NUM\_ELEMENTS\ 64U}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_32X32\_NUM\_LISTS\ 2U}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_SCALING\_LIST\_32X32\_NUM\_ELEMENTS\ 64U}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_CHROMA\_QP\_OFFSET\_LIST\_SIZE\ 6U}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_CHROMA\_QP\_OFFSET\_TILE\_COLS\_LIST\_SIZE\ 19U}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_CHROMA\_QP\_OFFSET\_TILE\_ROWS\_LIST\_SIZE\ 21U}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_PREDICTOR\_PALETTE\_COMPONENTS\_LIST\_SIZE\ 3U}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_PREDICTOR\_PALETTE\_COMP\_ENTRIES\_LIST\_SIZE\ 128U}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_MAX\_NUM\_LIST\_REF\ \ \ 15U}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_MAX\_CHROMA\_PLANES\ \ 2U}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_MAX\_SHORT\_TERM\_REF\_PIC\_SETS\ 64U}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_MAX\_DPB\_SIZE\ \ \ \ \ \ \ 16U}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_MAX\_LONG\_TERM\_REF\_PICS\_SPS\ 32U}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_MAX\_LONG\_TERM\_PICS\ 16U}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_MAX\_DELTA\_POC\ \ \ \ \ \ 48U}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ STD\_VIDEO\_H265\_NO\_REFERENCE\_PICTURE\ 0xFFU}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ StdVideoH265ChromaFormatIdc\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ STD\_VIDEO\_H265\_CHROMA\_FORMAT\_IDC\_MONOCHROME\ =\ 0,}
+\DoxyCodeLine{00051\ \ \ \ \ STD\_VIDEO\_H265\_CHROMA\_FORMAT\_IDC\_420\ =\ 1,}
+\DoxyCodeLine{00052\ \ \ \ \ STD\_VIDEO\_H265\_CHROMA\_FORMAT\_IDC\_422\ =\ 2,}
+\DoxyCodeLine{00053\ \ \ \ \ STD\_VIDEO\_H265\_CHROMA\_FORMAT\_IDC\_444\ =\ 3,}
+\DoxyCodeLine{00054\ \ \ \ \ STD\_VIDEO\_H265\_CHROMA\_FORMAT\_IDC\_INVALID\ =\ 0x7FFFFFFF,}
+\DoxyCodeLine{00055\ \ \ \ \ STD\_VIDEO\_H265\_CHROMA\_FORMAT\_IDC\_MAX\_ENUM\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00056\ \}\ StdVideoH265ChromaFormatIdc;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ StdVideoH265ProfileIdc\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ STD\_VIDEO\_H265\_PROFILE\_IDC\_MAIN\ =\ 1,}
+\DoxyCodeLine{00060\ \ \ \ \ STD\_VIDEO\_H265\_PROFILE\_IDC\_MAIN\_10\ =\ 2,}
+\DoxyCodeLine{00061\ \ \ \ \ STD\_VIDEO\_H265\_PROFILE\_IDC\_MAIN\_STILL\_PICTURE\ =\ 3,}
+\DoxyCodeLine{00062\ \ \ \ \ STD\_VIDEO\_H265\_PROFILE\_IDC\_FORMAT\_RANGE\_EXTENSIONS\ =\ 4,}
+\DoxyCodeLine{00063\ \ \ \ \ STD\_VIDEO\_H265\_PROFILE\_IDC\_SCC\_EXTENSIONS\ =\ 9,}
+\DoxyCodeLine{00064\ \ \ \ \ STD\_VIDEO\_H265\_PROFILE\_IDC\_INVALID\ =\ 0x7FFFFFFF,}
+\DoxyCodeLine{00065\ \ \ \ \ STD\_VIDEO\_H265\_PROFILE\_IDC\_MAX\_ENUM\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00066\ \}\ StdVideoH265ProfileIdc;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ StdVideoH265LevelIdc\ \{}
+\DoxyCodeLine{00069\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_1\_0\ =\ 0,}
+\DoxyCodeLine{00070\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_2\_0\ =\ 1,}
+\DoxyCodeLine{00071\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_2\_1\ =\ 2,}
+\DoxyCodeLine{00072\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_3\_0\ =\ 3,}
+\DoxyCodeLine{00073\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_3\_1\ =\ 4,}
+\DoxyCodeLine{00074\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_4\_0\ =\ 5,}
+\DoxyCodeLine{00075\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_4\_1\ =\ 6,}
+\DoxyCodeLine{00076\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_5\_0\ =\ 7,}
+\DoxyCodeLine{00077\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_5\_1\ =\ 8,}
+\DoxyCodeLine{00078\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_5\_2\ =\ 9,}
+\DoxyCodeLine{00079\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_6\_0\ =\ 10,}
+\DoxyCodeLine{00080\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_6\_1\ =\ 11,}
+\DoxyCodeLine{00081\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_6\_2\ =\ 12,}
+\DoxyCodeLine{00082\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_INVALID\ =\ 0x7FFFFFFF,}
+\DoxyCodeLine{00083\ \ \ \ \ STD\_VIDEO\_H265\_LEVEL\_IDC\_MAX\_ENUM\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00084\ \}\ StdVideoH265LevelIdc;}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ StdVideoH265SliceType\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ STD\_VIDEO\_H265\_SLICE\_TYPE\_B\ =\ 0,}
+\DoxyCodeLine{00088\ \ \ \ \ STD\_VIDEO\_H265\_SLICE\_TYPE\_P\ =\ 1,}
+\DoxyCodeLine{00089\ \ \ \ \ STD\_VIDEO\_H265\_SLICE\_TYPE\_I\ =\ 2,}
+\DoxyCodeLine{00090\ \ \ \ \ STD\_VIDEO\_H265\_SLICE\_TYPE\_INVALID\ =\ 0x7FFFFFFF,}
+\DoxyCodeLine{00091\ \ \ \ \ STD\_VIDEO\_H265\_SLICE\_TYPE\_MAX\_ENUM\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00092\ \}\ StdVideoH265SliceType;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ StdVideoH265PictureType\ \{}
+\DoxyCodeLine{00095\ \ \ \ \ STD\_VIDEO\_H265\_PICTURE\_TYPE\_P\ =\ 0,}
+\DoxyCodeLine{00096\ \ \ \ \ STD\_VIDEO\_H265\_PICTURE\_TYPE\_B\ =\ 1,}
+\DoxyCodeLine{00097\ \ \ \ \ STD\_VIDEO\_H265\_PICTURE\_TYPE\_I\ =\ 2,}
+\DoxyCodeLine{00098\ \ \ \ \ STD\_VIDEO\_H265\_PICTURE\_TYPE\_IDR\ =\ 3,}
+\DoxyCodeLine{00099\ \ \ \ \ STD\_VIDEO\_H265\_PICTURE\_TYPE\_INVALID\ =\ 0x7FFFFFFF,}
+\DoxyCodeLine{00100\ \ \ \ \ STD\_VIDEO\_H265\_PICTURE\_TYPE\_MAX\_ENUM\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00101\ \}\ StdVideoH265PictureType;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ StdVideoH265AspectRatioIdc\ \{}
+\DoxyCodeLine{00104\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_UNSPECIFIED\ =\ 0,}
+\DoxyCodeLine{00105\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_SQUARE\ =\ 1,}
+\DoxyCodeLine{00106\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_12\_11\ =\ 2,}
+\DoxyCodeLine{00107\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_10\_11\ =\ 3,}
+\DoxyCodeLine{00108\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_16\_11\ =\ 4,}
+\DoxyCodeLine{00109\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_40\_33\ =\ 5,}
+\DoxyCodeLine{00110\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_24\_11\ =\ 6,}
+\DoxyCodeLine{00111\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_20\_11\ =\ 7,}
+\DoxyCodeLine{00112\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_32\_11\ =\ 8,}
+\DoxyCodeLine{00113\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_80\_33\ =\ 9,}
+\DoxyCodeLine{00114\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_18\_11\ =\ 10,}
+\DoxyCodeLine{00115\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_15\_11\ =\ 11,}
+\DoxyCodeLine{00116\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_64\_33\ =\ 12,}
+\DoxyCodeLine{00117\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_160\_99\ =\ 13,}
+\DoxyCodeLine{00118\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_4\_3\ =\ 14,}
+\DoxyCodeLine{00119\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_3\_2\ =\ 15,}
+\DoxyCodeLine{00120\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_2\_1\ =\ 16,}
+\DoxyCodeLine{00121\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_EXTENDED\_SAR\ =\ 255,}
+\DoxyCodeLine{00122\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_INVALID\ =\ 0x7FFFFFFF,}
+\DoxyCodeLine{00123\ \ \ \ \ STD\_VIDEO\_H265\_ASPECT\_RATIO\_IDC\_MAX\_ENUM\ =\ 0x7FFFFFFF}
+\DoxyCodeLine{00124\ \}\ StdVideoH265AspectRatioIdc;}
+\DoxyCodeLine{00125\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_dec_pic_buf_mgr}{StdVideoH265DecPicBufMgr}}\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ uint32\_t\ \ \ \ max\_latency\_increase\_plus1[STD\_VIDEO\_H265\_SUBLAYERS\_LIST\_SIZE];}
+\DoxyCodeLine{00127\ \ \ \ \ uint8\_t\ \ \ \ \ max\_dec\_pic\_buffering\_minus1[STD\_VIDEO\_H265\_SUBLAYERS\_LIST\_SIZE];}
+\DoxyCodeLine{00128\ \ \ \ \ uint8\_t\ \ \ \ \ max\_num\_reorder\_pics[STD\_VIDEO\_H265\_SUBLAYERS\_LIST\_SIZE];}
+\DoxyCodeLine{00129\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_dec_pic_buf_mgr}{StdVideoH265DecPicBufMgr}};}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_sub_layer_hrd_parameters}{StdVideoH265SubLayerHrdParameters}}\ \{}
+\DoxyCodeLine{00132\ \ \ \ \ uint32\_t\ \ \ \ bit\_rate\_value\_minus1[STD\_VIDEO\_H265\_CPB\_CNT\_LIST\_SIZE];}
+\DoxyCodeLine{00133\ \ \ \ \ uint32\_t\ \ \ \ cpb\_size\_value\_minus1[STD\_VIDEO\_H265\_CPB\_CNT\_LIST\_SIZE];}
+\DoxyCodeLine{00134\ \ \ \ \ uint32\_t\ \ \ \ cpb\_size\_du\_value\_minus1[STD\_VIDEO\_H265\_CPB\_CNT\_LIST\_SIZE];}
+\DoxyCodeLine{00135\ \ \ \ \ uint32\_t\ \ \ \ bit\_rate\_du\_value\_minus1[STD\_VIDEO\_H265\_CPB\_CNT\_LIST\_SIZE];}
+\DoxyCodeLine{00136\ \ \ \ \ uint32\_t\ \ \ \ cbr\_flag;}
+\DoxyCodeLine{00137\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_sub_layer_hrd_parameters}{StdVideoH265SubLayerHrdParameters}};}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_hrd_flags}{StdVideoH265HrdFlags}}\ \{}
+\DoxyCodeLine{00140\ \ \ \ \ uint32\_t\ \ \ \ nal\_hrd\_parameters\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00141\ \ \ \ \ uint32\_t\ \ \ \ vcl\_hrd\_parameters\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00142\ \ \ \ \ uint32\_t\ \ \ \ sub\_pic\_hrd\_params\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00143\ \ \ \ \ uint32\_t\ \ \ \ sub\_pic\_cpb\_params\_in\_pic\_timing\_sei\_flag\ :\ 1;}
+\DoxyCodeLine{00144\ \ \ \ \ uint32\_t\ \ \ \ fixed\_pic\_rate\_general\_flag\ :\ 8;}
+\DoxyCodeLine{00145\ \ \ \ \ uint32\_t\ \ \ \ fixed\_pic\_rate\_within\_cvs\_flag\ :\ 8;}
+\DoxyCodeLine{00146\ \ \ \ \ uint32\_t\ \ \ \ low\_delay\_hrd\_flag\ :\ 8;}
+\DoxyCodeLine{00147\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_hrd_flags}{StdVideoH265HrdFlags}};}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_hrd_parameters}{StdVideoH265HrdParameters}}\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_h265_hrd_flags}{StdVideoH265HrdFlags}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00151\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ tick\_divisor\_minus2;}
+\DoxyCodeLine{00152\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ du\_cpb\_removal\_delay\_increment\_length\_minus1;}
+\DoxyCodeLine{00153\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpb\_output\_delay\_du\_length\_minus1;}
+\DoxyCodeLine{00154\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bit\_rate\_scale;}
+\DoxyCodeLine{00155\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpb\_size\_scale;}
+\DoxyCodeLine{00156\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpb\_size\_du\_scale;}
+\DoxyCodeLine{00157\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ initial\_cpb\_removal\_delay\_length\_minus1;}
+\DoxyCodeLine{00158\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ au\_cpb\_removal\_delay\_length\_minus1;}
+\DoxyCodeLine{00159\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dpb\_output\_delay\_length\_minus1;}
+\DoxyCodeLine{00160\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpb\_cnt\_minus1[STD\_VIDEO\_H265\_SUBLAYERS\_LIST\_SIZE];}
+\DoxyCodeLine{00161\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elemental\_duration\_in\_tc\_minus1[STD\_VIDEO\_H265\_SUBLAYERS\_LIST\_SIZE];}
+\DoxyCodeLine{00162\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved[3];}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_sub_layer_hrd_parameters}{StdVideoH265SubLayerHrdParameters}}*\ \ \ \ pSubLayerHrdParametersNal;}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_sub_layer_hrd_parameters}{StdVideoH265SubLayerHrdParameters}}*\ \ \ \ pSubLayerHrdParametersVcl;}
+\DoxyCodeLine{00165\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_hrd_parameters}{StdVideoH265HrdParameters}};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_vps_flags}{StdVideoH265VpsFlags}}\ \{}
+\DoxyCodeLine{00168\ \ \ \ \ uint32\_t\ \ \ \ vps\_temporal\_id\_nesting\_flag\ :\ 1;}
+\DoxyCodeLine{00169\ \ \ \ \ uint32\_t\ \ \ \ vps\_sub\_layer\_ordering\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00170\ \ \ \ \ uint32\_t\ \ \ \ vps\_timing\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00171\ \ \ \ \ uint32\_t\ \ \ \ vps\_poc\_proportional\_to\_timing\_flag\ :\ 1;}
+\DoxyCodeLine{00172\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_vps_flags}{StdVideoH265VpsFlags}};}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_profile_tier_level_flags}{StdVideoH265ProfileTierLevelFlags}}\ \{}
+\DoxyCodeLine{00175\ \ \ \ \ uint32\_t\ \ \ \ general\_tier\_flag\ :\ 1;}
+\DoxyCodeLine{00176\ \ \ \ \ uint32\_t\ \ \ \ general\_progressive\_source\_flag\ :\ 1;}
+\DoxyCodeLine{00177\ \ \ \ \ uint32\_t\ \ \ \ general\_interlaced\_source\_flag\ :\ 1;}
+\DoxyCodeLine{00178\ \ \ \ \ uint32\_t\ \ \ \ general\_non\_packed\_constraint\_flag\ :\ 1;}
+\DoxyCodeLine{00179\ \ \ \ \ uint32\_t\ \ \ \ general\_frame\_only\_constraint\_flag\ :\ 1;}
+\DoxyCodeLine{00180\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_profile_tier_level_flags}{StdVideoH265ProfileTierLevelFlags}};}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_profile_tier_level}{StdVideoH265ProfileTierLevel}}\ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_h265_profile_tier_level_flags}{StdVideoH265ProfileTierLevelFlags}}\ \ \ \ flags;}
+\DoxyCodeLine{00184\ \ \ \ \ StdVideoH265ProfileIdc\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ general\_profile\_idc;}
+\DoxyCodeLine{00185\ \ \ \ \ StdVideoH265LevelIdc\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ general\_level\_idc;}
+\DoxyCodeLine{00186\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_profile_tier_level}{StdVideoH265ProfileTierLevel}};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_video_parameter_set}{StdVideoH265VideoParameterSet}}\ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_h265_vps_flags}{StdVideoH265VpsFlags}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00190\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vps\_video\_parameter\_set\_id;}
+\DoxyCodeLine{00191\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vps\_max\_sub\_layers\_minus1;}
+\DoxyCodeLine{00192\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1;}
+\DoxyCodeLine{00193\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved2;}
+\DoxyCodeLine{00194\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vps\_num\_units\_in\_tick;}
+\DoxyCodeLine{00195\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vps\_time\_scale;}
+\DoxyCodeLine{00196\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vps\_num\_ticks\_poc\_diff\_one\_minus1;}
+\DoxyCodeLine{00197\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved3;}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_dec_pic_buf_mgr}{StdVideoH265DecPicBufMgr}}*\ \ \ \ \ \ \ \ pDecPicBufMgr;}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_hrd_parameters}{StdVideoH265HrdParameters}}*\ \ \ \ \ \ \ pHrdParameters;}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_profile_tier_level}{StdVideoH265ProfileTierLevel}}*\ \ \ \ pProfileTierLevel;}
+\DoxyCodeLine{00201\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_video_parameter_set}{StdVideoH265VideoParameterSet}};}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_scaling_lists}{StdVideoH265ScalingLists}}\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ uint8\_t\ \ \ \ ScalingList4x4[STD\_VIDEO\_H265\_SCALING\_LIST\_4X4\_NUM\_LISTS][STD\_VIDEO\_H265\_SCALING\_LIST\_4X4\_NUM\_ELEMENTS];}
+\DoxyCodeLine{00205\ \ \ \ \ uint8\_t\ \ \ \ ScalingList8x8[STD\_VIDEO\_H265\_SCALING\_LIST\_8X8\_NUM\_LISTS][STD\_VIDEO\_H265\_SCALING\_LIST\_8X8\_NUM\_ELEMENTS];}
+\DoxyCodeLine{00206\ \ \ \ \ uint8\_t\ \ \ \ ScalingList16x16[STD\_VIDEO\_H265\_SCALING\_LIST\_16X16\_NUM\_LISTS][STD\_VIDEO\_H265\_SCALING\_LIST\_16X16\_NUM\_ELEMENTS];}
+\DoxyCodeLine{00207\ \ \ \ \ uint8\_t\ \ \ \ ScalingList32x32[STD\_VIDEO\_H265\_SCALING\_LIST\_32X32\_NUM\_LISTS][STD\_VIDEO\_H265\_SCALING\_LIST\_32X32\_NUM\_ELEMENTS];}
+\DoxyCodeLine{00208\ \ \ \ \ uint8\_t\ \ \ \ ScalingListDCCoef16x16[STD\_VIDEO\_H265\_SCALING\_LIST\_16X16\_NUM\_LISTS];}
+\DoxyCodeLine{00209\ \ \ \ \ uint8\_t\ \ \ \ ScalingListDCCoef32x32[STD\_VIDEO\_H265\_SCALING\_LIST\_32X32\_NUM\_LISTS];}
+\DoxyCodeLine{00210\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_scaling_lists}{StdVideoH265ScalingLists}};}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_sps_vui_flags}{StdVideoH265SpsVuiFlags}}\ \{}
+\DoxyCodeLine{00213\ \ \ \ \ uint32\_t\ \ \ \ aspect\_ratio\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00214\ \ \ \ \ uint32\_t\ \ \ \ overscan\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00215\ \ \ \ \ uint32\_t\ \ \ \ overscan\_appropriate\_flag\ :\ 1;}
+\DoxyCodeLine{00216\ \ \ \ \ uint32\_t\ \ \ \ video\_signal\_type\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00217\ \ \ \ \ uint32\_t\ \ \ \ video\_full\_range\_flag\ :\ 1;}
+\DoxyCodeLine{00218\ \ \ \ \ uint32\_t\ \ \ \ colour\_description\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00219\ \ \ \ \ uint32\_t\ \ \ \ chroma\_loc\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00220\ \ \ \ \ uint32\_t\ \ \ \ neutral\_chroma\_indication\_flag\ :\ 1;}
+\DoxyCodeLine{00221\ \ \ \ \ uint32\_t\ \ \ \ field\_seq\_flag\ :\ 1;}
+\DoxyCodeLine{00222\ \ \ \ \ uint32\_t\ \ \ \ frame\_field\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00223\ \ \ \ \ uint32\_t\ \ \ \ default\_display\_window\_flag\ :\ 1;}
+\DoxyCodeLine{00224\ \ \ \ \ uint32\_t\ \ \ \ vui\_timing\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00225\ \ \ \ \ uint32\_t\ \ \ \ vui\_poc\_proportional\_to\_timing\_flag\ :\ 1;}
+\DoxyCodeLine{00226\ \ \ \ \ uint32\_t\ \ \ \ vui\_hrd\_parameters\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00227\ \ \ \ \ uint32\_t\ \ \ \ bitstream\_restriction\_flag\ :\ 1;}
+\DoxyCodeLine{00228\ \ \ \ \ uint32\_t\ \ \ \ tiles\_fixed\_structure\_flag\ :\ 1;}
+\DoxyCodeLine{00229\ \ \ \ \ uint32\_t\ \ \ \ motion\_vectors\_over\_pic\_boundaries\_flag\ :\ 1;}
+\DoxyCodeLine{00230\ \ \ \ \ uint32\_t\ \ \ \ restricted\_ref\_pic\_lists\_flag\ :\ 1;}
+\DoxyCodeLine{00231\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_sps_vui_flags}{StdVideoH265SpsVuiFlags}};}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_sequence_parameter_set_vui}{StdVideoH265SequenceParameterSetVui}}\ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_h265_sps_vui_flags}{StdVideoH265SpsVuiFlags}}\ \ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00235\ \ \ \ \ StdVideoH265AspectRatioIdc\ \ \ \ \ \ \ \ \ \ aspect\_ratio\_idc;}
+\DoxyCodeLine{00236\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sar\_width;}
+\DoxyCodeLine{00237\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sar\_height;}
+\DoxyCodeLine{00238\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ video\_format;}
+\DoxyCodeLine{00239\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ colour\_primaries;}
+\DoxyCodeLine{00240\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transfer\_characteristics;}
+\DoxyCodeLine{00241\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ matrix\_coeffs;}
+\DoxyCodeLine{00242\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_sample\_loc\_type\_top\_field;}
+\DoxyCodeLine{00243\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_sample\_loc\_type\_bottom\_field;}
+\DoxyCodeLine{00244\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1;}
+\DoxyCodeLine{00245\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved2;}
+\DoxyCodeLine{00246\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ def\_disp\_win\_left\_offset;}
+\DoxyCodeLine{00247\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ def\_disp\_win\_right\_offset;}
+\DoxyCodeLine{00248\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ def\_disp\_win\_top\_offset;}
+\DoxyCodeLine{00249\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ def\_disp\_win\_bottom\_offset;}
+\DoxyCodeLine{00250\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vui\_num\_units\_in\_tick;}
+\DoxyCodeLine{00251\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vui\_time\_scale;}
+\DoxyCodeLine{00252\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vui\_num\_ticks\_poc\_diff\_one\_minus1;}
+\DoxyCodeLine{00253\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ min\_spatial\_segmentation\_idc;}
+\DoxyCodeLine{00254\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved3;}
+\DoxyCodeLine{00255\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_bytes\_per\_pic\_denom;}
+\DoxyCodeLine{00256\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_bits\_per\_min\_cu\_denom;}
+\DoxyCodeLine{00257\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_max\_mv\_length\_horizontal;}
+\DoxyCodeLine{00258\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_max\_mv\_length\_vertical;}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_hrd_parameters}{StdVideoH265HrdParameters}}*\ \ \ \ pHrdParameters;}
+\DoxyCodeLine{00260\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_sequence_parameter_set_vui}{StdVideoH265SequenceParameterSetVui}};}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_predictor_palette_entries}{StdVideoH265PredictorPaletteEntries}}\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ uint16\_t\ \ \ \ PredictorPaletteEntries[STD\_VIDEO\_H265\_PREDICTOR\_PALETTE\_COMPONENTS\_LIST\_SIZE][STD\_VIDEO\_H265\_PREDICTOR\_PALETTE\_COMP\_ENTRIES\_LIST\_SIZE];}
+\DoxyCodeLine{00264\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_predictor_palette_entries}{StdVideoH265PredictorPaletteEntries}};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_sps_flags}{StdVideoH265SpsFlags}}\ \{}
+\DoxyCodeLine{00267\ \ \ \ \ uint32\_t\ \ \ \ sps\_temporal\_id\_nesting\_flag\ :\ 1;}
+\DoxyCodeLine{00268\ \ \ \ \ uint32\_t\ \ \ \ separate\_colour\_plane\_flag\ :\ 1;}
+\DoxyCodeLine{00269\ \ \ \ \ uint32\_t\ \ \ \ conformance\_window\_flag\ :\ 1;}
+\DoxyCodeLine{00270\ \ \ \ \ uint32\_t\ \ \ \ sps\_sub\_layer\_ordering\_info\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00271\ \ \ \ \ uint32\_t\ \ \ \ scaling\_list\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00272\ \ \ \ \ uint32\_t\ \ \ \ sps\_scaling\_list\_data\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00273\ \ \ \ \ uint32\_t\ \ \ \ amp\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00274\ \ \ \ \ uint32\_t\ \ \ \ sample\_adaptive\_offset\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00275\ \ \ \ \ uint32\_t\ \ \ \ pcm\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00276\ \ \ \ \ uint32\_t\ \ \ \ pcm\_loop\_filter\_disabled\_flag\ :\ 1;}
+\DoxyCodeLine{00277\ \ \ \ \ uint32\_t\ \ \ \ long\_term\_ref\_pics\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00278\ \ \ \ \ uint32\_t\ \ \ \ sps\_temporal\_mvp\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00279\ \ \ \ \ uint32\_t\ \ \ \ strong\_intra\_smoothing\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00280\ \ \ \ \ uint32\_t\ \ \ \ vui\_parameters\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00281\ \ \ \ \ uint32\_t\ \ \ \ sps\_extension\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00282\ \ \ \ \ uint32\_t\ \ \ \ sps\_range\_extension\_flag\ :\ 1;}
+\DoxyCodeLine{00283\ \ \ \ \ uint32\_t\ \ \ \ transform\_skip\_rotation\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00284\ \ \ \ \ uint32\_t\ \ \ \ transform\_skip\_context\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00285\ \ \ \ \ uint32\_t\ \ \ \ implicit\_rdpcm\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00286\ \ \ \ \ uint32\_t\ \ \ \ explicit\_rdpcm\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00287\ \ \ \ \ uint32\_t\ \ \ \ extended\_precision\_processing\_flag\ :\ 1;}
+\DoxyCodeLine{00288\ \ \ \ \ uint32\_t\ \ \ \ intra\_smoothing\_disabled\_flag\ :\ 1;}
+\DoxyCodeLine{00289\ \ \ \ \ uint32\_t\ \ \ \ high\_precision\_offsets\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00290\ \ \ \ \ uint32\_t\ \ \ \ persistent\_rice\_adaptation\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00291\ \ \ \ \ uint32\_t\ \ \ \ cabac\_bypass\_alignment\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00292\ \ \ \ \ uint32\_t\ \ \ \ sps\_scc\_extension\_flag\ :\ 1;}
+\DoxyCodeLine{00293\ \ \ \ \ uint32\_t\ \ \ \ sps\_curr\_pic\_ref\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00294\ \ \ \ \ uint32\_t\ \ \ \ palette\_mode\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00295\ \ \ \ \ uint32\_t\ \ \ \ sps\_palette\_predictor\_initializers\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00296\ \ \ \ \ uint32\_t\ \ \ \ intra\_boundary\_filtering\_disabled\_flag\ :\ 1;}
+\DoxyCodeLine{00297\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_sps_flags}{StdVideoH265SpsFlags}};}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_short_term_ref_pic_set_flags}{StdVideoH265ShortTermRefPicSetFlags}}\ \{}
+\DoxyCodeLine{00300\ \ \ \ \ uint32\_t\ \ \ \ inter\_ref\_pic\_set\_prediction\_flag\ :\ 1;}
+\DoxyCodeLine{00301\ \ \ \ \ uint32\_t\ \ \ \ delta\_rps\_sign\ :\ 1;}
+\DoxyCodeLine{00302\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_short_term_ref_pic_set_flags}{StdVideoH265ShortTermRefPicSetFlags}};}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_short_term_ref_pic_set}{StdVideoH265ShortTermRefPicSet}}\ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_h265_short_term_ref_pic_set_flags}{StdVideoH265ShortTermRefPicSetFlags}}\ \ \ \ flags;}
+\DoxyCodeLine{00306\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\_idx\_minus1;}
+\DoxyCodeLine{00307\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ use\_delta\_flag;}
+\DoxyCodeLine{00308\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ abs\_delta\_rps\_minus1;}
+\DoxyCodeLine{00309\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ used\_by\_curr\_pic\_flag;}
+\DoxyCodeLine{00310\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ used\_by\_curr\_pic\_s0\_flag;}
+\DoxyCodeLine{00311\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ used\_by\_curr\_pic\_s1\_flag;}
+\DoxyCodeLine{00312\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1;}
+\DoxyCodeLine{00313\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved2;}
+\DoxyCodeLine{00314\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved3;}
+\DoxyCodeLine{00315\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_negative\_pics;}
+\DoxyCodeLine{00316\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_positive\_pics;}
+\DoxyCodeLine{00317\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\_poc\_s0\_minus1[STD\_VIDEO\_H265\_MAX\_DPB\_SIZE];}
+\DoxyCodeLine{00318\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\_poc\_s1\_minus1[STD\_VIDEO\_H265\_MAX\_DPB\_SIZE];}
+\DoxyCodeLine{00319\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_short_term_ref_pic_set}{StdVideoH265ShortTermRefPicSet}};}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_long_term_ref_pics_sps}{StdVideoH265LongTermRefPicsSps}}\ \{}
+\DoxyCodeLine{00322\ \ \ \ \ uint32\_t\ \ \ \ used\_by\_curr\_pic\_lt\_sps\_flag;}
+\DoxyCodeLine{00323\ \ \ \ \ uint32\_t\ \ \ \ lt\_ref\_pic\_poc\_lsb\_sps[STD\_VIDEO\_H265\_MAX\_LONG\_TERM\_REF\_PICS\_SPS];}
+\DoxyCodeLine{00324\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_long_term_ref_pics_sps}{StdVideoH265LongTermRefPicsSps}};}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_sequence_parameter_set}{StdVideoH265SequenceParameterSet}}\ \{}
+\DoxyCodeLine{00327\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_h265_sps_flags}{StdVideoH265SpsFlags}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00328\ \ \ \ \ StdVideoH265ChromaFormatIdc\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_format\_idc;}
+\DoxyCodeLine{00329\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pic\_width\_in\_luma\_samples;}
+\DoxyCodeLine{00330\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pic\_height\_in\_luma\_samples;}
+\DoxyCodeLine{00331\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sps\_video\_parameter\_set\_id;}
+\DoxyCodeLine{00332\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sps\_max\_sub\_layers\_minus1;}
+\DoxyCodeLine{00333\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sps\_seq\_parameter\_set\_id;}
+\DoxyCodeLine{00334\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bit\_depth\_luma\_minus8;}
+\DoxyCodeLine{00335\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bit\_depth\_chroma\_minus8;}
+\DoxyCodeLine{00336\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_max\_pic\_order\_cnt\_lsb\_minus4;}
+\DoxyCodeLine{00337\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_min\_luma\_coding\_block\_size\_minus3;}
+\DoxyCodeLine{00338\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_diff\_max\_min\_luma\_coding\_block\_size;}
+\DoxyCodeLine{00339\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_min\_luma\_transform\_block\_size\_minus2;}
+\DoxyCodeLine{00340\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_diff\_max\_min\_luma\_transform\_block\_size;}
+\DoxyCodeLine{00341\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_transform\_hierarchy\_depth\_inter;}
+\DoxyCodeLine{00342\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ max\_transform\_hierarchy\_depth\_intra;}
+\DoxyCodeLine{00343\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_short\_term\_ref\_pic\_sets;}
+\DoxyCodeLine{00344\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_long\_term\_ref\_pics\_sps;}
+\DoxyCodeLine{00345\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pcm\_sample\_bit\_depth\_luma\_minus1;}
+\DoxyCodeLine{00346\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pcm\_sample\_bit\_depth\_chroma\_minus1;}
+\DoxyCodeLine{00347\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_min\_pcm\_luma\_coding\_block\_size\_minus3;}
+\DoxyCodeLine{00348\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_diff\_max\_min\_pcm\_luma\_coding\_block\_size;}
+\DoxyCodeLine{00349\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1;}
+\DoxyCodeLine{00350\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved2;}
+\DoxyCodeLine{00351\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ palette\_max\_size;}
+\DoxyCodeLine{00352\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\_palette\_max\_predictor\_size;}
+\DoxyCodeLine{00353\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ motion\_vector\_resolution\_control\_idc;}
+\DoxyCodeLine{00354\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sps\_num\_palette\_predictor\_initializers\_minus1;}
+\DoxyCodeLine{00355\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conf\_win\_left\_offset;}
+\DoxyCodeLine{00356\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conf\_win\_right\_offset;}
+\DoxyCodeLine{00357\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conf\_win\_top\_offset;}
+\DoxyCodeLine{00358\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ conf\_win\_bottom\_offset;}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_profile_tier_level}{StdVideoH265ProfileTierLevel}}*\ \ \ \ \ \ \ \ \ \ \ pProfileTierLevel;}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_dec_pic_buf_mgr}{StdVideoH265DecPicBufMgr}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pDecPicBufMgr;}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_scaling_lists}{StdVideoH265ScalingLists}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pScalingLists;}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_short_term_ref_pic_set}{StdVideoH265ShortTermRefPicSet}}*\ \ \ \ \ \ \ \ \ pShortTermRefPicSet;}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_long_term_ref_pics_sps}{StdVideoH265LongTermRefPicsSps}}*\ \ \ \ \ \ \ \ \ pLongTermRefPicsSps;}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_sequence_parameter_set_vui}{StdVideoH265SequenceParameterSetVui}}*\ \ \ \ pSequenceParameterSetVui;}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_predictor_palette_entries}{StdVideoH265PredictorPaletteEntries}}*\ \ \ \ pPredictorPaletteEntries;}
+\DoxyCodeLine{00366\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_sequence_parameter_set}{StdVideoH265SequenceParameterSet}};}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_pps_flags}{StdVideoH265PpsFlags}}\ \{}
+\DoxyCodeLine{00369\ \ \ \ \ uint32\_t\ \ \ \ dependent\_slice\_segments\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00370\ \ \ \ \ uint32\_t\ \ \ \ output\_flag\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00371\ \ \ \ \ uint32\_t\ \ \ \ sign\_data\_hiding\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00372\ \ \ \ \ uint32\_t\ \ \ \ cabac\_init\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00373\ \ \ \ \ uint32\_t\ \ \ \ constrained\_intra\_pred\_flag\ :\ 1;}
+\DoxyCodeLine{00374\ \ \ \ \ uint32\_t\ \ \ \ transform\_skip\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00375\ \ \ \ \ uint32\_t\ \ \ \ cu\_qp\_delta\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00376\ \ \ \ \ uint32\_t\ \ \ \ pps\_slice\_chroma\_qp\_offsets\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00377\ \ \ \ \ uint32\_t\ \ \ \ weighted\_pred\_flag\ :\ 1;}
+\DoxyCodeLine{00378\ \ \ \ \ uint32\_t\ \ \ \ weighted\_bipred\_flag\ :\ 1;}
+\DoxyCodeLine{00379\ \ \ \ \ uint32\_t\ \ \ \ transquant\_bypass\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00380\ \ \ \ \ uint32\_t\ \ \ \ tiles\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00381\ \ \ \ \ uint32\_t\ \ \ \ entropy\_coding\_sync\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00382\ \ \ \ \ uint32\_t\ \ \ \ uniform\_spacing\_flag\ :\ 1;}
+\DoxyCodeLine{00383\ \ \ \ \ uint32\_t\ \ \ \ loop\_filter\_across\_tiles\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00384\ \ \ \ \ uint32\_t\ \ \ \ pps\_loop\_filter\_across\_slices\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00385\ \ \ \ \ uint32\_t\ \ \ \ deblocking\_filter\_control\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00386\ \ \ \ \ uint32\_t\ \ \ \ deblocking\_filter\_override\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00387\ \ \ \ \ uint32\_t\ \ \ \ pps\_deblocking\_filter\_disabled\_flag\ :\ 1;}
+\DoxyCodeLine{00388\ \ \ \ \ uint32\_t\ \ \ \ pps\_scaling\_list\_data\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00389\ \ \ \ \ uint32\_t\ \ \ \ lists\_modification\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00390\ \ \ \ \ uint32\_t\ \ \ \ slice\_segment\_header\_extension\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00391\ \ \ \ \ uint32\_t\ \ \ \ pps\_extension\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00392\ \ \ \ \ uint32\_t\ \ \ \ cross\_component\_prediction\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00393\ \ \ \ \ uint32\_t\ \ \ \ chroma\_qp\_offset\_list\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00394\ \ \ \ \ uint32\_t\ \ \ \ pps\_curr\_pic\_ref\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00395\ \ \ \ \ uint32\_t\ \ \ \ residual\_adaptive\_colour\_transform\_enabled\_flag\ :\ 1;}
+\DoxyCodeLine{00396\ \ \ \ \ uint32\_t\ \ \ \ pps\_slice\_act\_qp\_offsets\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00397\ \ \ \ \ uint32\_t\ \ \ \ pps\_palette\_predictor\_initializers\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00398\ \ \ \ \ uint32\_t\ \ \ \ monochrome\_palette\_flag\ :\ 1;}
+\DoxyCodeLine{00399\ \ \ \ \ uint32\_t\ \ \ \ pps\_range\_extension\_flag\ :\ 1;}
+\DoxyCodeLine{00400\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_pps_flags}{StdVideoH265PpsFlags}};}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_h265_picture_parameter_set}{StdVideoH265PictureParameterSet}}\ \{}
+\DoxyCodeLine{00403\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_h265_pps_flags}{StdVideoH265PpsFlags}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ flags;}
+\DoxyCodeLine{00404\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_pic\_parameter\_set\_id;}
+\DoxyCodeLine{00405\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_seq\_parameter\_set\_id;}
+\DoxyCodeLine{00406\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sps\_video\_parameter\_set\_id;}
+\DoxyCodeLine{00407\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_extra\_slice\_header\_bits;}
+\DoxyCodeLine{00408\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_ref\_idx\_l0\_default\_active\_minus1;}
+\DoxyCodeLine{00409\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_ref\_idx\_l1\_default\_active\_minus1;}
+\DoxyCodeLine{00410\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ init\_qp\_minus26;}
+\DoxyCodeLine{00411\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ diff\_cu\_qp\_delta\_depth;}
+\DoxyCodeLine{00412\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_cb\_qp\_offset;}
+\DoxyCodeLine{00413\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_cr\_qp\_offset;}
+\DoxyCodeLine{00414\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_beta\_offset\_div2;}
+\DoxyCodeLine{00415\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_tc\_offset\_div2;}
+\DoxyCodeLine{00416\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_parallel\_merge\_level\_minus2;}
+\DoxyCodeLine{00417\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_max\_transform\_skip\_block\_size\_minus2;}
+\DoxyCodeLine{00418\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ diff\_cu\_chroma\_qp\_offset\_depth;}
+\DoxyCodeLine{00419\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_qp\_offset\_list\_len\_minus1;}
+\DoxyCodeLine{00420\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cb\_qp\_offset\_list[STD\_VIDEO\_H265\_CHROMA\_QP\_OFFSET\_LIST\_SIZE];}
+\DoxyCodeLine{00421\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cr\_qp\_offset\_list[STD\_VIDEO\_H265\_CHROMA\_QP\_OFFSET\_LIST\_SIZE];}
+\DoxyCodeLine{00422\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_sao\_offset\_scale\_luma;}
+\DoxyCodeLine{00423\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ log2\_sao\_offset\_scale\_chroma;}
+\DoxyCodeLine{00424\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_act\_y\_qp\_offset\_plus5;}
+\DoxyCodeLine{00425\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_act\_cb\_qp\_offset\_plus5;}
+\DoxyCodeLine{00426\ \ \ \ \ int8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_act\_cr\_qp\_offset\_plus3;}
+\DoxyCodeLine{00427\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pps\_num\_palette\_predictor\_initializers;}
+\DoxyCodeLine{00428\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ luma\_bit\_depth\_entry\_minus8;}
+\DoxyCodeLine{00429\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chroma\_bit\_depth\_entry\_minus8;}
+\DoxyCodeLine{00430\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_tile\_columns\_minus1;}
+\DoxyCodeLine{00431\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_tile\_rows\_minus1;}
+\DoxyCodeLine{00432\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1;}
+\DoxyCodeLine{00433\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved2;}
+\DoxyCodeLine{00434\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ column\_width\_minus1[STD\_VIDEO\_H265\_CHROMA\_QP\_OFFSET\_TILE\_COLS\_LIST\_SIZE];}
+\DoxyCodeLine{00435\ \ \ \ \ uint16\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ row\_height\_minus1[STD\_VIDEO\_H265\_CHROMA\_QP\_OFFSET\_TILE\_ROWS\_LIST\_SIZE];}
+\DoxyCodeLine{00436\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved3;}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_scaling_lists}{StdVideoH265ScalingLists}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pScalingLists;}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_h265_predictor_palette_entries}{StdVideoH265PredictorPaletteEntries}}*\ \ \ \ pPredictorPaletteEntries;}
+\DoxyCodeLine{00439\ \}\ \doxymbox{\hyperlink{struct_std_video_h265_picture_parameter_set}{StdVideoH265PictureParameterSet}};}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00442\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00443\ \}}
+\DoxyCodeLine{00444\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

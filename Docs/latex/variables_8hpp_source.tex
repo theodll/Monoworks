@@ -1,0 +1,94 @@
+\doxysection{variables.\+hpp}
+\hypertarget{variables_8hpp_source}{}\label{variables_8hpp_source}\index{MonoEngine/thirdparty/tracy/dtl/variables.hpp@{MonoEngine/thirdparty/tracy/dtl/variables.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*\ If\ you\ use\ this\ library,\ you\ must\ include\ dtl.hpp\ only.\ */}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifndef\ DTL\_VARIABLES\_H}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ DTL\_VARIABLES\_H}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <list>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedtl}{dtl}}\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{using\ }std::vector;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{using\ }std::string;}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{using\ }std::pair;}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{using\ }std::ostream;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{using\ }std::list;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{using\ }std::for\_each;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{using\ }std::distance;}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{using\ }std::fill;}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{using\ }std::cout;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{using\ }std::endl;}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{using\ }std::rotate;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{using\ }std::swap;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{using\ }std::max;}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ \doxymbox{\hyperlink{namespacedtl_a05f13f73a58ca4b9e0f04a538ca78e35}{version}}\ =\ \textcolor{stringliteral}{"{}1.20"{}};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{namespacedtl_a399af224ebf382cbabc14b093f4f6a3a}{edit\_t}};}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{const}\ \ \ \doxymbox{\hyperlink{namespacedtl_a399af224ebf382cbabc14b093f4f6a3a}{edit\_t}}\ SES\_DELETE\ =\ -\/1;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{const}\ \ \ \doxymbox{\hyperlink{namespacedtl_a399af224ebf382cbabc14b093f4f6a3a}{edit\_t}}\ SES\_COMMON\ =\ 0;}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{const}\ \ \ \doxymbox{\hyperlink{namespacedtl_a399af224ebf382cbabc14b093f4f6a3a}{edit\_t}}\ SES\_ADD\ \ \ \ =\ 1;}
+\DoxyCodeLine{00075\ \ \ \ \ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ SES\_MARK\_DELETE\ "{}-\/"{}}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ SES\_MARK\_COMMON\ "{}\ "{}}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ SES\_MARK\_ADD\ \ \ \ "{}+"{}}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdtl_1_1eleminfo}{eleminfo}}\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ beforeIdx;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ index\ of\ prev\ sequence}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ afterIdx;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ index\ of\ after\ sequence}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespacedtl_a399af224ebf382cbabc14b093f4f6a3a}{edit\_t}}\ \ \ \ type;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ type\ of\ edit(Add,\ Delete,\ Common)}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdtl_1_1eleminfo}{eleminfo}}\&\ other)\textcolor{keyword}{\ const}\{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (this-\/>beforeIdx\ ==\ other.beforeIdx\ \&\&\ this-\/>afterIdx\ ==\ other.afterIdx\ \&\&\ this-\/>type\ ==\ other.type);}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00093\ \ \ \ \ \}\ \doxymbox{\hyperlink{namespacedtl_a2c2290d197ffa4a9de9369043ee15aa1}{elemInfo}};}
+\DoxyCodeLine{00094\ \ \ \ \ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ DTL\_SEPARATE\_SIZE\ =\ 3;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ DTL\_CONTEXT\_SIZE\ \ =\ 3;}
+\DoxyCodeLine{00097\ \ \ \ \ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdtl_1_1_point}{Point}}\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ x;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ x\ cordinate}}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ y;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ y\ cordinate}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ k;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ vertex}}
+\DoxyCodeLine{00105\ \ \ \ \ \}\ P;}
+\DoxyCodeLine{00106\ \ \ \ \ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ \doxymbox{\hyperlink{namespacedtl_a9498a1a85f2641b461635c86d3e30bc2}{MAX\_CORDINATES\_SIZE}}\ =\ 2000000;}
+\DoxyCodeLine{00111\ \ \ \ \ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{typedef}\ vector<\ long\ long\ >\ editPath;}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{typedef}\ vector<\ P\ >\ \ \ \ \ \ \ \ \ editPathCordinates;}
+\DoxyCodeLine{00114\ \ \ \ \ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ sesElem>}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structdtl_1_1uni_hunk}{uniHunk}}\ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ a,\ b,\ c,\ d;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ @@\ -\/a,b\ +c,d\ @@}}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ vector<\ sesElem\ >\ common[2];\ \textcolor{comment}{//\ anteroposterior\ commons\ on\ changes}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ vector<\ sesElem\ >\ change;\ \ \ \ \textcolor{comment}{//\ changes}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}\ inc\_dec\_count;\ \ \ \ \ \textcolor{comment}{//\ count\ of\ increace\ and\ decrease}}
+\DoxyCodeLine{00124\ \ \ \ \ \};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ dtl\_typedefs(elem,\ sequence)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ typedef\ pair<\ elem,\ elemInfo\ >\ \ \ \ \ \ \ \ \ \ \ \ sesElem;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ \ \ typedef\ vector<\ sesElem\ >\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sesElemVec;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\ \ \ \ typedef\ vector<\ uniHunk<\ sesElem\ >\ >\ \ \ \ \ \ uniHunkVec;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\ \ \ \ typedef\ list<\ elem\ >\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elemList;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\ \ \ \ typedef\ vector<\ elem\ >\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elemVec;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\ \ \ \ typedef\ typename\ uniHunkVec::iterator\ \ \ \ \ uniHunkVec\_iter;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\ \ \ \ typedef\ typename\ sesElemVec::iterator\ \ \ \ \ sesElemVec\_iter;\ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\ \ \ \ typedef\ typename\ elemList::iterator\ \ \ \ \ \ \ elemList\_iter;\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\ \ \ \ typedef\ typename\ sequence::iterator\ \ \ \ \ \ \ sequence\_iter;\ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ \ \ typedef\ typename\ sequence::const\_iterator\ sequence\_const\_iter;\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\ \ \ \ typedef\ typename\ elemVec::iterator\ \ \ \ \ \ \ \ elemVec\_iter;}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \}\ }
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DTL\_VARIABLES\_H}}
+
+\end{DoxyCode}

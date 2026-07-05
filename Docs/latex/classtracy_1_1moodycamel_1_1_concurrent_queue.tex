@@ -1,0 +1,99 @@
+\doxysection{tracy::\+moodycamel::\+Concurrent\+Queue\texorpdfstring{$<$}{<} T, Traits \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue}{}\label{classtracy_1_1moodycamel_1_1_concurrent_queue}\index{tracy::moodycamel::ConcurrentQueue$<$ T, Traits $>$@{tracy::moodycamel::ConcurrentQueue$<$ T, Traits $>$}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{Explicit\+Producer}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a0037e2172afe96bd7f63f525bf7a293d}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a0037e2172afe96bd7f63f525bf7a293d} 
+typedef \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_producer_token}{moodycamel::\+\+Producer\+Token}} {\bfseries producer\+\_\+token\+\_\+t}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a8fa000c6b8f2cb8f0133b0039f20c3de}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a8fa000c6b8f2cb8f0133b0039f20c3de} 
+typedef \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_consumer_token}{moodycamel::\+\+Consumer\+Token}} {\bfseries consumer\+\_\+token\+\_\+t}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a1a4f5c4a7943adb738e4524eb0313576}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a1a4f5c4a7943adb738e4524eb0313576} 
+typedef Traits::\+index\+\_\+t {\bfseries index\+\_\+t}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_accbcc6816ea53ba16573d010e93ece69}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_accbcc6816ea53ba16573d010e93ece69} 
+typedef Traits::\+size\+\_\+t {\bfseries size\+\_\+t}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_add605b2d15d8dbff91b45d91ca465e52}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_add605b2d15d8dbff91b45d91ca465e52} 
+{\bfseries Concurrent\+Queue} (size\+\_\+t capacity=6 \texorpdfstring{$\ast$}{*}BLOCK\+\_\+\+SIZE)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a11dda2acf518037954f9ca3838c786b9}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a11dda2acf518037954f9ca3838c786b9} 
+{\bfseries Concurrent\+Queue} (size\+\_\+t min\+Capacity, size\+\_\+t max\+Explicit\+Producers)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a8a5b350a47f2aa93dec2ee59a4d1d410}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a8a5b350a47f2aa93dec2ee59a4d1d410} 
+{\bfseries Concurrent\+Queue} (Concurrent\+Queue const \&)=delete
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_afc5160b38bbe8d2727cc2f3433b6b043}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_afc5160b38bbe8d2727cc2f3433b6b043} 
+{\bfseries Concurrent\+Queue} (Concurrent\+Queue \&\&other)=delete
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a8438485e7f104d1239eec5b1904aea2f}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a8438485e7f104d1239eec5b1904aea2f} 
+Concurrent\+Queue \& {\bfseries operator=} (Concurrent\+Queue const \&)=delete
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_ad3a576553f55d1aa021a16deb1d72a96}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_ad3a576553f55d1aa021a16deb1d72a96} 
+Concurrent\+Queue \& {\bfseries operator=} (Concurrent\+Queue \&\&other)=delete
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a3651cb9da2717e0437b5972f270a65f1}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a3651cb9da2717e0437b5972f270a65f1} 
+tracy\+\_\+force\+\_\+inline T \texorpdfstring{$\ast$}{*} {\bfseries enqueue\+\_\+begin} (producer\+\_\+token\+\_\+t const \&token, index\+\_\+t \&current\+Tail\+Index)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_ad4cba392a7b9bc22c33f1f3cef587db7}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_ad4cba392a7b9bc22c33f1f3cef587db7} 
+{\footnotesize template$<$class Notify\+Thread, class Process\+Data$>$ }\\size\+\_\+t {\bfseries try\+\_\+dequeue\+\_\+bulk\+\_\+single} (consumer\+\_\+token\+\_\+t \&token, Notify\+Thread notify\+Thread, Process\+Data process\+Data)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_afc13f9854d7476d9be422c81dd4cfd26}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_afc13f9854d7476d9be422c81dd4cfd26} 
+size\+\_\+t {\bfseries size\+\_\+approx} () const
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a7da0ec84b8bcd84e28cf579c2b34410a}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a7da0ec84b8bcd84e28cf579c2b34410a} 
+\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{Explicit\+Producer}} \texorpdfstring{$\ast$}{*} {\bfseries get\+\_\+explicit\+\_\+producer} (producer\+\_\+token\+\_\+t const \&token)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_ab9113e395aaa868216a37685d3ac341b}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_ab9113e395aaa868216a37685d3ac341b} 
+bool {\bfseries readopt\+\_\+orphaned\+\_\+producer} (\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1_concurrent_queue_1_1_explicit_producer}{Explicit\+Producer}} \texorpdfstring{$\ast$}{*}producer)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a2deee79c4e0e940a29dcedddbfd78b6b}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a2deee79c4e0e940a29dcedddbfd78b6b} 
+static bool {\bfseries is\+\_\+lock\+\_\+free} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a44c5519df377796abf9c211f5e72e5db}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a44c5519df377796abf9c211f5e72e5db} 
+static const size\+\_\+t {\bfseries BLOCK\+\_\+\+SIZE} = static\+\_\+cast$<$size\+\_\+t$>$(Traits::\+\+BLOCK\+\_\+\+SIZE)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_ad3491588df552f590c45b84e6835e5b2}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_ad3491588df552f590c45b84e6835e5b2} 
+static const size\+\_\+t {\bfseries EXPLICIT\+\_\+\+BLOCK\+\_\+\+EMPTY\+\_\+\+COUNTER\+\_\+\+THRESHOLD} = static\+\_\+cast$<$size\+\_\+t$>$(Traits::\+\+EXPLICIT\+\_\+\+BLOCK\+\_\+\+EMPTY\+\_\+\+COUNTER\+\_\+\+THRESHOLD)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_aa8a4565a12b2ddf72997e06d579984fb}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_aa8a4565a12b2ddf72997e06d579984fb} 
+static const size\+\_\+t {\bfseries EXPLICIT\+\_\+\+INITIAL\+\_\+\+INDEX\+\_\+\+SIZE} = static\+\_\+cast$<$size\+\_\+t$>$(Traits::\+\+EXPLICIT\+\_\+\+INITIAL\+\_\+\+INDEX\+\_\+\+SIZE)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_af351c5a5c30b16baa5c90034624a4da6}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_af351c5a5c30b16baa5c90034624a4da6} 
+static const std::\+uint32\+\_\+t {\bfseries EXPLICIT\+\_\+\+CONSUMER\+\_\+\+CONSUMPTION\+\_\+\+QUOTA\+\_\+\+BEFORE\+\_\+\+ROTATE} = static\+\_\+cast$<$std::\+uint32\+\_\+t$>$(Traits::\+\+EXPLICIT\+\_\+\+CONSUMER\+\_\+\+CONSUMPTION\+\_\+\+QUOTA\+\_\+\+BEFORE\+\_\+\+ROTATE)
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a3f8d6c86f8396d378afdd508f408f40f}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a3f8d6c86f8396d378afdd508f408f40f} 
+static const size\+\_\+t {\bfseries MAX\+\_\+\+SUBQUEUE\+\_\+\+SIZE} = (\doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1const__numeric__max}{details::\+const\+\_\+numeric\+\_\+max}}$<$size\+\_\+t$>$::\+value -\/ static\+\_\+cast$<$size\+\_\+t$>$(Traits::\+\+MAX\+\_\+\+SUBQUEUE\+\_\+\+SIZE) $<$ BLOCK\+\_\+\+SIZE) ? \doxymbox{\hyperlink{structtracy_1_1moodycamel_1_1details_1_1const__numeric__max}{details::\+const\+\_\+numeric\+\_\+max}}$<$size\+\_\+t$>$::\+value :\+ ((static\+\_\+cast$<$size\+\_\+t$>$(Traits::\+\+MAX\+\_\+\+SUBQUEUE\+\_\+\+SIZE) + (BLOCK\+\_\+\+SIZE -\/ 1)) /\+ BLOCK\+\_\+\+SIZE \texorpdfstring{$\ast$}{*} BLOCK\+\_\+\+SIZE)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_acfb3304f9d64003d203b0d2dbc3fbc41}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_acfb3304f9d64003d203b0d2dbc3fbc41} 
+struct {\bfseries Producer\+Token}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a81aed503980c50c35b8447926e2581ec}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a81aed503980c50c35b8447926e2581ec} 
+struct {\bfseries Consumer\+Token}
+\item 
+\Hypertarget{classtracy_1_1moodycamel_1_1_concurrent_queue_a7bebbfc18b6ad306d5837467e9c05323}\label{classtracy_1_1moodycamel_1_1_concurrent_queue_a7bebbfc18b6ad306d5837467e9c05323} 
+struct {\bfseries Explicit\+Producer}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Engine/\+thirdparty/\+tracy/\+public/\+client/\+tracy\+\_\+concurrentqueue.\+h\end{DoxyCompactItemize}

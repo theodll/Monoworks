@@ -1,0 +1,246 @@
+\doxysection{Lock\+Less\+Multi\+Read\+Pipe.\+h}
+\hypertarget{_lock_less_multi_read_pipe_8h_source}{}\label{_lock_less_multi_read_pipe_8h_source}\index{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/enkiTS/LockLessMultiReadPipe.h@{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/enkiTS/LockLessMultiReadPipe.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright\ (c)\ 2013\ Doug\ Binks}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00003\ \textcolor{comment}{//\ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ warranty.\ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ \ \ \ in\ a\ product,\ an\ acknowledgement\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}Atomics.h"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{namespace\ }enki}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{//\ LockLessMultiReadPipe\ -\/\ Single\ writer,\ multiple\ reader\ thread\ safe\ pipe\ using\ (semi)\ lockless\ programming}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{//\ Readers\ can\ only\ read\ from\ the\ back\ of\ the\ pipe}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ The\ single\ writer\ can\ write\ to\ the\ front\ of\ the\ pipe,\ and\ read\ from\ both\ ends\ (a\ writer\ can\ be\ a\ reader)}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ for\ many\ of\ the\ principles\ used\ here,\ see\ http://msdn.microsoft.com/en-\/us/library/windows/desktop/ee418650(v=vs.85).aspx}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Note:\ using\ log2\ sizes\ so\ we\ do\ not\ need\ to\ clamp\ (multi-\/operation)}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{//\ T\ is\ the\ contained\ type}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ Note\ this\ is\ not\ true\ lockless\ as\ the\ use\ of\ flags\ as\ a\ form\ of\ lock\ state.}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{template}<u\textcolor{keywordtype}{int}8\_t\ cSizeLog2,\ \textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{class\ }LockLessMultiReadPipe}
+\DoxyCodeLine{00038\ \ \ \ \ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ LockLessMultiReadPipe();}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \string~LockLessMultiReadPipe()\ \{\}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ReaderTryReadBack\ returns\ false\ if\ we\ were\ unable\ to\ read}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ thread\ safe\ for\ both\ multiple\ readers\ and\ the\ writer}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ ReaderTryReadBack(\ \ \ T*\ pOut\ );}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ WriterTryReadFront\ returns\ false\ if\ we\ were\ unable\ to\ read}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ thread\ safe\ for\ the\ single\ writer,\ but\ should\ not\ be\ called\ by\ readers}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ WriterTryReadFront(\ \ T*\ pOut\ );}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ WriterTryWriteFront\ returns\ false\ if\ we\ were\ unable\ to\ write}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ is\ thread\ safe\ for\ the\ single\ writer,\ but\ should\ not\ be\ called\ by\ readers}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ WriterTryWriteFront(\ \textcolor{keyword}{const}\ T\&\ in\ );}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ IsPipeEmpty()\ is\ a\ utility\ function,\ not\ intended\ for\ general\ use}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Should\ only\ be\ used\ very\ prudently.}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ IsPipeEmpty()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0\ ==\ m\_WriteIndex\ -\/\ m\_ReadCount;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Clear()}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ m\_WriteIndex\ =\ 0;}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ m\_ReadIndex\ =\ 0;}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ m\_ReadCount\ =\ 0;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ memset(\ (\textcolor{keywordtype}{void}*)m\_Flags,\ 0,\ \textcolor{keyword}{sizeof}(\ m\_Flags\ )\ );}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{static}\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ ms\_cSize\ \ \ \ \ \ \ \ =\ (\ 1\ <<\ cSizeLog2\ );}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{static}\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ ms\_cIndexMask\ \ \ =\ ms\_cSize\ -\/\ 1;}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{static}\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ FLAG\_INVALID\ \ \ \ =\ 0xFFFFFFFF;\ \textcolor{comment}{//\ 32bit\ for\ CAS}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{static}\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ FLAG\_CAN\_WRITE\ \ =\ 0x00000000;\ \textcolor{comment}{//\ 32bit\ for\ CAS}}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{static}\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ FLAG\_CAN\_READ\ \ \ =\ 0x11111111;\ \textcolor{comment}{//\ 32bit\ for\ CAS}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ T\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_Buffer[\ ms\_cSize\ ];}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ read\ and\ write\ indexes\ allow\ fast\ access\ to\ the\ pipe,\ but\ actual\ access}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ controlled\ by\ the\ access\ flags.\ }}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keyword}{volatile}\ uint32\_t\ BASE\_ALIGN(4)\ m\_WriteIndex;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{volatile}\ uint32\_t\ BASE\_ALIGN(4)\ m\_ReadCount;}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keyword}{volatile}\ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_Flags[\ \ ms\_cSize\ ];}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keyword}{volatile}\ uint32\_t\ BASE\_ALIGN(4)\ m\_ReadIndex;}
+\DoxyCodeLine{00085\ \ \ \ \ \};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{template}<u\textcolor{keywordtype}{int}8\_t\ cSizeLog2,\ \textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ LockLessMultiReadPipe<cSizeLog2,T>::LockLessMultiReadPipe()}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ :\ m\_WriteIndex(0)}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ ,\ m\_ReadIndex(0)}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ ,\ m\_ReadCount(0)}
+\DoxyCodeLine{00092\ \ \ \ \ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ assert(\ cSizeLog2\ <\ 32\ );}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ memset(\ (\textcolor{keywordtype}{void}*)m\_Flags,\ 0,\ \textcolor{keyword}{sizeof}(\ m\_Flags\ )\ );}
+\DoxyCodeLine{00095\ \ \ \ \ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{template}<u\textcolor{keywordtype}{int}8\_t\ cSizeLog2,\ \textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ LockLessMultiReadPipe<cSizeLog2,T>::ReaderTryReadBack(\ \ \ T*\ pOut\ )}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ uint32\_t\ actualReadIndex;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ uint32\_t\ readCount\ \ =\ m\_ReadCount;}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ get\ hold\ of\ read\ index\ for\ consistency,}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ do\ first\ pass\ starting\ at\ read\ count}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ uint32\_t\ readIndexToUse\ \ =\ readCount;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\textcolor{keyword}{true})}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ writeIndex\ =\ m\_WriteIndex;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ power\ of\ two\ sizes\ ensures\ we\ can\ use\ a\ simple\ calc\ without\ modulus}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ numInPipe\ =\ writeIndex\ -\/\ readCount;}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ 0\ ==\ numInPipe\ )}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ readIndexToUse\ >=\ writeIndex\ )}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ move\ back\ to\ start}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ readIndexToUse\ =\ m\_ReadIndex;}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ power\ of\ two\ sizes\ ensures\ we\ can\ perform\ AND\ for\ a\ modulus}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ actualReadIndex\ \ \ \ =\ readIndexToUse\ \&\ ms\_cIndexMask;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Multiple\ potential\ readers\ mean\ we\ should\ check\ if\ the\ data\ is\ valid,}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ using\ an\ atomic\ compare\ exchange}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ previous\ =\ AtomicCompareAndSwap(\ \&m\_Flags[\ \ actualReadIndex\ ],\ FLAG\_INVALID,\ FLAG\_CAN\_READ\ );}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ FLAG\_CAN\_READ\ ==\ previous\ )}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ ++readIndexToUse;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//update\ known\ readcount}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ readCount\ \ =\ m\_ReadCount;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ update\ the\ read\ index\ using\ an\ atomic\ add,\ as\ we've\ only\ read\ one\ piece\ of\ data.}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ ensure\ consistency\ of\ the\ read\ index,\ and\ the\ above\ loop\ ensures\ readers}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ only\ read\ from\ unread\ data}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ AtomicAdd(\ \ (\textcolor{keyword}{volatile}\ int32\_t*)\&m\_ReadCount,\ 1\ );}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ BASE\_MEMORYBARRIER\_ACQUIRE();}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ now\ read\ data,\ ensuring\ we\ do\ so\ after\ above\ reads\ \&\ CAS}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ *pOut\ =\ m\_Buffer[\ actualReadIndex\ ];}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ m\_Flags[\ \ actualReadIndex\ ]\ =\ FLAG\_CAN\_WRITE;}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00155\ \ \ \ \ \}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{template}<u\textcolor{keywordtype}{int}8\_t\ cSizeLog2,\ \textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ LockLessMultiReadPipe<cSizeLog2,T>::WriterTryReadFront(\ \ T*\ pOut\ )}
+\DoxyCodeLine{00159\ \ \ \ \ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ uint32\_t\ writeIndex\ =\ m\_WriteIndex;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ uint32\_t\ frontReadIndex\ \ =\ writeIndex;}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Multiple\ potential\ readers\ mean\ we\ should\ check\ if\ the\ data\ is\ valid,}}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ using\ an\ atomic\ compare\ exchange\ -\/\ which\ acts\ as\ a\ form\ of\ lock\ (so\ not\ quite\ lockless\ really).}}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ uint32\_t\ previous\ =\ FLAG\_INVALID;}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ uint32\_t\ actualReadIndex\ =\ 0;}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ \textcolor{keyword}{true}\ )}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ power\ of\ two\ sizes\ ensures\ we\ can\ use\ a\ simple\ calc\ without\ modulus}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ readCount\ =\ m\_ReadCount;}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ numInPipe\ =\ writeIndex\ -\/\ readCount;}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ 0\ ==\ numInPipe\ ||\ 0\ ==\ frontReadIndex\ )}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ frontReadIndex\ can\ get\ to\ 0\ here\ if\ that\ item\ was\ just\ being\ read\ by\ another\ thread.}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_ReadIndex\ =\ readCount;}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ -\/-\/frontReadIndex;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ actualReadIndex\ =\ frontReadIndex\ \&\ ms\_cIndexMask;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ previous\ =\ AtomicCompareAndSwap(\ \&m\_Flags[\ \ actualReadIndex\ ],\ FLAG\_INVALID,\ FLAG\_CAN\_READ\ );}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ FLAG\_CAN\_READ\ ==\ previous\ )}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(\ m\_ReadIndex\ >=\ frontReadIndex\ \ )}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ now\ read\ data,\ ensuring\ we\ do\ so\ after\ above\ reads\ \&\ CAS}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ *pOut\ =\ m\_Buffer[\ actualReadIndex\ ];}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ m\_Flags[\ \ actualReadIndex\ ]\ =\ FLAG\_CAN\_WRITE;}
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ BASE\_MEMORYBARRIER\_RELEASE();}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 32-\/bit\ aligned\ stores\ are\ atomic,\ and\ writer\ owns\ the\ write\ index}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we\ only\ move\ one\ back\ as\ this\ is\ as\ many\ as\ we\ have\ read,\ not\ where\ we\ have\ read\ from.}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ -\/-\/m\_WriteIndex;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00202\ \ \ \ \ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{template}<u\textcolor{keywordtype}{int}8\_t\ cSizeLog2,\ \textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{inline}}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ LockLessMultiReadPipe<cSizeLog2,T>::WriterTryWriteFront(\ \textcolor{keyword}{const}\ T\&\ in\ )}
+\DoxyCodeLine{00207\ \ \ \ \ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ writer\ 'owns'\ the\ write\ index,\ and\ readers\ can\ only\ reduce}}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ amount\ of\ data\ in\ the\ pipe.}}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ get\ hold\ of\ both\ values\ for\ consistency\ and\ to\ reduce\ false\ sharing}}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ impacting\ more\ than\ one\ access}}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ uint32\_t\ writeIndex\ =\ m\_WriteIndex;}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ power\ of\ two\ sizes\ ensures\ we\ can\ perform\ AND\ for\ a\ modulus}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ uint32\_t\ actualWriteIndex\ \ \ \ =\ writeIndex\ \&\ ms\_cIndexMask;}
+\DoxyCodeLine{00217\ }
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ a\ reader\ may\ still\ be\ reading\ this\ item,\ as\ there\ are\ multiple\ readers}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_Flags[\ actualWriteIndex\ ]\ !=\ FLAG\_CAN\_WRITE\ )\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ still\ being\ read,\ so\ have\ caught\ up\ with\ tail.\ }}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ }
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ as\ we\ are\ the\ only\ writer\ we\ can\ update\ the\ data\ without\ atomics}}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ whilst\ the\ write\ index\ has\ not\ been\ updated}}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ m\_Buffer[\ actualWriteIndex\ ]\ =\ in;}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ m\_Flags[\ \ actualWriteIndex\ ]\ =\ FLAG\_CAN\_READ;}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ need\ to\ ensure\ the\ above\ writes\ occur\ prior\ to\ updating\ the\ write\ index,}}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ otherwise\ another\ thread\ might\ read\ before\ it's\ finished}}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ BASE\_MEMORYBARRIER\_RELEASE();}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 32-\/bit\ aligned\ stores\ are\ atomic,\ and\ the\ writer\ controls\ the\ write\ index}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ ++writeIndex;}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ m\_WriteIndex\ =\ writeIndex;}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00238\ \ \ \ \ \}}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00240\ \}}
+
+\end{DoxyCode}

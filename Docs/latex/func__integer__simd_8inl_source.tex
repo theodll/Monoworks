@@ -1,0 +1,71 @@
+\doxysection{func\+\_\+integer\+\_\+simd.\+inl}
+\hypertarget{func__integer__simd_8inl_source}{}\label{func__integer__simd_8inl_source}\index{MonoEngine/thirdparty/glm/glm/detail/func\_integer\_simd.inl@{MonoEngine/thirdparty/glm/glm/detail/func\_integer\_simd.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{integer_8h}{../simd/integer.h}}"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\{}
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ Q>}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__bitfield_reverse_step}{compute\_bitfieldReverseStep}}<4,\ uint,\ Q,\ true,\ true>}
+\DoxyCodeLine{00010\ \ \ \ \ \{}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vec<4,\ uint,\ Q>\ call(vec<4,\ uint,\ Q>\ \textcolor{keyword}{const}\&\ v,\ uint\ Mask,\ uint\ Shift)}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ set0\ =\ v.data;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ set1\ =\ \_mm\_set1\_epi32(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(Mask));}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ and1\ =\ \_mm\_and\_si128(set0,\ set1);}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ sft1\ =\ \_mm\_slli\_epi32(and1,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(Shift));}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ set2\ =\ \_mm\_andnot\_si128(set0,\ \_mm\_set1\_epi32(-\/1));}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ and2\ =\ \_mm\_and\_si128(set0,\ set2);}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ sft2\ =\ \_mm\_srai\_epi32(and2,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(Shift));}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ or0\ =\ \_mm\_or\_si128(sft1,\ sft2);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ or0;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00027\ \ \ \ \ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}<qualifier\ Q>}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structglm_1_1detail_1_1compute__bitfield_bit_count_step}{compute\_bitfieldBitCountStep}}<4,\ uint,\ Q,\ true,\ true>}
+\DoxyCodeLine{00031\ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ vec<4,\ uint,\ Q>\ call(vec<4,\ uint,\ Q>\ \textcolor{keyword}{const}\&\ v,\ uint\ Mask,\ uint\ Shift)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ set0\ =\ v.data;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ set1\ =\ \_mm\_set1\_epi32(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(Mask));}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ and0\ =\ \_mm\_and\_si128(set0,\ set1);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ sft0\ =\ \_mm\_slli\_epi32(set0,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(Shift));}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ and1\ =\ \_mm\_and\_si128(sft0,\ set1);}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \_\_m128i\ \textcolor{keyword}{const}\ add0\ =\ \_mm\_add\_epi32(and0,\ and1);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ add0;}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \};}
+\DoxyCodeLine{00045\ \}\textcolor{comment}{//namespace\ detail}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#\ \ \ if\ GLM\_ARCH\ \&\ GLM\_ARCH\_AVX\_BIT}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00049\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ bitCount(uint\ x)}
+\DoxyCodeLine{00050\ \ \ \ \ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_popcnt\_u32(x);}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#\ \ \ if(GLM\_MODEL\ ==\ GLM\_MODEL\_64)}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{template}<>}
+\DoxyCodeLine{00056\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{int}\ bitCount(detail::uint64\ x)}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\_mm\_popcnt\_u64(x));}
+\DoxyCodeLine{00059\ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_MODEL}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ \ \ endif}\textcolor{comment}{//GLM\_ARCH}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \}\textcolor{comment}{//namespace\ glm}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+
+\end{DoxyCode}

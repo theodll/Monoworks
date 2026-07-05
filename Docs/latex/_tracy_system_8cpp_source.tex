@@ -1,0 +1,415 @@
+\doxysection{Tracy\+System.\+cpp}
+\hypertarget{_tracy_system_8cpp_source}{}\label{_tracy_system_8cpp_source}\index{MonoEngine/thirdparty/tracy/public/common/TracySystem.cpp@{MonoEngine/thirdparty/tracy/public/common/TracySystem.cpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#\ \ pragma\ warning(disable:4996)}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#if\ defined\ \_WIN32}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#\ \ ifndef\ WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#\ \ \ \ define\ WIN32\_LEAN\_AND\_MEAN}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#\ \ ifndef\ NOMINMAX}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#\ \ \ \ define\ NOMINMAX}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#\ \ define\ SECURITY\_WIN32}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#\ \ include\ <windows.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#\ \ include\ <malloc.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#\ \ include\ <lmcons.h>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#\ \ include\ <security.h>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#\ \ include\ "{}TracyWinFamily.hpp"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#\ \ ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#\ \ \ \ pragma\ comment(lib,\ "{}secur32.lib"{})}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#\ \ include\ <pthread.h>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ \ include\ <pwd.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ include\ <string.h>}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#\ \ include\ <unistd.h>}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \_\_linux\_\_}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#\ \ ifdef\ \_\_ANDROID\_\_}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ \ \ \ include\ <sys/types.h>}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ \ \ \ include\ <sys/syscall.h>}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#\ \ include\ <fcntl.h>}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#elif\ defined\ \_\_FreeBSD\_\_}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#\ \ include\ <sys/thr.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#elif\ defined\ \_\_NetBSD\_\_}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#\ \ include\ <lwp.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#elif\ defined\ \_\_DragonFly\_\_}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#\ \ include\ <sys/lwp.h>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#elif\ defined\ \_\_QNX\_\_}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#\ \ include\ <process.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#\ \ include\ <sys/neutrino.h>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#ifdef\ \_\_MINGW32\_\_}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#\ \ define\ \_\_STDC\_FORMAT\_MACROS}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#include\ <inttypes.h>}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ "{}TracySystem.hpp"{}}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#ifdef\ TRACY\_PLATFORM\_HEADER}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ \ include\ TRACY\_PLATFORM\_HEADER}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#if\ defined\ \_WIN32}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \textcolor{keyword}{typedef}\ HRESULT\ (WINAPI\ *t\_SetThreadDescription)(\ HANDLE,\ PCWSTR\ );}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \textcolor{keyword}{typedef}\ HRESULT\ (WINAPI\ *t\_GetThreadDescription)(\ HANDLE,\ PWSTR*\ );}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#\ \ include\ <atomic>}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#\ \ include\ "{}TracyAlloc.hpp"{}}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00069\ \{}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{namespace\ }detail}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ TRACY\_API\ uint32\_t\ GetThreadHandleImpl()}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CUSTOM\_THREAD\_ID}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordflow}{return}\ PlatformGetThreadId();}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#elif\ defined\ \_WIN32}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{static\_assert}(\ \textcolor{keyword}{sizeof}(\ \textcolor{keyword}{decltype}(\ GetCurrentThreadId()\ )\ )\ <=\ \textcolor{keyword}{sizeof}(\ uint32\_t\ ),\ \textcolor{stringliteral}{"{}Thread\ handle\ too\ big\ to\ fit\ in\ protocol"{}}\ );}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{return}\ uint32\_t(\ GetCurrentThreadId()\ );}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#elif\ defined\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00082\ \ \ \ \ uint64\_t\ id;}
+\DoxyCodeLine{00083\ \ \ \ \ pthread\_threadid\_np(\ pthread\_self(),\ \&\textcolor{keywordtype}{id}\ );}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordflow}{return}\ uint32\_t(\ \textcolor{keywordtype}{id}\ );}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#elif\ defined\ \_\_ANDROID\_\_}}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordflow}{return}\ (uint32\_t)gettid();}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#elif\ defined\ \_\_linux\_\_}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordflow}{return}\ (uint32\_t)syscall(\ SYS\_gettid\ );}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#elif\ defined\ \_\_FreeBSD\_\_}}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{long}\ id;}
+\DoxyCodeLine{00091\ \ \ \ \ thr\_self(\ \&\textcolor{keywordtype}{id}\ );}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{return}\ id;}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#elif\ defined\ \_\_NetBSD\_\_}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordflow}{return}\ \_lwp\_self();}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#elif\ defined\ \_\_DragonFly\_\_}}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{return}\ lwp\_gettid();}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#elif\ defined\ \_\_OpenBSD\_\_}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{return}\ getthrid();}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#elif\ defined\ \_\_QNX\_\_}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordflow}{return}\ (uint32\_t)\ gettid();}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#elif\ defined\ \_\_EMSCRIPTEN\_\_}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ Not\ supported,\ but\ let\ it\ compile.}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{comment}{//\ To\ add\ support\ for\ a\ platform,\ retrieve\ and\ return\ the\ kernel\ thread\ identifier\ here.}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{//\ Note\ that\ pthread\_t\ (as\ for\ example\ returned\ by\ pthread\_self())\ is\ *not*\ a\ kernel}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ thread\ identifier.\ It\ is\ a\ pointer\ to\ a\ library-\/allocated\ data\ structure\ instead.}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ Such\ pointers\ will\ be\ reused\ heavily,\ making\ the\ pthread\_t\ non-\/unique.\ Additionally}}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{//\ a\ 64-\/bit\ pointer\ cannot\ be\ reliably\ truncated\ to\ 32\ bits.}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\ \ \ \ \#error\ "{}Unsupported\ platform!"{}}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00119\ std::atomic<ThreadNameData*>\&\ GetThreadNameData();}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#if\ defined\ \_MSC\_VER\ \&\&\ !defined\ \_\_clang\_\_}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#\ \ pragma\ pack(\ push,\ 8\ )}}
+\DoxyCodeLine{00124\ \textcolor{keyword}{struct\ }THREADNAME\_INFO}
+\DoxyCodeLine{00125\ \{}
+\DoxyCodeLine{00126\ \ \ \ \ DWORD\ dwType;}
+\DoxyCodeLine{00127\ \ \ \ \ LPCSTR\ szName;}
+\DoxyCodeLine{00128\ \ \ \ \ DWORD\ dwThreadID;}
+\DoxyCodeLine{00129\ \ \ \ \ DWORD\ dwFlags;}
+\DoxyCodeLine{00130\ \};}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#\ \ pragma\ pack(\ pop\ )}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{keywordtype}{void}\ ThreadNameMsvcMagic(\ \textcolor{keyword}{const}\ THREADNAME\_INFO\&\ info\ )}
+\DoxyCodeLine{00134\ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \_\_try}
+\DoxyCodeLine{00136\ \ \ \ \ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ RaiseException(\ 0x406D1388,\ 0,\ \textcolor{keyword}{sizeof}(info)/\textcolor{keyword}{sizeof}(ULONG\_PTR),\ (ULONG\_PTR*)\&info\ );}
+\DoxyCodeLine{00138\ \ \ \ \ \}}
+\DoxyCodeLine{00139\ \ \ \ \ \_\_except(EXCEPTION\_EXECUTE\_HANDLER)}
+\DoxyCodeLine{00140\ \ \ \ \ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ TRACY\_API\ \textcolor{keywordtype}{void}\ SetThreadName(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name\ )}
+\DoxyCodeLine{00146\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ SetThreadNameWithHint(\ name,\ 0\ );}
+\DoxyCodeLine{00148\ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ TRACY\_API\ \textcolor{keywordtype}{void}\ SetThreadNameWithHint(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ int32\_t\ groupHint\ )}
+\DoxyCodeLine{00151\ \{}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#if\ defined\ \_WIN32}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#\ \ if\ defined\ TRACY\_WIN32\_NO\_DESKTOP}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \_SetThreadDescription\ =\ \&::SetThreadDescription;}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \_SetThreadDescription\ =\ (t\_SetThreadDescription)GetProcAddress(\ GetModuleHandleA(\ \textcolor{stringliteral}{"{}kernel32.dll"{}}\ ),\ \textcolor{stringliteral}{"{}SetThreadDescription"{}}\ );}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordflow}{if}(\ \_SetThreadDescription\ )}
+\DoxyCodeLine{00159\ \ \ \ \ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{wchar\_t}\ buf[256];}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ mbstowcs(\ buf,\ name,\ 256\ );}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \_SetThreadDescription(\ GetCurrentThread(),\ buf\ );}
+\DoxyCodeLine{00163\ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00165\ \ \ \ \ \{}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#\ \ if\ defined\ \_MSC\_VER\ \&\&\ !defined\ \_\_clang\_\_}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ THREADNAME\_INFO\ info;}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ info.dwType\ =\ 0x1000;}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ info.szName\ =\ name;}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ info.dwThreadID\ =\ GetCurrentThreadId();}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ info.dwFlags\ =\ 0;}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ ThreadNameMsvcMagic(\ info\ );}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00174\ \ \ \ \ \}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#elif\ defined\ \_GNU\_SOURCE\ \&\&\ !defined\ \_\_EMSCRIPTEN\_\_}}
+\DoxyCodeLine{00176\ \ \ \ \ \{}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#if\ defined\ \_\_APPLE\_\_}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ pthread\_setname\_np(\ name\ );}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ sz\ =\ strlen(\ name\ );}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sz\ <=\ 15\ )}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ pthread\_setname\_np(\ pthread\_self(),\ name\ );}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ buf[16];}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ buf,\ name,\ 15\ );}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ buf[15]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ pthread\_setname\_np(\ pthread\_self(),\ buf\ );}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00193\ \ \ \ \ \}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#elif\ defined\ \_\_QNX\_\_}}
+\DoxyCodeLine{00195\ \ \ \ \ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ sz\ =\ strlen(\ name\ );}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ sz\ <=\ \_NTO\_THREAD\_NAME\_MAX\ )}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ pthread\_setname\_np(\ pthread\_self(),\ name\ );}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ buf[\_NTO\_THREAD\_NAME\_MAX\ +\ 1];}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ buf,\ name,\ \_NTO\_THREAD\_NAME\_MAX\ );}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ buf[\_NTO\_THREAD\_NAME\_MAX]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ pthread\_setname\_np(\ pthread\_self(),\ buf\ );}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00208\ \ \ \ \ \};}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00211\ \ \ \ \ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ sz\ =\ strlen(\ name\ );}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}*\ buf\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ sz+1\ );}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ memcpy(\ buf,\ name,\ sz\ );}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ buf[sz]\ =\ \textcolor{charliteral}{'\(\backslash\)0'};}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ data\ =\ (ThreadNameData*)tracy\_malloc\_fast(\ \textcolor{keyword}{sizeof}(\ ThreadNameData\ )\ );}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ data-\/>id\ =\ detail::GetThreadHandleImpl();}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ data-\/>groupHint\ =\ groupHint;}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ data-\/>name\ =\ buf;}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ data-\/>next\ =\ GetThreadNameData().load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ !GetThreadNameData().compare\_exchange\_weak(\ data-\/>next,\ data,\ std::memory\_order\_release,\ std::memory\_order\_relaxed\ )\ )\ \{\}}
+\DoxyCodeLine{00222\ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00224\ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00227\ ThreadNameData*\ GetThreadNameData(\ uint32\_t\ \textcolor{keywordtype}{id}\ )}
+\DoxyCodeLine{00228\ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ GetThreadNameData().load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{keywordflow}{while}(\ ptr\ )}
+\DoxyCodeLine{00231\ \ \ \ \ \{}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ptr-\/>id\ ==\ \textcolor{keywordtype}{id}\ )}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ptr;}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ ptr\ =\ ptr-\/>next;}
+\DoxyCodeLine{00237\ \ \ \ \ \}}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00239\ \}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ TRACY\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ GetThreadName(\ uint32\_t\ \textcolor{keywordtype}{id}\ )}
+\DoxyCodeLine{00243\ \{}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ buf[256];}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ GetThreadNameData().load(\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordflow}{while}(\ ptr\ )}
+\DoxyCodeLine{00248\ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ptr-\/>id\ ==\ \textcolor{keywordtype}{id}\ )}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ptr-\/>name;}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ ptr\ =\ ptr-\/>next;}
+\DoxyCodeLine{00254\ \ \ \ \ \}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#if\ defined\ \_WIN32}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#\ if\ defined\ TRACY\_WIN32\_NO\_DESKTOP}}
+\DoxyCodeLine{00259\ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \_GetThreadDescription\ =\ \&::GetThreadDescription;}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#\ else}}
+\DoxyCodeLine{00261\ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{auto}\ \_GetThreadDescription\ =\ (t\_GetThreadDescription)GetProcAddress(\ GetModuleHandleA(\ \textcolor{stringliteral}{"{}kernel32.dll"{}}\ ),\ \textcolor{stringliteral}{"{}GetThreadDescription"{}}\ );}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keywordflow}{if}(\ \_GetThreadDescription\ )}
+\DoxyCodeLine{00264\ \ \ \ \ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ hnd\ =\ OpenThread(\ THREAD\_QUERY\_LIMITED\_INFORMATION,\ FALSE,\ (DWORD)\textcolor{keywordtype}{id}\ );}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ hnd\ !=\ 0\ )}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ PWSTR\ tmp;}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ SUCCEEDED(\ \_GetThreadDescription(\ hnd,\ \&tmp\ )\ )\ )}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ret\ =\ wcstombs(\ buf,\ tmp,\ 256\ );}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ CloseHandle(\ hnd\ );}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LocalFree(\ tmp\ );}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ ret\ !=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(\ -\/1\ )\ )}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ buf;}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00280\ \ \ \ \ \}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#elif\ defined\ \_\_linux\_\_}}
+\DoxyCodeLine{00282\ \ \ \textcolor{keywordtype}{int}\ cs,\ fd;}
+\DoxyCodeLine{00283\ \ \ \textcolor{keywordtype}{char}\ path[32];}
+\DoxyCodeLine{00284\ \ \ snprintf(\ path,\ \textcolor{keyword}{sizeof}(\ path\ ),\ \textcolor{stringliteral}{"{}/proc/self/task/\%d/comm"{}},\ \textcolor{keywordtype}{id}\ );}
+\DoxyCodeLine{00285\ \ \ sprintf(\ buf,\ \textcolor{stringliteral}{"{}\%"{}}\ PRIu32,\ \textcolor{keywordtype}{id}\ );}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#\ ifndef\ \_\_ANDROID\_\_}}
+\DoxyCodeLine{00287\ \ \ \ pthread\_setcancelstate(\ PTHREAD\_CANCEL\_DISABLE,\ \&cs\ );}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00289\ \ \ \textcolor{keywordflow}{if}\ (\ (\ fd\ =\ open(\ path,\ O\_RDONLY\ )\ )\ >\ 0)\ \{}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ len\ =\ read(\ fd,\ buf,\ 255\ );}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ len\ >\ 0\ )}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ buf[len]\ =\ 0;}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ len\ >\ 1\ \&\&\ buf[len-\/1]\ ==\ \textcolor{charliteral}{'\(\backslash\)n'}\ )}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ buf[len-\/1]\ =\ 0;}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ close(\ fd\ );}
+\DoxyCodeLine{00300\ \ \ \}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#\ ifndef\ \_\_ANDROID\_\_}}
+\DoxyCodeLine{00302\ \ \ \ pthread\_setcancelstate(\ cs,\ 0\ );}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#\ endif}}
+\DoxyCodeLine{00304\ \ \ \textcolor{keywordflow}{return}\ buf;}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#elif\ defined\ \_\_QNX\_\_}}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ qnxNameBuf[\_NTO\_THREAD\_NAME\_MAX\ +\ 1]\ =\ \{0\};}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keywordflow}{if}\ (pthread\_getname\_np(\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(\textcolor{keywordtype}{id}),\ qnxNameBuf,\ \_NTO\_THREAD\_NAME\_MAX)\ ==\ 0)\ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ qnxNameBuf;}
+\DoxyCodeLine{00309\ \ \ \ \ \};}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ sprintf(\ buf,\ \textcolor{stringliteral}{"{}\%"{}}\ PRIu32,\ \textcolor{keywordtype}{id}\ );}
+\DoxyCodeLine{00313\ \ \ \textcolor{keywordflow}{return}\ buf;}
+\DoxyCodeLine{00314\ \}}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ TRACY\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ GetEnvVar(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name\ )}
+\DoxyCodeLine{00317\ \{}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#if\ defined\ \_WIN32}}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{comment}{//\ unfortunately\ getenv()\ on\ Windows\ is\ just\ fundamentally\ broken.\ \ It\ caches\ the\ entire}}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{comment}{//\ environment\ block\ once\ on\ startup,\ then\ never\ refreshes\ it\ again.\ \ If\ any\ environment}}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{comment}{//\ strings\ are\ added\ or\ modified\ after\ startup\ of\ the\ CRT,\ those\ changes\ will\ not\ be}}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{comment}{//\ seen\ by\ getenv().\ \ This\ removes\ the\ possibility\ of\ an\ app\ using\ this\ SDK\ from}}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{comment}{//\ programmatically\ setting\ any\ of\ the\ behaviour\ controlling\ envvars\ here.}}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{comment}{//\ To\ work\ around\ this,\ we'll\ instead\ go\ directly\ to\ the\ Win32\ environment\ strings\ APIs}}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{comment}{//\ to\ get\ the\ current\ value.}}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ buffer[1024];}
+\DoxyCodeLine{00328\ \ \ \ \ DWORD\ \textcolor{keyword}{const}\ kBufferSize\ =\ DWORD(\textcolor{keyword}{sizeof}(buffer)\ /\ \textcolor{keyword}{sizeof}(buffer[0]));}
+\DoxyCodeLine{00329\ \ \ \ \ DWORD\ count\ =\ GetEnvironmentVariableA(name,\ buffer,\ kBufferSize);}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{keywordflow}{if}(\ count\ ==\ 0\ )}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keywordflow}{if}(\ count\ >=\ kBufferSize\ )}
+\DoxyCodeLine{00335\ \ \ \ \ \{}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}*\ buf\ =\ \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{char}*\textcolor{keyword}{>}(\_alloca(count\ +\ 1));}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ count\ =\ GetEnvironmentVariableA(name,\ buf,\ count\ +\ 1);}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ memcpy(buffer,\ buf,\ kBufferSize);}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ buffer[kBufferSize\ -\/\ 1]\ =\ 0;}
+\DoxyCodeLine{00340\ \ \ \ \ \}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{keywordflow}{return}\ buffer;}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{keywordflow}{return}\ getenv(name);}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00346\ \}}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ TRACY\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ GetUserLogin()}
+\DoxyCodeLine{00349\ \{}
+\DoxyCodeLine{00350\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CUSTOM\_USER\_INFO}}
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{keywordflow}{return}\ PlatformGetUserLogin();}
+\DoxyCodeLine{00352\ \textcolor{preprocessor}{\#elif\ defined\ \_WIN32}}
+\DoxyCodeLine{00353\ \textcolor{preprocessor}{\#\ \ if\ defined\ TRACY\_WIN32\_NO\_DESKTOP}}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}(?)"{}};}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\#\ \ else}}
+\DoxyCodeLine{00356\ \ \ \ \ DWORD\ userSz\ =\ UNLEN+1;}
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ user[UNLEN+1];}
+\DoxyCodeLine{00358\ \ \ \ \ GetUserNameA(\ user,\ \&userSz\ );}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{keywordflow}{return}\ user;}
+\DoxyCodeLine{00360\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00361\ \textcolor{preprocessor}{\#elif\ defined\ \_\_ANDROID\_\_}}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ user\ =\ getlogin();}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keywordflow}{if}(\ user\ )\ \textcolor{keywordflow}{return}\ user;}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}(?)"{}};}
+\DoxyCodeLine{00365\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ user[1024]\ =\ \{\};}
+\DoxyCodeLine{00367\ \ \ \ \ getlogin\_r(\ user,\ \textcolor{keyword}{sizeof}(\ user\ )\ );}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{keywordflow}{return}\ user;}
+\DoxyCodeLine{00369\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00370\ \}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ TRACY\_API\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ GetUserFullName()}
+\DoxyCodeLine{00373\ \{}
+\DoxyCodeLine{00374\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CUSTOM\_USER\_INFO}}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordflow}{return}\ PlatformGetUserFullName();}
+\DoxyCodeLine{00376\ \textcolor{preprocessor}{\#elif\ defined\ \_WIN32}}
+\DoxyCodeLine{00377\ \textcolor{preprocessor}{\#\ \ if\ !defined\ TRACY\_WIN32\_NO\_DESKTOP}}
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ buf[1024];}
+\DoxyCodeLine{00379\ \ \ \ \ ULONG\ size\ =\ \textcolor{keyword}{sizeof}(\ buf\ );}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{keywordflow}{if}(\ GetUserNameExA(\ NameDisplay,\ buf,\ \&size\ )\ )\ \textcolor{keywordflow}{return}\ buf;}
+\DoxyCodeLine{00381\ \textcolor{preprocessor}{\#\ \ endif}}
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#elif\ defined\ \_\_ANDROID\_\_}}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ passwd\ =\ getpwuid(\ getuid()\ );}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{keywordflow}{if}(\ passwd\ \&\&\ passwd-\/>pw\_gecos\ \&\&\ *passwd-\/>pw\_gecos\ )\ \textcolor{keywordflow}{return}\ passwd-\/>pw\_gecos;}
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00387\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{char}\ buf[4*1024];}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keyword}{struct\ }passwd\ pwd;}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{keyword}{struct\ }passwd*\ ptr;}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keywordflow}{if}(\ getpwuid\_r(\ getuid(),\ \&pwd,\ buf,\ \textcolor{keyword}{sizeof}(\ buf\ ),\ \&ptr\ )\ ==\ 0\ \&\&\ ptr\ ==\ \&pwd\ \&\&\ *pwd.pw\_gecos\ )}
+\DoxyCodeLine{00392\ \ \ \ \ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pwd.pw\_gecos;}
+\DoxyCodeLine{00394\ \ \ \ \ \}}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00396\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00397\ \}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00402\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ TRACY\_API\ \textcolor{keywordtype}{void}\ \_\_\_tracy\_set\_thread\_name(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name\ )\ \{\ tracy::SetThreadName(\ name\ );\ \}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00408\ \}}
+\DoxyCodeLine{00409\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

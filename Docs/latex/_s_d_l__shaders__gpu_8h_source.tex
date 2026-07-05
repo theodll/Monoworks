@@ -1,0 +1,71 @@
+\doxysection{SDL\+\_\+shaders\+\_\+gpu.\+h}
+\hypertarget{_s_d_l__shaders__gpu_8h_source}{}\label{_s_d_l__shaders__gpu_8h_source}\index{MonoRuntime/extern/sdl/src/render/gpu/SDL\_shaders\_gpu.h@{MonoRuntime/extern/sdl/src/render/gpu/SDL\_shaders\_gpu.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_shaders\_gpu\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_shaders\_gpu\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ SDL\_GPU\ shader\ implementation}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ VERT\_SHADER\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00032\ \ \ \ \ VERT\_SHADER\_LINEPOINT,}
+\DoxyCodeLine{00033\ \ \ \ \ VERT\_SHADER\_TRI\_COLOR,}
+\DoxyCodeLine{00034\ \ \ \ \ VERT\_SHADER\_TRI\_TEXTURE,}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ NUM\_VERT\_SHADERS,}
+\DoxyCodeLine{00037\ \}\ GPU\_VertexShaderID;}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ FRAG\_SHADER\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00042\ \ \ \ \ FRAG\_SHADER\_COLOR,}
+\DoxyCodeLine{00043\ \ \ \ \ FRAG\_SHADER\_TEXTURE\_RGB,}
+\DoxyCodeLine{00044\ \ \ \ \ FRAG\_SHADER\_TEXTURE\_RGBA,}
+\DoxyCodeLine{00045\ \ \ \ \ FRAG\_SHADER\_TEXTURE\_ADVANCED,}
+\DoxyCodeLine{00046\ \ \ \ \ FRAG\_SHADER\_TEXTURE\_CUSTOM,}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ NUM\_FRAG\_SHADERS,}
+\DoxyCodeLine{00049\ \}\ GPU\_FragmentShaderID;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_g_p_u___shaders}{GPU\_Shaders}}}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ SDL\_GPUShader\ *vert\_shaders[NUM\_VERT\_SHADERS];}
+\DoxyCodeLine{00054\ \ \ \ \ SDL\_GPUShader\ *frag\_shaders[NUM\_FRAG\_SHADERS];}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_g_p_u___shaders}{GPU\_Shaders}}\ \doxymbox{\hyperlink{struct_g_p_u___shaders}{GPU\_Shaders}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{void}\ GPU\_FillSupportedShaderFormats(SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ GPU\_InitShaders(\doxymbox{\hyperlink{struct_g_p_u___shaders}{GPU\_Shaders}}\ *shaders,\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{00061\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ GPU\_ReleaseShaders(\doxymbox{\hyperlink{struct_g_p_u___shaders}{GPU\_Shaders}}\ *shaders,\ \doxymbox{\hyperlink{struct_s_d_l___g_p_u_device}{SDL\_GPUDevice}}\ *device);}
+\DoxyCodeLine{00062\ \textcolor{keyword}{extern}\ SDL\_GPUShader\ *GPU\_GetVertexShader(\doxymbox{\hyperlink{struct_g_p_u___shaders}{GPU\_Shaders}}\ *shaders,\ GPU\_VertexShaderID\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00063\ \textcolor{keyword}{extern}\ SDL\_GPUShader\ *GPU\_GetFragmentShader(\doxymbox{\hyperlink{struct_g_p_u___shaders}{GPU\_Shaders}}\ *shaders,\ GPU\_FragmentShaderID\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_shaders\_gpu\_h\_}}
+
+\end{DoxyCode}

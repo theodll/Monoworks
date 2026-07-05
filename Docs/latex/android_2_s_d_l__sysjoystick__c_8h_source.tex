@@ -1,0 +1,70 @@
+\doxysection{SDL\+\_\+sysjoystick\+\_\+c.\+h}
+\hypertarget{android_2_s_d_l__sysjoystick__c_8h_source}{}\label{android_2_s_d_l__sysjoystick__c_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/android/SDL\_sysjoystick\_c.h@{MonoRuntime/extern/sdl/src/joystick/android/SDL\_sysjoystick\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifdef\ SDL\_JOYSTICK\_ANDROID}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifndef\ SDL\_sysjoystick\_c\_h\_}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ SDL\_sysjoystick\_c\_h\_}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysjoystick.h"{}}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Android\_OnPadDown(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{int}\ keycode,\ \textcolor{keywordtype}{int}\ scancode);}
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Android\_OnPadUp(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{int}\ keycode,\ \textcolor{keywordtype}{int}\ scancode);}
+\DoxyCodeLine{00033\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Android\_OnJoy(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{int}\ axisnum,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00034\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Android\_OnHat(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{int}\ hat\_id,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y);}
+\DoxyCodeLine{00035\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_OnJoySensor(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{int}\ sensor\_type,\ Uint64\ sensor\_timestamp,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z);}
+\DoxyCodeLine{00036\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_AddJoystick(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *desc,\ \textcolor{keywordtype}{int}\ vendor\_id,\ \textcolor{keywordtype}{int}\ product\_id,\ \textcolor{keywordtype}{int}\ button\_mask,\ \textcolor{keywordtype}{int}\ naxes,\ \textcolor{keywordtype}{int}\ axis\_mask,\ \textcolor{keywordtype}{int}\ nhats,}
+\DoxyCodeLine{00037\ \ \ \ \textcolor{keywordtype}{bool}\ can\_rumble,\ \textcolor{keywordtype}{bool}\ has\_rgb\_led,\ \textcolor{keywordtype}{bool}\ has\_accelerometer,\ \textcolor{keywordtype}{bool}\ has\_gyroscope);}
+\DoxyCodeLine{00038\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_RemoveJoystick(\textcolor{keywordtype}{int}\ device\_id);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ A\ linked\ list\ of\ available\ joysticks}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_joylist\_item}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{int}\ device\_instance;}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ device\_id;\ \textcolor{comment}{//\ Android's\ device\ id}}
+\DoxyCodeLine{00045\ \ \ \ \ Uint16\ vendor\_id;}
+\DoxyCodeLine{00046\ \ \ \ \ Uint16\ product\_id;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{char}\ *name;\ \ \ \ \textcolor{comment}{//\ "{}SideWinder\ 3D\ Pro"{}\ or\ whatever}}
+\DoxyCodeLine{00048\ \ \ \ \ SDL\_GUID\ guid;}
+\DoxyCodeLine{00049\ \ \ \ \ SDL\_Joystick\ *joystick;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{int}\ nbuttons,\ naxes,\ nhats;}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{int}\ dpad\_state;}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{bool}\ can\_rumble;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_rgb\_led;}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_accelerometer;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{bool}\ has\_gyroscope;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{struct\ }SDL\_joylist\_item\ *next;}
+\DoxyCodeLine{00058\ \}\ SDL\_joylist\_item;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ SDL\_joylist\_item\ \doxymbox{\hyperlink{structjoystick__hwdata}{joystick\_hwdata}};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_sysjoystick\_c\_h\_}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_JOYSTICK\_ANDROID}}
+
+\end{DoxyCode}

@@ -1,0 +1,93 @@
+\doxysection{SDL\+\_\+keyboard\+\_\+c.\+h}
+\hypertarget{_s_d_l__keyboard__c_8h_source}{}\label{_s_d_l__keyboard__c_8h_source}\index{MonoRuntime/extern/sdl/src/events/SDL\_keyboard\_c.h@{MonoRuntime/extern/sdl/src/events/SDL\_keyboard\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_keyboard\_c\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_keyboard\_c\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}SDL\_keymap\_c.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ Keyboard\ events\ not\ associated\ with\ a\ specific\ input\ device}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ SDL\_GLOBAL\_KEYBOARD\_ID\ \ \ \ \ 0}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ The\ default\ keyboard\ input\ device,\ for\ platforms\ that\ don't\ have\ multiple\ keyboards}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SDL\_DEFAULT\_KEYBOARD\_ID\ \ \ \ 1}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ Initialize\ the\ keyboard\ subsystem}}
+\DoxyCodeLine{00035\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_InitKeyboard(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{comment}{//\ Return\ whether\ a\ device\ is\ actually\ a\ keyboard}}
+\DoxyCodeLine{00038\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_IsKeyboard(Uint16\ vendor,\ Uint16\ product,\ \textcolor{keywordtype}{int}\ num\_keys);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ A\ keyboard\ has\ been\ added\ to\ the\ system}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_AddKeyboard(SDL\_KeyboardID\ keyboardID,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ A\ keyboard\ has\ been\ removed\ from\ the\ system}}
+\DoxyCodeLine{00044\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_RemoveKeyboard(SDL\_KeyboardID\ keyboardID);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{comment}{//\ Set\ the\ mapping\ of\ scancode\ to\ key\ codes}}
+\DoxyCodeLine{00047\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SetKeymap(\doxymbox{\hyperlink{struct_s_d_l___keymap}{SDL\_Keymap}}\ *keymap,\ \textcolor{keywordtype}{bool}\ send\_event);}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{comment}{//\ Set\ the\ keyboard\ focus\ window}}
+\DoxyCodeLine{00050\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SetKeyboardFocus(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{comment}{/*\ Send\ a\ character\ from\ an\ on-\/screen\ keyboard\ as\ scancode\ and\ modifier\ key\ events,}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ \ \ currently\ assuming\ ASCII\ characters\ on\ a\ US\ keyboard\ layout}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00055\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendKeyboardUnicodeKey(Uint64\ timestamp,\ Uint32\ ch);}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ Send\ a\ keyboard\ key\ event}}
+\DoxyCodeLine{00058\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SendKeyboardKey(Uint64\ timestamp,\ SDL\_KeyboardID\ keyboardID,\ \textcolor{keywordtype}{int}\ rawcode,\ SDL\_Scancode\ scancode,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00059\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SendKeyboardKeyIgnoreModifiers(Uint64\ timestamp,\ SDL\_KeyboardID\ keyboardID,\ \textcolor{keywordtype}{int}\ rawcode,\ SDL\_Scancode\ scancode,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00060\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SendKeyboardKeyAutoRelease(Uint64\ timestamp,\ SDL\_Scancode\ scancode);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{/*\ This\ is\ for\ platforms\ that\ don't\ know\ the\ keymap\ but\ can\ report\ scancode\ and\ keycode\ directly.}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ Most\ platforms\ should\ prefer\ to\ optionally\ call\ SDL\_SetKeymap\ and\ then\ use\ SDL\_SendKeyboardKey.\ */}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SendKeyboardKeyAndKeycode(Uint64\ timestamp,\ SDL\_KeyboardID\ keyboardID,\ \textcolor{keywordtype}{int}\ rawcode,\ SDL\_Scancode\ scancode,\ SDL\_Keycode\ keycode,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ Release\ all\ the\ autorelease\ keys}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_ReleaseAutoReleaseKeys(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ Return\ true\ if\ any\ hardware\ key\ is\ pressed}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_HardwareKeyboardKeyPressed(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ Send\ keyboard\ text\ input}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendKeyboardText(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ Send\ editing\ text\ for\ selected\ range\ from\ start\ to\ end}}
+\DoxyCodeLine{00076\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendEditingText(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text,\ \textcolor{keywordtype}{int}\ start,\ \textcolor{keywordtype}{int}\ length);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ Send\ editing\ text\ candidates,\ which\ will\ be\ copied\ into\ the\ event}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendEditingTextCandidates(\textcolor{keywordtype}{char}\ **candidates,\ \textcolor{keywordtype}{int}\ num\_candidates,\ \textcolor{keywordtype}{int}\ selected\_candidate,\ \textcolor{keywordtype}{bool}\ horizontal);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{//\ Shutdown\ the\ keyboard\ subsystem}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_QuitKeyboard(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{comment}{//\ Toggle\ on\ or\ off\ pieces\ of\ the\ keyboard\ mod\ state.}}
+\DoxyCodeLine{00085\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_ToggleModState(SDL\_Keymod\ modstate,\ \textcolor{keywordtype}{bool}\ toggle);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_keyboard\_c\_h\_}}
+
+\end{DoxyCode}

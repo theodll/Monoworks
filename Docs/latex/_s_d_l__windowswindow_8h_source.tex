@@ -1,0 +1,160 @@
+\doxysection{SDL\+\_\+windowswindow.\+h}
+\hypertarget{_s_d_l__windowswindow_8h_source}{}\label{_s_d_l__windowswindow_8h_source}\index{MonoRuntime/extern/sdl/src/video/windows/SDL\_windowswindow.h@{MonoRuntime/extern/sdl/src/video/windows/SDL\_windowswindow.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_windowswindow\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_windowswindow\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL\_EGL}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}../SDL\_egl\_c.h"{}}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysvideo.h"{}}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_WindowRect}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ SDL\_WINDOWRECT\_CURRENT,}
+\DoxyCodeLine{00040\ \ \ \ \ SDL\_WINDOWRECT\_WINDOWED,}
+\DoxyCodeLine{00041\ \ \ \ \ SDL\_WINDOWRECT\_FLOATING,}
+\DoxyCodeLine{00042\ \ \ \ \ SDL\_WINDOWRECT\_PENDING}
+\DoxyCodeLine{00043\ \}\ SDL\_WindowRect;}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_WindowEraseBackgroundMode}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ SDL\_ERASEBACKGROUNDMODE\_NEVER,}
+\DoxyCodeLine{00048\ \ \ \ \ SDL\_ERASEBACKGROUNDMODE\_INITIAL,}
+\DoxyCodeLine{00049\ \ \ \ \ SDL\_ERASEBACKGROUNDMODE\_ALWAYS,}
+\DoxyCodeLine{00050\ \}\ SDL\_WindowEraseBackgroundMode;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00053\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ **lpVtbl;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{int}\ refcount;}
+\DoxyCodeLine{00056\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window;}
+\DoxyCodeLine{00057\ \ \ \ \ HWND\ hwnd;}
+\DoxyCodeLine{00058\ \ \ \ \ UINT\ format\_text;}
+\DoxyCodeLine{00059\ \ \ \ \ UINT\ format\_file;}
+\DoxyCodeLine{00060\ \}\ \doxymbox{\hyperlink{struct_s_d_l_drop_target}{SDLDropTarget}};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___window_data}{SDL\_WindowData}}}
+\DoxyCodeLine{00063\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window;}
+\DoxyCodeLine{00065\ \ \ \ \ HWND\ hwnd;}
+\DoxyCodeLine{00066\ \ \ \ \ HWND\ parent;}
+\DoxyCodeLine{00067\ \ \ \ \ HDC\ hdc;}
+\DoxyCodeLine{00068\ \ \ \ \ HDC\ \doxymbox{\hyperlink{classmdc}{mdc}};}
+\DoxyCodeLine{00069\ \ \ \ \ HINSTANCE\ hinstance;}
+\DoxyCodeLine{00070\ \ \ \ \ HBITMAP\ hbm;}
+\DoxyCodeLine{00071\ \ \ \ \ HICON\ hicon;}
+\DoxyCodeLine{00072\ \ \ \ \ WNDPROC\ wndproc;}
+\DoxyCodeLine{00073\ \ \ \ \ HHOOK\ keyboard\_hook;}
+\DoxyCodeLine{00074\ \ \ \ \ WPARAM\ mouse\_button\_flags;}
+\DoxyCodeLine{00075\ \ \ \ \ LPARAM\ last\_pointer\_update;}
+\DoxyCodeLine{00076\ \ \ \ \ WCHAR\ high\_surrogate;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{bool}\ initializing;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{bool}\ expected\_resize;}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{bool}\ in\_border\_change;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{bool}\ in\_title\_click;}
+\DoxyCodeLine{00081\ \ \ \ \ Uint8\ focus\_click\_pending;}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{bool}\ postpone\_clipcursor;}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{bool}\ clipcursor\_queued;}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{bool}\ windowed\_mode\_was\_maximized;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{bool}\ in\_window\_deactivation;}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{bool}\ force\_ws\_maximizebox;}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{bool}\ disable\_move\_size\_events;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{bool}\ showing\_window;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{int}\ in\_modal\_loop;}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{int}\ last\_modal\_width;}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keywordtype}{int}\ last\_modal\_height;}
+\DoxyCodeLine{00092\ \ \ \ \ RECT\ initial\_size\_rect;}
+\DoxyCodeLine{00093\ \ \ \ \ RECT\ cursor\_clipped\_rect;\ \textcolor{comment}{//\ last\ successfully\ committed\ clipping\ rect\ for\ this\ window}}
+\DoxyCodeLine{00094\ \ \ \ \ RECT\ cursor\_ctrlock\_rect;\ \textcolor{comment}{//\ this\ is\ Windows-\/specific,\ but\ probably\ does\ not\ need\ to\ be\ per-\/window}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{bool}\ mouse\_tracked;}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordtype}{bool}\ destroy\_parent\_with\_window;}
+\DoxyCodeLine{00097\ \ \ \ \ WCHAR\ *ICMFileName;}
+\DoxyCodeLine{00098\ \ \ \ \ SDL\_WindowEraseBackgroundMode\ hint\_erase\_background\_mode;}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{bool}\ taskbar\_button\_created;}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}\ *videodata;}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL\_EGL}}
+\DoxyCodeLine{00102\ \ \ \ \ EGLSurface\ egl\_surface;}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{comment}{//\ Whether\ we\ retain\ the\ content\ of\ the\ window\ when\ changing\ state}}
+\DoxyCodeLine{00106\ \ \ \ \ UINT\ copybits\_flag;}
+\DoxyCodeLine{00107\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l_drop_target}{SDLDropTarget}}\ *drop\_target;}
+\DoxyCodeLine{00108\ \};}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_CreateWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_PropertiesID\ create\_props);}
+\DoxyCodeLine{00111\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_SetWindowTitle(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00112\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowIcon(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\doxymbox{\hyperlink{namespaceicon}{icon}});}
+\DoxyCodeLine{00113\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowPosition(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00114\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_SetWindowSize(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00115\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GetWindowBordersSize(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *top,\ \textcolor{keywordtype}{int}\ *left,\ \textcolor{keywordtype}{int}\ *bottom,\ \textcolor{keywordtype}{int}\ *right);}
+\DoxyCodeLine{00116\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_GetWindowSizeInPixels(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *width,\ \textcolor{keywordtype}{int}\ *height);}
+\DoxyCodeLine{00117\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowOpacity(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ opacity);}
+\DoxyCodeLine{00118\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_ShowWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00119\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_HideWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00120\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_RaiseWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00121\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_MaximizeWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00122\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_MinimizeWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00123\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_RestoreWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00124\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_SetWindowBordered(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ bordered);}
+\DoxyCodeLine{00125\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_SetWindowResizable(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ resizable);}
+\DoxyCodeLine{00126\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_SetWindowAlwaysOnTop(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ on\_top);}
+\DoxyCodeLine{00127\ \textcolor{keyword}{extern}\ SDL\_FullscreenResult\ WIN\_SetWindowFullscreen(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___video_display}{SDL\_VideoDisplay}}\ *display,\ SDL\_FullscreenOp\ fullscreen);}
+\DoxyCodeLine{00128\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_UpdateWindowICCProfile(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ send\_event);}
+\DoxyCodeLine{00129\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ *WIN\_GetWindowICCProfile(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{size\_t}\ *size);}
+\DoxyCodeLine{00130\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowMouseRect(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00131\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowMouseGrab(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ grabbed);}
+\DoxyCodeLine{00132\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowKeyboardGrab(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ grabbed);}
+\DoxyCodeLine{00133\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_DestroyWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00134\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_OnWindowEnter(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00135\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_UpdateClipCursor(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00136\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_UnclipCursorForWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00137\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowHitTest(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00138\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_AcceptDragAndDrop(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ accept);}
+\DoxyCodeLine{00139\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_FlashWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_FlashOperation\ operation);}
+\DoxyCodeLine{00140\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_ApplyWindowProgress(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00141\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowPositionInternal(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ UINT\ flags,\ SDL\_WindowRect\ rect\_type);}
+\DoxyCodeLine{00142\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_ShowWindowSystemMenu(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y);}
+\DoxyCodeLine{00143\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowFocusable(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ focusable);}
+\DoxyCodeLine{00144\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_AdjustWindowRect(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *x,\ \textcolor{keywordtype}{int}\ *y,\ \textcolor{keywordtype}{int}\ *width,\ \textcolor{keywordtype}{int}\ *height,\ SDL\_WindowRect\ rect\_type);}
+\DoxyCodeLine{00145\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_AdjustWindowRectForHWND(HWND\ hwnd,\ LPRECT\ lpRect,\ UINT\ frame\_dpi);}
+\DoxyCodeLine{00146\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowParent(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *parent);}
+\DoxyCodeLine{00147\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_SetWindowModal(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ modal);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{comment}{//\ Ends\ C\ function\ definitions\ when\ using\ C++}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00151\ \}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_windowswindow\_h\_}}
+
+\end{DoxyCode}

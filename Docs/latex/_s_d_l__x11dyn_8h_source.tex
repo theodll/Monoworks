@@ -1,0 +1,110 @@
+\doxysection{SDL\+\_\+x11dyn.\+h}
+\hypertarget{_s_d_l__x11dyn_8h_source}{}\label{_s_d_l__x11dyn_8h_source}\index{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11dyn.h@{MonoRuntime/extern/sdl/src/video/x11/SDL\_x11dyn.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_x11dyn\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_x11dyn\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <X11/Xlib.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <X11/Xutil.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <X11/Xatom.h>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#include\ <X11/Xresource.h>}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_HAS\_XKBLIB}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#include\ <X11/XKBlib.h>}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ Apparently\ some\ X11\ systems\ can't\ include\ this\ multiple\ times...}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#ifndef\ SDL\_INCLUDED\_XLIBINT\_H}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ SDL\_INCLUDED\_XLIBINT\_H\ 1}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <X11/Xlibint.h>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <X11/Xproto.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <X11/extensions/Xext.h>}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#ifndef\ NO\_SHARED\_MEMORY}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <sys/ipc.h>}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ <sys/shm.h>}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ <X11/extensions/XShm.h>}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XCURSOR}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ <X11/Xcursor/Xcursor.h>}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XDBE}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ <X11/extensions/Xdbe.h>}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#if\ defined(SDL\_VIDEO\_DRIVER\_X11\_XINPUT2)\ ||\ defined(SDL\_VIDEO\_DRIVER\_X11\_XFIXES)}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#include\ <X11/extensions/XInput2.h>}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XFIXES}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#include\ <X11/extensions/Xfixes.h>}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XSYNC}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#include\ <X11/extensions/sync.h>}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XRANDR}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#include\ <X11/extensions/Xrandr.h>}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XSCRNSAVER}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#include\ <X11/extensions/scrnsaver.h>}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XSHAPE}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#include\ <X11/extensions/shape.h>}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_DRIVER\_X11\_XTEST}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#include\ <X11/extensions/XTest.h>}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{comment}{//\ evil\ function\ signatures...}}
+\DoxyCodeLine{00083\ \textcolor{keyword}{typedef}\ Bool\ (*SDL\_X11\_XESetWireToEventRetType)(Display\ *,\ XEvent\ *,\ xEvent\ *);}
+\DoxyCodeLine{00084\ \textcolor{keyword}{typedef}\ int\ (*SDL\_X11\_XSynchronizeRetType)(Display\ *);}
+\DoxyCodeLine{00085\ \textcolor{keyword}{typedef}\ Status\ (*SDL\_X11\_XESetEventToWireRetType)(Display\ *,\ XEvent\ *,\ xEvent\ *);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_X11\_LoadSymbols(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00088\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_X11\_UnloadSymbols(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ Declare\ all\ the\ function\ pointers\ and\ wrappers...}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ SDL\_X11\_SYM(rc,\ fn,\ params)\ \(\backslash\)}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\ \ \ \ typedef\ rc(*SDL\_DYNX11FN\_\#\#fn)\ params;\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\ \ \ \ extern\ SDL\_DYNX11FN\_\#\#fn\ X11\_\#\#fn;}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#include\ "{}SDL\_x11sym.h"{}}}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{comment}{/*\ These\ SDL\_X11\_HAVE\_*\ flags\ are\ here\ whether\ you\ have\ dynamic\ X11\ or\ not.\ */}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ SDL\_X11\_MODULE(modname)\ extern\ int\ SDL\_X11\_HAVE\_\#\#modname;}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#include\ "{}SDL\_x11sym.h"{}}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00101\ \}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !defined\ SDL\_x11dyn\_h\_}}
+
+\end{DoxyCode}

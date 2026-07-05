@@ -1,0 +1,102 @@
+\doxysection{dup\+\_\+filter\+\_\+sink.\+h}
+\hypertarget{dup__filter__sink_8h_source}{}\label{dup__filter__sink_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/dup\_filter\_sink.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/dup\_filter\_sink.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}dist\_sink.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/details/log\_msg.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <spdlog/details/null\_mutex.h>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Duplicate\ message\ removal\ sink.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ Skip\ the\ message\ if\ previous\ one\ is\ identical\ and\ less\ than\ "{}max\_skip\_duration"{}\ have\ passed}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ Example:}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ \ \ \ \ \#include\ <spdlog/sinks/dup\_filter\_sink.h>}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ \ \ \ \ int\ main()\ \{}}
+\DoxyCodeLine{00023\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ auto\ dup\_filter\ =\ std::make\_shared<dup\_filter\_sink\_st>(std::chrono::seconds(5),}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ level::info);\ dup\_filter-\/>add\_sink(std::make\_shared<stdout\_color\_sink\_mt>());}}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ spdlog::logger\ l("{}logger"{},\ dup\_filter);}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ l.info("{}Hello"{});}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ l.info("{}Hello"{});}}
+\DoxyCodeLine{00028\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ l.info("{}Hello"{});}}
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ l.info("{}Different\ Hello"{});}}
+\DoxyCodeLine{00030\ \textcolor{comment}{//\ \ \ \ \ \}}}
+\DoxyCodeLine{00031\ \textcolor{comment}{//}}
+\DoxyCodeLine{00032\ \textcolor{comment}{//\ Will\ produce:}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ \ \ \ \ \ \ [2019-\/06-\/25\ 17:50:56.511]\ [logger]\ [info]\ Hello}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ \ \ \ \ \ \ [2019-\/06-\/25\ 17:50:56.512]\ [logger]\ [info]\ Skipped\ 3\ duplicate\ messages..}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ \ \ \ \ \ \ [2019-\/06-\/25\ 17:50:56.512]\ [logger]\ [info]\ Different\ Hello}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00038\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00039\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00040\ \textcolor{keyword}{class\ }dup\_filter\_sink\ :\ \textcolor{keyword}{public}\ dist\_sink<Mutex>\ \{}
+\DoxyCodeLine{00041\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Rep,\ \textcolor{keyword}{class}\ Period>}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{explicit}\ dup\_filter\_sink(std::chrono::duration<Rep,\ Period>\ max\_skip\_duration)}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ :\ max\_skip\_duration\_\{max\_skip\_duration\}\ \{\}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ Rep,\ \textcolor{keyword}{class}\ Period>}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{explicit}\ dup\_filter\_sink(std::chrono::duration<Rep,\ Period>\ max\_skip\_duration,\ std::vector<std::shared\_ptr<sink>>\ sinks)}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ :\ max\_skip\_duration\_\{max\_skip\_duration\}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ ,\ dist\_sink<Mutex>(std::move(sinks))\ \{\}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00052\ \ \ \ \ std::chrono::microseconds\ max\_skip\_duration\_;}
+\DoxyCodeLine{00053\ \ \ \ \ log\_clock::time\_point\ last\_msg\_time\_;}
+\DoxyCodeLine{00054\ \ \ \ \ std::string\ last\_msg\_payload\_;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ skip\_counter\_\ =\ 0;}
+\DoxyCodeLine{00056\ \ \ \ \ level::level\_enum\ skipped\_msg\_log\_level\_\ =\ level::level\_enum::off;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ filtered\ =\ filter\_(msg);}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!filtered)\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ skip\_counter\_\ +=\ 1;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ skipped\_msg\_log\_level\_\ =\ msg.level;}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\ the\ "{}skipped.."{}\ message}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (skip\_counter\_\ >\ 0)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ buf[64];}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ msg\_size\ =\ ::snprintf(buf,\ \textcolor{keyword}{sizeof}(buf),\ \textcolor{stringliteral}{"{}Skipped\ \%u\ duplicate\ messages.."{}},}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\textcolor{keyword}{>}(skip\_counter\_));}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (msg\_size\ >\ 0\ \&\&\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(msg\_size)\ <\ \textcolor{keyword}{sizeof}(buf))\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ skipped\_msg\{msg.source,\ msg.logger\_name,\ skipped\_msg\_log\_level\_,}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ string\_view\_t\{buf,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{size\_t}\textcolor{keyword}{>}(msg\_size)\}\};}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dist\_sink<Mutex>::sink\_it\_(skipped\_msg);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ log\ current\ message}}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ dist\_sink<Mutex>::sink\_it\_(msg);}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ last\_msg\_time\_\ =\ msg.time;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ skip\_counter\_\ =\ 0;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ last\_msg\_payload\_.assign(msg.payload.data(),\ msg.payload.data()\ +\ msg.payload.size());}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//\ return\ whether\ the\ log\ msg\ should\ be\ displayed\ (true)\ or\ skipped\ (false)}}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{bool}\ filter\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ filter\_duration\ =\ msg.time\ -\/\ last\_msg\_time\_;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (filter\_duration\ >\ max\_skip\_duration\_)\ ||\ (msg.payload\ !=\ last\_msg\_payload\_);}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ \};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{using\ }dup\_filter\_sink\_mt\ =\ \doxymbox{\hyperlink{classsinks_1_1dup__filter__sink}{dup\_filter\_sink<std::mutex>}};}
+\DoxyCodeLine{00093\ \textcolor{keyword}{using\ }dup\_filter\_sink\_st\ =\ \doxymbox{\hyperlink{classsinks_1_1dup__filter__sink}{dup\_filter\_sink<details::null\_mutex>}};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00096\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

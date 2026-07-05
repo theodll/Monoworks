@@ -1,0 +1,756 @@
+\doxysection{Tracy\+D3\+D12.\+hpp}
+\hypertarget{_tracy_d3_d12_8hpp_source}{}\label{_tracy_d3_d12_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/tracy/TracyD3D12.hpp@{MonoEngine/thirdparty/tracy/public/tracy/TracyD3D12.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYD3D12\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYD3D12\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifndef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ TracyD3D12Context(device,\ queue)\ nullptr}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#define\ TracyD3D12Destroy(ctx)}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ TracyD3D12ContextName(ctx,\ name,\ size)}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ TracyD3D12NewFrame(ctx)}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ TracyD3D12Zone(ctx,\ cmdList,\ name)}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ TracyD3D12ZoneC(ctx,\ cmdList,\ name,\ color)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ TracyD3D12NamedZone(ctx,\ varname,\ cmdList,\ name,\ active)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ TracyD3D12NamedZoneC(ctx,\ varname,\ cmdList,\ name,\ color,\ active)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ TracyD3D12ZoneTransient(ctx,\ varname,\ cmdList,\ name,\ active)}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ TracyD3D12ZoneS(ctx,\ cmdList,\ name,\ depth)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ TracyD3D12ZoneCS(ctx,\ cmdList,\ name,\ color,\ depth)}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ TracyD3D12NamedZoneS(ctx,\ varname,\ cmdList,\ name,\ depth,\ active)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ TracyD3D12NamedZoneCS(ctx,\ varname,\ cmdList,\ name,\ color,\ depth,\ active)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ TracyD3D12ZoneTransientS(ctx,\ varname,\ cmdList,\ name,\ depth,\ active)}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ TracyD3D12Collect(ctx)}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_d3_d12_zone_scope}{D3D12ZoneScope}}\ \{\};}
+\DoxyCodeLine{00029\ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{using\ }TracyD3D12Ctx\ =\ \textcolor{keywordtype}{void}*;}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ "{}Tracy.hpp"{}}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ "{}../client/TracyFastVector.hpp"{}}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <d3d12.h>}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <dxgi.h>}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#ifndef\ TRACY\_D3D12\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ TRACY\_D3D12\_DEBUG\_LEVEL\ (0)}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//TRACY\_D3D12\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#ifndef\ TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER\ (1)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#if\ TRACY\_D3D12\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#\ \ \ define\ TracyD3D12Debug(...)\ \_\_VA\_ARGS\_\_;}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#\ \ \ ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ TracyD3D12Break()\ if\ (IsDebuggerPresent())\ \_\_debugbreak()}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#\ \ \ else}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ define\ TracyD3D12Break()\ }\textcolor{comment}{/*\ TODO\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#\ \ \ endif}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#\ \ \ define\ TracyD3D12Assert(predicate,\ ...)\ if\ (predicate)\ \{\}\ else\ \{\ \_\_VA\_ARGS\_\_;\ TracyD3D12Break();\ \}}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#\ \ \ define\ TracyD3D12Debug(...)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#\ \ \ define\ TracyD3D12Break()}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#\ \ \ define\ TracyD3D12Assert(predicate,\ ...)\ assert(predicate);}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ TracyD3D12Log(severity,\ msg)\ tracy::Profiler::LogString(\ tracy::MessageSourceType::Tracy,\ tracy::MessageSeverity::severity,\ tracy::Color::Red4,\ 0,\ msg\ );}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ TracyD3D12Panic(msg,\ ...)\ do\ \{\ TracyD3D12Log(Error,\ msg);\ TracyD3D12Assert(false\ \&\&\ "{}TracyD3D12:\ "{}\ msg);\ \_\_VA\_ARGS\_\_;\ \}\ while(false);}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ Command\ queue\ context.}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{class\ }D3D12QueueCtx}
+\DoxyCodeLine{00076\ \ \ \ \ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }D3D12ZoneScope;}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ uint8\_t\ m\_contextId\ =\ 255;\ \ \textcolor{comment}{//\ 255\ represents\ "{}invalid\ id"{}}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ std::mutex\ m\_collectionMutex;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ ID3D12Device*\ m\_device\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ ID3D12CommandQueue*\ m\_queue\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ ID3D12QueryHeap*\ m\_queryHeap\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ ID3D12Resource*\ m\_readbackBuffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#if\ TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ UINT64*\ m\_persistentTimestampBuffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }atomic\_counter\ =\ std::atomic<uint64\_t>;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ atomic\_counter\ m\_queryCounter\ =\ 0;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ atomic\_counter\ m\_previousCheckpoint\ =\ 0;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ uint32\_t\ m\_queryLimit\ =\ 64\ *\ 1024;\ \ \textcolor{comment}{//\ Must\ be\ even:\ each\ scope\ is\ a\ (begin,\ end)\ pair\ of\ queries}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ FastVector<UINT64>\ m\_shadowBuffer;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ UINT64\ m\_latestKnownGpuTimestamp\ =\ 0;}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ UINT64\ m\_prevCalibrationTicksCPU\ =\ 0;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ RecalibrateClocks()}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64\ cpuTimestamp;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64\ gpuTimestamp;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (FAILED(m\_queue-\/>GetClockCalibration(\&gpuTimestamp,\ \&cpuTimestamp)))}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Panic(\textcolor{stringliteral}{"{}failed\ to\ obtain\ queue\ clock\ calibration\ counters."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ cpuDeltaTicks\ =\ cpuTimestamp\ -\/\ m\_prevCalibrationTicksCPU;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cpuDeltaTicks\ >\ 0)}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ WARNING:\ technically,\ we\ should\ not\ emit\ a\ GpuCalibration\ event\ if\ the\ GPU\ counter}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ did\ not\ move,\ to\ prevent\ division\ by\ a\ gpuDelta\ of\ zero\ in\ later\ on\ (in\ the\ server).}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ In\ practice,\ GetClockCalibration()\ should\ be\ advancing\ CPU\ and\ GPU\ together.}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ int64\_t\ nanosecodsPerTick\ =\ int64\_t(1000000000)\ /\ GetFrequencyQpc();}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ cpuDeltaNS\ =\ cpuDeltaTicks\ *\ nanosecodsPerTick;}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Save\ the\ device\ cpu\ timestamp,\ not\ the\ Tracy\ profiler\ timestamp:}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_prevCalibrationTicksCPU\ =\ cpuTimestamp;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpuTimestamp\ =\ Profiler::GetTime();}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuCalibration);}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuCalibration.gpuTime,\ int64\_t(gpuTimestamp));}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuCalibration.cpuTime,\ int64\_t(cpuTimestamp));}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuCalibration.cpuDelta,\ cpuDeltaNS);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuCalibration.context,\ GetId());}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SubmitQueueItem(item);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ SubmitQueueItem(tracy::QueueItem*\ item)}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(*item);}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ D3D12QueueCtx(ID3D12Device*\ device,\ ID3D12CommandQueue*\ queue)}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_device(device)}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_queue(queue)}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ ,\ m\_shadowBuffer(m\_queryLimit)}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ m\_queue-\/>AddRef();}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Verify\ we\ support\ timestamp\ queries\ on\ this\ queue.}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (queue-\/>GetDesc().Type\ ==\ D3D12\_COMMAND\_LIST\_TYPE\_COPY)}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ D3D12\_FEATURE\_DATA\_D3D12\_OPTIONS3\ featureData\{\};}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HRESULT\ hr\ =\ device-\/>CheckFeatureSupport(D3D12\_FEATURE\_D3D12\_OPTIONS3,\ \&featureData,\ \textcolor{keyword}{sizeof}(featureData));}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (FAILED(hr)\ ||\ (featureData.CopyQueueTimestampQueriesSupported\ ==\ FALSE))}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Panic(\textcolor{stringliteral}{"{}Platform\ does\ not\ support\ profiling\ of\ copy\ queues."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ D3D12\_QUERY\_HEAP\_DESC\ heapDesc\{\};}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ heapDesc.Type\ =\ queue-\/>GetDesc().Type\ ==\ D3D12\_COMMAND\_LIST\_TYPE\_COPY\ ?\ D3D12\_QUERY\_HEAP\_TYPE\_COPY\_QUEUE\_TIMESTAMP\ :\ D3D12\_QUERY\_HEAP\_TYPE\_TIMESTAMP;}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ heapDesc.Count\ =\ m\_queryLimit;}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ heapDesc.NodeMask\ =\ 0;\ \ \textcolor{comment}{//\ \#TODO:\ Support\ multiple\ adapters.}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (FAILED(device-\/>CreateQueryHeap(\&heapDesc,\ IID\_PPV\_ARGS(\&m\_queryHeap))))}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_queryLimit\ /=\ 2;}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ heapDesc.Count\ =\ m\_queryLimit;}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Create\ a\ readback\ buffer,\ which\ will\ be\ used\ as\ a\ destination\ for\ the\ query\ data.}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ D3D12\_RESOURCE\_DESC\ readbackBufferDesc\{\};}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.Alignment\ =\ 0;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.Dimension\ =\ D3D12\_RESOURCE\_DIMENSION\_BUFFER;}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.Width\ =\ m\_queryLimit\ *\ \textcolor{keyword}{sizeof}(uint64\_t);}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.Height\ =\ 1;}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.DepthOrArraySize\ =\ 1;}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.Format\ =\ DXGI\_FORMAT\_UNKNOWN;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.Layout\ =\ D3D12\_TEXTURE\_LAYOUT\_ROW\_MAJOR;\ \ \textcolor{comment}{//\ Buffers\ are\ always\ row\ major.}}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.MipLevels\ =\ 1;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.SampleDesc.Count\ =\ 1;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.SampleDesc.Quality\ =\ 0;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ readbackBufferDesc.Flags\ =\ D3D12\_RESOURCE\_FLAG\_NONE;}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ D3D12\_HEAP\_PROPERTIES\ readbackHeapProps\{\};}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ readbackHeapProps.Type\ =\ D3D12\_HEAP\_TYPE\_READBACK;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ readbackHeapProps.CPUPageProperty\ =\ D3D12\_CPU\_PAGE\_PROPERTY\_UNKNOWN;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ readbackHeapProps.MemoryPoolPreference\ =\ D3D12\_MEMORY\_POOL\_UNKNOWN;}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ readbackHeapProps.CreationNodeMask\ =\ 0;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ readbackHeapProps.VisibleNodeMask\ =\ 0;\ \ \textcolor{comment}{//\ \#TODO:\ Support\ multiple\ adapters.}}
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (FAILED(device-\/>CreateCommittedResource(\&readbackHeapProps,\ D3D12\_HEAP\_FLAG\_NONE,\ \&readbackBufferDesc,\ D3D12\_RESOURCE\_STATE\_COPY\_DEST,\ \textcolor{keyword}{nullptr},\ IID\_PPV\_ARGS(\&m\_readbackBuffer))))}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Panic(\textcolor{stringliteral}{"{}Failed\ to\ create\ query\ readback\ buffer."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64*\ timestampBuffer\ =\ MapTimestampBuffer();}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (timestampBuffer\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (uint64\_t\ i\ =\ 0;\ i\ <\ m\_queryLimit;\ ++i)}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timestampBuffer[i]\ =\ 0;}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ UnmapTimestampBuffer(timestampBuffer);}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ period\ =\ [queue]()}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ timestampFrequency;}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (FAILED(queue-\/>GetTimestampFrequency(\&timestampFrequency)))}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0.0f;}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(\ 1E+09\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(timestampFrequency)\ );}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \}();}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (period\ ==\ 0.0f)}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Panic(\textcolor{stringliteral}{"{}Failed\ to\ get\ timestamp\ frequency."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ cpuTimestamp;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ gpuTimestamp;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (FAILED(queue-\/>GetClockCalibration(\&gpuTimestamp,\ \&cpuTimestamp)))}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Panic(\textcolor{stringliteral}{"{}Failed\ to\ get\ queue\ clock\ calibration."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ FastVector:\ clean/resize/init}}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{size\_t}\ i\ =\ 0;\ i\ <\ m\_queryLimit;\ ++i)\ *m\_shadowBuffer.push\_next()\ =\ gpuTimestamp;}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ m\_latestKnownGpuTimestamp\ =\ gpuTimestamp;}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Save\ the\ device\ cpu\ timestamp,\ not\ the\ profiler's\ timestamp.}}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ m\_prevCalibrationTicksCPU\ =\ cpuTimestamp;}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ cpuTimestamp\ =\ Profiler::GetTime();}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ All\ setup/init\ checks\ completed:\ ready\ to\ create\ the\ context.}}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ m\_contextId\ =\ GetGpuCtxCounter().fetch\_add(1);}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneValue(m\_contextId);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuNewContext);}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.cpuTime,\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(cpuTimestamp));}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.gpuTime,\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(gpuTimestamp));}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.thread,\ \textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(0));\ \textcolor{comment}{//\ zero\ means\ the\ context\ is\ not\ associated\ with\ a\ specific\ thread}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.period,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(period));}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.context,\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(GetId()));}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.flags,\ GpuContextCalibration);}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.type,\ GpuContextType::Direct3D12);}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ SubmitQueueItem(item);}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \string~D3D12QueueCtx()}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneValue(m\_contextId);}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ could\ use\ queue-\/>Signal()\ to\ inject\ a\ progress\ point\ in\ the\ queue}}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ the\ immediately\ wait\ for\ the\ signal,\ in\ order\ to\ avoid\ busy-\/waiting}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (need\ to\ create\ an\ ID3D12Fence\ and\ associate\ an\ Event\ object\ to\ it)}}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ even\ with\ Signal(),\ there\ are\ no\ guarantees\ the\ queries\ were\ sent}}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ the\ GPU\ for\ execution,\ so\ the\ Signal()\ does\ not\ give\ us\ much\ "{}signal"{}}}
+\DoxyCodeLine{00267\ \ }
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ collect\ all\ pending\ queries\ up\ to\ the\ latest\ known\ query}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ endTicket\ =\ m\_queryCounter;}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ lastIssuedTicket\ =\ endTicket\ -\/\ 2;}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ Drain(lastIssuedTicket,\ 200);}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ client\ is\ still\ pushing\ queries\ past\ the\ latest\ checkpoint\ above,}}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ assume\ there's\ a\ bug\ in\ the\ client,\ and\ ignore\ them\ (don't\ collect)}}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(endTicket,\ m\_queryCounter)\ >\ 0)}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Panic(\textcolor{stringliteral}{"{}client\ is\ still\ pushing\ queries."{}});}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#if\ TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_readbackBuffer)}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ D3D12\_RANGE\ fullRange\ \{\ 0,\ m\_queryLimit\ *\ \textcolor{keyword}{sizeof}(UINT64)\ \};}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_readbackBuffer-\/>Unmap(0,\ \&fullRange);}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_persistentTimestampBuffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_readbackBuffer)\ m\_readbackBuffer-\/>Release();}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_queryHeap)\ m\_queryHeap-\/>Release();}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ m\_queue-\/>Release();}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint8\_t\ GetId()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00292\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_contextId;}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Name(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ uint16\_t\ len\ )}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(\ len\ );}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ ptr,\ name,\ len\ );}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ QueueType::GpuContextName\ );}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.context,\ GetId());}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.ptr,\ (uint64\_t)ptr\ );}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuContextNameFat.size,\ len\ );}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ SubmitQueueItem(item);}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Collect()}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!GetProfiler().IsConnected())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Only\ one\ thread\ is\ allowed\ to\ collect\ timestamps\ at\ any\ given\ time}}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ but\ there's\ no\ need\ to\ block\ contending\ threads}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_collectionMutex.try\_lock())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock\ lock\ (m\_collectionMutex,\ std::adopt\_lock);}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ targetTicket\ =\ m\_queryCounter;}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ Collect(lock,\ m\_queryCounter,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Collect(std::unique\_lock<std::mutex>\&\ lock,\ uint64\_t\ targetTicket,\ \textcolor{keywordtype}{bool}\ urgent)}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Assert(\ lock.owns\_lock()\ );}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(m\_contextId)\ );}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ earliestTicket\ =\ m\_previousCheckpoint.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ endTicket\ =\ m\_queryCounter;}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(earliestTicket)\ );}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(endTicket)\ );}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(earliestTicket,\ endTicket)\ <=\ 0)}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64*\ timestampBuffer\ =\ MapTimestampBuffer();}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (timestampBuffer\ ==\ \textcolor{keyword}{nullptr})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attempt\ to\ collect\ as\ many\ resolved\ queries\ as\ possible}}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ ticket\ =\ earliestTicket;}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (ticket\ =\ earliestTicket;\ ticket\ !=\ endTicket;\ ticket\ +=\ 2)}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ResolveTimestamp(ticket,\ timestampBuffer))}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ implement\ preemptive\ timeout\ policy}}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Urgent\ request:\ ensure\ 'targetTicket'\ is\ collected\ before\ returning}}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (urgent)}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Assert(\ Distance(targetTicket,\ endTicket)\ >\ 0\ );}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (Distance(ticket,\ targetTicket)\ >=\ 0)}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DropTimestamp(ticket,\ timestampBuffer);}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ticket\ +=\ 2;}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Panic:\ overflow,\ start\ dropping\ queries\ to\ normalize\ the\ situation}}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (Distance(ticket,\ endTicket)\ >\ RingCapacity())}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DropTimestamp(ticket,\ timestampBuffer);}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ticket\ +=\ 2;}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ UnmapTimestampBuffer(timestampBuffer);}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ check\ for\ device\ status\ (device\ lost).}}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Technically\ speaking,\ values\ read\ from\ the\ timestamp\ buffer\ (readback\ heap)}}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ should\ only\ be\ trusted\ while\ the\ device\ is\ "{}fine"{}.\ Ideally,\ queries\ should}}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ be\ "{}peeked"{}\ first,\ and\ those\ deemed\ "{}resolved"{}\ should\ only\ be\ "{}emitted"{}\ if}}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ device\ is\ fine,\ or\ dropped\ otherwise.\ All\ that\ said,\ the\ collect\ code,}}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ as\ is,\ should\ not\ cause\ catastrophic\ issues.}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ RecalibrateClocks();}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ IsTicketPending(uint64\_t\ queryTicket)}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ checkpoint\ =\ m\_previousCheckpoint.load(std::memory\_order\_acquire);}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (Distance(checkpoint,\ queryTicket)\ >=\ 0);}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ Wait(uint64\_t\ queryTicket,\ uint64\_t\ timeout\_ms)}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(m\_contextId)\ );}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(queryTicket)\ );}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(RingIndex(queryTicket))\ );}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ini\ =\ GetTickCount64();}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ elapsed\ =\ 0;}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ could\ use\ condition\ variable\ to\ avoid\ spurious\ lock\ +\ collect\ iterations}}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (IsTicketPending(queryTicket))}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (elapsed\ >=\ timeout\_ms)}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock\ lock\ (m\_collectionMutex);}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Collect(lock,\ queryTicket,\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elapsed\ =\ GetTickCount64()\ -\/\ ini;}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Drain(uint64\_t\ queryTicket,\ uint64\_t\ gracePeriod\_ms)}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(m\_contextId)\ );}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(queryTicket)\ );}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(RingIndex(queryTicket))\ );}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Wait(queryTicket,\ gracePeriod\_ms))}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ can't\ wait\ anymore:\ urgent\ collect\ request}}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock\ lock\ (m\_collectionMutex);}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ Collect(lock,\ queryTicket,\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ ResolveTimestamp(uint64\_t\ queryTicket,\ UINT64*\ timestampBuffer)}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ queryId\ =\ RingIndex(queryTicket);}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64\ gpuZoneBeginTimestamp\ =\ timestampBuffer[queryId];}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64\ gpuZoneEndTimestamp\ =\ timestampBuffer[queryId+1];}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64\ baselineTimestamp\ =\ m\_shadowBuffer[queryId+1];}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ baseline\_diff\ =\ Distance(baselineTimestamp,\ gpuZoneEndTimestamp);}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (baseline\_diff\ <=\ 0)}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ EmitGpuTime(gpuZoneBeginTimestamp,\ queryId);}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ \ \ \ EmitGpuTime(gpuZoneEndTimestamp,\ queryId+1);}
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ \ \ RetireTicket(queryTicket);}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(m\_latestKnownGpuTimestamp,\ gpuZoneEndTimestamp)\ >\ 0)}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_latestKnownGpuTimestamp\ =\ gpuZoneEndTimestamp;}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ DropTimestamp(uint64\_t\ queryTicket,\ UINT64*\ timestampBuffer)}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ might\ as\ well\ attempt\ to\ resolve\ it\ before\ dropping\ it}}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ResolveTimestamp(queryTicket,\ timestampBuffer))}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ emit\ a\ "{}bogus"{}\ GpuTime\ to\ avoid\ problems\ with\ the\ internal}}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ zone\ tracking\ and\ matching\ logic\ in\ the\ server/profiler}}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ queryId\ =\ RingIndex(queryTicket);}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneScopedC(Color::Red4)\ );}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(queryTicket)\ );}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ ZoneValue(queryId)\ );}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ TracyPlot(\textcolor{stringliteral}{"{}TracyD3D12|drop"{}},\ int64\_t(0))\ );}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ TracyPlot(\textcolor{stringliteral}{"{}TracyD3D12|drop"{}},\ int64\_t(1))\ );}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ latestGpuTimestamp\ =\ m\_latestKnownGpuTimestamp;}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ EmitGpuTime(latestGpuTimestamp,\ queryId);}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ EmitGpuTime(latestGpuTimestamp,\ queryId+1);}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ RetireTicket(queryTicket);}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ TracyPlot(\textcolor{stringliteral}{"{}TracyD3D12|drop"{}},\ int64\_t(1))\ );}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(\ TracyPlot(\textcolor{stringliteral}{"{}TracyD3D12|drop"{}},\ int64\_t(0))\ );}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ EmitGpuTime(UINT64\ gpuTimestamp,\ uint32\_t\ queryId)}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuTime);}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.gpuTime,\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(gpuTimestamp));}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.queryId,\ \textcolor{keyword}{static\_cast<}uint16\_t\textcolor{keyword}{>}(queryId));}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.context,\ GetId());}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ m\_shadowBuffer[queryId]\ =\ gpuTimestamp;}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyFreeN(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(uintptr\_t(queryId)),\ \textcolor{stringliteral}{"{}TracyD3D12|Query"{}});}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint32\_t\ RingCapacity()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00470\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_queryLimit;}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint32\_t\ RingIndex(uint64\_t\ logicalSlot)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00475\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(logicalSlot\ \%\ RingCapacity());}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{static}\ int64\_t\ Distance(uint64\_t\ begin,\ uint64\_t\ end)}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ difference\ accounting\ for\ unsigned\ wrap-\/around}}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(end\ -\/\ begin);}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ RetireTicket(uint64\_t\ ticket)}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Assert(\ m\_previousCheckpoint\ ==\ ticket\ );}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ nextTicket\ =\ ticket\ +\ 2;}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ m\_previousCheckpoint.store(nextTicket,\ std::memory\_order\_release);}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00491\ }
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint32\_t\ NextQueryId()}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ WARN:\ the\ moment\ m\_queryCounter\ is\ incremented,\ Collect()\ will\ have\ instant}}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ visibility\ of\ the\ change\ and\ may\ therefore\ start\ attempting\ to\ collect\ them.}}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Under\ most\ circumstances,\ this\ is\ fine.\ However,\ suppose\ Collect()\ ends\ up}}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dropping\ a\ query\ due\ to\ timeout,\ but\ said\ query\ is\ indeed\ submitted\ to\ the}}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ GPU\ queue\ for\ execution\ later\ on.\ This\ "{}late"{}\ query\ will\ eventually\ become}}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ resolved\ by\ the\ GPU\ asynchronously\ writting\ to\ the\ corresponding\ query\ slot.}}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ newly\ produced\ query\ below\ could\ have\ matching\ ids/slot\ with\ said\ query.}}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ From\ there,\ there's\ no\ bullet-\/proof\ way\ for\ Collect()\ to\ distinguish\ between}}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ timestamp\ written\ to\ the\ query\ slot\ belonging\ to\ the\ old/late\ query,\ or}}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ the\ query\ that\ has\ just\ been\ generated.\ The\ value\ of\ the\ "{}late"{}\ query\ may}}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ may\ end\ up\ being\ collected\ as\ if\ it\ belonged\ to\ the\ the\ new\ query.}}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ ticket\ =\ m\_queryCounter.fetch\_add(2,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ checkpoint\ =\ m\_previousCheckpoint.load(std::memory\_order\_relaxed);}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(checkpoint,\ ticket)\ >=\ RingCapacity())}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Log(Warning,\ \textcolor{stringliteral}{"{}Too\ many\ pending\ GPU\ queries:\ stalling!"{}});}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ oldTicket\ =\ ticket\ -\/\ RingCapacity();}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Drain(oldTicket,\ 0);}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ queryId\ =\ RingIndex(ticket);}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Debug(}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyAllocN(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(uintptr\_t(queryId+0)),\ 1,\ \textcolor{stringliteral}{"{}TracyD3D12|Query"{}});}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyAllocN(\textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void}*\textcolor{keyword}{>}(uintptr\_t(queryId+1)),\ 1,\ \textcolor{stringliteral}{"{}TracyD3D12|Query"{}});}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ queryId;}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00522\ }
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ UINT64*\ MapTimestampBuffer()}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00525\ \textcolor{preprocessor}{\#if\ TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_persistentTimestampBuffer\ !=\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_persistentTimestampBuffer;}
+\DoxyCodeLine{00528\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \ \ \ \ D3D12\_RANGE\ fullRange\ \{\ 0,\ m\_queryLimit\ *\ \textcolor{keyword}{sizeof}(UINT64)\ \};}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}*\ readbackBufferMapping\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (FAILED(m\_readbackBuffer-\/>Map(0,\ \&fullRange,\ \&readbackBufferMapping)))}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Panic(\textcolor{stringliteral}{"{}failed\ to\ map\ timestamp\ buffer."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ UINT64*\ timestampBuffer\ =\ \textcolor{keyword}{static\_cast<}UINT64*\textcolor{keyword}{>}(readbackBufferMapping);}
+\DoxyCodeLine{00536\ \textcolor{preprocessor}{\#if\ TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ TracyD3D12Assert(\ m\_persistentTimestampBuffer\ ==\ \textcolor{keyword}{nullptr}\ );}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ m\_persistentTimestampBuffer\ =\ timestampBuffer;}
+\DoxyCodeLine{00539\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ timestampBuffer;}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ UnmapTimestampBuffer(UINT64*)}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{\#if\ !TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ D3D12\_RANGE\ fullRange\ \{\ 0,\ m\_queryLimit\ *\ \textcolor{keyword}{sizeof}(UINT64)\ \};}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ \ m\_readbackBuffer-\/>Unmap(0,\ \&fullRange);}
+\DoxyCodeLine{00548\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ DeviceLost()}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \ \ \ \ HRESULT\ status\ =\ m\_device-\/>GetDeviceRemovedReason();}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (status\ !=\ S\_OK);}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00556\ \ \ \ \ \};}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_d3_d12_zone_scope}{D3D12ZoneScope}}}
+\DoxyCodeLine{00559\ \ \ \ \ \{}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ m\_active;}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ D3D12QueueCtx*\ m\_ctx\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ ID3D12GraphicsCommandList*\ m\_cmdList\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ uint32\_t\ m\_queryId\ =\ 0;}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ WriteQueueItem(\textcolor{keyword}{const}\ SourceLocationData*\ srcLocation,\ int32\_t\ callstackDepth,\ uint32\_t\ sourceLine,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sourceFile,\ \textcolor{keywordtype}{size\_t}\ sourceFileLen,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ functionName,\ \textcolor{keywordtype}{size\_t}\ functionNameLen,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ zoneName,\ \textcolor{keywordtype}{size\_t}\ zoneNameLen)}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ captureCallstack\ =\ callstackDepth\ >\ 0\ \&\&\ has\_callstack();}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ transientZone\ =\ srcLocation\ ==\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ srcLocationAddr\ =\ \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\ srcLocation\ );}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ QueueItem*\ item\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ QueueType\ itemType;}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ transientZone\ )}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ srcLocationAddr\ =\ Profiler::AllocSourceLocation(\ sourceLine,\ sourceFile,\ sourceFileLen,\ functionName,\ functionNameLen,\ zoneName,\ zoneNameLen);}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ captureCallstack\ )}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerialCallstack(\ Callstack(\ callstackDepth\ )\ );}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginAllocSrcLocCallstackSerial;}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginAllocSrcLocSerial;}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ captureCallstack\ )}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerialCallstack(\ Callstack(\ callstackDepth\ )\ );}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginCallstackSerial;}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginSerial;}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00602\ }
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>hdr.type,\ itemType\ );}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime()\ );}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.srcloc,\ srcLocationAddr\ );}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.thread,\ GetThreadHandle()\ );}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.queryId,\ \textcolor{keyword}{static\_cast<}uint16\_t\textcolor{keyword}{>}(\ m\_queryId\ )\ );}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\ \&item-\/>gpuZoneBegin.context,\ m\_ctx-\/>GetId()\ );}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00611\ }
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ D3D12ZoneScope(D3D12QueueCtx*\ ctx,\ ID3D12GraphicsCommandList*\ cmdList,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00613\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active\&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00615\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active)}
+\DoxyCodeLine{00617\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ m\_ctx\ =\ ctx;}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ m\_cmdList\ =\ cmdList;}
+\DoxyCodeLine{00623\ }
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ m\_queryId\ =\ m\_ctx-\/>NextQueryId();}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \ \ \ \ m\_cmdList-\/>EndQuery(m\_ctx-\/>m\_queryHeap,\ D3D12\_QUERY\_TYPE\_TIMESTAMP,\ m\_queryId);}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00627\ }
+\DoxyCodeLine{00628\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ D3D12ZoneScope(D3D12QueueCtx*\ ctx,\ ID3D12GraphicsCommandList*\ cmdList,\ \textcolor{keyword}{const}\ SourceLocationData*\ srcLocation,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ :\ D3D12ZoneScope(ctx,\ cmdList,\ active)}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(srcLocation,\ 0,\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0\ );}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ D3D12ZoneScope(D3D12QueueCtx*\ ctx,\ ID3D12GraphicsCommandList*\ cmdList,\ \textcolor{keyword}{const}\ SourceLocationData*\ srcLocation,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \ \ \ \ :\ D3D12ZoneScope(ctx,\ cmdList,\ active)}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(srcLocation,\ depth,\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0\ );}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ D3D12ZoneScope(D3D12QueueCtx*\ ctx,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ ID3D12GraphicsCommandList*\ cmdList,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ :\ D3D12ZoneScope(ctx,\ cmdList,\ active)}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(\textcolor{keyword}{nullptr},\ 0,\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz);}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00646\ }
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ D3D12ZoneScope(D3D12QueueCtx*\ ctx,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ ID3D12GraphicsCommandList*\ cmdList,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ :\ D3D12ZoneScope(ctx,\ cmdList,\ active)}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(\textcolor{keyword}{nullptr},\ depth,\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz);}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00652\ }
+\DoxyCodeLine{00653\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \string~D3D12ZoneScope()}
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00656\ }
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ m\_queryId\ +\ 1;\ \ \textcolor{comment}{//\ Our\ end\ query\ slot\ is\ immediately\ after\ the\ begin\ slot.}}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuZoneEndSerial);}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.queryId,\ \textcolor{keyword}{static\_cast<}uint16\_t\textcolor{keyword}{>}(queryId));}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.context,\ m\_ctx-\/>GetId());}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ m\_cmdList-\/>EndQuery(m\_ctx-\/>m\_queryHeap,\ D3D12\_QUERY\_TYPE\_TIMESTAMP,\ queryId);}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ can't\ quite\ move\ this\ ResolveQueryData()\ call\ to\ Collect()...}}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ a\ command\ is\ instrumented,\ but\ the\ command\ list\ is\ never\ submitted}}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ for\ execution,\ we\ should\ not\ ask\ the\ GPU\ to\ resolve\ the\ corresponding}}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ queries\ (we'll\ get\ stale/garbage\ data\ if\ we\ do\ so)}}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \ \ \ \ m\_cmdList-\/>ResolveQueryData(m\_ctx-\/>m\_queryHeap,\ D3D12\_QUERY\_TYPE\_TIMESTAMP,\ m\_queryId,\ 2,\ m\_ctx-\/>m\_readbackBuffer,\ m\_queryId\ *\ \textcolor{keyword}{sizeof}(uint64\_t));}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00674\ \ \ \ \ \};}
+\DoxyCodeLine{00675\ }
+\DoxyCodeLine{00676\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ DestroyD3D12Context(D3D12QueueCtx*\ ctx)}
+\DoxyCodeLine{00677\ \ \ \ \ \{}
+\DoxyCodeLine{00678\ \ \ \ \ \ \ \ \ TracyD3D12Assert(ctx);}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ ctx-\/>\string~D3D12QueueCtx();}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ tracy\_free(ctx);}
+\DoxyCodeLine{00681\ \ \ \ \ \}}
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ D3D12QueueCtx*\ CreateD3D12Context(ID3D12Device*\ device,\ ID3D12CommandQueue*\ queue)}
+\DoxyCodeLine{00684\ \ \ \ \ \{}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ ctx\ =\ \textcolor{keyword}{static\_cast<}D3D12QueueCtx*\textcolor{keyword}{>}(tracy\_malloc(\textcolor{keyword}{sizeof}(D3D12QueueCtx)));}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ (ctx)\ D3D12QueueCtx\{\ device,\ queue\ \};}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ constructor\ may\ have\ failed:}}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ctx-\/>GetId()\ ==\ 255)}
+\DoxyCodeLine{00689\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \ \ \ \ DestroyD3D12Context(ctx);}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00693\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ctx;}
+\DoxyCodeLine{00694\ \ \ \ \ \}}
+\DoxyCodeLine{00695\ }
+\DoxyCodeLine{00696\ \}}
+\DoxyCodeLine{00697\ }
+\DoxyCodeLine{00698\ \textcolor{preprocessor}{\#undef\ TracyD3D12Panic}}
+\DoxyCodeLine{00699\ \textcolor{preprocessor}{\#undef\ TracyD3D12Log}}
+\DoxyCodeLine{00700\ \textcolor{preprocessor}{\#undef\ TracyD3D12Assert}}
+\DoxyCodeLine{00701\ \textcolor{preprocessor}{\#undef\ TracyD3D12Break}}
+\DoxyCodeLine{00702\ \textcolor{preprocessor}{\#undef\ TracyD3D12Debug}}
+\DoxyCodeLine{00703\ \textcolor{preprocessor}{\#undef\ TRACY\_D3D12\_PERSISTENT\_TIMESTAMP\_BUFFER}}
+\DoxyCodeLine{00704\ \textcolor{preprocessor}{\#undef\ TRACY\_D3D12\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00705\ }
+\DoxyCodeLine{00706\ \textcolor{keyword}{using\ }TracyD3D12Ctx\ =\ tracy::D3D12QueueCtx*;}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ \textcolor{preprocessor}{\#define\ TracyD3D12Context(device,\ queue)\ tracy::CreateD3D12Context(device,\ queue);}}
+\DoxyCodeLine{00709\ \textcolor{preprocessor}{\#define\ TracyD3D12Destroy(ctx)\ tracy::DestroyD3D12Context(ctx);}}
+\DoxyCodeLine{00710\ \textcolor{preprocessor}{\#define\ TracyD3D12ContextName(ctx,\ name,\ size)\ ctx-\/>Name(name,\ size);}}
+\DoxyCodeLine{00711\ }
+\DoxyCodeLine{00712\ \textcolor{preprocessor}{\#define\ TracyD3D12NewFrame(ctx)\ ((void)(ctx))}}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00714\ \textcolor{preprocessor}{\#define\ TracyD3D12UnnamedZone\ \_\_\_tracy\_gpu\_d3d12\_zone}}
+\DoxyCodeLine{00715\ \textcolor{preprocessor}{\#define\ TracyD3D12SrcLocSymbol\ TracyConcat(\_\_tracy\_d3d12\_source\_location,TracyLine)}}
+\DoxyCodeLine{00716\ \textcolor{preprocessor}{\#define\ TracyD3D12SrcLocObject(name,\ color)\ static\ constexpr\ tracy::SourceLocationData\ TracyD3D12SrcLocSymbol\ \{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};}}
+\DoxyCodeLine{00717\ }
+\DoxyCodeLine{00718\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CALLSTACK\ \&\&\ defined\ TRACY\_CALLSTACK}}
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12Zone(ctx,\ cmdList,\ name)\ TracyD3D12NamedZoneS(ctx,\ TracyD3D12UnnamedZone,\ cmdList,\ name,\ TRACY\_CALLSTACK,\ true)}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneC(ctx,\ cmdList,\ name,\ color)\ TracyD3D12NamedZoneCS(ctx,\ TracyD3D12UnnamedZone,\ cmdList,\ name,\ color,\ TRACY\_CALLSTACK,\ true)}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZone(ctx,\ varname,\ cmdList,\ name,\ active)\ TracyD3D12SrcLocObject(name,\ 0);\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ cmdList,\ \&TracyD3D12SrcLocSymbol,\ TRACY\_CALLSTACK,\ active\ \};}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZoneC(ctx,\ varname,\ cmdList,\ name,\ color,\ active)\ TracyD3D12SrcLocObject(name,\ color);\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ cmdList,\ \&TracyD3D12SrcLocSymbol,\ TRACY\_CALLSTACK,\ active\ \};}}
+\DoxyCodeLine{00723\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneTransient(ctx,\ varname,\ cmdList,\ name,\ active)\ TracyD3D12ZoneTransientS(ctx,\ varname,\ cmdList,\ name,\ TRACY\_CALLSTACK,\ active)}}
+\DoxyCodeLine{00724\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00725\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12Zone(ctx,\ cmdList,\ name)\ TracyD3D12NamedZone(ctx,\ TracyD3D12UnnamedZone,\ cmdList,\ name,\ true)}}
+\DoxyCodeLine{00726\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneC(ctx,\ cmdList,\ name,\ color)\ TracyD3D12NamedZoneC(ctx,\ TracyD3D12UnnamedZone,\ cmdList,\ name,\ color,\ true)}}
+\DoxyCodeLine{00727\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZone(ctx,\ varname,\ cmdList,\ name,\ active)\ TracyD3D12SrcLocObject(name,\ 0);\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ cmdList,\ \&TracyD3D12SrcLocSymbol,\ active\ \};}}
+\DoxyCodeLine{00728\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZoneC(ctx,\ varname,\ cmdList,\ name,\ color,\ active)\ TracyD3D12SrcLocObject(name,\ color);\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ cmdList,\ \&TracyD3D12SrcLocSymbol,\ active\ \};}}
+\DoxyCodeLine{00729\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneTransient(ctx,\ varname,\ cmdList,\ name,\ active)\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ TracyLine,\ TracyFile,\ strlen(TracyFile),\ TracyFunction,\ strlen(TracyFunction),\ name,\ strlen(name),\ cmdList,\ active\ \};}}
+\DoxyCodeLine{00730\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00731\ }
+\DoxyCodeLine{00732\ \textcolor{preprocessor}{\#ifdef\ TRACY\_HAS\_CALLSTACK}}
+\DoxyCodeLine{00733\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneS(ctx,\ cmdList,\ name,\ depth)\ TracyD3D12NamedZoneS(ctx,\ TracyD3D12UnnamedZone,\ cmdList,\ name,\ depth,\ true)}}
+\DoxyCodeLine{00734\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneCS(ctx,\ cmdList,\ name,\ color,\ depth)\ TracyD3D12NamedZoneCS(ctx,\ TracyD3D12UnnamedZone,\ cmdList,\ name,\ color,\ depth,\ true)}}
+\DoxyCodeLine{00735\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZoneS(ctx,\ varname,\ cmdList,\ name,\ depth,\ active)\ TracyD3D12SrcLocObject(name,\ 0);\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ cmdList,\ \&TracyD3D12SrcLocSymbol,\ depth,\ active\ \};}}
+\DoxyCodeLine{00736\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZoneCS(ctx,\ varname,\ cmdList,\ name,\ color,\ depth,\ active)\ TracyD3D12SrcLocObject(name,\ color);\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ cmdList,\ \&TracyD3D12SrcLocSymbol,\ depth,\ active\ \};}}
+\DoxyCodeLine{00737\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneTransientS(ctx,\ varname,\ cmdList,\ name,\ depth,\ active)\ tracy::D3D12ZoneScope\ varname\{\ ctx,\ TracyLine,\ TracyFile,\ strlen(TracyFile),\ TracyFunction,\ strlen(TracyFunction),\ name,\ strlen(name),\ cmdList,\ depth,\ active\ \};}}
+\DoxyCodeLine{00738\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00739\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneS(ctx,\ cmdList,\ name,\ depth)\ TracyD3D12Zone(ctx,\ cmdList,\ name)}}
+\DoxyCodeLine{00740\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneCS(ctx,\ cmdList,\ name,\ color,\ depth)\ TracyD3D12Zone(ctx,\ cmdList,\ name,\ color)}}
+\DoxyCodeLine{00741\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZoneS(ctx,\ varname,\ cmdList,\ name,\ depth,\ active)\ TracyD3D12NamedZone(ctx,\ varname,\ cmdList,\ name,\ active)}}
+\DoxyCodeLine{00742\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12NamedZoneCS(ctx,\ varname,\ cmdList,\ name,\ color,\ depth,\ active)\ TracyD3D12NamedZoneC(ctx,\ varname,\ cmdList,\ name,\ color,\ active)}}
+\DoxyCodeLine{00743\ \textcolor{preprocessor}{\#\ \ define\ TracyD3D12ZoneTransientS(ctx,\ varname,\ cmdList,\ name,\ depth,\ active)\ TracyD3D12ZoneTransient(ctx,\ varname,\ cmdList,\ name,\ active)}}
+\DoxyCodeLine{00744\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00745\ }
+\DoxyCodeLine{00746\ \textcolor{preprocessor}{\#define\ TracyD3D12Collect(ctx)\ ctx-\/>Collect();}}
+\DoxyCodeLine{00747\ }
+\DoxyCodeLine{00748\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00750\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,363 @@
+\doxysection{Tracy\+Vector.\+hpp}
+\hypertarget{_tracy_vector_8hpp_source}{}\label{_tracy_vector_8hpp_source}\index{MonoEngine/thirdparty/tracy/server/TracyVector.hpp@{MonoEngine/thirdparty/tracy/server/TracyVector.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYVECTOR\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYVECTOR\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}../public/common/TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}TracyMemory.hpp"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}TracyPopcnt.hpp"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}TracyShortPtr.hpp"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}TracySlab.hpp"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\#define\ TRACY\_VECTOR\_DEBUG}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#pragma\ pack(\ push,\ 1\ )}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00024\ \textcolor{keyword}{class\ }Vector}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{constexpr}\ uint8\_t\ MaxCapacity()\ \{\ \textcolor{keywordflow}{return}\ 0x7F;\ \}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{using\ }iterator\ =\ T*;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{using\ }const\_iterator\ =\ \textcolor{keyword}{const}\ T*;}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ tracy\_force\_inline\ Vector()}
+\DoxyCodeLine{00033\ \ \ \ \ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ memset(\ (\textcolor{keywordtype}{char}*)\textcolor{keyword}{this},\ 0,\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ Vector(\ \textcolor{keyword}{const}\ Vector\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00038\ \ \ \ \ tracy\_force\_inline\ Vector(\ Vector\&\&\ src\ )\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00039\ \ \ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ memcpy(\ (\textcolor{keywordtype}{char}*)\textcolor{keyword}{this},\ \&src,\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ memset(\ (\textcolor{keywordtype}{char}*)\&src,\ 0,\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ tracy\_force\_inline\ Vector(\ \textcolor{keyword}{const}\ T\&\ value\ )}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ :\ m\_ptr(\ (T*)malloc(\ \textcolor{keyword}{sizeof}(\ T\ )\ )\ )}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ ,\ m\_size(\ 1\ )}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ ,\ m\_capacity(\ 0\ )}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ ,\ m\_magic(\ 0\ )}
+\DoxyCodeLine{00049\ \ \ \ \ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ memUsage.fetch\_add(\ \textcolor{keyword}{sizeof}(\ T\ ),\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr)\ T(\ value\ );}
+\DoxyCodeLine{00052\ \ \ \ \ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ tracy\_force\_inline\ \string~Vector()}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_capacity\ !=\ MaxCapacity()\ \&\&\ m\_ptr\ )}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ memUsage.fetch\_sub(\ Capacity()\ *\ \textcolor{keyword}{sizeof}(\ T\ ),\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ free(\ m\_ptr\ );}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ Vector\&\ operator=(\ \textcolor{keyword}{const}\ Vector\&\ )\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00064\ \ \ \ \ tracy\_force\_inline\ Vector\&\ operator=(\ Vector\&\&\ src\ )\ \textcolor{keyword}{noexcept}}
+\DoxyCodeLine{00065\ \ \ \ \ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_capacity\ !=\ MaxCapacity()\ \&\&\ m\_ptr\ )}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ memUsage.fetch\_sub(\ Capacity()\ *\ \textcolor{keyword}{sizeof}(\ T\ ),\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ free(\ m\_ptr\ );}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ memcpy(\ (\textcolor{keywordtype}{char}*)\textcolor{keyword}{this},\ \&src,\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ memset(\ (\textcolor{keywordtype}{char}*)\&src,\ 0,\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ swap(\ Vector\&\ other\ )}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ uint8\_t\ tmp[\textcolor{keyword}{sizeof}(\ Vector<T>\ )];}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ memcpy(\ (\textcolor{keywordtype}{char}*)tmp,\ \&other,\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ memcpy(\ (\textcolor{keywordtype}{char}*)\&other,\ \textcolor{keyword}{this},\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ memcpy(\ (\textcolor{keywordtype}{char}*)\textcolor{keyword}{this},\ tmp,\ \textcolor{keyword}{sizeof}(\ Vector<T>\ )\ );}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ empty()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_size\ ==\ 0;\ \}}
+\DoxyCodeLine{00085\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{size\_t}\ size()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_size;\ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ set\_size(\ \textcolor{keywordtype}{size\_t}\ sz\ )\ \{\ assert(\ m\_capacity\ !=\ MaxCapacity()\ );\ m\_size\ =\ sz;\ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ tracy\_force\_inline\ T*\ data()\ \{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00090\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T*\ data()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \};}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ tracy\_force\_inline\ T*\ begin()\ \{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00093\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T*\ begin()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ptr;\ \}}
+\DoxyCodeLine{00094\ \ \ \ \ tracy\_force\_inline\ T*\ end()\ \{\ \textcolor{keywordflow}{return}\ m\_ptr\ +\ m\_size;\ \}}
+\DoxyCodeLine{00095\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T*\ end()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ptr\ +\ m\_size;\ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ tracy\_force\_inline\ T\&\ front()\ \{\ assert(\ m\_size\ >\ 0\ );\ \textcolor{keywordflow}{return}\ m\_ptr[0];\ \}}
+\DoxyCodeLine{00098\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T\&\ front()\textcolor{keyword}{\ const\ }\{\ assert(\ m\_size\ >\ 0\ );\ \textcolor{keywordflow}{return}\ m\_ptr[0];\ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ tracy\_force\_inline\ T\&\ back()\ \{\ assert(\ m\_size\ >\ 0\ );\ \textcolor{keywordflow}{return}\ m\_ptr[m\_size\ -\/\ 1];\ \}}
+\DoxyCodeLine{00101\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T\&\ back()\textcolor{keyword}{\ const\ }\{\ assert(\ m\_size\ >\ 0\ );\ \textcolor{keywordflow}{return}\ m\_ptr[m\_size\ -\/\ 1];\ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ tracy\_force\_inline\ T\&\ operator[](\ \textcolor{keywordtype}{size\_t}\ idx\ )\ \{\ \textcolor{keywordflow}{return}\ m\_ptr[idx];\ \}}
+\DoxyCodeLine{00104\ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{const}\ T\&\ operator[](\ \textcolor{keywordtype}{size\_t}\ idx\ )\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_ptr[idx];\ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ push\_back(\ \textcolor{keyword}{const}\ T\&\ v\ )}
+\DoxyCodeLine{00107\ \ \ \ \ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ ==\ Capacity()\ )\ AllocMore();}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+m\_size)\ T(\ v\ );}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ m\_size++;}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ push\_back\_non\_empty(\ \textcolor{keyword}{const}\ T\&\ v\ )}
+\DoxyCodeLine{00115\ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ assert(\ m\_ptr\ );}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ ==\ CapacityNoNullptrCheck()\ )\ AllocMore();}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+m\_size)\ T(\ v\ );}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ m\_size++;}
+\DoxyCodeLine{00121\ \ \ \ \ \}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ push\_back\_no\_space\_check(\ \textcolor{keyword}{const}\ T\&\ v\ )}
+\DoxyCodeLine{00124\ \ \ \ \ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ assert(\ m\_size\ <\ Capacity()\ );}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+m\_size)\ T(\ v\ );}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ m\_size++;}
+\DoxyCodeLine{00129\ \ \ \ \ \}}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ push\_back(\ T\&\&\ v\ )}
+\DoxyCodeLine{00132\ \ \ \ \ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ ==\ Capacity()\ )\ AllocMore();}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+m\_size)\ T(\ std::move(\ v\ )\ );}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ m\_size++;}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ tracy\_force\_inline\ T\&\ push\_next()}
+\DoxyCodeLine{00140\ \ \ \ \ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ ==\ Capacity()\ )\ AllocMore();}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+m\_size)\ T();}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_ptr[m\_size++];}
+\DoxyCodeLine{00145\ \ \ \ \ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ tracy\_force\_inline\ T\&\ push\_next\_non\_empty()}
+\DoxyCodeLine{00148\ \ \ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ assert(\ m\_ptr\ );}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ ==\ CapacityNoNullptrCheck()\ )\ AllocMore();}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+m\_size)\ T();}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_ptr[m\_size++];}
+\DoxyCodeLine{00154\ \ \ \ \ \}}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \ \ \ \ tracy\_force\_inline\ T\&\ push\_next\_no\_space\_check()}
+\DoxyCodeLine{00157\ \ \ \ \ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ assert(\ m\_size\ <\ Capacity()\ );}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+m\_size)\ T();}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_ptr[m\_size++];}
+\DoxyCodeLine{00162\ \ \ \ \ \}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ T*\ insert(\ T*\ it,\ \textcolor{keyword}{const}\ T\&\ v\ )}
+\DoxyCodeLine{00165\ \ \ \ \ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ assert(\ it\ >=\ m\_ptr\ \&\&\ it\ <=\ m\_ptr\ +\ m\_size\ );}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ dist\ =\ it\ -\/\ m\_ptr;}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ ==\ Capacity()\ )\ AllocMore();}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ dist\ !=\ m\_size\ )\ memmove(\ m\_ptr\ +\ dist\ +\ 1,\ m\_ptr\ +\ dist,\ (\ m\_size\ -\/\ dist\ )\ *\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ m\_size++;}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+dist)\ T(\ v\ );}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ m\_ptr[dist]\ =\ v;}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_ptr\ +\ dist;}
+\DoxyCodeLine{00175\ \ \ \ \ \}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ T*\ insert(\ T*\ it,\ T\&\&\ v\ )}
+\DoxyCodeLine{00178\ \ \ \ \ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ assert(\ it\ >=\ m\_ptr\ \&\&\ it\ <=\ m\_ptr\ +\ m\_size\ );}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ dist\ =\ it\ -\/\ m\_ptr;}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ ==\ Capacity()\ )\ AllocMore();}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ dist\ !=\ m\_size\ )\ memmove(\ m\_ptr\ +\ dist\ +\ 1,\ m\_ptr\ +\ dist,\ (\ m\_size\ -\/\ dist\ )\ *\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ m\_size++;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(m\_ptr+dist)\ T(\ std::move(\ v\ )\ );}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_ptr\ +\ dist;}
+\DoxyCodeLine{00187\ \ \ \ \ \}}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordtype}{void}\ insert(\ T*\ it,\ T*\ begin,\ T*\ end\ )}
+\DoxyCodeLine{00190\ \ \ \ \ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ assert(\ it\ >=\ m\_ptr\ \&\&\ it\ <=\ m\_ptr\ +\ m\_size\ );}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ sz\ =\ end\ -\/\ begin;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ dist\ =\ it\ -\/\ m\_ptr;}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}(\ m\_size\ +\ sz\ >\ Capacity()\ )\ AllocMore();}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ dist\ !=\ m\_size\ )\ memmove(\ m\_ptr\ +\ dist\ +\ sz,\ m\_ptr\ +\ dist,\ (\ m\_size\ -\/\ dist\ )\ *\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ m\_size\ +=\ sz;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ memcpy(\ m\_ptr\ +\ dist,\ begin,\ sz\ *\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00199\ \ \ \ \ \}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ T*\ erase(\ T*\ it\ )}
+\DoxyCodeLine{00202\ \ \ \ \ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ assert(\ it\ >=\ m\_ptr\ \&\&\ it\ <=\ m\_ptr\ +\ m\_size\ );}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ m\_size-\/-\/;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ memmove(\ it,\ it+1,\ (\ m\_size\ -\/\ (\ it\ -\/\ m\_ptr\ )\ )\ *\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ it;}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ T*\ erase(\ T*\ begin,\ T*\ end\ )}
+\DoxyCodeLine{00211\ \ \ \ \ \{}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ assert(\ begin\ >=\ m\_ptr\ \&\&\ begin\ <=\ m\_ptr\ +\ m\_size\ );}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ assert(\ end\ >=\ m\_ptr\ \&\&\ end\ <=\ m\_ptr\ +\ m\_size\ );}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ assert(\ begin\ <=\ end\ );}
+\DoxyCodeLine{00216\ }
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ dist\ =\ end\ -\/\ begin;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ dist\ >\ 0\ )}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ memmove(\ begin,\ end,\ (\ m\_size\ -\/\ (\ end\ -\/\ m\_ptr\ )\ )\ *\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ m\_size\ -\/=\ dist;}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ begin;}
+\DoxyCodeLine{00224\ \ \ \ \ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ pop\_back()}
+\DoxyCodeLine{00227\ \ \ \ \ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ assert(\ m\_size\ >\ 0\ );}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ m\_size-\/-\/;}
+\DoxyCodeLine{00231\ \ \ \ \ \}}
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \ \ \ \ tracy\_force\_inline\ T\&\ back\_and\_pop()}
+\DoxyCodeLine{00234\ \ \ \ \ \{}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ assert(\ m\_size\ >\ 0\ );}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ m\_size-\/-\/;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_ptr[m\_size];}
+\DoxyCodeLine{00239\ \ \ \ \ \}}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ reserve(\ \textcolor{keywordtype}{size\_t}\ cap\ )}
+\DoxyCodeLine{00242\ \ \ \ \ \{}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ cap\ ==\ 0\ ||\ cap\ <=\ Capacity()\ )\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ reserve\_non\_zero(\ cap\ );}
+\DoxyCodeLine{00245\ \ \ \ \ \}}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordtype}{void}\ reserve\_non\_zero(\ \textcolor{keywordtype}{size\_t}\ cap\ )}
+\DoxyCodeLine{00248\ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ cap-\/-\/;}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ cap\ |=\ cap\ >>\ 1;}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ cap\ |=\ cap\ >>\ 2;}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ cap\ |=\ cap\ >>\ 4;}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ cap\ |=\ cap\ >>\ 8;}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ cap\ |=\ cap\ >>\ 16;}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ cap\ =\ TracyCountBits(\ cap\ );}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ memUsage.fetch\_add(\ (\ (\ 1\ <<\ cap\ )\ -\/\ Capacity()\ )\ *\ \textcolor{keyword}{sizeof}(\ T\ ),\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ m\_capacity\ =\ cap;}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ Realloc();}
+\DoxyCodeLine{00260\ \ \ \ \ \}}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ reserve\_and\_use(\ \textcolor{keywordtype}{size\_t}\ sz\ )}
+\DoxyCodeLine{00263\ \ \ \ \ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ reserve(\ sz\ );}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ m\_size\ =\ sz;}
+\DoxyCodeLine{00267\ \ \ \ \ \}}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keywordtype}{size\_t}\ U>}
+\DoxyCodeLine{00270\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ reserve\_exact(\ uint32\_t\ sz,\ \doxymbox{\hyperlink{classtracy_1_1_slab}{Slab<U>}}\&\ slab\ )}
+\DoxyCodeLine{00271\ \ \ \ \ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ assert(\ !m\_ptr\ );}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ m\_capacity\ =\ MaxCapacity();}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ m\_size\ =\ sz;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ m\_ptr\ =\ (T*)slab.AllocBig(\ \textcolor{keyword}{sizeof}(\ T\ )\ *\ sz\ );}
+\DoxyCodeLine{00276\ \ \ \ \ \}}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ clear()}
+\DoxyCodeLine{00279\ \ \ \ \ \{}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ m\_size\ =\ 0;}
+\DoxyCodeLine{00282\ \ \ \ \ \}}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{bool}\ is\_magic()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_magic;\ \}}
+\DoxyCodeLine{00285\ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ set\_magic()\ \{\ assert(\ !m\_magic\ );\ m\_magic\ =\ 1;\ \}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00288\ \ \ \ \ tracy\_no\_inline\ \textcolor{keywordtype}{void}\ AllocMore()}
+\DoxyCodeLine{00289\ \ \ \ \ \{}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ assert(\ m\_capacity\ !=\ MaxCapacity()\ );}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_ptr\ ==\ \textcolor{keyword}{nullptr}\ )}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ memUsage.fetch\_add(\ \textcolor{keyword}{sizeof}(\ T\ ),\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ m\_ptr\ =\ (T*)malloc(\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ m\_capacity\ =\ 0;}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ memUsage.fetch\_add(\ Capacity()\ *\ \textcolor{keyword}{sizeof}(\ T\ ),\ std::memory\_order\_relaxed\ );}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ m\_capacity++;}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ Realloc();}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00304\ \ \ \ \ \}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{keywordtype}{void}\ Realloc()}
+\DoxyCodeLine{00307\ \ \ \ \ \{}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ T*\ ptr\ =\ (T*)malloc(\ \textcolor{keyword}{sizeof}(\ T\ )\ *\ CapacityNoNullptrCheck()\ );}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ m\_size\ !=\ 0\ )}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ std::is\_trivially\_copyable<T>()\ )}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(\ (\textcolor{keywordtype}{char}*)ptr,\ m\_ptr,\ m\_size\ *\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\ uint32\_t\ i=0;\ i<m\_size;\ i++\ )}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}(ptr+i)\ T(\ std::move(\ m\_ptr[i]\ )\ );}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ free(\ m\_ptr\ );}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ m\_ptr\ =\ ptr;}
+\DoxyCodeLine{00325\ \ \ \ \ \}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ tracy\_force\_inline\ uint32\_t\ Capacity()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00328\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_ptr\ ==\ \textcolor{keyword}{nullptr}\ ?\ 0\ :\ 1\ <<\ m\_capacity;}
+\DoxyCodeLine{00330\ \ \ \ \ \}}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00332\ \ \ \ \ tracy\_force\_inline\ uint32\_t\ CapacityNoNullptrCheck()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00333\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1\ <<\ m\_capacity;}
+\DoxyCodeLine{00335\ \ \ \ \ \}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#ifdef\ TRACY\_VECTOR\_DEBUG}}
+\DoxyCodeLine{00338\ \ \ \ \ T*\ m\_ptr;}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00340\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr<T>}}\ m\_ptr;}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00342\ \ \ \ \ uint32\_t\ m\_size;}
+\DoxyCodeLine{00343\ \ \ \ \ uint8\_t\ m\_capacity\ :\ 7;}
+\DoxyCodeLine{00344\ \ \ \ \ uint8\_t\ m\_magic\ :\ 1;}
+\DoxyCodeLine{00345\ \};}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_vector_adapter_direct}{VectorAdapterDirect}}\ \{\ \textcolor{keyword}{const}\ T\&\ operator()(\ \textcolor{keyword}{const}\ T\&\ it\ )\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ it;\ \}\ \};}
+\DoxyCodeLine{00349\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_vector_adapter_pointer}{VectorAdapterPointer}}\ \{\ \textcolor{keyword}{const}\ T\&\ operator()(\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr<T>}}\&\ it\ )\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ *it;\ \}\ \};}
+\DoxyCodeLine{00350\ }
+\DoxyCodeLine{00351\ \textcolor{preprocessor}{\#pragma\ pack(\ pop\ )}}
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{size\_t}\ VectorSize\ =\ \textcolor{keyword}{sizeof}(\ \doxymbox{\hyperlink{classtracy_1_1_vector}{Vector<int>}}\ );}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

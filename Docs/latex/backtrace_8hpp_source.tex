@@ -1,0 +1,205 @@
+\doxysection{backtrace.\+hpp}
+\hypertarget{backtrace_8hpp_source}{}\label{backtrace_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/libbacktrace/backtrace.hpp@{MonoEngine/thirdparty/tracy/public/libbacktrace/backtrace.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*\ backtrace.h\ -\/-\/\ Public\ header\ file\ for\ stack\ backtrace\ library.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ \ Copyright\ (C)\ 2012-\/2021\ Free\ Software\ Foundation,\ Inc.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ \ Written\ by\ Ian\ Lance\ Taylor,\ Google.}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{Redistribution\ and\ use\ in\ source\ and\ binary\ forms,\ with\ or\ without}}
+\DoxyCodeLine{00006\ \textcolor{comment}{modification,\ are\ permitted\ provided\ that\ the\ following\ conditions\ are}}
+\DoxyCodeLine{00007\ \textcolor{comment}{met:}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ \ \ (1)\ Redistributions\ of\ source\ code\ must\ retain\ the\ above\ copyright}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ \ \ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ \ \ \ (2)\ Redistributions\ in\ binary\ form\ must\ reproduce\ the\ above\ copyright}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ \ \ notice,\ this\ list\ of\ conditions\ and\ the\ following\ disclaimer\ in}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ the\ documentation\ and/or\ other\ materials\ provided\ with\ the}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ distribution.}}
+\DoxyCodeLine{00016\ \textcolor{comment}{}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ \ \ (3)\ The\ name\ of\ the\ author\ may\ not\ be\ used\ to}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ endorse\ or\ promote\ products\ derived\ from\ this\ software\ without}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ \ \ specific\ prior\ written\ permission.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{}}
+\DoxyCodeLine{00021\ \textcolor{comment}{THIS\ SOFTWARE\ IS\ PROVIDED\ BY\ THE\ AUTHOR\ \`{}\`{}AS\ IS''\ AND\ ANY\ EXPRESS\ OR}}
+\DoxyCodeLine{00022\ \textcolor{comment}{IMPLIED\ WARRANTIES,\ INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ THE\ IMPLIED}}
+\DoxyCodeLine{00023\ \textcolor{comment}{WARRANTIES\ OF\ MERCHANTABILITY\ AND\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ ARE}}
+\DoxyCodeLine{00024\ \textcolor{comment}{DISCLAIMED.\ IN\ NO\ EVENT\ SHALL\ THE\ AUTHOR\ BE\ LIABLE\ FOR\ ANY\ DIRECT,}}
+\DoxyCodeLine{00025\ \textcolor{comment}{INDIRECT,\ INCIDENTAL,\ SPECIAL,\ EXEMPLARY,\ OR\ CONSEQUENTIAL\ DAMAGES}}
+\DoxyCodeLine{00026\ \textcolor{comment}{(INCLUDING,\ BUT\ NOT\ LIMITED\ TO,\ PROCUREMENT\ OF\ SUBSTITUTE\ GOODS\ OR}}
+\DoxyCodeLine{00027\ \textcolor{comment}{SERVICES;\ LOSS\ OF\ USE,\ DATA,\ OR\ PROFITS;\ OR\ BUSINESS\ INTERRUPTION)}}
+\DoxyCodeLine{00028\ \textcolor{comment}{HOWEVER\ CAUSED\ AND\ ON\ ANY\ THEORY\ OF\ LIABILITY,\ WHETHER\ IN\ CONTRACT,}}
+\DoxyCodeLine{00029\ \textcolor{comment}{STRICT\ LIABILITY,\ OR\ TORT\ (INCLUDING\ NEGLIGENCE\ OR\ OTHERWISE)\ ARISING}}
+\DoxyCodeLine{00030\ \textcolor{comment}{IN\ ANY\ WAY\ OUT\ OF\ THE\ USE\ OF\ THIS\ SOFTWARE,\ EVEN\ IF\ ADVISED\ OF\ THE}}
+\DoxyCodeLine{00031\ \textcolor{comment}{POSSIBILITY\ OF\ SUCH\ DAMAGE.\ \ */}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ BACKTRACE\_H}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ BACKTRACE\_H}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{/*\ The\ backtrace\ state.\ \ This\ struct\ is\ intentionally\ not\ defined\ in}}
+\DoxyCodeLine{00044\ \textcolor{comment}{\ \ \ the\ public\ interface.\ \ */}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{comment}{/*\ The\ type\ of\ the\ error\ callback\ argument\ to\ backtrace\ functions.}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ \ \ This\ function,\ if\ not\ NULL,\ will\ be\ called\ for\ certain\ error\ cases.}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ \ \ The\ DATA\ argument\ is\ passed\ to\ the\ function\ that\ calls\ this\ one.}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ \ \ The\ MSG\ argument\ is\ an\ error\ message.\ \ The\ ERRNUM\ argument,\ if}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ \ \ greater\ than\ 0,\ holds\ an\ errno\ value.\ \ The\ MSG\ buffer\ may\ become}}
+\DoxyCodeLine{00053\ \textcolor{comment}{\ \ \ invalid\ after\ this\ function\ returns.}}
+\DoxyCodeLine{00054\ \textcolor{comment}{}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ \ As\ a\ special\ case,\ the\ ERRNUM\ argument\ will\ be\ passed\ as\ -\/1\ if\ no}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ \ \ debug\ info\ can\ be\ found\ for\ the\ executable,\ or\ if\ the\ debug\ info}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ \ \ exists\ but\ has\ an\ unsupported\ version,\ but\ the\ function\ requires}}
+\DoxyCodeLine{00058\ \textcolor{comment}{\ \ \ debug\ info\ (e.g.,\ backtrace\_full,\ backtrace\_pcinfo).\ \ The\ MSG\ in}}
+\DoxyCodeLine{00059\ \textcolor{comment}{\ \ \ this\ case\ will\ be\ something\ along\ the\ lines\ of\ "{}no\ debug\ info"{}.}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ \ \ Similarly,\ ERRNUM\ will\ be\ passed\ as\ -\/1\ if\ there\ is\ no\ symbol\ table,}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ \ \ but\ the\ function\ requires\ a\ symbol\ table\ (e.g.,\ backtrace\_syminfo).}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ This\ may\ be\ used\ as\ a\ signal\ that\ some\ other\ approach\ should\ be}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ tried.\ \ */}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ void\ (*backtrace\_error\_callback)\ (\textcolor{keywordtype}{void}\ *data,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *msg,}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ errnum);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{comment}{/*\ Create\ state\ information\ for\ the\ backtrace\ routines.\ \ This\ must\ be}}
+\DoxyCodeLine{00069\ \textcolor{comment}{\ \ \ called\ before\ any\ of\ the\ other\ routines,\ and\ its\ return\ value\ must}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ \ \ be\ passed\ to\ all\ of\ the\ other\ routines.\ \ FILENAME\ is\ the\ path\ name}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ \ \ of\ the\ executable\ file;\ if\ it\ is\ NULL\ the\ library\ will\ try}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ \ \ system-\/specific\ path\ names.\ \ If\ not\ NULL,\ FILENAME\ must\ point\ to\ a}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ \ \ permanent\ buffer.\ \ If\ THREADED\ is\ non-\/zero\ the\ state\ may\ be}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ accessed\ by\ multiple\ threads\ simultaneously,\ and\ the\ library\ will}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ \ \ use\ appropriate\ atomic\ operations.\ \ If\ THREADED\ is\ zero\ the\ state}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ \ \ may\ only\ be\ accessed\ by\ one\ thread\ at\ a\ time.\ \ This\ returns\ a\ state}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ \ \ pointer\ on\ success,\ NULL\ on\ error.\ \ If\ an\ error\ occurs,\ this\ will}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ \ \ call\ the\ ERROR\_CALLBACK\ routine.}}
+\DoxyCodeLine{00079\ \textcolor{comment}{}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ \ \ Calling\ this\ function\ allocates\ resources\ that\ cannot\ be\ freed.}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ \ \ There\ is\ no\ backtrace\_free\_state\ function.\ \ The\ state\ is\ used\ to}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ \ \ cache\ information\ that\ is\ expensive\ to\ recompute.\ \ Programs\ are}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ \ \ expected\ to\ call\ this\ function\ at\ most\ once\ and\ to\ save\ the\ return}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ \ \ value\ for\ all\ later\ calls\ to\ backtrace\ functions.\ \ */}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}}\ *backtrace\_create\_state\ (}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename,\ \textcolor{keywordtype}{int}\ threaded,}
+\DoxyCodeLine{00088\ \ \ \ \ backtrace\_error\_callback\ error\_callback,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{comment}{/*\ Like\ backtrace\_create\_state,\ but\ marks\ the\ state\ as\ being\ for\ an}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ \ \ external\ file\ that\ is\ not\ loaded\ in\ the\ current\ process.\ \ This}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ \ \ bypasses\ the\ ET\_DYN\ deferral\ to\ dl\_iterate\_phdr\ that\ normally}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ \ \ happens\ for\ PIE\ executables\ and\ shared\ libraries,\ allowing\ DWARF}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ \ \ data\ to\ be\ loaded\ directly\ from\ the\ file\ with\ base\_address=0.}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ \ \ The\ caller\ is\ responsible\ for\ converting\ runtime\ virtual\ addresses}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ \ \ to\ ELF\ virtual\ addresses\ before\ passing\ them\ to\ backtrace\_pcinfo}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ \ \ or\ backtrace\_syminfo.\ \ */}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{extern}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}}\ *backtrace\_create\_state\_for\_file\ (}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename,\ \textcolor{keywordtype}{int}\ threaded,}
+\DoxyCodeLine{00101\ \ \ \ \ backtrace\_error\_callback\ error\_callback,\ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{comment}{/*\ The\ type\ of\ the\ callback\ argument\ to\ the\ backtrace\_full\ function.}}
+\DoxyCodeLine{00104\ \textcolor{comment}{\ \ \ DATA\ is\ the\ argument\ passed\ to\ backtrace\_full.\ \ PC\ is\ the\ program}}
+\DoxyCodeLine{00105\ \textcolor{comment}{\ \ \ counter.\ \ FILENAME\ is\ the\ name\ of\ the\ file\ containing\ PC,\ or\ NULL}}
+\DoxyCodeLine{00106\ \textcolor{comment}{\ \ \ if\ not\ available.\ \ LINENO\ is\ the\ line\ number\ in\ FILENAME\ containing}}
+\DoxyCodeLine{00107\ \textcolor{comment}{\ \ \ PC,\ or\ 0\ if\ not\ available.\ \ FUNCTION\ is\ the\ name\ of\ the\ function}}
+\DoxyCodeLine{00108\ \textcolor{comment}{\ \ \ containing\ PC,\ or\ NULL\ if\ not\ available.\ \ This\ should\ return\ 0\ to}}
+\DoxyCodeLine{00109\ \textcolor{comment}{\ \ \ continuing\ tracing.\ \ The\ FILENAME\ and\ FUNCTION\ buffers\ may\ become}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ \ \ invalid\ after\ this\ function\ returns.\ \ */}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{keyword}{typedef}\ int\ (*backtrace\_full\_callback)\ (\textcolor{keywordtype}{void}\ *data,\ uintptr\_t\ pc,\ uintptr\_t\ lowaddr,}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename,\ \textcolor{keywordtype}{int}\ lineno,}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\doxymbox{\hyperlink{structtracy_1_1function}{function}});}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{comment}{/*\ Get\ a\ full\ stack\ backtrace.\ \ SKIP\ is\ the\ number\ of\ frames\ to\ skip;}}
+\DoxyCodeLine{00117\ \textcolor{comment}{\ \ \ passing\ 0\ will\ start\ the\ trace\ with\ the\ function\ calling}}
+\DoxyCodeLine{00118\ \textcolor{comment}{\ \ \ backtrace\_full.\ \ DATA\ is\ passed\ to\ the\ callback\ routine.\ \ If\ any}}
+\DoxyCodeLine{00119\ \textcolor{comment}{\ \ \ call\ to\ CALLBACK\ returns\ a\ non-\/zero\ value,\ the\ stack\ backtrace}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ \ \ stops,\ and\ backtrace\ returns\ that\ value;\ this\ may\ be\ used\ to\ limit}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ \ \ the\ number\ of\ stack\ frames\ desired.\ \ If\ all\ calls\ to\ CALLBACK}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ \ \ return\ 0,\ backtrace\ returns\ 0.\ \ The\ backtrace\_full\ function\ will}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ \ \ make\ at\ least\ one\ call\ to\ either\ CALLBACK\ or\ ERROR\_CALLBACK.\ \ This}}
+\DoxyCodeLine{00124\ \textcolor{comment}{\ \ \ function\ requires\ debug\ info\ for\ the\ executable.\ \ */}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ backtrace\_full\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}}\ *state,\ \textcolor{keywordtype}{int}\ skip,}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_full\_callback\ callback,}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_error\_callback\ error\_callback,}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \textcolor{comment}{/*\ The\ type\ of\ the\ callback\ argument\ to\ the\ backtrace\_simple\ function.}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ \ \ DATA\ is\ the\ argument\ passed\ to\ simple\_backtrace.\ \ PC\ is\ the\ program}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ \ \ counter.\ \ This\ should\ return\ 0\ to\ continue\ tracing.\ \ */}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{typedef}\ int\ (*backtrace\_simple\_callback)\ (\textcolor{keywordtype}{void}\ *data,\ uintptr\_t\ pc);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \textcolor{comment}{/*\ Get\ a\ simple\ backtrace.\ \ SKIP\ is\ the\ number\ of\ frames\ to\ skip,\ as}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ \ \ in\ backtrace.\ \ DATA\ is\ passed\ to\ the\ callback\ routine.\ \ If\ any\ call}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ \ \ to\ CALLBACK\ returns\ a\ non-\/zero\ value,\ the\ stack\ backtrace\ stops,}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ \ \ and\ backtrace\_simple\ returns\ that\ value.\ \ Otherwise}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ \ \ backtrace\_simple\ returns\ 0.\ \ The\ backtrace\_simple\ function\ will}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ \ \ make\ at\ least\ one\ call\ to\ either\ CALLBACK\ or\ ERROR\_CALLBACK.\ \ This}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ \ \ function\ does\ not\ require\ any\ debug\ info\ for\ the\ executable.\ \ */}}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ backtrace\_simple\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}}\ *state,\ \textcolor{keywordtype}{int}\ skip,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_simple\_callback\ callback,}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_error\_callback\ error\_callback,}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \textcolor{comment}{/*\ Print\ the\ current\ backtrace\ in\ a\ user\ readable\ format\ to\ a\ FILE.}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ \ \ SKIP\ is\ the\ number\ of\ frames\ to\ skip,\ as\ in\ backtrace\_full.\ \ Any}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ \ \ error\ messages\ are\ printed\ to\ stderr.\ \ This\ function\ requires\ debug}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ \ \ info\ for\ the\ executable.\ \ */}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ backtrace\_print\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}}\ *state,\ \textcolor{keywordtype}{int}\ skip,\ FILE\ *);}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \textcolor{comment}{/*\ Given\ PC,\ a\ program\ counter\ in\ the\ current\ program,\ call\ the}}
+\DoxyCodeLine{00158\ \textcolor{comment}{\ \ \ callback\ function\ with\ filename,\ line\ number,\ and\ function\ name}}
+\DoxyCodeLine{00159\ \textcolor{comment}{\ \ \ information.\ \ This\ will\ normally\ call\ the\ callback\ function\ exactly}}
+\DoxyCodeLine{00160\ \textcolor{comment}{\ \ \ once.\ \ However,\ if\ the\ PC\ happens\ to\ describe\ an\ inlined\ call,\ and}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ \ \ the\ debugging\ information\ contains\ the\ necessary\ information,\ then}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ \ \ this\ may\ call\ the\ callback\ function\ multiple\ times.\ \ This\ will\ make}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ \ \ at\ least\ one\ call\ to\ either\ CALLBACK\ or\ ERROR\_CALLBACK.\ \ This}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ \ \ returns\ the\ first\ non-\/zero\ value\ returned\ by\ CALLBACK,\ or\ 0.\ \ */}}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ backtrace\_pcinfo\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}}\ *state,\ uintptr\_t\ pc,}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_full\_callback\ callback,}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_error\_callback\ error\_callback,}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \textcolor{comment}{/*\ The\ type\ of\ the\ callback\ argument\ to\ backtrace\_syminfo.\ \ DATA\ and}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ \ \ PC\ are\ the\ arguments\ passed\ to\ backtrace\_syminfo.\ \ SYMNAME\ is\ the}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ \ \ name\ of\ the\ symbol\ for\ the\ corresponding\ code.\ \ SYMVAL\ is\ the}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ \ \ value\ and\ SYMSIZE\ is\ the\ size\ of\ the\ symbol.\ \ SYMNAME\ will\ be\ NULL}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ \ \ if\ no\ error\ occurred\ but\ the\ symbol\ could\ not\ be\ found.\ \ */}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \textcolor{keyword}{typedef}\ void\ (*backtrace\_syminfo\_callback)\ (\textcolor{keywordtype}{void}\ *data,\ uintptr\_t\ pc,}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *symname,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uintptr\_t\ symval,}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uintptr\_t\ symsize);}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \textcolor{comment}{/*\ Given\ ADDR,\ an\ address\ or\ program\ counter\ in\ the\ current\ program,}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ \ \ call\ the\ callback\ information\ with\ the\ symbol\ name\ and\ value}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ \ \ describing\ the\ function\ or\ variable\ in\ which\ ADDR\ may\ be\ found.}}
+\DoxyCodeLine{00185\ \textcolor{comment}{\ \ \ This\ will\ call\ either\ CALLBACK\ or\ ERROR\_CALLBACK\ exactly\ once.}}
+\DoxyCodeLine{00186\ \textcolor{comment}{\ \ \ This\ returns\ 1\ on\ success,\ 0\ on\ failure.\ \ This\ function\ requires}}
+\DoxyCodeLine{00187\ \textcolor{comment}{\ \ \ the\ symbol\ table\ but\ does\ not\ require\ the\ debug\ info.\ \ Note\ that\ if}}
+\DoxyCodeLine{00188\ \textcolor{comment}{\ \ \ the\ symbol\ table\ is\ present\ but\ ADDR\ could\ not\ be\ found\ in\ the}}
+\DoxyCodeLine{00189\ \textcolor{comment}{\ \ \ table,\ CALLBACK\ will\ be\ called\ with\ a\ NULL\ SYMNAME\ argument.}}
+\DoxyCodeLine{00190\ \textcolor{comment}{\ \ \ Returns\ 1\ on\ success,\ 0\ on\ error.\ \ */}}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00192\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ backtrace\_syminfo\ (\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{structtracy_1_1backtrace__state}{backtrace\_state}}\ *state,\ uintptr\_t\ addr,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_syminfo\_callback\ callback,}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ backtrace\_error\_callback\ error\_callback,}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

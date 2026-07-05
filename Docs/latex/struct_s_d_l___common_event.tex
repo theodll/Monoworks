@@ -1,0 +1,50 @@
+\doxysection{SDL\+\_\+\+Common\+Event Struct Reference}
+\hypertarget{struct_s_d_l___common_event}{}\label{struct_s_d_l___common_event}\index{SDL\_CommonEvent@{SDL\_CommonEvent}}
+
+
+{\ttfamily \+\#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Uint32 \doxymbox{\hyperlink{struct_s_d_l___common_event_a4ecd888325355321b42b2e2956f27453}{type}}
+\item 
+\Hypertarget{struct_s_d_l___common_event_a333ffe3901b780b345ba42669fbcf7af}\label{struct_s_d_l___common_event_a333ffe3901b780b345ba42669fbcf7af} 
+Uint32 {\bfseries reserved}
+\item 
+Uint64 \doxymbox{\hyperlink{struct_s_d_l___common_event_af59858dc04fd297e03703bf192dd0fda}{timestamp}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Fields shared by every event (event.\+common.\texorpdfstring{$\ast$}{*})
+
+All the individual structs that comprise the \doxylink{union_s_d_l___event}{SDL\+\_\+\+Event} union start with these same fields, so you can access them from any struct directly.
+
+Event types that don\textquotesingle{}t have further data in a specific struct will still have valid Common\+Event data, accessible via the event.\+common field.
+
+\begin{DoxySince}{Since}
+This struct is available since SDL 3.\+2.\+0. 
+\end{DoxySince}
+
+
+\label{struct_s_d_l___common_event_doc-variable-members}
+\Hypertarget{struct_s_d_l___common_event_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_s_d_l___common_event_af59858dc04fd297e03703bf192dd0fda}\index{SDL\_CommonEvent@{SDL\_CommonEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_CommonEvent@{SDL\_CommonEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{struct_s_d_l___common_event_af59858dc04fd297e03703bf192dd0fda} 
+Uint64 SDL\+\_\+\+Common\+Event::\+timestamp}
+
+In nanoseconds, populated using SDL\+\_\+\+Get\+Ticks\+NS() \Hypertarget{struct_s_d_l___common_event_a4ecd888325355321b42b2e2956f27453}\index{SDL\_CommonEvent@{SDL\_CommonEvent}!type@{type}}
+\index{type@{type}!SDL\_CommonEvent@{SDL\_CommonEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{struct_s_d_l___common_event_a4ecd888325355321b42b2e2956f27453} 
+Uint32 SDL\+\_\+\+Common\+Event::\+type}
+
+Event type, shared with all events, Uint32 to cover user events which are not in the SDL\+\_\+\+Event\+Type enumeration 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Runtime/\+extern/\+sdl/\+include/\+\+SDL3/\+SDL\+\_\+events.\+h\end{DoxyCompactItemize}

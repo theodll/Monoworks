@@ -1,0 +1,192 @@
+\doxysection{SDL\+\_\+android.\+h}
+\hypertarget{_s_d_l__android_8h_source}{}\label{_s_d_l__android_8h_source}\index{MonoRuntime/extern/sdl/src/core/android/SDL\_android.h@{MonoRuntime/extern/sdl/src/core/android/SDL\_android.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_android\_h}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_android\_h}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00028\ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}}
+\DoxyCodeLine{00029\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00030\ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#include\ <EGL/eglplatform.h>}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <android/native\_window\_jni.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifndef\ SDL\_AUDIO\_DISABLED}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ "{}../../audio/SDL\_sysaudio.h"{}}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ this\ appears\ to\ be\ broken\ right\ now\ (on\ Android,\ not\ SDL,\ I\ think...?).}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#define\ ALLOW\_MULTIPLE\_ANDROID\_AUDIO\_DEVICES\ 0}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{comment}{//\ Life\ cycle}}
+\DoxyCodeLine{00046\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ SDL\_ANDROID\_LIFECYCLE\_WAKE,}
+\DoxyCodeLine{00049\ \ \ \ \ SDL\_ANDROID\_LIFECYCLE\_PAUSE,}
+\DoxyCodeLine{00050\ \ \ \ \ SDL\_ANDROID\_LIFECYCLE\_RESUME,}
+\DoxyCodeLine{00051\ \ \ \ \ SDL\_ANDROID\_LIFECYCLE\_LOWMEMORY,}
+\DoxyCodeLine{00052\ \ \ \ \ SDL\_ANDROID\_LIFECYCLE\_DESTROY,}
+\DoxyCodeLine{00053\ \ \ \ \ SDL\_NUM\_ANDROID\_LIFECYCLE\_EVENTS}
+\DoxyCodeLine{00054\ \}\ SDL\_AndroidLifecycleEvent;}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keywordtype}{void}\ Android\_SendLifecycleEvent(SDL\_AndroidLifecycleEvent\ event);}
+\DoxyCodeLine{00057\ \textcolor{keywordtype}{bool}\ Android\_WaitLifecycleEvent(SDL\_AndroidLifecycleEvent\ *event,\ Sint64\ timeoutNS);}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keywordtype}{void}\ Android\_LockActivityMutex(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00060\ \textcolor{keywordtype}{void}\ Android\_UnlockActivityMutex(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keywordtype}{void}\ Android\_SetAllowRecreateActivity(\textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#ifndef\ SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ Interface\ from\ the\ SDL\ library\ into\ the\ Android\ Java\ activity}}
+\DoxyCodeLine{00066\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_JNI\_SetActivityTitle(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *title);}
+\DoxyCodeLine{00067\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_JNI\_SetWindowStyle(\textcolor{keywordtype}{bool}\ fullscreen);}
+\DoxyCodeLine{00068\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_JNI\_SetOrientation(\textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ \textcolor{keywordtype}{int}\ resizable,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *hint);}
+\DoxyCodeLine{00069\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_JNI\_MinimizeWindow(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00070\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Android\_JNI\_ShouldMinimizeOnFocusLoss(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_JNI\_ShowScreenKeyboard(\textcolor{keywordtype}{int}\ input\_type,\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *inputRect);}
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_JNI\_HideScreenKeyboard(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ ANativeWindow\ *Android\_JNI\_GetNativeWindow(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ Kept\ outside\ the\ video\ guard\ for\ the\ camera\ driver;\ stays\ SDL\_ORIENTATION\_UNKNOWN\ when\ video\ is\ disabled\ (only\ the\ video\ Java\ layer\ updates\ it).}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ SDL\_DisplayOrientation\ Android\_JNI\_GetDisplayNaturalOrientation(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00080\ \textcolor{keyword}{extern}\ SDL\_DisplayOrientation\ Android\_JNI\_GetDisplayCurrentOrientation(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#ifndef\ SDL\_AUDIO\_DISABLED}}
+\DoxyCodeLine{00083\ \textcolor{comment}{//\ Audio\ support}}
+\DoxyCodeLine{00084\ \textcolor{keywordtype}{void}\ Android\_StartAudioHotplug(\doxymbox{\hyperlink{struct_s_d_l___audio_device}{SDL\_AudioDevice}}\ **default\_playback,\ \doxymbox{\hyperlink{struct_s_d_l___audio_device}{SDL\_AudioDevice}}\ **default\_recording);}
+\DoxyCodeLine{00085\ \textcolor{keywordtype}{void}\ Android\_StopAudioHotplug(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00086\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Android\_AudioThreadInit(\doxymbox{\hyperlink{struct_s_d_l___audio_device}{SDL\_AudioDevice}}\ *device);}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !SDL\_AUDIO\_DISABLED}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{comment}{//\ Detecting\ device\ type}}
+\DoxyCodeLine{00090\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Android\_IsDeXMode(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ Android\_IsChromebook(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keywordtype}{bool}\ Android\_JNI\_FileOpen(\textcolor{keywordtype}{void}\ **puserdata,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *fileName,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode);}
+\DoxyCodeLine{00094\ Sint64\ Android\_JNI\_FileSize(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00095\ Sint64\ Android\_JNI\_FileSeek(\textcolor{keywordtype}{void}\ *userdata,\ Sint64\ offset,\ SDL\_IOWhence\ whence);}
+\DoxyCodeLine{00096\ \textcolor{keywordtype}{size\_t}\ Android\_JNI\_FileRead(\textcolor{keywordtype}{void}\ *userdata,\ \textcolor{keywordtype}{void}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ size,\ SDL\_IOStatus\ *status);}
+\DoxyCodeLine{00097\ \textcolor{keywordtype}{size\_t}\ Android\_JNI\_FileWrite(\textcolor{keywordtype}{void}\ *userdata,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *buffer,\ \textcolor{keywordtype}{size\_t}\ size,\ SDL\_IOStatus\ *status);}
+\DoxyCodeLine{00098\ \textcolor{keywordtype}{bool}\ Android\_JNI\_FileClose(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00099\ \textcolor{keywordtype}{bool}\ Android\_JNI\_EnumerateAssetDirectory(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path,\ SDL\_EnumerateDirectoryCallback\ cb,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00100\ \textcolor{keywordtype}{bool}\ Android\_JNI\_GetAssetPathInfo(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path,\ \doxymbox{\hyperlink{struct_s_d_l___path_info}{SDL\_PathInfo}}\ *info);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ Environment\ support}}
+\DoxyCodeLine{00103\ \textcolor{keywordtype}{void}\ Android\_JNI\_GetManifestEnvironmentVariables(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00104\ \textcolor{keywordtype}{int}\ Android\_JNI\_OpenFileDescriptor(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *uri,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#ifndef\ SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00107\ \textcolor{comment}{//\ Clipboard\ support}}
+\DoxyCodeLine{00108\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SetClipboardText(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text);}
+\DoxyCodeLine{00109\ \textcolor{keywordtype}{char}\ *Android\_JNI\_GetClipboardText(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00110\ \textcolor{keywordtype}{bool}\ Android\_JNI\_HasClipboardText(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{comment}{//\ Power\ support}}
+\DoxyCodeLine{00114\ \textcolor{keywordtype}{int}\ Android\_JNI\_GetPowerInfo(\textcolor{keywordtype}{int}\ *plugged,\ \textcolor{keywordtype}{int}\ *charged,\ \textcolor{keywordtype}{int}\ *battery,\ \textcolor{keywordtype}{int}\ *seconds,\ \textcolor{keywordtype}{int}\ *percent);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{comment}{//\ Joystick\ support}}
+\DoxyCodeLine{00117\ \textcolor{keywordtype}{void}\ Android\_JNI\_DetectDevices(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00118\ \textcolor{keywordtype}{void}\ Android\_JNI\_JoystickSetLED(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{int}\ red,\ \textcolor{keywordtype}{int}\ green,\ \textcolor{keywordtype}{int}\ blue);}
+\DoxyCodeLine{00119\ \textcolor{keywordtype}{void}\ Android\_JNI\_JoystickSetSensorsEnabled(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{comment}{//\ Haptic\ support}}
+\DoxyCodeLine{00122\ \textcolor{keywordtype}{void}\ Android\_JNI\_DetectHapticDevices(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{void}\ Android\_JNI\_HapticRun(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{float}\ intensity,\ \textcolor{keywordtype}{int}\ length);}
+\DoxyCodeLine{00124\ \textcolor{keywordtype}{void}\ Android\_JNI\_HapticRumble(\textcolor{keywordtype}{int}\ device\_id,\ \textcolor{keywordtype}{float}\ low\_frequency\_intensity,\ \textcolor{keywordtype}{float}\ high\_frequency\_intensity,\ \textcolor{keywordtype}{int}\ length);}
+\DoxyCodeLine{00125\ \textcolor{keywordtype}{void}\ Android\_JNI\_HapticStop(\textcolor{keywordtype}{int}\ device\_id);}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{comment}{//\ Video}}
+\DoxyCodeLine{00128\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SuspendScreenSaver(\textcolor{keywordtype}{bool}\ suspend);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#ifndef\ SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00131\ \textcolor{comment}{//\ Touch\ support}}
+\DoxyCodeLine{00132\ \textcolor{keywordtype}{void}\ Android\_JNI\_InitTouch(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \textcolor{comment}{//\ Threads}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#include\ <jni.h>}}
+\DoxyCodeLine{00137\ JNIEnv\ *Android\_JNI\_GetEnv(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00138\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SetupThread(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00140\ \textcolor{comment}{//\ Locale}}
+\DoxyCodeLine{00141\ \textcolor{keywordtype}{bool}\ Android\_JNI\_GetLocale(\textcolor{keywordtype}{char}\ *buf,\ \textcolor{keywordtype}{size\_t}\ buflen);}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{comment}{//\ Generic\ messages}}
+\DoxyCodeLine{00144\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SendMessage(\textcolor{keywordtype}{int}\ command,\ \textcolor{keywordtype}{int}\ param);}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{comment}{//\ MessageBox}}
+\DoxyCodeLine{00147\ \textcolor{keywordtype}{bool}\ Android\_JNI\_ShowMessageBox(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___message_box_data}{SDL\_MessageBoxData}}\ *messageboxdata,\ \textcolor{keywordtype}{int}\ *buttonID);}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#ifndef\ SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00150\ \textcolor{comment}{//\ Cursor\ support}}
+\DoxyCodeLine{00151\ \textcolor{keywordtype}{int}\ Android\_JNI\_CreateCustomCursor(\doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *surface,\ \textcolor{keywordtype}{int}\ hot\_x,\ \textcolor{keywordtype}{int}\ hot\_y);}
+\DoxyCodeLine{00152\ \textcolor{keywordtype}{void}\ Android\_JNI\_DestroyCustomCursor(\textcolor{keywordtype}{int}\ cursorID);}
+\DoxyCodeLine{00153\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SetCustomCursor(\textcolor{keywordtype}{int}\ cursorID);}
+\DoxyCodeLine{00154\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SetSystemCursor(\textcolor{keywordtype}{int}\ cursorID);}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{comment}{//\ Relative\ mouse\ support}}
+\DoxyCodeLine{00157\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SupportsRelativeMouse(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00158\ \textcolor{keywordtype}{bool}\ Android\_JNI\_SetRelativeMouseEnabled(\textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !SDL\_VIDEO\_DISABLED}}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \textcolor{comment}{//\ Show\ toast\ notification}}
+\DoxyCodeLine{00162\ \textcolor{keywordtype}{bool}\ Android\_JNI\_ShowToast(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *message,\ \textcolor{keywordtype}{int}\ duration,\ \textcolor{keywordtype}{int}\ gravity,\ \textcolor{keywordtype}{int}\ xOffset,\ \textcolor{keywordtype}{int}\ yOffset);}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \textcolor{keywordtype}{bool}\ Android\_JNI\_OpenURL(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *url);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keywordtype}{int}\ SDL\_GetAndroidSDKVersion(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{keywordtype}{bool}\ SDL\_IsAndroidTablet(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00169\ \textcolor{keywordtype}{bool}\ SDL\_IsAndroidTV(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00170\ SDL\_FormFactor\ SDL\_GetAndroidDeviceFormFactor(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00172\ \textcolor{keywordtype}{char}\ *SDL\_GetAndroidPackageName(\textcolor{keywordtype}{void});\ \ \textcolor{comment}{//\ this\ is\ a\ SDL\_malloc'd\ string\ the\ caller\ will\ own.}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{comment}{//\ File\ Dialogs}}
+\DoxyCodeLine{00175\ \textcolor{keywordtype}{bool}\ Android\_JNI\_ShowFileDialog(SDL\_DialogFileCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata,}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___dialog_file_filter}{SDL\_DialogFileFilter}}\ *filters,\ \textcolor{keywordtype}{int}\ nfilters,\ SDL\_FileDialogType\ type,}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keywordtype}{bool}\ multiple,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *initialPath);}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{comment}{//\ Ends\ C\ function\ definitions\ when\ using\ C++}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00181\ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}}
+\DoxyCodeLine{00182\ \}}
+\DoxyCodeLine{00183\ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_android\_h}}
+
+\end{DoxyCode}

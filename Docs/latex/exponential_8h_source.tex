@@ -1,0 +1,25 @@
+\doxysection{exponential.\+h}
+\hypertarget{exponential_8h_source}{}\label{exponential_8h_source}\index{MonoEngine/thirdparty/glm/glm/simd/exponential.h@{MonoEngine/thirdparty/glm/glm/simd/exponential.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}platform.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#if\ GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec1\_sqrt\_lowp(glm\_f32vec4\ x)}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_mul\_ss(\_mm\_rsqrt\_ss(x),\ x);}
+\DoxyCodeLine{00013\ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ GLM\_FUNC\_QUALIFIER\ glm\_f32vec4\ glm\_vec4\_sqrt\_lowp(glm\_f32vec4\ x)}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{return}\ \_mm\_mul\_ps(\_mm\_rsqrt\_ps(x),\ x);}
+\DoxyCodeLine{00018\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//GLM\_ARCH\ \&\ GLM\_ARCH\_SSE2\_BIT}}
+
+\end{DoxyCode}

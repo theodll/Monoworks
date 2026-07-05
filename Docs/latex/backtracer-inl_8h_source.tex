@@ -1,0 +1,69 @@
+\doxysection{backtracer-\/inl.h}
+\hypertarget{backtracer-inl_8h_source}{}\label{backtracer-inl_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/details/backtracer-\/inl.h@{MonoEngine/thirdparty/spdlog/include/spdlog/details/backtracer-\/inl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/details/backtracer.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00011\ SPDLOG\_INLINE\ backtracer::backtracer(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{classdetails_1_1backtracer}{backtracer}}\ \&other)\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(other.mutex\_);}
+\DoxyCodeLine{00013\ \ \ \ \ enabled\_\ =\ other.enabled();}
+\DoxyCodeLine{00014\ \ \ \ \ messages\_\ =\ other.messages\_;}
+\DoxyCodeLine{00015\ \}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ SPDLOG\_INLINE\ backtracer::backtracer(\doxymbox{\hyperlink{classdetails_1_1backtracer}{backtracer}}\ \&\&other)\ SPDLOG\_NOEXCEPT\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(other.mutex\_);}
+\DoxyCodeLine{00019\ \ \ \ \ enabled\_\ =\ other.enabled();}
+\DoxyCodeLine{00020\ \ \ \ \ messages\_\ =\ std::move(other.messages\_);}
+\DoxyCodeLine{00021\ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ SPDLOG\_INLINE\ \doxymbox{\hyperlink{classdetails_1_1backtracer}{backtracer}}\ \&backtracer::operator=(\doxymbox{\hyperlink{classdetails_1_1backtracer}{backtracer}}\ other)\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ std::lock\_guard<std::mutex>\ lock(mutex\_);}
+\DoxyCodeLine{00025\ \ \ \ \ enabled\_\ =\ other.enabled();}
+\DoxyCodeLine{00026\ \ \ \ \ messages\_\ =\ std::move(other.messages\_);}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00028\ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ backtracer::enable(\textcolor{keywordtype}{size\_t}\ size)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ std::lock\_guard<std::mutex>\ lock\{mutex\_\};}
+\DoxyCodeLine{00032\ \ \ \ \ enabled\_.store(\textcolor{keyword}{true},\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00033\ \ \ \ \ messages\_\ =\ circular\_q<log\_msg\_buffer>\{size\};}
+\DoxyCodeLine{00034\ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ backtracer::disable()\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ std::lock\_guard<std::mutex>\ lock\{mutex\_\};}
+\DoxyCodeLine{00038\ \ \ \ \ enabled\_.store(\textcolor{keyword}{false},\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00039\ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ SPDLOG\_INLINE\ \textcolor{keywordtype}{bool}\ backtracer::enabled()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ enabled\_.load(std::memory\_order\_relaxed);\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ backtracer::push\_back(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{log\_msg}}\ \&msg)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ std::lock\_guard<std::mutex>\ lock\{mutex\_\};}
+\DoxyCodeLine{00045\ \ \ \ \ messages\_.push\_back(log\_msg\_buffer\{msg\});}
+\DoxyCodeLine{00046\ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ SPDLOG\_INLINE\ \textcolor{keywordtype}{bool}\ backtracer::empty()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00049\ \ \ \ \ std::lock\_guard<std::mutex>\ lock\{mutex\_\};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{return}\ messages\_.empty();}
+\DoxyCodeLine{00051\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{comment}{//\ pop\ all\ items\ in\ the\ q\ and\ apply\ the\ given\ fun\ on\ each\ of\ them.}}
+\DoxyCodeLine{00054\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ backtracer::foreach\_pop(std::function<\textcolor{keywordtype}{void}(\textcolor{keyword}{const}\ details::log\_msg\ \&)>\ fun)\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ std::lock\_guard<std::mutex>\ lock\{mutex\_\};}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{while}\ (!messages\_.empty())\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ \&front\_msg\ =\ messages\_.front();}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ fun(front\_msg);}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ messages\_.pop\_front();}
+\DoxyCodeLine{00060\ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \}}
+\DoxyCodeLine{00062\ \}\ \ \textcolor{comment}{//\ namespace\ details}}
+\DoxyCodeLine{00063\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

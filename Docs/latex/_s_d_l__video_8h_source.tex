@@ -1,0 +1,585 @@
+\doxysection{SDL\+\_\+video.\+h}
+\hypertarget{_s_d_l__video_8h_source}{}\label{_s_d_l__video_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_video.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_video.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#ifndef\ SDL\_video\_h\_}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ SDL\_video\_h\_}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_pixels.h>}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_rect.h>}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_surface.h>}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00060\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00062\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00075\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_DisplayID;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_WindowID;}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{comment}{/*\ Global\ video\ properties...\ */}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GLOBAL\_VIDEO\_WAYLAND\_WL\_DISPLAY\_POINTER\ "{}SDL.video.wayland.wl\_display"{}}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GLOBAL\_VIDEO\_WAYLAND\_SESSION\_ID\_STRING\ "{}SDL.video.wayland.session\_id"{}}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00145\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_SystemTheme}
+\DoxyCodeLine{00146\ \{}
+\DoxyCodeLine{00147\ \ \ \ \ SDL\_SYSTEM\_THEME\_UNKNOWN,\ \ \ }
+\DoxyCodeLine{00148\ \ \ \ \ SDL\_SYSTEM\_THEME\_LIGHT,\ \ \ \ \ }
+\DoxyCodeLine{00149\ \ \ \ \ SDL\_SYSTEM\_THEME\_DARK\ \ \ \ \ \ \ }
+\DoxyCodeLine{00150\ \}\ SDL\_SystemTheme;}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00161\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___display_mode_data}{SDL\_DisplayModeData}}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_data}{SDL\_DisplayModeData}};}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00174\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}}}
+\DoxyCodeLine{00175\ \{}
+\DoxyCodeLine{00176\ \ \ \ \ SDL\_DisplayID\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_ab60700fea611b04fe764b1b19908bf39}{displayID}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00177\ \ \ \ \ SDL\_PixelFormat\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_a8b07655570c51e4e58600e4f1a82b3c7}{format}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_a504bb5e21950b719a0df43be51199046}{w}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_a0d9eabed50a560ed553af772c26632d7}{h}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_a9199ba8d701e2a03af7cd783d62f9342}{pixel\_density}};\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_aee91024c65f29e35089deee37302940f}{refresh\_rate}};\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_a1f95d7e8d934dfb6419b456851b7313f}{refresh\_rate\_numerator}};\ \ \ \ \ }
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode_a3466a5b7c22af3170d2ca845f1a1b6e8}{refresh\_rate\_denominator}};\ \ \ }
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ SDL\_DisplayModeData\ *\doxymbox{\hyperlink{struct_s_d_l___display_mode_a49bb7d55eb86bce7f32ba30c222abea1}{internal}};\ \ }
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ \}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}};}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00194\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_DisplayOrientation}
+\DoxyCodeLine{00195\ \{}
+\DoxyCodeLine{00196\ \ \ \ \ SDL\_ORIENTATION\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00197\ \ \ \ \ SDL\_ORIENTATION\_LANDSCAPE,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00198\ \ \ \ \ SDL\_ORIENTATION\_LANDSCAPE\_FLIPPED,\ \ }
+\DoxyCodeLine{00199\ \ \ \ \ SDL\_ORIENTATION\_PORTRAIT,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00200\ \ \ \ \ SDL\_ORIENTATION\_PORTRAIT\_FLIPPED\ \ \ \ }
+\DoxyCodeLine{00201\ \}\ SDL\_DisplayOrientation;}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00210\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}};}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00230\ \textcolor{keyword}{typedef}\ Uint64\ SDL\_WindowFlags;}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_FULLSCREEN\ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000001)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_OPENGL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000002)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_OCCLUDED\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000004)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_HIDDEN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000008)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_BORDERLESS\ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000010)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_RESIZABLE\ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000020)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_MINIMIZED\ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000040)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_MAXIMIZED\ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000080)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_MOUSE\_GRABBED\ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000100)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_INPUT\_FOCUS\ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000200)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_MOUSE\_FOCUS\ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000400)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_EXTERNAL\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000000800)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_MODAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000001000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_HIGH\_PIXEL\_DENSITY\ \ \ SDL\_UINT64\_C(0x0000000000002000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_MOUSE\_CAPTURE\ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000004000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_MOUSE\_RELATIVE\_MODE\ \ SDL\_UINT64\_C(0x0000000000008000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_ALWAYS\_ON\_TOP\ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000010000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_UTILITY\ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000020000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_TOOLTIP\ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000040000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_POPUP\_MENU\ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000080000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_KEYBOARD\_GRABBED\ \ \ \ \ SDL\_UINT64\_C(0x0000000000100000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_FILL\_DOCUMENT\ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000000200000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_VULKAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000010000000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_METAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000020000000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_TRANSPARENT\ \ \ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000040000000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_NOT\_FOCUSABLE\ \ \ \ \ \ \ \ SDL\_UINT64\_C(0x0000000080000000)\ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_UNDEFINED\_MASK\ \ \ \ 0x1FFF0000u}}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_UNDEFINED\_DISPLAY(X)\ \ (SDL\_WINDOWPOS\_UNDEFINED\_MASK|(X))}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_UNDEFINED\ \ \ \ \ \ \ \ \ SDL\_WINDOWPOS\_UNDEFINED\_DISPLAY(0)}}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_ISUNDEFINED(X)\ \ \ \ (((X)\&0xFFFF0000)\ ==\ SDL\_WINDOWPOS\_UNDEFINED\_MASK)}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_CENTERED\_MASK\ \ \ \ 0x2FFF0000u}}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_CENTERED\_DISPLAY(X)\ \ (SDL\_WINDOWPOS\_CENTERED\_MASK|(X))}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_CENTERED\ \ \ \ \ \ \ \ \ SDL\_WINDOWPOS\_CENTERED\_DISPLAY(0)}}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00354\ \textcolor{preprocessor}{\#define\ SDL\_WINDOWPOS\_ISCENTERED(X)\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00355\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ (((X)\&0xFFFF0000)\ ==\ SDL\_WINDOWPOS\_CENTERED\_MASK)}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00363\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_FlashOperation}
+\DoxyCodeLine{00364\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ SDL\_FLASH\_CANCEL,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00366\ \ \ \ \ SDL\_FLASH\_BRIEFLY,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00367\ \ \ \ \ SDL\_FLASH\_UNTIL\_FOCUSED\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00368\ \}\ SDL\_FlashOperation;}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00375\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_ProgressState}
+\DoxyCodeLine{00376\ \{}
+\DoxyCodeLine{00377\ \ \ \ \ SDL\_PROGRESS\_STATE\_INVALID\ =\ -\/1,\ \ \ \ }
+\DoxyCodeLine{00378\ \ \ \ \ SDL\_PROGRESS\_STATE\_NONE,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00379\ \ \ \ \ SDL\_PROGRESS\_STATE\_INDETERMINATE,\ \ \ }
+\DoxyCodeLine{00380\ \ \ \ \ SDL\_PROGRESS\_STATE\_NORMAL,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00381\ \ \ \ \ SDL\_PROGRESS\_STATE\_PAUSED,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00382\ \ \ \ \ SDL\_PROGRESS\_STATE\_ERROR\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00383\ \}\ SDL\_ProgressState;}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00395\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }SDL\_GLContextState\ *SDL\_GLContext;}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00402\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *SDL\_EGLDisplay;}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00409\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *SDL\_EGLConfig;}
+\DoxyCodeLine{00410\ }
+\DoxyCodeLine{00416\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{void}\ *SDL\_EGLSurface;}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00423\ \textcolor{keyword}{typedef}\ intptr\_t\ SDL\_EGLAttrib;}
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00430\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ SDL\_EGLint;}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00455\ \textcolor{keyword}{typedef}\ SDL\_EGLAttrib\ *(SDLCALL\ *SDL\_EGLAttribArrayCallback)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00486\ \textcolor{keyword}{typedef}\ SDL\_EGLint\ *(SDLCALL\ *SDL\_EGLIntArrayCallback)(\textcolor{keywordtype}{void}\ *userdata,\ SDL\_EGLDisplay\ display,\ SDL\_EGLConfig\ config);}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00505\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GLAttr}
+\DoxyCodeLine{00506\ \{}
+\DoxyCodeLine{00507\ \ \ \ \ SDL\_GL\_RED\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00508\ \ \ \ \ SDL\_GL\_GREEN\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00509\ \ \ \ \ SDL\_GL\_BLUE\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00510\ \ \ \ \ SDL\_GL\_ALPHA\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00511\ \ \ \ \ SDL\_GL\_BUFFER\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00512\ \ \ \ \ SDL\_GL\_DOUBLEBUFFER,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00513\ \ \ \ \ SDL\_GL\_DEPTH\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00514\ \ \ \ \ SDL\_GL\_STENCIL\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00515\ \ \ \ \ SDL\_GL\_ACCUM\_RED\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00516\ \ \ \ \ SDL\_GL\_ACCUM\_GREEN\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00517\ \ \ \ \ SDL\_GL\_ACCUM\_BLUE\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00518\ \ \ \ \ SDL\_GL\_ACCUM\_ALPHA\_SIZE,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00519\ \ \ \ \ SDL\_GL\_STEREO,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00520\ \ \ \ \ SDL\_GL\_MULTISAMPLEBUFFERS,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00521\ \ \ \ \ SDL\_GL\_MULTISAMPLESAMPLES,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00522\ \ \ \ \ SDL\_GL\_ACCELERATED\_VISUAL,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00523\ \ \ \ \ SDL\_GL\_RETAINED\_BACKING,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00524\ \ \ \ \ SDL\_GL\_CONTEXT\_MAJOR\_VERSION,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00525\ \ \ \ \ SDL\_GL\_CONTEXT\_MINOR\_VERSION,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00526\ \ \ \ \ SDL\_GL\_CONTEXT\_FLAGS,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00527\ \ \ \ \ SDL\_GL\_CONTEXT\_PROFILE\_MASK,\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00528\ \ \ \ \ SDL\_GL\_SHARE\_WITH\_CURRENT\_CONTEXT,\ \ }
+\DoxyCodeLine{00529\ \ \ \ \ SDL\_GL\_FRAMEBUFFER\_SRGB\_CAPABLE,\ \ \ \ }
+\DoxyCodeLine{00530\ \ \ \ \ SDL\_GL\_CONTEXT\_RELEASE\_BEHAVIOR,\ \ \ \ }
+\DoxyCodeLine{00531\ \ \ \ \ SDL\_GL\_CONTEXT\_RESET\_NOTIFICATION,\ \ }
+\DoxyCodeLine{00532\ \ \ \ \ SDL\_GL\_CONTEXT\_NO\_ERROR,}
+\DoxyCodeLine{00533\ \ \ \ \ SDL\_GL\_FLOATBUFFERS,}
+\DoxyCodeLine{00534\ \ \ \ \ SDL\_GL\_EGL\_PLATFORM}
+\DoxyCodeLine{00535\ \}\ SDL\_GLAttr;}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00542\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_GLProfile;}
+\DoxyCodeLine{00543\ }
+\DoxyCodeLine{00544\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_PROFILE\_CORE\ \ \ \ \ \ \ \ \ \ \ 0x0001\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00545\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_PROFILE\_COMPATIBILITY\ \ 0x0002\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00546\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_PROFILE\_ES\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0004\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00547\ }
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00554\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_GLContextFlag;}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_DEBUG\_FLAG\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00557\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_FORWARD\_COMPATIBLE\_FLAG\ 0x0002}}
+\DoxyCodeLine{00558\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_ROBUST\_ACCESS\_FLAG\ \ \ \ \ \ 0x0004}}
+\DoxyCodeLine{00559\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_RESET\_ISOLATION\_FLAG\ \ \ \ 0x0008}}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ }
+\DoxyCodeLine{00568\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_GLContextReleaseFlag;}
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_RELEASE\_BEHAVIOR\_NONE\ \ \ 0x0000}}
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_RELEASE\_BEHAVIOR\_FLUSH\ \ 0x0001}}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ }
+\DoxyCodeLine{00579\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_GLContextResetNotification;}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_RESET\_NO\_NOTIFICATION\ \ 0x0000}}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#define\ SDL\_GL\_CONTEXT\_RESET\_LOSE\_CONTEXT\ \ \ \ \ 0x0001}}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ }
+\DoxyCodeLine{00585\ \textcolor{comment}{/*\ Function\ prototypes\ */}}
+\DoxyCodeLine{00586\ }
+\DoxyCodeLine{00598\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetNumVideoDrivers(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00620\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetVideoDriver(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00639\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetCurrentVideoDriver(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00650\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_SystemTheme\ SDLCALL\ SDL\_GetSystemTheme(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00651\ }
+\DoxyCodeLine{00665\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_DisplayID\ *\ SDLCALL\ SDL\_GetDisplays(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00679\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_DisplayID\ SDLCALL\ SDL\_GetPrimaryDisplay(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00680\ }
+\DoxyCodeLine{00717\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetDisplayProperties(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_DISPLAY\_HDR\_ENABLED\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.display.HDR\_enabled"{}}}
+\DoxyCodeLine{00720\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_DISPLAY\_KMSDRM\_PANEL\_ORIENTATION\_NUMBER\ "{}SDL.display.KMSDRM.panel\_orientation"{}}}
+\DoxyCodeLine{00721\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_DISPLAY\_WAYLAND\_WL\_OUTPUT\_POINTER\ \ \ \ \ \ \ "{}SDL.display.wayland.wl\_output"{}}}
+\DoxyCodeLine{00722\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_DISPLAY\_WINDOWS\_HMONITOR\_POINTER\ \ \ \ \ \ \ \ "{}SDL.display.windows.hmonitor"{}}}
+\DoxyCodeLine{00723\ }
+\DoxyCodeLine{00737\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetDisplayName(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00757\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetDisplayBounds(SDL\_DisplayID\ displayID,\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{00758\ }
+\DoxyCodeLine{00783\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetDisplayUsableBounds(SDL\_DisplayID\ displayID,\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{00784\ }
+\DoxyCodeLine{00798\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_DisplayOrientation\ SDLCALL\ SDL\_GetNaturalDisplayOrientation(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00799\ }
+\DoxyCodeLine{00813\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_DisplayOrientation\ SDLCALL\ SDL\_GetCurrentDisplayOrientation(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00814\ }
+\DoxyCodeLine{00840\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_GetDisplayContentScale(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00841\ }
+\DoxyCodeLine{00868\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}}\ **\ SDLCALL\ SDL\_GetFullscreenDisplayModes(SDL\_DisplayID\ displayID,\ \textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00869\ }
+\DoxyCodeLine{00899\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetClosestFullscreenDisplayMode(SDL\_DisplayID\ displayID,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ \textcolor{keywordtype}{float}\ refresh\_rate,\ \textcolor{keywordtype}{bool}\ include\_high\_density\_modes,\ \doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}}\ *closest);}
+\DoxyCodeLine{00900\ }
+\DoxyCodeLine{00920\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}}\ *\ SDLCALL\ SDL\_GetDesktopDisplayMode(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00941\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}}\ *\ SDLCALL\ SDL\_GetCurrentDisplayMode(SDL\_DisplayID\ displayID);}
+\DoxyCodeLine{00942\ }
+\DoxyCodeLine{00957\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_DisplayID\ SDLCALL\ SDL\_GetDisplayForPoint(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___point}{SDL\_Point}}\ *point);}
+\DoxyCodeLine{00958\ }
+\DoxyCodeLine{00974\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_DisplayID\ SDLCALL\ SDL\_GetDisplayForRect(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00991\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_DisplayID\ SDLCALL\ SDL\_GetDisplayForWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00992\ }
+\DoxyCodeLine{01010\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_GetWindowPixelDensity(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01011\ }
+\DoxyCodeLine{01034\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_GetWindowDisplayScale(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01035\ }
+\DoxyCodeLine{01069\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowFullscreenMode(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}}\ *mode);}
+\DoxyCodeLine{01070\ }
+\DoxyCodeLine{01085\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___display_mode}{SDL\_DisplayMode}}\ *\ SDLCALL\ SDL\_GetWindowFullscreenMode(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01086\ }
+\DoxyCodeLine{01100\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ *\ SDLCALL\ SDL\_GetWindowICCProfile(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{size\_t}\ *size);}
+\DoxyCodeLine{01101\ }
+\DoxyCodeLine{01114\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PixelFormat\ SDLCALL\ SDL\_GetWindowPixelFormat(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01115\ }
+\DoxyCodeLine{01130\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ **\ SDLCALL\ SDL\_GetWindows(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{01131\ }
+\DoxyCodeLine{01219\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_CreateWindow(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *title,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ SDL\_WindowFlags\ flags);}
+\DoxyCodeLine{01220\ }
+\DoxyCodeLine{01295\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_CreatePopupWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *parent,\ \textcolor{keywordtype}{int}\ offset\_x,\ \textcolor{keywordtype}{int}\ offset\_y,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h,\ SDL\_WindowFlags\ flags);}
+\DoxyCodeLine{01296\ }
+\DoxyCodeLine{01459\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_CreateWindowWithProperties(SDL\_PropertiesID\ props);}
+\DoxyCodeLine{01460\ }
+\DoxyCodeLine{01461\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_ALWAYS\_ON\_TOP\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.always\_on\_top"{}}}
+\DoxyCodeLine{01462\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_BORDERLESS\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.borderless"{}}}
+\DoxyCodeLine{01463\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_CONSTRAIN\_POPUP\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.constrain\_popup"{}}}
+\DoxyCodeLine{01464\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_FOCUSABLE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.focusable"{}}}
+\DoxyCodeLine{01465\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_EXTERNAL\_GRAPHICS\_CONTEXT\_BOOLEAN\ \ \ "{}SDL.window.create.external\_graphics\_context"{}}}
+\DoxyCodeLine{01466\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_FLAGS\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.flags"{}}}
+\DoxyCodeLine{01467\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_FULLSCREEN\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.fullscreen"{}}}
+\DoxyCodeLine{01468\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_HEIGHT\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.height"{}}}
+\DoxyCodeLine{01469\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_HIDDEN\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.hidden"{}}}
+\DoxyCodeLine{01470\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_HIGH\_PIXEL\_DENSITY\_BOOLEAN\ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.high\_pixel\_density"{}}}
+\DoxyCodeLine{01471\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_MAXIMIZED\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.maximized"{}}}
+\DoxyCodeLine{01472\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_MENU\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.menu"{}}}
+\DoxyCodeLine{01473\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_METAL\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.metal"{}}}
+\DoxyCodeLine{01474\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_MINIMIZED\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.minimized"{}}}
+\DoxyCodeLine{01475\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_MODAL\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.modal"{}}}
+\DoxyCodeLine{01476\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_MOUSE\_GRABBED\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.mouse\_grabbed"{}}}
+\DoxyCodeLine{01477\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_OPENGL\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.opengl"{}}}
+\DoxyCodeLine{01478\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_PARENT\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.parent"{}}}
+\DoxyCodeLine{01479\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_RESIZABLE\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.resizable"{}}}
+\DoxyCodeLine{01480\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_TITLE\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.title"{}}}
+\DoxyCodeLine{01481\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_TRANSPARENT\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.transparent"{}}}
+\DoxyCodeLine{01482\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_TOOLTIP\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.tooltip"{}}}
+\DoxyCodeLine{01483\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_UTILITY\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.utility"{}}}
+\DoxyCodeLine{01484\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_VULKAN\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.vulkan"{}}}
+\DoxyCodeLine{01485\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WIDTH\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.width"{}}}
+\DoxyCodeLine{01486\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_X\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.x"{}}}
+\DoxyCodeLine{01487\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_Y\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.y"{}}}
+\DoxyCodeLine{01488\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_COCOA\_WINDOW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.cocoa.window"{}}}
+\DoxyCodeLine{01489\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_COCOA\_VIEW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.cocoa.view"{}}}
+\DoxyCodeLine{01490\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WINDOWSCENE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.uikit.windowscene"{}}}
+\DoxyCodeLine{01491\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WAYLAND\_SURFACE\_ROLE\_CUSTOM\_BOOLEAN\ "{}SDL.window.create.wayland.surface\_role\_custom"{}}}
+\DoxyCodeLine{01492\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WAYLAND\_CREATE\_EGL\_WINDOW\_BOOLEAN\ \ \ "{}SDL.window.create.wayland.create\_egl\_window"{}}}
+\DoxyCodeLine{01493\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WAYLAND\_WINDOW\_ID\_STRING\ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.wayland.window\_id"{}}}
+\DoxyCodeLine{01494\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WAYLAND\_WL\_SURFACE\_POINTER\ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.wayland.wl\_surface"{}}}
+\DoxyCodeLine{01495\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WIN32\_HWND\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.win32.hwnd"{}}}
+\DoxyCodeLine{01496\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_WIN32\_PIXEL\_FORMAT\_HWND\_POINTER\ \ \ \ \ "{}SDL.window.create.win32.pixel\_format\_hwnd"{}}}
+\DoxyCodeLine{01497\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_X11\_WINDOW\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.x11.window"{}}}
+\DoxyCodeLine{01498\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_EMSCRIPTEN\_CANVAS\_ID\_STRING\ \ \ \ \ \ \ \ \ "{}SDL.window.create.emscripten.canvas\_id"{}}}
+\DoxyCodeLine{01499\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_EMSCRIPTEN\_KEYBOARD\_ELEMENT\_STRING\ \ "{}SDL.window.create.emscripten.keyboard\_element"{}}}
+\DoxyCodeLine{01500\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_CREATE\_VISIONOS\_SETTINGS\_STRING\ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.create.visionos.settings"{}}}
+\DoxyCodeLine{01501\ }
+\DoxyCodeLine{01518\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_WindowID\ SDLCALL\ SDL\_GetWindowID(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01519\ }
+\DoxyCodeLine{01536\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_GetWindowFromID(SDL\_WindowID\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{01537\ }
+\DoxyCodeLine{01551\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_GetWindowParent(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01552\ }
+\DoxyCodeLine{01699\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetWindowProperties(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01700\ }
+\DoxyCodeLine{01701\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_SHAPE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.shape"{}}}
+\DoxyCodeLine{01702\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_HDR\_ENABLED\_BOOLEAN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.HDR\_enabled"{}}}
+\DoxyCodeLine{01703\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_SDR\_WHITE\_LEVEL\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.SDR\_white\_level"{}}}
+\DoxyCodeLine{01704\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_HDR\_HEADROOM\_FLOAT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.HDR\_headroom"{}}}
+\DoxyCodeLine{01705\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_ANDROID\_WINDOW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.android.window"{}}}
+\DoxyCodeLine{01706\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_ANDROID\_SURFACE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.android.surface"{}}}
+\DoxyCodeLine{01707\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_UIKIT\_WINDOW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.uikit.window"{}}}
+\DoxyCodeLine{01708\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_UIKIT\_METAL\_VIEW\_TAG\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.uikit.metal\_view\_tag"{}}}
+\DoxyCodeLine{01709\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_UIKIT\_OPENGL\_FRAMEBUFFER\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.uikit.opengl.framebuffer"{}}}
+\DoxyCodeLine{01710\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_UIKIT\_OPENGL\_RENDERBUFFER\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.uikit.opengl.renderbuffer"{}}}
+\DoxyCodeLine{01711\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_UIKIT\_OPENGL\_RESOLVE\_FRAMEBUFFER\_NUMBER\ \ \ \ \ "{}SDL.window.uikit.opengl.resolve\_framebuffer"{}}}
+\DoxyCodeLine{01712\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_KMSDRM\_DEVICE\_INDEX\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.kmsdrm.dev\_index"{}}}
+\DoxyCodeLine{01713\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_KMSDRM\_DRM\_FD\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.kmsdrm.drm\_fd"{}}}
+\DoxyCodeLine{01714\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_KMSDRM\_GBM\_DEVICE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.kmsdrm.gbm\_dev"{}}}
+\DoxyCodeLine{01715\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_COCOA\_WINDOW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.cocoa.window"{}}}
+\DoxyCodeLine{01716\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_COCOA\_METAL\_VIEW\_TAG\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.cocoa.metal\_view\_tag"{}}}
+\DoxyCodeLine{01717\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_OPENVR\_OVERLAY\_ID\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.openvr.overlay\_id"{}}}
+\DoxyCodeLine{01718\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_QNX\_WINDOW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.qnx.window"{}}}
+\DoxyCodeLine{01719\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_QNX\_SURFACE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.qnx.surface"{}}}
+\DoxyCodeLine{01720\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_VIVANTE\_DISPLAY\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.vivante.display"{}}}
+\DoxyCodeLine{01721\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_VIVANTE\_WINDOW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.vivante.window"{}}}
+\DoxyCodeLine{01722\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_VIVANTE\_SURFACE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.vivante.surface"{}}}
+\DoxyCodeLine{01723\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WIN32\_HWND\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.win32.hwnd"{}}}
+\DoxyCodeLine{01724\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WIN32\_HDC\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.win32.hdc"{}}}
+\DoxyCodeLine{01725\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WIN32\_INSTANCE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.win32.instance"{}}}
+\DoxyCodeLine{01726\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_DISPLAY\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.display"{}}}
+\DoxyCodeLine{01727\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_SURFACE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.surface"{}}}
+\DoxyCodeLine{01728\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_VIEWPORT\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.viewport"{}}}
+\DoxyCodeLine{01729\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_EGL\_WINDOW\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.egl\_window"{}}}
+\DoxyCodeLine{01730\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_WINDOW\_ID\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.window\_id"{}}}
+\DoxyCodeLine{01731\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_XDG\_SURFACE\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.xdg\_surface"{}}}
+\DoxyCodeLine{01732\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_XDG\_TOPLEVEL\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.xdg\_toplevel"{}}}
+\DoxyCodeLine{01733\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_XDG\_TOPLEVEL\_EXPORT\_HANDLE\_STRING\ \ \ "{}SDL.window.wayland.xdg\_toplevel\_export\_handle"{}}}
+\DoxyCodeLine{01734\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_XDG\_POPUP\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.xdg\_popup"{}}}
+\DoxyCodeLine{01735\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_WAYLAND\_XDG\_POSITIONER\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.wayland.xdg\_positioner"{}}}
+\DoxyCodeLine{01736\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_X11\_DISPLAY\_POINTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.x11.display"{}}}
+\DoxyCodeLine{01737\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_X11\_SCREEN\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.x11.screen"{}}}
+\DoxyCodeLine{01738\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_X11\_WINDOW\_NUMBER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.x11.window"{}}}
+\DoxyCodeLine{01739\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_EMSCRIPTEN\_CANVAS\_ID\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.emscripten.canvas\_id"{}}}
+\DoxyCodeLine{01740\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_EMSCRIPTEN\_KEYBOARD\_ELEMENT\_STRING\ \ \ \ \ \ \ \ \ \ "{}SDL.window.emscripten.keyboard\_element"{}}}
+\DoxyCodeLine{01741\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_WINDOW\_VISIONOS\_SETTINGS\_STRING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}SDL.window.visionos.settings"{}}}
+\DoxyCodeLine{01742\ }
+\DoxyCodeLine{01762\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_WindowFlags\ SDLCALL\ SDL\_GetWindowFlags(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01763\ }
+\DoxyCodeLine{01780\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowTitle(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *title);}
+\DoxyCodeLine{01781\ }
+\DoxyCodeLine{01795\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetWindowTitle(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{01796\ }
+\DoxyCodeLine{01822\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowIcon(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\doxymbox{\hyperlink{namespaceicon}{icon}});}
+\DoxyCodeLine{01823\ }
+\DoxyCodeLine{01863\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowPosition(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y);}
+\DoxyCodeLine{01864\ }
+\DoxyCodeLine{01888\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowPosition(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *x,\ \textcolor{keywordtype}{int}\ *y);}
+\DoxyCodeLine{01889\ }
+\DoxyCodeLine{01925\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowSize(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ w,\ \textcolor{keywordtype}{int}\ h);}
+\DoxyCodeLine{01926\ }
+\DoxyCodeLine{01949\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowSize(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *w,\ \textcolor{keywordtype}{int}\ *h);}
+\DoxyCodeLine{01950\ }
+\DoxyCodeLine{01971\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowSafeArea(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{01972\ }
+\DoxyCodeLine{02012\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowAspectRatio(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ min\_aspect,\ \textcolor{keywordtype}{float}\ max\_aspect);}
+\DoxyCodeLine{02013\ }
+\DoxyCodeLine{02031\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowAspectRatio(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ *min\_aspect,\ \textcolor{keywordtype}{float}\ *max\_aspect);}
+\DoxyCodeLine{02032\ }
+\DoxyCodeLine{02068\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowBordersSize(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *top,\ \textcolor{keywordtype}{int}\ *left,\ \textcolor{keywordtype}{int}\ *bottom,\ \textcolor{keywordtype}{int}\ *right);}
+\DoxyCodeLine{02069\ }
+\DoxyCodeLine{02088\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowSizeInPixels(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *w,\ \textcolor{keywordtype}{int}\ *h);}
+\DoxyCodeLine{02089\ }
+\DoxyCodeLine{02106\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowMinimumSize(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ min\_w,\ \textcolor{keywordtype}{int}\ min\_h);}
+\DoxyCodeLine{02107\ }
+\DoxyCodeLine{02126\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowMinimumSize(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *w,\ \textcolor{keywordtype}{int}\ *h);}
+\DoxyCodeLine{02127\ }
+\DoxyCodeLine{02144\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowMaximumSize(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ max\_w,\ \textcolor{keywordtype}{int}\ max\_h);}
+\DoxyCodeLine{02145\ }
+\DoxyCodeLine{02164\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowMaximumSize(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *w,\ \textcolor{keywordtype}{int}\ *h);}
+\DoxyCodeLine{02165\ }
+\DoxyCodeLine{02186\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowBordered(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ bordered);}
+\DoxyCodeLine{02187\ }
+\DoxyCodeLine{02208\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowResizable(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ resizable);}
+\DoxyCodeLine{02209\ }
+\DoxyCodeLine{02227\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowAlwaysOnTop(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ on\_top);}
+\DoxyCodeLine{02228\ }
+\DoxyCodeLine{02258\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowFillDocument(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ fill);}
+\DoxyCodeLine{02259\ }
+\DoxyCodeLine{02274\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ShowWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02275\ }
+\DoxyCodeLine{02290\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_HideWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02291\ }
+\DoxyCodeLine{02310\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RaiseWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02311\ }
+\DoxyCodeLine{02344\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_MaximizeWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02345\ }
+\DoxyCodeLine{02373\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_MinimizeWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02374\ }
+\DoxyCodeLine{02403\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RestoreWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02404\ }
+\DoxyCodeLine{02435\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowFullscreen(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ fullscreen);}
+\DoxyCodeLine{02436\ }
+\DoxyCodeLine{02466\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SyncWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02467\ }
+\DoxyCodeLine{02481\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_WindowHasSurface(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02482\ }
+\DoxyCodeLine{02510\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *\ SDLCALL\ SDL\_GetWindowSurface(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02511\ }
+\DoxyCodeLine{02536\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowSurfaceVSync(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ vsync);}
+\DoxyCodeLine{02537\ }
+\DoxyCodeLine{02538\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_SURFACE\_VSYNC\_DISABLED\ 0}}
+\DoxyCodeLine{02539\ \textcolor{preprocessor}{\#define\ SDL\_WINDOW\_SURFACE\_VSYNC\_ADAPTIVE\ (-\/1)}}
+\DoxyCodeLine{02540\ }
+\DoxyCodeLine{02556\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowSurfaceVSync(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ *vsync);}
+\DoxyCodeLine{02557\ }
+\DoxyCodeLine{02577\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_UpdateWindowSurface(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02578\ }
+\DoxyCodeLine{02606\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_UpdateWindowSurfaceRects(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rects,\ \textcolor{keywordtype}{int}\ numrects);}
+\DoxyCodeLine{02607\ }
+\DoxyCodeLine{02622\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_DestroyWindowSurface(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02623\ }
+\DoxyCodeLine{02655\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowKeyboardGrab(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ grabbed);}
+\DoxyCodeLine{02656\ }
+\DoxyCodeLine{02675\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowMouseGrab(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ grabbed);}
+\DoxyCodeLine{02676\ }
+\DoxyCodeLine{02689\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowKeyboardGrab(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02690\ }
+\DoxyCodeLine{02706\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetWindowMouseGrab(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02707\ }
+\DoxyCodeLine{02720\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_GetGrabbedWindow(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{02721\ }
+\DoxyCodeLine{02742\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowMouseRect(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *rect);}
+\DoxyCodeLine{02743\ }
+\DoxyCodeLine{02759\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ *\ SDLCALL\ SDL\_GetWindowMouseRect(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02760\ }
+\DoxyCodeLine{02780\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowOpacity(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ opacity);}
+\DoxyCodeLine{02781\ }
+\DoxyCodeLine{02798\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_GetWindowOpacity(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{02799\ }
+\DoxyCodeLine{02832\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowParent(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *parent);}
+\DoxyCodeLine{02833\ }
+\DoxyCodeLine{02852\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowModal(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ modal);}
+\DoxyCodeLine{02853\ }
+\DoxyCodeLine{02866\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowFocusable(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ focusable);}
+\DoxyCodeLine{02867\ }
+\DoxyCodeLine{02868\ }
+\DoxyCodeLine{02892\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ShowWindowSystemMenu(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y);}
+\DoxyCodeLine{02893\ }
+\DoxyCodeLine{02903\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_HitTestResult}
+\DoxyCodeLine{02904\ \{}
+\DoxyCodeLine{02905\ \ \ \ \ SDL\_HITTEST\_NORMAL,\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02906\ \ \ \ \ SDL\_HITTEST\_DRAGGABLE,\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02907\ \ \ \ \ SDL\_HITTEST\_RESIZE\_TOPLEFT,\ \ \ \ \ }
+\DoxyCodeLine{02908\ \ \ \ \ SDL\_HITTEST\_RESIZE\_TOP,\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02909\ \ \ \ \ SDL\_HITTEST\_RESIZE\_TOPRIGHT,\ \ \ \ }
+\DoxyCodeLine{02910\ \ \ \ \ SDL\_HITTEST\_RESIZE\_RIGHT,\ \ \ \ \ \ \ }
+\DoxyCodeLine{02911\ \ \ \ \ SDL\_HITTEST\_RESIZE\_BOTTOMRIGHT,\ }
+\DoxyCodeLine{02912\ \ \ \ \ SDL\_HITTEST\_RESIZE\_BOTTOM,\ \ \ \ \ \ }
+\DoxyCodeLine{02913\ \ \ \ \ SDL\_HITTEST\_RESIZE\_BOTTOMLEFT,\ \ }
+\DoxyCodeLine{02914\ \ \ \ \ SDL\_HITTEST\_RESIZE\_LEFT\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{02915\ \}\ SDL\_HitTestResult;}
+\DoxyCodeLine{02916\ }
+\DoxyCodeLine{02927\ \textcolor{keyword}{typedef}\ SDL\_HitTestResult\ (SDLCALL\ *SDL\_HitTest)(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *win,}
+\DoxyCodeLine{02928\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___point}{SDL\_Point}}\ *area,}
+\DoxyCodeLine{02929\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *data);}
+\DoxyCodeLine{02930\ }
+\DoxyCodeLine{02973\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowHitTest(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_HitTest\ callback,\ \textcolor{keywordtype}{void}\ *callback\_data);}
+\DoxyCodeLine{02974\ }
+\DoxyCodeLine{03001\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowShape(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \doxymbox{\hyperlink{struct_s_d_l___surface}{SDL\_Surface}}\ *shape);}
+\DoxyCodeLine{03002\ }
+\DoxyCodeLine{03015\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_FlashWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_FlashOperation\ operation);}
+\DoxyCodeLine{03016\ }
+\DoxyCodeLine{03030\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowProgressState(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_ProgressState\ state);}
+\DoxyCodeLine{03031\ }
+\DoxyCodeLine{03043\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_ProgressState\ SDLCALL\ SDL\_GetWindowProgressState(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{03044\ }
+\DoxyCodeLine{03058\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetWindowProgressValue(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{03059\ }
+\DoxyCodeLine{03071\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_GetWindowProgressValue(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{03072\ }
+\DoxyCodeLine{03093\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_DestroyWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{03094\ }
+\DoxyCodeLine{03095\ }
+\DoxyCodeLine{03112\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ScreenSaverEnabled(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03113\ }
+\DoxyCodeLine{03127\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_EnableScreenSaver(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03128\ }
+\DoxyCodeLine{03148\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_DisableScreenSaver(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03149\ }
+\DoxyCodeLine{03150\ }
+\DoxyCodeLine{03154\ \textcolor{comment}{/*\ @\{\ */}}
+\DoxyCodeLine{03155\ }
+\DoxyCodeLine{03178\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_LoadLibrary(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{03179\ }
+\DoxyCodeLine{03233\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_FunctionPointer\ SDLCALL\ SDL\_GL\_GetProcAddress(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *proc);}
+\DoxyCodeLine{03234\ }
+\DoxyCodeLine{03252\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_FunctionPointer\ SDLCALL\ SDL\_EGL\_GetProcAddress(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *proc);}
+\DoxyCodeLine{03253\ }
+\DoxyCodeLine{03263\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GL\_UnloadLibrary(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03264\ }
+\DoxyCodeLine{03286\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_ExtensionSupported(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *extension);}
+\DoxyCodeLine{03287\ }
+\DoxyCodeLine{03298\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_GL\_ResetAttributes(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03299\ }
+\DoxyCodeLine{03321\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_SetAttribute(SDL\_GLAttr\ attr,\ \textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{03322\ }
+\DoxyCodeLine{03339\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_GetAttribute(SDL\_GLAttr\ attr,\ \textcolor{keywordtype}{int}\ *value);}
+\DoxyCodeLine{03340\ }
+\DoxyCodeLine{03369\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GLContext\ SDLCALL\ SDL\_GL\_CreateContext(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{03370\ }
+\DoxyCodeLine{03387\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_MakeCurrent(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{03388\ }
+\DoxyCodeLine{03399\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *\ SDLCALL\ SDL\_GL\_GetCurrentWindow(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03400\ }
+\DoxyCodeLine{03413\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GLContext\ SDLCALL\ SDL\_GL\_GetCurrentContext(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03414\ }
+\DoxyCodeLine{03425\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_EGLDisplay\ SDLCALL\ SDL\_EGL\_GetCurrentDisplay(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03426\ }
+\DoxyCodeLine{03437\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_EGLConfig\ SDLCALL\ SDL\_EGL\_GetCurrentConfig(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{03438\ }
+\DoxyCodeLine{03450\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_EGLSurface\ SDLCALL\ SDL\_EGL\_GetWindowSurface(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{03451\ }
+\DoxyCodeLine{03472\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_EGL\_SetAttributeCallbacks(SDL\_EGLAttribArrayCallback\ platformAttribCallback,}
+\DoxyCodeLine{03473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_EGLIntArrayCallback\ surfaceAttribCallback,}
+\DoxyCodeLine{03474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_EGLIntArrayCallback\ contextAttribCallback,\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{03475\ }
+\DoxyCodeLine{03505\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_SetSwapInterval(\textcolor{keywordtype}{int}\ interval);}
+\DoxyCodeLine{03506\ }
+\DoxyCodeLine{03526\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_GetSwapInterval(\textcolor{keywordtype}{int}\ *interval);}
+\DoxyCodeLine{03527\ }
+\DoxyCodeLine{03546\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_SwapWindow(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{03547\ }
+\DoxyCodeLine{03561\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GL\_DestroyContext(SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{03562\ }
+\DoxyCodeLine{03563\ \textcolor{comment}{/*\ @\}\ */}\textcolor{comment}{/*\ OpenGL\ support\ functions\ */}}
+\DoxyCodeLine{03564\ }
+\DoxyCodeLine{03565\ }
+\DoxyCodeLine{03566\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{03567\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{03568\ \}}
+\DoxyCodeLine{03569\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{03570\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{03571\ }
+\DoxyCodeLine{03572\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_video\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

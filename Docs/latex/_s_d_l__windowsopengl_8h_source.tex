@@ -1,0 +1,187 @@
+\doxysection{SDL\+\_\+windowsopengl.\+h}
+\hypertarget{_s_d_l__windowsopengl_8h_source}{}\label{_s_d_l__windowsopengl_8h_source}\index{MonoRuntime/extern/sdl/src/video/windows/SDL\_windowsopengl.h@{MonoRuntime/extern/sdl/src/video/windows/SDL\_windowsopengl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_windowsopengl\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_windowsopengl\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifdef\ SDL\_VIDEO\_OPENGL\_WGL}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_XBOXONE)\ ||\ defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00029\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }tagPIXELFORMATDESCRIPTOR}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ WORD\ nSize;}
+\DoxyCodeLine{00032\ \ \ \ \ WORD\ nVersion;}
+\DoxyCodeLine{00033\ \ \ \ \ DWORD\ dwFlags;}
+\DoxyCodeLine{00034\ \ \ \ \ BYTE\ iPixelType;}
+\DoxyCodeLine{00035\ \ \ \ \ BYTE\ cColorBits;}
+\DoxyCodeLine{00036\ \ \ \ \ BYTE\ cRedBits;}
+\DoxyCodeLine{00037\ \ \ \ \ BYTE\ cRedShift;}
+\DoxyCodeLine{00038\ \ \ \ \ BYTE\ cGreenBits;}
+\DoxyCodeLine{00039\ \ \ \ \ BYTE\ cGreenShift;}
+\DoxyCodeLine{00040\ \ \ \ \ BYTE\ cBlueBits;}
+\DoxyCodeLine{00041\ \ \ \ \ BYTE\ cBlueShift;}
+\DoxyCodeLine{00042\ \ \ \ \ BYTE\ cAlphaBits;}
+\DoxyCodeLine{00043\ \ \ \ \ BYTE\ cAlphaShift;}
+\DoxyCodeLine{00044\ \ \ \ \ BYTE\ cAccumBits;}
+\DoxyCodeLine{00045\ \ \ \ \ BYTE\ cAccumRedBits;}
+\DoxyCodeLine{00046\ \ \ \ \ BYTE\ cAccumGreenBits;}
+\DoxyCodeLine{00047\ \ \ \ \ BYTE\ cAccumBlueBits;}
+\DoxyCodeLine{00048\ \ \ \ \ BYTE\ cAccumAlphaBits;}
+\DoxyCodeLine{00049\ \ \ \ \ BYTE\ cDepthBits;}
+\DoxyCodeLine{00050\ \ \ \ \ BYTE\ cStencilBits;}
+\DoxyCodeLine{00051\ \ \ \ \ BYTE\ cAuxBuffers;}
+\DoxyCodeLine{00052\ \ \ \ \ BYTE\ iLayerType;}
+\DoxyCodeLine{00053\ \ \ \ \ BYTE\ bReserved;}
+\DoxyCodeLine{00054\ \ \ \ \ DWORD\ dwLayerMask;}
+\DoxyCodeLine{00055\ \ \ \ \ DWORD\ dwVisibleMask;}
+\DoxyCodeLine{00056\ \ \ \ \ DWORD\ dwDamageMask;}
+\DoxyCodeLine{00057\ \}\ PIXELFORMATDESCRIPTOR,\ *PPIXELFORMATDESCRIPTOR,\ *LPPIXELFORMATDESCRIPTOR;}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___g_l_driver_data}{SDL\_GLDriverData}}}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_ARB\_pixel\_format;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_EXT\_swap\_control\_tear;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_ARB\_context\_flush\_control;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_ARB\_create\_context\_robustness;}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_ARB\_create\_context\_no\_error;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_ARB\_pixel\_format\_float;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_EXT\_create\_context\_es2\_profile;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{bool}\ HAS\_WGL\_ARB\_framebuffer\_sRGB;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{/*\ Max\ version\ of\ OpenGL\ ES\ context\ that\ can\ be\ created\ if\ the}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ \ \ \ \ \ \ implementation\ supports\ WGL\_EXT\_create\_context\_es2\_profile.}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ \ \ \ \ \ \ major\ =\ minor\ =\ 0\ when\ unsupported.}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ \ \ */}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00076\ \ \ \ \ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ major;}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ minor;}
+\DoxyCodeLine{00079\ \ \ \ \ \}\ es\_profile\_max\_supported\_version;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00082\ \ \ \ \ PROC\ (WINAPI\ *wglGetProcAddress)(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *proc);}
+\DoxyCodeLine{00083\ \ \ \ \ HGLRC\ (WINAPI\ *wglCreateContext)(HDC\ hdc);}
+\DoxyCodeLine{00084\ \ \ \ \ BOOL\ (WINAPI\ *wglDeleteContext)(HGLRC\ hglrc);}
+\DoxyCodeLine{00085\ \ \ \ \ BOOL\ (WINAPI\ *wglMakeCurrent)(HDC\ hdc,\ HGLRC\ hglrc);}
+\DoxyCodeLine{00086\ \ \ \ \ BOOL\ (WINAPI\ *wglShareLists)(HGLRC\ hglrc1,\ HGLRC\ hglrc2);}
+\DoxyCodeLine{00087\ \ \ \ \ BOOL\ (WINAPI\ *wglChoosePixelFormatARB)(HDC\ hdc,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *piAttribIList,\ \textcolor{keyword}{const}\ FLOAT\ *\ pfAttribFList,\ UINT\ nMaxFormats,\ \textcolor{keywordtype}{int}\ *piFormats,\ UINT\ *\ nNumFormats);}
+\DoxyCodeLine{00088\ \ \ \ \ BOOL\ (WINAPI\ *wglGetPixelFormatAttribivARB)(HDC\ hdc,\ \textcolor{keywordtype}{int}\ iPixelFormat,\ \textcolor{keywordtype}{int}\ iLayerPlane,\ UINT\ nAttributes,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *piAttributes,\ \textcolor{keywordtype}{int}\ *piValues);}
+\DoxyCodeLine{00089\ \ \ \ \ BOOL\ (WINAPI\ *wglSwapIntervalEXT)(\textcolor{keywordtype}{int}\ interval);}
+\DoxyCodeLine{00090\ \ \ \ \ int\ (WINAPI\ *wglGetSwapIntervalEXT)(void);}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_XBOXONE)\ ||\ defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00092\ \ \ \ \ BOOL\ (WINAPI\ *wglSwapBuffers)(HDC\ hdc);}
+\DoxyCodeLine{00093\ \ \ \ \ int\ (WINAPI\ *wglDescribePixelFormat)(HDC\ hdc,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ iPixelFormat,}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UINT\ nBytes,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LPPIXELFORMATDESCRIPTOR\ ppfd);}
+\DoxyCodeLine{00097\ \ \ \ \ int\ (WINAPI\ *wglChoosePixelFormat)(HDC\ hdc,}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ PIXELFORMATDESCRIPTOR\ *ppfd);}
+\DoxyCodeLine{00099\ \ \ \ \ BOOL\ (WINAPI\ *wglSetPixelFormat)(HDC\ hdc,}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ format,}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ PIXELFORMATDESCRIPTOR\ *ppfd);}
+\DoxyCodeLine{00102\ \ \ \ \ int\ (WINAPI\ *wglGetPixelFormat)(HDC\ hdc);}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00105\ \};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{comment}{//\ OpenGL\ functions}}
+\DoxyCodeLine{00108\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_LoadLibrary(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *path);}
+\DoxyCodeLine{00109\ \textcolor{keyword}{extern}\ SDL\_FunctionPointer\ WIN\_GL\_GetProcAddress(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *proc);}
+\DoxyCodeLine{00110\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_GL\_UnloadLibrary(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00111\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_UseEGL(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00112\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_SetupWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00113\ \textcolor{keyword}{extern}\ SDL\_GLContext\ WIN\_GL\_CreateContext(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00114\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_MakeCurrent(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{00116\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_SetSwapInterval(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ interval);}
+\DoxyCodeLine{00117\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_GetSwapInterval(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \textcolor{keywordtype}{int}\ *interval);}
+\DoxyCodeLine{00118\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_SwapWindow(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00119\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_GL\_DestroyContext(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ SDL\_GLContext\ \doxymbox{\hyperlink{classcontext}{context}});}
+\DoxyCodeLine{00120\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ WIN\_GL\_InitExtensions(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#ifndef\ WGL\_ARB\_pixel\_format}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ WGL\_NUMBER\_PIXEL\_FORMATS\_ARB\ \ \ \ 0x2000}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ WGL\_DRAW\_TO\_WINDOW\_ARB\ \ \ \ \ \ \ \ \ \ 0x2001}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ WGL\_DRAW\_TO\_BITMAP\_ARB\ \ \ \ \ \ \ \ \ \ 0x2002}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ WGL\_ACCELERATION\_ARB\ \ \ \ \ \ \ \ \ \ \ \ 0x2003}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ WGL\_NEED\_PALETTE\_ARB\ \ \ \ \ \ \ \ \ \ \ \ 0x2004}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ WGL\_NEED\_SYSTEM\_PALETTE\_ARB\ \ \ \ \ 0x2005}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ WGL\_SWAP\_LAYER\_BUFFERS\_ARB\ \ \ \ \ \ 0x2006}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ WGL\_SWAP\_METHOD\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x2007}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ WGL\_NUMBER\_OVERLAYS\_ARB\ \ \ \ \ \ \ \ \ 0x2008}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ WGL\_NUMBER\_UNDERLAYS\_ARB\ \ \ \ \ \ \ \ 0x2009}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ WGL\_TRANSPARENT\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x200A}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ WGL\_TRANSPARENT\_RED\_VALUE\_ARB\ \ \ 0x2037}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ WGL\_TRANSPARENT\_GREEN\_VALUE\_ARB\ 0x2038}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ WGL\_TRANSPARENT\_BLUE\_VALUE\_ARB\ \ 0x2039}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ WGL\_TRANSPARENT\_ALPHA\_VALUE\_ARB\ 0x203A}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ WGL\_TRANSPARENT\_INDEX\_VALUE\_ARB\ 0x203B}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ WGL\_SHARE\_DEPTH\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x200C}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ WGL\_SHARE\_STENCIL\_ARB\ \ \ \ \ \ \ \ \ \ \ 0x200D}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ WGL\_SHARE\_ACCUM\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x200E}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ WGL\_SUPPORT\_GDI\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x200F}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ WGL\_SUPPORT\_OPENGL\_ARB\ \ \ \ \ \ \ \ \ \ 0x2010}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ WGL\_DOUBLE\_BUFFER\_ARB\ \ \ \ \ \ \ \ \ \ \ 0x2011}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ WGL\_STEREO\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2012}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ WGL\_PIXEL\_TYPE\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2013}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ WGL\_COLOR\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2014}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ WGL\_RED\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2015}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ WGL\_RED\_SHIFT\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2016}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ WGL\_GREEN\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2017}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ WGL\_GREEN\_SHIFT\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x2018}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ WGL\_BLUE\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2019}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ WGL\_BLUE\_SHIFT\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x201A}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ WGL\_ALPHA\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x201B}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ WGL\_ALPHA\_SHIFT\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x201C}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ WGL\_ACCUM\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x201D}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ WGL\_ACCUM\_RED\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ 0x201E}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ WGL\_ACCUM\_GREEN\_BITS\_ARB\ \ \ \ \ \ \ \ 0x201F}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ WGL\_ACCUM\_BLUE\_BITS\_ARB\ \ \ \ \ \ \ \ \ 0x2020}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ WGL\_ACCUM\_ALPHA\_BITS\_ARB\ \ \ \ \ \ \ \ 0x2021}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ WGL\_DEPTH\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2022}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ WGL\_STENCIL\_BITS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ 0x2023}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ WGL\_AUX\_BUFFERS\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ 0x2024}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ WGL\_NO\_ACCELERATION\_ARB\ \ \ \ \ \ \ \ \ 0x2025}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ WGL\_GENERIC\_ACCELERATION\_ARB\ \ \ \ 0x2026}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ WGL\_FULL\_ACCELERATION\_ARB\ \ \ \ \ \ \ 0x2027}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ WGL\_SWAP\_EXCHANGE\_ARB\ \ \ \ \ \ \ \ \ \ \ 0x2028}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ WGL\_SWAP\_COPY\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x2029}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ WGL\_SWAP\_UNDEFINED\_ARB\ \ \ \ \ \ \ \ \ \ 0x202A}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ WGL\_TYPE\_RGBA\_ARB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x202B}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ WGL\_TYPE\_COLORINDEX\_ARB\ \ \ \ \ \ \ \ \ 0x202C}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#ifndef\ WGL\_ARB\_multisample}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ WGL\_SAMPLE\_BUFFERS\_ARB\ 0x2041}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ WGL\_SAMPLES\_ARB\ \ \ \ \ \ \ \ 0x2042}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_VIDEO\_OPENGL\_WGL}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_windowsopengl\_h\_}}
+
+\end{DoxyCode}

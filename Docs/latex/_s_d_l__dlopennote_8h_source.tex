@@ -1,0 +1,134 @@
+\doxysection{SDL\+\_\+dlopennote.\+h}
+\hypertarget{_s_d_l__dlopennote_8h_source}{}\label{_s_d_l__dlopennote_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_dlopennote.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_dlopennote.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ WIKI\ CATEGORY:\ DlopenNotes\ */}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#ifndef\ SDL\_dlopennote\_h}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ SDL\_dlopennote\_h}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN\_PRIORITY\_SUGGESTED\ \ \ "{}suggested"{}}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN\_PRIORITY\_RECOMMENDED\ "{}recommended"{}}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN\_PRIORITY\_REQUIRED\ \ \ \ "{}required"{}}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_UNIX)\ ||\ defined(SDL\_PLATFORM\_ANDROID)}}
+\DoxyCodeLine{00105\ \textcolor{comment}{/*\ The\ dlopen\ note\ functionality\ isn't\ used\ on\ this\ platform\ */}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#ifndef\ SDL\_DISABLE\_DLOPEN\_NOTES}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ SDL\_DISABLE\_DLOPEN\_NOTES}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)\ \&\&\ (\_\_GNUC\_\_\ <\ 3\ ||\ (\_\_GNUC\_\_\ ==\ 3\ \&\&\ \_\_GNUC\_MINOR\_\_\ <\ 1))}}
+\DoxyCodeLine{00110\ \textcolor{comment}{/*\ gcc\ <\ 3.1\ too\ old\ */}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#ifndef\ SDL\_DISABLE\_DLOPEN\_NOTES}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ SDL\_DISABLE\_DLOPEN\_NOTES}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_PLATFORM\_UNIX\ ||\ SDL\_PLATFORM\_ANDROID\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#if\ defined(\_\_ELF\_\_)\ \&\&\ !defined(SDL\_DISABLE\_DLOPEN\_NOTES)}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN\_VENDOR\ "{}FDO"{}}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN\_TYPE\ 0x407c0c0aU}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_INTERNAL2(json,\ variable\_name)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\ \ \ \ \_\_attribute\_\_((aligned(4),\ used,\ section("{}.note.dlopen"{})))\ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\ \ \ \ static\ const\ struct\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ struct\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ Uint32\ n\_namesz;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ Uint32\ n\_descsz;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ Uint32\ n\_type;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ nhdr;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ char\ name[4];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \_\_attribute\_\_((aligned(4)))\ char\ dlopen\_json[sizeof(json)];\ \(\backslash\)}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\ \ \ \ \}\ variable\_name\ =\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ sizeof(SDL\_ELF\_NOTE\_DLOPEN\_VENDOR),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ sizeof(json),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_ELF\_NOTE\_DLOPEN\_TYPE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ SDL\_ELF\_NOTE\_DLOPEN\_VENDOR,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ json\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\ \ \ \ \}}}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_INTERNAL(json,\ variable\_name)\ \(\backslash\)}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\ \ \ \ SDL\_ELF\_NOTE\_INTERNAL2(json,\ variable\_name)}}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY1(N1)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY2(N1,N2)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N2\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY3(N1,N2,N3)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N2\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N3\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY4(N1,N2,N3,N4)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N2\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N3\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N4\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY5(N1,N2,N3,N4,N5)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N2\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N3\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N4\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N5\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY6(N1,N2,N3,N4,N5,N6)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N2\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N3\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N4\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N5\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N6\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY7(N1,N2,N3,N4,N5,N6,N7)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N2\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N3\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N4\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N5\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N6\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N7\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY8(N1,N2,N3,N4,N5,N6,N7,N8)\ "{}[\(\backslash\)"{}"{}\ N1\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N2\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N3\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N4\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N5\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N6\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N7\ "{}\(\backslash\)"{},\(\backslash\)"{}"{}\ N8\ "{}\(\backslash\)"{}]"{}}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY\_GET(N1,N2,N3,N4,N5,N6,N7,N8,NAME,...)\ NAME}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JSON\_ARRAY(...)\ \(\backslash\)}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY\_GET(\ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \_\_VA\_ARGS\_\_,\ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY8,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY7,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY6,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY5,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY4,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY3,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY2,\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ SDL\_DLNOTE\_JSON\_ARRAY1\ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\ \ \ \ )(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{comment}{/*\ Create\ "{}unique"{}\ variable\ name\ using\ \_\_LINE\_\_,}}
+\DoxyCodeLine{00169\ \textcolor{comment}{\ *\ so\ creating\ multiple\ elf\ notes\ on\ the\ same\ line\ is\ not\ supported}}
+\DoxyCodeLine{00170\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JOIN2(A,B)\ A\#\#B}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_JOIN(A,B)\ SDL\_DLNOTE\_JOIN2(A,B)}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ SDL\_DLNOTE\_UNIQUE\_NAME\ SDL\_DLNOTE\_JOIN(s\_SDL\_dlopen\_note\_,\ \_\_LINE\_\_)}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN(feature,\ description,\ priority,\ ...)\ \(\backslash\)}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\ \ \ \ SDL\_ELF\_NOTE\_INTERNAL(\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ "{}[\{\(\backslash\)"{}feature\(\backslash\)"{}:\(\backslash\)"{}"{}\ feature\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ "{}\(\backslash\)"{},\(\backslash\)"{}description\(\backslash\)"{}:\(\backslash\)"{}"{}\ description\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ "{}\(\backslash\)"{},\(\backslash\)"{}priority\(\backslash\)"{}:\(\backslash\)"{}"{}\ priority\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ "{}\(\backslash\)"{},\(\backslash\)"{}soname\(\backslash\)"{}:"{}\ SDL\_DLNOTE\_JSON\_ARRAY(\_\_VA\_ARGS\_\_)\ "{}\}]"{},\ \ \ \(\backslash\)}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ SDL\_DLNOTE\_UNIQUE\_NAME);}}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#elif\ defined(\_\_GNUC\_\_)\ \&\&\ \_\_GNUC\_\_\ <\ 3}}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN(args...)}}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#elif\ defined(\_MSC\_VER)\ \&\&\ \_MSC\_VER\ <\ 1400}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00226\ \textcolor{comment}{/*\ Variadic\ macros\ are\ not\ supported\ */}}
+\DoxyCodeLine{00227\ }
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ SDL\_ELF\_NOTE\_DLOPEN(...)}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_dlopennote\_h\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

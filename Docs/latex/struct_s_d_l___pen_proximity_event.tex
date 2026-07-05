@@ -1,0 +1,68 @@
+\doxysection{SDL\+\_\+\+Pen\+Proximity\+Event Struct Reference}
+\hypertarget{struct_s_d_l___pen_proximity_event}{}\label{struct_s_d_l___pen_proximity_event}\index{SDL\_PenProximityEvent@{SDL\_PenProximityEvent}}
+
+
+{\ttfamily \+\#include $<$SDL\+\_\+events.\+h$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+SDL\+\_\+\+Event\+Type \doxymbox{\hyperlink{struct_s_d_l___pen_proximity_event_a777025f062d19d6e02242f928a34dd06}{type}}
+\item 
+\Hypertarget{struct_s_d_l___pen_proximity_event_a788fb86ae2c0bee4ef4f608b9dfa0269}\label{struct_s_d_l___pen_proximity_event_a788fb86ae2c0bee4ef4f608b9dfa0269} 
+Uint32 {\bfseries reserved}
+\item 
+Uint64 \doxymbox{\hyperlink{struct_s_d_l___pen_proximity_event_a10c18490059f40f9c236dfc787949b63}{timestamp}}
+\item 
+SDL\+\_\+\+Window\+ID \doxymbox{\hyperlink{struct_s_d_l___pen_proximity_event_adf04ef3a5ba6471d18070926046c0bb1}{window\+ID}}
+\item 
+SDL\+\_\+\+Pen\+ID \doxymbox{\hyperlink{struct_s_d_l___pen_proximity_event_a1367b26d2388f2716310ce7c4ba8eeed}{which}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Pressure-\/sensitive pen proximity event structure (event.\+pproximity.\texorpdfstring{$\ast$}{*})
+
+When a pen becomes visible to the system (it is close enough to a tablet, etc), SDL will send an SDL\+\_\+\+EVENT\+\_\+\+PEN\+\_\+\+PROXIMITY\+\_\+\+IN event with the new pen\textquotesingle{}s ID. This ID is valid until the pen leaves proximity again (has been removed from the tablet\textquotesingle{}s area, the tablet has been unplugged, etc). If the same pen reenters proximity again, it will be given a new ID.
+
+Note that "{}proximity"{} means "{}close enough for the tablet to know the tool is there."{} The pen touching and lifting off from the tablet while not leaving the area are handled by SDL\+\_\+\+EVENT\+\_\+\+PEN\+\_\+\+DOWN and SDL\+\_\+\+EVENT\+\_\+\+PEN\+\_\+\+UP.
+
+Not all platforms have a window associated with the pen during proximity events. Some wait until motion/\+button/\+etc events to offer this info.
+
+\begin{DoxySince}{Since}
+This struct is available since SDL 3.\+2.\+0. 
+\end{DoxySince}
+
+
+\label{struct_s_d_l___pen_proximity_event_doc-variable-members}
+\Hypertarget{struct_s_d_l___pen_proximity_event_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_s_d_l___pen_proximity_event_a10c18490059f40f9c236dfc787949b63}\index{SDL\_PenProximityEvent@{SDL\_PenProximityEvent}!timestamp@{timestamp}}
+\index{timestamp@{timestamp}!SDL\_PenProximityEvent@{SDL\_PenProximityEvent}}
+\doxysubsubsection{\texorpdfstring{timestamp}{timestamp}}
+{\footnotesize\ttfamily \label{struct_s_d_l___pen_proximity_event_a10c18490059f40f9c236dfc787949b63} 
+Uint64 SDL\+\_\+\+Pen\+Proximity\+Event::\+timestamp}
+
+In nanoseconds, populated using SDL\+\_\+\+Get\+Ticks\+NS() \Hypertarget{struct_s_d_l___pen_proximity_event_a777025f062d19d6e02242f928a34dd06}\index{SDL\_PenProximityEvent@{SDL\_PenProximityEvent}!type@{type}}
+\index{type@{type}!SDL\_PenProximityEvent@{SDL\_PenProximityEvent}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{struct_s_d_l___pen_proximity_event_a777025f062d19d6e02242f928a34dd06} 
+SDL\+\_\+\+Event\+Type SDL\+\_\+\+Pen\+Proximity\+Event::\+type}
+
+SDL\+\_\+\+EVENT\+\_\+\+PEN\+\_\+\+PROXIMITY\+\_\+\+IN or SDL\+\_\+\+EVENT\+\_\+\+PEN\+\_\+\+PROXIMITY\+\_\+\+OUT \Hypertarget{struct_s_d_l___pen_proximity_event_a1367b26d2388f2716310ce7c4ba8eeed}\index{SDL\_PenProximityEvent@{SDL\_PenProximityEvent}!which@{which}}
+\index{which@{which}!SDL\_PenProximityEvent@{SDL\_PenProximityEvent}}
+\doxysubsubsection{\texorpdfstring{which}{which}}
+{\footnotesize\ttfamily \label{struct_s_d_l___pen_proximity_event_a1367b26d2388f2716310ce7c4ba8eeed} 
+SDL\+\_\+\+Pen\+ID SDL\+\_\+\+Pen\+Proximity\+Event::\+which}
+
+The pen instance id \Hypertarget{struct_s_d_l___pen_proximity_event_adf04ef3a5ba6471d18070926046c0bb1}\index{SDL\_PenProximityEvent@{SDL\_PenProximityEvent}!windowID@{windowID}}
+\index{windowID@{windowID}!SDL\_PenProximityEvent@{SDL\_PenProximityEvent}}
+\doxysubsubsection{\texorpdfstring{windowID}{windowID}}
+{\footnotesize\ttfamily \label{struct_s_d_l___pen_proximity_event_adf04ef3a5ba6471d18070926046c0bb1} 
+SDL\+\_\+\+Window\+ID SDL\+\_\+\+Pen\+Proximity\+Event::\+window\+ID}
+
+The window with pen focus, if any 
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+Mono\+Runtime/\+extern/\+sdl/\+include/\+\+SDL3/\+SDL\+\_\+events.\+h\end{DoxyCompactItemize}

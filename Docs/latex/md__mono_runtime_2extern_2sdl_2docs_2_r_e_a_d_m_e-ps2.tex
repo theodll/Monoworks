@@ -1,0 +1,60 @@
+\chapter{PS2 }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2}\index{PS2@{PS2}}
+SDL port for the Sony Playstation 2 contributed by:\+
+\begin{DoxyItemize}
+\item Francisco Javier Trujillo Mata
+\end{DoxyItemize}
+
+Credit to
+\begin{DoxyItemize}
+\item The guys that ported SDL to PSP \& Vita because I\textquotesingle{}m taking them as reference.
+\item David G. F. for helping me with several issues and tests.
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1428}{}\doxysection{\texorpdfstring{Building}{Building}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1428}
+To build SDL library for the PS2, make sure you have the latest PS2\+Dev status and run:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export\ PS2DEV=/usr/local/ps2dev\ \#\ or\ wherever\ your\ ps2dev\ installation\ is}
+\DoxyCodeLine{export\ PS2SDK=\$PS2DEV/ps2sdk}
+\DoxyCodeLine{export\ PATH=\$PATH:\$PS2DEV/bin:\$PS2DEV/ee/bin:\$PS2DEV/iop/bin:\$PS2DEV/dvp/bin:\$PS2SDK/bin}
+\DoxyCodeLine{cmake\ -\/S.\ -\/Bbuild\ -\/DCMAKE\_BUILD\_TYPE=Release\ -\/DCMAKE\_TOOLCHAIN\_FILE=\$PS2DEV/share/ps2dev.cmake}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+\DoxyCodeLine{cmake\ -\/-\/install\ build}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1429}{}\doxysection{\texorpdfstring{Hints}{Hints}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1429}
+
+\begin{DoxyItemize}
+\item {\ttfamily SDL\+\_\+\+HINT\+\_\+\+PS2\+\_\+\+GS\+\_\+\+WIDTH}:\+ Width of the framebuffer. Defaults to 640.
+\item {\ttfamily SDL\+\_\+\+HINT\+\_\+\+PS2\+\_\+\+GS\+\_\+\+HEIGHT}:\+ Height of the framebuffer. Defaults to 448.
+\item {\ttfamily SDL\+\_\+\+HINT\+\_\+\+PS2\+\_\+\+GS\+\_\+\+PROGRESSIVE}:\+ Whether to use progressive, instead of interlaced. Defaults to 0.
+\item {\ttfamily SDL\+\_\+\+HINT\+\_\+\+PS2\+\_\+\+GS\+\_\+\+MODE}:\+ Regional standard of the signal. "{}\+NTSC"{} (60hz), "{}\+PAL"{} (50hz) or "{}"{} (the console\textquotesingle{}s region, default).
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1430}{}\doxysection{\texorpdfstring{Notes}{Notes}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1430}
+If you trying to debug a SDL app through \href{https://github.com/ps2dev/ps2client}{\texttt{ps2client}} you need to avoid the IOP reset, otherwise you will lose the connection with your computer. So to avoid the reset of the IOP CPU, you need to call to the macro {\ttfamily SDL\+\_\+\+PS2\+\_\+\+SKIP\+\_\+\+IOP\+\_\+\+RESET();}. It could be something similar as:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{.....}
+\DoxyCodeLine{}
+\DoxyCodeLine{SDL\_PS2\_SKIP\_IOP\_RESET();}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int}\ main(\textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ *argv[])}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{.....}
+
+\end{DoxyCode}
+ For a release binary is recommendable to reset the IOP always.
+
+Remember to do a clean compilation every time you enable or disable the {\ttfamily SDL\+\_\+\+PS2\+\_\+\+SKIP\+\_\+\+IOP\+\_\+\+RESET} otherwise the change won\textquotesingle{}t be reflected.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1431}{}\doxysection{\texorpdfstring{Getting PS2 Dev}{Getting PS2 Dev}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1431}
+\href{https://github.com/ps2dev/ps2dev}{\texttt{Installing PS2 Dev}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1432}{}\doxysection{\texorpdfstring{Running on Emulators}{Running on Emulators}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1432}
+\href{https://github.com/PCSX2/pcsx2}{\texttt{PCSX2}}
+
+\href{https://pcsx2.net/}{\texttt{More PCSX2 information}}
+
+\href{https://github.com/allkern/iris}{\texttt{Iris}}
+
+\href{https://allkern.dev/iris}{\texttt{More Iris information}}
+
+\href{https://github.com/jpd002/Play-}{\texttt{Play!}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1433}{}\doxysection{\texorpdfstring{To Do}{To Do}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ps2_autotoc_md1433}
+
+\begin{DoxyItemize}
+\item PS2 Screen Keyboard
+\item Dialogs
+\item Others 
+\end{DoxyItemize}

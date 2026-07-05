@@ -1,0 +1,95 @@
+\doxysection{imgui\+\_\+impl\+\_\+dx12.\+h}
+\hypertarget{imgui__impl__dx12_8h_source}{}\label{imgui__impl__dx12_8h_source}\index{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_dx12.h@{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_dx12.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ dear\ imgui:\ Renderer\ Backend\ for\ DirectX12}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ This\ needs\ to\ be\ used\ along\ with\ a\ Platform\ Backend\ (e.g.\ Win32)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Implemented\ features:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ \ [X]\ Renderer:\ User\ texture\ binding.\ Use\ 'D3D12\_GPU\_DESCRIPTOR\_HANDLE'\ as\ texture\ identifier.\ Read\ the\ FAQ\ about\ ImTextureID/ImTextureRef!}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Large\ meshes\ support\ (64k+\ vertices)\ even\ with\ 16-\/bit\ indices\ (ImGuiBackendFlags\_RendererHasVtxOffset).}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Texture\ updates\ support\ for\ dynamic\ font\ atlas\ (ImGuiBackendFlags\_RendererHasTextures).}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ \ [X]\ Renderer:\ Expose\ selected\ render\ state\ for\ draw\ callbacks\ to\ use.\ Access\ in\ '(ImGui\_ImplXXXX\_RenderState*)GetPlatformIO().Renderer\_RenderState'.}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ The\ aim\ of\ imgui\_impl\_dx12.h/.cpp\ is\ to\ be\ usable\ in\ your\ engine\ without\ any\ modification.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ IF\ YOU\ FEEL\ YOU\ NEED\ TO\ MAKE\ ANY\ CHANGE\ TO\ THIS\ CODE,\ please\ share\ them\ and\ your\ feedback\ at\ https://github.com/ocornut/imgui/}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ You\ can\ use\ unmodified\ imgui\_impl\_*\ files\ in\ your\ project.\ See\ examples/\ folder\ for\ examples\ of\ using\ this.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Prefer\ including\ the\ entire\ imgui/\ repository\ into\ your\ project\ (either\ as\ a\ copy\ or\ as\ a\ submodule),\ and\ only\ build\ the\ backends\ you\ need.}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ Learn\ about\ Dear\ ImGui:}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ -\/\ FAQ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ https://dearimgui.com/faq}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ -\/\ Getting\ Started\ \ \ \ \ \ https://dearimgui.com/getting-\/started}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ -\/\ Documentation\ \ \ \ \ \ \ \ https://dearimgui.com/docs\ (same\ as\ your\ local\ docs/\ folder).}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ -\/\ Introduction,\ links\ and\ more\ at\ the\ top\ of\ imgui.cpp}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}imgui.h"{}}\ \ \ \ \ \ \textcolor{comment}{//\ IMGUI\_IMPL\_API}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ IMGUI\_DISABLE}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ <dxgiformat.h>}\ \textcolor{comment}{//\ DXGI\_FORMAT}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ <d3d12.h>}\ \ \ \ \ \ \textcolor{comment}{//\ D3D12\_CPU\_DESCRIPTOR\_HANDLE}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ Clang/GCC\ warnings\ with\ -\/Weverything}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#if\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ push}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ ignored\ "{}-\/Wold-\/style-\/cast"{}\ }\textcolor{comment}{//\ warning:\ use\ of\ old-\/style\ cast}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Initialization\ data,\ for\ ImGui\_ImplDX12\_Init()}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{struct\ }ImGui\_ImplDX12\_InitInfo}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ ID3D12Device*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Device;}
+\DoxyCodeLine{00037\ \ \ \ \ ID3D12CommandQueue*\ \ \ \ \ \ \ \ \ CommandQueue;\ \ \ \ \ \ \ \textcolor{comment}{//\ Command\ queue\ used\ for\ queuing\ texture\ uploads.}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ NumFramesInFlight;}
+\DoxyCodeLine{00039\ \ \ \ \ DXGI\_FORMAT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RTVFormat;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ RenderTarget\ format.}}
+\DoxyCodeLine{00040\ \ \ \ \ DXGI\_FORMAT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DSVFormat;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ DepthStencilView\ format.}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UserData;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ Allocating\ SRV\ descriptors\ for\ textures\ is\ up\ to\ the\ application,\ so\ we\ provide\ callbacks.}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ (current\ version\ of\ the\ backend\ will\ only\ allocate\ one\ descriptor,\ from\ 1.92\ the\ backend\ will\ need\ to\ allocate\ more)}}
+\DoxyCodeLine{00045\ \ \ \ \ ID3D12DescriptorHeap*\ \ \ \ \ \ \ SrvDescriptorHeap;}
+\DoxyCodeLine{00046\ \ \ \ \ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*SrvDescriptorAllocFn)(ImGui\_ImplDX12\_InitInfo*\ info,\ D3D12\_CPU\_DESCRIPTOR\_HANDLE*\ out\_cpu\_desc\_handle,\ D3D12\_GPU\_DESCRIPTOR\_HANDLE*\ out\_gpu\_desc\_handle);}
+\DoxyCodeLine{00047\ \ \ \ \ void\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (*SrvDescriptorFreeFn)(ImGui\_ImplDX12\_InitInfo*\ info,\ D3D12\_CPU\_DESCRIPTOR\_HANDLE\ cpu\_desc\_handle,\ D3D12\_GPU\_DESCRIPTOR\_HANDLE\ gpu\_desc\_handle);}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#ifndef\ IMGUI\_DISABLE\_OBSOLETE\_FUNCTIONS}}
+\DoxyCodeLine{00049\ \ \ \ \ D3D12\_CPU\_DESCRIPTOR\_HANDLE\ LegacySingleSrvCpuDescriptor;\ \textcolor{comment}{//\ To\ facilitate\ transition\ from\ single\ descriptor\ to\ allocator\ callback,\ you\ may\ use\ those.}}
+\DoxyCodeLine{00050\ \ \ \ \ D3D12\_GPU\_DESCRIPTOR\_HANDLE\ LegacySingleSrvGpuDescriptor;}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ ImGui\_ImplDX12\_InitInfo()\ \ \ \{\ memset((\textcolor{keywordtype}{void}*)\textcolor{keyword}{this},\ 0,\ \textcolor{keyword}{sizeof}(*\textcolor{keyword}{this}));\ \}}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{comment}{//\ Follow\ "{}Getting\ Started"{}\ link\ and\ check\ examples/\ folder\ to\ learn\ about\ using\ backends!}}
+\DoxyCodeLine{00057\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ ImGui\_ImplDX12\_Init(\doxymbox{\hyperlink{struct_im_gui___impl_d_x12___init_info}{ImGui\_ImplDX12\_InitInfo}}*\ info);}
+\DoxyCodeLine{00058\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplDX12\_Shutdown();}
+\DoxyCodeLine{00059\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplDX12\_NewFrame();}
+\DoxyCodeLine{00060\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplDX12\_RenderDrawData(\doxymbox{\hyperlink{struct_im_draw_data}{ImDrawData}}*\ draw\_data,\ ID3D12GraphicsCommandList*\ graphics\_command\_list);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#ifndef\ IMGUI\_DISABLE\_OBSOLETE\_FUNCTIONS}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Legacy\ initialization\ API\ Obsoleted\ in\ 1.91.5}}
+\DoxyCodeLine{00064\ \textcolor{comment}{//\ -\/\ font\_srv\_cpu\_desc\_handle\ and\ font\_srv\_gpu\_desc\_handle\ are\ handles\ to\ a\ single\ SRV\ descriptor\ to\ use\ for\ the\ internal\ font\ texture,\ they\ must\ be\ in\ 'srv\_descriptor\_heap'}}
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ -\/\ When\ we\ introduced\ the\ ImGui\_ImplDX12\_InitInfo\ struct\ we\ also\ added\ a\ 'ID3D12CommandQueue*\ CommandQueue'\ field.}}
+\DoxyCodeLine{00066\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ ImGui\_ImplDX12\_Init(ID3D12Device*\ device,\ \textcolor{keywordtype}{int}\ num\_frames\_in\_flight,\ DXGI\_FORMAT\ rtv\_format,\ ID3D12DescriptorHeap*\ srv\_descriptor\_heap,\ D3D12\_CPU\_DESCRIPTOR\_HANDLE\ font\_srv\_cpu\_desc\_handle,\ D3D12\_GPU\_DESCRIPTOR\_HANDLE\ font\_srv\_gpu\_desc\_handle);}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ Use\ if\ you\ want\ to\ reset\ your\ rendering\ device\ without\ losing\ Dear\ ImGui\ state.}}
+\DoxyCodeLine{00070\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ ImGui\_ImplDX12\_CreateDeviceObjects();}
+\DoxyCodeLine{00071\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplDX12\_InvalidateDeviceObjects();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{//\ (Advanced)\ Use\ e.g.\ if\ you\ need\ to\ precisely\ control\ the\ timing\ of\ texture\ updates\ (e.g.\ for\ staged\ rendering),\ by\ setting\ ImDrawData::Textures\ =\ nullptr\ to\ handle\ this\ manually.}}
+\DoxyCodeLine{00074\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplDX12\_UpdateTexture(\doxymbox{\hyperlink{struct_im_texture_data}{ImTextureData}}*\ tex);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{comment}{//\ [BETA]\ Selected\ render\ state\ data\ shared\ with\ callbacks.}}
+\DoxyCodeLine{00077\ \textcolor{comment}{//\ This\ is\ temporarily\ stored\ in\ GetPlatformIO().Renderer\_RenderState\ during\ the\ ImGui\_ImplDX12\_RenderDrawData()\ call.}}
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ (Please\ open\ an\ issue\ if\ you\ feel\ you\ need\ access\ to\ more\ data)}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_im_gui___impl_d_x12___render_state}{ImGui\_ImplDX12\_RenderState}}}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ ID3D12Device*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Device;}
+\DoxyCodeLine{00082\ \ \ \ \ ID3D12GraphicsCommandList*\ \ CommandList;}
+\DoxyCodeLine{00083\ \};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#if\ defined(\_\_clang\_\_)}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#pragma\ clang\ diagnostic\ pop}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#ifndef\ IMGUI\_DISABLE}}
+
+\end{DoxyCode}

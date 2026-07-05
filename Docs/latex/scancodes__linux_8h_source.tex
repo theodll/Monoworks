@@ -1,0 +1,854 @@
+\doxysection{scancodes\+\_\+linux.\+h}
+\hypertarget{scancodes__linux_8h_source}{}\label{scancodes__linux_8h_source}\index{MonoRuntime/extern/sdl/src/events/scancodes\_linux.h@{MonoRuntime/extern/sdl/src/events/scancodes\_linux.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{/*\ Linux\ virtual\ key\ code\ to\ SDL\_Keycode\ mapping\ table}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ \ \ Sources:}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ \ -\/\ Linux\ kernel\ source\ input.h}}
+\DoxyCodeLine{00026\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00027\ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00028\ \textcolor{keyword}{static}\ SDL\_Scancode\ \textcolor{keyword}{const}\ linux\_scancode\_table[]\ =\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{/*\ \ \ 0,\ 0x000\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RESERVED}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{comment}{/*\ \ \ 1,\ 0x001\ */}\ \ \ \ SDL\_SCANCODE\_ESCAPE,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ESC}}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{comment}{/*\ \ \ 2,\ 0x002\ */}\ \ \ \ SDL\_SCANCODE\_1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_1}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{/*\ \ \ 3,\ 0x003\ */}\ \ \ \ SDL\_SCANCODE\_2,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_2}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{/*\ \ \ 4,\ 0x004\ */}\ \ \ \ SDL\_SCANCODE\_3,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_3}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{/*\ \ \ 5,\ 0x005\ */}\ \ \ \ SDL\_SCANCODE\_4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_4}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{comment}{/*\ \ \ 6,\ 0x006\ */}\ \ \ \ SDL\_SCANCODE\_5,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_5}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{/*\ \ \ 7,\ 0x007\ */}\ \ \ \ SDL\_SCANCODE\_6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_6}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{/*\ \ \ 8,\ 0x008\ */}\ \ \ \ SDL\_SCANCODE\_7,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_7}}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{/*\ \ \ 9,\ 0x009\ */}\ \ \ \ SDL\_SCANCODE\_8,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_8}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{comment}{/*\ \ 10,\ 0x00a\ */}\ \ \ \ SDL\_SCANCODE\_9,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_9}}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{/*\ \ 11,\ 0x00b\ */}\ \ \ \ SDL\_SCANCODE\_0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_0}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{/*\ \ 12,\ 0x00c\ */}\ \ \ \ SDL\_SCANCODE\_MINUS,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MINUS}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{/*\ \ 13,\ 0x00d\ */}\ \ \ \ SDL\_SCANCODE\_EQUALS,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EQUAL}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{/*\ \ 14,\ 0x00e\ */}\ \ \ \ SDL\_SCANCODE\_BACKSPACE,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BACKSPACE}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{/*\ \ 15,\ 0x00f\ */}\ \ \ \ SDL\_SCANCODE\_TAB,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TAB}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{/*\ \ 16,\ 0x010\ */}\ \ \ \ SDL\_SCANCODE\_Q,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_Q}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{/*\ \ 17,\ 0x011\ */}\ \ \ \ SDL\_SCANCODE\_W,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_W}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{/*\ \ 18,\ 0x012\ */}\ \ \ \ SDL\_SCANCODE\_E,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_E}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{/*\ \ 19,\ 0x013\ */}\ \ \ \ SDL\_SCANCODE\_R,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_R}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{/*\ \ 20,\ 0x014\ */}\ \ \ \ SDL\_SCANCODE\_T,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_T}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{/*\ \ 21,\ 0x015\ */}\ \ \ \ SDL\_SCANCODE\_Y,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_Y}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{/*\ \ 22,\ 0x016\ */}\ \ \ \ SDL\_SCANCODE\_U,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_U}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{comment}{/*\ \ 23,\ 0x017\ */}\ \ \ \ SDL\_SCANCODE\_I,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_I}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{/*\ \ 24,\ 0x018\ */}\ \ \ \ SDL\_SCANCODE\_O,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_O}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{/*\ \ 25,\ 0x019\ */}\ \ \ \ SDL\_SCANCODE\_P,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_P}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{/*\ \ 26,\ 0x01a\ */}\ \ \ \ SDL\_SCANCODE\_LEFTBRACKET,\ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFTBRACE}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{/*\ \ 27,\ 0x01b\ */}\ \ \ \ SDL\_SCANCODE\_RIGHTBRACKET,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHTBRACE}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{/*\ \ 28,\ 0x01c\ */}\ \ \ \ SDL\_SCANCODE\_RETURN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ENTER}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{/*\ \ 29,\ 0x01d\ */}\ \ \ \ SDL\_SCANCODE\_LCTRL,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFTCTRL}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{/*\ \ 30,\ 0x01e\ */}\ \ \ \ SDL\_SCANCODE\_A,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_A}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{/*\ \ 31,\ 0x01f\ */}\ \ \ \ SDL\_SCANCODE\_S,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_S}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{comment}{/*\ \ 32,\ 0x020\ */}\ \ \ \ SDL\_SCANCODE\_D,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_D}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{comment}{/*\ \ 33,\ 0x021\ */}\ \ \ \ SDL\_SCANCODE\_F,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F}}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{/*\ \ 34,\ 0x022\ */}\ \ \ \ SDL\_SCANCODE\_G,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_G}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{/*\ \ 35,\ 0x023\ */}\ \ \ \ SDL\_SCANCODE\_H,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_H}}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{/*\ \ 36,\ 0x024\ */}\ \ \ \ SDL\_SCANCODE\_J,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_J}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{/*\ \ 37,\ 0x025\ */}\ \ \ \ SDL\_SCANCODE\_K,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_K}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{/*\ \ 38,\ 0x026\ */}\ \ \ \ SDL\_SCANCODE\_L,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_L}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{comment}{/*\ \ 39,\ 0x027\ */}\ \ \ \ SDL\_SCANCODE\_SEMICOLON,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SEMICOLON}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{/*\ \ 40,\ 0x028\ */}\ \ \ \ SDL\_SCANCODE\_APOSTROPHE,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_APOSTROPHE}}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{/*\ \ 41,\ 0x029\ */}\ \ \ \ SDL\_SCANCODE\_GRAVE,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_GRAVE}}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{/*\ \ 42,\ 0x02a\ */}\ \ \ \ SDL\_SCANCODE\_LSHIFT,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFTSHIFT}}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{/*\ \ 43,\ 0x02b\ */}\ \ \ \ SDL\_SCANCODE\_BACKSLASH,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BACKSLASH}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{/*\ \ 44,\ 0x02c\ */}\ \ \ \ SDL\_SCANCODE\_Z,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_Z}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{/*\ \ 45,\ 0x02d\ */}\ \ \ \ SDL\_SCANCODE\_X,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_X}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{/*\ \ 46,\ 0x02e\ */}\ \ \ \ SDL\_SCANCODE\_C,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_C}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{/*\ \ 47,\ 0x02f\ */}\ \ \ \ SDL\_SCANCODE\_V,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_V}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{comment}{/*\ \ 48,\ 0x030\ */}\ \ \ \ SDL\_SCANCODE\_B,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_B}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{/*\ \ 49,\ 0x031\ */}\ \ \ \ SDL\_SCANCODE\_N,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_N}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{/*\ \ 50,\ 0x032\ */}\ \ \ \ SDL\_SCANCODE\_M,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_M}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{/*\ \ 51,\ 0x033\ */}\ \ \ \ SDL\_SCANCODE\_COMMA,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_COMMA}}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{/*\ \ 52,\ 0x034\ */}\ \ \ \ SDL\_SCANCODE\_PERIOD,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DOT}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{/*\ \ 53,\ 0x035\ */}\ \ \ \ SDL\_SCANCODE\_SLASH,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SLASH}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{/*\ \ 54,\ 0x036\ */}\ \ \ \ SDL\_SCANCODE\_RSHIFT,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHTSHIFT}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{/*\ \ 55,\ 0x037\ */}\ \ \ \ SDL\_SCANCODE\_KP\_MULTIPLY,\ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPASTERISK}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{/*\ \ 56,\ 0x038\ */}\ \ \ \ SDL\_SCANCODE\_LALT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFTALT}}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{comment}{/*\ \ 57,\ 0x039\ */}\ \ \ \ SDL\_SCANCODE\_SPACE,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SPACE}}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{/*\ \ 58,\ 0x03a\ */}\ \ \ \ SDL\_SCANCODE\_CAPSLOCK,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAPSLOCK}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{/*\ \ 59,\ 0x03b\ */}\ \ \ \ SDL\_SCANCODE\_F1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F1}}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{/*\ \ 60,\ 0x03c\ */}\ \ \ \ SDL\_SCANCODE\_F2,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F2}}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{/*\ \ 61,\ 0x03d\ */}\ \ \ \ SDL\_SCANCODE\_F3,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F3}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{/*\ \ 62,\ 0x03e\ */}\ \ \ \ SDL\_SCANCODE\_F4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F4}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{/*\ \ 63,\ 0x03f\ */}\ \ \ \ SDL\_SCANCODE\_F5,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F5}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{/*\ \ 64,\ 0x040\ */}\ \ \ \ SDL\_SCANCODE\_F6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F6}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{comment}{/*\ \ 65,\ 0x041\ */}\ \ \ \ SDL\_SCANCODE\_F7,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F7}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{comment}{/*\ \ 66,\ 0x042\ */}\ \ \ \ SDL\_SCANCODE\_F8,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F8}}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{comment}{/*\ \ 67,\ 0x043\ */}\ \ \ \ SDL\_SCANCODE\_F9,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F9}}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{comment}{/*\ \ 68,\ 0x044\ */}\ \ \ \ SDL\_SCANCODE\_F10,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F10}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{/*\ \ 69,\ 0x045\ */}\ \ \ \ SDL\_SCANCODE\_NUMLOCKCLEAR,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMLOCK}}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{/*\ \ 70,\ 0x046\ */}\ \ \ \ SDL\_SCANCODE\_SCROLLLOCK,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SCROLLLOCK}}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{comment}{/*\ \ 71,\ 0x047\ */}\ \ \ \ SDL\_SCANCODE\_KP\_7,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP7}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{comment}{/*\ \ 72,\ 0x048\ */}\ \ \ \ SDL\_SCANCODE\_KP\_8,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP8}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{/*\ \ 73,\ 0x049\ */}\ \ \ \ SDL\_SCANCODE\_KP\_9,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP9}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{/*\ \ 74,\ 0x04a\ */}\ \ \ \ SDL\_SCANCODE\_KP\_MINUS,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPMINUS}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{/*\ \ 75,\ 0x04b\ */}\ \ \ \ SDL\_SCANCODE\_KP\_4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP4}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{comment}{/*\ \ 76,\ 0x04c\ */}\ \ \ \ SDL\_SCANCODE\_KP\_5,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP5}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{comment}{/*\ \ 77,\ 0x04d\ */}\ \ \ \ SDL\_SCANCODE\_KP\_6,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP6}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{comment}{/*\ \ 78,\ 0x04e\ */}\ \ \ \ SDL\_SCANCODE\_KP\_PLUS,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPPLUS}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{/*\ \ 79,\ 0x04f\ */}\ \ \ \ SDL\_SCANCODE\_KP\_1,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP1}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{/*\ \ 80,\ 0x050\ */}\ \ \ \ SDL\_SCANCODE\_KP\_2,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP2}}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{comment}{/*\ \ 81,\ 0x051\ */}\ \ \ \ SDL\_SCANCODE\_KP\_3,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP3}}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{comment}{/*\ \ 82,\ 0x052\ */}\ \ \ \ SDL\_SCANCODE\_KP\_0,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KP0}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{/*\ \ 83,\ 0x053\ */}\ \ \ \ SDL\_SCANCODE\_KP\_PERIOD,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPDOT}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{comment}{/*\ \ 84,\ 0x054\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{comment}{/*\ \ 85,\ 0x055\ */}\ \ \ \ SDL\_SCANCODE\_LANG5,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ZENKAKUHANKAKU}}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{/*\ \ 86,\ 0x056\ */}\ \ \ \ SDL\_SCANCODE\_NONUSBACKSLASH,\ \ \ \ \textcolor{comment}{//\ KEY\_102ND}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{comment}{/*\ \ 87,\ 0x057\ */}\ \ \ \ SDL\_SCANCODE\_F11,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F11}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{comment}{/*\ \ 88,\ 0x058\ */}\ \ \ \ SDL\_SCANCODE\_F12,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F12}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{comment}{/*\ \ 89,\ 0x059\ */}\ \ \ \ SDL\_SCANCODE\_INTERNATIONAL1,\ \ \ \ \textcolor{comment}{//\ KEY\_RO}}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{/*\ \ 90,\ 0x05a\ */}\ \ \ \ SDL\_SCANCODE\_LANG3,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KATAKANA}}
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{comment}{/*\ \ 91,\ 0x05b\ */}\ \ \ \ SDL\_SCANCODE\_LANG4,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HIRAGANA}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{comment}{/*\ \ 92,\ 0x05c\ */}\ \ \ \ SDL\_SCANCODE\_INTERNATIONAL4,\ \ \ \ \textcolor{comment}{//\ KEY\_HENKAN}}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{comment}{/*\ \ 93,\ 0x05d\ */}\ \ \ \ SDL\_SCANCODE\_INTERNATIONAL2,\ \ \ \ \textcolor{comment}{//\ KEY\_KATAKANAHIRAGANA}}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{comment}{/*\ \ 94,\ 0x05e\ */}\ \ \ \ SDL\_SCANCODE\_INTERNATIONAL5,\ \ \ \ \textcolor{comment}{//\ KEY\_MUHENKAN}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{comment}{/*\ \ 95,\ 0x05f\ */}\ \ \ \ SDL\_SCANCODE\_INTERNATIONAL5,\ \ \ \ \textcolor{comment}{//\ KEY\_KPJPCOMMA}}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{comment}{/*\ \ 96,\ 0x060\ */}\ \ \ \ SDL\_SCANCODE\_KP\_ENTER,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPENTER}}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{comment}{/*\ \ 97,\ 0x061\ */}\ \ \ \ SDL\_SCANCODE\_RCTRL,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHTCTRL}}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{comment}{/*\ \ 98,\ 0x062\ */}\ \ \ \ SDL\_SCANCODE\_KP\_DIVIDE,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPSLASH}}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{comment}{/*\ \ 99,\ 0x063\ */}\ \ \ \ SDL\_SCANCODE\_SYSREQ,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SYSRQ}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{/*\ 100,\ 0x064\ */}\ \ \ \ SDL\_SCANCODE\_RALT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHTALT}}
+\DoxyCodeLine{00130\ \ \ \ \ \textcolor{comment}{/*\ 101,\ 0x065\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LINEFEED}}
+\DoxyCodeLine{00131\ \ \ \ \ \textcolor{comment}{/*\ 102,\ 0x066\ */}\ \ \ \ SDL\_SCANCODE\_HOME,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HOME}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{comment}{/*\ 103,\ 0x067\ */}\ \ \ \ SDL\_SCANCODE\_UP,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_UP}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{comment}{/*\ 104,\ 0x068\ */}\ \ \ \ SDL\_SCANCODE\_PAGEUP,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PAGEUP}}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{/*\ 105,\ 0x069\ */}\ \ \ \ SDL\_SCANCODE\_LEFT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFT}}
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{/*\ 106,\ 0x06a\ */}\ \ \ \ SDL\_SCANCODE\_RIGHT,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHT}}
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{/*\ 107,\ 0x06b\ */}\ \ \ \ SDL\_SCANCODE\_END,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_END}}
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{comment}{/*\ 108,\ 0x06c\ */}\ \ \ \ SDL\_SCANCODE\_DOWN,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DOWN}}
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{comment}{/*\ 109,\ 0x06d\ */}\ \ \ \ SDL\_SCANCODE\_PAGEDOWN,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PAGEDOWN}}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{/*\ 110,\ 0x06e\ */}\ \ \ \ SDL\_SCANCODE\_INSERT,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_INSERT}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{comment}{/*\ 111,\ 0x06f\ */}\ \ \ \ SDL\_SCANCODE\_DELETE,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DELETE}}
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{/*\ 112,\ 0x070\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO}}
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{comment}{/*\ 113,\ 0x071\ */}\ \ \ \ SDL\_SCANCODE\_MUTE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MUTE}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{comment}{/*\ 114,\ 0x072\ */}\ \ \ \ SDL\_SCANCODE\_VOLUMEDOWN,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VOLUMEDOWN}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{comment}{/*\ 115,\ 0x073\ */}\ \ \ \ SDL\_SCANCODE\_VOLUMEUP,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VOLUMEUP}}
+\DoxyCodeLine{00145\ \ \ \ \ \textcolor{comment}{/*\ 116,\ 0x074\ */}\ \ \ \ SDL\_SCANCODE\_POWER,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_POWER}}
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{comment}{/*\ 117,\ 0x075\ */}\ \ \ \ SDL\_SCANCODE\_KP\_EQUALS,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPEQUAL}}
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{comment}{/*\ 118,\ 0x076\ */}\ \ \ \ SDL\_SCANCODE\_KP\_PLUSMINUS,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPPLUSMINUS}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{comment}{/*\ 119,\ 0x077\ */}\ \ \ \ SDL\_SCANCODE\_PAUSE,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PAUSE}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{comment}{/*\ 120,\ 0x078\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SCALE}}
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{/*\ 121,\ 0x079\ */}\ \ \ \ SDL\_SCANCODE\_KP\_COMMA,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPCOMMA}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{comment}{/*\ 122,\ 0x07a\ */}\ \ \ \ SDL\_SCANCODE\_LANG1,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HANGEUL}}
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{comment}{/*\ 123,\ 0x07b\ */}\ \ \ \ SDL\_SCANCODE\_LANG2,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HANJA}}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{comment}{/*\ 124,\ 0x07c\ */}\ \ \ \ SDL\_SCANCODE\_INTERNATIONAL3,\ \ \ \ \textcolor{comment}{//\ KEY\_YEN}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{comment}{/*\ 125,\ 0x07d\ */}\ \ \ \ SDL\_SCANCODE\_LGUI,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFTMETA}}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{comment}{/*\ 126,\ 0x07e\ */}\ \ \ \ SDL\_SCANCODE\_RGUI,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHTMETA}}
+\DoxyCodeLine{00156\ \ \ \ \ \textcolor{comment}{/*\ 127,\ 0x07f\ */}\ \ \ \ SDL\_SCANCODE\_APPLICATION,\ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_COMPOSE}}
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{comment}{/*\ 128,\ 0x080\ */}\ \ \ \ SDL\_SCANCODE\_STOP,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_STOP}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{comment}{/*\ 129,\ 0x081\ */}\ \ \ \ SDL\_SCANCODE\_AGAIN,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_AGAIN}}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{comment}{/*\ 130,\ 0x082\ */}\ \ \ \ SDL\_SCANCODE\_AC\_PROPERTIES,\ \ \ \ \ \textcolor{comment}{//\ KEY\_PROPS}}
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{/*\ 131,\ 0x083\ */}\ \ \ \ SDL\_SCANCODE\_UNDO,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_UNDO}}
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{comment}{/*\ 132,\ 0x084\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FRONT}}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{comment}{/*\ 133,\ 0x085\ */}\ \ \ \ SDL\_SCANCODE\_COPY,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_COPY}}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{comment}{/*\ 134,\ 0x086\ */}\ \ \ \ SDL\_SCANCODE\_AC\_OPEN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_OPEN}}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{comment}{/*\ 135,\ 0x087\ */}\ \ \ \ SDL\_SCANCODE\_PASTE,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PASTE}}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{/*\ 136,\ 0x088\ */}\ \ \ \ SDL\_SCANCODE\_FIND,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FIND}}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{comment}{/*\ 137,\ 0x089\ */}\ \ \ \ SDL\_SCANCODE\_CUT,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CUT}}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{comment}{/*\ 138,\ 0x08a\ */}\ \ \ \ SDL\_SCANCODE\_HELP,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HELP}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{comment}{/*\ 139,\ 0x08b\ */}\ \ \ \ SDL\_SCANCODE\_MENU,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MENU}}
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{comment}{/*\ 140,\ 0x08c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CALC}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{/*\ 141,\ 0x08d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SETUP}}
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{/*\ 142,\ 0x08e\ */}\ \ \ \ SDL\_SCANCODE\_SLEEP,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SLEEP}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{comment}{/*\ 143,\ 0x08f\ */}\ \ \ \ SDL\_SCANCODE\_WAKE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_WAKEUP}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{/*\ 144,\ 0x090\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FILE}}
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{comment}{/*\ 145,\ 0x091\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SENDFILE}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{comment}{/*\ 146,\ 0x092\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DELETEFILE}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{comment}{/*\ 147,\ 0x093\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_XFER}}
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{comment}{/*\ 148,\ 0x094\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PROG1}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{comment}{/*\ 149,\ 0x095\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PROG2}}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{comment}{/*\ 150,\ 0x096\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_WWW}}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{/*\ 151,\ 0x097\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MSDOS}}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{comment}{/*\ 152,\ 0x098\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_COFFEE}}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{comment}{/*\ 153,\ 0x099\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ROTATE\_DISPLAY}}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{comment}{/*\ 154,\ 0x09a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CYCLEWINDOWS}}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{comment}{/*\ 155,\ 0x09b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MAIL}}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{/*\ 156,\ 0x09c\ */}\ \ \ \ SDL\_SCANCODE\_AC\_BOOKMARKS,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BOOKMARKS}}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{comment}{/*\ 157,\ 0x09d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_COMPUTER}}
+\DoxyCodeLine{00187\ \ \ \ \ \textcolor{comment}{/*\ 158,\ 0x09e\ */}\ \ \ \ SDL\_SCANCODE\_AC\_BACK,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BACK}}
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{comment}{/*\ 159,\ 0x09f\ */}\ \ \ \ SDL\_SCANCODE\_AC\_FORWARD,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FORWARD}}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{comment}{/*\ 160,\ 0x0a0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CLOSECD}}
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{/*\ 161,\ 0x0a1\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_EJECT,\ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EJECTCD}}
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{comment}{/*\ 162,\ 0x0a2\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_EJECT,\ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EJECTCLOSECD}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{comment}{/*\ 163,\ 0x0a3\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_NEXT\_TRACK,\ \ \textcolor{comment}{//\ KEY\_NEXTSONG}}
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{comment}{/*\ 164,\ 0x0a4\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_PLAY\_PAUSE,\ \ \ \textcolor{comment}{//\ KEY\_PLAYPAUSE}}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{comment}{/*\ 165,\ 0x0a5\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_PREVIOUS\_TRACK,\ \textcolor{comment}{//\ KEY\_PREVIOUSSONG}}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{comment}{/*\ 166,\ 0x0a6\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_STOP,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_STOPCD}}
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{comment}{/*\ 167,\ 0x0a7\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_RECORD,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RECORD}}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{comment}{/*\ 168,\ 0x0a8\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_REWIND,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_REWIND}}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{comment}{/*\ 169,\ 0x0a9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PHONE}}
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{comment}{/*\ 170,\ 0x0aa\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ISO}}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{comment}{/*\ 171,\ 0x0ab\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CONFIG}}
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{comment}{/*\ 172,\ 0x0ac\ */}\ \ \ \ SDL\_SCANCODE\_AC\_HOME,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HOMEPAGE}}
+\DoxyCodeLine{00202\ \ \ \ \ \textcolor{comment}{/*\ 173,\ 0x0ad\ */}\ \ \ \ SDL\_SCANCODE\_AC\_REFRESH,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_REFRESH}}
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{/*\ 174,\ 0x0ae\ */}\ \ \ \ SDL\_SCANCODE\_AC\_EXIT,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EXIT}}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{comment}{/*\ 175,\ 0x0af\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MOVE}}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{comment}{/*\ 176,\ 0x0b0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EDIT}}
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{comment}{/*\ 177,\ 0x0b1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SCROLLUP}}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{comment}{/*\ 178,\ 0x0b2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SCROLLDOWN}}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{comment}{/*\ 179,\ 0x0b3\ */}\ \ \ \ SDL\_SCANCODE\_KP\_LEFTPAREN,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KPLEFTPAREN}}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{comment}{/*\ 180,\ 0x0b4\ */}\ \ \ \ SDL\_SCANCODE\_KP\_RIGHTPAREN,\ \ \ \ \ \textcolor{comment}{//\ KEY\_KPRIGHTPAREN}}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{comment}{/*\ 181,\ 0x0b5\ */}\ \ \ \ SDL\_SCANCODE\_AC\_NEW,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NEW}}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{comment}{/*\ 182,\ 0x0b6\ */}\ \ \ \ SDL\_SCANCODE\_AGAIN,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_REDO}}
+\DoxyCodeLine{00212\ \ \ \ \ \textcolor{comment}{/*\ 183,\ 0x0b7\ */}\ \ \ \ SDL\_SCANCODE\_F13,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F13}}
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{comment}{/*\ 184,\ 0x0b8\ */}\ \ \ \ SDL\_SCANCODE\_F14,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F14}}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{comment}{/*\ 185,\ 0x0b9\ */}\ \ \ \ SDL\_SCANCODE\_F15,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F15}}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{comment}{/*\ 186,\ 0x0ba\ */}\ \ \ \ SDL\_SCANCODE\_F16,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F16}}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{comment}{/*\ 187,\ 0x0bb\ */}\ \ \ \ SDL\_SCANCODE\_F17,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F17}}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{comment}{/*\ 188,\ 0x0bc\ */}\ \ \ \ SDL\_SCANCODE\_F18,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F18}}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{/*\ 189,\ 0x0bd\ */}\ \ \ \ SDL\_SCANCODE\_F19,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F19}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{comment}{/*\ 190,\ 0x0be\ */}\ \ \ \ SDL\_SCANCODE\_F20,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F20}}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{comment}{/*\ 191,\ 0x0bf\ */}\ \ \ \ SDL\_SCANCODE\_F21,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F21}}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{comment}{/*\ 192,\ 0x0c0\ */}\ \ \ \ SDL\_SCANCODE\_F22,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F22}}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{comment}{/*\ 193,\ 0x0c1\ */}\ \ \ \ SDL\_SCANCODE\_F23,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F23}}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{comment}{/*\ 194,\ 0x0c2\ */}\ \ \ \ SDL\_SCANCODE\_F24,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_F24}}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{comment}{/*\ 195,\ 0x0c3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00225\ \ \ \ \ \textcolor{comment}{/*\ 196,\ 0x0c4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{comment}{/*\ 197,\ 0x0c5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{comment}{/*\ 198,\ 0x0c6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{comment}{/*\ 199,\ 0x0c7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{comment}{/*\ 200,\ 0x0c8\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_PLAY,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PLAYCD}}
+\DoxyCodeLine{00230\ \ \ \ \ \textcolor{comment}{/*\ 201,\ 0x0c9\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_PAUSE,\ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PAUSECD}}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{/*\ 202,\ 0x0ca\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PROG3}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{comment}{/*\ 203,\ 0x0cb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PROG4}}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{comment}{/*\ 204,\ 0x0cc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ALL\_APPLICATIONS}}
+\DoxyCodeLine{00234\ \ \ \ \ \textcolor{comment}{/*\ 205,\ 0x0cd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SUSPEND}}
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{comment}{/*\ 206,\ 0x0ce\ */}\ \ \ \ SDL\_SCANCODE\_AC\_CLOSE,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CLOSE}}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{comment}{/*\ 207,\ 0x0cf\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_PLAY,\ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PLAY}}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{comment}{/*\ 208,\ 0x0d0\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_FAST\_FORWARD,\ \textcolor{comment}{//\ KEY\_FASTFORWARD}}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{comment}{/*\ 209,\ 0x0d1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BASSBOOST}}
+\DoxyCodeLine{00239\ \ \ \ \ \textcolor{comment}{/*\ 210,\ 0x0d2\ */}\ \ \ \ SDL\_SCANCODE\_PRINTSCREEN,\ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PRINT}}
+\DoxyCodeLine{00240\ \ \ \ \ \textcolor{comment}{/*\ 211,\ 0x0d3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HP}}
+\DoxyCodeLine{00241\ \ \ \ \ \textcolor{comment}{/*\ 212,\ 0x0d4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA}}
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{comment}{/*\ 213,\ 0x0d5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SOUND}}
+\DoxyCodeLine{00243\ \ \ \ \ \textcolor{comment}{/*\ 214,\ 0x0d6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_QUESTION}}
+\DoxyCodeLine{00244\ \ \ \ \ \textcolor{comment}{/*\ 215,\ 0x0d7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EMAIL}}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{comment}{/*\ 216,\ 0x0d8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CHAT}}
+\DoxyCodeLine{00246\ \ \ \ \ \textcolor{comment}{/*\ 217,\ 0x0d9\ */}\ \ \ \ SDL\_SCANCODE\_AC\_SEARCH,\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SEARCH}}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{comment}{/*\ 218,\ 0x0da\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CONNECT}}
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{comment}{/*\ 219,\ 0x0db\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FINANCE}}
+\DoxyCodeLine{00249\ \ \ \ \ \textcolor{comment}{/*\ 220,\ 0x0dc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SPORT}}
+\DoxyCodeLine{00250\ \ \ \ \ \textcolor{comment}{/*\ 221,\ 0x0dd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SHOP}}
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{comment}{/*\ 222,\ 0x0de\ */}\ \ \ \ SDL\_SCANCODE\_ALTERASE,\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ALTERASE}}
+\DoxyCodeLine{00252\ \ \ \ \ \textcolor{comment}{/*\ 223,\ 0x0df\ */}\ \ \ \ SDL\_SCANCODE\_CANCEL,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CANCEL}}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{comment}{/*\ 224,\ 0x0e0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRIGHTNESSDOWN}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{comment}{/*\ 225,\ 0x0e1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRIGHTNESSUP}}
+\DoxyCodeLine{00255\ \ \ \ \ \textcolor{comment}{/*\ 226,\ 0x0e2\ */}\ \ \ \ SDL\_SCANCODE\_MEDIA\_SELECT,\ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MEDIA}}
+\DoxyCodeLine{00256\ \ \ \ \ \textcolor{comment}{/*\ 227,\ 0x0e3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SWITCHVIDEOMODE}}
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{comment}{/*\ 228,\ 0x0e4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDILLUMTOGGLE}}
+\DoxyCodeLine{00258\ \ \ \ \ \textcolor{comment}{/*\ 229,\ 0x0e5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDILLUMDOWN}}
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{comment}{/*\ 230,\ 0x0e6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDILLUMUP}}
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{comment}{/*\ 231,\ 0x0e7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SEND}}
+\DoxyCodeLine{00261\ \ \ \ \ \textcolor{comment}{/*\ 232,\ 0x0e8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_REPLY}}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{comment}{/*\ 233,\ 0x0e9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FORWARDMAIL}}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{comment}{/*\ 234,\ 0x0ea\ */}\ \ \ \ SDL\_SCANCODE\_AC\_SAVE,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SAVE}}
+\DoxyCodeLine{00264\ \ \ \ \ \textcolor{comment}{/*\ 235,\ 0x0eb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DOCUMENTS}}
+\DoxyCodeLine{00265\ \ \ \ \ \textcolor{comment}{/*\ 236,\ 0x0ec\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BATTERY}}
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{comment}{/*\ 237,\ 0x0ed\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BLUETOOTH}}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{comment}{/*\ 238,\ 0x0ee\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_WLAN}}
+\DoxyCodeLine{00268\ \ \ \ \ \textcolor{comment}{/*\ 239,\ 0x0ef\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_UWB}}
+\DoxyCodeLine{00269\ \ \ \ \ \textcolor{comment}{/*\ 240,\ 0x0f0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_UNKNOWN}}
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{comment}{/*\ 241,\ 0x0f1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VIDEO\_NEXT}}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{comment}{/*\ 242,\ 0x0f2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VIDEO\_PREV}}
+\DoxyCodeLine{00272\ \ \ \ \ \textcolor{comment}{/*\ 243,\ 0x0f3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRIGHTNESS\_CYCLE}}
+\DoxyCodeLine{00273\ \ \ \ \ \textcolor{comment}{/*\ 244,\ 0x0f4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRIGHTNESS\_AUTO}}
+\DoxyCodeLine{00274\ \ \ \ \ \textcolor{comment}{/*\ 245,\ 0x0f5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DISPLAY\_OFF}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{comment}{/*\ 246,\ 0x0f6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_WWAN}}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{comment}{/*\ 247,\ 0x0f7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RFKILL}}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{comment}{/*\ 248,\ 0x0f8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MICMUTE}}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{comment}{/*\ 249,\ 0x0f9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00279\ \ \ \ \ \textcolor{comment}{/*\ 250,\ 0x0fa\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{comment}{/*\ 251,\ 0x0fb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{comment}{/*\ 252,\ 0x0fc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{comment}{/*\ 253,\ 0x0fd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{comment}{/*\ 254,\ 0x0fe\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{comment}{/*\ 255,\ 0x0ff\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00285\ \ \ \ \ \textcolor{comment}{/*\ 256,\ 0x100\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{comment}{/*\ 257,\ 0x101\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{comment}{/*\ 258,\ 0x102\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{comment}{/*\ 259,\ 0x103\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{comment}{/*\ 260,\ 0x104\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{comment}{/*\ 261,\ 0x105\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{comment}{/*\ 262,\ 0x106\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{comment}{/*\ 263,\ 0x107\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{comment}{/*\ 264,\ 0x108\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{comment}{/*\ 265,\ 0x109\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00295\ \ \ \ \ \textcolor{comment}{/*\ 266,\ 0x10a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{comment}{/*\ 267,\ 0x10b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{comment}{/*\ 268,\ 0x10c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00298\ \ \ \ \ \textcolor{comment}{/*\ 269,\ 0x10d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{comment}{/*\ 270,\ 0x10e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{comment}{/*\ 271,\ 0x10f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{comment}{/*\ 272,\ 0x110\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{comment}{/*\ 273,\ 0x111\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00303\ \ \ \ \ \textcolor{comment}{/*\ 274,\ 0x112\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{comment}{/*\ 275,\ 0x113\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00305\ \ \ \ \ \textcolor{comment}{/*\ 276,\ 0x114\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00306\ \ \ \ \ \textcolor{comment}{/*\ 277,\ 0x115\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{comment}{/*\ 278,\ 0x116\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{comment}{/*\ 279,\ 0x117\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{comment}{/*\ 280,\ 0x118\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{comment}{/*\ 281,\ 0x119\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00311\ \ \ \ \ \textcolor{comment}{/*\ 282,\ 0x11a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00312\ \ \ \ \ \textcolor{comment}{/*\ 283,\ 0x11b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{comment}{/*\ 284,\ 0x11c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{comment}{/*\ 285,\ 0x11d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{comment}{/*\ 286,\ 0x11e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{comment}{/*\ 287,\ 0x11f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{comment}{/*\ 288,\ 0x120\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{comment}{/*\ 289,\ 0x121\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{comment}{/*\ 290,\ 0x122\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{comment}{/*\ 291,\ 0x123\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{comment}{/*\ 292,\ 0x124\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{comment}{/*\ 293,\ 0x125\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00323\ \ \ \ \ \textcolor{comment}{/*\ 294,\ 0x126\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{comment}{/*\ 295,\ 0x127\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{comment}{/*\ 296,\ 0x128\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{comment}{/*\ 297,\ 0x129\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00327\ \ \ \ \ \textcolor{comment}{/*\ 298,\ 0x12a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{comment}{/*\ 299,\ 0x12b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{comment}{/*\ 300,\ 0x12c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{comment}{/*\ 301,\ 0x12d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00331\ \ \ \ \ \textcolor{comment}{/*\ 302,\ 0x12e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00332\ \ \ \ \ \textcolor{comment}{/*\ 303,\ 0x12f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{comment}{/*\ 304,\ 0x130\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{comment}{/*\ 305,\ 0x131\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{comment}{/*\ 306,\ 0x132\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00336\ \ \ \ \ \textcolor{comment}{/*\ 307,\ 0x133\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00337\ \ \ \ \ \textcolor{comment}{/*\ 308,\ 0x134\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{comment}{/*\ 309,\ 0x135\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{comment}{/*\ 310,\ 0x136\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{comment}{/*\ 311,\ 0x137\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00341\ \ \ \ \ \textcolor{comment}{/*\ 312,\ 0x138\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{comment}{/*\ 313,\ 0x139\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00343\ \ \ \ \ \textcolor{comment}{/*\ 314,\ 0x13a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00344\ \ \ \ \ \textcolor{comment}{/*\ 315,\ 0x13b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{comment}{/*\ 316,\ 0x13c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{comment}{/*\ 317,\ 0x13d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{comment}{/*\ 318,\ 0x13e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{comment}{/*\ 319,\ 0x13f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{comment}{/*\ 320,\ 0x140\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00350\ \ \ \ \ \textcolor{comment}{/*\ 321,\ 0x141\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00351\ \ \ \ \ \textcolor{comment}{/*\ 322,\ 0x142\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00352\ \ \ \ \ \textcolor{comment}{/*\ 323,\ 0x143\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00353\ \ \ \ \ \textcolor{comment}{/*\ 324,\ 0x144\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{comment}{/*\ 325,\ 0x145\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{comment}{/*\ 326,\ 0x146\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00356\ \ \ \ \ \textcolor{comment}{/*\ 327,\ 0x147\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{comment}{/*\ 328,\ 0x148\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{comment}{/*\ 329,\ 0x149\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00359\ \ \ \ \ \textcolor{comment}{/*\ 330,\ 0x14a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{comment}{/*\ 331,\ 0x14b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00361\ \ \ \ \ \textcolor{comment}{/*\ 332,\ 0x14c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{comment}{/*\ 333,\ 0x14d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{comment}{/*\ 334,\ 0x14e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{comment}{/*\ 335,\ 0x14f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{comment}{/*\ 336,\ 0x150\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{comment}{/*\ 337,\ 0x151\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00367\ \ \ \ \ \textcolor{comment}{/*\ 338,\ 0x152\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00368\ \ \ \ \ \textcolor{comment}{/*\ 339,\ 0x153\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{comment}{/*\ 340,\ 0x154\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{comment}{/*\ 341,\ 0x155\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00371\ \ \ \ \ \textcolor{comment}{/*\ 342,\ 0x156\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00372\ \ \ \ \ \textcolor{comment}{/*\ 343,\ 0x157\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{comment}{/*\ 344,\ 0x158\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00374\ \ \ \ \ \textcolor{comment}{/*\ 345,\ 0x159\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{comment}{/*\ 346,\ 0x15a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00376\ \ \ \ \ \textcolor{comment}{/*\ 347,\ 0x15b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00377\ \ \ \ \ \textcolor{comment}{/*\ 348,\ 0x15c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{comment}{/*\ 349,\ 0x15d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00379\ \ \ \ \ \textcolor{comment}{/*\ 350,\ 0x15e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00380\ \ \ \ \ \textcolor{comment}{/*\ 351,\ 0x15f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{comment}{/*\ 352,\ 0x160\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_OK}}
+\DoxyCodeLine{00382\ \ \ \ \ \textcolor{comment}{/*\ 353,\ 0x161\ */}\ \ \ \ SDL\_SCANCODE\_SELECT,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SELECT}}
+\DoxyCodeLine{00383\ \ \ \ \ \textcolor{comment}{/*\ 354,\ 0x162\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_GOTO}}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{comment}{/*\ 355,\ 0x163\ */}\ \ \ \ SDL\_SCANCODE\_CLEAR,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CLEAR}}
+\DoxyCodeLine{00385\ \ \ \ \ \textcolor{comment}{/*\ 356,\ 0x164\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_POWER2}}
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{comment}{/*\ 357,\ 0x165\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_OPTION}}
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{comment}{/*\ 358,\ 0x166\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_INFO}}
+\DoxyCodeLine{00388\ \ \ \ \ \textcolor{comment}{/*\ 359,\ 0x167\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TIME}}
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{comment}{/*\ 360,\ 0x168\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VENDOR}}
+\DoxyCodeLine{00390\ \ \ \ \ \textcolor{comment}{/*\ 361,\ 0x169\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ARCHIVE}}
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{comment}{/*\ 362,\ 0x16a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PROGRAM}}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{comment}{/*\ 363,\ 0x16b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CHANNEL}}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{comment}{/*\ 364,\ 0x16c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FAVORITES}}
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{comment}{/*\ 365,\ 0x16d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EPG}}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{comment}{/*\ 366,\ 0x16e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PVR}}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{comment}{/*\ 367,\ 0x16f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MHP}}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{comment}{/*\ 368,\ 0x170\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LANGUAGE}}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{comment}{/*\ 369,\ 0x171\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TITLE}}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{comment}{/*\ 370,\ 0x172\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SUBTITLE}}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{comment}{/*\ 371,\ 0x173\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ANGLE}}
+\DoxyCodeLine{00401\ \ \ \ \ \textcolor{comment}{/*\ 372,\ 0x174\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FULL\_SCREEN}}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{comment}{/*\ 373,\ 0x175\ */}\ \ \ \ SDL\_SCANCODE\_MODE,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MODE}}
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{comment}{/*\ 374,\ 0x176\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KEYBOARD}}
+\DoxyCodeLine{00404\ \ \ \ \ \textcolor{comment}{/*\ 375,\ 0x177\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ASPECT\_RATIO}}
+\DoxyCodeLine{00405\ \ \ \ \ \textcolor{comment}{/*\ 376,\ 0x178\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PC}}
+\DoxyCodeLine{00406\ \ \ \ \ \textcolor{comment}{/*\ 377,\ 0x179\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TV}}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{comment}{/*\ 378,\ 0x17a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TV2}}
+\DoxyCodeLine{00408\ \ \ \ \ \textcolor{comment}{/*\ 379,\ 0x17b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VCR}}
+\DoxyCodeLine{00409\ \ \ \ \ \textcolor{comment}{/*\ 380,\ 0x17c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VCR2}}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{comment}{/*\ 381,\ 0x17d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SAT}}
+\DoxyCodeLine{00411\ \ \ \ \ \textcolor{comment}{/*\ 382,\ 0x17e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SAT2}}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{comment}{/*\ 383,\ 0x17f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CD}}
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{comment}{/*\ 384,\ 0x180\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TAPE}}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{comment}{/*\ 385,\ 0x181\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RADIO}}
+\DoxyCodeLine{00415\ \ \ \ \ \textcolor{comment}{/*\ 386,\ 0x182\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TUNER}}
+\DoxyCodeLine{00416\ \ \ \ \ \textcolor{comment}{/*\ 387,\ 0x183\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PLAYER}}
+\DoxyCodeLine{00417\ \ \ \ \ \textcolor{comment}{/*\ 388,\ 0x184\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TEXT}}
+\DoxyCodeLine{00418\ \ \ \ \ \textcolor{comment}{/*\ 389,\ 0x185\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DVD}}
+\DoxyCodeLine{00419\ \ \ \ \ \textcolor{comment}{/*\ 390,\ 0x186\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_AUX}}
+\DoxyCodeLine{00420\ \ \ \ \ \textcolor{comment}{/*\ 391,\ 0x187\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MP3}}
+\DoxyCodeLine{00421\ \ \ \ \ \textcolor{comment}{/*\ 392,\ 0x188\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_AUDIO}}
+\DoxyCodeLine{00422\ \ \ \ \ \textcolor{comment}{/*\ 393,\ 0x189\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VIDEO}}
+\DoxyCodeLine{00423\ \ \ \ \ \textcolor{comment}{/*\ 394,\ 0x18a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DIRECTORY}}
+\DoxyCodeLine{00424\ \ \ \ \ \textcolor{comment}{/*\ 395,\ 0x18b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LIST}}
+\DoxyCodeLine{00425\ \ \ \ \ \textcolor{comment}{/*\ 396,\ 0x18c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MEMO}}
+\DoxyCodeLine{00426\ \ \ \ \ \textcolor{comment}{/*\ 397,\ 0x18d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CALENDAR}}
+\DoxyCodeLine{00427\ \ \ \ \ \textcolor{comment}{/*\ 398,\ 0x18e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RED}}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{comment}{/*\ 399,\ 0x18f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_GREEN}}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{comment}{/*\ 400,\ 0x190\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_YELLOW}}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{comment}{/*\ 401,\ 0x191\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BLUE}}
+\DoxyCodeLine{00431\ \ \ \ \ \textcolor{comment}{/*\ 402,\ 0x192\ */}\ \ \ \ SDL\_SCANCODE\_CHANNEL\_INCREMENT,\ \ \textcolor{comment}{//\ KEY\_CHANNELUP}}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{comment}{/*\ 403,\ 0x193\ */}\ \ \ \ SDL\_SCANCODE\_CHANNEL\_DECREMENT,\ \ \textcolor{comment}{//\ KEY\_CHANNELDOWN}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#if\ 0\ }\textcolor{comment}{//\ We\ don't\ have\ any\ mapped\ scancodes\ after\ this\ point\ (yet)}}
+\DoxyCodeLine{00434\ \ \ \ \ \textcolor{comment}{/*\ 404,\ 0x194\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FIRST}}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{comment}{/*\ 405,\ 0x195\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LAST}}
+\DoxyCodeLine{00436\ \ \ \ \ \textcolor{comment}{/*\ 406,\ 0x196\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_AB}}
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{comment}{/*\ 407,\ 0x197\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NEXT}}
+\DoxyCodeLine{00438\ \ \ \ \ \textcolor{comment}{/*\ 408,\ 0x198\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RESTART}}
+\DoxyCodeLine{00439\ \ \ \ \ \textcolor{comment}{/*\ 409,\ 0x199\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SLOW}}
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{comment}{/*\ 410,\ 0x19a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SHUFFLE}}
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{comment}{/*\ 411,\ 0x19b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BREAK}}
+\DoxyCodeLine{00442\ \ \ \ \ \textcolor{comment}{/*\ 412,\ 0x19c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PREVIOUS}}
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{comment}{/*\ 413,\ 0x19d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DIGITS}}
+\DoxyCodeLine{00444\ \ \ \ \ \textcolor{comment}{/*\ 414,\ 0x19e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TEEN}}
+\DoxyCodeLine{00445\ \ \ \ \ \textcolor{comment}{/*\ 415,\ 0x19f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TWEN}}
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{comment}{/*\ 416,\ 0x1a0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VIDEOPHONE}}
+\DoxyCodeLine{00447\ \ \ \ \ \textcolor{comment}{/*\ 417,\ 0x1a1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_GAMES}}
+\DoxyCodeLine{00448\ \ \ \ \ \textcolor{comment}{/*\ 418,\ 0x1a2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ZOOMIN}}
+\DoxyCodeLine{00449\ \ \ \ \ \textcolor{comment}{/*\ 419,\ 0x1a3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ZOOMOUT}}
+\DoxyCodeLine{00450\ \ \ \ \ \textcolor{comment}{/*\ 420,\ 0x1a4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ZOOMRESET}}
+\DoxyCodeLine{00451\ \ \ \ \ \textcolor{comment}{/*\ 421,\ 0x1a5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_WORDPROCESSOR}}
+\DoxyCodeLine{00452\ \ \ \ \ \textcolor{comment}{/*\ 422,\ 0x1a6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EDITOR}}
+\DoxyCodeLine{00453\ \ \ \ \ \textcolor{comment}{/*\ 423,\ 0x1a7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SPREADSHEET}}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{comment}{/*\ 424,\ 0x1a8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_GRAPHICSEDITOR}}
+\DoxyCodeLine{00455\ \ \ \ \ \textcolor{comment}{/*\ 425,\ 0x1a9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PRESENTATION}}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{comment}{/*\ 426,\ 0x1aa\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DATABASE}}
+\DoxyCodeLine{00457\ \ \ \ \ \textcolor{comment}{/*\ 427,\ 0x1ab\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NEWS}}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{comment}{/*\ 428,\ 0x1ac\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VOICEMAIL}}
+\DoxyCodeLine{00459\ \ \ \ \ \textcolor{comment}{/*\ 429,\ 0x1ad\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ADDRESSBOOK}}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{comment}{/*\ 430,\ 0x1ae\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MESSENGER}}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{comment}{/*\ 431,\ 0x1af\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DISPLAYTOGGLE}}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{comment}{/*\ 432,\ 0x1b0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SPELLCHECK}}
+\DoxyCodeLine{00463\ \ \ \ \ \textcolor{comment}{/*\ 433,\ 0x1b1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LOGOFF}}
+\DoxyCodeLine{00464\ \ \ \ \ \textcolor{comment}{/*\ 434,\ 0x1b2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DOLLAR}}
+\DoxyCodeLine{00465\ \ \ \ \ \textcolor{comment}{/*\ 435,\ 0x1b3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EURO}}
+\DoxyCodeLine{00466\ \ \ \ \ \textcolor{comment}{/*\ 436,\ 0x1b4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FRAMEBACK}}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{comment}{/*\ 437,\ 0x1b5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FRAMEFORWARD}}
+\DoxyCodeLine{00468\ \ \ \ \ \textcolor{comment}{/*\ 438,\ 0x1b6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CONTEXT\_MENU}}
+\DoxyCodeLine{00469\ \ \ \ \ \textcolor{comment}{/*\ 439,\ 0x1b7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MEDIA\_REPEAT}}
+\DoxyCodeLine{00470\ \ \ \ \ \textcolor{comment}{/*\ 440,\ 0x1b8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_10CHANNELSUP}}
+\DoxyCodeLine{00471\ \ \ \ \ \textcolor{comment}{/*\ 441,\ 0x1b9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_10CHANNELSDOWN}}
+\DoxyCodeLine{00472\ \ \ \ \ \textcolor{comment}{/*\ 442,\ 0x1ba\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_IMAGES}}
+\DoxyCodeLine{00473\ \ \ \ \ \textcolor{comment}{/*\ 443,\ 0x1bb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00474\ \ \ \ \ \textcolor{comment}{/*\ 444,\ 0x1bc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NOTIFICATION\_CENTER}}
+\DoxyCodeLine{00475\ \ \ \ \ \textcolor{comment}{/*\ 445,\ 0x1bd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PICKUP\_PHONE}}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{comment}{/*\ 446,\ 0x1be\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_HANGUP\_PHONE}}
+\DoxyCodeLine{00477\ \ \ \ \ \textcolor{comment}{/*\ 447,\ 0x1bf\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00478\ \ \ \ \ \textcolor{comment}{/*\ 448,\ 0x1c0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DEL\_EOL}}
+\DoxyCodeLine{00479\ \ \ \ \ \textcolor{comment}{/*\ 449,\ 0x1c1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DEL\_EOS}}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{comment}{/*\ 450,\ 0x1c2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_INS\_LINE}}
+\DoxyCodeLine{00481\ \ \ \ \ \textcolor{comment}{/*\ 451,\ 0x1c3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DEL\_LINE}}
+\DoxyCodeLine{00482\ \ \ \ \ \textcolor{comment}{/*\ 452,\ 0x1c4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00483\ \ \ \ \ \textcolor{comment}{/*\ 453,\ 0x1c5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00484\ \ \ \ \ \textcolor{comment}{/*\ 454,\ 0x1c6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00485\ \ \ \ \ \textcolor{comment}{/*\ 455,\ 0x1c7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00486\ \ \ \ \ \textcolor{comment}{/*\ 456,\ 0x1c8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00487\ \ \ \ \ \textcolor{comment}{/*\ 457,\ 0x1c9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00488\ \ \ \ \ \textcolor{comment}{/*\ 458,\ 0x1ca\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00489\ \ \ \ \ \textcolor{comment}{/*\ 459,\ 0x1cb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00490\ \ \ \ \ \textcolor{comment}{/*\ 460,\ 0x1cc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00491\ \ \ \ \ \textcolor{comment}{/*\ 461,\ 0x1cd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00492\ \ \ \ \ \textcolor{comment}{/*\ 462,\ 0x1ce\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00493\ \ \ \ \ \textcolor{comment}{/*\ 463,\ 0x1cf\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00494\ \ \ \ \ \textcolor{comment}{/*\ 464,\ 0x1d0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN}}
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{comment}{/*\ 465,\ 0x1d1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_ESC}}
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{comment}{/*\ 466,\ 0x1d2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F1}}
+\DoxyCodeLine{00497\ \ \ \ \ \textcolor{comment}{/*\ 467,\ 0x1d3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F2}}
+\DoxyCodeLine{00498\ \ \ \ \ \textcolor{comment}{/*\ 468,\ 0x1d4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F3}}
+\DoxyCodeLine{00499\ \ \ \ \ \textcolor{comment}{/*\ 469,\ 0x1d5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F4}}
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{comment}{/*\ 470,\ 0x1d6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F5}}
+\DoxyCodeLine{00501\ \ \ \ \ \textcolor{comment}{/*\ 471,\ 0x1d7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F6}}
+\DoxyCodeLine{00502\ \ \ \ \ \textcolor{comment}{/*\ 472,\ 0x1d8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F7}}
+\DoxyCodeLine{00503\ \ \ \ \ \textcolor{comment}{/*\ 473,\ 0x1d9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F8}}
+\DoxyCodeLine{00504\ \ \ \ \ \textcolor{comment}{/*\ 474,\ 0x1da\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F9}}
+\DoxyCodeLine{00505\ \ \ \ \ \textcolor{comment}{/*\ 475,\ 0x1db\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F10}}
+\DoxyCodeLine{00506\ \ \ \ \ \textcolor{comment}{/*\ 476,\ 0x1dc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F11}}
+\DoxyCodeLine{00507\ \ \ \ \ \textcolor{comment}{/*\ 477,\ 0x1dd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F12}}
+\DoxyCodeLine{00508\ \ \ \ \ \textcolor{comment}{/*\ 478,\ 0x1de\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_1}}
+\DoxyCodeLine{00509\ \ \ \ \ \textcolor{comment}{/*\ 479,\ 0x1df\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_2}}
+\DoxyCodeLine{00510\ \ \ \ \ \textcolor{comment}{/*\ 480,\ 0x1e0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_D}}
+\DoxyCodeLine{00511\ \ \ \ \ \textcolor{comment}{/*\ 481,\ 0x1e1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_E}}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{comment}{/*\ 482,\ 0x1e2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_F}}
+\DoxyCodeLine{00513\ \ \ \ \ \textcolor{comment}{/*\ 483,\ 0x1e3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_S}}
+\DoxyCodeLine{00514\ \ \ \ \ \textcolor{comment}{/*\ 484,\ 0x1e4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_B}}
+\DoxyCodeLine{00515\ \ \ \ \ \textcolor{comment}{/*\ 485,\ 0x1e5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FN\_RIGHT\_SHIFT}}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{comment}{/*\ 486,\ 0x1e6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{comment}{/*\ 487,\ 0x1e7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{comment}{/*\ 488,\ 0x1e8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{comment}{/*\ 489,\ 0x1e9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00520\ \ \ \ \ \textcolor{comment}{/*\ 490,\ 0x1ea\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{comment}{/*\ 491,\ 0x1eb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00522\ \ \ \ \ \textcolor{comment}{/*\ 492,\ 0x1ec\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00523\ \ \ \ \ \textcolor{comment}{/*\ 493,\ 0x1ed\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{comment}{/*\ 494,\ 0x1ee\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00525\ \ \ \ \ \textcolor{comment}{/*\ 495,\ 0x1ef\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00526\ \ \ \ \ \textcolor{comment}{/*\ 496,\ 0x1f0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00527\ \ \ \ \ \textcolor{comment}{/*\ 497,\ 0x1f1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT1}}
+\DoxyCodeLine{00528\ \ \ \ \ \textcolor{comment}{/*\ 498,\ 0x1f2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT2}}
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{comment}{/*\ 499,\ 0x1f3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT3}}
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{comment}{/*\ 500,\ 0x1f4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT4}}
+\DoxyCodeLine{00531\ \ \ \ \ \textcolor{comment}{/*\ 501,\ 0x1f5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT5}}
+\DoxyCodeLine{00532\ \ \ \ \ \textcolor{comment}{/*\ 502,\ 0x1f6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT6}}
+\DoxyCodeLine{00533\ \ \ \ \ \textcolor{comment}{/*\ 503,\ 0x1f7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT7}}
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{comment}{/*\ 504,\ 0x1f8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT8}}
+\DoxyCodeLine{00535\ \ \ \ \ \textcolor{comment}{/*\ 505,\ 0x1f9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT9}}
+\DoxyCodeLine{00536\ \ \ \ \ \textcolor{comment}{/*\ 506,\ 0x1fa\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRL\_DOT10}}
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{comment}{/*\ 507,\ 0x1fb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00538\ \ \ \ \ \textcolor{comment}{/*\ 508,\ 0x1fc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{comment}{/*\ 509,\ 0x1fd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{comment}{/*\ 510,\ 0x1fe\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00541\ \ \ \ \ \textcolor{comment}{/*\ 511,\ 0x1ff\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00542\ \ \ \ \ \textcolor{comment}{/*\ 512,\ 0x200\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_0}}
+\DoxyCodeLine{00543\ \ \ \ \ \textcolor{comment}{/*\ 513,\ 0x201\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_1}}
+\DoxyCodeLine{00544\ \ \ \ \ \textcolor{comment}{/*\ 514,\ 0x202\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_2}}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{comment}{/*\ 515,\ 0x203\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_3}}
+\DoxyCodeLine{00546\ \ \ \ \ \textcolor{comment}{/*\ 516,\ 0x204\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_4}}
+\DoxyCodeLine{00547\ \ \ \ \ \textcolor{comment}{/*\ 517,\ 0x205\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_5}}
+\DoxyCodeLine{00548\ \ \ \ \ \textcolor{comment}{/*\ 518,\ 0x206\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_6}}
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{comment}{/*\ 519,\ 0x207\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_7}}
+\DoxyCodeLine{00550\ \ \ \ \ \textcolor{comment}{/*\ 520,\ 0x208\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_8}}
+\DoxyCodeLine{00551\ \ \ \ \ \textcolor{comment}{/*\ 521,\ 0x209\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_9}}
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{comment}{/*\ 522,\ 0x20a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_STAR}}
+\DoxyCodeLine{00553\ \ \ \ \ \textcolor{comment}{/*\ 523,\ 0x20b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_POUND}}
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{comment}{/*\ 524,\ 0x20c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_A}}
+\DoxyCodeLine{00555\ \ \ \ \ \textcolor{comment}{/*\ 525,\ 0x20d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_B}}
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{comment}{/*\ 526,\ 0x20e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_C}}
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{comment}{/*\ 527,\ 0x20f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_D}}
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{comment}{/*\ 528,\ 0x210\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA\_FOCUS}}
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{comment}{/*\ 529,\ 0x211\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_WPS\_BUTTON}}
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{comment}{/*\ 530,\ 0x212\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TOUCHPAD\_TOGGLE}}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{comment}{/*\ 531,\ 0x213\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TOUCHPAD\_ON}}
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{comment}{/*\ 532,\ 0x214\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TOUCHPAD\_OFF}}
+\DoxyCodeLine{00563\ \ \ \ \ \textcolor{comment}{/*\ 533,\ 0x215\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA\_ZOOMIN}}
+\DoxyCodeLine{00564\ \ \ \ \ \textcolor{comment}{/*\ 534,\ 0x216\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA\_ZOOMOUT}}
+\DoxyCodeLine{00565\ \ \ \ \ \textcolor{comment}{/*\ 535,\ 0x217\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA\_UP}}
+\DoxyCodeLine{00566\ \ \ \ \ \textcolor{comment}{/*\ 536,\ 0x218\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA\_DOWN}}
+\DoxyCodeLine{00567\ \ \ \ \ \textcolor{comment}{/*\ 537,\ 0x219\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA\_LEFT}}
+\DoxyCodeLine{00568\ \ \ \ \ \textcolor{comment}{/*\ 538,\ 0x21a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CAMERA\_RIGHT}}
+\DoxyCodeLine{00569\ \ \ \ \ \textcolor{comment}{/*\ 539,\ 0x21b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ATTENDANT\_ON}}
+\DoxyCodeLine{00570\ \ \ \ \ \textcolor{comment}{/*\ 540,\ 0x21c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ATTENDANT\_OFF}}
+\DoxyCodeLine{00571\ \ \ \ \ \textcolor{comment}{/*\ 541,\ 0x21d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ATTENDANT\_TOGGLE}}
+\DoxyCodeLine{00572\ \ \ \ \ \textcolor{comment}{/*\ 542,\ 0x21e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LIGHTS\_TOGGLE}}
+\DoxyCodeLine{00573\ \ \ \ \ \textcolor{comment}{/*\ 543,\ 0x21f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00574\ \ \ \ \ \textcolor{comment}{/*\ 544,\ 0x220\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00575\ \ \ \ \ \textcolor{comment}{/*\ 545,\ 0x221\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{comment}{/*\ 546,\ 0x222\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00577\ \ \ \ \ \textcolor{comment}{/*\ 547,\ 0x223\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00578\ \ \ \ \ \textcolor{comment}{/*\ 548,\ 0x224\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00579\ \ \ \ \ \textcolor{comment}{/*\ 549,\ 0x225\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00580\ \ \ \ \ \textcolor{comment}{/*\ 550,\ 0x226\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00581\ \ \ \ \ \textcolor{comment}{/*\ 551,\ 0x227\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00582\ \ \ \ \ \textcolor{comment}{/*\ 552,\ 0x228\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{comment}{/*\ 553,\ 0x229\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00584\ \ \ \ \ \textcolor{comment}{/*\ 554,\ 0x22a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00585\ \ \ \ \ \textcolor{comment}{/*\ 555,\ 0x22b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{comment}{/*\ 556,\ 0x22c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00587\ \ \ \ \ \textcolor{comment}{/*\ 557,\ 0x22d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00588\ \ \ \ \ \textcolor{comment}{/*\ 558,\ 0x22e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00589\ \ \ \ \ \textcolor{comment}{/*\ 559,\ 0x22f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00590\ \ \ \ \ \textcolor{comment}{/*\ 560,\ 0x230\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ALS\_TOGGLE}}
+\DoxyCodeLine{00591\ \ \ \ \ \textcolor{comment}{/*\ 561,\ 0x231\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ROTATE\_LOCK\_TOGGLE}}
+\DoxyCodeLine{00592\ \ \ \ \ \textcolor{comment}{/*\ 562,\ 0x232\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00593\ \ \ \ \ \textcolor{comment}{/*\ 563,\ 0x233\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00594\ \ \ \ \ \textcolor{comment}{/*\ 564,\ 0x234\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00595\ \ \ \ \ \textcolor{comment}{/*\ 565,\ 0x235\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{comment}{/*\ 566,\ 0x236\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00597\ \ \ \ \ \textcolor{comment}{/*\ 567,\ 0x237\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00598\ \ \ \ \ \textcolor{comment}{/*\ 568,\ 0x238\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{comment}{/*\ 569,\ 0x239\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00600\ \ \ \ \ \textcolor{comment}{/*\ 570,\ 0x23a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00601\ \ \ \ \ \textcolor{comment}{/*\ 571,\ 0x23b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00602\ \ \ \ \ \textcolor{comment}{/*\ 572,\ 0x23c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00603\ \ \ \ \ \textcolor{comment}{/*\ 573,\ 0x23d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00604\ \ \ \ \ \textcolor{comment}{/*\ 574,\ 0x23e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00605\ \ \ \ \ \textcolor{comment}{/*\ 575,\ 0x23f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00606\ \ \ \ \ \textcolor{comment}{/*\ 576,\ 0x240\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BUTTONCONFIG}}
+\DoxyCodeLine{00607\ \ \ \ \ \textcolor{comment}{/*\ 577,\ 0x241\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_TASKMANAGER}}
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{comment}{/*\ 578,\ 0x242\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_JOURNAL}}
+\DoxyCodeLine{00609\ \ \ \ \ \textcolor{comment}{/*\ 579,\ 0x243\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_CONTROLPANEL}}
+\DoxyCodeLine{00610\ \ \ \ \ \textcolor{comment}{/*\ 580,\ 0x244\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_APPSELECT}}
+\DoxyCodeLine{00611\ \ \ \ \ \textcolor{comment}{/*\ 581,\ 0x245\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SCREENSAVER}}
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{comment}{/*\ 582,\ 0x246\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VOICECOMMAND}}
+\DoxyCodeLine{00613\ \ \ \ \ \textcolor{comment}{/*\ 583,\ 0x247\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ASSISTANT}}
+\DoxyCodeLine{00614\ \ \ \ \ \textcolor{comment}{/*\ 584,\ 0x248\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBD\_LAYOUT\_NEXT}}
+\DoxyCodeLine{00615\ \ \ \ \ \textcolor{comment}{/*\ 585,\ 0x249\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_EMOJI\_PICKER}}
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{comment}{/*\ 586,\ 0x24a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DICTATE}}
+\DoxyCodeLine{00617\ \ \ \ \ \textcolor{comment}{/*\ 587,\ 0x24b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{comment}{/*\ 588,\ 0x24c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{comment}{/*\ 589,\ 0x24d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{comment}{/*\ 590,\ 0x24e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00621\ \ \ \ \ \textcolor{comment}{/*\ 591,\ 0x24f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{comment}{/*\ 592,\ 0x250\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRIGHTNESS\_MIN}}
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{comment}{/*\ 593,\ 0x251\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_BRIGHTNESS\_MAX}}
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{comment}{/*\ 594,\ 0x252\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{comment}{/*\ 595,\ 0x253\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00626\ \ \ \ \ \textcolor{comment}{/*\ 596,\ 0x254\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00627\ \ \ \ \ \textcolor{comment}{/*\ 597,\ 0x255\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00628\ \ \ \ \ \textcolor{comment}{/*\ 598,\ 0x256\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00629\ \ \ \ \ \textcolor{comment}{/*\ 599,\ 0x257\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00630\ \ \ \ \ \textcolor{comment}{/*\ 600,\ 0x258\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00631\ \ \ \ \ \textcolor{comment}{/*\ 601,\ 0x259\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00632\ \ \ \ \ \textcolor{comment}{/*\ 602,\ 0x25a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00633\ \ \ \ \ \textcolor{comment}{/*\ 603,\ 0x25b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00634\ \ \ \ \ \textcolor{comment}{/*\ 604,\ 0x25c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00635\ \ \ \ \ \textcolor{comment}{/*\ 605,\ 0x25d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00636\ \ \ \ \ \textcolor{comment}{/*\ 606,\ 0x25e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00637\ \ \ \ \ \textcolor{comment}{/*\ 607,\ 0x25f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00638\ \ \ \ \ \textcolor{comment}{/*\ 608,\ 0x260\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDINPUTASSIST\_PREV}}
+\DoxyCodeLine{00639\ \ \ \ \ \textcolor{comment}{/*\ 609,\ 0x261\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDINPUTASSIST\_NEXT}}
+\DoxyCodeLine{00640\ \ \ \ \ \textcolor{comment}{/*\ 610,\ 0x262\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDINPUTASSIST\_PREVGROUP}}
+\DoxyCodeLine{00641\ \ \ \ \ \textcolor{comment}{/*\ 611,\ 0x263\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDINPUTASSIST\_NEXTGROUP}}
+\DoxyCodeLine{00642\ \ \ \ \ \textcolor{comment}{/*\ 612,\ 0x264\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDINPUTASSIST\_ACCEPT}}
+\DoxyCodeLine{00643\ \ \ \ \ \textcolor{comment}{/*\ 613,\ 0x265\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBDINPUTASSIST\_CANCEL}}
+\DoxyCodeLine{00644\ \ \ \ \ \textcolor{comment}{/*\ 614,\ 0x266\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHT\_UP}}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{comment}{/*\ 615,\ 0x267\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_RIGHT\_DOWN}}
+\DoxyCodeLine{00646\ \ \ \ \ \textcolor{comment}{/*\ 616,\ 0x268\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFT\_UP}}
+\DoxyCodeLine{00647\ \ \ \ \ \textcolor{comment}{/*\ 617,\ 0x269\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_LEFT\_DOWN}}
+\DoxyCodeLine{00648\ \ \ \ \ \textcolor{comment}{/*\ 618,\ 0x26a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ROOT\_MENU}}
+\DoxyCodeLine{00649\ \ \ \ \ \textcolor{comment}{/*\ 619,\ 0x26b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MEDIA\_TOP\_MENU}}
+\DoxyCodeLine{00650\ \ \ \ \ \textcolor{comment}{/*\ 620,\ 0x26c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_11}}
+\DoxyCodeLine{00651\ \ \ \ \ \textcolor{comment}{/*\ 621,\ 0x26d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NUMERIC\_12}}
+\DoxyCodeLine{00652\ \ \ \ \ \textcolor{comment}{/*\ 622,\ 0x26e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_AUDIO\_DESC}}
+\DoxyCodeLine{00653\ \ \ \ \ \textcolor{comment}{/*\ 623,\ 0x26f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_3D\_MODE}}
+\DoxyCodeLine{00654\ \ \ \ \ \textcolor{comment}{/*\ 624,\ 0x270\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_NEXT\_FAVORITE}}
+\DoxyCodeLine{00655\ \ \ \ \ \textcolor{comment}{/*\ 625,\ 0x271\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_STOP\_RECORD}}
+\DoxyCodeLine{00656\ \ \ \ \ \textcolor{comment}{/*\ 626,\ 0x272\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PAUSE\_RECORD}}
+\DoxyCodeLine{00657\ \ \ \ \ \textcolor{comment}{/*\ 627,\ 0x273\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_VOD}}
+\DoxyCodeLine{00658\ \ \ \ \ \textcolor{comment}{/*\ 628,\ 0x274\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_UNMUTE}}
+\DoxyCodeLine{00659\ \ \ \ \ \textcolor{comment}{/*\ 629,\ 0x275\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_FASTREVERSE}}
+\DoxyCodeLine{00660\ \ \ \ \ \textcolor{comment}{/*\ 630,\ 0x276\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SLOWREVERSE}}
+\DoxyCodeLine{00661\ \ \ \ \ \textcolor{comment}{/*\ 631,\ 0x277\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_DATA}}
+\DoxyCodeLine{00662\ \ \ \ \ \textcolor{comment}{/*\ 632,\ 0x278\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_ONSCREEN\_KEYBOARD}}
+\DoxyCodeLine{00663\ \ \ \ \ \textcolor{comment}{/*\ 633,\ 0x279\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_PRIVACY\_SCREEN\_TOGGLE}}
+\DoxyCodeLine{00664\ \ \ \ \ \textcolor{comment}{/*\ 634,\ 0x27a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_SELECTIVE\_SCREENSHOT}}
+\DoxyCodeLine{00665\ \ \ \ \ \textcolor{comment}{/*\ 635,\ 0x27b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00666\ \ \ \ \ \textcolor{comment}{/*\ 636,\ 0x27c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00667\ \ \ \ \ \textcolor{comment}{/*\ 637,\ 0x27d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00668\ \ \ \ \ \textcolor{comment}{/*\ 638,\ 0x27e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00669\ \ \ \ \ \textcolor{comment}{/*\ 639,\ 0x27f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00670\ \ \ \ \ \textcolor{comment}{/*\ 640,\ 0x280\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00671\ \ \ \ \ \textcolor{comment}{/*\ 641,\ 0x281\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00672\ \ \ \ \ \textcolor{comment}{/*\ 642,\ 0x282\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00673\ \ \ \ \ \textcolor{comment}{/*\ 643,\ 0x283\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00674\ \ \ \ \ \textcolor{comment}{/*\ 644,\ 0x284\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00675\ \ \ \ \ \textcolor{comment}{/*\ 645,\ 0x285\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00676\ \ \ \ \ \textcolor{comment}{/*\ 646,\ 0x286\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00677\ \ \ \ \ \textcolor{comment}{/*\ 647,\ 0x287\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00678\ \ \ \ \ \textcolor{comment}{/*\ 648,\ 0x288\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00679\ \ \ \ \ \textcolor{comment}{/*\ 649,\ 0x289\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00680\ \ \ \ \ \textcolor{comment}{/*\ 650,\ 0x28a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00681\ \ \ \ \ \textcolor{comment}{/*\ 651,\ 0x28b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00682\ \ \ \ \ \textcolor{comment}{/*\ 652,\ 0x28c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00683\ \ \ \ \ \textcolor{comment}{/*\ 653,\ 0x28d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00684\ \ \ \ \ \textcolor{comment}{/*\ 654,\ 0x28e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00685\ \ \ \ \ \textcolor{comment}{/*\ 655,\ 0x28f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00686\ \ \ \ \ \textcolor{comment}{/*\ 656,\ 0x290\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO1}}
+\DoxyCodeLine{00687\ \ \ \ \ \textcolor{comment}{/*\ 657,\ 0x291\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO2}}
+\DoxyCodeLine{00688\ \ \ \ \ \textcolor{comment}{/*\ 658,\ 0x292\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO3}}
+\DoxyCodeLine{00689\ \ \ \ \ \textcolor{comment}{/*\ 659,\ 0x293\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO4}}
+\DoxyCodeLine{00690\ \ \ \ \ \textcolor{comment}{/*\ 660,\ 0x294\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO5}}
+\DoxyCodeLine{00691\ \ \ \ \ \textcolor{comment}{/*\ 661,\ 0x295\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO6}}
+\DoxyCodeLine{00692\ \ \ \ \ \textcolor{comment}{/*\ 662,\ 0x296\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO7}}
+\DoxyCodeLine{00693\ \ \ \ \ \textcolor{comment}{/*\ 663,\ 0x297\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO8}}
+\DoxyCodeLine{00694\ \ \ \ \ \textcolor{comment}{/*\ 664,\ 0x298\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO9}}
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{comment}{/*\ 665,\ 0x299\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO10}}
+\DoxyCodeLine{00696\ \ \ \ \ \textcolor{comment}{/*\ 666,\ 0x29a\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO11}}
+\DoxyCodeLine{00697\ \ \ \ \ \textcolor{comment}{/*\ 667,\ 0x29b\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO12}}
+\DoxyCodeLine{00698\ \ \ \ \ \textcolor{comment}{/*\ 668,\ 0x29c\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO13}}
+\DoxyCodeLine{00699\ \ \ \ \ \textcolor{comment}{/*\ 669,\ 0x29d\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO14}}
+\DoxyCodeLine{00700\ \ \ \ \ \textcolor{comment}{/*\ 670,\ 0x29e\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO15}}
+\DoxyCodeLine{00701\ \ \ \ \ \textcolor{comment}{/*\ 671,\ 0x29f\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO16}}
+\DoxyCodeLine{00702\ \ \ \ \ \textcolor{comment}{/*\ 672,\ 0x2a0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO17}}
+\DoxyCodeLine{00703\ \ \ \ \ \textcolor{comment}{/*\ 673,\ 0x2a1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO18}}
+\DoxyCodeLine{00704\ \ \ \ \ \textcolor{comment}{/*\ 674,\ 0x2a2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO19}}
+\DoxyCodeLine{00705\ \ \ \ \ \textcolor{comment}{/*\ 675,\ 0x2a3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO20}}
+\DoxyCodeLine{00706\ \ \ \ \ \textcolor{comment}{/*\ 676,\ 0x2a4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO21}}
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{comment}{/*\ 677,\ 0x2a5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO22}}
+\DoxyCodeLine{00708\ \ \ \ \ \textcolor{comment}{/*\ 678,\ 0x2a6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO23}}
+\DoxyCodeLine{00709\ \ \ \ \ \textcolor{comment}{/*\ 679,\ 0x2a7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO24}}
+\DoxyCodeLine{00710\ \ \ \ \ \textcolor{comment}{/*\ 680,\ 0x2a8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO25}}
+\DoxyCodeLine{00711\ \ \ \ \ \textcolor{comment}{/*\ 681,\ 0x2a9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO26}}
+\DoxyCodeLine{00712\ \ \ \ \ \textcolor{comment}{/*\ 682,\ 0x2aa\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO27}}
+\DoxyCodeLine{00713\ \ \ \ \ \textcolor{comment}{/*\ 683,\ 0x2ab\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO28}}
+\DoxyCodeLine{00714\ \ \ \ \ \textcolor{comment}{/*\ 684,\ 0x2ac\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO29}}
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{comment}{/*\ 685,\ 0x2ad\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO30}}
+\DoxyCodeLine{00716\ \ \ \ \ \textcolor{comment}{/*\ 686,\ 0x2ae\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00717\ \ \ \ \ \textcolor{comment}{/*\ 687,\ 0x2af\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00718\ \ \ \ \ \textcolor{comment}{/*\ 688,\ 0x2b0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO\_RECORD\_START}}
+\DoxyCodeLine{00719\ \ \ \ \ \textcolor{comment}{/*\ 689,\ 0x2b1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO\_RECORD\_STOP}}
+\DoxyCodeLine{00720\ \ \ \ \ \textcolor{comment}{/*\ 690,\ 0x2b2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO\_PRESET\_CYCLE}}
+\DoxyCodeLine{00721\ \ \ \ \ \textcolor{comment}{/*\ 691,\ 0x2b3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO\_PRESET1}}
+\DoxyCodeLine{00722\ \ \ \ \ \textcolor{comment}{/*\ 692,\ 0x2b4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO\_PRESET2}}
+\DoxyCodeLine{00723\ \ \ \ \ \textcolor{comment}{/*\ 693,\ 0x2b5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MACRO\_PRESET3}}
+\DoxyCodeLine{00724\ \ \ \ \ \textcolor{comment}{/*\ 694,\ 0x2b6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00725\ \ \ \ \ \textcolor{comment}{/*\ 695,\ 0x2b7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00726\ \ \ \ \ \textcolor{comment}{/*\ 696,\ 0x2b8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBD\_LCD\_MENU1}}
+\DoxyCodeLine{00727\ \ \ \ \ \textcolor{comment}{/*\ 697,\ 0x2b9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBD\_LCD\_MENU2}}
+\DoxyCodeLine{00728\ \ \ \ \ \textcolor{comment}{/*\ 698,\ 0x2ba\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBD\_LCD\_MENU3}}
+\DoxyCodeLine{00729\ \ \ \ \ \textcolor{comment}{/*\ 699,\ 0x2bb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBD\_LCD\_MENU4}}
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{comment}{/*\ 700,\ 0x2bc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_KBD\_LCD\_MENU5}}
+\DoxyCodeLine{00731\ \ \ \ \ \textcolor{comment}{/*\ 701,\ 0x2bd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00732\ \ \ \ \ \textcolor{comment}{/*\ 702,\ 0x2be\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00733\ \ \ \ \ \textcolor{comment}{/*\ 703,\ 0x2bf\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00734\ \ \ \ \ \textcolor{comment}{/*\ 704,\ 0x2c0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00735\ \ \ \ \ \textcolor{comment}{/*\ 705,\ 0x2c1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00736\ \ \ \ \ \textcolor{comment}{/*\ 706,\ 0x2c2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00737\ \ \ \ \ \textcolor{comment}{/*\ 707,\ 0x2c3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00738\ \ \ \ \ \textcolor{comment}{/*\ 708,\ 0x2c4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00739\ \ \ \ \ \textcolor{comment}{/*\ 709,\ 0x2c5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00740\ \ \ \ \ \textcolor{comment}{/*\ 710,\ 0x2c6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00741\ \ \ \ \ \textcolor{comment}{/*\ 711,\ 0x2c7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00742\ \ \ \ \ \textcolor{comment}{/*\ 712,\ 0x2c8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00743\ \ \ \ \ \textcolor{comment}{/*\ 713,\ 0x2c9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00744\ \ \ \ \ \textcolor{comment}{/*\ 714,\ 0x2ca\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00745\ \ \ \ \ \textcolor{comment}{/*\ 715,\ 0x2cb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00746\ \ \ \ \ \textcolor{comment}{/*\ 716,\ 0x2cc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00747\ \ \ \ \ \textcolor{comment}{/*\ 717,\ 0x2cd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00748\ \ \ \ \ \textcolor{comment}{/*\ 718,\ 0x2ce\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00749\ \ \ \ \ \textcolor{comment}{/*\ 719,\ 0x2cf\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00750\ \ \ \ \ \textcolor{comment}{/*\ 720,\ 0x2d0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00751\ \ \ \ \ \textcolor{comment}{/*\ 721,\ 0x2d1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00752\ \ \ \ \ \textcolor{comment}{/*\ 722,\ 0x2d2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00753\ \ \ \ \ \textcolor{comment}{/*\ 723,\ 0x2d3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00754\ \ \ \ \ \textcolor{comment}{/*\ 724,\ 0x2d4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00755\ \ \ \ \ \textcolor{comment}{/*\ 725,\ 0x2d5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00756\ \ \ \ \ \textcolor{comment}{/*\ 726,\ 0x2d6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00757\ \ \ \ \ \textcolor{comment}{/*\ 727,\ 0x2d7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00758\ \ \ \ \ \textcolor{comment}{/*\ 728,\ 0x2d8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00759\ \ \ \ \ \textcolor{comment}{/*\ 729,\ 0x2d9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00760\ \ \ \ \ \textcolor{comment}{/*\ 730,\ 0x2da\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00761\ \ \ \ \ \textcolor{comment}{/*\ 731,\ 0x2db\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00762\ \ \ \ \ \textcolor{comment}{/*\ 732,\ 0x2dc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00763\ \ \ \ \ \textcolor{comment}{/*\ 733,\ 0x2dd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00764\ \ \ \ \ \textcolor{comment}{/*\ 734,\ 0x2de\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00765\ \ \ \ \ \textcolor{comment}{/*\ 735,\ 0x2df\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00766\ \ \ \ \ \textcolor{comment}{/*\ 736,\ 0x2e0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00767\ \ \ \ \ \textcolor{comment}{/*\ 737,\ 0x2e1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00768\ \ \ \ \ \textcolor{comment}{/*\ 738,\ 0x2e2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00769\ \ \ \ \ \textcolor{comment}{/*\ 739,\ 0x2e3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00770\ \ \ \ \ \textcolor{comment}{/*\ 740,\ 0x2e4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00771\ \ \ \ \ \textcolor{comment}{/*\ 741,\ 0x2e5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00772\ \ \ \ \ \textcolor{comment}{/*\ 742,\ 0x2e6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00773\ \ \ \ \ \textcolor{comment}{/*\ 743,\ 0x2e7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00774\ \ \ \ \ \textcolor{comment}{/*\ 744,\ 0x2e8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00775\ \ \ \ \ \textcolor{comment}{/*\ 745,\ 0x2e9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00776\ \ \ \ \ \textcolor{comment}{/*\ 746,\ 0x2ea\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00777\ \ \ \ \ \textcolor{comment}{/*\ 747,\ 0x2eb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00778\ \ \ \ \ \textcolor{comment}{/*\ 748,\ 0x2ec\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00779\ \ \ \ \ \textcolor{comment}{/*\ 749,\ 0x2ed\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00780\ \ \ \ \ \textcolor{comment}{/*\ 750,\ 0x2ee\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00781\ \ \ \ \ \textcolor{comment}{/*\ 751,\ 0x2ef\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00782\ \ \ \ \ \textcolor{comment}{/*\ 752,\ 0x2f0\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00783\ \ \ \ \ \textcolor{comment}{/*\ 753,\ 0x2f1\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00784\ \ \ \ \ \textcolor{comment}{/*\ 754,\ 0x2f2\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00785\ \ \ \ \ \textcolor{comment}{/*\ 755,\ 0x2f3\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00786\ \ \ \ \ \textcolor{comment}{/*\ 756,\ 0x2f4\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00787\ \ \ \ \ \textcolor{comment}{/*\ 757,\ 0x2f5\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00788\ \ \ \ \ \textcolor{comment}{/*\ 758,\ 0x2f6\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00789\ \ \ \ \ \textcolor{comment}{/*\ 759,\ 0x2f7\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00790\ \ \ \ \ \textcolor{comment}{/*\ 760,\ 0x2f8\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00791\ \ \ \ \ \textcolor{comment}{/*\ 761,\ 0x2f9\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00792\ \ \ \ \ \textcolor{comment}{/*\ 762,\ 0x2fa\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00793\ \ \ \ \ \textcolor{comment}{/*\ 763,\ 0x2fb\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00794\ \ \ \ \ \textcolor{comment}{/*\ 764,\ 0x2fc\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00795\ \ \ \ \ \textcolor{comment}{/*\ 765,\ 0x2fd\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00796\ \ \ \ \ \textcolor{comment}{/*\ 766,\ 0x2fe\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,}
+\DoxyCodeLine{00797\ \ \ \ \ \textcolor{comment}{/*\ 767,\ 0x2ff\ */}\ \ \ \ SDL\_SCANCODE\_UNKNOWN,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ KEY\_MAX}}
+\DoxyCodeLine{00798\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ 0}}
+\DoxyCodeLine{00799\ \};}
+\DoxyCodeLine{00800\ }
+\DoxyCodeLine{00801\ \textcolor{preprocessor}{\#if\ 0\ }\textcolor{comment}{//\ A\ shell\ script\ to\ update\ the\ Linux\ key\ names\ in\ this\ file}}
+\DoxyCodeLine{00802\ \textcolor{preprocessor}{\#!/bin/bash}}
+\DoxyCodeLine{00803\ }
+\DoxyCodeLine{00804\ function\ get\_keyname}
+\DoxyCodeLine{00805\ \{}
+\DoxyCodeLine{00806\ \ \ \ \ value=\$(echo\ \textcolor{stringliteral}{"{}\$1"{}}\ |\ awk\ \textcolor{stringliteral}{'\{print\ \$3\}'})}
+\DoxyCodeLine{00807\ \ \ \ \ grep\ -\/F\ KEY\_\ /usr/include/linux/input-\/\textcolor{keyword}{event}-\/codes.h\ |\ \textcolor{keywordflow}{while}\ read\ line;\ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ read\ -\/ra\ fields\ <<<\textcolor{stringliteral}{"{}\$line"{}}}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ [\ \textcolor{stringliteral}{"{}\$\{fields[2]\}"{}}\ =\ \textcolor{stringliteral}{"{}\$value"{}}\ ];\ then}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \ \ \ \ echo\ \textcolor{stringliteral}{"{}\$\{fields[1]\}"{}}}
+\DoxyCodeLine{00811\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ fi}
+\DoxyCodeLine{00813\ \ \ \ \ done}
+\DoxyCodeLine{00814\ \}}
+\DoxyCodeLine{00815\ }
+\DoxyCodeLine{00816\ grep\ -\/F\ SDL\_SCANCODE\ scancodes\_linux.h\ |\ \textcolor{keywordflow}{while}\ read\ line;\ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{00817\ \ \ \ \ \textcolor{keywordflow}{if}\ [\ \$(echo\ \textcolor{stringliteral}{"{}\$line"{}}\ |\ awk\ \textcolor{stringliteral}{'\{print\ NF\}'})\ -\/eq\ 5\ ];\ then}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ name=\$(get\_keyname\ \textcolor{stringliteral}{"{}\$line"{}})}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ [\ \textcolor{stringliteral}{"{}\$name"{}}\ !=\ \textcolor{stringliteral}{"{}"{}}\ ];\ then}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ echo\ \textcolor{stringliteral}{"{}\ \ \ \ \$line\ \ \ \ \ \ \ \ \ \ \ \ /*\ \$name\ */"{}}}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ fi}
+\DoxyCodeLine{00823\ \ \ \ \ fi}
+\DoxyCodeLine{00824\ \ \ \ \ echo\ \textcolor{stringliteral}{"{}\ \ \ \ \$line"{}}}
+\DoxyCodeLine{00825\ done}
+\DoxyCodeLine{00826\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ script}}
+\DoxyCodeLine{00827\ }
+\DoxyCodeLine{00828\ \textcolor{preprocessor}{\#if\ 0\ }\textcolor{comment}{//\ A\ shell\ script\ to\ get\ comments\ from\ the\ Linux\ header\ for\ these\ keys}}
+\DoxyCodeLine{00829\ \textcolor{preprocessor}{\#!/bin/bash}}
+\DoxyCodeLine{00830\ }
+\DoxyCodeLine{00831\ function\ get\_comment}
+\DoxyCodeLine{00832\ \{}
+\DoxyCodeLine{00833\ \ \ \ \ name=\$(echo\ \textcolor{stringliteral}{"{}\$1"{}}\ |\ awk\ \textcolor{stringliteral}{'\{print\ \$7\}'})}
+\DoxyCodeLine{00834\ \ \ \ \ \textcolor{keywordflow}{if}\ [\ \textcolor{stringliteral}{"{}\$name"{}}\ !=\ \textcolor{stringliteral}{"{}"{}}\ ];\ then}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ grep\ -\/E\ \textcolor{stringliteral}{"{}\$name\(\backslash\)s"{}}\ /usr/include/linux/input-\/\textcolor{keyword}{event}-\/codes.h\ |\ grep\ -\/F\ \textcolor{stringliteral}{"{}/*"{}}\ |\ sed\ \textcolor{stringliteral}{'s,[\string^/]*/,/,'}}
+\DoxyCodeLine{00836\ \ \ \ \ fi}
+\DoxyCodeLine{00837\ \}}
+\DoxyCodeLine{00838\ }
+\DoxyCodeLine{00839\ grep\ -\/F\ SDL\_SCANCODE\ scancodes\_linux.h\ |\ \textcolor{keywordflow}{while}\ read\ line;\ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{00840\ \ \ \ \ comment=\$(get\_comment\ \textcolor{stringliteral}{"{}\$line"{}})}
+\DoxyCodeLine{00841\ \ \ \ \ \textcolor{keywordflow}{if}\ [\ \textcolor{stringliteral}{"{}\$comment"{}}\ !=\ \textcolor{stringliteral}{"{}"{}}\ ];\ then}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \ \ echo\ \textcolor{stringliteral}{"{}\ \ \ \ \$line\ \$comment"{}}}
+\DoxyCodeLine{00843\ \ \ \ \ fi}
+\DoxyCodeLine{00844\ done}
+\DoxyCodeLine{00845\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ end\ script}}
+\DoxyCodeLine{00846\ }
+\DoxyCodeLine{00847\ }
+\DoxyCodeLine{00848\ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+
+\end{DoxyCode}

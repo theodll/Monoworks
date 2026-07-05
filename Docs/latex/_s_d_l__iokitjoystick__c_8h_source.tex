@@ -1,0 +1,87 @@
+\doxysection{SDL\+\_\+iokitjoystick\+\_\+c.\+h}
+\hypertarget{_s_d_l__iokitjoystick__c_8h_source}{}\label{_s_d_l__iokitjoystick__c_8h_source}\index{MonoRuntime/extern/sdl/src/joystick/darwin/SDL\_iokitjoystick\_c.h@{MonoRuntime/extern/sdl/src/joystick/darwin/SDL\_iokitjoystick\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_JOYSTICK\_IOKIT\_H}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_JOYSTICK\_IOKIT\_H}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ <IOKit/hid/IOHIDLib.h>}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ <ForceFeedback/ForceFeedback.h>}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <ForceFeedback/ForceFeedbackConstants.h>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrec_element}{recElement}}}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ IOHIDElementRef\ elementRef;}
+\DoxyCodeLine{00033\ \ \ \ \ IOHIDElementCookie\ cookie;}
+\DoxyCodeLine{00034\ \ \ \ \ uint32\_t\ usagePage,\ usage;\ \textcolor{comment}{//\ HID\ usage}}
+\DoxyCodeLine{00035\ \ \ \ \ SInt32\ min;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ reported\ min\ value\ possible}}
+\DoxyCodeLine{00036\ \ \ \ \ SInt32\ max;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ reported\ max\ value\ possible}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ runtime\ variables\ used\ for\ auto-\/calibration}}
+\DoxyCodeLine{00039\ \ \ \ \ SInt32\ minReport;\ \textcolor{comment}{//\ min\ returned\ value}}
+\DoxyCodeLine{00040\ \ \ \ \ SInt32\ maxReport;\ \textcolor{comment}{//\ max\ returned\ value}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrec_element}{recElement}}\ *pNext;\ \textcolor{comment}{//\ next\ element\ in\ list}}
+\DoxyCodeLine{00043\ \};}
+\DoxyCodeLine{00044\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structrec_element}{recElement}}\ \doxymbox{\hyperlink{structrec_element}{recElement}};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata}{joystick\_hwdata}}}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ IOHIDDeviceRef\ deviceRef;\ \textcolor{comment}{//\ HIDManager\ device\ handle}}
+\DoxyCodeLine{00049\ \ \ \ \ io\_service\_t\ ffservice;\ \ \ \textcolor{comment}{//\ Interface\ for\ force\ feedback,\ 0\ =\ no\ ff}}
+\DoxyCodeLine{00050\ \ \ \ \ FFDeviceObjectReference\ ffdevice;}
+\DoxyCodeLine{00051\ \ \ \ \ FFEFFECT\ *ffeffect;}
+\DoxyCodeLine{00052\ \ \ \ \ FFEffectObjectReference\ ffeffect\_ref;}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ ff\_initialized;}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{char}\ product[256];\ \ \textcolor{comment}{//\ name\ of\ product}}
+\DoxyCodeLine{00056\ \ \ \ \ uint32\_t\ usage;\ \ \ \ \ \textcolor{comment}{//\ usage\ page\ from\ IOUSBHID\ Parser.h\ which\ defines\ general\ usage}}
+\DoxyCodeLine{00057\ \ \ \ \ uint32\_t\ usagePage;\ \textcolor{comment}{//\ usage\ within\ above\ page\ from\ IOUSBHID\ Parser.h\ which\ defines\ specific\ usage}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{int}\ axes;\ \ \ \ \ \textcolor{comment}{//\ number\ of\ axis\ (calculated,\ not\ reported\ by\ device)}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{int}\ buttons;\ \ \textcolor{comment}{//\ number\ of\ buttons\ (calculated,\ not\ reported\ by\ device)}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ hats;\ \ \ \ \ \textcolor{comment}{//\ number\ of\ hat\ switches\ (calculated,\ not\ reported\ by\ device)}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{int}\ elements;\ \textcolor{comment}{//\ number\ of\ total\ elements\ (should\ be\ total\ of\ above)\ (calculated,\ not\ reported\ by\ device)}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \doxymbox{\hyperlink{structrec_element}{recElement}}\ *firstAxis;}
+\DoxyCodeLine{00065\ \ \ \ \ \doxymbox{\hyperlink{structrec_element}{recElement}}\ *firstButton;}
+\DoxyCodeLine{00066\ \ \ \ \ \doxymbox{\hyperlink{structrec_element}{recElement}}\ *firstHat;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{bool}\ removed;}
+\DoxyCodeLine{00069\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *joystick;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{bool}\ runLoopAttached;\ \textcolor{comment}{//\ is\ 'deviceRef'\ attached\ to\ a\ CFRunLoop?}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ instance\_id;}
+\DoxyCodeLine{00073\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___g_u_i_d}{SDL\_GUID}}\ guid;}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{int}\ steam\_virtual\_gamepad\_slot;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{bool}\ nacon\_revolution\_x\_unlimited;}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata}{joystick\_hwdata}}\ *pNext;\ \textcolor{comment}{//\ next\ device}}
+\DoxyCodeLine{00078\ \};}
+\DoxyCodeLine{00079\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structjoystick__hwdata}{joystick\_hwdata}}\ recDevice;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_JOYSTICK\_IOKIT\_H}}
+
+\end{DoxyCode}

@@ -1,0 +1,40 @@
+\doxysection{Tracy\+Debug.\+hpp}
+\hypertarget{_tracy_debug_8hpp_source}{}\label{_tracy_debug_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/client/TracyDebug.hpp@{MonoEngine/thirdparty/tracy/public/client/TracyDebug.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYPRINT\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYPRINT\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#\ \ define\ TRACY\_VERBOSE\_EARLY\_OUT\_COND\ if(\ !GetProfiler().IsConnected()\ )\ break}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Skip\ rather\ than\ assert:\ TracyDebug\ can\ fire\ during\ Profiler\ member}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ construction\ (e.g.\ SysPower\ ctor\ scanning\ intel-\/rapl),\ before\ s\_instance\ is}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ set,\ so\ ProfilerAvailable()\ is\ legitimately\ false.}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#\ \ define\ TRACY\_VERBOSE\_EARLY\_OUT\_COND\ if(\ !tracy::ProfilerAvailable()\ )\ break}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#define\ TracyInternalMessage(\ severity,\ ...\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ TRACY\_VERBOSE\_EARLY\_OUT\_COND;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ char\ buffer[4096];\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ snprintf(\ buffer,\ sizeof(buffer),\ \_\_VA\_ARGS\_\_\ );\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ tracy::Profiler::LogString(\ tracy::MessageSourceType::Tracy,\ severity,\ 0,\ TRACY\_CALLSTACK,\ strlen(\ buffer\ ),\ buffer\ );\ \(\backslash\)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\ \ \ \ \}\ while(\ 0\ )}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ TRACY\_VERBOSE}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#\ \ include\ <stdio.h>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#\ \ define\ TracyDebug(...)\ do\ \{\ fprintf(\ stderr,\ \_\_VA\_ARGS\_\_\ );\ fputc(\ '\(\backslash\)n',\ stderr\ );\ \}\ while(\ 0\ )}}
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ Note:\ We\ can't\ use\ LogString\ when\ using\ TRACY\_DELAYED\_INIT\ due\ to\ a\ deadlock\ in\ the\ init\ code.\ }}
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ This\ is\ caused\ by\ \`{}GetProfilerData`\ triggerting\ ProfileData\ ctor,\ which\ itself\ will\ call\ \`{}GetProfilerData`\ and\ deadlock.}}
+\DoxyCodeLine{00026\ \textcolor{comment}{//\ TRACY\_MANUAL\_LIFETIME\ does\ not\ have\ this\ issue\ since\ StartupProfiler\ sets\ s\_profilerData\ before\ calling\ the\ constructor.}}
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ In\ general,\ this\ also\ means\ we\ can\ only\ call\ TracyDebug\ after\ and\ the\ first\ logging\ is\ after\ queue\ initialization\ and\ critical\ init\ (such\ as\ InitCallstackCritical).}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#elif\ !defined(TRACY\_NO\_INTERNAL\_MESSAGE)\ \&\&\ (!defined(TRACY\_DELAYED\_INIT)\ ||\ defined(TRACY\_MANUAL\_LIFETIME))}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#\ \ define\ TracyDebug(...)\ TracyInternalMessage(\ tracy::MessageSeverity::Debug,\ \_\_VA\_ARGS\_\_\ )}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#\ \ define\ TracyDebug(...)}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,115 @@
+\chapter{Building HIDAPI from Source }
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d}{}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d}\index{Building HIDAPI from Source@{Building HIDAPI from Source}}
+\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1645}%
+\Hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1645}%
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1646}{}\doxysection{\texorpdfstring{Table of content}{Table of content}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1646}
+
+\begin{DoxyItemize}
+\item IntroIntro
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item PrerequisitesPrerequisites
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item LinuxLinux
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Free\+BSDFree\+BSD
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item MacMac
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item WindowsWindows
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Embedding HIDAPI directly into your source treeEmbedding HIDAPI directly into your source tree
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Building the manual way on Unix platformsBuilding the manual way on Unix platforms
+\end{DoxyItemize}
+\begin{DoxyItemize}
+\item Building on WindowsBuilding on Windows
+\end{DoxyItemize}\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1647}{}\doxysection{\texorpdfstring{Intro}{Intro}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1647}
+For various reasons, you may need to build HIDAPI on your own.
+
+It can be done in several different ways:\+
+\begin{DoxyItemize}
+\item using \doxysectlink{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8cmake}{CMake}{0};
+\item using \doxysectlink{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools}{Autotools}{0} (deprecated);
+\item using manual makefilesmanual makefiles
+\end{DoxyItemize};
+\begin{DoxyItemize}
+\item using {\ttfamily Meson} (requires CMake);
+\end{DoxyItemize}
+
+{\bfseries{Autotools}} build system is historically the first mature build system for HIDAPI. The most common usage of it is in its separate README:\+ \doxysectlink{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools}{BUILD.autotools.md}{0}.~\newline
+ NOTE:\+ for all intentions and purposes the Autotools build scripts for HIDAPI are {\itshape deprecated} and going to be obsolete in the future. HIDAPI Team recommends using CMake build for HIDAPI.
+
+{\bfseries{CMake}} build system is de facto an industry standard for many open-\/source and proprietary projects and solutions. HIDAPI is one of the projects which use the power of CMake to its advantage. More documentation is available in its separate README:\+ \doxysectlink{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8cmake}{BUILD.cmake.md}{0}.
+
+{\bfseries{Meson}} build system for HIDAPI is designed as a \href{https://mesonbuild.com/CMake-module.html}{\texttt{wrapper}} over CMake build script. It is present for the convenience of Meson users who need to use HIDAPI and need to be sure HIDAPI is built in accordance with officially supported build scripts.~\newline
+ In the Meson script of your project you need a {\ttfamily hidapi = subproject(\textquotesingle{}hidapi\textquotesingle{})} subproject, and {\ttfamily hidapi.\+get\+\_\+variable(\textquotesingle{}hidapi\+\_\+dep\textquotesingle{})} as your dependency. There are also backend/\+platform-\/specific dependencies available:\+ {\ttfamily hidapi\+\_\+winapi}, {\ttfamily hidapi\+\_\+darwin}, {\ttfamily hidapi\+\_\+hidraw}, {\ttfamily hidapi\+\_\+libusb}.
+
+If you don\textquotesingle{}t know where to start to build HIDAPI, we recommend starting with \doxysectlink{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8cmake}{CMake}{0} build.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1648}{}\doxysection{\texorpdfstring{Prerequisites:\+}{Prerequisites:\+}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1648}
+Regardless of what build system you choose to use, there are specific dependencies for each platform/\+backend.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1649}{}\doxysubsection{\texorpdfstring{Linux:\+}{Linux:\+}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1649}
+Depending on which backend you\textquotesingle{}re going to build, you\textquotesingle{}ll need to install additional development packages. For {\ttfamily linux/\+hidraw} backend, you need a development package for {\ttfamily libudev}. For {\ttfamily libusb} backend, naturally, you need {\ttfamily libusb} development package.
+
+On Debian/\+\+Ubuntu systems these can be installed by running:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\ required\ only\ by\ hidraw\ backend}
+\DoxyCodeLine{sudo\ apt\ install\ libudev-\/dev}
+\DoxyCodeLine{\#\ required\ only\ by\ libusb\ backend}
+\DoxyCodeLine{sudo\ apt\ install\ libusb-\/1.0-\/0-\/dev}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1650}{}\doxysubsection{\texorpdfstring{Free\+BSD:\+}{Free\+BSD:\+}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1650}
+On Free\+BSD, you will need to install libiconv. This is done by running the following:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{pkg\_add\ -\/r\ libiconv}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1651}{}\doxysubsection{\texorpdfstring{Mac:\+}{Mac:\+}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1651}
+Make sure you have XCode installed and its Command \doxylink{struct_line}{Line} Tools.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1652}{}\doxysubsection{\texorpdfstring{Windows:\+}{Windows:\+}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1652}
+You just need a compiler. You may use Visual Studio or Cygwin/\+\+Min\+GW, depending on which environment is best for your needs.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1653}{}\doxysection{\texorpdfstring{Embedding HIDAPI directly into your source tree}{Embedding HIDAPI directly into your source tree}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1653}
+Instead of using one of the provided standalone build systems, you may want to integrate HIDAPI directly into your source tree.
+
+\DoxyHorRuler{0}
+ If your project uses CMake as a build system, it is safe to add HIDAPI as a \href{BUILD.cmake.md\#hidapi-as-a-subdirectory}{\texttt{subdirectory}}.
+
+\DoxyHorRuler{0}
+ If {\itshape the only option} that works for you is adding HIDAPI sources directly to your project\textquotesingle{}s build system, then you need:\+
+\begin{DoxyItemize}
+\item include a {\itshape single source file} into your project\textquotesingle{}s build system, depending on your platform and the backend you want to use:\+
+\begin{DoxyItemize}
+\item \href{windows/hid.c}{\texttt{{\ttfamily windows\textbackslash{}hid.\+c}}};
+\item \href{linux/hid.c}{\texttt{{\ttfamily linux/\+hid.\+c}}};
+\item \href{libusb/hid.c}{\texttt{{\ttfamily libusb/\+hid.\+c}}};
+\item \href{mac/hid.c}{\texttt{{\ttfamily mac/\+hid.\+c}}};
+\end{DoxyItemize}
+\item add a \+[{\ttfamily hidapi}]\+(hidapi) folder to the include path when building {\ttfamily hid.\+c};
+\item make the platform/\+backend specific dependenciesdependencies
+\end{DoxyItemize}available during the compilation/\+linking, when building {\ttfamily hid.\+c};
+
+NOTE:\+ the above doesn\textquotesingle{}t guarantee that having a copy of {\ttfamily \texorpdfstring{$<$}{<}backend\texorpdfstring{$>$}{>}/\+hid.c} and {\ttfamily \doxylink{hidapi_8h}{hidapi/\+hidapi.\+h}} is enough to build HIDAPI. The only guarantee that {\ttfamily \texorpdfstring{$<$}{<}backend\texorpdfstring{$>$}{>}/\+hid.c} includes all necessary sources to compile it as a single file.
+
+Check the manual makefiles for a simple example/\+reference of what are the dependencies of each specific backend.\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1656}{}\doxysection{\texorpdfstring{Building the manual way on Unix platforms}{Building the manual way on Unix platforms}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1656}
+Manual Makefiles are provided mostly to give the user an idea what it takes to build a program which embeds HIDAPI directly inside of it. These should really be used as examples only. If you want to build a system-\/wide shared library, use one of the build systems mentioned above.
+
+To build HIDAPI using the manual Makefiles, change the directory of your platform and run make. For example, on Linux run:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd\ linux/}
+\DoxyCodeLine{make\ -\/f\ Makefile-\/manual}
+
+\end{DoxyCode}
+\hypertarget{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1657}{}\doxysection{\texorpdfstring{Building on Windows}{Building on Windows}}\label{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_autotoc_md1657}
+To build the HIDAPI DLL on Windows using Visual Studio, build the {\ttfamily .sln} file in the {\ttfamily windows/\+} directory.
+
+To build HIDAPI using Min\+GW or Cygwin using Autotools, use general Autotools \doxysectlink{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8autotools}{instruction}{0}.
+
+Any windows builds (MSVC or Min\+GW/\+\+Cygwin) are also supported by \doxysectlink{md__mono_runtime_2extern_2sdl_2src_2hidapi_2_b_u_i_l_d_8cmake}{CMake}{0}.
+
+If you are looking for information regarding DDK build of HIDAPI:\+
+\begin{DoxyItemize}
+\item the build has been broken for a while and now the support files are obsolete. 
+\end{DoxyItemize}

@@ -1,0 +1,107 @@
+\doxysection{SDL\+\_\+uikitviewcontroller.\+h}
+\hypertarget{_s_d_l__uikitviewcontroller_8h_source}{}\label{_s_d_l__uikitviewcontroller_8h_source}\index{MonoRuntime/extern/sdl/src/video/uikit/SDL\_uikitviewcontroller.h@{MonoRuntime/extern/sdl/src/video/uikit/SDL\_uikitviewcontroller.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#import\ <UIKit/UIKit.h>}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysvideo.h"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#ifdef\ SDL\_PLATFORM\_TVOS}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#import\ <GameController/GameController.h>}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ SDLRootViewController\ GCEventViewController}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SDLRootViewController\ UIViewController}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{@interface\ }\doxymbox{\hyperlink{interface_s_d_l_u_i_text_field}{SDLUITextField}}\ :\ UITextField}
+\DoxyCodeLine{00035\ -\/\ (BOOL)canPerformAction:(\textcolor{keywordtype}{SEL})action\ withSender:(\textcolor{keywordtype}{id})sender;}
+\DoxyCodeLine{00036\ \textcolor{keyword}{@end}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ SDL\_IPHONE\_KEYBOARD}}
+\DoxyCodeLine{00039\ \textcolor{keyword}{@interface\ }\doxymbox{\hyperlink{interface_s_d_l__uikitviewcontroller}{SDL\_uikitviewcontroller}}\ :\ SDLRootViewController\ <UITextFieldDelegate>}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{@interface\ }\doxymbox{\hyperlink{interface_s_d_l__uikitviewcontroller}{SDL\_uikitviewcontroller}}\ :\ SDLRootViewController}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{@property}(nonatomic,\ assign)\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ -\/\ (instancetype)initWithSDLWindow:(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *)\_window;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ -\/\ (void)traitCollectionDidChange:(UITraitCollection\ *)previousTraitCollection;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ -\/\ (void)setAnimationCallback:(int)interval}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ callback:(void\ (*)(\textcolor{keywordtype}{void}\ *))callback}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ callbackParam:(\textcolor{keywordtype}{void}\ *)callbackParam;}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ -\/\ (void)startAnimation;}
+\DoxyCodeLine{00055\ -\/\ (void)stopAnimation;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ -\/\ (void)doLoop:(CADisplayLink\ *)sender;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ -\/\ (void)loadView;}
+\DoxyCodeLine{00060\ -\/\ (void)viewDidLayoutSubviews;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#ifdef\ SDL\_PLATFORM\_VISIONOS}}
+\DoxyCodeLine{00063\ -\/\ (void)initializeVisionOSCurvedUI;}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#ifndef\ SDL\_PLATFORM\_TVOS}}
+\DoxyCodeLine{00067\ -\/\ (NSUInteger)supportedInterfaceOrientations;}
+\DoxyCodeLine{00068\ -\/\ (BOOL)prefersStatusBarHidden;}
+\DoxyCodeLine{00069\ -\/\ (BOOL)prefersHomeIndicatorAutoHidden;}
+\DoxyCodeLine{00070\ -\/\ (UIRectEdge)preferredScreenEdgesDeferringSystemGestures;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{@property}(nonatomic,\ assign)\ \textcolor{keywordtype}{int}\ homeIndicatorHidden;}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#ifdef\ SDL\_IPHONE\_KEYBOARD}}
+\DoxyCodeLine{00076\ -\/\ (bool)startTextInput;}
+\DoxyCodeLine{00077\ -\/\ (bool)stopTextInput;}
+\DoxyCodeLine{00078\ -\/\ (void)initKeyboard;}
+\DoxyCodeLine{00079\ -\/\ (void)deinitKeyboard;}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ -\/\ (void)keyboardWillShow:(NSNotification\ *)notification;}
+\DoxyCodeLine{00082\ -\/\ (void)keyboardDidShow:(NSNotification\ *)notification;}
+\DoxyCodeLine{00083\ -\/\ (void)keyboardWillHide:(NSNotification\ *)notification;}
+\DoxyCodeLine{00084\ -\/\ (void)keyboardDidHide:(NSNotification\ *)notification;}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ -\/\ (void)updateKeyboard;}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{@property}(nonatomic,\ assign,\ getter=isTextFieldFocused)\ BOOL\ textFieldFocused;}
+\DoxyCodeLine{00089\ \textcolor{keyword}{@property}(nonatomic,\ assign)\ \doxymbox{\hyperlink{struct_s_d_l___rect}{SDL\_Rect}}\ textInputRect;}
+\DoxyCodeLine{00090\ \textcolor{keyword}{@property}(nonatomic,\ assign)\ \textcolor{keywordtype}{int}\ keyboardHeight;}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{keyword}{@end}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#ifdef\ SDL\_IPHONE\_KEYBOARD}}
+\DoxyCodeLine{00096\ \textcolor{keywordtype}{bool}\ UIKit\_HasScreenKeyboardSupport(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00097\ \textcolor{keywordtype}{bool}\ UIKit\_StartTextInput(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00098\ \textcolor{keywordtype}{bool}\ UIKit\_StopTextInput(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00099\ \textcolor{keywordtype}{void}\ UIKit\_SetTextInputProperties(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00100\ \textcolor{keywordtype}{bool}\ UIKit\_UpdateTextInputArea(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window);}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

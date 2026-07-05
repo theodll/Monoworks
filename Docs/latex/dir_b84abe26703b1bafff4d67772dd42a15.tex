@@ -1,0 +1,65 @@
+\doxysection{Mono\+Runtime/\+extern/\+sdl/\+examples Directory Reference}
+\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15}{}\label{dir_b84abe26703b1bafff4d67772dd42a15}\index{MonoRuntime/extern/sdl/examples Directory Reference@{MonoRuntime/extern/sdl/examples Directory Reference}}
+\doxysubsubsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file {\bfseries save-\/rendering-\/to-\/bitmaps.\+h}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1530}{}\doxysubsection{\texorpdfstring{Examples}{Examples}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1530}
+\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1531}{}\doxysubsection{\texorpdfstring{What is this?}{What is this?}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1531}
+In here are a collection of standalone SDL application examples. Unless otherwise stated, they should work on all supported platforms out of the box. If they don\textquotesingle{}t \href{https://github.com/libsdl-org/SDL/issues/new}{\texttt{please file a bug to let us know}}.\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1532}{}\doxysubsection{\texorpdfstring{What is this SDL\+\_\+\+App\+Iterate thing?}{What is this SDL\+\_\+\+App\+Iterate thing?}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1532}
+SDL can optionally build apps as a collection of callbacks instead of the usual program structure that starts and ends in a function called {\ttfamily main}. The examples use this format for two reasons.
+
+First, it allows the examples to work when built as web applications without a pile of ugly {\ttfamily \#ifdef}s, and all of these examples are published on the web at \href{https://examples.libsdl.org/}{\texttt{examples.\+libsdl.\+org}}, so you can easily see them in action.
+
+Second, it\textquotesingle{}s example code! The callbacks let us cleanly break the program up into the four logical pieces most apps care about:\+
+
+
+\begin{DoxyItemize}
+\item \doxylink{class_program}{Program} startup
+\item Event handling
+\item What the program actually does in a single frame
+\item \doxylink{class_program}{Program} shutdown
+\end{DoxyItemize}
+
+A detailed technical explanation of these callbacks is in docs/\+\+README-\/main-\/functions.\+md (or view that page on the web on \href{https://wiki.libsdl.org/SDL3/README/main-functions\#main-callbacks-in-sdl3}{\texttt{the wiki}}).\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1533}{}\doxysubsection{\texorpdfstring{I would like to build and run these examples myself.}{I would like to build and run these examples myself.}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1533}
+When you build SDL with CMake, you can add {\ttfamily -\/DSDL\+\_\+\+EXAMPLES=On} to the CMake command line. When you build SDL, these examples will be built with it.
+
+But most of these can just be built as a single .c file, as long as you point your compiler at SDL3\textquotesingle{}s headers and link against SDL.\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1534}{}\doxysubsection{\texorpdfstring{What is the license on the example code? Can I paste this into my project?}{What is the license on the example code? Can I paste this into my project?}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1534}
+All code in the examples directory is considered public domain! You can do anything you like with it, including copy/\+paste it into your closed-\/source project, sell it, and pretend you wrote it yourself. We do not require you to give us credit for this code (but we always appreciate if you do!).
+
+This is only true for the examples directory. The rest of SDL falls under the \href{https://github.com/libsdl-org/SDL/blob/main/LICENSE.txt}{\texttt{zlib license}}.\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1535}{}\doxysubsection{\texorpdfstring{What is template.\+html and highlight-\/plugin.\+lua in this directory?}{What is template.\+html and highlight-\/plugin.\+lua in this directory?}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1535}
+This is what \href{https://examples.libsdl.org/}{\texttt{examples.\+libsdl.\+org}} uses when generating the web versions of these example programs. You can ignore this, unless you are improving it, in which case we definitely would love to hear from you!\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1536}{}\doxysubsection{\texorpdfstring{What is template.\+c in this directory?}{What is template.\+c in this directory?}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1536}
+If writing new examples, this is the skeleton code we start from, to keep everything consistent. You can ignore it.\hypertarget{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1537}{}\doxysubsection{\texorpdfstring{How are the thumbnails/\+onmouseover media created?}{How are the thumbnails/\+onmouseover media created?}}\label{dir_b84abe26703b1bafff4d67772dd42a15_autotoc_md1537}
+(Since I have to figure this out every time.)
+
+This is how Ryan is doing it currently.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily rm -\/f frame\texorpdfstring{$\ast$}{*}.png}
+\item Temporarily add {\ttfamily \#include "{}../\+../\+save-\/rendering-\/to-\/bitmaps.h"{}} after any SDL includes in the example program.
+\item Launch the example app, interact with it, let it run for a few seconds, quit.
+\item This will dump a "{}frame\+X.\+png"{} file for each frame rendered.
+\item Make a video in webp format from the bitmaps (this assumes the bitmaps were stored at 60fps, you might have to tweak).
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ffmpeg\ -\/framerate\ 60\ -\/pattern\_type\ glob\ -\/i\ 'frame*.png'\ -\/loop\ 0\ -\/quality\ 40\ -\/r\ 10\ -\/frames:v\ 40\ onmouseover.webp}
+
+\end{DoxyCode}
+
+
+You might need to start in the middle of the video, or mess with quality or number of frames to generate, ymmv.
+\item Pick a frame for the thumbnail, make it a .png, and run that png through pngquant for massive file size reduction without any obvious loss in quality:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{convert\ frame00000.png\ cvt.png\ ;\ pngquant\ cvt.png\ -\/-\/output\ thumbnail.png\ ;\ rm\ -\/f\ cvt.png}
+
+\end{DoxyCode}
+ 
+\end{DoxyItemize}

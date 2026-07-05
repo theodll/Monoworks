@@ -1,0 +1,80 @@
+\doxysection{SDL\+\_\+gpu\+\_\+util.\+h}
+\hypertarget{_s_d_l__gpu__util_8h_source}{}\label{_s_d_l__gpu__util_8h_source}\index{MonoRuntime/extern/sdl/src/render/gpu/SDL\_gpu\_util.h@{MonoRuntime/extern/sdl/src/render/gpu/SDL\_gpu\_util.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_gpu\_util\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_gpu\_util\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BLENDOP\_INVALID\ \ \ \ \ ((SDL\_GPUBlendOp)0x7fffffff)}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ SDL\_GPU\_BLENDFACTOR\_INVALID\ ((SDL\_GPUBlendFactor)0x7fffffff)}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{static}\ SDL\_INLINE\ SDL\_GPUBlendFactor\ GPU\_ConvertBlendFactor(SDL\_BlendFactor\ factor)}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordflow}{switch}\ (factor)\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_ZERO:}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_ZERO;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_ONE:}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_ONE;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_SRC\_COLOR:}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_SRC\_COLOR;}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_ONE\_MINUS\_SRC\_COLOR:}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_SRC\_COLOR;}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_SRC\_ALPHA:}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_SRC\_ALPHA;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_ONE\_MINUS\_SRC\_ALPHA:}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_SRC\_ALPHA;}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_DST\_COLOR:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_DST\_COLOR;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_ONE\_MINUS\_DST\_COLOR:}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_DST\_COLOR;}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_DST\_ALPHA:}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_DST\_ALPHA;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDFACTOR\_ONE\_MINUS\_DST\_ALPHA:}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_ONE\_MINUS\_DST\_ALPHA;}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDFACTOR\_INVALID;}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{static}\ SDL\_INLINE\ SDL\_GPUBlendOp\ GPU\_ConvertBlendOperation(SDL\_BlendOperation\ operation)}
+\DoxyCodeLine{00057\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordflow}{switch}\ (operation)\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDOPERATION\_ADD:}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDOP\_ADD;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDOPERATION\_SUBTRACT:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDOP\_SUBTRACT;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDOPERATION\_REV\_SUBTRACT:}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDOP\_REVERSE\_SUBTRACT;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDOPERATION\_MINIMUM:}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDOP\_MIN;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordflow}{case}\ SDL\_BLENDOPERATION\_MAXIMUM:}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDOP\_MAX;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_GPU\_BLENDOP\_INVALID;}
+\DoxyCodeLine{00071\ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_gpu\_util\_h}}
+
+\end{DoxyCode}

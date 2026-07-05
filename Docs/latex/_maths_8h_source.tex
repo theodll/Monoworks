@@ -1,0 +1,448 @@
+\doxysection{Maths.\+h}
+\hypertarget{_maths_8h_source}{}\label{_maths_8h_source}\index{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/Maths.h@{MonoEngine/thirdparty/tracy/examples/ToyPathTracer/Source/Maths.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}Config.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}MathSimd.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ kPI\ 3.1415926f}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ SSE/SIMD\ vector\ largely\ based\ on\ http://www.codersnotes.com/notes/maths-\/lib-\/2016/}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#if\ DO\_FLOAT3\_WITH\_SIMD}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#if\ !defined(\_\_arm\_\_)\ \&\&\ !defined(\_\_arm64\_\_)\ \&\&\ !defined(\_M\_ARM64)}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ -\/-\/-\/-\/\ SSE\ implementation}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ SHUFFLE3(v,\ 0,1,2)\ leaves\ the\ vector\ unchanged\ (v.xyz).}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ SHUFFLE3(v,\ 0,0,0)\ splats\ the\ X\ (v.xxx).}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ SHUFFLE3(V,\ X,Y,Z)\ float3(\_mm\_shuffle\_ps((V).m,\ (V).m,\ \_MM\_SHUFFLE(Z,Z,Y,X)))}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{struct\ }float3}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ VM\_INLINE\ float3()\ \{\}}
+\DoxyCodeLine{00026\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *p)\ \{\ m\ =\ \_mm\_set\_ps(p[2],\ p[2],\ p[1],\ p[0]);\ \}}
+\DoxyCodeLine{00027\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)\ \{\ m\ =\ \_mm\_set\_ps(z,\ z,\ y,\ x);\ \}}
+\DoxyCodeLine{00028\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(\textcolor{keywordtype}{float}\ v)\ \{\ m\ =\ \_mm\_set1\_ps(v);\ \}}
+\DoxyCodeLine{00029\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(\_\_m128\ v)\ \{\ m\ =\ v;\ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getX()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(m);\ \}}
+\DoxyCodeLine{00032\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getY()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(\_mm\_shuffle\_ps(m,\ m,\ \_MM\_SHUFFLE(1,\ 1,\ 1,\ 1)));\ \}}
+\DoxyCodeLine{00033\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getZ()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \_mm\_cvtss\_f32(\_mm\_shuffle\_ps(m,\ m,\ \_MM\_SHUFFLE(2,\ 2,\ 2,\ 2)));\ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ VM\_INLINE\ float3\ yzx()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ SHUFFLE3(*\textcolor{keyword}{this},\ 1,\ 2,\ 0);\ \}}
+\DoxyCodeLine{00036\ \ \ \ \ VM\_INLINE\ float3\ zxy()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ SHUFFLE3(*\textcolor{keyword}{this},\ 2,\ 0,\ 1);\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{void}\ store(\textcolor{keywordtype}{float}\ *p)\textcolor{keyword}{\ const\ }\{\ p[0]\ =\ getX();\ p[1]\ =\ getY();\ p[2]\ =\ getZ();\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ setX(\textcolor{keywordtype}{float}\ x)}
+\DoxyCodeLine{00041\ \ \ \ \ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ m\ =\ \_mm\_move\_ss(m,\ \_mm\_set\_ss(x));}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ setY(\textcolor{keywordtype}{float}\ y)}
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \_\_m128\ t\ =\ \_mm\_move\_ss(m,\ \_mm\_set\_ss(y));}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ t\ =\ \_mm\_shuffle\_ps(t,\ t,\ \_MM\_SHUFFLE(3,\ 2,\ 0,\ 0));}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ m\ =\ \_mm\_move\_ss(t,\ m);}
+\DoxyCodeLine{00049\ \ \ \ \ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ setZ(\textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \_\_m128\ t\ =\ \_mm\_move\_ss(m,\ \_mm\_set\_ss(z));}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ t\ =\ \_mm\_shuffle\_ps(t,\ t,\ \_MM\_SHUFFLE(3,\ 0,\ 1,\ 0));}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ m\ =\ \_mm\_move\_ss(t,\ m);}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \_\_m128\ m;}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{structfloat3}{float3}}\ bool3;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator+\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_add\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00063\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_sub\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00064\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_mul\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00065\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_div\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00066\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \textcolor{keywordtype}{float}\ b)\ \{\ a.m\ =\ \_mm\_mul\_ps(a.m,\ \_mm\_set1\_ps(b));\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00067\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \textcolor{keywordtype}{float}\ b)\ \{\ a.m\ =\ \_mm\_div\_ps(a.m,\ \_mm\_set1\_ps(b));\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00068\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*\ (\textcolor{keywordtype}{float}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ b.m\ =\ \_mm\_mul\_ps(\_mm\_set1\_ps(a),\ b.m);\ \textcolor{keywordflow}{return}\ b;\ \}}
+\DoxyCodeLine{00069\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator/\ (\textcolor{keywordtype}{float}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ b.m\ =\ \_mm\_div\_ps(\_mm\_set1\_ps(a),\ b.m);\ \textcolor{keywordflow}{return}\ b;\ \}}
+\DoxyCodeLine{00070\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator+=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ +\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00071\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator-\/=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ -\/\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00072\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator*=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ *\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00073\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator/=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ /\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00074\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator*=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \textcolor{keywordtype}{float}\ b)\ \{\ a\ =\ a\ *\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00075\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator/=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \textcolor{keywordtype}{float}\ b)\ \{\ a\ =\ a\ /\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00076\ VM\_INLINE\ bool3\ operator==(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_cmpeq\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00077\ VM\_INLINE\ bool3\ operator!=(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_cmpneq\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00078\ VM\_INLINE\ bool3\ operator<\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_cmplt\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00079\ VM\_INLINE\ bool3\ operator>\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_cmpgt\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00080\ VM\_INLINE\ bool3\ operator<=(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_cmple\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00081\ VM\_INLINE\ bool3\ operator>=(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_cmpge\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00082\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ min(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_min\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00083\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ max(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ \_mm\_max\_ps(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat3}{float3}}(\_mm\_setzero\_ps())\ -\/\ a;\ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ VM\_INLINE\ \textcolor{keywordtype}{float}\ hmin(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)}
+\DoxyCodeLine{00088\ \{}
+\DoxyCodeLine{00089\ \ \ \ \ v\ =\ min(v,\ SHUFFLE3(v,\ 1,\ 0,\ 2));}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{return}\ min(v,\ SHUFFLE3(v,\ 2,\ 0,\ 1)).getX();}
+\DoxyCodeLine{00091\ \}}
+\DoxyCodeLine{00092\ VM\_INLINE\ \textcolor{keywordtype}{float}\ hmax(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)}
+\DoxyCodeLine{00093\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ v\ =\ max(v,\ SHUFFLE3(v,\ 1,\ 0,\ 2));}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{return}\ max(v,\ SHUFFLE3(v,\ 2,\ 0,\ 1)).getX();}
+\DoxyCodeLine{00096\ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ cross(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)}
+\DoxyCodeLine{00099\ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{comment}{//\ x\ \ <-\/\ \ a.y*b.z\ -\/\ a.z*b.y}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{comment}{//\ y\ \ <-\/\ \ a.z*b.x\ -\/\ a.x*b.z}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ z\ \ <-\/\ \ a.x*b.y\ -\/\ a.y*b.x}}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{comment}{//\ We\ can\ save\ a\ shuffle\ by\ grouping\ it\ in\ this\ wacky\ order:}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{return}\ (a.zxy()*b\ -\/\ a*b.zxy()).zxy();}
+\DoxyCodeLine{00105\ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{comment}{//\ Returns\ a\ 3-\/bit\ code\ where\ bit0..bit2\ is\ X..Z}}
+\DoxyCodeLine{00108\ VM\_INLINE\ \textcolor{keywordtype}{unsigned}\ mask(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)\ \{\ \textcolor{keywordflow}{return}\ \_mm\_movemask\_ps(v.m)\ \&\ 7;\ \}}
+\DoxyCodeLine{00109\ \textcolor{comment}{//\ Once\ we\ have\ a\ comparison,\ we\ can\ branch\ based\ on\ its\ results:}}
+\DoxyCodeLine{00110\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ any(bool3\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ !=\ 0;\ \}}
+\DoxyCodeLine{00111\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ all(bool3\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ ==\ 7;\ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ clamp(\doxymbox{\hyperlink{structfloat3}{float3}}\ t,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ \textcolor{keywordflow}{return}\ min(max(t,\ a),\ b);\ \}}
+\DoxyCodeLine{00114\ VM\_INLINE\ \textcolor{keywordtype}{float}\ sum(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)\ \{\ \textcolor{keywordflow}{return}\ v.getX()\ +\ v.getY()\ +\ v.getZ();\ \}}
+\DoxyCodeLine{00115\ VM\_INLINE\ \textcolor{keywordtype}{float}\ dot(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ \textcolor{keywordflow}{return}\ sum(a*b);\ \}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ \#if\ !defined(\_\_arm\_\_)\ \&\&\ !defined(\_\_arm64\_\_)}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{comment}{//\ -\/-\/-\/-\/\ NEON\ implementation}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#include\ <arm\_neon.h>}}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structfloat3}{float3}}}
+\DoxyCodeLine{00124\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ VM\_INLINE\ float3()\ \{\}}
+\DoxyCodeLine{00126\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(\textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ *p)\ \{\ \textcolor{keywordtype}{float}\ v[4]\ =\ \{p[0],\ p[1],\ p[2],\ 0\};\ m\ =\ vld1q\_f32(v);\ \}}
+\DoxyCodeLine{00127\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y,\ \textcolor{keywordtype}{float}\ z)\ \{\ \textcolor{keywordtype}{float}\ v[4]\ =\ \{x,\ y,\ z,\ 0\};\ m\ =\ vld1q\_f32(v);\ \}}
+\DoxyCodeLine{00128\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(\textcolor{keywordtype}{float}\ v)\ \{\ m\ =\ vdupq\_n\_f32(v);\ \}}
+\DoxyCodeLine{00129\ \ \ \ \ VM\_INLINE\ \textcolor{keyword}{explicit}\ float3(float32x4\_t\ v)\ \{\ m\ =\ v;\ \}}
+\DoxyCodeLine{00130\ \ \ \ \ }
+\DoxyCodeLine{00131\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getX()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(m,\ 0);\ \}}
+\DoxyCodeLine{00132\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getY()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(m,\ 1);\ \}}
+\DoxyCodeLine{00133\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getZ()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ vgetq\_lane\_f32(m,\ 2);\ \}}
+\DoxyCodeLine{00134\ \ \ \ \ }
+\DoxyCodeLine{00135\ \ \ \ \ VM\_INLINE\ float3\ yzx()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00136\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ float32x2\_t\ low\ =\ vget\_low\_f32(m);}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ float32x4\_t\ yzx\ =\ vcombine\_f32(vext\_f32(low,\ vget\_high\_f32(m),\ 1),\ low);}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ float3(yzx);}
+\DoxyCodeLine{00140\ \ \ \ \ \}}
+\DoxyCodeLine{00141\ \ \ \ \ VM\_INLINE\ float3\ zxy()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00142\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ float32x4\_t\ p\ =\ m;}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ p\ =\ vuzpq\_f32(vreinterpretq\_f32\_s32(vextq\_s32(vreinterpretq\_s32\_f32(p),\ vreinterpretq\_s32\_f32(p),\ 1)),\ p).val[1];}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ float3(p);}
+\DoxyCodeLine{00146\ \ \ \ \ \}}
+\DoxyCodeLine{00147\ \ \ \ \ }
+\DoxyCodeLine{00148\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{void}\ store(\textcolor{keywordtype}{float}\ *p)\textcolor{keyword}{\ const\ }\{\ p[0]\ =\ getX();\ p[1]\ =\ getY();\ p[2]\ =\ getZ();\ \}}
+\DoxyCodeLine{00149\ \ \ \ \ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{void}\ setX(\textcolor{keywordtype}{float}\ x)}
+\DoxyCodeLine{00151\ \ \ \ \ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ m\ =\ vsetq\_lane\_f32(x,\ m,\ 0);}
+\DoxyCodeLine{00153\ \ \ \ \ \}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{void}\ setY(\textcolor{keywordtype}{float}\ y)}
+\DoxyCodeLine{00155\ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ m\ =\ vsetq\_lane\_f32(y,\ m,\ 1);}
+\DoxyCodeLine{00157\ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{void}\ setZ(\textcolor{keywordtype}{float}\ z)}
+\DoxyCodeLine{00159\ \ \ \ \ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ m\ =\ vsetq\_lane\_f32(z,\ m,\ 2);}
+\DoxyCodeLine{00161\ \ \ \ \ \}}
+\DoxyCodeLine{00162\ \ \ \ \ }
+\DoxyCodeLine{00163\ \ \ \ \ float32x4\_t\ m;}
+\DoxyCodeLine{00164\ \};}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00166\ \textcolor{keyword}{typedef}\ \doxymbox{\hyperlink{structfloat3}{float3}}\ bool3;}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ VM\_INLINE\ float32x4\_t\ rcp\_2(float32x4\_t\ v)}
+\DoxyCodeLine{00169\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ float32x4\_t\ e\ =\ vrecpeq\_f32(v);}
+\DoxyCodeLine{00171\ \ \ \ \ e\ =\ vmulq\_f32(vrecpsq\_f32(e,\ v),\ e);}
+\DoxyCodeLine{00172\ \ \ \ \ e\ =\ vmulq\_f32(vrecpsq\_f32(e,\ v),\ e);}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordflow}{return}\ e;}
+\DoxyCodeLine{00174\ \}}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator+\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vaddq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00177\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vsubq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00178\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vmulq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00179\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ float32x4\_t\ recip\ =\ rcp\_2(b.m);\ a.m\ =\ vmulq\_f32(a.m,\ recip);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00180\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \textcolor{keywordtype}{float}\ b)\ \{\ a.m\ =\ vmulq\_f32(a.m,\ vdupq\_n\_f32(b));\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00181\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \textcolor{keywordtype}{float}\ b)\ \{\ float32x4\_t\ recip\ =\ rcp\_2(vdupq\_n\_f32(b));\ a.m\ =\ vmulq\_f32(a.m,\ recip);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00182\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*\ (\textcolor{keywordtype}{float}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ b.m\ =\ vmulq\_f32(vdupq\_n\_f32(a),\ b.m);\ \textcolor{keywordflow}{return}\ b;\ \}}
+\DoxyCodeLine{00183\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator/\ (\textcolor{keywordtype}{float}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ float32x4\_t\ recip\ =\ rcp\_2(b.m);\ b.m\ =\ vmulq\_f32(vdupq\_n\_f32(a),\ recip);\ \textcolor{keywordflow}{return}\ b;\ \}}
+\DoxyCodeLine{00184\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator+=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ +\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00185\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator-\/=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ -\/\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00186\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator*=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ *\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00187\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator/=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a\ =\ a\ /\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00188\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator*=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \textcolor{keywordtype}{float}\ b)\ \{\ a\ =\ a\ *\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00189\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ operator/=\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ \&a,\ \textcolor{keywordtype}{float}\ b)\ \{\ a\ =\ a\ /\ b;\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00190\ VM\_INLINE\ bool3\ operator==(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vceqq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00191\ VM\_INLINE\ bool3\ operator!=(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vmvnq\_u32(vceqq\_f32(a.m,\ b.m));\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00192\ VM\_INLINE\ bool3\ operator<\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vcltq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00193\ VM\_INLINE\ bool3\ operator>\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vcgtq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00194\ VM\_INLINE\ bool3\ operator<=(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vcleq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00195\ VM\_INLINE\ bool3\ operator>=(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vcgeq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00196\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ min(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vminq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00197\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ max(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ a.m\ =\ vmaxq\_f32(a.m,\ b.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator-\/\ (\doxymbox{\hyperlink{structfloat3}{float3}}\ a)\ \{\ a.m\ =\ vnegq\_f32(a.m);\ \textcolor{keywordflow}{return}\ a;\ \}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ VM\_INLINE\ \textcolor{keywordtype}{float}\ hmin(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)}
+\DoxyCodeLine{00202\ \{}
+\DoxyCodeLine{00203\ \ \ \ \ float32x2\_t\ minOfHalfs\ =\ vpmin\_f32(vget\_low\_f32(v.m),\ vget\_high\_f32(v.m));}
+\DoxyCodeLine{00204\ \ \ \ \ float32x2\_t\ minOfMinOfHalfs\ =\ vpmin\_f32(minOfHalfs,\ minOfHalfs);}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keywordflow}{return}\ vget\_lane\_f32(minOfMinOfHalfs,\ 0);}
+\DoxyCodeLine{00206\ \}}
+\DoxyCodeLine{00207\ VM\_INLINE\ \textcolor{keywordtype}{float}\ hmax(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)}
+\DoxyCodeLine{00208\ \{}
+\DoxyCodeLine{00209\ \ \ \ \ float32x2\_t\ maxOfHalfs\ =\ vpmax\_f32(vget\_low\_f32(v.m),\ vget\_high\_f32(v.m));}
+\DoxyCodeLine{00210\ \ \ \ \ float32x2\_t\ maxOfMaxOfHalfs\ =\ vpmax\_f32(maxOfHalfs,\ maxOfHalfs);}
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keywordflow}{return}\ vget\_lane\_f32(maxOfMaxOfHalfs,\ 0);}
+\DoxyCodeLine{00212\ \}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ cross(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)}
+\DoxyCodeLine{00215\ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{comment}{//\ x\ \ <-\/\ \ a.y*b.z\ -\/\ a.z*b.y}}
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{comment}{//\ y\ \ <-\/\ \ a.z*b.x\ -\/\ a.x*b.z}}
+\DoxyCodeLine{00218\ \ \ \ \ \textcolor{comment}{//\ z\ \ <-\/\ \ a.x*b.y\ -\/\ a.y*b.x}}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{comment}{//\ We\ can\ save\ a\ shuffle\ by\ grouping\ it\ in\ this\ wacky\ order:}}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keywordflow}{return}\ (a.zxy()*b\ -\/\ a*b.zxy()).zxy();}
+\DoxyCodeLine{00221\ \}}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00223\ \textcolor{comment}{//\ Returns\ a\ 3-\/bit\ code\ where\ bit0..bit2\ is\ X..Z}}
+\DoxyCodeLine{00224\ VM\_INLINE\ \textcolor{keywordtype}{unsigned}\ mask(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)}
+\DoxyCodeLine{00225\ \{}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#if\ defined(\_M\_ARM64)}}
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32\_t\ values[4]\ =\ \{\ 1u,\ 2u,\ 4u,\ 8u\ \};}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{const}\ uint32x4\_t\ movemask\ =\ vld1q\_u32(\ values\ );}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{const}\ uint32x4\_t\ highbit\ =\ vdupq\_n\_u32(\ 0x80000000u\ );}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#else\ }}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32x4\_t\ movemask\ =\ \{\ 1,\ 2,\ 4,\ 8\ \};}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint32x4\_t\ highbit\ =\ \{\ 0x80000000,\ 0x80000000,\ 0x80000000,\ 0x80000000\ \};}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00234\ \ \ \ \ uint32x4\_t\ t0\ =\ vreinterpretq\_u32\_f32(v.m);}
+\DoxyCodeLine{00235\ \ \ \ \ uint32x4\_t\ t1\ =\ vtstq\_u32(t0,\ highbit);}
+\DoxyCodeLine{00236\ \ \ \ \ uint32x4\_t\ t2\ =\ vandq\_u32(t1,\ movemask);}
+\DoxyCodeLine{00237\ \ \ \ \ uint32x2\_t\ t3\ =\ vorr\_u32(vget\_low\_u32(t2),\ vget\_high\_u32(t2));}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordflow}{return}\ vget\_lane\_u32(t3,\ 0)\ |\ vget\_lane\_u32(t3,\ 1);}
+\DoxyCodeLine{00239\ \}}
+\DoxyCodeLine{00240\ \textcolor{comment}{//\ Once\ we\ have\ a\ comparison,\ we\ can\ branch\ based\ on\ its\ results:}}
+\DoxyCodeLine{00241\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ any(bool3\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ !=\ 0;\ \}}
+\DoxyCodeLine{00242\ VM\_INLINE\ \textcolor{keywordtype}{bool}\ all(bool3\ v)\ \{\ \textcolor{keywordflow}{return}\ mask(v)\ ==\ 7;\ \}}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ clamp(\doxymbox{\hyperlink{structfloat3}{float3}}\ t,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ \textcolor{keywordflow}{return}\ min(max(t,\ a),\ b);\ \}}
+\DoxyCodeLine{00245\ VM\_INLINE\ \textcolor{keywordtype}{float}\ sum(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)\ \{\ \textcolor{keywordflow}{return}\ v.getX()\ +\ v.getY()\ +\ v.getZ();\ \}}
+\DoxyCodeLine{00246\ VM\_INLINE\ \textcolor{keywordtype}{float}\ dot(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b)\ \{\ \textcolor{keywordflow}{return}\ sum(a*b);\ \}}
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00248\ }
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#else\ of\ \#if\ !defined(\_\_arm\_\_)\ \&\&\ !defined(\_\_arm64\_\_)}}
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#else\ }\textcolor{comment}{//\ \#if\ DO\_FLOAT3\_WITH\_SIMD}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{comment}{//\ -\/-\/-\/-\/\ Simple\ scalar\ C\ implementation}}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ }
+\DoxyCodeLine{00256\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structfloat3}{float3}}}
+\DoxyCodeLine{00257\ \{}
+\DoxyCodeLine{00258\ \ \ \ \ float3()\ :\ x(0),\ y(0),\ z(0)\ \{\}}
+\DoxyCodeLine{00259\ \ \ \ \ float3(\textcolor{keywordtype}{float}\ x\_,\ \textcolor{keywordtype}{float}\ y\_,\ \textcolor{keywordtype}{float}\ z\_)\ :\ x(x\_),\ y(y\_),\ z(z\_)\ \{\}}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ float3\ operator-\/()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ float3(-\/x,\ -\/y,\ -\/z);\ \}}
+\DoxyCodeLine{00262\ \ \ \ \ float3\&\ operator+=(\textcolor{keyword}{const}\ float3\&\ o)\ \{\ x+=o.x;\ y+=o.y;\ z+=o.z;\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00263\ \ \ \ \ float3\&\ operator-\/=(\textcolor{keyword}{const}\ float3\&\ o)\ \{\ x-\/=o.x;\ y-\/=o.y;\ z-\/=o.z;\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00264\ \ \ \ \ float3\&\ operator*=(\textcolor{keyword}{const}\ float3\&\ o)\ \{\ x*=o.x;\ y*=o.y;\ z*=o.z;\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00265\ \ \ \ \ float3\&\ operator*=(\textcolor{keywordtype}{float}\ o)\ \{\ x*=o;\ y*=o;\ z*=o;\ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getX()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ x;\ \}}
+\DoxyCodeLine{00268\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getY()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ y;\ \}}
+\DoxyCodeLine{00269\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{float}\ getZ()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ z;\ \}}
+\DoxyCodeLine{00270\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{void}\ setX(\textcolor{keywordtype}{float}\ x\_)\ \{\ x\ =\ x\_;\ \}}
+\DoxyCodeLine{00271\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{void}\ setY(\textcolor{keywordtype}{float}\ y\_)\ \{\ y\ =\ y\_;\ \}}
+\DoxyCodeLine{00272\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{void}\ setZ(\textcolor{keywordtype}{float}\ z\_)\ \{\ z\ =\ z\_;\ \}}
+\DoxyCodeLine{00273\ \ \ \ \ VM\_INLINE\ \textcolor{keywordtype}{void}\ store(\textcolor{keywordtype}{float}\ *p)\textcolor{keyword}{\ const\ }\{\ p[0]\ =\ getX();\ p[1]\ =\ getY();\ p[2]\ =\ getZ();\ \}}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordtype}{float}\ x,\ y,\ z;}
+\DoxyCodeLine{00276\ \};}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator+(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ b)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat3}{float3}}(a.x+b.x,a.y+b.y,a.z+b.z);\ \}}
+\DoxyCodeLine{00279\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator-\/(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ b)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat3}{float3}}(a.x-\/b.x,a.y-\/b.y,a.z-\/b.z);\ \}}
+\DoxyCodeLine{00280\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ b)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat3}{float3}}(a.x*b.x,a.y*b.y,a.z*b.z);\ \}}
+\DoxyCodeLine{00281\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ a,\ \textcolor{keywordtype}{float}\ b)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat3}{float3}}(a.x*b,a.y*b,a.z*b);\ \}}
+\DoxyCodeLine{00282\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ operator*(\textcolor{keywordtype}{float}\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ b)\ \{\ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat3}{float3}}(a*b.x,a*b.y,a*b.z);\ \}}
+\DoxyCodeLine{00283\ VM\_INLINE\ \textcolor{keywordtype}{float}\ dot(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ b)\ \{\ \textcolor{keywordflow}{return}\ a.x*b.x+a.y*b.y+a.z*b.z;\ \}}
+\DoxyCodeLine{00284\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ cross(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ a,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ b)}
+\DoxyCodeLine{00285\ \{}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structfloat3}{float3}}(}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a.y*b.z\ -\/\ a.z*b.y,}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/(a.x*b.z\ -\/\ a.z*b.x),}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a.x*b.y\ -\/\ a.y*b.x}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00291\ \}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#else\ of\ \#if\ DO\_FLOAT3\_WITH\_SIMD}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ VM\_INLINE\ \textcolor{keywordtype}{float}\ length(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)\ \{\ \textcolor{keywordflow}{return}\ sqrtf(dot(v,\ v));\ \}}
+\DoxyCodeLine{00295\ VM\_INLINE\ \textcolor{keywordtype}{float}\ sqLength(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)\ \{\ \textcolor{keywordflow}{return}\ dot(v,\ v);\ \}}
+\DoxyCodeLine{00296\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ normalize(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)\ \{\ \textcolor{keywordflow}{return}\ v\ *\ (1.0f\ /\ length(v));\ \}}
+\DoxyCodeLine{00297\ VM\_INLINE\ \doxymbox{\hyperlink{structfloat3}{float3}}\ lerp(\doxymbox{\hyperlink{structfloat3}{float3}}\ a,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ b,\ \textcolor{keywordtype}{float}\ t)\ \{\ \textcolor{keywordflow}{return}\ a\ +\ (b-\/a)*t;\ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ AssertUnit(\doxymbox{\hyperlink{structfloat3}{float3}}\ v)}
+\DoxyCodeLine{00301\ \{}
+\DoxyCodeLine{00302\ \ \ \ \ assert(fabsf(sqLength(v)\ -\/\ 1.0f)\ <\ 0.01f);}
+\DoxyCodeLine{00303\ \}}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \textcolor{keyword}{inline}\ \doxymbox{\hyperlink{structfloat3}{float3}}\ reflect(\doxymbox{\hyperlink{structfloat3}{float3}}\ v,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ n)}
+\DoxyCodeLine{00306\ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \textcolor{keywordflow}{return}\ v\ -\/\ 2*dot(v,n)*n;}
+\DoxyCodeLine{00308\ \}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ refract(\doxymbox{\hyperlink{structfloat3}{float3}}\ v,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ n,\ \textcolor{keywordtype}{float}\ nint,\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ outRefracted)}
+\DoxyCodeLine{00311\ \{}
+\DoxyCodeLine{00312\ \ \ \ \ AssertUnit(v);}
+\DoxyCodeLine{00313\ \ \ \ \ \textcolor{keywordtype}{float}\ dt\ =\ dot(v,\ n);}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keywordtype}{float}\ discr\ =\ 1.0f\ -\/\ nint*nint*(1-\/dt*dt);}
+\DoxyCodeLine{00315\ \ \ \ \ \textcolor{keywordflow}{if}\ (discr\ >\ 0)}
+\DoxyCodeLine{00316\ \ \ \ \ \{}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ outRefracted\ =\ nint\ *\ (v\ -\/\ n*dt)\ -\/\ n*sqrtf(discr);}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00319\ \ \ \ \ \}}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00321\ \}}
+\DoxyCodeLine{00322\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ schlick(\textcolor{keywordtype}{float}\ cosine,\ \textcolor{keywordtype}{float}\ ri)}
+\DoxyCodeLine{00323\ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keywordtype}{float}\ r0\ =\ (1-\/ri)\ /\ (1+ri);}
+\DoxyCodeLine{00325\ \ \ \ \ r0\ =\ r0*r0;}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keywordflow}{return}\ r0\ +\ (1-\/r0)*powf(1-\/cosine,\ 5);}
+\DoxyCodeLine{00327\ \}}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \textcolor{keyword}{struct\ }Ray}
+\DoxyCodeLine{00330\ \{}
+\DoxyCodeLine{00331\ \ \ \ \ Ray()\ \{\}}
+\DoxyCodeLine{00332\ \ \ \ \ Ray(\doxymbox{\hyperlink{structfloat3}{float3}}\ orig\_,\ \doxymbox{\hyperlink{structfloat3}{float3}}\ dir\_)\ :\ orig(orig\_),\ dir(dir\_)\ \{\ AssertUnit(dir);\ \}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ pointAt(\textcolor{keywordtype}{float}\ t)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ orig\ +\ dir\ *\ t;\ \}}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ orig;}
+\DoxyCodeLine{00337\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ dir;}
+\DoxyCodeLine{00338\ \};}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_hit}{Hit}}}
+\DoxyCodeLine{00342\ \{}
+\DoxyCodeLine{00343\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ pos;}
+\DoxyCodeLine{00344\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ normal;}
+\DoxyCodeLine{00345\ \ \ \ \ \textcolor{keywordtype}{float}\ t;}
+\DoxyCodeLine{00346\ \};}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \textcolor{keyword}{struct\ }Sphere}
+\DoxyCodeLine{00350\ \{}
+\DoxyCodeLine{00351\ \ \ \ \ Sphere()\ :\ radius(1.0f),\ invRadius(0.0f)\ \{\}}
+\DoxyCodeLine{00352\ \ \ \ \ Sphere(\doxymbox{\hyperlink{structfloat3}{float3}}\ center\_,\ \textcolor{keywordtype}{float}\ radius\_)\ :\ center(center\_),\ radius(radius\_),\ invRadius(0.0f)\ \{\}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateDerivedData()\ \{\ invRadius\ =\ 1.0f/radius;\ \}}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ center;}
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keywordtype}{float}\ radius;}
+\DoxyCodeLine{00358\ \ \ \ \ \textcolor{keywordtype}{float}\ invRadius;}
+\DoxyCodeLine{00359\ \};}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \textcolor{comment}{//\ data\ for\ all\ spheres\ in\ a\ "{}structure\ of\ arrays"{}\ layout}}
+\DoxyCodeLine{00363\ \textcolor{keyword}{struct\ }SpheresSoA}
+\DoxyCodeLine{00364\ \{}
+\DoxyCodeLine{00365\ \ \ \ \ SpheresSoA(\textcolor{keywordtype}{int}\ c)}
+\DoxyCodeLine{00366\ \ \ \ \ \{}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ count\ =\ c;}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ we'll\ be\ processing\ spheres\ in\ kSimdWidth\ chunks,\ so\ make\ sure\ to\ allocate}}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ enough\ space}}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ simdCount\ =\ (c\ +\ (kSimdWidth\ -\/\ 1))\ /\ kSimdWidth\ *\ kSimdWidth;}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ centerX\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{float}[simdCount];}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ centerY\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{float}[simdCount];}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ centerZ\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{float}[simdCount];}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ sqRadius\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{float}[simdCount];}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ invRadius\ =\ \textcolor{keyword}{new}\ \textcolor{keywordtype}{float}[simdCount];}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ set\ all\ data\ to\ "{}impossible\ sphere"{}\ state}}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ count;\ i\ <\ simdCount;\ ++i)}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ centerX[i]\ =\ centerY[i]\ =\ centerZ[i]\ =\ 10000.0f;}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ sqRadius[i]\ =\ 0.0f;}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ invRadius[i]\ =\ 0.0f;}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00383\ \ \ \ \ \}}
+\DoxyCodeLine{00384\ \ \ \ \ \string~SpheresSoA()}
+\DoxyCodeLine{00385\ \ \ \ \ \{}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ centerX;}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ centerY;}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ centerZ;}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ sqRadius;}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}[]\ invRadius;}
+\DoxyCodeLine{00391\ \ \ \ \ \}}
+\DoxyCodeLine{00392\ \ \ \ \ \textcolor{keywordtype}{float}*\ centerX;}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{keywordtype}{float}*\ centerY;}
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keywordtype}{float}*\ centerZ;}
+\DoxyCodeLine{00395\ \ \ \ \ \textcolor{keywordtype}{float}*\ sqRadius;}
+\DoxyCodeLine{00396\ \ \ \ \ \textcolor{keywordtype}{float}*\ invRadius;}
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keywordtype}{int}\ simdCount;}
+\DoxyCodeLine{00398\ \ \ \ \ \textcolor{keywordtype}{int}\ count;}
+\DoxyCodeLine{00399\ \};}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{keywordtype}{int}\ HitSpheres(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_ray}{Ray}}\&\ r,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_spheres_so_a}{SpheresSoA}}\&\ spheres,\ \textcolor{keywordtype}{float}\ tMin,\ \textcolor{keywordtype}{float}\ tMax,\ \doxymbox{\hyperlink{struct_hit}{Hit}}\&\ outHit);}
+\DoxyCodeLine{00403\ }
+\DoxyCodeLine{00404\ \textcolor{keywordtype}{float}\ RandomFloat01(uint32\_t\&\ state);}
+\DoxyCodeLine{00405\ \doxymbox{\hyperlink{structfloat3}{float3}}\ RandomInUnitDisk(uint32\_t\&\ state);}
+\DoxyCodeLine{00406\ \doxymbox{\hyperlink{structfloat3}{float3}}\ RandomInUnitSphere(uint32\_t\&\ state);}
+\DoxyCodeLine{00407\ \doxymbox{\hyperlink{structfloat3}{float3}}\ RandomUnitVector(uint32\_t\&\ state);}
+\DoxyCodeLine{00408\ }
+\DoxyCodeLine{00409\ \textcolor{keyword}{struct\ }Camera}
+\DoxyCodeLine{00410\ \{}
+\DoxyCodeLine{00411\ \ \ \ \ Camera()\ \{\}}
+\DoxyCodeLine{00412\ \ \ \ \ \textcolor{comment}{//\ vfov\ is\ top\ to\ bottom\ in\ degrees}}
+\DoxyCodeLine{00413\ \ \ \ \ Camera(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ lookFrom,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ lookAt,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{structfloat3}{float3}}\&\ vup,\ \textcolor{keywordtype}{float}\ vfov,\ \textcolor{keywordtype}{float}\ aspect,\ \textcolor{keywordtype}{float}\ aperture,\ \textcolor{keywordtype}{float}\ focusDist)}
+\DoxyCodeLine{00414\ \ \ \ \ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ lensRadius\ =\ aperture\ /\ 2;}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ theta\ =\ vfov*kPI/180;}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ halfHeight\ =\ tanf(theta/2);}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ halfWidth\ =\ aspect\ *\ halfHeight;}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ origin\ =\ lookFrom;}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ w\ =\ normalize(lookFrom\ -\/\ lookAt);}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ u\ =\ normalize(cross(vup,\ w));}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ v\ =\ cross(w,\ u);}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ lowerLeftCorner\ =\ origin\ -\/\ halfWidth*focusDist*u\ -\/\ halfHeight*focusDist*v\ -\/\ focusDist*w;}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ horizontal\ =\ 2*halfWidth*focusDist*u;}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ vertical\ =\ 2*halfHeight*focusDist*v;}
+\DoxyCodeLine{00426\ \ \ \ \ \}}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ \doxymbox{\hyperlink{struct_ray}{Ray}}\ GetRay(\textcolor{keywordtype}{float}\ s,\ \textcolor{keywordtype}{float}\ t,\ uint32\_t\&\ state)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00429\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ rd\ =\ lensRadius\ *\ RandomInUnitDisk(state);}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ offset\ =\ u\ *\ rd.getX()\ +\ v\ *\ rd.getY();}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{struct_ray}{Ray}}(origin\ +\ offset,\ normalize(lowerLeftCorner\ +\ s*horizontal\ +\ t*vertical\ -\/\ origin\ -\/\ offset));}
+\DoxyCodeLine{00433\ \ \ \ \ \}}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ origin;}
+\DoxyCodeLine{00436\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ lowerLeftCorner;}
+\DoxyCodeLine{00437\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ horizontal;}
+\DoxyCodeLine{00438\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ vertical;}
+\DoxyCodeLine{00439\ \ \ \ \ \doxymbox{\hyperlink{structfloat3}{float3}}\ u,\ v,\ w;}
+\DoxyCodeLine{00440\ \ \ \ \ \textcolor{keywordtype}{float}\ lensRadius;}
+\DoxyCodeLine{00441\ \};}
+\DoxyCodeLine{00442\ }
+
+\end{DoxyCode}

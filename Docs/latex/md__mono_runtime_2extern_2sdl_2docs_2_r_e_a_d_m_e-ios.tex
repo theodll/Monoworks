@@ -1,0 +1,212 @@
+\chapter{i\+OS }
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios}{}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios}\index{iOS@{iOS}}
+\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1335}{}\doxysection{\texorpdfstring{Building the Simple Direct\+Media Layer for i\+OS 11.\+0+}{Building the Simple Direct\+Media Layer for i\+OS 11.\+0+}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1335}
+Please note that building SDL requires at least Xcode 12.\+2 and the i\+OS 14.\+2 SDK.
+
+Instructions:\+
+
+
+\begin{DoxyEnumerate}
+\item Open SDL.\+xcodeproj (located in Xcode/\+\+SDL) in Xcode.
+\item Select your desired target, and hit build.
+\end{DoxyEnumerate}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1336}{}\doxysection{\texorpdfstring{Using the Simple Direct\+Media Layer for i\+OS with the SDL3 xc\+Framework}{Using the Simple Direct\+Media Layer for i\+OS with the SDL3 xc\+Framework}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1336}
+The recommended way to use SDL for i\+OS is by including the SDL3.\+xcframework which is now a build target of the SDL.\+xcodeproj file. An xcframework is a new (Xcode 11) uber-\/framework which can handle any combination of processor type and target OS platform. You can either build the SDL3.\+xcframework yourself or download the latest release disk image asset (\texorpdfstring{$\ast$}{*}.dmg).
+
+In the past, i\+OS devices were always an ARM variant processor, and the simulator was always i386 or x86\+\_\+64, and thus libraries could be combined into a single framework for both simulator and device. With the introduction of the Apple Silicon ARM-\/based machines, regular frameworks would collide as CPU type was no longer sufficient to differentiate the platform. So Apple created the new xcframework library package.
+
+The xcframework target builds into a Products directory alongside the SDL.\+xcodeproj file, as SDL3.\+xcframework. This can be brought in to any i\+OS project and will function properly for both simulator and device, no matter their CPUs. Note that Intel Macs cannot cross-\/compile for Apple Silicon Macs. If you need AS compatibility, perform this build on an Apple Silicon Mac.
+
+This target requires Xcode 11 or later. The target will simply fail to build if attempted on older Xcodes.
+
+In addition, on Apple platforms, main() cannot be in a dynamically loaded library. However, unlike in SDL2, in SDL3 SDL\+\_\+main is implemented inline in \doxylink{_s_d_l__main_8h_source}{SDL\+\_\+main.\+h}, so you don\textquotesingle{}t need to link against a static lib\+SDL3main.\+lib, and you don\textquotesingle{}t need to copy a .c file from the SDL3 source either. This means that i\+OS apps which used the statically-\/linked lib\+SDL3.\+lib and now link with the xcframwork can just {\ttfamily \#include \texorpdfstring{$<$}{<}\doxylink{_s_d_l__main_8h_source}{SDL3/\+\+SDL\+\_\+main.\+h}\texorpdfstring{$>$}{>}} in the source file that contains their standard {\ttfamily int main(int argc, char \texorpdfstring{$\ast$}{*}argv\+[$\,$]\+)} function to get a header-\/only SDL\+\_\+main implementation that calls the {\ttfamily SDL\+\_\+\+Run\+App()} with your standard main function.
+
+To use the SDL3.\+xcframework follow these steps:\+
+
+
+\begin{DoxyEnumerate}
+\item Run Xcode and create a new project using the i\+OS Game template, selecting the Objective C language and Metal game technology.
+\item In the main view, delete all files except for Assets and Launch\+Screen
+\item Select the project in the main view, go to the "{}\+General"{} tab, scroll down to "{}\+Frameworks, Libraries, and Embedded Content"{}, and drag and drop the SDL3.\+xcframework
+\item Still in "{}\+Frameworks, Libraries, and Embedded Content"{}, select "{}\+Embed \& Sign"{} for the SDL3.\+xcframework.
+\item Add the source files that you would normally have for an SDL program, making sure to have \+\#include \texorpdfstring{$<$}{<}\doxylink{_s_d_l__main_8h_source}{SDL3/\+\+SDL\+\_\+main.\+h}\texorpdfstring{$>$}{>} at the top of the file containing your main() function.
+\item Add any assets that your application needs.
+\item Enjoy!
+\end{DoxyEnumerate}
+
+Using an xc\+Framework is similar to using a regular framework. However, issues have been seen with the build system not seeing the headers in the xc\+Framework. To remedy this, add the path to the xc\+Framework in your app\textquotesingle{}s target ==\texorpdfstring{$>$}{>} Build Settings ==\texorpdfstring{$>$}{>} Framework Search Paths and mark it recursive (this is critical). Also critical is to remove "{}\texorpdfstring{$\ast$}{*}.\+framework"{} from Build Settings ==\texorpdfstring{$>$}{>} Sub-\/\+Directories to Exclude in Recursive Searches. Clean the build folder, and on your next build the build system should be able to see any of these in your code, as expected:\+
+
+\+\#include "{}\+SDL3/\+\+SDL\+\_\+main.\+h"{} \+\#include \texorpdfstring{$<$}{<}\doxylink{_s_d_l_8h_source}{SDL3/\+\+SDL.\+h}\texorpdfstring{$>$}{>} \+\#include \texorpdfstring{$<$}{<}\doxylink{_s_d_l__main_8h_source}{SDL3/\+\+SDL\+\_\+main.\+h}\texorpdfstring{$>$}{>}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1337}{}\doxysection{\texorpdfstring{Using the Simple Direct\+Media Layer for i\+OS by adding the SDL3 Xcode project}{Using the Simple Direct\+Media Layer for i\+OS by adding the SDL3 Xcode project}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1337}
+To maintain compatibility with older Xcode versions than version 11 you can add the SDL3 Xcode project file to your project:\+
+
+
+\begin{DoxyEnumerate}
+\item Run Xcode and create a new project using the i\+OS Game template, selecting the Objective C language and Metal game technology.
+\item In the main view, delete all files except for Assets and Launch\+Screen
+\item Right click the project in the main view, select "{}\+Add Files..."{}, and add the SDL project, Xcode/\+\+SDL/\+\+SDL.\+xcodeproj
+\item Select the project in the main view, go to the "{}\+Info"{} tab and under "{}\+Custom i\+OS Target Properties"{} remove the line "{}\+Main storyboard file base name"{}
+\item Select the project in the main view, go to the "{}\+Build Settings"{} tab, select "{}\+All"{}, and edit "{}\+Header Search Path"{} and drag over the SDL "{}\+Public Headers"{} folder from the left
+\item Select the project in the main view, go to the "{}\+Build Phases"{} tab, select "{}\+Link Binary With Libraries"{}, and add SDL3.\+framework from "{}\+Framework-\/i\+OS"{}
+\item Select the project in the main view, go to the "{}\+General"{} tab, scroll down to "{}\+Frameworks, Libraries, and Embedded Content"{}, and select "{}\+Embed \& Sign"{} for the SDL library.
+\item Add the source files that you would normally have for an SDL program, making sure to have \+\#include \texorpdfstring{$<$}{<}\doxylink{_s_d_l__main_8h_source}{SDL3/\+\+SDL\+\_\+main.\+h}\texorpdfstring{$>$}{>} at the top of the file containing your main() function.
+\item Add any assets that your application needs.
+\item Enjoy!
+\end{DoxyEnumerate}
+
+Notes for distributing your i\+OS app on the App\+Store when using the embedded SDL3 Xcode project:\+ Embedding the SDL3 Xcode project makes SDL3.\+framework a target of your app, so it will be included in the archive created during the "{}\+Archive"{} step required for App Store submission. As this prevents successful distribution, remove the framework via a script in the Build Phase after the "{}\+Embed \& Sign"{} step.
+
+
+\begin{DoxyEnumerate}
+\item Select the project in the main view, go to the "{}\+Build Phases"{} tab, click on the big \textquotesingle{}+\textquotesingle{} in this tab and click "{}\+New Run Script Phase"{}.
+\item Scroll down to "{}\+Run Script"{} (after the "{}\+Embed SDL3 Framework"{}) and enter the following script:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{if\ [\ -\/d\ "{}\$INSTALL\_ROOT/Library"{}\ ];\ then}
+\DoxyCodeLine{\ \ \ \ echo\ "{}Removing\ SDL3.framework\ from\ INSTALL\_ROOT\ for\ archiving"{}}
+\DoxyCodeLine{\ \ \ \ rm\ -\/rf\ "{}\$INSTALL\_ROOT/Library"{}}
+\DoxyCodeLine{fi}
+
+\end{DoxyCode}
+
+\item Below the script entry uncheck the "{}\+Run Script:\+"{} options "{}\+For install builds only"{} and "{}\+Based on dependency analysis"{}
+\item Edit the Build Settings and set "{}\+User Script Sandboxing"{} to "{}\+No"{}.
+\end{DoxyEnumerate}
+
+TODO:\+ Add information regarding App Store requirements such as icons, etc.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1338}{}\doxysection{\texorpdfstring{Notes -- Retina /\+ High-\/\+DPI and window sizes}{Notes -- Retina /\+ High-\/\+DPI and window sizes}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1338}
+Window and display mode sizes in SDL are in points rather than in pixels. On i\+OS this means that a window created on an i\+Phone 6 will have a size in points of 375 x 667, rather than a size in pixels of 750 x 1334. All i\+OS apps are expected to size their content based on points rather than pixels, as this allows different i\+OS devices to have different pixel densities (Retina versus non-\/\+Retina screens, etc.) without apps caring too much.
+
+SDL\+\_\+\+Get\+Window\+Size() and mouse coordinates are in points rather than pixels, but the window will have a much greater pixel density when the device supports it, and the SDL\+\_\+\+Get\+Window\+Size\+In\+Pixels() can be called to determine the size in pixels of the drawable screen framebuffer.
+
+The SDL 2D rendering API will automatically handle this for you, by default providing a rendering area in points, and you can call SDL\+\_\+\+Set\+Render\+Logical\+Presentation() to gain access to the higher density resolution.
+
+Some Open\+GL ES functions such as gl\+Viewport expect sizes in pixels rather than sizes in points. When doing 2D rendering with Open\+GL ES, an orthographic projection matrix using the size in points (SDL\+\_\+\+Get\+Window\+Size()) can be used in order to display content at the same scale no matter whether a Retina device is used or not.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1339}{}\doxysection{\texorpdfstring{Notes -- Getting full screen resolution}{Notes -- Getting full screen resolution}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1339}
+Make sure that you have a Launch Screen key in your Info.\+plist, e.\+g. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{<key>UILaunchScreen</key>}
+\DoxyCodeLine{<dict/>}
+
+\end{DoxyCode}
+ If you don\textquotesingle{}t specify a launch screen, then the OS will assume that your application needs an older compatibility mode and will get a limited resolution screen.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1340}{}\doxysection{\texorpdfstring{Notes -- Application events}{Notes -- Application events}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1340}
+On i\+OS the application goes through a fixed life cycle and you will get notifications of state changes via application events. When these events are delivered you must handle them in an event callback because the OS may not give you any processing time after the events are delivered.
+
+e.\+g. \begin{DoxyVerb}bool HandleAppEvents(void *userdata, SDL_Event *event)
+{
+    switch (event->type)
+    {
+    case SDL_EVENT_TERMINATING:
+        /* Terminate the app.
+           Shut everything down before returning from this function.
+        */
+        return false;
+    case SDL_EVENT_LOW_MEMORY:
+        /* You will get this when your app is paused and iOS wants more memory.
+           Release as much memory as possible.
+        */
+        return false;
+    case SDL_EVENT_WILL_ENTER_BACKGROUND:
+        /* Prepare your app to go into the background.  Stop loops, etc.
+           This gets called when the user hits the home button, or gets a call.
+        */
+        return false;
+    case SDL_EVENT_DID_ENTER_BACKGROUND:
+        /* This will get called if the user accepted whatever sent your app to the background.
+           If the user got a phone call and canceled it, you'll instead get an SDL_EVENT_DID_ENTER_FOREGROUND event and restart your loops.
+           When you get this, you have 5 seconds to save all your state or the app will be terminated.
+           Your app is NOT active at this point.
+        */
+        return false;
+    case SDL_EVENT_WILL_ENTER_FOREGROUND:
+        /* This call happens when your app is coming back to the foreground.
+           Restore all your state here.
+        */
+        return false;
+    case SDL_EVENT_DID_ENTER_FOREGROUND:
+        /* Restart your loops here.
+           Your app is interactive and getting CPU again.
+        */
+        return false;
+    default:
+        /* No special processing, add it to the event queue */
+        return true;
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    SDL_SetEventFilter(HandleAppEvents, NULL);
+
+    ... run your main loop
+
+    return 0;
+}
+\end{DoxyVerb}
+
+
+Note that if you are using main callbacks instead of a standard C main() function, your SDL\+\_\+\+App\+Event() callback will run as these events arrive and you do not need to use SDL\+\_\+\+Set\+Event\+Filter.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1341}{}\doxysection{\texorpdfstring{Notes -- Keyboard}{Notes -- Keyboard}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1341}
+The SDL keyboard API has been extended to support on-\/screen keyboards:\+
+
+void SDL\+\_\+\+Start\+Text\+Input() -- enables text events and reveals the onscreen keyboard.
+
+void SDL\+\_\+\+Stop\+Text\+Input() -- disables text events and hides the onscreen keyboard.
+
+bool SDL\+\_\+\+Text\+Input\+Active() -- returns whether or not text events are enabled (and the onscreen keyboard is visible)\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1342}{}\doxysection{\texorpdfstring{Notes -- Mouse}{Notes -- Mouse}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1342}
+i\+OS now supports Bluetooth mice on i\+Pad, but by default will provide the mouse input as touch. In order for SDL to see the real mouse events, you should set the key UIApplication\+Supports\+Indirect\+Input\+Events to true in your Info.\+plist
+
+From i\+OS 17 onward, the key now defaults to true.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1343}{}\doxysection{\texorpdfstring{Notes -- Reading and Writing files}{Notes -- Reading and Writing files}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1343}
+Each application installed on i\+Phone resides in a sandbox which includes its own application home directory. Your application may not access files outside this directory.
+
+When your SDL based i\+Phone application starts up, it sets the working directory to the main bundle, where your application resources are stored. You cannot write to this directory. Instead, you should write document files to the directory returned by SDL\+\_\+\+Get\+User\+Folder(\+SDL\+\_\+\+FOLDER\+\_\+\+DOCUMENTS) and preferences to the directory returned by SDL\+\_\+\+Get\+Pref\+Path().
+
+More information on this subject is available here:\+ \href{http://developer.apple.com/library/ios/\#documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Introduction/Introduction.html}{\texttt{http:\+/\+/\+developer.\+apple.\+com/\+library/\+ios/\+\+\#documentation/\+i\+Phone/\+\+Conceptual/\+i\+Phone\+OSProgramming\+Guide/\+\+Introduction/\+\+Introduction.\+html}}\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1344}{}\doxysection{\texorpdfstring{Notes -- i\+Phone SDL limitations}{Notes -- i\+Phone SDL limitations}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1344}
+Windows:\+ Full-\/size, single window applications only. You cannot create multi-\/window SDL applications for i\+Phone OS. The application window will fill the display, though you have the option of turning on or off the menu-\/bar (pass SDL\+\_\+\+Create\+Window() the flag SDL\+\_\+\+WINDOW\+\_\+\+BORDERLESS).
+
+Textures:\+ The optimal texture formats on i\+OS are SDL\+\_\+\+PIXELFORMAT\+\_\+\+ABGR8888, SDL\+\_\+\+PIXELFORMAT\+\_\+\+ABGR8888, SDL\+\_\+\+PIXELFORMAT\+\_\+\+XBGR8888, and SDL\+\_\+\+PIXELFORMAT\+\_\+\+RGB24 pixel formats.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1345}{}\doxysection{\texorpdfstring{Notes -- Core\+Bluetooth.\+framework}{Notes -- Core\+Bluetooth.\+framework}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1345}
+SDL\+\_\+\+JOYSTICK\+\_\+\+HIDAPI is disabled by default. It can give you access to a lot more game controller devices, but it requires permission from the user before your app will be able to talk to the Bluetooth hardware. "{}\+Made For i\+OS"{} branded controllers do not need this as we don\textquotesingle{}t have to speak to them directly with raw bluetooth, so many apps can live without this.
+
+You\textquotesingle{}ll need to link with Core\+Bluetooth.\+framework and add something like this to your Info.\+plist:\+
+
+$<$key$>$NSBluetooth\+Peripheral\+Usage\+Description$<$/\+key$>$ $<$string$>$My\+App would like to remain connected to nearby bluetooth Game Controllers and Game Pads even when you\textquotesingle{}re not using the app.$<$/\+string$>$\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1346}{}\doxysection{\texorpdfstring{Game Center}{Game Center}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1346}
+Game Center integration might require that you break up your main loop in order to yield control back to the system. In other words, instead of running an endless main loop, you run each frame in a callback function, using:\+ \begin{DoxyVerb}bool SDL_SetiOSAnimationCallback(SDL_Window * window, int interval, SDL_iOSAnimationCallback callback, void *callbackParam);
+\end{DoxyVerb}
+
+
+This will set up the given function to be called back on the animation callback, and then you have to return from main() to let the Cocoa event loop run.
+
+e.\+g. \begin{DoxyVerb}extern "C"
+void ShowFrame(void*)
+{
+    ... do event handling, frame logic and rendering ...
+}
+
+int main(int argc, char *argv[])
+{
+    ... initialize game ...
+
+#ifdef SDL_PLATFORM_IOS
+    // Initialize the Game Center for scoring and matchmaking
+    InitGameCenter();
+
+    // Set up the game to run in the window animation callback on iOS
+    // so that Game Center and so forth works correctly.
+    SDL_SetiOSAnimationCallback(window, 1, ShowFrame, NULL);
+#else
+    while ( running ) {
+        ShowFrame(0);
+        DelayFrame();
+    }
+#endif
+    return 0;
+}
+\end{DoxyVerb}
+
+
+Note that if you are using main callbacks instead of a standard C main() function, your SDL\+\_\+\+App\+Iterate() callback is already doing this and you don\textquotesingle{}t need to use SDL\+\_\+\+Seti\+OSAnimation\+Callback.\hypertarget{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1347}{}\doxysection{\texorpdfstring{Deploying to older versions of i\+OS}{Deploying to older versions of i\+OS}}\label{md__mono_runtime_2extern_2sdl_2docs_2_r_e_a_d_m_e-ios_autotoc_md1347}
+SDL supports deploying to older versions of i\+OS than are supported by the latest version of Xcode, all the way back to i\+OS 11.\+0
+
+In order to do that you need to download an older version of Xcode:\+ \href{https://developer.apple.com/download/more/?name=Xcode}{\texttt{https:\+/\+/\+developer.\+apple.\+com/\+download/\+more/\+?name=\+Xcode}}
+
+Open the package contents of the older Xcode and your newer version of Xcode and copy over the folders in Xcode.\+app/\+\+Contents/\+\+Developer/\+\+Platforms/\+i\+Phone\+OS.platform/\+\+Device\+Support
+
+Then open the file Xcode.\+app/\+\+Contents/\+\+Developer/\+\+Platforms/\+i\+Phone\+OS.platform/\+\+Developer/\+\+SDKs/\+i\+Phone\+OS.\+sdk/\+\+SDKSettings.plist and add the versions of i\+OS you want to deploy to the key Root/\+\+Default\+Properties/\+\+DEPLOYMENT\+\_\+\+TARGET\+\_\+\+SUGGESTED\+\_\+\+VALUES
+
+Open your project and set your deployment target to the desired version of i\+OS
+
+Finally, remove Game\+Controller from the list of frameworks linked by your application and edit the build settings for "{}\+Other Linker Flags"{} and add -\/weak\+\_\+framework Game\+Controller 

@@ -1,0 +1,676 @@
+\doxysection{SDL\+\_\+windowsvideo.\+h}
+\hypertarget{_s_d_l__windowsvideo_8h_source}{}\label{_s_d_l__windowsvideo_8h_source}\index{MonoRuntime/extern/sdl/src/video/windows/SDL\_windowsvideo.h@{MonoRuntime/extern/sdl/src/video/windows/SDL\_windowsvideo.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#ifndef\ SDL\_windowsvideo\_h\_}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ SDL\_windowsvideo\_h\_}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}../../core/windows/SDL\_windows.h"{}}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ "{}../SDL\_sysvideo.h"{}}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#ifdef\ HAVE\_DXGI\_H}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#ifndef\ \_\_cplusplus}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ CINTERFACE}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ COBJMACROS}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#include\ <dxgi.h>}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)\ \&\&\ (\_MSC\_VER\ >=\ 1500)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXONE)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#include\ <msctf.h>}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ "{}SDL\_msctf.h"{}}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ <imm.h>}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#define\ MAX\_CANDLIST\ \ \ 10}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ MAX\_CANDLENGTH\ 256}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ MAX\_CANDSIZE\ \ \ (sizeof(WCHAR)\ *\ MAX\_CANDLIST\ *\ MAX\_CANDLENGTH)}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsclipboard.h"{}}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsevents.h"{}}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsgameinput.h"{}}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsopengl.h"{}}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_XBOXONE)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsshape.h"{}}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowskeyboard.h"{}}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsmodes.h"{}}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsmouse.h"{}}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowsopengles.h"{}}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#include\ "{}SDL\_windowswindow.h"{}}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#ifndef\ USER\_DEFAULT\_SCREEN\_DPI}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ USER\_DEFAULT\_SCREEN\_DPI\ 96}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#if\ WINVER\ <\ \_WIN32\_WINNT\_WIN7}}
+\DoxyCodeLine{00070\ \textcolor{comment}{//\ Touch\ input\ definitions}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ TWF\_FINETOUCH\ 1}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ TWF\_WANTPALM\ \ 2}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ TOUCHEVENTF\_MOVE\ 0x0001}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ TOUCHEVENTF\_DOWN\ 0x0002}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ TOUCHEVENTF\_UP\ \ \ 0x0004}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ DECLARE\_HANDLE(HTOUCHINPUT);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\_TOUCHINPUT}
+\DoxyCodeLine{00081\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ LONG\ x;}
+\DoxyCodeLine{00083\ \ \ \ \ LONG\ y;}
+\DoxyCodeLine{00084\ \ \ \ \ HANDLE\ hSource;}
+\DoxyCodeLine{00085\ \ \ \ \ DWORD\ dwID;}
+\DoxyCodeLine{00086\ \ \ \ \ DWORD\ dwFlags;}
+\DoxyCodeLine{00087\ \ \ \ \ DWORD\ dwMask;}
+\DoxyCodeLine{00088\ \ \ \ \ DWORD\ dwTime;}
+\DoxyCodeLine{00089\ \ \ \ \ ULONG\_PTR\ dwExtraInfo;}
+\DoxyCodeLine{00090\ \ \ \ \ DWORD\ cxContact;}
+\DoxyCodeLine{00091\ \ \ \ \ DWORD\ cyContact;}
+\DoxyCodeLine{00092\ \}\ TOUCHINPUT,\ *PTOUCHINPUT;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{comment}{//\ More-\/robust\ display\ information\ in\ Vista...}}
+\DoxyCodeLine{00095\ \textcolor{comment}{//\ This\ is\ a\ huge\ amount\ of\ data\ to\ be\ stuffing\ into\ three\ API\ calls.\ :(}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_PATH\_SOURCE\_INFO}
+\DoxyCodeLine{00097\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ LUID\ adapterId;}
+\DoxyCodeLine{00099\ \ \ \ \ UINT32\ id;}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00101\ \ \ \ \ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ UINT32\ modeInfoIdx;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ cloneGroupId\ :\ 16;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ sourceModeInfoIdx\ :\ 16;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \}\ DUMMYSTRUCTNAME;}
+\DoxyCodeLine{00108\ \ \ \ \ \}\ DUMMYUNIONNAME;}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ UINT32\ statusFlags;}
+\DoxyCodeLine{00111\ \}\ DISPLAYCONFIG\_PATH\_SOURCE\_INFO;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_RATIONAL}
+\DoxyCodeLine{00114\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ UINT32\ Numerator;}
+\DoxyCodeLine{00116\ \ \ \ \ UINT32\ Denominator;}
+\DoxyCodeLine{00117\ \}\ DISPLAYCONFIG\_RATIONAL;}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_PATH\_TARGET\_INFO}
+\DoxyCodeLine{00120\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ LUID\ adapterId;}
+\DoxyCodeLine{00122\ \ \ \ \ UINT32\ id;}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00124\ \ \ \ \ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ UINT32\ modeInfoIdx;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ desktopModeInfoIdx\ :\ 16;}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ targetModeInfoIdx\ :\ 16;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \}\ DUMMYSTRUCTNAME;}
+\DoxyCodeLine{00131\ \ \ \ \ \}\ DUMMYUNIONNAME;}
+\DoxyCodeLine{00132\ \ \ \ \ UINT32\ \textcolor{comment}{/*DISPLAYCONFIG\_VIDEO\_OUTPUT\_TECHNOLOGY*/}\ outputTechnology;}
+\DoxyCodeLine{00133\ \ \ \ \ UINT32\ \textcolor{comment}{/*DISPLAYCONFIG\_ROTATION*/}\ \doxymbox{\hyperlink{group__gtx__quaternion_gadbb992b52cef49dd3b11966e34260d17}{rotation}};}
+\DoxyCodeLine{00134\ \ \ \ \ UINT32\ \textcolor{comment}{/*DISPLAYCONFIG\_SCALING*/}\ scaling;}
+\DoxyCodeLine{00135\ \ \ \ \ DISPLAYCONFIG\_RATIONAL\ refreshRate;}
+\DoxyCodeLine{00136\ \ \ \ \ UINT32\ \textcolor{comment}{/*DISPLAYCONFIG\_SCANLINE\_ORDERING*/}\ scanLineOrdering;}
+\DoxyCodeLine{00137\ \ \ \ \ BOOL\ targetAvailable;}
+\DoxyCodeLine{00138\ \ \ \ \ UINT32\ statusFlags;}
+\DoxyCodeLine{00139\ \}\ DISPLAYCONFIG\_PATH\_TARGET\_INFO;}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_PATH\_INFO}
+\DoxyCodeLine{00142\ \{}
+\DoxyCodeLine{00143\ \ \ \ \ DISPLAYCONFIG\_PATH\_SOURCE\_INFO\ sourceInfo;}
+\DoxyCodeLine{00144\ \ \ \ \ DISPLAYCONFIG\_PATH\_TARGET\_INFO\ targetInfo;}
+\DoxyCodeLine{00145\ \ \ \ \ UINT32\ flags;}
+\DoxyCodeLine{00146\ \}\ DISPLAYCONFIG\_PATH\_INFO;}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00149\ \{}
+\DoxyCodeLine{00150\ \ \ \ \ DISPLAYCONFIG\_MODE\_INFO\_TYPE\_SOURCE\ =\ 1,}
+\DoxyCodeLine{00151\ \ \ \ \ DISPLAYCONFIG\_MODE\_INFO\_TYPE\_TARGET\ =\ 2,}
+\DoxyCodeLine{00152\ \ \ \ \ DISPLAYCONFIG\_MODE\_INFO\_TYPE\_DESKTOP\_IMAGE\ =\ 3,}
+\DoxyCodeLine{00153\ \ \ \ \ DISPLAYCONFIG\_MODE\_INFO\_TYPE\_FORCE\_UINT32\ =\ 0xFFFFFFFF}
+\DoxyCodeLine{00154\ \}\ DISPLAYCONFIG\_MODE\_INFO\_TYPE;}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00156\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_2DREGION}
+\DoxyCodeLine{00157\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ UINT32\ cx;}
+\DoxyCodeLine{00159\ \ \ \ \ UINT32\ cy;}
+\DoxyCodeLine{00160\ \}\ DISPLAYCONFIG\_2DREGION;}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_VIDEO\_SIGNAL\_INFO}
+\DoxyCodeLine{00163\ \{}
+\DoxyCodeLine{00164\ \ \ \ \ UINT64\ pixelRate;}
+\DoxyCodeLine{00165\ \ \ \ \ DISPLAYCONFIG\_RATIONAL\ hSyncFreq;}
+\DoxyCodeLine{00166\ \ \ \ \ DISPLAYCONFIG\_RATIONAL\ vSyncFreq;}
+\DoxyCodeLine{00167\ \ \ \ \ DISPLAYCONFIG\_2DREGION\ activeSize;}
+\DoxyCodeLine{00168\ \ \ \ \ DISPLAYCONFIG\_2DREGION\ totalSize;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00171\ \ \ \ \ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ videoStandard\ :\ 16;}
+\DoxyCodeLine{00175\ }
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Vertical\ refresh\ frequency\ divider}}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ vSyncFreqDivider\ :\ 6;}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ reserved\ :\ 10;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \}\ AdditionalSignalInfo;}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ UINT32\ videoStandard;}
+\DoxyCodeLine{00183\ \ \ \ \ \}\ DUMMYUNIONNAME;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{comment}{//\ Scan\ line\ ordering\ (e.g.\ progressive,\ interlaced).}}
+\DoxyCodeLine{00186\ \ \ \ \ UINT32\ \textcolor{comment}{/*DISPLAYCONFIG\_SCANLINE\_ORDERING*/}\ scanLineOrdering;}
+\DoxyCodeLine{00187\ \}\ DISPLAYCONFIG\_VIDEO\_SIGNAL\_INFO;}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_SOURCE\_MODE}
+\DoxyCodeLine{00190\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ UINT32\ width;}
+\DoxyCodeLine{00192\ \ \ \ \ UINT32\ height;}
+\DoxyCodeLine{00193\ \ \ \ \ UINT32\ \textcolor{comment}{/*DISPLAYCONFIG\_PIXELFORMAT*/}\ pixelFormat;}
+\DoxyCodeLine{00194\ \ \ \ \ POINTL\ position;}
+\DoxyCodeLine{00195\ \}\ DISPLAYCONFIG\_SOURCE\_MODE;}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_TARGET\_MODE}
+\DoxyCodeLine{00198\ \{}
+\DoxyCodeLine{00199\ \ \ \ \ DISPLAYCONFIG\_VIDEO\_SIGNAL\_INFO\ targetVideoSignalInfo;}
+\DoxyCodeLine{00200\ \}\ DISPLAYCONFIG\_TARGET\_MODE;}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_DESKTOP\_IMAGE\_INFO}
+\DoxyCodeLine{00203\ \{}
+\DoxyCodeLine{00204\ \ \ \ \ POINTL\ PathSourceSize;}
+\DoxyCodeLine{00205\ \ \ \ \ RECTL\ DesktopImageRegion;}
+\DoxyCodeLine{00206\ \ \ \ \ RECTL\ DesktopImageClip;}
+\DoxyCodeLine{00207\ \}\ DISPLAYCONFIG\_DESKTOP\_IMAGE\_INFO;}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_MODE\_INFO}
+\DoxyCodeLine{00210\ \{}
+\DoxyCodeLine{00211\ \ \ \ \ DISPLAYCONFIG\_MODE\_INFO\_TYPE\ infoType;}
+\DoxyCodeLine{00212\ \ \ \ \ UINT32\ id;}
+\DoxyCodeLine{00213\ \ \ \ \ LUID\ adapterId;}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00215\ \ \ \ \ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ DISPLAYCONFIG\_TARGET\_MODE\ targetMode;}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ DISPLAYCONFIG\_SOURCE\_MODE\ sourceMode;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ DISPLAYCONFIG\_DESKTOP\_IMAGE\_INFO\ desktopImageInfo;}
+\DoxyCodeLine{00219\ \ \ \ \ \}\ DUMMYUNIONNAME;}
+\DoxyCodeLine{00220\ \}\ DISPLAYCONFIG\_MODE\_INFO;}
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ DISPLAYCONFIG\_TOPOLOGY\_ID}
+\DoxyCodeLine{00223\ \{}
+\DoxyCodeLine{00224\ \ \ \ \ DISPLAYCONFIG\_TOPOLOGY\_INTERNAL\ =\ 0x00000001,}
+\DoxyCodeLine{00225\ \ \ \ \ DISPLAYCONFIG\_TOPOLOGY\_CLONE\ =\ 0x00000002,}
+\DoxyCodeLine{00226\ \ \ \ \ DISPLAYCONFIG\_TOPOLOGY\_EXTEND\ =\ 0x00000004,}
+\DoxyCodeLine{00227\ \ \ \ \ DISPLAYCONFIG\_TOPOLOGY\_EXTERNAL\ =\ 0x00000008,}
+\DoxyCodeLine{00228\ \ \ \ \ DISPLAYCONFIG\_TOPOLOGY\_FORCE\_UINT32\ =\ 0xFFFFFFFF}
+\DoxyCodeLine{00229\ \}\ DISPLAYCONFIG\_TOPOLOGY\_ID;}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00232\ \{}
+\DoxyCodeLine{00233\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_SOURCE\_NAME\ =\ 1,}
+\DoxyCodeLine{00234\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_TARGET\_NAME\ =\ 2,}
+\DoxyCodeLine{00235\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_TARGET\_PREFERRED\_MODE\ =\ 3,}
+\DoxyCodeLine{00236\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_ADAPTER\_NAME\ =\ 4,}
+\DoxyCodeLine{00237\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_SET\_TARGET\_PERSISTENCE\ =\ 5,}
+\DoxyCodeLine{00238\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_TARGET\_BASE\_TYPE\ =\ 6,}
+\DoxyCodeLine{00239\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_SUPPORT\_VIRTUAL\_RESOLUTION\ =\ 7,}
+\DoxyCodeLine{00240\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_SET\_SUPPORT\_VIRTUAL\_RESOLUTION\ =\ 8,}
+\DoxyCodeLine{00241\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_ADVANCED\_COLOR\_INFO\ =\ 9,}
+\DoxyCodeLine{00242\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_SET\_ADVANCED\_COLOR\_STATE\ =\ 10,}
+\DoxyCodeLine{00243\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_GET\_SDR\_WHITE\_LEVEL\ =\ 11,}
+\DoxyCodeLine{00244\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_FORCE\_UINT32\ =\ 0xFFFFFFFF}
+\DoxyCodeLine{00245\ \}\ DISPLAYCONFIG\_DEVICE\_INFO\_TYPE;}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_DEVICE\_INFO\_HEADER}
+\DoxyCodeLine{00248\ \{}
+\DoxyCodeLine{00249\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_TYPE\ type;}
+\DoxyCodeLine{00250\ \ \ \ \ UINT32\ size;}
+\DoxyCodeLine{00251\ \ \ \ \ LUID\ adapterId;}
+\DoxyCodeLine{00252\ \ \ \ \ UINT32\ id;}
+\DoxyCodeLine{00253\ \}\ DISPLAYCONFIG\_DEVICE\_INFO\_HEADER;}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00255\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_SOURCE\_DEVICE\_NAME}
+\DoxyCodeLine{00256\ \{}
+\DoxyCodeLine{00257\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_HEADER\ header;}
+\DoxyCodeLine{00258\ \ \ \ \ WCHAR\ viewGdiDeviceName[CCHDEVICENAME];}
+\DoxyCodeLine{00259\ \}\ DISPLAYCONFIG\_SOURCE\_DEVICE\_NAME;}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_TARGET\_DEVICE\_NAME\_FLAGS}
+\DoxyCodeLine{00262\ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00264\ \ \ \ \ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ friendlyNameFromEdid\ :\ 1;}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ friendlyNameForced\ :\ 1;}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ edidIdsValid\ :\ 1;}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ UINT32\ reserved\ :\ 29;}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \}\ DUMMYSTRUCTNAME;}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ UINT32\ value;}
+\DoxyCodeLine{00273\ \ \ \ \ \}\ DUMMYUNIONNAME;}
+\DoxyCodeLine{00274\ \}\ DISPLAYCONFIG\_TARGET\_DEVICE\_NAME\_FLAGS;}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00276\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }DISPLAYCONFIG\_TARGET\_DEVICE\_NAME}
+\DoxyCodeLine{00277\ \{}
+\DoxyCodeLine{00278\ \ \ \ \ DISPLAYCONFIG\_DEVICE\_INFO\_HEADER\ header;}
+\DoxyCodeLine{00279\ \ \ \ \ DISPLAYCONFIG\_TARGET\_DEVICE\_NAME\_FLAGS\ flags;}
+\DoxyCodeLine{00280\ \ \ \ \ UINT32\ \textcolor{comment}{/*DISPLAYCONFIG\_VIDEO\_OUTPUT\_TECHNOLOGY*/}\ outputTechnology;}
+\DoxyCodeLine{00281\ \ \ \ \ UINT16\ edidManufactureId;}
+\DoxyCodeLine{00282\ \ \ \ \ UINT16\ edidProductCodeId;}
+\DoxyCodeLine{00283\ \ \ \ \ UINT32\ connectorInstance;}
+\DoxyCodeLine{00284\ \ \ \ \ WCHAR\ monitorFriendlyDeviceName[64];}
+\DoxyCodeLine{00285\ \ \ \ \ WCHAR\ monitorDevicePath[128];}
+\DoxyCodeLine{00286\ \}\ DISPLAYCONFIG\_TARGET\_DEVICE\_NAME;}
+\DoxyCodeLine{00287\ }
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#define\ QDC\_ONLY\_ACTIVE\_PATHS\ 0x00000002}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ WINVER\ <\ \_WIN32\_WINNT\_WIN7}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#if\ WINVER\ <\ \_WIN32\_WINNT\_WIN8}}
+\DoxyCodeLine{00293\ \textcolor{comment}{//\ Pen\ input\ definitions}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_NEW\ 0x00000001}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_INRANGE\ 0x00000002}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_INCONTACT\ 0x00000004}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_FIRSTBUTTON\ 0x00000010}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_SECONDBUTTON\ 0x00000020}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_THIRDBUTTON\ 0x00000040}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_FOURTHBUTTON\ 0x00000080}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_FIFTHBUTTON\ 0x00000100}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_PRIMARY\ 0x00002000}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_CONFIDENCE\ 0x00004000}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#define\ POINTER\_MESSAGE\_FLAG\_CANCELED\ 0x00008000}}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#define\ GET\_POINTERID\_WPARAM(wParam)\ (LOWORD(wParam))}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#define\ IS\_POINTER\_FLAG\_SET\_WPARAM(wParam,\ flag)\ (((DWORD)HIWORD(wParam)\ \&\ (flag))\ ==\ (flag))}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#define\ IS\_POINTER\_INCONTACT\_WPARAM(wParam)\ IS\_POINTER\_FLAG\_SET\_WPARAM(wParam,\ POINTER\_MESSAGE\_FLAG\_INCONTACT)}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#define\ IS\_POINTER\_FIRSTBUTTON\_WPARAM(wParam)\ IS\_POINTER\_FLAG\_SET\_WPARAM(wParam,\ POINTER\_MESSAGE\_FLAG\_FIRSTBUTTON)}}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \textcolor{keyword}{typedef}\ DWORD\ POINTER\_INPUT\_TYPE;}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \textcolor{keyword}{enum}\ tagPOINTER\_INPUT\_TYPE}
+\DoxyCodeLine{00314\ \{}
+\DoxyCodeLine{00315\ \ \ \ \ PT\_POINTER\ =\ 1,}
+\DoxyCodeLine{00316\ \ \ \ \ PT\_TOUCH,}
+\DoxyCodeLine{00317\ \ \ \ \ PT\_PEN,}
+\DoxyCodeLine{00318\ \ \ \ \ PT\_MOUSE,}
+\DoxyCodeLine{00319\ \ \ \ \ PT\_TOUCHPAD}
+\DoxyCodeLine{00320\ \};}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \textcolor{keyword}{typedef}\ UINT32\ POINTER\_FLAGS;}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \textcolor{keyword}{typedef}\ UINT32\ PEN\_FLAGS;}
+\DoxyCodeLine{00325\ \textcolor{preprocessor}{\#define\ PEN\_FLAG\_NONE\ 0x00000000}}
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#define\ PEN\_FLAG\_BARREL\ 0x00000001}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ PEN\_FLAG\_INVERTED\ 0x00000002}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ PEN\_FLAG\_ERASER\ 0x00000004}}
+\DoxyCodeLine{00329\ }
+\DoxyCodeLine{00330\ \textcolor{keyword}{typedef}\ UINT32\ PEN\_MASK;}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ PEN\_MASK\_NONE\ 0x00000000}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ PEN\_MASK\_PRESSURE\ 0x00000001}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ PEN\_MASK\_ROTATION\ 0x00000002}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#define\ PEN\_MASK\_TILT\_X\ 0x00000004}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ PEN\_MASK\_TILT\_Y\ 0x00000008}}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ tagPOINTER\_BUTTON\_CHANGE\_TYPE}
+\DoxyCodeLine{00338\ \{}
+\DoxyCodeLine{00339\ \ \ \ \ POINTER\_CHANGE\_NONE,}
+\DoxyCodeLine{00340\ \ \ \ \ POINTER\_CHANGE\_FIRSTBUTTON\_DOWN,}
+\DoxyCodeLine{00341\ \ \ \ \ POINTER\_CHANGE\_FIRSTBUTTON\_UP,}
+\DoxyCodeLine{00342\ \ \ \ \ POINTER\_CHANGE\_SECONDBUTTON\_DOWN,}
+\DoxyCodeLine{00343\ \ \ \ \ POINTER\_CHANGE\_SECONDBUTTON\_UP,}
+\DoxyCodeLine{00344\ \ \ \ \ POINTER\_CHANGE\_THIRDBUTTON\_DOWN,}
+\DoxyCodeLine{00345\ \ \ \ \ POINTER\_CHANGE\_THIRDBUTTON\_UP,}
+\DoxyCodeLine{00346\ \ \ \ \ POINTER\_CHANGE\_FOURTHBUTTON\_DOWN,}
+\DoxyCodeLine{00347\ \ \ \ \ POINTER\_CHANGE\_FOURTHBUTTON\_UP,}
+\DoxyCodeLine{00348\ \ \ \ \ POINTER\_CHANGE\_FIFTHBUTTON\_DOWN,}
+\DoxyCodeLine{00349\ \ \ \ \ POINTER\_CHANGE\_FIFTHBUTTON\_UP}
+\DoxyCodeLine{00350\ \}\ POINTER\_BUTTON\_CHANGE\_TYPE;}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }tagPOINTER\_INFO}
+\DoxyCodeLine{00353\ \{}
+\DoxyCodeLine{00354\ \ \ \ \ POINTER\_INPUT\_TYPE\ pointerType;}
+\DoxyCodeLine{00355\ \ \ \ \ UINT32\ pointerId;}
+\DoxyCodeLine{00356\ \ \ \ \ UINT32\ frameId;}
+\DoxyCodeLine{00357\ \ \ \ \ POINTER\_FLAGS\ pointerFlags;}
+\DoxyCodeLine{00358\ \ \ \ \ HANDLE\ sourceDevice;}
+\DoxyCodeLine{00359\ \ \ \ \ HWND\ hwndTarget;}
+\DoxyCodeLine{00360\ \ \ \ \ POINT\ ptPixelLocation;}
+\DoxyCodeLine{00361\ \ \ \ \ POINT\ ptHimetricLocation;}
+\DoxyCodeLine{00362\ \ \ \ \ POINT\ ptPixelLocationRaw;}
+\DoxyCodeLine{00363\ \ \ \ \ POINT\ ptHimetricLocationRaw;}
+\DoxyCodeLine{00364\ \ \ \ \ DWORD\ dwTime;}
+\DoxyCodeLine{00365\ \ \ \ \ UINT32\ historyCount;}
+\DoxyCodeLine{00366\ \ \ \ \ INT32\ InputData;}
+\DoxyCodeLine{00367\ \ \ \ \ DWORD\ dwKeyStates;}
+\DoxyCodeLine{00368\ \ \ \ \ UINT64\ PerformanceCount;}
+\DoxyCodeLine{00369\ \ \ \ \ POINTER\_BUTTON\_CHANGE\_TYPE\ ButtonChangeType;}
+\DoxyCodeLine{00370\ \}\ POINTER\_INFO;}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }tagPOINTER\_PEN\_INFO}
+\DoxyCodeLine{00373\ \{}
+\DoxyCodeLine{00374\ \ \ \ \ POINTER\_INFO\ pointerInfo;}
+\DoxyCodeLine{00375\ \ \ \ \ PEN\_FLAGS\ penFlags;}
+\DoxyCodeLine{00376\ \ \ \ \ PEN\_MASK\ penMask;}
+\DoxyCodeLine{00377\ \ \ \ \ UINT32\ pressure;}
+\DoxyCodeLine{00378\ \ \ \ \ UINT32\ \doxymbox{\hyperlink{group__gtx__quaternion_gadbb992b52cef49dd3b11966e34260d17}{rotation}};}
+\DoxyCodeLine{00379\ \ \ \ \ INT32\ tiltX;}
+\DoxyCodeLine{00380\ \ \ \ \ INT32\ tiltY;}
+\DoxyCodeLine{00381\ \}\ POINTER\_PEN\_INFO;}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ WINVER\ <\ \_WIN32\_WINNT\_WIN8}}
+\DoxyCodeLine{00384\ }
+\DoxyCodeLine{00385\ \textcolor{preprocessor}{\#ifndef\ HAVE\_SHELLSCALINGAPI\_H}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ MONITOR\_DPI\_TYPE}
+\DoxyCodeLine{00388\ \{}
+\DoxyCodeLine{00389\ \ \ \ \ MDT\_EFFECTIVE\_DPI\ =\ 0,}
+\DoxyCodeLine{00390\ \ \ \ \ MDT\_ANGULAR\_DPI\ =\ 1,}
+\DoxyCodeLine{00391\ \ \ \ \ MDT\_RAW\_DPI\ =\ 2,}
+\DoxyCodeLine{00392\ \ \ \ \ MDT\_DEFAULT\ =\ MDT\_EFFECTIVE\_DPI}
+\DoxyCodeLine{00393\ \}\ MONITOR\_DPI\_TYPE;}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ PROCESS\_DPI\_AWARENESS}
+\DoxyCodeLine{00396\ \{}
+\DoxyCodeLine{00397\ \ \ \ \ PROCESS\_DPI\_UNAWARE\ =\ 0,}
+\DoxyCodeLine{00398\ \ \ \ \ PROCESS\_SYSTEM\_DPI\_AWARE\ =\ 1,}
+\DoxyCodeLine{00399\ \ \ \ \ PROCESS\_PER\_MONITOR\_DPI\_AWARE\ =\ 2}
+\DoxyCodeLine{00400\ \}\ PROCESS\_DPI\_AWARENESS;}
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00403\ \textcolor{preprocessor}{\#include\ <shellscalingapi.h>}}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }ITaskbarList3\ ITaskbarList3;}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \textcolor{preprocessor}{\#ifndef\ \_DPI\_AWARENESS\_CONTEXTS\_}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ DPI\_AWARENESS}
+\DoxyCodeLine{00411\ \{}
+\DoxyCodeLine{00412\ \ \ \ \ DPI\_AWARENESS\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00413\ \ \ \ \ DPI\_AWARENESS\_UNAWARE\ =\ 0,}
+\DoxyCodeLine{00414\ \ \ \ \ DPI\_AWARENESS\_SYSTEM\_AWARE\ =\ 1,}
+\DoxyCodeLine{00415\ \ \ \ \ DPI\_AWARENESS\_PER\_MONITOR\_AWARE\ =\ 2}
+\DoxyCodeLine{00416\ \}\ DPI\_AWARENESS;}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ DECLARE\_HANDLE(DPI\_AWARENESS\_CONTEXT);}
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ \textcolor{preprocessor}{\#define\ DPI\_AWARENESS\_CONTEXT\_UNAWARE\ \ \ \ \ \ \ \ \ \ \ ((DPI\_AWARENESS\_CONTEXT)-\/1)}}
+\DoxyCodeLine{00421\ \textcolor{preprocessor}{\#define\ DPI\_AWARENESS\_CONTEXT\_SYSTEM\_AWARE\ \ \ \ \ \ ((DPI\_AWARENESS\_CONTEXT)-\/2)}}
+\DoxyCodeLine{00422\ \textcolor{preprocessor}{\#define\ DPI\_AWARENESS\_CONTEXT\_PER\_MONITOR\_AWARE\ ((DPI\_AWARENESS\_CONTEXT)-\/3)}}
+\DoxyCodeLine{00423\ }
+\DoxyCodeLine{00424\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \_DPI\_AWARENESS\_CONTEXTS\_}}
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ \textcolor{comment}{//\ Windows\ 10\ Creators\ Update}}
+\DoxyCodeLine{00427\ \textcolor{preprocessor}{\#if\ NTDDI\_VERSION\ <\ 0x0A000003}}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#define\ DPI\_AWARENESS\_CONTEXT\_PER\_MONITOR\_AWARE\_V2\ ((DPI\_AWARENESS\_CONTEXT)-\/4)}}
+\DoxyCodeLine{00429\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ NTDDI\_VERSION\ <\ 0x0A000003}}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \textcolor{comment}{//\ Windows\ 10\ version\ 1809}}
+\DoxyCodeLine{00432\ \textcolor{preprocessor}{\#if\ NTDDI\_VERSION\ <\ 0x0A000006}}
+\DoxyCodeLine{00433\ \textcolor{preprocessor}{\#define\ DPI\_AWARENESS\_CONTEXT\_UNAWARE\_GDISCALED\ ((DPI\_AWARENESS\_CONTEXT)-\/5)}}
+\DoxyCodeLine{00434\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ NTDDI\_VERSION\ <\ 0x0A000006}}
+\DoxyCodeLine{00435\ }
+\DoxyCodeLine{00436\ \textcolor{keyword}{typedef}\ BOOL\ (*PFNSHFullScreen)(HWND,\ DWORD);}
+\DoxyCodeLine{00437\ \textcolor{keyword}{typedef}\ void\ (*PFCoordTransform)(\doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *,\ POINT\ *);}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00440\ \{}
+\DoxyCodeLine{00441\ \ \ \ \ \textcolor{keywordtype}{void}\ **lpVtbl;}
+\DoxyCodeLine{00442\ \ \ \ \ \textcolor{keywordtype}{int}\ refcount;}
+\DoxyCodeLine{00443\ \ \ \ \ \textcolor{keywordtype}{void}\ *data;}
+\DoxyCodeLine{00444\ \}\ \doxymbox{\hyperlink{struct_t_s_f_sink}{TSFSink}};}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \textcolor{preprocessor}{\#ifndef\ SDL\_DISABLE\_WINDOWS\_IME}}
+\DoxyCodeLine{00447\ \textcolor{comment}{//\ Definition\ from\ Win98DDK\ version\ of\ IMM.H}}
+\DoxyCodeLine{00448\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtag_i_n_p_u_t_c_o_n_t_e_x_t2}{tagINPUTCONTEXT2}}}
+\DoxyCodeLine{00449\ \{}
+\DoxyCodeLine{00450\ \ \ \ \ HWND\ hWnd;}
+\DoxyCodeLine{00451\ \ \ \ \ BOOL\ fOpen;}
+\DoxyCodeLine{00452\ \ \ \ \ POINT\ ptStatusWndPos;}
+\DoxyCodeLine{00453\ \ \ \ \ POINT\ ptSoftKbdPos;}
+\DoxyCodeLine{00454\ \ \ \ \ DWORD\ fdwConversion;}
+\DoxyCodeLine{00455\ \ \ \ \ DWORD\ fdwSentence;}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00457\ \ \ \ \ \{}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ LOGFONTA\ A;}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ LOGFONTW\ W;}
+\DoxyCodeLine{00460\ \ \ \ \ \}\ lfFont;}
+\DoxyCodeLine{00461\ \ \ \ \ COMPOSITIONFORM\ cfCompForm;}
+\DoxyCodeLine{00462\ \ \ \ \ CANDIDATEFORM\ cfCandForm[4];}
+\DoxyCodeLine{00463\ \ \ \ \ HIMCC\ hCompStr;}
+\DoxyCodeLine{00464\ \ \ \ \ HIMCC\ hCandInfo;}
+\DoxyCodeLine{00465\ \ \ \ \ HIMCC\ hGuideLine;}
+\DoxyCodeLine{00466\ \ \ \ \ HIMCC\ hPrivate;}
+\DoxyCodeLine{00467\ \ \ \ \ DWORD\ dwNumMsgBuf;}
+\DoxyCodeLine{00468\ \ \ \ \ HIMCC\ hMsgBuf;}
+\DoxyCodeLine{00469\ \ \ \ \ DWORD\ fdwInit;}
+\DoxyCodeLine{00470\ \ \ \ \ DWORD\ dwReserve[3];}
+\DoxyCodeLine{00471\ \}\ INPUTCONTEXT2,\ *PINPUTCONTEXT2,\ NEAR\ *NPINPUTCONTEXT2,\ FAR\ *LPINPUTCONTEXT2;}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00473\ }
+\DoxyCodeLine{00474\ \textcolor{comment}{//\ Corner\ rounding\ support\ \ (Win\ 11+)}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#ifndef\ DWMWA\_WINDOW\_CORNER\_PREFERENCE}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#define\ DWMWA\_WINDOW\_CORNER\_PREFERENCE\ 33}}
+\DoxyCodeLine{00477\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00478\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ \{}
+\DoxyCodeLine{00479\ \ \ \ \ DWMWCP\_DEFAULT\ =\ 0,}
+\DoxyCodeLine{00480\ \ \ \ \ DWMWCP\_DONOTROUND\ =\ 1,}
+\DoxyCodeLine{00481\ \ \ \ \ DWMWCP\_ROUND\ =\ 2,}
+\DoxyCodeLine{00482\ \ \ \ \ DWMWCP\_ROUNDSMALL\ =\ 3}
+\DoxyCodeLine{00483\ \}\ DWM\_WINDOW\_CORNER\_PREFERENCE;}
+\DoxyCodeLine{00484\ }
+\DoxyCodeLine{00485\ \textcolor{comment}{//\ Border\ Color\ support\ (Win\ 11+)}}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#ifndef\ DWMWA\_BORDER\_COLOR}}
+\DoxyCodeLine{00487\ \textcolor{preprocessor}{\#define\ DWMWA\_BORDER\_COLOR\ 34}}
+\DoxyCodeLine{00488\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \textcolor{preprocessor}{\#ifndef\ DWMWA\_COLOR\_DEFAULT}}
+\DoxyCodeLine{00491\ \textcolor{preprocessor}{\#define\ DWMWA\_COLOR\_DEFAULT\ 0xFFFFFFFF}}
+\DoxyCodeLine{00492\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00494\ \textcolor{preprocessor}{\#ifndef\ DWMWA\_COLOR\_NONE}}
+\DoxyCodeLine{00495\ \textcolor{preprocessor}{\#define\ DWMWA\_COLOR\_NONE\ 0xFFFFFFFE}}
+\DoxyCodeLine{00496\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00498\ \textcolor{comment}{//\ Transparent\ window\ support}}
+\DoxyCodeLine{00499\ \textcolor{preprocessor}{\#ifndef\ DWM\_BB\_ENABLE}}
+\DoxyCodeLine{00500\ \textcolor{preprocessor}{\#define\ DWM\_BB\_ENABLE\ 0x00000001}}
+\DoxyCodeLine{00501\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\#ifndef\ DWM\_BB\_BLURREGION}}
+\DoxyCodeLine{00503\ \textcolor{preprocessor}{\#define\ DWM\_BB\_BLURREGION\ 0x00000002}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00505\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00506\ \{}
+\DoxyCodeLine{00507\ \ \ \ \ DWORD\ flags;}
+\DoxyCodeLine{00508\ \ \ \ \ BOOL\ enable;}
+\DoxyCodeLine{00509\ \ \ \ \ HRGN\ blur\_region;}
+\DoxyCodeLine{00510\ \ \ \ \ BOOL\ transition\_on\_maxed;}
+\DoxyCodeLine{00511\ \}\ \doxymbox{\hyperlink{struct_d_w_m___b_l_u_r_b_e_h_i_n_d}{DWM\_BLURBEHIND}};}
+\DoxyCodeLine{00512\ }
+\DoxyCodeLine{00513\ \textcolor{comment}{//\ Private\ display\ data}}
+\DoxyCodeLine{00514\ }
+\DoxyCodeLine{00515\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___video_data}{SDL\_VideoData}}}
+\DoxyCodeLine{00516\ \{}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{keywordtype}{int}\ render;}
+\DoxyCodeLine{00518\ }
+\DoxyCodeLine{00519\ \ \ \ \ \textcolor{keywordtype}{bool}\ coinitialized;}
+\DoxyCodeLine{00520\ \textcolor{preprocessor}{\#if\ !(defined(SDL\_PLATFORM\_XBOXONE)\ ||\ defined(SDL\_PLATFORM\_XBOXSERIES))}}
+\DoxyCodeLine{00521\ \ \ \ \ \textcolor{keywordtype}{bool}\ oleinitialized;}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !(defined(SDL\_PLATFORM\_XBOXONE)\ ||\ defined(SDL\_PLATFORM\_XBOXSERIES))}}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \ \ \ \ DWORD\ clipboard\_count;}
+\DoxyCodeLine{00525\ }
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_XBOXONE)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXSERIES)\ }\textcolor{comment}{//\ Xbox\ doesn't\ support\ user32/shcore}}
+\DoxyCodeLine{00527\ \ \ \ \ SDL\_SharedObject\ *userDLL;}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{comment}{//\ DisplayConfig\ functions}}
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00531\ \ \ \ \ LONG\ (WINAPI\ *GetDisplayConfigBufferSizes)(\ UINT32,\ UINT32\ *,\ UINT32\ *);}
+\DoxyCodeLine{00532\ \ \ \ \ LONG\ (WINAPI\ *QueryDisplayConfig)(\ UINT32,\ UINT32\ *,\ DISPLAYCONFIG\_PATH\_INFO*,\ UINT32\ *,\ DISPLAYCONFIG\_MODE\_INFO*,\ DISPLAYCONFIG\_TOPOLOGY\_ID*);}
+\DoxyCodeLine{00533\ \ \ \ \ LONG\ (WINAPI\ *DisplayConfigGetDeviceInfo)(\ DISPLAYCONFIG\_DEVICE\_INFO\_HEADER*);}
+\DoxyCodeLine{00534\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00535\ }
+\DoxyCodeLine{00536\ \ \ \ \ \textcolor{comment}{//\ Touch\ input\ functions}}
+\DoxyCodeLine{00537\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00538\ \ \ \ \ BOOL\ (WINAPI\ *CloseTouchInputHandle)(\ HTOUCHINPUT\ );}
+\DoxyCodeLine{00539\ \ \ \ \ BOOL\ (WINAPI\ *GetTouchInputInfo)(\ HTOUCHINPUT,\ UINT,\ PTOUCHINPUT,\ int\ );}
+\DoxyCodeLine{00540\ \ \ \ \ BOOL\ (WINAPI\ *RegisterTouchWindow)(\ HWND,\ ULONG\ );}
+\DoxyCodeLine{00541\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00543\ \ \ \ \ \textcolor{comment}{//\ DWM\ functions}}
+\DoxyCodeLine{00544\ \ \ \ \ SDL\_SharedObject\ *dwmapiDLL;}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00546\ \ \ \ \ HRESULT\ (WINAPI\ *DwmFlush)(void);}
+\DoxyCodeLine{00547\ \ \ \ \ HRESULT\ (WINAPI\ *DwmEnableBlurBehindWindow)(HWND\ hwnd,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_d_w_m___b_l_u_r_b_e_h_i_n_d}{DWM\_BLURBEHIND}}\ *pBlurBehind);}
+\DoxyCodeLine{00548\ \ \ \ \ HRESULT\ (WINAPI\ *DwmSetWindowAttribute)(HWND\ hwnd,\ DWORD\ dwAttribute,\ LPCVOID\ pvAttribute,\ DWORD\ cbAttribute);}
+\DoxyCodeLine{00549\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \ \ \ \ \textcolor{comment}{//\ Pen\ input\ functions}}
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00553\ \ \ \ \ BOOL\ (WINAPI\ *GetPointerType)(UINT32\ pointerId,\ POINTER\_INPUT\_TYPE\ *pointerType);}
+\DoxyCodeLine{00554\ \ \ \ \ BOOL\ (WINAPI\ *GetPointerPenInfo)(UINT32\ pointerId,\ POINTER\_PEN\_INFO\ *penInfo);}
+\DoxyCodeLine{00555\ \ \ \ \ BOOL\ (WINAPI\ *GetPointerDeviceRects)(HANDLE\ device,\ RECT\ *pointerDeviceRect,\ RECT\ *displayRect);}
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ \textcolor{comment}{//\ DPI\ functions}}
+\DoxyCodeLine{00559\ \ \ \ \ SDL\_SharedObject\ *shcoreDLL;}
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00561\ \ \ \ \ BOOL\ (WINAPI\ *SetProcessDPIAware)(\ void\ );}
+\DoxyCodeLine{00562\ \ \ \ \ BOOL\ (WINAPI\ *SetProcessDpiAwarenessContext)(\ DPI\_AWARENESS\_CONTEXT\ );}
+\DoxyCodeLine{00563\ \ \ \ \ DPI\_AWARENESS\_CONTEXT\ (WINAPI\ *SetThreadDpiAwarenessContext)(\ DPI\_AWARENESS\_CONTEXT\ );}
+\DoxyCodeLine{00564\ \ \ \ \ DPI\_AWARENESS\_CONTEXT\ (WINAPI\ *GetThreadDpiAwarenessContext)(\ void\ );}
+\DoxyCodeLine{00565\ \ \ \ \ DPI\_AWARENESS\ (WINAPI\ *GetAwarenessFromDpiAwarenessContext)(\ DPI\_AWARENESS\_CONTEXT\ );}
+\DoxyCodeLine{00566\ \ \ \ \ BOOL\ (WINAPI\ *EnableNonClientDpiScaling)(\ HWND\ );}
+\DoxyCodeLine{00567\ \ \ \ \ BOOL\ (WINAPI\ *AdjustWindowRectExForDpi)(\ LPRECT,\ DWORD,\ BOOL,\ DWORD,\ UINT\ );}
+\DoxyCodeLine{00568\ \ \ \ \ UINT\ (WINAPI\ *GetDpiForWindow)(\ HWND\ );}
+\DoxyCodeLine{00569\ \ \ \ \ BOOL\ (WINAPI\ *AreDpiAwarenessContextsEqual)(DPI\_AWARENESS\_CONTEXT,\ DPI\_AWARENESS\_CONTEXT);}
+\DoxyCodeLine{00570\ \ \ \ \ BOOL\ (WINAPI\ *IsValidDpiAwarenessContext)(DPI\_AWARENESS\_CONTEXT);}
+\DoxyCodeLine{00571\ \ \ \ \ HRESULT\ (WINAPI\ *GetDpiForMonitor)(\ HMONITOR\ \ \ \ \ \ \ \ \ hmonitor,}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MONITOR\_DPI\_TYPE\ dpiType,}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UINT\ \ \ \ \ \ \ \ \ \ \ \ \ *dpiX,}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UINT\ \ \ \ \ \ \ \ \ \ \ \ \ *dpiY\ );}
+\DoxyCodeLine{00575\ \ \ \ \ HRESULT\ (WINAPI\ *SetProcessDpiAwareness)(PROCESS\_DPI\_AWARENESS\ dpiAwareness);}
+\DoxyCodeLine{00576\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00577\ \textcolor{preprocessor}{\#endif\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ !defined(SDL\_PLATFORM\_XBOXONE)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00578\ }
+\DoxyCodeLine{00579\ \textcolor{preprocessor}{\#ifdef\ HAVE\_DXGI\_H}}
+\DoxyCodeLine{00580\ \ \ \ \ SDL\_SharedObject\ *dxgiDLL;}
+\DoxyCodeLine{00581\ \ \ \ \ IDXGIFactory\ *pDXGIFactory;}
+\DoxyCodeLine{00582\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \ \ \ \ \textcolor{keywordtype}{bool}\ cleared;}
+\DoxyCodeLine{00585\ }
+\DoxyCodeLine{00586\ \ \ \ \ \textcolor{keywordtype}{bool}\ detect\_device\_hotplug;}
+\DoxyCodeLine{00587\ }
+\DoxyCodeLine{00588\ \ \ \ \ BYTE\ *rawinput;}
+\DoxyCodeLine{00589\ \ \ \ \ UINT\ rawinput\_offset;}
+\DoxyCodeLine{00590\ \ \ \ \ UINT\ rawinput\_size;}
+\DoxyCodeLine{00591\ \ \ \ \ UINT\ rawinput\_count;}
+\DoxyCodeLine{00592\ \ \ \ \ Uint64\ last\_rawinput\_poll;}
+\DoxyCodeLine{00593\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___point}{SDL\_Point}}\ last\_raw\_mouse\_position;}
+\DoxyCodeLine{00594\ \ \ \ \ \textcolor{keywordtype}{bool}\ raw\_mouse\_enabled;}
+\DoxyCodeLine{00595\ \ \ \ \ \textcolor{keywordtype}{bool}\ raw\_mouse\_flag\_nolegacy;}
+\DoxyCodeLine{00596\ \ \ \ \ \textcolor{keywordtype}{bool}\ raw\_keyboard\_enabled;}
+\DoxyCodeLine{00597\ \ \ \ \ \textcolor{keywordtype}{bool}\ raw\_keyboard\_flag\_nohotkeys;}
+\DoxyCodeLine{00598\ \ \ \ \ \textcolor{keywordtype}{bool}\ raw\_keyboard\_flag\_inputsink;}
+\DoxyCodeLine{00599\ \ \ \ \ \textcolor{keywordtype}{bool}\ pending\_E1\_key\_sequence;}
+\DoxyCodeLine{00600\ \ \ \ \ SDL\_PenID\ raw\_input\_fake\_pen\_id;}
+\DoxyCodeLine{00601\ }
+\DoxyCodeLine{00602\ \ \ \ \ WIN\_GameInputData\ *gameinput\_context;}
+\DoxyCodeLine{00603\ }
+\DoxyCodeLine{00604\ \textcolor{preprocessor}{\#ifndef\ SDL\_DISABLE\_WINDOWS\_IME}}
+\DoxyCodeLine{00605\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_initialized;}
+\DoxyCodeLine{00606\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_enabled;}
+\DoxyCodeLine{00607\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_available;}
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_internal\_composition;}
+\DoxyCodeLine{00609\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_internal\_candidates;}
+\DoxyCodeLine{00610\ \ \ \ \ HWND\ ime\_hwnd\_main;}
+\DoxyCodeLine{00611\ \ \ \ \ HWND\ ime\_hwnd\_current;}
+\DoxyCodeLine{00612\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_needs\_clear\_composition;}
+\DoxyCodeLine{00613\ \ \ \ \ HIMC\ ime\_himc;}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \ \ \ \ WCHAR\ *ime\_composition;}
+\DoxyCodeLine{00616\ \ \ \ \ \textcolor{keywordtype}{int}\ ime\_composition\_length;}
+\DoxyCodeLine{00617\ \ \ \ \ WCHAR\ ime\_readingstring[16];}
+\DoxyCodeLine{00618\ \ \ \ \ \textcolor{keywordtype}{int}\ ime\_cursor;}
+\DoxyCodeLine{00619\ \ \ \ \ \textcolor{keywordtype}{int}\ ime\_selected\_start;}
+\DoxyCodeLine{00620\ \ \ \ \ \textcolor{keywordtype}{int}\ ime\_selected\_length;}
+\DoxyCodeLine{00621\ }
+\DoxyCodeLine{00622\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_candidates\_open;}
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_update\_candidates;}
+\DoxyCodeLine{00624\ \ \ \ \ \textcolor{keywordtype}{char}\ *ime\_candidates[MAX\_CANDLIST];}
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{keywordtype}{int}\ ime\_candcount;}
+\DoxyCodeLine{00626\ \ \ \ \ DWORD\ ime\_candref;}
+\DoxyCodeLine{00627\ \ \ \ \ DWORD\ ime\_candsel;}
+\DoxyCodeLine{00628\ \ \ \ \ \textcolor{keywordtype}{int}\ ime\_candlistindexbase;}
+\DoxyCodeLine{00629\ \ \ \ \ \textcolor{keywordtype}{bool}\ ime\_horizontal\_candidates;}
+\DoxyCodeLine{00630\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00631\ }
+\DoxyCodeLine{00632\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_XBOXONE)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00633\ \ \ \ \ COMPOSITIONFORM\ ime\_composition\_area;}
+\DoxyCodeLine{00634\ \ \ \ \ CANDIDATEFORM\ ime\_candidate\_area;}
+\DoxyCodeLine{00635\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !defined(SDL\_PLATFORM\_XBOXONE)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#ifndef\ SDL\_DISABLE\_WINDOWS\_IME}}
+\DoxyCodeLine{00638\ \ \ \ \ HKL\ ime\_hkl;}
+\DoxyCodeLine{00639\ \ \ \ \ SDL\_SharedObject\ *ime\_himm32;}
+\DoxyCodeLine{00640\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/OFF*\ */}\ \textcolor{comment}{//\ clang-\/format\ off}}
+\DoxyCodeLine{00641\ \ \ \ \ UINT\ (WINAPI\ *GetReadingString)(HIMC\ himc,\ UINT\ uReadingBufLen,\ LPWSTR\ lpwReadingBuf,\ PINT\ pnErrorIndex,\ BOOL\ *pfIsVertical,\ PUINT\ puMaxReadingLen);}
+\DoxyCodeLine{00642\ \ \ \ \ BOOL\ (WINAPI\ *ShowReadingWindow)(HIMC\ himc,\ BOOL\ bShow);}
+\DoxyCodeLine{00643\ \ \ \ \ LPINPUTCONTEXT2\ (WINAPI\ *ImmLockIMC)(HIMC\ himc);}
+\DoxyCodeLine{00644\ \ \ \ \ BOOL\ (WINAPI\ *ImmUnlockIMC)(HIMC\ himc);}
+\DoxyCodeLine{00645\ \ \ \ \ LPVOID\ (WINAPI\ *ImmLockIMCC)(HIMCC\ himcc);}
+\DoxyCodeLine{00646\ \ \ \ \ BOOL\ (WINAPI\ *ImmUnlockIMCC)(HIMCC\ himcc);}
+\DoxyCodeLine{00647\ \ \ \ \ \textcolor{comment}{/*\ *INDENT-\/ON*\ */}\ \textcolor{comment}{//\ clang-\/format\ on}}
+\DoxyCodeLine{00648\ }
+\DoxyCodeLine{00649\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ !SDL\_DISABLE\_WINDOWS\_IME}}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \ \ \ \ BYTE\ pre\_hook\_key\_state[256];}
+\DoxyCodeLine{00652\ \ \ \ \ UINT\ \_SDL\_WAKEUP;}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00654\ \textcolor{preprocessor}{\#if\ !defined(SDL\_PLATFORM\_XBOXONE)\ \&\&\ !defined(SDL\_PLATFORM\_XBOXSERIES)}}
+\DoxyCodeLine{00655\ \ \ \ \ UINT\ WM\_TASKBAR\_BUTTON\_CREATED;}
+\DoxyCodeLine{00656\ \ \ \ \ ITaskbarList3\ *taskbar\_list;}
+\DoxyCodeLine{00657\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00658\ \};}
+\DoxyCodeLine{00659\ }
+\DoxyCodeLine{00660\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ g\_WindowsEnableMessageLoop;}
+\DoxyCodeLine{00661\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ g\_WindowsEnableMenuMnemonics;}
+\DoxyCodeLine{00662\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ g\_WindowFrameUsableWhileCursorHidden;}
+\DoxyCodeLine{00663\ }
+\DoxyCodeLine{00664\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }IDirect3D9\ IDirect3D9;}
+\DoxyCodeLine{00665\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ D3D\_LoadDLL(\textcolor{keywordtype}{void}\ **pD3DDLL,\ IDirect3D9\ **pDirect3D9Interface);}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ \textcolor{keyword}{extern}\ SDL\_SystemTheme\ WIN\_GetSystemTheme(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00668\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ WIN\_IsPerMonitorV2DPIAware(\doxymbox{\hyperlink{struct_s_d_l___video_device}{SDL\_VideoDevice}}\ *\_this);}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00670\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_windowsvideo\_h\_}}
+
+\end{DoxyCode}

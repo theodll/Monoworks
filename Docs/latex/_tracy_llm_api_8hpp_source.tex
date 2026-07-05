@@ -1,0 +1,65 @@
+\doxysection{Tracy\+Llm\+Api.\+hpp}
+\hypertarget{_tracy_llm_api_8hpp_source}{}\label{_tracy_llm_api_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlmApi.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyLlmApi.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYLLMAPI\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYLLMAPI\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_llm_model}{LlmModel}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ std::string\ name;}
+\DoxyCodeLine{00016\ \ \ \ \ std::string\ quant;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{int}\ contextSize\ =\ -\/1;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{bool}\ embeddings\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{TracyLlmApi}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{enum\ class}\ Type}
+\DoxyCodeLine{00024\ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ Unknown,}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ LmStudio,}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ LlamaSwap,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ LlamaCpp,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ Other}
+\DoxyCodeLine{00030\ \ \ \ \ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_tracy_llm_api}{\string~TracyLlmApi}}();}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ Connect(\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ url\ );}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ ChatCompletion(\ \textcolor{keyword}{const}\ nlohmann::json\&\ req,\ \textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{bool}(\textcolor{keyword}{const}\ nlohmann::json\&)>\&\ callback,\ \textcolor{keywordtype}{int}\ modelIdx\ );}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{bool}\ Embeddings(\ \textcolor{keyword}{const}\ nlohmann::json\&\ req,\ nlohmann::json\&\ response,\ \textcolor{keywordtype}{bool}\ separateConnection\ =\ \textcolor{keyword}{false}\ );}
+\DoxyCodeLine{00038\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ Tokenize(\ \textcolor{keyword}{const}\ std::string\&\ text,\ \textcolor{keywordtype}{int}\ modelIdx\ );}
+\DoxyCodeLine{00039\ \ \ \ \ [[nodiscard]]\ nlohmann::json\ SendMessage(\ \textcolor{keyword}{const}\ nlohmann::json\&\ chat,\ \textcolor{keywordtype}{int}\ modelIdx\ );}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ IsConnected()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_curl\ !=\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00042\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::vector<LlmModel>\&\ GetModels()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_models;\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ SetupCurl(\ \textcolor{keywordtype}{void}*\ curl\ );}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ int64\_t\ GetRequest(\ \textcolor{keyword}{const}\ std::string\&\ url,\ std::string\&\ response\ );}
+\DoxyCodeLine{00048\ \ \ \ \ int64\_t\ PostRequest(\ \textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::string\&\ data,\ std::string\&\ response,\ \textcolor{keywordtype}{bool}\ separateConnection\ =\ \textcolor{keyword}{false}\ );}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}*\ m\_curl\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00051\ \ \ \ \ std::string\ m\_url;}
+\DoxyCodeLine{00052\ \ \ \ \ Type\ m\_type;}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ std::vector<LlmModel>\ m\_models;}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

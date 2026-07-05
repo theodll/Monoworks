@@ -1,0 +1,92 @@
+\doxysection{SDL\+\_\+hidapi\+\_\+windows.\+h}
+\hypertarget{_s_d_l__hidapi__windows_8h_source}{}\label{_s_d_l__hidapi__windows_8h_source}\index{MonoRuntime/extern/sdl/src/hidapi/SDL\_hidapi\_windows.h@{MonoRuntime/extern/sdl/src/hidapi/SDL\_hidapi\_windows.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*\ Define\ standard\ library\ functions\ in\ terms\ of\ SDL\ */}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{/*\ \#pragma\ push\_macro/pop\_macro\ works\ correctly\ only\ as\ of\ gcc\ >=\ 4.4.3}}
+\DoxyCodeLine{00025\ \textcolor{comment}{\ \ \ clang-\/3.0\ \_seems\_\ to\ be\ OK.\ */}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}calloc"{})}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}free"{})}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}malloc"{})}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}memcmp"{})}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}swprintf"{})}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}towupper"{})}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}wcscmp"{})}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}\_wcsdup"{})}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}wcslen"{})}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}wcsncpy"{})}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}wcsstr"{})}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#pragma\ push\_macro("{}wcstol"{})}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#undef\ calloc}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#undef\ free}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#undef\ malloc}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#undef\ memcmp}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#undef\ swprintf}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#undef\ towupper}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#undef\ wcscmp}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#undef\ \_wcsdup}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#undef\ wcslen}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#undef\ wcsncpy}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#undef\ wcsstr}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#undef\ wcstol}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#define\ calloc\ \ \ \ \ \ SDL\_calloc}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ free\ \ \ \ \ \ \ \ SDL\_free}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ malloc\ \ \ \ \ \ SDL\_malloc}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ memcmp\ \ \ \ \ \ SDL\_memcmp}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#define\ swprintf\ \ \ \ SDL\_swprintf}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ towupper\ \ \ \ (wchar\_t)SDL\_toupper}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ wcscmp\ \ \ \ \ \ SDL\_wcscmp}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ \_wcsdup\ \ \ \ \ SDL\_wcsdup}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ wcslen\ \ \ \ \ \ SDL\_wcslen}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ wcsncpy\ \ \ \ \ SDL\_wcslcpy}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ wcsstr\ \ \ \ \ \ SDL\_wcsstr}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ wcstol\ \ \ \ \ \ SDL\_wcstol}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{comment}{//\ These\ functions\ conflict\ when\ linking\ both\ SDL\ and\ hidapi\ statically}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ hid\_winapi\_descriptor\_reconstruct\_pp\_data\ SDL\_hid\_winapi\_descriptor\_reconstruct\_pp\_data}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ hid\_winapi\_get\_container\_id\ SDL\_hid\_winapi\_get\_container\_id}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#undef\ HIDAPI\_H\_\_}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#include\ "{}windows/hid.c"{}}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ HAVE\_PLATFORM\_BACKEND\ 1}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ udev\_ctx\ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{/*\ restore\ libc\ function\ macros\ */}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}calloc"{})}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}free"{})}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}malloc"{})}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}memcmp"{})}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}swprintf"{})}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}towupper"{})}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}wcscmp"{})}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}\_wcsdup"{})}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}wcslen"{})}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}wcsncpy"{})}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}wcsstr"{})}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#pragma\ pop\_macro("{}wcstol"{})}}
+
+\end{DoxyCode}

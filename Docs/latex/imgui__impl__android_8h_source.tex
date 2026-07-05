@@ -1,0 +1,43 @@
+\doxysection{imgui\+\_\+impl\+\_\+android.\+h}
+\hypertarget{imgui__impl__android_8h_source}{}\label{imgui__impl__android_8h_source}\index{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_android.h@{MonoEngine/thirdparty/imgui/backends/imgui\_impl\_android.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ dear\ imgui:\ Platform\ Binding\ for\ Android\ native\ app}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ This\ needs\ to\ be\ used\ along\ with\ the\ OpenGL\ 3\ Renderer\ (imgui\_impl\_opengl3)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ Implemented\ features:}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ \ [X]\ Platform:\ Keyboard\ support.\ Since\ 1.87\ we\ are\ using\ the\ io.AddKeyEvent()\ function.\ Pass\ ImGuiKey\ values\ to\ all\ key\ functions\ e.g.\ ImGui::IsKeyPressed(ImGuiKey\_Space).\ [Legacy\ AKEYCODE\_*\ values\ are\ obsolete\ since\ 1.87\ and\ not\ supported\ since\ 1.91.5]}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ \ [X]\ Platform:\ Mouse\ support.\ Can\ discriminate\ Mouse/TouchScreen/Pen.}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ Missing\ features\ or\ Issues:}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ \ [\ ]\ Platform:\ Clipboard\ support.}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ \ [\ ]\ Platform:\ Gamepad\ support.}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ \ [\ ]\ Platform:\ Mouse\ cursor\ shape\ and\ visibility\ (ImGuiBackendFlags\_HasMouseCursors).\ Disable\ with\ 'io.ConfigFlags\ |=\ ImGuiConfigFlags\_NoMouseCursorChange'.\ FIXME:\ Check\ if\ this\ is\ even\ possible\ with\ Android.}}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ Important:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ \ -\/\ Consider\ using\ SDL\ or\ GLFW\ backend\ on\ Android,\ which\ will\ be\ more\ full-\/featured\ than\ this.}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ \ -\/\ FIXME:\ On-\/screen\ keyboard\ currently\ needs\ to\ be\ enabled\ by\ the\ application\ (see\ examples/\ and\ issue\ \#3446)}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ \ -\/\ FIXME:\ Unicode\ character\ inputs\ needs\ to\ be\ passed\ by\ Dear\ ImGui\ by\ the\ application\ (see\ examples/\ and\ issue\ \#3446)}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ You\ can\ use\ unmodified\ imgui\_impl\_*\ files\ in\ your\ project.\ See\ examples/\ folder\ for\ examples\ of\ using\ this.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ Prefer\ including\ the\ entire\ imgui/\ repository\ into\ your\ project\ (either\ as\ a\ copy\ or\ as\ a\ submodule),\ and\ only\ build\ the\ backends\ you\ need.}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ Learn\ about\ Dear\ ImGui:}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ -\/\ FAQ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ https://dearimgui.com/faq}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ -\/\ Getting\ Started\ \ \ \ \ \ https://dearimgui.com/getting-\/started}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ -\/\ Documentation\ \ \ \ \ \ \ \ https://dearimgui.com/docs\ (same\ as\ your\ local\ docs/\ folder).}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ -\/\ Introduction,\ links\ and\ more\ at\ the\ top\ of\ imgui.cpp}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}imgui.h"{}}\ \ \ \ \ \ \textcolor{comment}{//\ IMGUI\_IMPL\_API}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifndef\ IMGUI\_DISABLE}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{struct\ }ANativeWindow;}
+\DoxyCodeLine{00029\ \textcolor{keyword}{struct\ }AInputEvent;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{comment}{//\ Follow\ "{}Getting\ Started"{}\ link\ and\ check\ examples/\ folder\ to\ learn\ about\ using\ backends!}}
+\DoxyCodeLine{00032\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{bool}\ \ \ \ \ ImGui\_ImplAndroid\_Init(ANativeWindow*\ window);}
+\DoxyCodeLine{00033\ IMGUI\_IMPL\_API\ int32\_t\ \ ImGui\_ImplAndroid\_HandleInputEvent(\textcolor{keyword}{const}\ AInputEvent*\ input\_event);}
+\DoxyCodeLine{00034\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplAndroid\_Shutdown();}
+\DoxyCodeLine{00035\ IMGUI\_IMPL\_API\ \textcolor{keywordtype}{void}\ \ \ \ \ ImGui\_ImplAndroid\_NewFrame();}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ \#ifndef\ IMGUI\_DISABLE}}
+
+\end{DoxyCode}

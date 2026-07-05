@@ -1,0 +1,107 @@
+\doxysection{SDL\+\_\+init.\+h}
+\hypertarget{_s_d_l__init_8h_source}{}\label{_s_d_l__init_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_init.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_init.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#ifndef\ SDL\_init\_h\_}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ SDL\_init\_h\_}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_events.h>}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00057\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{comment}{/*\ As\ of\ version\ 0.5,\ SDL\ is\ loaded\ dynamically\ into\ the\ application\ */}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_InitFlags;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_AUDIO\ \ \ \ \ \ 0x00000010u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_VIDEO\ \ \ \ \ \ 0x00000020u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_JOYSTICK\ \ \ 0x00000200u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_HAPTIC\ \ \ \ \ 0x00001000u}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_GAMEPAD\ \ \ \ 0x00002000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_EVENTS\ \ \ \ \ 0x00004000u}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_SENSOR\ \ \ \ \ 0x00008000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ SDL\_INIT\_CAMERA\ \ \ \ \ 0x00010000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00109\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_AppResult}
+\DoxyCodeLine{00110\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ SDL\_APP\_CONTINUE,\ \ \ }
+\DoxyCodeLine{00112\ \ \ \ \ SDL\_APP\_SUCCESS,\ \ \ \ }
+\DoxyCodeLine{00113\ \ \ \ \ SDL\_APP\_FAILURE\ \ \ \ \ }
+\DoxyCodeLine{00114\ \}\ SDL\_AppResult;}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00133\ \textcolor{keyword}{typedef}\ SDL\_AppResult\ (SDLCALL\ *SDL\_AppInit\_func)(\textcolor{keywordtype}{void}\ **appstate,\ \textcolor{keywordtype}{int}\ argc,\ \textcolor{keywordtype}{char}\ *argv[]);}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00148\ \textcolor{keyword}{typedef}\ SDL\_AppResult\ (SDLCALL\ *SDL\_AppIterate\_func)(\textcolor{keywordtype}{void}\ *appstate);}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00164\ \textcolor{keyword}{typedef}\ SDL\_AppResult\ (SDLCALL\ *SDL\_AppEvent\_func)(\textcolor{keywordtype}{void}\ *appstate,\ \doxymbox{\hyperlink{union_s_d_l___event}{SDL\_Event}}\ *event);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00178\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDL\_AppQuit\_func)(\textcolor{keywordtype}{void}\ *appstate,\ SDL\_AppResult\ result);}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00238\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_Init(SDL\_InitFlags\ flags);}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00257\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_InitSubSystem(SDL\_InitFlags\ flags);}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00274\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_QuitSubSystem(SDL\_InitFlags\ flags);}
+\DoxyCodeLine{00275\ }
+\DoxyCodeLine{00290\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_InitFlags\ SDLCALL\ SDL\_WasInit(SDL\_InitFlags\ flags);}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00310\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_Quit(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00330\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_IsMainThread(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00331\ }
+\DoxyCodeLine{00341\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDL\_MainThreadCallback)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00367\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RunOnMainThread(SDL\_MainThreadCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata,\ \textcolor{keywordtype}{bool}\ wait\_complete);}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00405\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetAppMetadata(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *appname,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *appversion,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *appidentifier);}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00468\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetAppMetadataProperty(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *value);}
+\DoxyCodeLine{00469\ }
+\DoxyCodeLine{00470\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_APP\_METADATA\_NAME\_STRING\ \ \ \ \ \ \ \ \ "{}SDL.app.metadata.name"{}}}
+\DoxyCodeLine{00471\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_APP\_METADATA\_VERSION\_STRING\ \ \ \ \ \ "{}SDL.app.metadata.version"{}}}
+\DoxyCodeLine{00472\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_APP\_METADATA\_IDENTIFIER\_STRING\ \ \ "{}SDL.app.metadata.identifier"{}}}
+\DoxyCodeLine{00473\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_APP\_METADATA\_CREATOR\_STRING\ \ \ \ \ \ "{}SDL.app.metadata.creator"{}}}
+\DoxyCodeLine{00474\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_APP\_METADATA\_COPYRIGHT\_STRING\ \ \ \ "{}SDL.app.metadata.copyright"{}}}
+\DoxyCodeLine{00475\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_APP\_METADATA\_URL\_STRING\ \ \ \ \ \ \ \ \ \ "{}SDL.app.metadata.url"{}}}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_APP\_METADATA\_TYPE\_STRING\ \ \ \ \ \ \ \ \ "{}SDL.app.metadata.type"{}}}
+\DoxyCodeLine{00477\ }
+\DoxyCodeLine{00499\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetAppMetadataProperty(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name);}
+\DoxyCodeLine{00500\ }
+\DoxyCodeLine{00501\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00502\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00503\ \}}
+\DoxyCodeLine{00504\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00505\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_init\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

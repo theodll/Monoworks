@@ -1,0 +1,81 @@
+\doxysection{SDL\+\_\+dialog.\+h}
+\hypertarget{include_2_s_d_l3_2_s_d_l__dialog_8h_source}{}\label{include_2_s_d_l3_2_s_d_l__dialog_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_dialog.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_dialog.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifndef\ SDL\_dialog\_h\_}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ SDL\_dialog\_h\_}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_video.h>}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00046\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00048\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00070\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___dialog_file_filter}{SDL\_DialogFileFilter}}}
+\DoxyCodeLine{00071\ \{}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *pattern;}
+\DoxyCodeLine{00074\ \}\ \doxymbox{\hyperlink{struct_s_d_l___dialog_file_filter}{SDL\_DialogFileFilter}};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{typedef}\ void\ (SDLCALL\ *SDL\_DialogFileCallback)(\textcolor{keywordtype}{void}\ *userdata,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ \textcolor{keyword}{const}\ *filelist,\ \textcolor{keywordtype}{int}\ filter);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00164\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ShowOpenFileDialog(SDL\_DialogFileCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___dialog_file_filter}{SDL\_DialogFileFilter}}\ *filters,\ \textcolor{keywordtype}{int}\ nfilters,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *default\_location,\ \textcolor{keywordtype}{bool}\ allow\_many);}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00213\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ShowSaveFileDialog(SDL\_DialogFileCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___dialog_file_filter}{SDL\_DialogFileFilter}}\ *filters,\ \textcolor{keywordtype}{int}\ nfilters,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *default\_location);}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00258\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ShowOpenFolderDialog(SDL\_DialogFileCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *default\_location,\ \textcolor{keywordtype}{bool}\ allow\_many);}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00270\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_FileDialogType}
+\DoxyCodeLine{00271\ \{}
+\DoxyCodeLine{00272\ \ \ \ \ SDL\_FILEDIALOG\_OPENFILE,}
+\DoxyCodeLine{00273\ \ \ \ \ SDL\_FILEDIALOG\_SAVEFILE,}
+\DoxyCodeLine{00274\ \ \ \ \ SDL\_FILEDIALOG\_OPENFOLDER}
+\DoxyCodeLine{00275\ \}\ SDL\_FileDialogType;}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00324\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_ShowFileDialogWithProperties(SDL\_FileDialogType\ type,\ SDL\_DialogFileCallback\ callback,\ \textcolor{keywordtype}{void}\ *userdata,\ SDL\_PropertiesID\ props);}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_FILTERS\_POINTER\ \ \ \ \ "{}SDL.filedialog.filters"{}}}
+\DoxyCodeLine{00327\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_NFILTERS\_NUMBER\ \ \ \ \ "{}SDL.filedialog.nfilters"{}}}
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_WINDOW\_POINTER\ \ \ \ \ \ "{}SDL.filedialog.window"{}}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_LOCATION\_STRING\ \ \ \ \ "{}SDL.filedialog.location"{}}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_MANY\_BOOLEAN\ \ \ \ \ \ \ \ "{}SDL.filedialog.many"{}}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_TITLE\_STRING\ \ \ \ \ \ \ \ "{}SDL.filedialog.title"{}}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_ACCEPT\_STRING\ \ \ \ \ \ \ "{}SDL.filedialog.accept"{}}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_FILE\_DIALOG\_CANCEL\_STRING\ \ \ \ \ \ \ "{}SDL.filedialog.cancel"{}}}
+\DoxyCodeLine{00334\ }
+\DoxyCodeLine{00335\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00337\ \}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{00340\ }
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_dialog\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

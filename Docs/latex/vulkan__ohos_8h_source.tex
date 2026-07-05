@@ -1,0 +1,126 @@
+\doxysection{vulkan\+\_\+ohos.\+h}
+\hypertarget{vulkan__ohos_8h_source}{}\label{vulkan__ohos_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_ohos.h@{MonoRuntime/extern/sdl/src/video/khronos/vulkan/vulkan\_ohos.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_OHOS\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VULKAN\_OHOS\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ 2015-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ Vulkan\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ VK\_OHOS\_external\_memory\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ VK\_OHOS\_external\_memory\ 1}}
+\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }OH\_NativeBuffer;}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ VK\_OHOS\_EXTERNAL\_MEMORY\_SPEC\_VERSION\ 1}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ VK\_OHOS\_EXTERNAL\_MEMORY\_EXTENSION\_NAME\ "{}VK\_OHOS\_external\_memory"{}}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_native_buffer_usage_o_h_o_s}{VkNativeBufferUsageOHOS}}\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00030\ \ \ \ \ uint64\_t\ \ \ \ \ \ \ \ \ \ \ OHOSNativeBufferUsage;}
+\DoxyCodeLine{00031\ \}\ \doxymbox{\hyperlink{struct_vk_native_buffer_usage_o_h_o_s}{VkNativeBufferUsageOHOS}};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_native_buffer_properties_o_h_o_s}{VkNativeBufferPropertiesOHOS}}\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00036\ \ \ \ \ VkDeviceSize\ \ \ \ \ \ \ allocationSize;}
+\DoxyCodeLine{00037\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ memoryTypeBits;}
+\DoxyCodeLine{00038\ \}\ \doxymbox{\hyperlink{struct_vk_native_buffer_properties_o_h_o_s}{VkNativeBufferPropertiesOHOS}};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_native_buffer_format_properties_o_h_o_s}{VkNativeBufferFormatPropertiesOHOS}}\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00043\ \ \ \ \ VkFormat\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ format;}
+\DoxyCodeLine{00044\ \ \ \ \ uint64\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ externalFormat;}
+\DoxyCodeLine{00045\ \ \ \ \ VkFormatFeatureFlags\ \ \ \ \ \ \ \ \ \ \ \ \ formatFeatures;}
+\DoxyCodeLine{00046\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_component_mapping}{VkComponentMapping}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ samplerYcbcrConversionComponents;}
+\DoxyCodeLine{00047\ \ \ \ \ VkSamplerYcbcrModelConversion\ \ \ \ suggestedYcbcrModel;}
+\DoxyCodeLine{00048\ \ \ \ \ VkSamplerYcbcrRange\ \ \ \ \ \ \ \ \ \ \ \ \ \ suggestedYcbcrRange;}
+\DoxyCodeLine{00049\ \ \ \ \ VkChromaLocation\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suggestedXChromaOffset;}
+\DoxyCodeLine{00050\ \ \ \ \ VkChromaLocation\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suggestedYChromaOffset;}
+\DoxyCodeLine{00051\ \}\ \doxymbox{\hyperlink{struct_vk_native_buffer_format_properties_o_h_o_s}{VkNativeBufferFormatPropertiesOHOS}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_import_native_buffer_info_o_h_o_s}{VkImportNativeBufferInfoOHOS}}\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{struct\ }OH\_NativeBuffer*\ \ \ \ buffer;}
+\DoxyCodeLine{00057\ \}\ \doxymbox{\hyperlink{struct_vk_import_native_buffer_info_o_h_o_s}{VkImportNativeBufferInfoOHOS}};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_memory_get_native_buffer_info_o_h_o_s}{VkMemoryGetNativeBufferInfoOHOS}}\ \{}
+\DoxyCodeLine{00060\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00062\ \ \ \ \ VkDeviceMemory\ \ \ \ \ memory;}
+\DoxyCodeLine{00063\ \}\ \doxymbox{\hyperlink{struct_vk_memory_get_native_buffer_info_o_h_o_s}{VkMemoryGetNativeBufferInfoOHOS}};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_external_format_o_h_o_s}{VkExternalFormatOHOS}}\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ VkStructureType\ \ \ \ sType;}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00068\ \ \ \ \ uint64\_t\ \ \ \ \ \ \ \ \ \ \ externalFormat;}
+\DoxyCodeLine{00069\ \}\ \doxymbox{\hyperlink{struct_vk_external_format_o_h_o_s}{VkExternalFormatOHOS}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetNativeBufferPropertiesOHOS)(VkDevice\ device,\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }OH\_NativeBuffer*\ buffer,\ \doxymbox{\hyperlink{struct_vk_native_buffer_properties_o_h_o_s}{VkNativeBufferPropertiesOHOS}}*\ pProperties);}
+\DoxyCodeLine{00072\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkGetMemoryNativeBufferOHOS)(VkDevice\ device,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_memory_get_native_buffer_info_o_h_o_s}{VkMemoryGetNativeBufferInfoOHOS}}*\ pInfo,\ \textcolor{keyword}{struct\ }OH\_NativeBuffer**\ pBuffer);}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00076\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetNativeBufferPropertiesOHOS(}
+\DoxyCodeLine{00077\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{struct}\ OH\_NativeBuffer*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ buffer,}
+\DoxyCodeLine{00079\ \ \ \ \ \doxymbox{\hyperlink{struct_vk_native_buffer_properties_o_h_o_s}{VkNativeBufferPropertiesOHOS}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pProperties);}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00083\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkGetMemoryNativeBufferOHOS(}
+\DoxyCodeLine{00084\ \ \ \ \ VkDevice\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ device,}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_memory_get_native_buffer_info_o_h_o_s}{VkMemoryGetNativeBufferInfoOHOS}}*\ \ \ \ \ \ pInfo,}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{struct}\ OH\_NativeBuffer**\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pBuffer);}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{comment}{//\ VK\_OHOS\_surface\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ VK\_OHOS\_surface\ 1}}
+\DoxyCodeLine{00093\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }NativeWindow\ OHNativeWindow;}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ VK\_OHOS\_SURFACE\_SPEC\_VERSION\ \ \ \ \ \ 1}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ VK\_OHOS\_SURFACE\_EXTENSION\_NAME\ \ \ \ "{}VK\_OHOS\_surface"{}}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ VkFlags\ VkSurfaceCreateFlagsOHOS;}
+\DoxyCodeLine{00097\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_vk_surface_create_info_o_h_o_s}{VkSurfaceCreateInfoOHOS}}\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ VkStructureType\ \ \ \ \ \ \ \ \ \ \ \ \ sType;}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pNext;}
+\DoxyCodeLine{00100\ \ \ \ \ VkSurfaceCreateFlagsOHOS\ \ \ \ flags;}
+\DoxyCodeLine{00101\ \ \ \ \ OHNativeWindow*\ \ \ \ \ \ \ \ \ \ \ \ \ window;}
+\DoxyCodeLine{00102\ \}\ \doxymbox{\hyperlink{struct_vk_surface_create_info_o_h_o_s}{VkSurfaceCreateInfoOHOS}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{typedef}\ VkResult\ (VKAPI\_PTR\ *PFN\_vkCreateSurfaceOHOS)(VkInstance\ instance,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_surface_create_info_o_h_o_s}{VkSurfaceCreateInfoOHOS}}*\ pCreateInfo,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ pAllocator,\ VkSurfaceKHR*\ pSurface);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#ifndef\ VK\_NO\_PROTOTYPES}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#ifndef\ VK\_ONLY\_EXPORTED\_PROTOTYPES}}
+\DoxyCodeLine{00108\ VKAPI\_ATTR\ VkResult\ VKAPI\_CALL\ vkCreateSurfaceOHOS(}
+\DoxyCodeLine{00109\ \ \ \ \ VkInstance\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ instance,}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_surface_create_info_o_h_o_s}{VkSurfaceCreateInfoOHOS}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ pCreateInfo,}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_vk_allocation_callbacks}{VkAllocationCallbacks}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pAllocator,}
+\DoxyCodeLine{00112\ \ \ \ \ VkSurfaceKHR*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pSurface);}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00117\ \}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

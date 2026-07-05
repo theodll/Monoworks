@@ -1,0 +1,68 @@
+\doxysection{Mono\+Engine/\+thirdparty/\+tracy/\+tests/\+rocprof/\+repro/\+on\+\_\+demand Directory Reference}
+\hypertarget{dir_de13c4b6dcc453c6ff6c63040002ae1b}{}\label{dir_de13c4b6dcc453c6ff6c63040002ae1b}\index{MonoEngine/thirdparty/tracy/tests/rocprof/repro/on\_demand Directory Reference@{MonoEngine/thirdparty/tracy/tests/rocprof/repro/on\_demand Directory Reference}}
+
+
+\doxysubsection{Detailed Description}
+\hypertarget{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1148}{}\doxysubsection{\texorpdfstring{Rocprofiler On-\/\+Demand Profiling Repro}{Rocprofiler On-\/\+Demand Profiling Repro}}\label{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1148}
+Demonstrates that unpatched Tracy crashes when a profiler connects to a HIP application built with {\ttfamily TRACY\+\_\+\+ON\+\_\+\+DEMAND} and {\ttfamily TRACY\+\_\+\+ROCPROF}.\hypertarget{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1149}{}\doxysubsection{\texorpdfstring{Root cause}{Root cause}}\label{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1149}
+Three bugs in {\ttfamily Tracy\+Rocprof.\+cpp} break on-\/demand profiling:\+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Gpu\+New\+Context not deferred.}} {\ttfamily gpu\+\_\+context\+\_\+allocate()} writes a {\ttfamily Gpu\+New\+Context} queue item but does not call {\ttfamily Defer\+Item()}. When a Tracy client connects late, the context creation message is never replayed. The server then receives {\ttfamily Gpu\+Zone\+Begin} events for a context it has never seen, triggering:\+ \begin{DoxyVerb}Assertion `ctx' failed in ProcessGpuZoneBeginImplCommon
+\end{DoxyVerb}
+
+\end{DoxyEnumerate}
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Gpu\+Context\+Name not deferred.}} Same function writes the context name ("{}rocprofv3"{}) without calling {\ttfamily Defer\+Item()}. Even after fixing bug 1, a late-\/connecting client sees the GPU context but it appears unnamed in the profiler. Use {\ttfamily check\+\_\+gpu\+\_\+ctx\+\_\+name} to verify.
+\item {\bfseries{Kernel symbols dropped before init.}} The {\ttfamily data-\/\texorpdfstring{$>$}{>}\doxylink{group__init}{Initialization, version and error reference}} guard at the top of {\ttfamily tool\+\_\+callback\+\_\+tracing\+\_\+callback()} blocks all callbacks before the GPU context is allocated. Kernel symbol registrations ({\ttfamily CODE\+\_\+\+OBJECT\+\_\+\+DEVICE\+\_\+\+KERNEL\+\_\+\+SYMBOL\+\_\+\+REGISTER}) happen at HIP init time — before {\ttfamily data-\/\texorpdfstring{$>$}{>}\doxylink{group__init}{Initialization, version and error reference}} is true — so they are silently dropped. Even if the crash is worked around, kernel names would be missing.
+\end{DoxyEnumerate}\hypertarget{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1150}{}\doxysubsection{\texorpdfstring{Prerequisites}{Prerequisites}}\label{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1150}
+
+\begin{DoxyItemize}
+\item AMD GPU with working ROCm driver
+\item {\ttfamily librocprofiler-\/sdk.\+so} available (typically at {\ttfamily /\+opt/\+rocm/\+lib/\+})
+\item {\ttfamily /\+opt/\+rocm/\+bin/\+hipcc}
+\end{DoxyItemize}\hypertarget{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1151}{}\doxysubsection{\texorpdfstring{Build and run}{Build and run}}\label{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1151}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/B\ build\ -\/DCMAKE\_BUILD\_TYPE=Release}
+\DoxyCodeLine{cmake\ -\/-\/build\ build}
+\DoxyCodeLine{./build/repro\ \&}
+\DoxyCodeLine{tracy-\/capture\ -\/o\ repro.tracy\ -\/s\ 5}
+
+\end{DoxyCode}
+
+
+If ROCm is not under {\ttfamily /\+opt/\+rocm}, pass {\ttfamily -\/DROCM\+\_\+\+PATH=/\+path/\+to/\+rocm}.
+
+The reproducer is also registered as a ctest target:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ctest\ -\/-\/test-\/dir\ build\ -\/R\ repro}
+
+\end{DoxyCode}
+\hypertarget{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1152}{}\doxysubsection{\texorpdfstring{Verifying the context name}{Verifying the context name}}\label{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1152}
+{\ttfamily check\+\_\+gpu\+\_\+ctx\+\_\+name} loads a {\ttfamily .tracy} file and prints the GPU context names. It links the Tracy server library, so it is built only on request:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cmake\ -\/B\ build\ -\/DBUILD\_CHECK\_TOOL=ON}
+\DoxyCodeLine{cmake\ -\/-\/build\ build\ -\/-\/target\ check\_gpu\_ctx\_name}
+\DoxyCodeLine{./build/check\_gpu\_ctx\_name\ repro.tracy}
+\DoxyCodeLine{\#\ Expected\ (patched):\ \ \ "{}GPU\ context\ 0:\ rocprofv3"{}}
+\DoxyCodeLine{\#\ Expected\ (unpatched):\ "{}GPU\ context\ 0:\ (unnamed)"{}}
+
+\end{DoxyCode}
+
+
+Exit codes:\+ 0 = all contexts named, 2 = unnamed context found.\hypertarget{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1153}{}\doxysubsection{\texorpdfstring{What to expect}{What to expect}}\label{dir_de13c4b6dcc453c6ff6c63040002ae1b_autotoc_md1153}
+
+\begin{DoxyTable}{2}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Tracy version  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Result  \\
+Unpatched  &{\ttfamily tracy-\/capture} crashes:\+ {\ttfamily Assertion \textquotesingle{}ctx\textquotesingle{} failed}  \\
+Patched (Gpu\+New\+Context only)  &Capture succeeds but GPU context is unnamed  \\
+Fully patched  &Capture succeeds with \texorpdfstring{$\sim$}{\string~}50 GPU zones and context named "{}rocprofv3"{}  \\
+\end{DoxyTable}

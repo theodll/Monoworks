@@ -1,0 +1,343 @@
+\doxysection{SDL\+\_\+gamepad.\+h}
+\hypertarget{_s_d_l__gamepad_8h_source}{}\label{_s_d_l__gamepad_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_gamepad.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_gamepad.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#ifndef\ SDL\_gamepad\_h\_}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ SDL\_gamepad\_h\_}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_error.h>}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_guid.h>}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_iostream.h>}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_joystick.h>}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_power.h>}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_properties.h>}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_sensor.h>}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_begin\_code.h>}}
+\DoxyCodeLine{00090\ \textcolor{comment}{/*\ Set\ up\ for\ C\ function\ definitions,\ even\ when\ using\ C++\ */}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00092\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00100\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ \doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00111\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GamepadType}
+\DoxyCodeLine{00112\ \{}
+\DoxyCodeLine{00113\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_UNKNOWN\ =\ 0,}
+\DoxyCodeLine{00114\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_STANDARD,}
+\DoxyCodeLine{00115\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_XBOX360,}
+\DoxyCodeLine{00116\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_XBOXONE,}
+\DoxyCodeLine{00117\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_PS3,}
+\DoxyCodeLine{00118\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_PS4,}
+\DoxyCodeLine{00119\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_PS5,}
+\DoxyCodeLine{00120\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_NINTENDO\_SWITCH\_PRO,}
+\DoxyCodeLine{00121\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_NINTENDO\_SWITCH\_JOYCON\_LEFT,}
+\DoxyCodeLine{00122\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_NINTENDO\_SWITCH\_JOYCON\_RIGHT,}
+\DoxyCodeLine{00123\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_NINTENDO\_SWITCH\_JOYCON\_PAIR,}
+\DoxyCodeLine{00124\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_GAMECUBE,}
+\DoxyCodeLine{00125\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_STEAM,}
+\DoxyCodeLine{00126\ \ \ \ \ SDL\_GAMEPAD\_TYPE\_COUNT}
+\DoxyCodeLine{00127\ \}\ SDL\_GamepadType;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00153\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GamepadButton}
+\DoxyCodeLine{00154\ \{}
+\DoxyCodeLine{00155\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00156\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_SOUTH,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00157\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_EAST,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00158\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_WEST,\ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00159\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_NORTH,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00160\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_BACK,}
+\DoxyCodeLine{00161\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_GUIDE,}
+\DoxyCodeLine{00162\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_START,}
+\DoxyCodeLine{00163\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LEFT\_STICK,}
+\DoxyCodeLine{00164\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_RIGHT\_STICK,}
+\DoxyCodeLine{00165\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LEFT\_SHOULDER,}
+\DoxyCodeLine{00166\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_RIGHT\_SHOULDER,}
+\DoxyCodeLine{00167\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_DPAD\_UP,}
+\DoxyCodeLine{00168\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_DPAD\_DOWN,}
+\DoxyCodeLine{00169\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_DPAD\_LEFT,}
+\DoxyCodeLine{00170\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_DPAD\_RIGHT,}
+\DoxyCodeLine{00171\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_MISC1,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00172\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_RIGHT\_PADDLE1,\ \ \ }
+\DoxyCodeLine{00173\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LEFT\_PADDLE1,\ \ \ \ }
+\DoxyCodeLine{00174\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_RIGHT\_PADDLE2,\ \ \ }
+\DoxyCodeLine{00175\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LEFT\_PADDLE2,\ \ \ \ }
+\DoxyCodeLine{00176\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_TOUCHPAD,\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00177\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_MISC2,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00178\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_MISC3,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00179\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_MISC4,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00180\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_MISC5,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00181\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_MISC6,\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00182\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_COUNT}
+\DoxyCodeLine{00183\ \}\ SDL\_GamepadButton;}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00196\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GamepadButtonLabel}
+\DoxyCodeLine{00197\ \{}
+\DoxyCodeLine{00198\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_UNKNOWN,}
+\DoxyCodeLine{00199\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_A,}
+\DoxyCodeLine{00200\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_B,}
+\DoxyCodeLine{00201\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_X,}
+\DoxyCodeLine{00202\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_Y,}
+\DoxyCodeLine{00203\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_CROSS,}
+\DoxyCodeLine{00204\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_CIRCLE,}
+\DoxyCodeLine{00205\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_SQUARE,}
+\DoxyCodeLine{00206\ \ \ \ \ SDL\_GAMEPAD\_BUTTON\_LABEL\_TRIANGLE}
+\DoxyCodeLine{00207\ \}\ SDL\_GamepadButtonLabel;}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00223\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GamepadAxis}
+\DoxyCodeLine{00224\ \{}
+\DoxyCodeLine{00225\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00226\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_LEFTX,}
+\DoxyCodeLine{00227\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_LEFTY,}
+\DoxyCodeLine{00228\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_RIGHTX,}
+\DoxyCodeLine{00229\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_RIGHTY,}
+\DoxyCodeLine{00230\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_LEFT\_TRIGGER,}
+\DoxyCodeLine{00231\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_RIGHT\_TRIGGER,}
+\DoxyCodeLine{00232\ \ \ \ \ SDL\_GAMEPAD\_AXIS\_COUNT}
+\DoxyCodeLine{00233\ \}\ SDL\_GamepadAxis;}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00243\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GamepadCapSenseType}
+\DoxyCodeLine{00244\ \{}
+\DoxyCodeLine{00245\ \ \ \ \ SDL\_GAMEPAD\_CAPSENSE\_INVALID\ =\ -\/1,}
+\DoxyCodeLine{00246\ \ \ \ \ SDL\_GAMEPAD\_CAPSENSE\_LEFT\_STICK,\ \ \ \ }
+\DoxyCodeLine{00247\ \ \ \ \ SDL\_GAMEPAD\_CAPSENSE\_RIGHT\_STICK,\ \ \ }
+\DoxyCodeLine{00248\ \ \ \ \ SDL\_GAMEPAD\_CAPSENSE\_LEFT\_GRIP,\ \ \ \ \ }
+\DoxyCodeLine{00249\ \ \ \ \ SDL\_GAMEPAD\_CAPSENSE\_RIGHT\_GRIP,\ \ \ \ }
+\DoxyCodeLine{00250\ \ \ \ \ SDL\_GAMEPAD\_CAPSENSE\_COUNT}
+\DoxyCodeLine{00251\ \}\ SDL\_GamepadCapSenseType;}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00263\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_GamepadBindingType}
+\DoxyCodeLine{00264\ \{}
+\DoxyCodeLine{00265\ \ \ \ \ SDL\_GAMEPAD\_BINDTYPE\_NONE\ =\ 0,}
+\DoxyCodeLine{00266\ \ \ \ \ SDL\_GAMEPAD\_BINDTYPE\_BUTTON,}
+\DoxyCodeLine{00267\ \ \ \ \ SDL\_GAMEPAD\_BINDTYPE\_AXIS,}
+\DoxyCodeLine{00268\ \ \ \ \ SDL\_GAMEPAD\_BINDTYPE\_HAT}
+\DoxyCodeLine{00269\ \}\ SDL\_GamepadBindingType;}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00286\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___gamepad_binding}{SDL\_GamepadBinding}}}
+\DoxyCodeLine{00287\ \{}
+\DoxyCodeLine{00288\ \ \ \ \ SDL\_GamepadBindingType\ input\_type;}
+\DoxyCodeLine{00289\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00290\ \ \ \ \ \{}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ button;}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axis;}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axis\_min;}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axis\_max;}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \}\ axis;}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hat;}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hat\_mask;}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \}\ hat;}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00306\ \ \ \ \ \}\ input;}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \ \ \ \ SDL\_GamepadBindingType\ output\_type;}
+\DoxyCodeLine{00309\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00310\ \ \ \ \ \{}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ SDL\_GamepadButton\ button;}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ SDL\_GamepadAxis\ axis;}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axis\_min;}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axis\_max;}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \}\ axis;}
+\DoxyCodeLine{00319\ }
+\DoxyCodeLine{00320\ \ \ \ \ \}\ output;}
+\DoxyCodeLine{00321\ \}\ \doxymbox{\hyperlink{struct_s_d_l___gamepad_binding}{SDL\_GamepadBinding}};}
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00365\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_AddGamepadMapping(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mapping);}
+\DoxyCodeLine{00366\ }
+\DoxyCodeLine{00405\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_AddGamepadMappingsFromIO(\doxymbox{\hyperlink{struct_s_d_l___i_o_stream}{SDL\_IOStream}}\ *src,\ \textcolor{keywordtype}{bool}\ closeio);}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00439\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_AddGamepadMappingsFromFile(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file);}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00453\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_ReloadGamepadMappings(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00454\ }
+\DoxyCodeLine{00469\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ **\ SDLCALL\ SDL\_GetGamepadMappings(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00486\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadMappingForGUID(\doxymbox{\hyperlink{struct_s_d_l___g_u_i_d}{SDL\_GUID}}\ guid);}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00507\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadMapping(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00508\ }
+\DoxyCodeLine{00527\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetGamepadMapping(SDL\_JoystickID\ instance\_id,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mapping);}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00540\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_HasGamepad(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00541\ }
+\DoxyCodeLine{00558\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_JoystickID\ *\ SDLCALL\ SDL\_GetGamepads(\textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00574\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_IsGamepad(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00592\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadNameForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00610\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadPathForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00611\ }
+\DoxyCodeLine{00627\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetGamepadPlayerIndexForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00628\ }
+\DoxyCodeLine{00645\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___g_u_i_d}{SDL\_GUID}}\ SDLCALL\ SDL\_GetGamepadGUIDForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00646\ }
+\DoxyCodeLine{00664\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_GetGamepadVendorForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00665\ }
+\DoxyCodeLine{00683\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_GetGamepadProductForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00702\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_GetGamepadProductVersionForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00703\ }
+\DoxyCodeLine{00720\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadType\ SDLCALL\ SDL\_GetGamepadTypeForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00721\ }
+\DoxyCodeLine{00738\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadType\ SDLCALL\ SDL\_GetRealGamepadTypeForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00739\ }
+\DoxyCodeLine{00756\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadMappingForID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00757\ }
+\DoxyCodeLine{00772\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *\ SDLCALL\ SDL\_OpenGamepad(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00773\ }
+\DoxyCodeLine{00786\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *\ SDLCALL\ SDL\_GetGamepadFromID(SDL\_JoystickID\ instance\_id);}
+\DoxyCodeLine{00787\ }
+\DoxyCodeLine{00801\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *\ SDLCALL\ SDL\_GetGamepadFromPlayerIndex(\textcolor{keywordtype}{int}\ player\_index);}
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00830\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PropertiesID\ SDLCALL\ SDL\_GetGamepadProperties(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00831\ }
+\DoxyCodeLine{00832\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GAMEPAD\_CAP\_MONO\_LED\_BOOLEAN\ \ \ \ \ \ \ SDL\_PROP\_JOYSTICK\_CAP\_MONO\_LED\_BOOLEAN}}
+\DoxyCodeLine{00833\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GAMEPAD\_CAP\_RGB\_LED\_BOOLEAN\ \ \ \ \ \ \ \ SDL\_PROP\_JOYSTICK\_CAP\_RGB\_LED\_BOOLEAN}}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GAMEPAD\_CAP\_PLAYER\_LED\_BOOLEAN\ \ \ \ \ SDL\_PROP\_JOYSTICK\_CAP\_PLAYER\_LED\_BOOLEAN}}
+\DoxyCodeLine{00835\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GAMEPAD\_CAP\_RUMBLE\_BOOLEAN\ \ \ \ \ \ \ \ \ SDL\_PROP\_JOYSTICK\_CAP\_RUMBLE\_BOOLEAN}}
+\DoxyCodeLine{00836\ \textcolor{preprocessor}{\#define\ SDL\_PROP\_GAMEPAD\_CAP\_TRIGGER\_RUMBLE\_BOOLEAN\ SDL\_PROP\_JOYSTICK\_CAP\_TRIGGER\_RUMBLE\_BOOLEAN}}
+\DoxyCodeLine{00837\ }
+\DoxyCodeLine{00850\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_JoystickID\ SDLCALL\ SDL\_GetGamepadID(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00851\ }
+\DoxyCodeLine{00866\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadName(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00867\ }
+\DoxyCodeLine{00882\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadPath(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00883\ }
+\DoxyCodeLine{00897\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadType\ SDLCALL\ SDL\_GetGamepadType(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00898\ }
+\DoxyCodeLine{00912\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadType\ SDLCALL\ SDL\_GetRealGamepadType(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00913\ }
+\DoxyCodeLine{00928\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetGamepadPlayerIndex(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00929\ }
+\DoxyCodeLine{00945\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetGamepadPlayerIndex(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ \textcolor{keywordtype}{int}\ player\_index);}
+\DoxyCodeLine{00946\ }
+\DoxyCodeLine{00961\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_GetGamepadVendor(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00962\ }
+\DoxyCodeLine{00977\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_GetGamepadProduct(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00978\ }
+\DoxyCodeLine{00993\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_GetGamepadProductVersion(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{01007\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint16\ SDLCALL\ SDL\_GetGamepadFirmwareVersion(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01008\ }
+\DoxyCodeLine{01021\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadSerial(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01022\ }
+\DoxyCodeLine{01036\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Uint64\ SDLCALL\ SDL\_GetGamepadSteamHandle(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01037\ }
+\DoxyCodeLine{01050\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_JoystickConnectionState\ SDLCALL\ SDL\_GetGamepadConnectionState(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01051\ }
+\DoxyCodeLine{01072\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_PowerState\ SDLCALL\ SDL\_GetGamepadPowerInfo(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ \textcolor{keywordtype}{int}\ *percent);}
+\DoxyCodeLine{01073\ }
+\DoxyCodeLine{01086\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GamepadConnected(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01087\ }
+\DoxyCodeLine{01108\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___joystick}{SDL\_Joystick}}\ *\ SDLCALL\ SDL\_GetGamepadJoystick(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01109\ }
+\DoxyCodeLine{01125\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_SetGamepadEventsEnabled(\textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{01126\ }
+\DoxyCodeLine{01141\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GamepadEventsEnabled(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01142\ }
+\DoxyCodeLine{01157\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \doxymbox{\hyperlink{struct_s_d_l___gamepad_binding}{SDL\_GamepadBinding}}\ **\ SDLCALL\ SDL\_GetGamepadBindings(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ \textcolor{keywordtype}{int}\ *count);}
+\DoxyCodeLine{01158\ }
+\DoxyCodeLine{01170\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_UpdateGamepads(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{01171\ }
+\DoxyCodeLine{01190\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadType\ SDLCALL\ SDL\_GetGamepadTypeFromString(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{01191\ }
+\DoxyCodeLine{01206\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadStringForType(SDL\_GamepadType\ type);}
+\DoxyCodeLine{01207\ }
+\DoxyCodeLine{01230\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadAxis\ SDLCALL\ SDL\_GetGamepadAxisFromString(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{01231\ }
+\DoxyCodeLine{01246\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadStringForAxis(SDL\_GamepadAxis\ axis);}
+\DoxyCodeLine{01247\ }
+\DoxyCodeLine{01265\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GamepadHasAxis(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadAxis\ axis);}
+\DoxyCodeLine{01266\ }
+\DoxyCodeLine{01293\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ Sint16\ SDLCALL\ SDL\_GetGamepadAxis(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadAxis\ axis);}
+\DoxyCodeLine{01294\ }
+\DoxyCodeLine{01313\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadButton\ SDLCALL\ SDL\_GetGamepadButtonFromString(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{01314\ }
+\DoxyCodeLine{01329\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadStringForButton(SDL\_GamepadButton\ button);}
+\DoxyCodeLine{01330\ }
+\DoxyCodeLine{01347\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GamepadHasButton(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadButton\ button);}
+\DoxyCodeLine{01348\ }
+\DoxyCodeLine{01363\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetGamepadButton(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadButton\ button);}
+\DoxyCodeLine{01364\ }
+\DoxyCodeLine{01378\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadButtonLabel\ SDLCALL\ SDL\_GetGamepadButtonLabelForType(SDL\_GamepadType\ type,\ SDL\_GamepadButton\ button);}
+\DoxyCodeLine{01379\ }
+\DoxyCodeLine{01393\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ SDL\_GamepadButtonLabel\ SDLCALL\ SDL\_GetGamepadButtonLabel(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadButton\ button);}
+\DoxyCodeLine{01394\ }
+\DoxyCodeLine{01407\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetNumGamepadTouchpads(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01408\ }
+\DoxyCodeLine{01424\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{int}\ SDLCALL\ SDL\_GetNumGamepadTouchpadFingers(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ \textcolor{keywordtype}{int}\ touchpad);}
+\DoxyCodeLine{01425\ }
+\DoxyCodeLine{01448\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetGamepadTouchpadFinger(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ \textcolor{keywordtype}{int}\ touchpad,\ \textcolor{keywordtype}{int}\ finger,\ \textcolor{keywordtype}{bool}\ *down,\ \textcolor{keywordtype}{float}\ *x,\ \textcolor{keywordtype}{float}\ *y,\ \textcolor{keywordtype}{float}\ *pressure);}
+\DoxyCodeLine{01449\ }
+\DoxyCodeLine{01465\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GamepadHasSensor(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_SensorType\ type);}
+\DoxyCodeLine{01466\ }
+\DoxyCodeLine{01483\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetGamepadSensorEnabled(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_SensorType\ type,\ \textcolor{keywordtype}{bool}\ enabled);}
+\DoxyCodeLine{01484\ }
+\DoxyCodeLine{01498\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GamepadSensorEnabled(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_SensorType\ type);}
+\DoxyCodeLine{01499\ }
+\DoxyCodeLine{01511\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{float}\ SDLCALL\ SDL\_GetGamepadSensorDataRate(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_SensorType\ type);}
+\DoxyCodeLine{01512\ }
+\DoxyCodeLine{01530\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetGamepadSensorData(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_SensorType\ type,\ \textcolor{keywordtype}{float}\ *data,\ \textcolor{keywordtype}{int}\ num\_values);}
+\DoxyCodeLine{01531\ }
+\DoxyCodeLine{01545\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GamepadHasCapSense(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadCapSenseType\ type);}
+\DoxyCodeLine{01546\ }
+\DoxyCodeLine{01560\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_GetGamepadCapSense(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadCapSenseType\ type);}
+\DoxyCodeLine{01561\ }
+\DoxyCodeLine{01584\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RumbleGamepad(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ Uint16\ low\_frequency\_rumble,\ Uint16\ high\_frequency\_rumble,\ Uint32\ duration\_ms);}
+\DoxyCodeLine{01585\ }
+\DoxyCodeLine{01614\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_RumbleGamepadTriggers(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ Uint16\ left\_rumble,\ Uint16\ right\_rumble,\ Uint32\ duration\_ms);}
+\DoxyCodeLine{01615\ }
+\DoxyCodeLine{01636\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SetGamepadLED(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ Uint8\ red,\ Uint8\ green,\ Uint8\ blue);}
+\DoxyCodeLine{01637\ }
+\DoxyCodeLine{01651\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{bool}\ SDLCALL\ SDL\_SendGamepadEffect(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *data,\ \textcolor{keywordtype}{int}\ size);}
+\DoxyCodeLine{01652\ }
+\DoxyCodeLine{01665\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keywordtype}{void}\ SDLCALL\ SDL\_CloseGamepad(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad);}
+\DoxyCodeLine{01666\ }
+\DoxyCodeLine{01681\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadAppleSFSymbolsNameForButton(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadButton\ button);}
+\DoxyCodeLine{01682\ }
+\DoxyCodeLine{01696\ \textcolor{keyword}{extern}\ SDL\_DECLSPEC\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\ SDLCALL\ SDL\_GetGamepadAppleSFSymbolsNameForAxis(\doxymbox{\hyperlink{struct_s_d_l___gamepad}{SDL\_Gamepad}}\ *gamepad,\ SDL\_GamepadAxis\ axis);}
+\DoxyCodeLine{01697\ }
+\DoxyCodeLine{01698\ }
+\DoxyCodeLine{01699\ \textcolor{comment}{/*\ Ends\ C\ function\ definitions\ when\ using\ C++\ */}}
+\DoxyCodeLine{01700\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{01701\ \}}
+\DoxyCodeLine{01702\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{01703\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_close\_code.h>}}
+\DoxyCodeLine{01704\ }
+\DoxyCodeLine{01705\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_gamepad\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

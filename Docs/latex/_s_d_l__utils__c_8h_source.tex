@@ -1,0 +1,100 @@
+\doxysection{SDL\+\_\+utils\+\_\+c.\+h}
+\hypertarget{_s_d_l__utils__c_8h_source}{}\label{_s_d_l__utils__c_8h_source}\index{MonoRuntime/extern/sdl/src/SDL\_utils\_c.h@{MonoRuntime/extern/sdl/src/SDL\_utils\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ This\ is\ included\ in\ SDL\_internal.h}}
+\DoxyCodeLine{00022\ \textcolor{comment}{//\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_utils\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_utils\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{comment}{//\ Common\ utility\ functions\ that\ aren't\ in\ the\ public\ API}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{comment}{//\ Return\ the\ smallest\ power\ of\ 2\ greater\ than\ or\ equal\ to\ 'x'}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ SDL\_powerof2(\textcolor{keywordtype}{int}\ x);}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{extern}\ Uint32\ SDL\_CalculateGCD(Uint32\ a,\ Uint32\ b);}
+\DoxyCodeLine{00033\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_CalculateFraction(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{int}\ *numerator,\ \textcolor{keywordtype}{int}\ *denominator);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_startswith(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\textcolor{keywordtype}{string},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *prefix);}
+\DoxyCodeLine{00036\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_endswith(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\textcolor{keywordtype}{string},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *suffix);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00049\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ SDL\_URIToLocal(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *src,\ \textcolor{keywordtype}{char}\ *dst);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00052\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_IsURI(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *uri);}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00055\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ SDL\_OBJECT\_TYPE\_UNKNOWN,}
+\DoxyCodeLine{00057\ \ \ \ \ SDL\_OBJECT\_TYPE\_WINDOW,}
+\DoxyCodeLine{00058\ \ \ \ \ SDL\_OBJECT\_TYPE\_RENDERER,}
+\DoxyCodeLine{00059\ \ \ \ \ SDL\_OBJECT\_TYPE\_TEXTURE,}
+\DoxyCodeLine{00060\ \ \ \ \ SDL\_OBJECT\_TYPE\_JOYSTICK,}
+\DoxyCodeLine{00061\ \ \ \ \ SDL\_OBJECT\_TYPE\_GAMEPAD,}
+\DoxyCodeLine{00062\ \ \ \ \ SDL\_OBJECT\_TYPE\_HAPTIC,}
+\DoxyCodeLine{00063\ \ \ \ \ SDL\_OBJECT\_TYPE\_SENSOR,}
+\DoxyCodeLine{00064\ \ \ \ \ SDL\_OBJECT\_TYPE\_HIDAPI\_DEVICE,}
+\DoxyCodeLine{00065\ \ \ \ \ SDL\_OBJECT\_TYPE\_HIDAPI\_JOYSTICK,}
+\DoxyCodeLine{00066\ \ \ \ \ SDL\_OBJECT\_TYPE\_THREAD,}
+\DoxyCodeLine{00067\ \ \ \ \ SDL\_OBJECT\_TYPE\_TRAY,}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \}\ SDL\_ObjectType;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{extern}\ Uint32\ SDL\_GetNextObjectID(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00072\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SetObjectValid(\textcolor{keywordtype}{void}\ *\textcolor{keywordtype}{object},\ SDL\_ObjectType\ type,\ \textcolor{keywordtype}{bool}\ valid);}
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_FindObject(\textcolor{keywordtype}{void}\ *\textcolor{keywordtype}{object},\ SDL\_ObjectType\ type);}
+\DoxyCodeLine{00074\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ SDL\_GetObjects(SDL\_ObjectType\ type,\ \textcolor{keywordtype}{void}\ **objects,\ \textcolor{keywordtype}{int}\ count);}
+\DoxyCodeLine{00075\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SetObjectsInvalid(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_object\_validation;}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ SDL\_FORCE\_INLINE\ \textcolor{keywordtype}{bool}\ SDL\_ObjectValid(\textcolor{keywordtype}{void}\ *\textcolor{keywordtype}{object},\ SDL\_ObjectType\ type)}
+\DoxyCodeLine{00080\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordflow}{if}\ (!\textcolor{keywordtype}{object})\ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordflow}{if}\ (!SDL\_object\_validation)\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ SDL\_FindObject(\textcolor{keywordtype}{object},\ type);}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{extern}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *SDL\_GetPersistentString(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *\textcolor{keywordtype}{string});}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{char}\ *SDL\_CreateDeviceName(Uint16\ vendor,\ Uint16\ product,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *vendor\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *product\_name,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *default\_name);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{comment}{//\ Log\ what\ backend\ a\ subsystem\ chose,\ if\ a\ hint\ was\ set\ to\ do\ so.\ Useful\ for\ debugging.}}
+\DoxyCodeLine{00097\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_DebugLogBackend(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *subsystem,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *backend);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#ifdef\ SDL\_PLATFORM\_EMSCRIPTEN}}
+\DoxyCodeLine{00100\ \textcolor{comment}{//\ even\ though\ we\ reference\ the\ C\ runtime's\ free()\ in\ other\ places,\ it\ appears}}
+\DoxyCodeLine{00101\ \textcolor{comment}{//\ to\ be\ inlined\ more\ aggressively\ in\ Emscripten\ 4,\ so\ we\ need\ a\ reference\ to}}
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ it\ here,\ too,\ so\ inlined\ Javascript\ doesn't\ fail\ to\ find\ it.}}
+\DoxyCodeLine{00103\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ Emscripten\_force\_free(\textcolor{keywordtype}{void}\ *ptr);}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_utils\_h\_}}
+
+\end{DoxyCode}

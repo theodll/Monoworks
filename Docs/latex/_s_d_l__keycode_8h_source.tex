@@ -1,0 +1,318 @@
+\doxysection{SDL\+\_\+keycode.\+h}
+\hypertarget{_s_d_l__keycode_8h_source}{}\label{_s_d_l__keycode_8h_source}\index{MonoRuntime/extern/sdl/include/SDL3/SDL\_keycode.h@{MonoRuntime/extern/sdl/include/SDL3/SDL\_keycode.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#ifndef\ SDL\_keycode\_h\_}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ SDL\_keycode\_h\_}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_stdinc.h>}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#include\ <SDL3/SDL\_scancode.h>}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_Keycode;}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ SDLK\_EXTENDED\_MASK\ \ \ \ \ \ \ \ \ \ (1u\ <<\ 29)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#define\ SDLK\_SCANCODE\_MASK\ \ \ \ \ \ \ \ \ \ (1u\ <<\ 30)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ SDL\_SCANCODE\_TO\_KEYCODE(X)\ \ (X\ |\ SDLK\_SCANCODE\_MASK)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#define\ SDLK\_UNKNOWN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ SDLK\_RETURN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000000du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ SDLK\_ESCAPE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000001bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ SDLK\_BACKSPACE\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000008u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ SDLK\_TAB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000009u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ SDLK\_SPACE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000020u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#define\ SDLK\_EXCLAIM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000021u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ SDLK\_DBLAPOSTROPHE\ \ \ \ \ \ \ \ \ \ 0x00000022u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ SDLK\_HASH\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000023u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00073\ \textcolor{preprocessor}{\#define\ SDLK\_DOLLAR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000024u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ SDLK\_PERCENT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000025u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ SDLK\_AMPERSAND\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000026u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ SDLK\_APOSTROPHE\ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000027u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#define\ SDLK\_LEFTPAREN\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000028u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ SDLK\_RIGHTPAREN\ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000029u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#define\ SDLK\_ASTERISK\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000002au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ SDLK\_PLUS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000002bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#define\ SDLK\_COMMA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000002cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ SDLK\_MINUS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000002du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#define\ SDLK\_PERIOD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000002eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ SDLK\_SLASH\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000002fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ SDLK\_0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000030u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ SDLK\_1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000031u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#define\ SDLK\_2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000032u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00088\ \textcolor{preprocessor}{\#define\ SDLK\_3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000033u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ SDLK\_4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000034u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ SDLK\_5\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000035u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00091\ \textcolor{preprocessor}{\#define\ SDLK\_6\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000036u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#define\ SDLK\_7\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000037u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00093\ \textcolor{preprocessor}{\#define\ SDLK\_8\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000038u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00094\ \textcolor{preprocessor}{\#define\ SDLK\_9\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000039u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#define\ SDLK\_COLON\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000003au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00096\ \textcolor{preprocessor}{\#define\ SDLK\_SEMICOLON\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000003bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#define\ SDLK\_LESS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000003cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#define\ SDLK\_EQUALS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000003du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00099\ \textcolor{preprocessor}{\#define\ SDLK\_GREATER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000003eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00100\ \textcolor{preprocessor}{\#define\ SDLK\_QUESTION\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000003fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ SDLK\_AT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000040u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\#define\ SDLK\_LEFTBRACKET\ \ \ \ \ \ \ \ \ \ \ \ 0x0000005bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#define\ SDLK\_BACKSLASH\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000005cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#define\ SDLK\_RIGHTBRACKET\ \ \ \ \ \ \ \ \ \ \ 0x0000005du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#define\ SDLK\_CARET\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000005eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#define\ SDLK\_UNDERSCORE\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000005fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#define\ SDLK\_GRAVE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000060u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#define\ SDLK\_A\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000061u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#define\ SDLK\_B\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000062u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\#define\ SDLK\_C\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000063u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00111\ \textcolor{preprocessor}{\#define\ SDLK\_D\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000064u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00112\ \textcolor{preprocessor}{\#define\ SDLK\_E\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000065u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ SDLK\_F\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000066u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\#define\ SDLK\_G\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000067u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00115\ \textcolor{preprocessor}{\#define\ SDLK\_H\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000068u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#define\ SDLK\_I\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000069u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00117\ \textcolor{preprocessor}{\#define\ SDLK\_J\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000006au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#define\ SDLK\_K\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000006bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00119\ \textcolor{preprocessor}{\#define\ SDLK\_L\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000006cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00120\ \textcolor{preprocessor}{\#define\ SDLK\_M\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000006du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00121\ \textcolor{preprocessor}{\#define\ SDLK\_N\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000006eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#define\ SDLK\_O\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000006fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00123\ \textcolor{preprocessor}{\#define\ SDLK\_P\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000070u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00124\ \textcolor{preprocessor}{\#define\ SDLK\_Q\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000071u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#define\ SDLK\_R\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000072u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00126\ \textcolor{preprocessor}{\#define\ SDLK\_S\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000073u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#define\ SDLK\_T\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000074u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#define\ SDLK\_U\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000075u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00129\ \textcolor{preprocessor}{\#define\ SDLK\_V\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000076u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00130\ \textcolor{preprocessor}{\#define\ SDLK\_W\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000077u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00131\ \textcolor{preprocessor}{\#define\ SDLK\_X\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000078u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00132\ \textcolor{preprocessor}{\#define\ SDLK\_Y\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x00000079u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00133\ \textcolor{preprocessor}{\#define\ SDLK\_Z\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000007au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00134\ \textcolor{preprocessor}{\#define\ SDLK\_LEFTBRACE\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000007bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00135\ \textcolor{preprocessor}{\#define\ SDLK\_PIPE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000007cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00136\ \textcolor{preprocessor}{\#define\ SDLK\_RIGHTBRACE\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000007du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00137\ \textcolor{preprocessor}{\#define\ SDLK\_TILDE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000007eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00138\ \textcolor{preprocessor}{\#define\ SDLK\_DELETE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x0000007fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00139\ \textcolor{preprocessor}{\#define\ SDLK\_PLUSMINUS\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x000000b1u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00140\ \textcolor{preprocessor}{\#define\ SDLK\_CAPSLOCK\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000039u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00141\ \textcolor{preprocessor}{\#define\ SDLK\_F1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000003au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00142\ \textcolor{preprocessor}{\#define\ SDLK\_F2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000003bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00143\ \textcolor{preprocessor}{\#define\ SDLK\_F3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000003cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#define\ SDLK\_F4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000003du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00145\ \textcolor{preprocessor}{\#define\ SDLK\_F5\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000003eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00146\ \textcolor{preprocessor}{\#define\ SDLK\_F6\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000003fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00147\ \textcolor{preprocessor}{\#define\ SDLK\_F7\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000040u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00148\ \textcolor{preprocessor}{\#define\ SDLK\_F8\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000041u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00149\ \textcolor{preprocessor}{\#define\ SDLK\_F9\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000042u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00150\ \textcolor{preprocessor}{\#define\ SDLK\_F10\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000043u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#define\ SDLK\_F11\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000044u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00152\ \textcolor{preprocessor}{\#define\ SDLK\_F12\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000045u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00153\ \textcolor{preprocessor}{\#define\ SDLK\_PRINTSCREEN\ \ \ \ \ \ \ \ \ \ \ \ 0x40000046u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00154\ \textcolor{preprocessor}{\#define\ SDLK\_SCROLLLOCK\ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000047u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00155\ \textcolor{preprocessor}{\#define\ SDLK\_PAUSE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000048u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00156\ \textcolor{preprocessor}{\#define\ SDLK\_INSERT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000049u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00157\ \textcolor{preprocessor}{\#define\ SDLK\_HOME\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000004au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00158\ \textcolor{preprocessor}{\#define\ SDLK\_PAGEUP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000004bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00159\ \textcolor{preprocessor}{\#define\ SDLK\_END\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000004du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00160\ \textcolor{preprocessor}{\#define\ SDLK\_PAGEDOWN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000004eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00161\ \textcolor{preprocessor}{\#define\ SDLK\_RIGHT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000004fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00162\ \textcolor{preprocessor}{\#define\ SDLK\_LEFT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000050u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00163\ \textcolor{preprocessor}{\#define\ SDLK\_DOWN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000051u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00164\ \textcolor{preprocessor}{\#define\ SDLK\_UP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000052u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00165\ \textcolor{preprocessor}{\#define\ SDLK\_NUMLOCKCLEAR\ \ \ \ \ \ \ \ \ \ \ 0x40000053u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00166\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_DIVIDE\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000054u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00167\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MULTIPLY\ \ \ \ \ \ \ \ \ \ \ \ 0x40000055u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MINUS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000056u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00169\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_PLUS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000057u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_ENTER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000058u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00171\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_1\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000059u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00172\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000005au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00173\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_3\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000005bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00174\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000005cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00175\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_5\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000005du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00176\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_6\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000005eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_7\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000005fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_8\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000060u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_9\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000061u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000062u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00181\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_PERIOD\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000063u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00182\ \textcolor{preprocessor}{\#define\ SDLK\_APPLICATION\ \ \ \ \ \ \ \ \ \ \ \ 0x40000065u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00183\ \textcolor{preprocessor}{\#define\ SDLK\_POWER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000066u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_EQUALS\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000067u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00185\ \textcolor{preprocessor}{\#define\ SDLK\_F13\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000068u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00186\ \textcolor{preprocessor}{\#define\ SDLK\_F14\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000069u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00187\ \textcolor{preprocessor}{\#define\ SDLK\_F15\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000006au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00188\ \textcolor{preprocessor}{\#define\ SDLK\_F16\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000006bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00189\ \textcolor{preprocessor}{\#define\ SDLK\_F17\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000006cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00190\ \textcolor{preprocessor}{\#define\ SDLK\_F18\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000006du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#define\ SDLK\_F19\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000006eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00192\ \textcolor{preprocessor}{\#define\ SDLK\_F20\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000006fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00193\ \textcolor{preprocessor}{\#define\ SDLK\_F21\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000070u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00194\ \textcolor{preprocessor}{\#define\ SDLK\_F22\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000071u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00195\ \textcolor{preprocessor}{\#define\ SDLK\_F23\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000072u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00196\ \textcolor{preprocessor}{\#define\ SDLK\_F24\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000073u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00197\ \textcolor{preprocessor}{\#define\ SDLK\_EXECUTE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000074u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00198\ \textcolor{preprocessor}{\#define\ SDLK\_HELP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000075u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00199\ \textcolor{preprocessor}{\#define\ SDLK\_MENU\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000076u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00200\ \textcolor{preprocessor}{\#define\ SDLK\_SELECT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000077u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#define\ SDLK\_STOP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000078u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00202\ \textcolor{preprocessor}{\#define\ SDLK\_AGAIN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000079u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\#define\ SDLK\_UNDO\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000007au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00204\ \textcolor{preprocessor}{\#define\ SDLK\_CUT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000007bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00205\ \textcolor{preprocessor}{\#define\ SDLK\_COPY\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000007cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00206\ \textcolor{preprocessor}{\#define\ SDLK\_PASTE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000007du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00207\ \textcolor{preprocessor}{\#define\ SDLK\_FIND\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000007eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00208\ \textcolor{preprocessor}{\#define\ SDLK\_MUTE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000007fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00209\ \textcolor{preprocessor}{\#define\ SDLK\_VOLUMEUP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000080u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00210\ \textcolor{preprocessor}{\#define\ SDLK\_VOLUMEDOWN\ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000081u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00211\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_COMMA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000085u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_EQUALSAS400\ \ \ \ \ \ \ \ \ 0x40000086u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00213\ \textcolor{preprocessor}{\#define\ SDLK\_ALTERASE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000099u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#define\ SDLK\_SYSREQ\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000009au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00215\ \textcolor{preprocessor}{\#define\ SDLK\_CANCEL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000009bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00216\ \textcolor{preprocessor}{\#define\ SDLK\_CLEAR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000009cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00217\ \textcolor{preprocessor}{\#define\ SDLK\_PRIOR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000009du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00218\ \textcolor{preprocessor}{\#define\ SDLK\_RETURN2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000009eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00219\ \textcolor{preprocessor}{\#define\ SDLK\_SEPARATOR\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000009fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00220\ \textcolor{preprocessor}{\#define\ SDLK\_OUT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000a0u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00221\ \textcolor{preprocessor}{\#define\ SDLK\_OPER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000a1u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00222\ \textcolor{preprocessor}{\#define\ SDLK\_CLEARAGAIN\ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000a2u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\#define\ SDLK\_CRSEL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000a3u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00224\ \textcolor{preprocessor}{\#define\ SDLK\_EXSEL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000a4u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_00\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000b0u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00226\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_000\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000b1u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00227\ \textcolor{preprocessor}{\#define\ SDLK\_THOUSANDSSEPARATOR\ \ \ \ \ 0x400000b2u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00228\ \textcolor{preprocessor}{\#define\ SDLK\_DECIMALSEPARATOR\ \ \ \ \ \ \ 0x400000b3u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00229\ \textcolor{preprocessor}{\#define\ SDLK\_CURRENCYUNIT\ \ \ \ \ \ \ \ \ \ \ 0x400000b4u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00230\ \textcolor{preprocessor}{\#define\ SDLK\_CURRENCYSUBUNIT\ \ \ \ \ \ \ \ 0x400000b5u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00231\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_LEFTPAREN\ \ \ \ \ \ \ \ \ \ \ 0x400000b6u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00232\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_RIGHTPAREN\ \ \ \ \ \ \ \ \ \ 0x400000b7u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00233\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_LEFTBRACE\ \ \ \ \ \ \ \ \ \ \ 0x400000b8u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00234\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_RIGHTBRACE\ \ \ \ \ \ \ \ \ \ 0x400000b9u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_TAB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000bau\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00236\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_BACKSPACE\ \ \ \ \ \ \ \ \ \ \ 0x400000bbu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_A\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000bcu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00238\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_B\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000bdu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_C\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000beu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00240\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_D\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000bfu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00241\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_E\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000c0u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00242\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_F\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000c1u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00243\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_XOR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000c2u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00244\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_POWER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000c3u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00245\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_PERCENT\ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000c4u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00246\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_LESS\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000c5u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00247\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_GREATER\ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000c6u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00248\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_AMPERSAND\ \ \ \ \ \ \ \ \ \ \ 0x400000c7u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_DBLAMPERSAND\ \ \ \ \ \ \ \ 0x400000c8u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00250\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_VERTICALBAR\ \ \ \ \ \ \ \ \ 0x400000c9u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_DBLVERTICALBAR\ \ \ \ \ \ 0x400000cau\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00252\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_COLON\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000cbu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_HASH\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000ccu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00254\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_SPACE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000cdu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00255\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_AT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000ceu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00256\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_EXCLAM\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000cfu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00257\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MEMSTORE\ \ \ \ \ \ \ \ \ \ \ \ 0x400000d0u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00258\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MEMRECALL\ \ \ \ \ \ \ \ \ \ \ 0x400000d1u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00259\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MEMCLEAR\ \ \ \ \ \ \ \ \ \ \ \ 0x400000d2u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00260\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MEMADD\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000d3u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00261\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MEMSUBTRACT\ \ \ \ \ \ \ \ \ 0x400000d4u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00262\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MEMMULTIPLY\ \ \ \ \ \ \ \ \ 0x400000d5u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00263\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_MEMDIVIDE\ \ \ \ \ \ \ \ \ \ \ 0x400000d6u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00264\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_PLUSMINUS\ \ \ \ \ \ \ \ \ \ \ 0x400000d7u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00265\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_CLEAR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000d8u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00266\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_CLEARENTRY\ \ \ \ \ \ \ \ \ \ 0x400000d9u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00267\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_BINARY\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000dau\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00268\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_OCTAL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000dbu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00269\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_DECIMAL\ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000dcu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\#define\ SDLK\_KP\_HEXADECIMAL\ \ \ \ \ \ \ \ \ 0x400000ddu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00271\ \textcolor{preprocessor}{\#define\ SDLK\_LCTRL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e0u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\#define\ SDLK\_LSHIFT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e1u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00273\ \textcolor{preprocessor}{\#define\ SDLK\_LALT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e2u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00274\ \textcolor{preprocessor}{\#define\ SDLK\_LGUI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e3u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00275\ \textcolor{preprocessor}{\#define\ SDLK\_RCTRL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e4u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00276\ \textcolor{preprocessor}{\#define\ SDLK\_RSHIFT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e5u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#define\ SDLK\_RALT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e6u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00278\ \textcolor{preprocessor}{\#define\ SDLK\_RGUI\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x400000e7u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#define\ SDLK\_MODE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000101u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00280\ \textcolor{preprocessor}{\#define\ SDLK\_SLEEP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000102u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00281\ \textcolor{preprocessor}{\#define\ SDLK\_WAKE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000103u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00282\ \textcolor{preprocessor}{\#define\ SDLK\_CHANNEL\_INCREMENT\ \ \ \ \ \ 0x40000104u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00283\ \textcolor{preprocessor}{\#define\ SDLK\_CHANNEL\_DECREMENT\ \ \ \ \ \ 0x40000105u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00284\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_PLAY\ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000106u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_PAUSE\ \ \ \ \ \ \ \ \ \ \ \ 0x40000107u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00286\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_RECORD\ \ \ \ \ \ \ \ \ \ \ 0x40000108u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00287\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_FAST\_FORWARD\ \ \ \ \ 0x40000109u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00288\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_REWIND\ \ \ \ \ \ \ \ \ \ \ 0x4000010au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00289\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_NEXT\_TRACK\ \ \ \ \ \ \ 0x4000010bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00290\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_PREVIOUS\_TRACK\ \ \ 0x4000010cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00291\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_STOP\ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000010du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00292\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_EJECT\ \ \ \ \ \ \ \ \ \ \ \ 0x4000010eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00293\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_PLAY\_PAUSE\ \ \ \ \ \ \ 0x4000010fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00294\ \textcolor{preprocessor}{\#define\ SDLK\_MEDIA\_SELECT\ \ \ \ \ \ \ \ \ \ \ 0x40000110u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00295\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_NEW\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000111u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00296\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_OPEN\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000112u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00297\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_CLOSE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000113u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00298\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_EXIT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000114u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00299\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_SAVE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000115u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00300\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_PRINT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000116u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00301\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_PROPERTIES\ \ \ \ \ \ \ \ \ \ 0x40000117u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00302\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_SEARCH\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000118u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00303\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_HOME\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000119u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00304\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_BACK\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000011au\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00305\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_FORWARD\ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000011bu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00306\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_STOP\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000011cu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00307\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_REFRESH\ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000011du\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00308\ \textcolor{preprocessor}{\#define\ SDLK\_AC\_BOOKMARKS\ \ \ \ \ \ \ \ \ \ \ 0x4000011eu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00309\ \textcolor{preprocessor}{\#define\ SDLK\_SOFTLEFT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x4000011fu\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00310\ \textcolor{preprocessor}{\#define\ SDLK\_SOFTRIGHT\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000120u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00311\ \textcolor{preprocessor}{\#define\ SDLK\_CALL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000121u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00312\ \textcolor{preprocessor}{\#define\ SDLK\_ENDCALL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x40000122u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00313\ \textcolor{preprocessor}{\#define\ SDLK\_LEFT\_TAB\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x20000001u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00314\ \textcolor{preprocessor}{\#define\ SDLK\_LEVEL5\_SHIFT\ \ \ \ \ \ \ \ \ \ \ 0x20000002u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00315\ \textcolor{preprocessor}{\#define\ SDLK\_MULTI\_KEY\_COMPOSE\ \ \ \ \ \ 0x20000003u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00316\ \textcolor{preprocessor}{\#define\ SDLK\_LMETA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x20000004u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00317\ \textcolor{preprocessor}{\#define\ SDLK\_RMETA\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x20000005u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00318\ \textcolor{preprocessor}{\#define\ SDLK\_LHYPER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x20000006u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00319\ \textcolor{preprocessor}{\#define\ SDLK\_RHYPER\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x20000007u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00326\ \textcolor{keyword}{typedef}\ Uint16\ SDL\_Keymod;}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_NONE\ \ \ 0x0000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00329\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_LSHIFT\ 0x0001u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00330\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_RSHIFT\ 0x0002u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00331\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_LEVEL5\ 0x0004u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00332\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_LCTRL\ \ 0x0040u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00333\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_RCTRL\ \ 0x0080u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00334\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_LALT\ \ \ 0x0100u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00335\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_RALT\ \ \ 0x0200u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00336\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_LGUI\ \ \ 0x0400u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00337\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_RGUI\ \ \ 0x0800u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00338\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_NUM\ \ \ \ 0x1000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00339\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_CAPS\ \ \ 0x2000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00340\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_MODE\ \ \ 0x4000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00341\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_SCROLL\ 0x8000u\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00342\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_CTRL\ \ \ (SDL\_KMOD\_LCTRL\ |\ SDL\_KMOD\_RCTRL)\ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00343\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_SHIFT\ \ (SDL\_KMOD\_LSHIFT\ |\ SDL\_KMOD\_RSHIFT)\ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00344\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_ALT\ \ \ \ (SDL\_KMOD\_LALT\ |\ SDL\_KMOD\_RALT)\ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00345\ \textcolor{preprocessor}{\#define\ SDL\_KMOD\_GUI\ \ \ \ (SDL\_KMOD\_LGUI\ |\ SDL\_KMOD\_RGUI)\ \ \ \ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ SDL\_keycode\_h\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

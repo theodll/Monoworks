@@ -1,0 +1,119 @@
+\doxysection{Tracy\+Timeline\+Draw.\+hpp}
+\hypertarget{_tracy_timeline_draw_8hpp_source}{}\label{_tracy_timeline_draw_8hpp_source}\index{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyTimelineDraw.hpp@{MonoEngine/thirdparty/tracy/profiler/src/profiler/TracyTimelineDraw.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYTIMELINEDRAW\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYTIMELINEDRAW\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}TracyEvent.hpp"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}TracyShortPtr.hpp"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{enum\ class}\ TimelineDrawType\ :\ uint8\_t}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ Folded,}
+\DoxyCodeLine{00015\ \ \ \ \ Zone,}
+\DoxyCodeLine{00016\ \ \ \ \ GhostFolded,}
+\DoxyCodeLine{00017\ \ \ \ \ Ghost}
+\DoxyCodeLine{00018\ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_timeline_draw}{TimelineDraw}}}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ TimelineDrawType\ type;}
+\DoxyCodeLine{00023\ \ \ \ \ uint16\_t\ depth;}
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr<void*>}}\ ev;}
+\DoxyCodeLine{00025\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_int48}{Int48}}\ rend;}
+\DoxyCodeLine{00026\ \ \ \ \ uint32\_t\ num;}
+\DoxyCodeLine{00027\ \ \ \ \ uint32\_t\ inheritedColor;}
+\DoxyCodeLine{00028\ \};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{enum\ class}\ ContextSwitchDrawType\ :\ uint8\_t}
+\DoxyCodeLine{00032\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ Waiting,}
+\DoxyCodeLine{00034\ \ \ \ \ Folded,}
+\DoxyCodeLine{00035\ \ \ \ \ Running}
+\DoxyCodeLine{00036\ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_context_switch_draw}{ContextSwitchDraw}}}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ ContextSwitchDrawType\ type;}
+\DoxyCodeLine{00041\ \ \ \ \ uint32\_t\ idx;}
+\DoxyCodeLine{00042\ \ \ \ \ uint32\_t\ data;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Folded:\ number\ of\ items\ -\/OR-\/\ Waiting:\ wait\ stack}}
+\DoxyCodeLine{00043\ \};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{enum\ class}\ SampleType}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ Own,}
+\DoxyCodeLine{00049\ \ \ \ \ External,}
+\DoxyCodeLine{00050\ \ \ \ \ Kernel}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_samples_draw}{SamplesDraw}}}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ uint32\_t\ num;}
+\DoxyCodeLine{00056\ \ \ \ \ uint32\_t\ idx;}
+\DoxyCodeLine{00057\ \ \ \ \ SampleType\ type;}
+\DoxyCodeLine{00058\ \};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_messages_draw}{MessagesDraw}}}
+\DoxyCodeLine{00062\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr<MessageData>}}\ msg;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{bool}\ highlight;}
+\DoxyCodeLine{00065\ \ \ \ \ uint32\_t\ num;}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_cpu_usage_draw}{CpuUsageDraw}}}
+\DoxyCodeLine{00070\ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{int}\ own;}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ other;}
+\DoxyCodeLine{00073\ \};}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_cpu_ctx_draw}{CpuCtxDraw}}}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \ \ \ \ uint32\_t\ idx;}
+\DoxyCodeLine{00079\ \ \ \ \ uint32\_t\ num;}
+\DoxyCodeLine{00080\ \};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_lock_state}{LockState}}}
+\DoxyCodeLine{00085\ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{enum}\ Type\ :\ uint8\_t}
+\DoxyCodeLine{00087\ \ \ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ Nothing\ \ \ \ \ \ \ \ \ =\ 1\ <<\ 0,}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ HasLock\ \ \ \ \ \ \ \ \ =\ 1\ <<\ 1,\ \ \ \textcolor{comment}{//\ green}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ HasBlockingLock\ =\ 1\ <<\ 2,\ \ \ \textcolor{comment}{//\ yellow}}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ WaitLock\ \ \ \ \ \ \ \ =\ 1\ <<\ 3\ \ \ \ \textcolor{comment}{//\ red}}
+\DoxyCodeLine{00092\ \ \ \ \ \};}
+\DoxyCodeLine{00093\ \};}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_lock_draw_item}{LockDrawItem}}}
+\DoxyCodeLine{00096\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1_int48}{Int48}}\ t1;}
+\DoxyCodeLine{00098\ \ \ \ \ LockState::Type\ state;}
+\DoxyCodeLine{00099\ \ \ \ \ uint32\_t\ condensed;}
+\DoxyCodeLine{00100\ \ \ \ \ \doxymbox{\hyperlink{classtracy_1_1short__ptr}{short\_ptr<LockEventPtr>}}\ ptr,\ next;}
+\DoxyCodeLine{00101\ \};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structtracy_1_1_lock_draw}{LockDraw}}}
+\DoxyCodeLine{00104\ \{}
+\DoxyCodeLine{00105\ \ \ \ \ uint32\_t\ id;}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{bool}\ forceDraw;}
+\DoxyCodeLine{00107\ \ \ \ \ uint8\_t\ thread;}
+\DoxyCodeLine{00108\ \ \ \ \ std::vector<LockDrawItem>\ data;}
+\DoxyCodeLine{00109\ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \}}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

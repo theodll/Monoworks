@@ -1,0 +1,81 @@
+\doxysection{fast\+\_\+square\+\_\+root.\+inl}
+\hypertarget{fast__square__root_8inl_source}{}\label{fast__square__root_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/fast\_square\_root.inl@{MonoEngine/thirdparty/glm/glm/gtx/fast\_square\_root.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{comment}{//\ fastSqrt}}
+\DoxyCodeLine{00006\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00007\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \doxymbox{\hyperlink{group__gtx__fast__square__root_ga6c460e9414a50b2fc455c8f64c86cdc9}{fastSqrt}}(genType\ x)}
+\DoxyCodeLine{00008\ \ \ \ \ \{}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<genType>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'fastSqrt'\ only\ accept\ floating-\/point\ input"{}});}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ genType(1)\ /\ \doxymbox{\hyperlink{group__gtx__fast__square__root_ga7f081b14d9c7035c8714eba5f7f75a8f}{fastInverseSqrt}}(x);}
+\DoxyCodeLine{00012\ \ \ \ \ \}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00015\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__fast__square__root_ga6c460e9414a50b2fc455c8f64c86cdc9}{fastSqrt}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00016\ \ \ \ \ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__gtx__fast__square__root_ga6c460e9414a50b2fc455c8f64c86cdc9}{fastSqrt}},\ x);}
+\DoxyCodeLine{00018\ \ \ \ \ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{comment}{//\ fastInversesqrt}}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00022\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \doxymbox{\hyperlink{group__gtx__fast__square__root_ga7f081b14d9c7035c8714eba5f7f75a8f}{fastInverseSqrt}}(genType\ x)}
+\DoxyCodeLine{00023\ \ \ \ \ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1compute__inversesqrt}{detail::compute\_inversesqrt<1,\ genType,\ lowp,\ detail::is\_aligned<lowp>::value}}>::call(\doxymbox{\hyperlink{structglm_1_1vec}{vec<1,\ genType,\ lowp>}}(x)).x;}
+\DoxyCodeLine{00025\ \ \ \ \ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00028\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__fast__square__root_ga7f081b14d9c7035c8714eba5f7f75a8f}{fastInverseSqrt}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00029\ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1compute__inversesqrt}{detail::compute\_inversesqrt<L,\ T,\ Q,\ detail::is\_aligned<Q>::value}}>::call(x);}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ fastLength}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00035\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gafe697d6287719538346bbdf8b1367c59}{fastLength}}(genType\ x)}
+\DoxyCodeLine{00036\ \ \ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<genType>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'fastLength'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{abs}}(x);}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gafe697d6287719538346bbdf8b1367c59}{fastLength}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'fastLength'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__gtx__fast__square__root_ga6c460e9414a50b2fc455c8f64c86cdc9}{fastSqrt}}(dot(x,\ x));}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{//\ fastDistance}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00052\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gaac333418d0c4e0cc6d3d219ed606c238}{fastDistance}}(genType\ x,\ genType\ y)}
+\DoxyCodeLine{00053\ \ \ \ \ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gafe697d6287719538346bbdf8b1367c59}{fastLength}}(y\ -\/\ x);}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00058\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gaac333418d0c4e0cc6d3d219ed606c238}{fastDistance}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ y)}
+\DoxyCodeLine{00059\ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gafe697d6287719538346bbdf8b1367c59}{fastLength}}(y\ -\/\ x);}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{//\ fastNormalize}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ genType>}
+\DoxyCodeLine{00065\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ genType\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gac0991240651a3f75792ff5de2e526b8c}{fastNormalize}}(genType\ x)}
+\DoxyCodeLine{00066\ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ >\ genType(0)\ ?\ genType(1)\ :\ -\/genType(1);}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00071\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__fast__square__root_gac0991240651a3f75792ff5de2e526b8c}{fastNormalize}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ *\ \doxymbox{\hyperlink{group__gtx__fast__square__root_ga7f081b14d9c7035c8714eba5f7f75a8f}{fastInverseSqrt}}(dot(x,\ x));}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

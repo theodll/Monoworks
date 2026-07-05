@@ -1,0 +1,979 @@
+\doxysection{Tracy\+Web\+GPU.\+hpp}
+\hypertarget{_tracy_web_g_p_u_8hpp_source}{}\label{_tracy_web_g_p_u_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/tracy/TracyWebGPU.hpp@{MonoEngine/thirdparty/tracy/public/tracy/TracyWebGPU.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYWEBGPU\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYWEBGPU\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ WebGPU,\ unlike\ other\ graphics\ APIs,\ has\ many\ annoying\ restrictions\ that\ complicate}}
+\DoxyCodeLine{00005\ \textcolor{comment}{//\ the\ design\ of\ the\ Tracy\ WebGPU\ back-\/end:}}
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ -\/\ there's\ no\ CPU/GPU\ clock\ calibration\ API}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ -\/\ submitting\ GPU\ commands\ that\ touch\ a\ buffer\ that\ the\ host\ is\ mapping\ is\ not\ permitted}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ -\/\ resolving\ timestamps\ require\ destination\ offsets\ aligned\ to\ 256\ bytes}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ -\/\ timestamps\ are\ only\ available\ at\ pass\ granularity\ (implementations\ may\ need\ to\ emulate\ this)}}
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ -\/\ spec\ mandates\ timestamps\ to\ be\ in\ nanoseconds\ (implementationw\ may\ need\ to\ emulate\ this)}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#ifndef\ TRACY\_ENABLE}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ TracyWebGPUSetupDeviceDescriptor(deviceDescriptor)}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ TracyWebGPUContext(instance,\ device,\ queue)\ nullptr}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ TracyWebGPUDestroy(ctx)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ TracyWebGPUContextName(ctx,\ name,\ size)}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#define\ TracyWebGPUZone(ctx,\ encoder,\ passDesc,\ name)}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#define\ TracyWebGPUZoneC(ctx,\ encoder,\ passDesc,\ name,\ color)}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#define\ TracyWebGPUNamedZone(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ TracyWebGPUNamedZoneC(ctx,\ varname,\ encoder,\ passDesc,\ name,\ color,\ active)}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ TracyWebGPUZoneTransient(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ TracyWebGPUZoneS(ctx,\ encoder,\ passDesc,\ name,\ depth)}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ TracyWebGPUZoneCS(ctx,\ encoder,\ passDesc,\ name,\ color,\ depth)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ TracyWebGPUNamedZoneS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ depth,\ active)}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ TracyWebGPUNamedZoneCS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ color,\ depth,\ active)}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ TracyWebGPUZoneTransientS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ depth,\ active)}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ TracyWebGPUCollect(ctx)}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_web_g_p_u_zone_scope}{WebGPUZoneScope}}\ \{\};}
+\DoxyCodeLine{00037\ \}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{using\ }TracyWebGPUCtx\ =\ \textcolor{keywordtype}{void}*;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}Tracy.hpp"{}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#include\ "{}../client/TracyProfiler.hpp"{}}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#include\ "{}../client/TracyCallstack.hpp"{}}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlign.hpp"{}}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#include\ "{}../common/TracyAlloc.hpp"{}}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#include\ <cstdlib>}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#include\ <cstring>}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#include\ <webgpu/webgpu.h>}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ piggy-\/back\ on\ WGPU\_DAWN\_TOGGLES\_DESCRIPTOR\_INIT\ to\ detect\ Dawn\ header}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#ifdef\ WGPU\_DAWN\_TOGGLES\_DESCRIPTOR\_INIT}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ TRACY\_WEBGPU\_DAWN\_NATIVE\ (1)}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#include\ <dawn/native/DawnNative.h>}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ TRACY\_WEBGPU\_WGPU\_NATIVE\ (1)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#include\ <webgpu/wgpu.h>}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#ifndef\ TRACY\_WEBGPU\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ TRACY\_WEBGPU\_DEBUG\_LEVEL\ (0)}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif}\textcolor{comment}{//TRACY\_WEBGPU\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#if\ TRACY\_WEBGPU\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#define\ TracyWebGPUDebug(...)\ \_\_VA\_ARGS\_\_;}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#if\ defined(\_MSC\_VER)}}
+\DoxyCodeLine{00077\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ int32\_t\ IsDebuggerPresent(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ TracyWebGPUBreak()\ if\ (IsDebuggerPresent())\ \_\_debugbreak()}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00080\ \textcolor{preprocessor}{\#define\ TracyWebGPUBreak()\ ((void)0)}}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#define\ TracyWebGPUAssert(predicate,\ ...)\ if\ (predicate)\ \{\}\ else\ \{\ \_\_VA\_ARGS\_\_;\ TracyWebGPUBreak();\ \}}}
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#define\ TracyWebGPUDebug(...)}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#define\ TracyWebGPUBreak()}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#define\ TracyWebGPUAssert(predicate,\ ...)\ assert(predicate);}}
+\DoxyCodeLine{00087\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{preprocessor}{\#define\ TracyWebGPULog(severity,\ msg)\ do\ \{\ char\ buffer\ [1024];\ int\ len\ =\ snprintf(buffer,\ sizeof(buffer),\ "{}TracyWebGPU:\ \%s"{},\ msg);\ tracy::Profiler::LogString(\ tracy::MessageSourceType::Tracy,\ tracy::MessageSeverity::severity,\ tracy::Color::Red4,\ 0,\ len,\ buffer\ );\ \}\ while(false)}}
+\DoxyCodeLine{00090\ \textcolor{preprocessor}{\#define\ TracyWebGPUPanic(msg,\ ...)\ do\ \{\ TracyWebGPULog(Error,\ msg);\ TracyWebGPUAssert(false\ \&\&\ "{}TracyWebGPU:\ "{}\ msg);\ \_\_VA\_ARGS\_\_;\ \}\ while(false)}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00093\ \{}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{class\ }WebGPUQueueCtx}
+\DoxyCodeLine{00096\ \ \ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{keyword}{friend}\ \textcolor{keyword}{class\ }WebGPUZoneScope;}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ uint8\_t\ m\_contextId\ =\ 255;\ \ \textcolor{comment}{//\ 255\ represents\ "{}invalid\ id"{}}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ std::mutex\ m\_collectionMutex;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ WGPUInstance\ m\_instance\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ WGPUDevice\ m\_device\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ WGPUQueue\ m\_queue\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }ReadbackStage}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUBuffer\ buffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic<uint64\_t>\ copiedUpto\ \{0\};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ std::atomic<WGPUMapAsyncStatus>\ mapStatus\ =\ \{\};}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUFuture\ pendingFuture\ =\ \{\};}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::atomic<WGPUMapAsyncStatus>::is\_always\_lock\_free,\ \textcolor{stringliteral}{"{}WGPUMapAsyncStatus\ must\ be\ lock-\/free\ atomic"{}});}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ WGPUQuerySet\ \ m\_querySet\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ WGPUBuffer\ \ \ \ m\_resolveBuffer\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ ReadbackStage\ m\_readbackReel\ [3];}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ std::atomic<int>\ m\_writeIdx\ \{0\};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }atomic\_counter\ =\ std::atomic<uint64\_t>;}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ atomic\_counter\ m\_queryCounter\ =\ 0;}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ atomic\_counter\ m\_previousCheckpoint\ =\ 0;}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ uint32\_t\ m\_queryLimit\ =\ 0;}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ std::vector<uint64\_t>\ m\_shadowBuffer;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }WallTime\ =\ std::chrono::steady\_clock::time\_point;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keyword}{auto}\ GetWallTime()\ \{\ \textcolor{keywordflow}{return}\ WallTime::clock::now();\ \}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ tracy\_force\_inline\ \textcolor{keyword}{auto}\ Milliseconds(\textcolor{keywordtype}{int}\ value)\ \{\ \textcolor{keywordflow}{return}\ std::chrono::milliseconds(value);\ \}}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ WaitQueueIdle(WGPUQueue\ queue,\ WGPUInstance\ instance)}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ gpuDone\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUQueueWorkDoneCallbackInfo\ doneCB\ =\ \{\};}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ doneCB.mode\ =\ WGPUCallbackMode\_AllowProcessEvents;}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ doneCB.callback\ =\ [](WGPUQueueWorkDoneStatus,\ WGPUStringView,\ \textcolor{keywordtype}{void}*\ userData,\ \textcolor{keywordtype}{void}*)\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{bool}*\textcolor{keyword}{>}(userData)\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ doneCB.userdata1\ =\ \&gpuDone;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuQueueOnSubmittedWorkDone(queue,\ doneCB);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ deadline\ =\ GetWallTime()\ +\ Milliseconds(2000);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (!gpuDone\ \&\&\ GetWallTime()\ <\ deadline)}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuInstanceProcessEvents(instance);}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ gpuDone;}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ uint64\_t*\ MapBufferSync(WGPUBuffer\ buffer,\ WGPUInstance\ instance)}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }MapCtx\ \{\ WGPUMapAsyncStatus\ status\ =\ \{\};\ \}\ ctx;}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUBufferMapCallbackInfo\ cbInfo\ =\ \{\};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ cbInfo.mode\ \ \ \ \ \ =\ WGPUCallbackMode\_AllowProcessEvents;}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ cbInfo.callback\ \ =\ [](WGPUMapAsyncStatus\ status,\ WGPUStringView,\ \textcolor{keywordtype}{void}*\ userData,\ \textcolor{keywordtype}{void}*)\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ ctx\ =\ \textcolor{keyword}{static\_cast<}MapCtx*\textcolor{keyword}{>}(userData);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ctx-\/>status\ =\ status;}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ cbInfo.userdata1\ =\ \&ctx;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ offset\ =\ 0;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size\ =\ 2\ *\ \textcolor{keyword}{sizeof}(uint64\_t);}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuBufferMapAsync(buffer,\ WGPUMapMode\_Read,\ offset,\ size,\ cbInfo);}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ deadline\ =\ GetWallTime()\ +\ Milliseconds(2000);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (ctx.status\ ==\ 0\ \&\&\ GetWallTime()\ <\ deadline)}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuInstanceProcessEvents(instance);}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ctx.status\ !=\ WGPUMapAsyncStatus\_Success)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ data\ =\ wgpuBufferGetConstMappedRange(buffer,\ offset,\ size);}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint64\_t*\textcolor{keyword}{>}(data);}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }Calibration\ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ minCpuRange\ =\ \string~uint64\_t(0)\ >>\ 1;}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }Regression}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ n\ =\ 0;}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ mean\_x\ =\ 0;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ mean\_y\ =\ 0;}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ S\_xx\ =\ 0;}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ S\_xy\ =\ 0;}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Update(int64\_t\ x,\ int64\_t\ y)}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n\ +=\ 1;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ dx\ =\ x\ -\/\ mean\_x;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ dy\ =\ y\ -\/\ mean\_y;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mean\_x\ +=\ dx\ /\ n;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mean\_y\ +=\ dy\ /\ n;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_xx\ +=\ dx\ *\ (x\ -\/\ mean\_x);}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\_xy\ +=\ dx\ *\ (y\ -\/\ mean\_y);}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ Slope()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ double(S\_xy)\ /\ S\_xx;\ \}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ Intercept()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ mean\_y\ -\/\ Slope()\ *\ mean\_x;\ \}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ Regression\ cpuToGpuModel;\ \ \ \textcolor{comment}{//\ cpu-\/ticks\ to\ gpu-\/ticks}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ Regression\ cpuRangeModel;\ \ \ \textcolor{comment}{//\ cpu-\/tick\ interval\ uncertainty}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ Regression\ wallToGpuModel;\ \ \textcolor{comment}{//\ nanoseconds\ to\ gpu-\/ticks}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ GetReferenceTime(uint64\_t\&\ cpuTime,\ uint64\_t\&\ gpuTime)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00199\ \textcolor{keyword}{\ \ \ \ \ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ mean\ belongs\ to\ the\ regression\ line}}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpuTime\ =\ cpuToGpuModel.mean\_x;}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gpuTime\ =\ cpuToGpuModel.mean\_y;}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ Period()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ 1.0\ /\ wallToGpuModel.Slope();\ \}\ \ \ \ \textcolor{comment}{//\ ns/tick}}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ AcceptX(\textcolor{keyword}{const}\ Regression\&\ r,\ int64\_t\ x,\ \textcolor{keywordtype}{double}\ threshold\ =\ 3.0)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (r.n\ <\ 2)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ dx\ =\ x\ -\/\ r.mean\_x;}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (dx\ <=\ 0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \textcolor{comment}{//\ always\ accept\ "{}tighter"{}\ outliers}}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ variance\ =\ double(r.S\_xx)\ /\ (r.n\ -\/\ 1);}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (variance\ ==\ 0.0)\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ WARN:\ dx*dx\ "{}could"{}\ overflow,\ but\ very\ unlikely\ in\ practice}}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ zz\ =\ (double)(dx*dx)\ /\ variance;}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ zz\ <=\ (threshold*threshold);}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ Update(WallTime\ twall0,\ WallTime\ twall1,\ uint64\_t\ tcpu0,\ uint64\_t\ tcpu1,\ uint64\_t\ tgpu)}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }std::chrono;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ cpuRange\ =\ tcpu1\ -\/\ tcpu0;}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpuRangeModel.Update(cpuRange,\ 0);}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!AcceptX(cpuRangeModel,\ cpuRange,\ 1.0))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Process\ sample:}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ tcpu\ =\ tcpu0\ +\ (tcpu1\ -\/\ tcpu0)\ /\ 2;\ \textcolor{comment}{//\ mid-\/point}}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ twall\ =\ duration\_cast<nanoseconds>(}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (twall0\ +\ (twall1\ -\/\ twall0)\ /\ 2)\ \ \ \ \ \ \ \ \textcolor{comment}{//\ mid-\/point}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .time\_since\_epoch()}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ).count();}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ incremental\ regression:}}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpuToGpuModel.Update(tcpu,\ tgpu);}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wallToGpuModel.Update(twall,\ tgpu);}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUDebug(\ fprintf(stderr,\ \textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/\ (sample\ accepted!\ wall\ =\ \%lld\ |\ cpu\ =\ \%lld\ |\ gpu\ =\ \%lld\ |\ period\ =\ \%f)\(\backslash\)n"{}},\ twall,\ tcpu,\ tgpu,\ Period())\ );}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \}\ m\_calibration;}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ SubmitQueueItem(tracy::QueueItem*\ item)}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00237\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ GetProfiler().DeferItem(*item);}
+\DoxyCodeLine{00239\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ CalibrateClocks(uint64\_t\&\ outCpuTime,\ uint64\_t\&\ outGpuTime,\ \textcolor{keywordtype}{double}\&\ period)}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ WebGPU\ does\ not\ have\ any\ clock\ calibration\ API.}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ routine\ attempts\ to\ estimates\ a\ reasonable\ (cpuTime,\ gpuTime)\ correlation}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ by\ sampling\ CPU\ and\ GPU\ timestamps\ around\ a\ "{}synchronous"{}\ draw\ call.}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Several\ samples\ are\ taken\ to\ tighten\ the\ estimation.}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScoped;}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUShaderSourceWGSL\ wgslSrc\ =\ \{\};}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ wgslSrc.chain.sType\ =\ WGPUSType\_ShaderSourceWGSL;}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ wgslSrc.code\ =}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ R\textcolor{stringliteral}{"{}(}}
+\DoxyCodeLine{00257\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ @vertex\ fn\ vs(@builtin(vertex\_index)\ i:\ u32)\ -\/>\ @builtin(position)\ vec4f\ \{}}
+\DoxyCodeLine{00258\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\ p\ =\ array(vec4f(-\/1,-\/1,.5,1),\ vec4f(3,-\/1,.5,1),\ vec4f(-\/1,3,.5,1));}}
+\DoxyCodeLine{00259\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ return\ p[i];}}
+\DoxyCodeLine{00260\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00261\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ @fragment\ fn\ fs()\ -\/>\ @location(0)\ vec4f\ \{\ return\ vec4f(0.0);\ \}}}
+\DoxyCodeLine{00262\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )"{},}}
+\DoxyCodeLine{00263\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WGPU\_STRLEN}}
+\DoxyCodeLine{00264\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ \};}}
+\DoxyCodeLine{00265\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ WGPUShaderModuleDescriptor\ smDesc\ =\ \{\};}}
+\DoxyCodeLine{00266\ \textcolor{stringliteral}{\ \ \ \ \ \ \ \ \ \ \ \ smDesc.nextInChain\ \ =\ }\textcolor{keyword}{reinterpret\_cast<}WGPUChainedStruct*\textcolor{keyword}{>}(\&wgslSrc);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUShaderModule\ calibShader\ =\ wgpuDeviceCreateShaderModule(m\_device,\ \&smDesc);}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!calibShader)\ \{\ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ calibration\ shader."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUTextureDescriptor\ texDesc\ =\ \{\};}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ texDesc.usage\ \ \ \ \ \ \ \ \ =\ WGPUTextureUsage\_RenderAttachment;}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ texDesc.dimension\ \ \ \ \ =\ WGPUTextureDimension\_2D;}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ texDesc.size\ \ \ \ \ \ \ \ \ \ =\ \{\ 1,\ 1,\ 1\ \};}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ texDesc.format\ \ \ \ \ \ \ \ =\ WGPUTextureFormat\_BGRA8Unorm;}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ texDesc.mipLevelCount\ =\ 1;}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ texDesc.sampleCount\ \ \ =\ 1;}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUTexture\ tex\ =\ wgpuDeviceCreateTexture(m\_device,\ \&texDesc);}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!tex)\ \{\ wgpuShaderModuleRelease(calibShader);\ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ calibration\ scratch\ texture."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUTextureView\ texView\ =\ wgpuTextureCreateView(tex,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!texView)\ \{\ wgpuTextureRelease(tex);\ wgpuShaderModuleRelease(calibShader);\ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ calibration\ scratch\ texture\ view."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUColorTargetState\ colorTarget\ =\ \{\};}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ colorTarget.format\ \ \ \ =\ WGPUTextureFormat\_BGRA8Unorm;}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ colorTarget.writeMask\ =\ WGPUColorWriteMask\_All;}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUFragmentState\ fragState\ =\ \{\};}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ fragState.module\ \ \ \ \ \ =\ calibShader;}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ fragState.entryPoint\ \ =\ \{\ \textcolor{stringliteral}{"{}fs"{}},\ WGPU\_STRLEN\ \};}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ fragState.targetCount\ =\ 1;}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ fragState.targets\ \ \ \ \ =\ \&colorTarget;}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ WGPURenderPipelineDescriptor\ pipeDesc\ =\ \{\};}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ pipeDesc.vertex.module\ \ \ \ \ \ \ \ =\ calibShader;}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ pipeDesc.vertex.entryPoint\ \ \ \ =\ \{\ \textcolor{stringliteral}{"{}vs"{}},\ WGPU\_STRLEN\ \};}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ pipeDesc.primitive.topology\ \ \ =\ WGPUPrimitiveTopology\_TriangleList;}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ pipeDesc.multisample.count\ \ \ \ =\ 1;}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ pipeDesc.fragment\ \ \ \ \ \ \ \ \ \ \ \ \ =\ \&fragState;}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ WGPURenderPipeline\ calibPipeline\ =\ wgpuDeviceCreateRenderPipeline(m\_device,\ \&pipeDesc);}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!calibPipeline)\ \{\ wgpuTextureViewRelease(texView);\ wgpuTextureRelease(tex);\ wgpuShaderModuleRelease(calibShader);\ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ calibration\ pipeline."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{00298\ }
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ queryId\ =\ 0;}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUPassTimestampWrites\ anchorTs\ =\ \{\};}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ anchorTs.querySet\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ m\_querySet;}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ anchorTs.beginningOfPassWriteIndex\ =\ queryId;}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ anchorTs.endOfPassWriteIndex\ \ \ \ \ \ \ =\ queryId+1;}
+\DoxyCodeLine{00304\ }
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ WGPURenderPassColorAttachment\ att\ =\ \{\};}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ att.view\ \ \ \ \ \ \ =\ texView;}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ att.loadOp\ \ \ \ \ =\ WGPULoadOp\_Clear;}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ att.storeOp\ \ \ \ =\ WGPUStoreOp\_Store;}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ att.depthSlice\ =\ WGPU\_DEPTH\_SLICE\_UNDEFINED;}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ WGPURenderPassDescriptor\ passDesc\ =\ \{\};}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ passDesc.colorAttachmentCount\ =\ 1;}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ passDesc.colorAttachments\ \ \ \ \ =\ \&att;}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ passDesc.timestampWrites\ \ \ \ \ \ =\ \&anchorTs;}
+\DoxyCodeLine{00315\ }
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ calibration\ loop}}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ deadline\ =\ GetWallTime()\ +\ Milliseconds(100);}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ 1000;\ ++i)}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ loop\ until\ time\ budget\ (100ms)\ allows,\ but\ ensure\ at\ least\ 5\ iterations}}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((GetWallTime()\ >=\ deadline)\ \&\&\ (i\ >\ 5))}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WGPUCommandEncoder\ enc\ =\ wgpuDeviceCreateCommandEncoder(m\_device,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!enc)\ \{\ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ command\ encoder\ for\ time\ calibration."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WGPURenderPassEncoder\ pass\ =\ wgpuCommandEncoderBeginRenderPass(enc,\ \&passDesc);}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuRenderPassEncoderSetPipeline(pass,\ calibPipeline);}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuRenderPassEncoderDraw(pass,\ 3,\ 1,\ 0,\ 0);}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuRenderPassEncoderEnd(pass);}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuRenderPassEncoderRelease(pass);}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WGPUBuffer\ readBackBuffer\ =\ m\_readbackReel[0].buffer;}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ byteOffset\ =\ queryId\ *\ \textcolor{keyword}{sizeof}(uint64\_t);}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ sizeInBytes\ =\ 2\ *\ \textcolor{keyword}{sizeof}(uint64\_t);}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuCommandEncoderResolveQuerySet(enc,\ m\_querySet,\ queryId,\ 2,\ m\_resolveBuffer,\ byteOffset);}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuCommandEncoderCopyBufferToBuffer(enc,\ m\_resolveBuffer,\ byteOffset,\ readBackBuffer,\ byteOffset,\ sizeInBytes);}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WGPUCommandBuffer\ cmd\ =\ wgpuCommandEncoderFinish(enc,\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuCommandEncoderRelease(enc);}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!cmd)\ \{\ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ finish\ calibration\ command\ encoder."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});\ \}}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WaitQueueIdle(m\_queue,\ m\_instance);}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ cpu\ [2]\ =\ \{\};}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int64\_t\ gpu\ [2]\ =\ \{\};}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WallTime\ wall\ [2]\ =\ \{\};}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpu[0]\ =\ Profiler::GetTime();}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wall[0]\ =\ GetWallTime();}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuQueueSubmit(m\_queue,\ 1,\ \&cmd);}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuCommandBufferRelease(cmd);}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WaitQueueIdle(m\_queue,\ m\_instance);}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wall[1]\ =\ GetWallTime();}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cpu[1]\ =\ Profiler::GetTime();}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ gpuTimestamps\ =\ MapBufferSync(readBackBuffer,\ m\_instance);}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUAssert(gpuTimestamps\ !=\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gpu[0]\ =\ gpuTimestamps[0];}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ gpu[1]\ =\ gpuTimestamps[1];}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuBufferUnmap(readBackBuffer);}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUDebug(}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fprintf(stdout,\ \textcolor{stringliteral}{"{}[\%03d]\ CalibrateClocks()\ [CPU]\ \%16lld\ |\ \%16lld\ |\ ///\ \%lld\(\backslash\)n"{}},\ i,\ cpu[0],\ cpu[1],\ cpu[1]-\/cpu[0]);}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fprintf(stdout,\ \ \textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ [GPU]\ \%16llu\ |\ \%16llu\ |\ ///\ \%lld\(\backslash\)n"{}},\ \ \ \ gpu[0],\ gpu[1],\ gpu[1]-\/gpu[0]);}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ cpuTimeRef,\ gpuTimeRef;}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_calibration.GetReferenceTime(cpuTimeRef,\ gpuTimeRef);}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (gpu[0]\ <\ gpuTimeRef)}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fprintf(stdout,\ \textcolor{stringliteral}{"{}!!!!!\ CalibrateClocks()\ -\/>\ WARNING!!!\ going\ backwards!\(\backslash\)n\%llu\(\backslash\)n\%llu\(\backslash\)n\%lld\(\backslash\)n"{}},\ gpuTimeRef,\ gpu[0],\ gpu[0]\ -\/\ gpuTimeRef);}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ skip\ first\ sample\ since\ it\ is\ quite\ jittery\ (lazy\ intialization\ of\ WebGPU\ objects)}}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ 0)}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_calibration.Update(wall[0],\ wall[1],\ cpu[0],\ cpu[1],\ gpu[0]);}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUDebug(}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fprintf(stdout,\ \textcolor{stringliteral}{"{}\#\#\#\#\#\ CalibrateClocks()\ WALL\ =\ \%lld\ |\ CPU\ =\ \%lld\ |\ GPU\ =\ \%lld\ |\ period\ =\ \%f\(\backslash\)n"{}},}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_calibration.wallToGpuModel.mean\_x,}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_calibration.cpuToGpuModel.mean\_x,}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_calibration.cpuToGpuModel.mean\_y,}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_calibration.Period());}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuRenderPipelineRelease(calibPipeline);}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuShaderModuleRelease(calibShader);}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuTextureViewRelease(texView);}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuTextureRelease(tex);}
+\DoxyCodeLine{00387\ }
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ m\_calibration.GetReferenceTime(outCpuTime,\ outGpuTime);}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ period\ =\ m\_calibration.Period();}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ assume\ 1\ ns/tick\ if\ the\ period\ estimation\ is\ close\ enough\ to\ 1}}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::abs(period\ -\/\ 1.0)\ <\ 0.001)}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ period\ =\ 1.0;}
+\DoxyCodeLine{00393\ }
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }Requirements}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00401\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ if\ (TRACY\_WEBGPU\_DAWN\_NATIVE)}}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ WGPUDawnTogglesDescriptor\ dawnTogglesDesc\ =\ \{\};}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ NumExtras\ =\ 0;}
+\DoxyCodeLine{00404\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ elif\ (TRACY\_WEBGPU\_WGPU\_NATIVE)}}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ NumExtras\ =\ 1;}
+\DoxyCodeLine{00406\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ NumFeatures\ =\ 1\ +\ NumExtras;}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUFeatureName\ \ features\ [NumFeatures]\ =\ \{\};}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUChainedStruct*\ togglesDesc\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ Requirements()}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>features[0]\ =\ WGPUFeatureName\_TimestampQuery;}
+\DoxyCodeLine{00416\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (TRACY\_WEBGPU\_WGPU\_NATIVE)}}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>features[1]\ =\ (WGPUFeatureName)WGPUNativeFeature\_TimestampQueryInsideEncoders;}
+\DoxyCodeLine{00418\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00419\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (TRACY\_WEBGPU\_DAWN\_NATIVE)}}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ dawnDisabledToggles[]\ =\ \{\ \textcolor{stringliteral}{"{}timestamp\_quantization"{}}\ \};}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ dawnEnabledToggles[]\ \ =\ \{\ \textcolor{stringliteral}{"{}disable\_timestamp\_query\_conversion"{}}\ \};}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>dawnTogglesDesc.chain.sType\ =\ WGPUSType\_DawnTogglesDescriptor;}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>dawnTogglesDesc.disabledToggles\ =\ dawnDisabledToggles;}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>dawnTogglesDesc.disabledToggleCount\ =\ 1;}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>dawnTogglesDesc.enabledToggles\ =\ dawnEnabledToggles;}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>dawnTogglesDesc.enabledToggleCount\ \ =\ 1;}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>togglesDesc\ =\ \textcolor{keyword}{reinterpret\_cast<}WGPUChainedStruct*\textcolor{keyword}{>}(\&this-\/>dawnTogglesDesc);}
+\DoxyCodeLine{00428\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00430\ }
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ VerifyDevice(WGPUDevice\ device)}
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (device\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Invalid\ WGPUDevice."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wgpuDeviceHasFeature(device,\ WGPUFeatureName\_TimestampQuery)\ ==\ WGPU\_FALSE)}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Device\ is\ missing\ feature\ WGPUFeatureName\_TimestampQuery."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00437\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (TRACY\_WEBGPU\_DAWN\_NATIVE)}}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ hasDisableConversion\ =\ \textcolor{keyword}{false},\ hasQuantization\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ t\ :\ ::dawn::native::GetTogglesUsed(device))}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(t,\ \textcolor{stringliteral}{"{}disable\_timestamp\_query\_conversion"{}})\ ==\ 0)}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasDisableConversion\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (strcmp(t,\ \textcolor{stringliteral}{"{}timestamp\_quantization"{}})\ ==\ 0)}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hasQuantization\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!hasDisableConversion)}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Device\ must\ toggle\ disable\_timestamp\_query\_conversion\ (Dawn)."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (hasQuantization)}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Device\ must\ disable\ timestamp\_quantization\ (Dawn)."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00450\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ elif\ (TRACY\_WEBGPU\_WGPU\_NATIVE)}}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wgpuDeviceHasFeature(device,\ (WGPUFeatureName)WGPUNativeFeature\_TimestampQueryInsideEncoders)\ ==\ WGPU\_FALSE)}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Device\ is\ missing\ feature\ WGPUNativeFeature\_TimestampQueryInsideEncoders\ (wgpu-\/native)."{}},\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00453\ \textcolor{preprocessor}{\#\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ endif}}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00456\ }
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ ApplyToDeviceDescriptor(WGPUDeviceDescriptor\&\ deviceDescriptor)}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ userCount\ \ =\ deviceDescriptor.requiredFeatureCount;}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ totalCount\ =\ userCount\ +\ NumFeatures;}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOTE:\ this\ allocation\ will\ leak...}}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ mergedFeatures\ =\ \textcolor{keyword}{static\_cast<}WGPUFeatureName*\textcolor{keyword}{>}(tracy\_malloc(totalCount\ *\ \textcolor{keyword}{sizeof}(WGPUFeatureName)));}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (userCount\ >\ 0\ \&\&\ deviceDescriptor.requiredFeatures)}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(mergedFeatures,\ deviceDescriptor.requiredFeatures,\ userCount\ *\ \textcolor{keyword}{sizeof}(WGPUFeatureName));}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(mergedFeatures\ +\ userCount,\ features,\ NumFeatures\ *\ \textcolor{keyword}{sizeof}(WGPUFeatureName));}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deviceDescriptor.requiredFeatures\ \ \ \ \ =\ mergedFeatures;}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deviceDescriptor.requiredFeatureCount\ =\ totalCount;}
+\DoxyCodeLine{00468\ }
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (togglesDesc)}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ togglesDesc-\/>next\ \ \ \ \ \ \ \ \ \ \ \ =\ deviceDescriptor.nextInChain;}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ deviceDescriptor.nextInChain\ =\ togglesDesc;}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00476\ }
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ WebGPUQueueCtx(WGPUInstance\ instance,\ WGPUDevice\ device,\ WGPUQueue\ queue)}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!Requirements::VerifyDevice(device))}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}GPU\ profiling\ disabled:\ the\ device\ did\ not\ set\ the\ required\ features."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00483\ }
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUAssert(instance);\ wgpuInstanceAddRef(instance);\ m\_instance\ =\ instance;}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUAssert(device);\ \ \ wgpuDeviceAddRef(device);\ \ \ \ \ m\_device\ \ \ =\ device;}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUAssert(queue);\ \ \ \ wgpuQueueAddRef(queue);\ \ \ \ \ \ \ m\_queue\ \ \ \ =\ queue;}
+\DoxyCodeLine{00487\ }
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Setup\ Query\ Set:\ must\ have\ even\ size\ since\ queries\ are\ issued\ in\ pairs.}}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (The\ WebGPU\ spec\ mandates\ 4096,\ with\ no\ way\ to\ query\ the\ device\ limit.)}}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUQuerySetDescriptor\ qsDesc\ =\ \{\};}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ qsDesc.type\ =\ WGPUQueryType\_Timestamp;}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ qsDesc.count\ =\ 4096;}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;;)}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_querySet\ =\ wgpuDeviceCreateQuerySet(m\_device,\ \&qsDesc);}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_querySet)\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ qsDesc.count\ /=\ 2;}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (qsDesc.count\ <\ 128)\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_querySet\ ==\ \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ timestamp\ query\ set."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ m\_queryLimit\ =\ qsDesc.count;}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUBufferDescriptor\ resolveDesc\ =\ \{\};}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \ \ \ \ resolveDesc.usage\ =\ WGPUBufferUsage\_QueryResolve\ |\ WGPUBufferUsage\_CopySrc;}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \ \ \ \ resolveDesc.size\ \ =\ \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(m\_queryLimit)\ *\ \textcolor{keyword}{sizeof}(uint64\_t);}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \ \ \ \ m\_resolveBuffer\ =\ wgpuDeviceCreateBuffer(m\_device,\ \&resolveDesc);}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_resolveBuffer)}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ timestamp\ resolve\ buffer."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUBufferDescriptor\ readbackDesc\ =\ \{\};}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \ \ \ \ readbackDesc.usage\ =\ WGPUBufferUsage\_CopyDst\ |\ WGPUBufferUsage\_MapRead;}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ readbackDesc.size\ \ =\ \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(m\_queryLimit)\ *\ \textcolor{keyword}{sizeof}(uint64\_t);}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ stage\ :\ m\_readbackReel)}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stage.buffer\ =\ wgpuDeviceCreateBuffer(m\_device,\ \&readbackDesc);}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stage.copiedUpto\ =\ 0;}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!stage.buffer)\ \{\ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ create\ timestamp\ readback\ buffer."{}},\ \textcolor{keywordflow}{return});\ \}}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ cpuTimestamp\ =\ 0;}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ gpuTimestamp\ =\ 0;}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ period\ =\ 0.0;\ \ \textcolor{comment}{//\ in\ nanoseconds\ per\ gpu-\/tick}}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!CalibrateClocks(cpuTimestamp,\ gpuTimestamp,\ period))}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Failed\ to\ calibrate\ CPU/GPU\ clocks."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUDebug(\ fprintf(stdout,\ \textcolor{stringliteral}{"{}[WebGPUQueueCtx]\ cpuTimestamp:\ \%llu\ |\ gpuTimestamp:\ \%llu\ |\ period:\ \%f\(\backslash\)n"{}},\ cpuTimestamp,\ gpuTimestamp,\ period)\ );}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \ \ \ \ m\_shadowBuffer.resize(m\_queryLimit,\ gpuTimestamp);}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ All\ setup\ completed:\ register\ the\ context.}}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ m\_contextId\ =\ GetGpuCtxCounter().fetch\_add(1);}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneValue(m\_contextId);}
+\DoxyCodeLine{00533\ }
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuNewContext);}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.cpuTime,\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(cpuTimestamp));}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.gpuTime,\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(gpuTimestamp));}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.thread,\ \textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(0));}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.period,\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{float}\textcolor{keyword}{>}(period));}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.context,\ \textcolor{keyword}{static\_cast<}uint8\_t\textcolor{keyword}{>}(GetId()));}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.flags,\ GpuContextFlags(0));\ \ \textcolor{comment}{//\ no\ calibration\ available}}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuNewContext.type,\ GpuContextType::WebGPU);}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ SubmitQueueItem(item);}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00545\ }
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \string~WebGPUQueueCtx()}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ a\ few\ problems\ to\ address\ later\ during\ this\ final\ Collect():}}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 1.\ ensure\ "{}partial"{}\ query\ batches\ are\ collected}}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 2.\ ensure\ all\ readback\ stages\ are\ collected\ and\ empty}}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 3.\ ensure\ readback\ buffers\ are\ not\ mapped\ before\ deleting\ them}}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ Collect();}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\&\ stage\ :\ m\_readbackReel)}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (stage.buffer)\ \{\ wgpuBufferRelease(stage.buffer);\ \ \ \ \ stage.buffer\ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_resolveBuffer)\ \ \{\ wgpuBufferRelease(m\_resolveBuffer);\ \ m\_resolveBuffer\ \ =\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_querySet)\ \ \ \ \ \ \ \{\ wgpuQuerySetRelease(m\_querySet);\ \ \ \ \ m\_querySet\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_queue)\ \ \ \ \ \ \ \ \ \ \{\ wgpuQueueRelease(m\_queue);\ \ \ \ \ \ \ \ \ \ \ m\_queue\ \ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_device)\ \ \ \ \ \ \ \ \ \{\ wgpuDeviceRelease(m\_device);\ \ \ \ \ \ \ \ \ m\_device\ \ \ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_instance)\ \ \ \ \ \ \ \{\ wgpuInstanceRelease(m\_instance);\ \ \ \ \ m\_instance\ \ \ \ \ \ \ =\ \textcolor{keyword}{nullptr};\ \}}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint8\_t\ GetId()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00564\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_contextId;}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00567\ }
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Name(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ uint16\_t\ len)}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ ptr\ =\ (\textcolor{keywordtype}{char}*)tracy\_malloc(len);}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ memcpy(ptr,\ name,\ len);}
+\DoxyCodeLine{00572\ }
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuContextName);}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuContextNameFat.context,\ GetId());}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuContextNameFat.ptr,\ (uint64\_t)ptr);}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuContextNameFat.size,\ len);}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ SubmitQueueItem(item);}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00580\ }
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ Collect(\textcolor{keywordtype}{bool}\ webgpuProcessEvents=\textcolor{keyword}{false})}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00583\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!GetProfiler().IsConnected())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00585\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_collectionMutex.try\_lock())\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_lock<std::mutex>\ lock(m\_collectionMutex,\ std::adopt\_lock);}
+\DoxyCodeLine{00588\ }
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \ \ \ \ ZoneScopedC(Color::Red4);}
+\DoxyCodeLine{00590\ }
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(m\_previousCheckpoint,\ m\_queryCounter)\ <=\ 0)}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00593\ }
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Current\ Readback\ "{}Reel"{}\ Stages:}}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ state\ =\ m\_writeIdx;}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ fillingIdx\ =\ (state\ +\ 0)\ \%\ 3;\ \textcolor{comment}{//\ this\ is\ where\ instrumentation\ is\ pushing\ new\ queries}}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ pendingIdx\ =\ (state\ +\ 1)\ \%\ 3;\ \textcolor{comment}{//\ instrumentation\ is\ done\ here;\ ready\ to\ be\ collected}}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ collectIdx\ =\ (state\ +\ 2)\ \%\ 3;\ \textcolor{comment}{//\ this\ is\ where\ queries\ are\ being\ collected\ right\ now}}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ensure\ readback\ buffer\ has\ been\ mapped\ to\ the\ host}}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\ collectStage\ =\ m\_readbackReel[collectIdx];}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (collectStage.pendingFuture.id\ !=\ 0)}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (webgpuProcessEvents)}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuInstanceProcessEvents(m\_instance);}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (collectStage.mapStatus\ ==\ WGPUMapAsyncStatus\{\})}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \ \textcolor{comment}{//\ callback\ hasn't\ fired\ yet}}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collectStage.pendingFuture\ =\ \{\};}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (collectStage.mapStatus\ !=\ WGPUMapAsyncStatus\_Success)}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUPanic(\textcolor{stringliteral}{"{}Colect():\ unable\ to\ map\ readback\ buffer."{}},\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00612\ }
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (collectStage.mapStatus\ ==\ WGPUMapAsyncStatus\_Success)}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t*\ ts\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keyword}{const\ }uint64\_t*\textcolor{keyword}{>}(}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuBufferGetConstMappedRange(collectStage.buffer,\ 0,}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(m\_queryLimit)\ *\ \textcolor{keyword}{sizeof}(uint64\_t)));}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ts)}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ ticket\ =\ m\_previousCheckpoint;}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ end\ =\ collectStage.copiedUpto;}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUDebug(\ fprintf(stdout,\ \textcolor{stringliteral}{"{}[TWG]\ Collect\ [\%d]\ (\%llu,\ \%llu)\(\backslash\)n"{}},\ collectIdx,\ ticket,\ end)\ );}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ Distance(ticket,\ end)\ >\ 0;\ ticket\ +=\ 2)}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ slotB\ =\ RingIndex(ticket);}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint32\_t\ slotE\ =\ slotB\ +\ 1;}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUDebug(}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fprintf(stderr,}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}[TWG]\ slot\ B=\%4u\ E=\%4u\ ts[B]=\%llu\ ts[E]=\%llu\ shadow[E]=\%llu\ ts-\/diff=\%lld\ shadow-\/diff=\%lld\(\backslash\)n"{}},}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ slotB,\ slotE,}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ts[slotB],\ ts[slotE],\ m\_shadowBuffer[slotE],}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Distance(ts[slotB],\ ts[slotE]),}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Distance(m\_shadowBuffer[slotE],\ ts[slotE]));}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(m\_shadowBuffer[slotE],\ ts[slotE])\ <=\ 0)}
+\DoxyCodeLine{00636\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};\ \textcolor{comment}{//\ GPU\ hasn't\ written\ this\ timestamp\ yet;\ retry\ next\ Collect()}}
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EmitGpuTime(ts[slotB],\ slotB);}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ EmitGpuTime(ts[slotE],\ slotE);}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_previousCheckpoint\ =\ ticket;}
+\DoxyCodeLine{00641\ }
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(ticket,\ end)\ >\ 0)}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \textcolor{comment}{//\ still\ unresolved\ queries\ in\ this\ buffer;\ come\ back\ next\ Collect()}}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ All\ queries\ resolved\ (or\ getMappedRange\ failed):\ unmap\ and\ fall\ through\ to\ rotate.}}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wgpuBufferUnmap(collectStage.buffer);}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ collectStage.mapStatus\ =\ \{\};}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00650\ }
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ At\ this\ point,\ all\ queries\ in\ the\ collect\ buffer\ have\ been\ processed.}}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (it's\ now\ tie\ to\ "{}rotate"{}\ the\ buffers\ around...)}}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Has\ any\ ResolveQueryBatch\ call\ landed\ in\ this\ reel\ stage\ since\ it\ was\ last\ recycled?}}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (Are\ there\ any\ queries\ to\ resolve\ and\ collect\ at\ all?)}}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_readbackReel[fillingIdx].copiedUpto\ <=\ m\_previousCheckpoint)}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Rotate/Cycle\ the\ Readback\ Pipeline\ State:}}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ buffer\ that\ was\ just\ collected\ shall\ now\ be\ used\ for\ instrumentation}}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ collectStage.copiedUpto\ =\ m\_previousCheckpoint.load();}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ m\_writeIdx\ =\ collectIdx;\ \ \ \ \textcolor{comment}{//\ atomically\ commit\ the\ pipeline\ rotation}}
+\DoxyCodeLine{00663\ }
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\ nextToCollect\ =\ m\_readbackReel[pendingIdx];}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \ \ \ \ WGPUBufferMapCallbackInfo\ cbInfo\ =\ \{\};}
+\DoxyCodeLine{00666\ \ \ \ \ \ \ \ \ \ \ \ \ cbInfo.mode\ =\ WGPUCallbackMode\_AllowProcessEvents;}
+\DoxyCodeLine{00667\ \ \ \ \ \ \ \ \ \ \ \ \ cbInfo.callback\ =\ [](WGPUMapAsyncStatus\ status,\ WGPUStringView,\ \textcolor{keywordtype}{void}*\ userData,\ \textcolor{keywordtype}{void}*)}
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ stage\ =\ \textcolor{keyword}{static\_cast<}ReadbackStage*\textcolor{keyword}{>}(userData);}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ stage-\/>mapStatus\ =\ status;}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \ \ \ \ cbInfo.userdata1\ =\ \&nextToCollect;}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ \ nextToCollect.pendingFuture\ =\ wgpuBufferMapAsync(}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nextToCollect.buffer,\ WGPUMapMode\_Read,\ 0,}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(m\_queryLimit)\ *\ \textcolor{keyword}{sizeof}(uint64\_t),\ cbInfo);}
+\DoxyCodeLine{00676\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00677\ }
+\DoxyCodeLine{00678\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ EmitGpuTime(uint64\_t\ gpuTimestamp,\ uint32\_t\ queryId)}
+\DoxyCodeLine{00680\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00681\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00682\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuTime);}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.gpuTime,\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(gpuTimestamp));}
+\DoxyCodeLine{00684\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.queryId,\ \textcolor{keyword}{static\_cast<}uint16\_t\textcolor{keyword}{>}(queryId));}
+\DoxyCodeLine{00685\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuTime.context,\ GetId());}
+\DoxyCodeLine{00686\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00687\ \ \ \ \ \ \ \ \ \ \ \ \ m\_shadowBuffer[queryId]\ =\ gpuTimestamp;}
+\DoxyCodeLine{00688\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00689\ }
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint32\_t\ RingCapacity()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_queryLimit;\ \}}
+\DoxyCodeLine{00691\ }
+\DoxyCodeLine{00692\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint32\_t\ RingIndex(uint64\_t\ t)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00693\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00694\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}uint32\_t\textcolor{keyword}{>}(t\ \%\ RingCapacity());}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00696\ }
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keyword}{static}\ int64\_t\ Distance(uint64\_t\ begin,\ uint64\_t\ end)}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(end\ -\/\ begin);}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00701\ }
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ uint64\_t\ NextQueryId()}
+\DoxyCodeLine{00703\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ ticket\ =\ m\_queryCounter.fetch\_add(2,\ std::memory\_order\_relaxed);}
+\DoxyCodeLine{00705\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Distance(m\_previousCheckpoint,\ ticket)}
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ >=\ \textcolor{keyword}{static\_cast<}int64\_t\textcolor{keyword}{>}(RingCapacity()))}
+\DoxyCodeLine{00707\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPULog(Warning,\ \textcolor{stringliteral}{"{}Too\ many\ pending\ GPU\ queries:\ stalling!"{}});}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Collect();}
+\DoxyCodeLine{00710\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ticket;}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00713\ \ \ \ \ \};}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classtracy_1_1_web_g_p_u_zone_scope}{WebGPUZoneScope}}}
+\DoxyCodeLine{00716\ \ \ \ \ \{}
+\DoxyCodeLine{00717\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ m\_active;}
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ WebGPUQueueCtx*\ m\_ctx\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ WGPUCommandEncoder\ m\_encoder\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ uint64\_t\ m\_rawTicket\ =\ 0;}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ uint32\_t\ m\_queryId\ =\ 0;}
+\DoxyCodeLine{00722\ }
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ WGPUPassTimestampWrites\ m\_timestampWrites\ =\ \{\};}
+\DoxyCodeLine{00724\ }
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ ResolveQueryBatch(uint32\_t\ queryBatchStartId)}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ensure\ there\ are\ pending\ queries\ to\ resolve\ in\ the\ batch}}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\&\ stage\ =\ m\_ctx-\/>m\_readbackReel[m\_ctx-\/>m\_writeIdx];}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (WebGPUQueueCtx::Distance(stage.copiedUpto,\ m\_rawTicket)\ <=\ 0)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00730\ }
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 32\ queries\ =\ 32\ *\ 8\ bytes\ =\ 256\ bytes}}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUAssert(queryBatchStartId\ \%\ 32\ ==\ 0,\ \textcolor{keywordflow}{return});}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ queryBatchStartId\ =\ m\_ctx-\/>RingIndex(queryBatchStartId);}
+\DoxyCodeLine{00734\ }
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ blockOffset\ =\ \textcolor{keyword}{static\_cast<}uint64\_t\textcolor{keyword}{>}(queryBatchStartId)\ *\ \textcolor{keyword}{sizeof}(uint64\_t);}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuCommandEncoderResolveQuerySet(}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_encoder,}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_ctx-\/>m\_querySet,}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ queryBatchStartId,\ 32,}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_ctx-\/>m\_resolveBuffer,}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blockOffset\ \textcolor{comment}{//\ MUST\ be\ a\ multiple\ of\ (aligned\ to)\ 256...}}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00743\ }
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ readbackBuffer\ =\ stage.buffer;}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \ \ \ \ wgpuCommandEncoderCopyBufferToBuffer(}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_encoder,}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\_ctx-\/>m\_resolveBuffer,}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blockOffset,}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ readbackBuffer,}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ blockOffset,}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 32\ *\ \textcolor{keyword}{sizeof}(uint64\_t)}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00753\ }
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Advance\ this\ stage's\ high-\/water\ mark\ to\ cover\ the\ block\ just\ encoded.}}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ maybe\ we\ can\ use\ fetch\_add\ to\ increment\ the\ atomic\ and\ not\ need}}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ keep\ track\ of\ the\ raw\ ticket;\ Collect\ would\ need\ to\ derive\ the\ raw}}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ end\ ticket\ number.}}
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ uint64\_t\ blockEnd\ =\ m\_rawTicket;}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ prev\ =\ stage.copiedUpto;}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ ((WebGPUQueueCtx::Distance(prev,\ blockEnd)\ >\ 0)\ \&\&}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ !stage.copiedUpto.compare\_exchange\_weak(prev,\ blockEnd))\ \{\}}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \ \ \ \ TracyWebGPUDebug(\ fprintf(stdout,\ \textcolor{stringliteral}{"{}[TWG]\ WebGPUZoneScope\ [\%d]\ (\%d,\%d)\(\backslash\)n"{}},\ (\textcolor{keywordtype}{int})m\_ctx-\/>m\_writeIdx,\ queryBatchStartId,\ queryBatchStartId+32)\ );}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00764\ }
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ WriteQueueItem(\textcolor{keyword}{const}\ SourceLocationData*\ srcLocation,\ int32\_t\ callstackDepth,\ uint32\_t\ sourceLine,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ sourceFile,\ \textcolor{keywordtype}{size\_t}\ sourceFileLen,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ functionName,\ \textcolor{keywordtype}{size\_t}\ functionNameLen,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ zoneName,\ \textcolor{keywordtype}{size\_t}\ zoneNameLen)}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00768\ }
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ captureCallstack\ =\ callstackDepth\ >\ 0\ \&\&\ has\_callstack();}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{bool}\ transientZone\ =\ srcLocation\ ==\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \ \ \ \ uint64\_t\ srcLocationAddr\ =\ \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(srcLocation);}
+\DoxyCodeLine{00772\ }
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \ \ \ \ QueueItem*\ item\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ QueueType\ itemType;}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (transientZone)}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ srcLocationAddr\ =\ Profiler::AllocSourceLocation(sourceLine,\ sourceFile,\ sourceFileLen,\ functionName,\ functionNameLen,\ zoneName,\ zoneNameLen);}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (captureCallstack)}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerialCallstack(Callstack(callstackDepth));}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginAllocSrcLocCallstackSerial;}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginAllocSrcLocSerial;}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (captureCallstack)}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerialCallstack(Callstack(callstackDepth));}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginCallstackSerial;}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ itemType\ =\ QueueType::GpuZoneBeginSerial;}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ itemType);}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.srcloc,\ srcLocationAddr);}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.queryId,\ \textcolor{keyword}{static\_cast<}uint16\_t\textcolor{keyword}{>}(m\_queryId));}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneBegin.context,\ m\_ctx-\/>GetId());}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00811\ }
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Fills\ in\ m\_timestampWrites\ and\ assigns\ its\ address\ to\ passDesc.timestampWrites.}}
+\DoxyCodeLine{00813\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Works\ with\ both\ WGPURenderPassDescriptor\ and\ WGPUComputePassDescriptor.}}
+\DoxyCodeLine{00814\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ PassDescriptor>}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ InitBase(WebGPUQueueCtx*\ ctx,\ WGPUCommandEncoder\ encoder,\ PassDescriptor\&\ passDesc)}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \ \ \ \ m\_ctx\ \ \ \ \ =\ ctx;}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ m\_encoder\ =\ encoder;}
+\DoxyCodeLine{00819\ }
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ m\_rawTicket\ =\ m\_ctx-\/>NextQueryId();}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ m\_queryId\ \ \ =\ m\_ctx-\/>RingIndex(m\_rawTicket);}
+\DoxyCodeLine{00822\ }
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \ \ \ \ m\_timestampWrites.querySet\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ m\_ctx-\/>m\_querySet;}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ m\_timestampWrites.beginningOfPassWriteIndex\ =\ m\_queryId;}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ \ \ m\_timestampWrites.endOfPassWriteIndex\ \ \ \ \ \ \ =\ m\_queryId\ +\ 1;}
+\DoxyCodeLine{00826\ \ \ \ \ \ \ \ \ \ \ \ \ passDesc.timestampWrites\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \&m\_timestampWrites;}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00828\ }
+\DoxyCodeLine{00829\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ PassDescriptor>}
+\DoxyCodeLine{00831\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ WebGPUZoneScope(WebGPUQueueCtx*\ ctx,\ WGPUCommandEncoder\ encoder,\ PassDescriptor\&\ passDesc,\ \textcolor{keyword}{const}\ SourceLocationData*\ srcLocation,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00832\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00833\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active\ \&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00834\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00835\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active)}
+\DoxyCodeLine{00836\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00838\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active\ ||\ !ctx)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00839\ \ \ \ \ \ \ \ \ \ \ \ \ InitBase(ctx,\ encoder,\ passDesc);}
+\DoxyCodeLine{00840\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(srcLocation,\ 0,\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0);}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00842\ }
+\DoxyCodeLine{00843\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ PassDescriptor>}
+\DoxyCodeLine{00844\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ WebGPUZoneScope(WebGPUQueueCtx*\ ctx,\ WGPUCommandEncoder\ encoder,\ PassDescriptor\&\ passDesc,\ \textcolor{keyword}{const}\ SourceLocationData*\ srcLocation,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00845\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00846\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active\ \&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00847\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00848\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active)}
+\DoxyCodeLine{00849\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00850\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00851\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active\ ||\ !ctx)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00852\ \ \ \ \ \ \ \ \ \ \ \ \ InitBase(ctx,\ encoder,\ passDesc);}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(srcLocation,\ depth,\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0,\ \textcolor{keyword}{nullptr},\ 0);}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00855\ }
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ PassDescriptor>}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ WebGPUZoneScope(WebGPUQueueCtx*\ ctx,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ WGPUCommandEncoder\ encoder,\ PassDescriptor\&\ passDesc,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00858\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00859\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active\ \&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00860\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00861\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active)}
+\DoxyCodeLine{00862\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active\ ||\ !ctx)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \ \ \ \ InitBase(ctx,\ encoder,\ passDesc);}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(\textcolor{keyword}{nullptr},\ 0,\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz);}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00868\ }
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ PassDescriptor>}
+\DoxyCodeLine{00870\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ WebGPUZoneScope(WebGPUQueueCtx*\ ctx,\ uint32\_t\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ source,\ \textcolor{keywordtype}{size\_t}\ sourceSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ function,\ \textcolor{keywordtype}{size\_t}\ functionSz,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ name,\ \textcolor{keywordtype}{size\_t}\ nameSz,\ WGPUCommandEncoder\ encoder,\ PassDescriptor\&\ passDesc,\ int32\_t\ depth,\ \textcolor{keywordtype}{bool}\ active)}
+\DoxyCodeLine{00871\ \textcolor{preprocessor}{\#ifdef\ TRACY\_ON\_DEMAND}}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active\ \&\&\ GetProfiler().IsConnected())}
+\DoxyCodeLine{00873\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ \ \ \ \ :\ m\_active(active)}
+\DoxyCodeLine{00875\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00877\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active\ ||\ !ctx)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ \ \ \ \ InitBase(ctx,\ encoder,\ passDesc);}
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \ \ \ \ WriteQueueItem(\textcolor{keyword}{nullptr},\ depth,\ line,\ source,\ sourceSz,\ function,\ functionSz,\ name,\ nameSz);}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ tracy\_force\_inline\ \string~WebGPUZoneScope()}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_active\ ||\ !m\_ctx)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00885\ }
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\ queryId\ =\ m\_queryId\ +\ 1;}
+\DoxyCodeLine{00887\ }
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ item\ =\ Profiler::QueueSerial();}
+\DoxyCodeLine{00889\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>hdr.type,\ QueueType::GpuZoneEndSerial);}
+\DoxyCodeLine{00890\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.cpuTime,\ Profiler::GetTime());}
+\DoxyCodeLine{00891\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.thread,\ GetThreadHandle());}
+\DoxyCodeLine{00892\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.queryId,\ \textcolor{keyword}{static\_cast<}uint16\_t\textcolor{keyword}{>}(queryId));}
+\DoxyCodeLine{00893\ \ \ \ \ \ \ \ \ \ \ \ \ MemWrite(\&item-\/>gpuZoneEnd.context,\ m\_ctx-\/>GetId());}
+\DoxyCodeLine{00894\ \ \ \ \ \ \ \ \ \ \ \ \ Profiler::QueueSerialFinish();}
+\DoxyCodeLine{00895\ }
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_queryId\ \%\ 32\ ==\ 0)}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ResolveQueryBatch(m\_queryId-\/32);}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00899\ \ \ \ \ \};}
+\DoxyCodeLine{00900\ }
+\DoxyCodeLine{00901\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ DestroyWebGPUContext(WebGPUQueueCtx*\ ctx)}
+\DoxyCodeLine{00902\ \ \ \ \ \{}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!ctx)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ ctx-\/>\string~WebGPUQueueCtx();}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ tracy\_free(ctx);}
+\DoxyCodeLine{00906\ \ \ \ \ \}}
+\DoxyCodeLine{00907\ }
+\DoxyCodeLine{00908\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{inline}\ WebGPUQueueCtx*\ CreateWebGPUContext(WGPUInstance\ instance,\ WGPUDevice\ device,\ WGPUQueue\ queue)}
+\DoxyCodeLine{00909\ \ \ \ \ \{}
+\DoxyCodeLine{00910\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}*\ ctx\ =\ \textcolor{keyword}{static\_cast<}WebGPUQueueCtx*\textcolor{keyword}{>}(tracy\_malloc(\textcolor{keyword}{sizeof}(WebGPUQueueCtx)));}
+\DoxyCodeLine{00911\ \ \ \ \ \ \ \ \ \textcolor{keyword}{new}\ (ctx)\ WebGPUQueueCtx\{\ instance,\ device,\ queue\ \};}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (ctx-\/>GetId()\ ==\ 255)}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \ \ \ \ DestroyWebGPUContext(ctx);}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ctx;}
+\DoxyCodeLine{00918\ \ \ \ \ \}}
+\DoxyCodeLine{00919\ }
+\DoxyCodeLine{00920\ \}}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00922\ \textcolor{preprocessor}{\#undef\ TracyWebGPUPanic}}
+\DoxyCodeLine{00923\ \textcolor{preprocessor}{\#undef\ TracyWebGPULog}}
+\DoxyCodeLine{00924\ \textcolor{preprocessor}{\#undef\ TracyWebGPUAssert}}
+\DoxyCodeLine{00925\ \textcolor{preprocessor}{\#undef\ TracyWebGPUBreak}}
+\DoxyCodeLine{00926\ \textcolor{preprocessor}{\#undef\ TracyWebGPUDebug}}
+\DoxyCodeLine{00927\ \textcolor{preprocessor}{\#undef\ TRACY\_WEBGPU\_DEBUG\_LEVEL}}
+\DoxyCodeLine{00928\ }
+\DoxyCodeLine{00929\ \textcolor{keyword}{using\ }TracyWebGPUCtx\ =\ tracy::WebGPUQueueCtx*;}
+\DoxyCodeLine{00930\ }
+\DoxyCodeLine{00931\ \textcolor{preprocessor}{\#define\ TracyWebGPUSetupDeviceDescriptor(deviceDescriptor)\ tracy::WebGPUQueueCtx::Requirements\ TracyConcat(\_\_tracy\_wgpu\_setup\_,\ TracyLine);\ TracyConcat(\_\_tracy\_wgpu\_setup\_,\ TracyLine).ApplyToDeviceDescriptor(deviceDescriptor)}}
+\DoxyCodeLine{00932\ }
+\DoxyCodeLine{00933\ \textcolor{preprocessor}{\#define\ TracyWebGPUContext(instance,\ device,\ queue)\ tracy::CreateWebGPUContext(instance,\ device,\ queue);}}
+\DoxyCodeLine{00934\ \textcolor{preprocessor}{\#define\ TracyWebGPUDestroy(ctx)\ tracy::DestroyWebGPUContext(ctx);}}
+\DoxyCodeLine{00935\ \textcolor{preprocessor}{\#define\ TracyWebGPUContextName(ctx,\ name,\ size)\ if\ (ctx)\ ctx-\/>Name(name,\ size);}}
+\DoxyCodeLine{00936\ }
+\DoxyCodeLine{00937\ \textcolor{preprocessor}{\#define\ TracyWebGPUUnnamedZone\ \_\_\_tracy\_gpu\_webgpu\_zone}}
+\DoxyCodeLine{00938\ \textcolor{preprocessor}{\#define\ TracyWebGPUSrcLocSymbol\ TracyConcat(\_\_tracy\_webgpu\_source\_location,TracyLine)}}
+\DoxyCodeLine{00939\ \textcolor{preprocessor}{\#define\ TracyWebGPUSrcLocObject(name,\ color)\ static\ constexpr\ tracy::SourceLocationData\ TracyWebGPUSrcLocSymbol\ \{\ name,\ TracyFunction,\ TracyFile,\ (uint32\_t)TracyLine,\ color\ \};}}
+\DoxyCodeLine{00940\ }
+\DoxyCodeLine{00941\ \textcolor{preprocessor}{\#if\ defined\ TRACY\_HAS\_CALLSTACK\ \&\&\ defined\ TRACY\_CALLSTACK}}
+\DoxyCodeLine{00942\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZone(ctx,\ encoder,\ passDesc,\ name)\ TracyWebGPUNamedZoneS(ctx,\ TracyWebGPUUnnamedZone,\ encoder,\ passDesc,\ name,\ TRACY\_CALLSTACK,\ true)}}
+\DoxyCodeLine{00943\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneC(ctx,\ encoder,\ passDesc,\ name,\ color)\ TracyWebGPUNamedZoneCS(ctx,\ TracyWebGPUUnnamedZone,\ encoder,\ passDesc,\ name,\ color,\ TRACY\_CALLSTACK,\ true)}}
+\DoxyCodeLine{00944\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZone(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)\ TracyWebGPUSrcLocObject(name,\ 0);\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ encoder,\ passDesc,\ \&TracyWebGPUSrcLocSymbol,\ TRACY\_CALLSTACK,\ active\ \};}}
+\DoxyCodeLine{00945\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZoneC(ctx,\ varname,\ encoder,\ passDesc,\ name,\ color,\ active)\ TracyWebGPUSrcLocObject(name,\ color);\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ encoder,\ passDesc,\ \&TracyWebGPUSrcLocSymbol,\ TRACY\_CALLSTACK,\ active\ \};}}
+\DoxyCodeLine{00946\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneTransient(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)\ TracyWebGPUZoneTransientS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ TRACY\_CALLSTACK,\ active)}}
+\DoxyCodeLine{00947\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00948\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZone(ctx,\ encoder,\ passDesc,\ name)\ TracyWebGPUNamedZone(ctx,\ TracyWebGPUUnnamedZone,\ encoder,\ passDesc,\ name,\ true)}}
+\DoxyCodeLine{00949\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneC(ctx,\ encoder,\ passDesc,\ name,\ color)\ TracyWebGPUNamedZoneC(ctx,\ TracyWebGPUUnnamedZone,\ encoder,\ passDesc,\ name,\ color,\ true)}}
+\DoxyCodeLine{00950\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZone(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)\ TracyWebGPUSrcLocObject(name,\ 0);\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ encoder,\ passDesc,\ \&TracyWebGPUSrcLocSymbol,\ active\ \};}}
+\DoxyCodeLine{00951\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZoneC(ctx,\ varname,\ encoder,\ passDesc,\ name,\ color,\ active)\ TracyWebGPUSrcLocObject(name,\ color);\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ encoder,\ passDesc,\ \&TracyWebGPUSrcLocSymbol,\ active\ \};}}
+\DoxyCodeLine{00952\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneTransient(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ TracyLine,\ TracyFile,\ strlen(TracyFile),\ TracyFunction,\ strlen(TracyFunction),\ name,\ strlen(name),\ encoder,\ passDesc,\ active\ \};}}
+\DoxyCodeLine{00953\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00954\ }
+\DoxyCodeLine{00955\ \textcolor{preprocessor}{\#ifdef\ TRACY\_HAS\_CALLSTACK}}
+\DoxyCodeLine{00956\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneS(ctx,\ encoder,\ passDesc,\ name,\ depth)\ TracyWebGPUNamedZoneS(ctx,\ TracyWebGPUUnnamedZone,\ encoder,\ passDesc,\ name,\ depth,\ true)}}
+\DoxyCodeLine{00957\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneCS(ctx,\ encoder,\ passDesc,\ name,\ color,\ depth)\ TracyWebGPUNamedZoneCS(ctx,\ TracyWebGPUUnnamedZone,\ encoder,\ passDesc,\ name,\ color,\ depth,\ true)}}
+\DoxyCodeLine{00958\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZoneS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ depth,\ active)\ TracyWebGPUSrcLocObject(name,\ 0);\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ encoder,\ passDesc,\ \&TracyWebGPUSrcLocSymbol,\ depth,\ active\ \};}}
+\DoxyCodeLine{00959\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZoneCS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ color,\ depth,\ active)\ TracyWebGPUSrcLocObject(name,\ color);\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ encoder,\ passDesc,\ \&TracyWebGPUSrcLocSymbol,\ depth,\ active\ \};}}
+\DoxyCodeLine{00960\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneTransientS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ depth,\ active)\ tracy::WebGPUZoneScope\ varname\{\ ctx,\ TracyLine,\ TracyFile,\ strlen(TracyFile),\ TracyFunction,\ strlen(TracyFunction),\ name,\ strlen(name),\ encoder,\ passDesc,\ depth,\ active\ \};}}
+\DoxyCodeLine{00961\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00962\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneS(ctx,\ encoder,\ passDesc,\ name,\ depth)\ TracyWebGPUZone(ctx,\ encoder,\ passDesc,\ name)}}
+\DoxyCodeLine{00963\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneCS(ctx,\ encoder,\ passDesc,\ name,\ color,\ depth)\ TracyWebGPUZoneC(ctx,\ encoder,\ passDesc,\ name,\ color)}}
+\DoxyCodeLine{00964\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZoneS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ depth,\ active)\ TracyWebGPUNamedZone(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)}}
+\DoxyCodeLine{00965\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUNamedZoneCS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ color,\ depth,\ active)\ TracyWebGPUNamedZoneC(ctx,\ varname,\ encoder,\ passDesc,\ name,\ color,\ active)}}
+\DoxyCodeLine{00966\ \textcolor{preprocessor}{\#\ \ define\ TracyWebGPUZoneTransientS(ctx,\ varname,\ encoder,\ passDesc,\ name,\ depth,\ active)\ TracyWebGPUZoneTransient(ctx,\ varname,\ encoder,\ passDesc,\ name,\ active)}}
+\DoxyCodeLine{00967\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00968\ }
+\DoxyCodeLine{00969\ \textcolor{preprocessor}{\#define\ TracyWebGPUCollect(ctx)\ if\ (ctx)\ ctx-\/>Collect();}}
+\DoxyCodeLine{00970\ }
+\DoxyCodeLine{00971\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00972\ }
+\DoxyCodeLine{00973\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

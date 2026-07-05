@@ -1,0 +1,185 @@
+\doxysection{rotating\+\_\+file\+\_\+sink-\/inl.h}
+\hypertarget{rotating__file__sink-inl_8h_source}{}\label{rotating__file__sink-inl_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/rotating\_file\_sink-\/inl.h@{MonoEngine/thirdparty/spdlog/include/spdlog/sinks/rotating\_file\_sink-\/inl.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_HEADER\_ONLY}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <spdlog/sinks/rotating\_file\_sink.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <spdlog/common.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <spdlog/details/file\_helper.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <spdlog/details/null\_mutex.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <spdlog/fmt/fmt.h>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <cerrno>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <ctime>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <tuple>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }sinks\ \{}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00026\ SPDLOG\_INLINE\ rotating\_file\_sink<Mutex>::rotating\_file\_sink(}
+\DoxyCodeLine{00027\ \ \ \ \ filename\_t\ base\_filename,}
+\DoxyCodeLine{00028\ \ \ \ \ std::size\_t\ max\_size,}
+\DoxyCodeLine{00029\ \ \ \ \ std::size\_t\ max\_files,}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ rotate\_on\_open,}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{const}\ file\_event\_handlers\ \&event\_handlers)}
+\DoxyCodeLine{00032\ \ \ \ \ :\ base\_filename\_(std::move(base\_filename)),}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ max\_size\_(max\_size),}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ max\_files\_(max\_files),}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ file\_helper\_\{event\_handlers\}\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_size\ ==\ 0)\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}rotating\ sink\ constructor:\ max\_size\ arg\ cannot\ be\ zero"{}});}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_files\ >\ MaxFiles)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}rotating\ sink\ constructor:\ max\_files\ arg\ cannot\ exceed\ MaxFiles"{}});}
+\DoxyCodeLine{00042\ \ \ \ \ \}}
+\DoxyCodeLine{00043\ \ \ \ \ file\_helper\_.open(calc\_filename(base\_filename\_,\ 0));}
+\DoxyCodeLine{00044\ \ \ \ \ current\_size\_\ =\ file\_helper\_.size();\ \ \textcolor{comment}{//\ expensive.\ called\ only\ once}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordflow}{if}\ (rotate\_on\_open\ \&\&\ current\_size\_\ >\ 0)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ rotate\_();}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ current\_size\_\ =\ 0;}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ calc\ filename\ according\ to\ index\ and\ file\ extension\ if\ exists.}}
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ e.g.\ calc\_filename("{}logs/mylog.txt,\ 3)\ =>\ "{}logs/mylog.3.txt"{}.}}
+\DoxyCodeLine{00053\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00054\ SPDLOG\_INLINE\ filename\_t\ rotating\_file\_sink<Mutex>::calc\_filename(\textcolor{keyword}{const}\ filename\_t\ \&filename,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::size\_t\ index)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordflow}{if}\ (index\ ==\ 0U)\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ filename;}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ filename\_t\ basename;}
+\DoxyCodeLine{00061\ \ \ \ \ filename\_t\ ext;}
+\DoxyCodeLine{00062\ \ \ \ \ std::tie(basename,\ ext)\ =\ details::file\_helper::split\_by\_extension(filename);}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordflow}{return}\ fmt\_lib::format(SPDLOG\_FMT\_STRING(SPDLOG\_FILENAME\_T(\textcolor{stringliteral}{"{}\{\}.\{\}\{\}"{}})),\ basename,\ index,\ ext);}
+\DoxyCodeLine{00064\ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00067\ SPDLOG\_INLINE\ filename\_t\ rotating\_file\_sink<Mutex>::filename()\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{return}\ file\_helper\_.filename();}
+\DoxyCodeLine{00070\ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00073\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ rotating\_file\_sink<Mutex>::rotate\_now()\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00075\ \ \ \ \ rotate\_();}
+\DoxyCodeLine{00076\ \}}
+\DoxyCodeLine{00077\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00078\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ rotating\_file\_sink<Mutex>::set\_max\_size(std::size\_t\ max\_size)\ \{}
+\DoxyCodeLine{00079\ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_size\ ==\ 0)\ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}rotating\ sink\ set\_max\_size:\ max\_size\ arg\ cannot\ be\ zero"{}});}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \ \ \ \ max\_size\_\ =\ max\_size;}
+\DoxyCodeLine{00084\ \}}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00087\ SPDLOG\_INLINE\ std::size\_t\ rotating\_file\_sink<Mutex>::get\_max\_size()\ \{}
+\DoxyCodeLine{00088\ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordflow}{return}\ max\_size\_;}
+\DoxyCodeLine{00090\ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00093\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ rotating\_file\_sink<Mutex>::set\_max\_files(std::size\_t\ max\_files)\ \{}
+\DoxyCodeLine{00094\ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_files\ >\ MaxFiles)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}rotating\ sink\ set\_max\_files:\ max\_files\ arg\ cannot\ exceed\ 200000"{}});}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ \ \ \ \ max\_files\_\ =\ max\_files;}
+\DoxyCodeLine{00099\ \}}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00102\ std::size\_t\ rotating\_file\_sink<Mutex>::get\_max\_files()\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ std::lock\_guard<Mutex>\ lock(base\_sink<Mutex>::mutex\_);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordflow}{return}\ max\_files\_;}
+\DoxyCodeLine{00105\ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00108\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ rotating\_file\_sink<Mutex>::sink\_it\_(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdetails_1_1log__msg}{details::log\_msg}}\ \&msg)\ \{}
+\DoxyCodeLine{00109\ \ \ \ \ memory\_buf\_t\ formatted;}
+\DoxyCodeLine{00110\ \ \ \ \ base\_sink<Mutex>::formatter\_-\/>format(msg,\ formatted);}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{auto}\ new\_size\ =\ current\_size\_\ +\ formatted.size();}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{comment}{//\ rotate\ if\ the\ new\ estimated\ file\ size\ exceeds\ max\ size.}}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{comment}{//\ rotate\ only\ if\ the\ real\ size\ >\ 0\ to\ better\ deal\ with\ full\ disk\ (see\ issue\ \#2261).}}
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{comment}{//\ we\ only\ check\ the\ real\ size\ when\ new\_size\ >\ max\_size\_\ because\ it\ is\ relatively\ expensive.}}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordflow}{if}\ (new\_size\ >\ max\_size\_)\ \{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ file\_helper\_.flush();}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (file\_helper\_.size()\ >\ 0)\ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ rotate\_();}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ new\_size\ =\ formatted.size();}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \ \ file\_helper\_.write(formatted);}
+\DoxyCodeLine{00124\ \ \ \ \ current\_size\_\ =\ new\_size;}
+\DoxyCodeLine{00125\ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00128\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ rotating\_file\_sink<Mutex>::flush\_()\ \{}
+\DoxyCodeLine{00129\ \ \ \ \ file\_helper\_.flush();}
+\DoxyCodeLine{00130\ \}}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \textcolor{comment}{//\ Rotate\ files:}}
+\DoxyCodeLine{00133\ \textcolor{comment}{//\ log.txt\ -\/>\ log.1.txt}}
+\DoxyCodeLine{00134\ \textcolor{comment}{//\ log.1.txt\ -\/>\ log.2.txt}}
+\DoxyCodeLine{00135\ \textcolor{comment}{//\ log.2.txt\ -\/>\ log.3.txt}}
+\DoxyCodeLine{00136\ \textcolor{comment}{//\ log.3.txt\ -\/>\ delete}}
+\DoxyCodeLine{00137\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00138\ SPDLOG\_INLINE\ \textcolor{keywordtype}{void}\ rotating\_file\_sink<Mutex>::rotate\_()\ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{using\ }details::os::filename\_to\_str;}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{using\ }details::os::path\_exists;}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ file\_helper\_.close();}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keyword}{auto}\ i\ =\ max\_files\_;\ i\ >\ 0;\ -\/-\/i)\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ filename\_t\ src\ =\ calc\_filename(base\_filename\_,\ i\ -\/\ 1);}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!path\_exists(src))\ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ filename\_t\ target\ =\ calc\_filename(base\_filename\_,\ i);}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!rename\_file\_(src,\ target))\ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ failed\ try\ again\ after\ a\ small\ delay.}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ this\ is\ a\ workaround\ to\ a\ windows\ issue,\ where\ very\ high\ rotation}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ rates\ can\ cause\ the\ rename\ to\ fail\ with\ permission\ denied\ (because\ of\ antivirus?).}}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ details::os::sleep\_for\_millis(100);}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!rename\_file\_(src,\ target))\ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ file\_helper\_.reopen(}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{true});\ \ \textcolor{comment}{//\ truncate\ the\ log\ file\ anyway\ to\ prevent\ it\ to\ grow\ beyond\ its\ limit!}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_size\_\ =\ 0;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\_spdlog\_ex(\textcolor{stringliteral}{"{}rotating\_file\_sink:\ failed\ renaming\ "{}}\ +\ filename\_to\_str(src)\ +}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ to\ "{}}\ +\ filename\_to\_str(target),}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ errno);}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \}}
+\DoxyCodeLine{00165\ \ \ \ \ file\_helper\_.reopen(\textcolor{keyword}{true});}
+\DoxyCodeLine{00166\ \}}
+\DoxyCodeLine{00167\ }
+\DoxyCodeLine{00168\ \textcolor{comment}{//\ delete\ the\ target\ if\ exists,\ and\ rename\ the\ src\ file\ \ to\ target}}
+\DoxyCodeLine{00169\ \textcolor{comment}{//\ return\ true\ on\ success,\ false\ otherwise.}}
+\DoxyCodeLine{00170\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Mutex>}
+\DoxyCodeLine{00171\ SPDLOG\_INLINE\ \textcolor{keywordtype}{bool}\ rotating\_file\_sink<Mutex>::rename\_file\_(\textcolor{keyword}{const}\ filename\_t\ \&src\_filename,}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ filename\_t\ \&target\_filename)\ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{comment}{//\ try\ to\ delete\ the\ target\ file\ in\ case\ it\ already\ exists.}}
+\DoxyCodeLine{00174\ \ \ \ \ (void)details::os::remove(target\_filename);}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordflow}{return}\ details::os::rename(src\_filename,\ target\_filename)\ ==\ 0;}
+\DoxyCodeLine{00176\ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \}\ \ \textcolor{comment}{//\ namespace\ sinks}}
+\DoxyCodeLine{00179\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

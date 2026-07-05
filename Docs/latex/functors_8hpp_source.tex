@@ -1,0 +1,106 @@
+\doxysection{functors.\+hpp}
+\hypertarget{functors_8hpp_source}{}\label{functors_8hpp_source}\index{MonoEngine/thirdparty/tracy/dtl/functors.hpp@{MonoEngine/thirdparty/tracy/dtl/functors.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{comment}{/*\ If\ you\ use\ this\ library,\ you\ must\ include\ dtl.hpp\ only.\ */}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifndef\ DTL\_FUNCTORS\_H}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#define\ DTL\_FUNCTORS\_H}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacedtl}{dtl}}\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ sesElem,\ \textcolor{keyword}{typename}\ stream\ =\ ostream\ >}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{class\ }Printer}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ public\ :}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ Printer\ ()\ \ \ \ \ \ \ \ \ \ \ \ :\ out\_(cout)\ \{\}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ Printer\ (stream\&\ out)\ :\ out\_(out)\ \ \{\}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \string~Printer\ ()\ \{\}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ operator()\ (\textcolor{keyword}{const}\ sesElem\&\ se)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00054\ \ \ \ \ protected\ :}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ stream\&\ out\_;}
+\DoxyCodeLine{00056\ \ \ \ \ \};}
+\DoxyCodeLine{00057\ \ \ \ \ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ sesElem,\ \textcolor{keyword}{typename}\ stream\ =\ ostream\ >}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{class\ }CommonPrinter\ :\ \textcolor{keyword}{public}\ Printer\ <\ sesElem,\ stream\ >}
+\DoxyCodeLine{00063\ \ \ \ \ \{}
+\DoxyCodeLine{00064\ \ \ \ \ public\ :}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ CommonPrinter\ \ ()\ \ \ \ \ \ \ \ \ \ \ \ :\ Printer\ <\ sesElem,\ stream\ >\ ()\ \ \ \ \{\}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ CommonPrinter\ \ (stream\&\ out)\ :\ Printer\ <\ sesElem,\ stream\ >\ (out)\ \{\}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \string~CommonPrinter\ ()\ \{\}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ operator()\ (\textcolor{keyword}{const}\ sesElem\&\ se)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>out\_\ <<\ SES\_MARK\_COMMON\ <<\ se.first\ <<\ endl;\ \ \ \ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \};}
+\DoxyCodeLine{00072\ \ \ \ \ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ sesElem,\ \textcolor{keyword}{typename}\ stream\ =\ ostream\ >}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{class\ }ChangePrinter\ :\ \textcolor{keyword}{public}\ Printer\ <\ sesElem,\ stream\ >}
+\DoxyCodeLine{00078\ \ \ \ \ \{}
+\DoxyCodeLine{00079\ \ \ \ \ public\ :}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ ChangePrinter\ \ ()\ \ \ \ \ \ \ \ \ \ \ \ :\ Printer\ <\ sesElem,\ stream\ >\ ()\ \ \ \ \{\}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ ChangePrinter\ \ (stream\&\ out)\ :\ Printer\ <\ sesElem,\ stream\ >\ (out)\ \{\}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \string~ChangePrinter\ ()\ \{\}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ operator()\ (\textcolor{keyword}{const}\ sesElem\&\ se)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (se.second.type)\ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_ADD:}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>out\_\ <<\ SES\_MARK\_ADD\ \ \ \ <<\ se.first\ <<\ endl;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_DELETE:}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>out\_\ <<\ SES\_MARK\_DELETE\ <<\ se.first\ <<\ endl;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ SES\_COMMON:}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>out\_\ <<\ SES\_MARK\_COMMON\ <<\ se.first\ <<\ endl;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \ \ \ \ \};}
+\DoxyCodeLine{00097\ \ \ \ \ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ sesElem,\ \textcolor{keyword}{typename}\ stream\ =\ ostream\ >}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{class\ }UniHunkPrinter}
+\DoxyCodeLine{00103\ \ \ \ \ \{}
+\DoxyCodeLine{00104\ \ \ \ \ public\ :}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ UniHunkPrinter\ \ ()\ \ \ \ \ \ \ \ \ \ \ \ :\ out\_(cout)\ \{\}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ UniHunkPrinter\ \ (stream\&\ out)\ :\ out\_(out)\ \ \{\}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \string~UniHunkPrinter\ ()\ \{\}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ operator()\ (\textcolor{keyword}{const}\ \doxymbox{\hyperlink{structdtl_1_1uni_hunk}{uniHunk<\ sesElem\ >}}\&\ hunk)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ out\_\ <<\ \textcolor{stringliteral}{"{}@@"{}}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ -\/"{}}\ \ <<\ hunk.a\ <<\ \textcolor{stringliteral}{"{},"{}}\ <<\ hunk.b}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ +"{}}\ \ <<\ hunk.c\ <<\ \textcolor{stringliteral}{"{},"{}}\ <<\ hunk.d}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ @@"{}}\ <<\ endl;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(hunk.common[0].begin(),\ hunk.common[0].end(),\ \doxymbox{\hyperlink{classdtl_1_1_common_printer}{CommonPrinter<\ sesElem,\ stream\ >}}(out\_));}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(hunk.change.begin(),\ \ \ \ hunk.change.end(),\ \ \ \ \doxymbox{\hyperlink{classdtl_1_1_change_printer}{ChangePrinter<\ sesElem,\ stream\ >}}(out\_));}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ for\_each(hunk.common[1].begin(),\ hunk.common[1].end(),\ \doxymbox{\hyperlink{classdtl_1_1_common_printer}{CommonPrinter<\ sesElem,\ stream\ >}}(out\_));}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ private\ :}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ stream\&\ out\_;}
+\DoxyCodeLine{00120\ \ \ \ \ \};}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ sesElem,\ \textcolor{keyword}{typename}\ storedData\ >}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{class\ }Storage}
+\DoxyCodeLine{00127\ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ Storage(storedData\&\ sd)\ :\ storedData\_(sd)\ \{\}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \string~Storage()\ \{\}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ operator()\ (\textcolor{keyword}{const}\ sesElem\&\ se)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ storedData\&\ storedData\_;}
+\DoxyCodeLine{00134\ \ \ \ \ \};}
+\DoxyCodeLine{00135\ \ \ \ \ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ elem>}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{class\ }Compare}
+\DoxyCodeLine{00141\ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ public\ :}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ Compare\ ()\ \{\}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \string~Compare\ ()\ \{\}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ impl\ (\textcolor{keyword}{const}\ elem\&\ e1,\ \textcolor{keyword}{const}\ elem\&\ e2)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ e1\ ==\ e2;}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \};}
+\DoxyCodeLine{00149\ \}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DTL\_FUNCTORS\_H}}
+
+\end{DoxyCode}

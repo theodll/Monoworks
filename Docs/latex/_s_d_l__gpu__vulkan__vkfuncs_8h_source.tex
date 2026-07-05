@@ -1,0 +1,185 @@
+\doxysection{SDL\+\_\+gpu\+\_\+vulkan\+\_\+vkfuncs.\+h}
+\hypertarget{_s_d_l__gpu__vulkan__vkfuncs_8h_source}{}\label{_s_d_l__gpu__vulkan__vkfuncs_8h_source}\index{MonoRuntime/extern/sdl/src/gpu/vulkan/SDL\_gpu\_vulkan\_vkfuncs.h@{MonoRuntime/extern/sdl/src/gpu/vulkan/SDL\_gpu\_vulkan\_vkfuncs.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00023\ \textcolor{comment}{\ *\ Global\ functions\ from\ the\ Vulkan\ Loader}}
+\DoxyCodeLine{00024\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_GLOBAL\_FUNCTION}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#define\ VULKAN\_GLOBAL\_FUNCTION(name)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00029\ VULKAN\_GLOBAL\_FUNCTION(vkCreateInstance)}
+\DoxyCodeLine{00030\ VULKAN\_GLOBAL\_FUNCTION(vkEnumerateInstanceExtensionProperties)}
+\DoxyCodeLine{00031\ VULKAN\_GLOBAL\_FUNCTION(vkEnumerateInstanceLayerProperties)}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ *\ vkInstance,\ created\ by\ global\ vkCreateInstance\ function}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_INSTANCE\_FUNCTION}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ VULKAN\_INSTANCE\_FUNCTION(name)}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \textcolor{comment}{//\ Vulkan\ 1.0}}
+\DoxyCodeLine{00042\ VULKAN\_INSTANCE\_FUNCTION(vkGetDeviceProcAddr)}
+\DoxyCodeLine{00043\ VULKAN\_INSTANCE\_FUNCTION(vkCreateDevice)}
+\DoxyCodeLine{00044\ VULKAN\_INSTANCE\_FUNCTION(vkDestroyInstance)}
+\DoxyCodeLine{00045\ VULKAN\_INSTANCE\_FUNCTION(vkEnumerateDeviceExtensionProperties)}
+\DoxyCodeLine{00046\ VULKAN\_INSTANCE\_FUNCTION(vkEnumeratePhysicalDevices)}
+\DoxyCodeLine{00047\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceFeatures)}
+\DoxyCodeLine{00048\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceQueueFamilyProperties)}
+\DoxyCodeLine{00049\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceFormatProperties)}
+\DoxyCodeLine{00050\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceImageFormatProperties)}
+\DoxyCodeLine{00051\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceMemoryProperties)}
+\DoxyCodeLine{00052\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceProperties)}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \textcolor{comment}{//\ Vulkan\ 1.1\ (Needed\ for\ opt-\/in\ feature\ checks)}}
+\DoxyCodeLine{00055\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceFeatures2)}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{comment}{//\ VK\_KHR\_get\_physical\_device\_properties2,\ needed\ for\ KHR\_driver\_properties}}
+\DoxyCodeLine{00058\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceProperties2KHR)}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{comment}{//\ VK\_KHR\_surface}}
+\DoxyCodeLine{00061\ VULKAN\_INSTANCE\_FUNCTION(vkDestroySurfaceKHR)}
+\DoxyCodeLine{00062\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceSurfaceCapabilitiesKHR)}
+\DoxyCodeLine{00063\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceSurfaceFormatsKHR)}
+\DoxyCodeLine{00064\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceSurfacePresentModesKHR)}
+\DoxyCodeLine{00065\ VULKAN\_INSTANCE\_FUNCTION(vkGetPhysicalDeviceSurfaceSupportKHR)}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ VK\_EXT\_debug\_utils}}
+\DoxyCodeLine{00068\ VULKAN\_INSTANCE\_FUNCTION(vkCmdBeginDebugUtilsLabelEXT)}
+\DoxyCodeLine{00069\ VULKAN\_INSTANCE\_FUNCTION(vkSetDebugUtilsObjectNameEXT)}
+\DoxyCodeLine{00070\ VULKAN\_INSTANCE\_FUNCTION(vkCmdEndDebugUtilsLabelEXT)}
+\DoxyCodeLine{00071\ VULKAN\_INSTANCE\_FUNCTION(vkCmdInsertDebugUtilsLabelEXT)}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ *\ vkDevice,\ created\ by\ a\ vkInstance}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_DEVICE\_FUNCTION}}
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#define\ VULKAN\_DEVICE\_FUNCTION(name)}}
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{//\ Vulkan\ 1.0}}
+\DoxyCodeLine{00082\ VULKAN\_DEVICE\_FUNCTION(vkAllocateCommandBuffers)}
+\DoxyCodeLine{00083\ VULKAN\_DEVICE\_FUNCTION(vkAllocateDescriptorSets)}
+\DoxyCodeLine{00084\ VULKAN\_DEVICE\_FUNCTION(vkAllocateMemory)}
+\DoxyCodeLine{00085\ VULKAN\_DEVICE\_FUNCTION(vkBeginCommandBuffer)}
+\DoxyCodeLine{00086\ VULKAN\_DEVICE\_FUNCTION(vkBindBufferMemory)}
+\DoxyCodeLine{00087\ VULKAN\_DEVICE\_FUNCTION(vkBindImageMemory)}
+\DoxyCodeLine{00088\ VULKAN\_DEVICE\_FUNCTION(vkCmdBeginRenderPass)}
+\DoxyCodeLine{00089\ VULKAN\_DEVICE\_FUNCTION(vkCmdBindDescriptorSets)}
+\DoxyCodeLine{00090\ VULKAN\_DEVICE\_FUNCTION(vkCmdBindIndexBuffer)}
+\DoxyCodeLine{00091\ VULKAN\_DEVICE\_FUNCTION(vkCmdBindPipeline)}
+\DoxyCodeLine{00092\ VULKAN\_DEVICE\_FUNCTION(vkCmdBindVertexBuffers)}
+\DoxyCodeLine{00093\ VULKAN\_DEVICE\_FUNCTION(vkCmdBlitImage)}
+\DoxyCodeLine{00094\ VULKAN\_DEVICE\_FUNCTION(vkCmdClearAttachments)}
+\DoxyCodeLine{00095\ VULKAN\_DEVICE\_FUNCTION(vkCmdClearColorImage)}
+\DoxyCodeLine{00096\ VULKAN\_DEVICE\_FUNCTION(vkCmdClearDepthStencilImage)}
+\DoxyCodeLine{00097\ VULKAN\_DEVICE\_FUNCTION(vkCmdCopyBuffer)}
+\DoxyCodeLine{00098\ VULKAN\_DEVICE\_FUNCTION(vkCmdCopyImage)}
+\DoxyCodeLine{00099\ VULKAN\_DEVICE\_FUNCTION(vkCmdCopyBufferToImage)}
+\DoxyCodeLine{00100\ VULKAN\_DEVICE\_FUNCTION(vkCmdCopyImageToBuffer)}
+\DoxyCodeLine{00101\ VULKAN\_DEVICE\_FUNCTION(vkCmdDispatch)}
+\DoxyCodeLine{00102\ VULKAN\_DEVICE\_FUNCTION(vkCmdDispatchIndirect)}
+\DoxyCodeLine{00103\ VULKAN\_DEVICE\_FUNCTION(vkCmdDraw)}
+\DoxyCodeLine{00104\ VULKAN\_DEVICE\_FUNCTION(vkCmdDrawIndexed)}
+\DoxyCodeLine{00105\ VULKAN\_DEVICE\_FUNCTION(vkCmdDrawIndexedIndirect)}
+\DoxyCodeLine{00106\ VULKAN\_DEVICE\_FUNCTION(vkCmdDrawIndirect)}
+\DoxyCodeLine{00107\ VULKAN\_DEVICE\_FUNCTION(vkCmdEndRenderPass)}
+\DoxyCodeLine{00108\ VULKAN\_DEVICE\_FUNCTION(vkCmdPipelineBarrier)}
+\DoxyCodeLine{00109\ VULKAN\_DEVICE\_FUNCTION(vkCmdResolveImage)}
+\DoxyCodeLine{00110\ VULKAN\_DEVICE\_FUNCTION(vkCmdSetBlendConstants)}
+\DoxyCodeLine{00111\ VULKAN\_DEVICE\_FUNCTION(vkCmdSetDepthBias)}
+\DoxyCodeLine{00112\ VULKAN\_DEVICE\_FUNCTION(vkCmdSetScissor)}
+\DoxyCodeLine{00113\ VULKAN\_DEVICE\_FUNCTION(vkCmdSetStencilReference)}
+\DoxyCodeLine{00114\ VULKAN\_DEVICE\_FUNCTION(vkCmdSetViewport)}
+\DoxyCodeLine{00115\ VULKAN\_DEVICE\_FUNCTION(vkCreateBuffer)}
+\DoxyCodeLine{00116\ VULKAN\_DEVICE\_FUNCTION(vkCreateCommandPool)}
+\DoxyCodeLine{00117\ VULKAN\_DEVICE\_FUNCTION(vkCreateDescriptorPool)}
+\DoxyCodeLine{00118\ VULKAN\_DEVICE\_FUNCTION(vkCreateDescriptorSetLayout)}
+\DoxyCodeLine{00119\ VULKAN\_DEVICE\_FUNCTION(vkCreateFence)}
+\DoxyCodeLine{00120\ VULKAN\_DEVICE\_FUNCTION(vkCreateFramebuffer)}
+\DoxyCodeLine{00121\ VULKAN\_DEVICE\_FUNCTION(vkCreateComputePipelines)}
+\DoxyCodeLine{00122\ VULKAN\_DEVICE\_FUNCTION(vkCreateGraphicsPipelines)}
+\DoxyCodeLine{00123\ VULKAN\_DEVICE\_FUNCTION(vkCreateImage)}
+\DoxyCodeLine{00124\ VULKAN\_DEVICE\_FUNCTION(vkCreateImageView)}
+\DoxyCodeLine{00125\ VULKAN\_DEVICE\_FUNCTION(vkCreatePipelineCache)}
+\DoxyCodeLine{00126\ VULKAN\_DEVICE\_FUNCTION(vkCreatePipelineLayout)}
+\DoxyCodeLine{00127\ VULKAN\_DEVICE\_FUNCTION(vkCreateRenderPass)}
+\DoxyCodeLine{00128\ VULKAN\_DEVICE\_FUNCTION(vkCreateSampler)}
+\DoxyCodeLine{00129\ VULKAN\_DEVICE\_FUNCTION(vkCreateSemaphore)}
+\DoxyCodeLine{00130\ VULKAN\_DEVICE\_FUNCTION(vkCreateShaderModule)}
+\DoxyCodeLine{00131\ VULKAN\_DEVICE\_FUNCTION(vkDestroyBuffer)}
+\DoxyCodeLine{00132\ VULKAN\_DEVICE\_FUNCTION(vkDestroyCommandPool)}
+\DoxyCodeLine{00133\ VULKAN\_DEVICE\_FUNCTION(vkDestroyDescriptorPool)}
+\DoxyCodeLine{00134\ VULKAN\_DEVICE\_FUNCTION(vkDestroyDescriptorSetLayout)}
+\DoxyCodeLine{00135\ VULKAN\_DEVICE\_FUNCTION(vkDestroyDevice)}
+\DoxyCodeLine{00136\ VULKAN\_DEVICE\_FUNCTION(vkDestroyFence)}
+\DoxyCodeLine{00137\ VULKAN\_DEVICE\_FUNCTION(vkDestroyFramebuffer)}
+\DoxyCodeLine{00138\ VULKAN\_DEVICE\_FUNCTION(vkDestroyImage)}
+\DoxyCodeLine{00139\ VULKAN\_DEVICE\_FUNCTION(vkDestroyImageView)}
+\DoxyCodeLine{00140\ VULKAN\_DEVICE\_FUNCTION(vkDestroyPipeline)}
+\DoxyCodeLine{00141\ VULKAN\_DEVICE\_FUNCTION(vkDestroyPipelineCache)}
+\DoxyCodeLine{00142\ VULKAN\_DEVICE\_FUNCTION(vkDestroyPipelineLayout)}
+\DoxyCodeLine{00143\ VULKAN\_DEVICE\_FUNCTION(vkDestroyRenderPass)}
+\DoxyCodeLine{00144\ VULKAN\_DEVICE\_FUNCTION(vkDestroySampler)}
+\DoxyCodeLine{00145\ VULKAN\_DEVICE\_FUNCTION(vkDestroySemaphore)}
+\DoxyCodeLine{00146\ VULKAN\_DEVICE\_FUNCTION(vkDestroyShaderModule)}
+\DoxyCodeLine{00147\ VULKAN\_DEVICE\_FUNCTION(vkDeviceWaitIdle)}
+\DoxyCodeLine{00148\ VULKAN\_DEVICE\_FUNCTION(vkEndCommandBuffer)}
+\DoxyCodeLine{00149\ VULKAN\_DEVICE\_FUNCTION(vkFreeCommandBuffers)}
+\DoxyCodeLine{00150\ VULKAN\_DEVICE\_FUNCTION(vkFreeMemory)}
+\DoxyCodeLine{00151\ VULKAN\_DEVICE\_FUNCTION(vkGetDeviceQueue)}
+\DoxyCodeLine{00152\ VULKAN\_DEVICE\_FUNCTION(vkGetPipelineCacheData)}
+\DoxyCodeLine{00153\ VULKAN\_DEVICE\_FUNCTION(vkGetFenceStatus)}
+\DoxyCodeLine{00154\ VULKAN\_DEVICE\_FUNCTION(vkGetBufferMemoryRequirements)}
+\DoxyCodeLine{00155\ VULKAN\_DEVICE\_FUNCTION(vkGetImageMemoryRequirements)}
+\DoxyCodeLine{00156\ VULKAN\_DEVICE\_FUNCTION(vkMapMemory)}
+\DoxyCodeLine{00157\ VULKAN\_DEVICE\_FUNCTION(vkQueueSubmit)}
+\DoxyCodeLine{00158\ VULKAN\_DEVICE\_FUNCTION(vkQueueWaitIdle)}
+\DoxyCodeLine{00159\ VULKAN\_DEVICE\_FUNCTION(vkResetCommandBuffer)}
+\DoxyCodeLine{00160\ VULKAN\_DEVICE\_FUNCTION(vkResetCommandPool)}
+\DoxyCodeLine{00161\ VULKAN\_DEVICE\_FUNCTION(vkResetDescriptorPool)}
+\DoxyCodeLine{00162\ VULKAN\_DEVICE\_FUNCTION(vkResetFences)}
+\DoxyCodeLine{00163\ VULKAN\_DEVICE\_FUNCTION(vkUnmapMemory)}
+\DoxyCodeLine{00164\ VULKAN\_DEVICE\_FUNCTION(vkUpdateDescriptorSets)}
+\DoxyCodeLine{00165\ VULKAN\_DEVICE\_FUNCTION(vkWaitForFences)}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{comment}{//\ VK\_KHR\_swapchain}}
+\DoxyCodeLine{00168\ VULKAN\_DEVICE\_FUNCTION(vkAcquireNextImageKHR)}
+\DoxyCodeLine{00169\ VULKAN\_DEVICE\_FUNCTION(vkCreateSwapchainKHR)}
+\DoxyCodeLine{00170\ VULKAN\_DEVICE\_FUNCTION(vkDestroySwapchainKHR)}
+\DoxyCodeLine{00171\ VULKAN\_DEVICE\_FUNCTION(vkQueuePresentKHR)}
+\DoxyCodeLine{00172\ VULKAN\_DEVICE\_FUNCTION(vkGetSwapchainImagesKHR)}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ *\ Redefine\ these\ every\ time\ you\ include\ this\ header!}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00177\ \textcolor{preprocessor}{\#undef\ VULKAN\_GLOBAL\_FUNCTION}}
+\DoxyCodeLine{00178\ \textcolor{preprocessor}{\#undef\ VULKAN\_INSTANCE\_FUNCTION}}
+\DoxyCodeLine{00179\ \textcolor{preprocessor}{\#undef\ VULKAN\_DEVICE\_FUNCTION}}
+
+\end{DoxyCode}

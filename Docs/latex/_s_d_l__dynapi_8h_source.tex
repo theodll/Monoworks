@@ -1,0 +1,85 @@
+\doxysection{SDL\+\_\+dynapi.\+h}
+\hypertarget{_s_d_l__dynapi_8h_source}{}\label{_s_d_l__dynapi_8h_source}\index{MonoRuntime/extern/sdl/src/dynapi/SDL\_dynapi.h@{MonoRuntime/extern/sdl/src/dynapi/SDL\_dynapi.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SDL\_dynapi\_h\_}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ SDL\_dynapi\_h\_}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{/*\ IMPORTANT:}}
+\DoxyCodeLine{00026\ \textcolor{comment}{\ \ \ This\ is\ the\ master\ switch\ to\ disabling\ the\ dynamic\ API.\ We\ made\ it\ so\ you}}
+\DoxyCodeLine{00027\ \textcolor{comment}{\ \ \ have\ to\ hand-\/edit\ an\ internal\ source\ file\ in\ SDL\ to\ turn\ it\ off;\ you}}
+\DoxyCodeLine{00028\ \textcolor{comment}{\ \ \ can\ do\ it\ if\ you\ want\ it\ badly\ enough,\ but\ hopefully\ you\ won't\ want\ to.}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ You\ should\ understand\ the\ ramifications\ of\ turning\ this\ off:\ it\ makes\ it}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ hard\ to\ update\ your\ SDL\ in\ the\ field,\ and\ impossible\ if\ you've\ statically}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ linked\ SDL\ into\ your\ app.\ Understand\ that\ platforms\ change,\ and\ if\ we\ can't}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ drop\ in\ an\ updated\ SDL,\ your\ application\ can\ definitely\ break\ some\ time}}
+\DoxyCodeLine{00033\ \textcolor{comment}{\ \ \ in\ the\ future,\ even\ if\ it's\ fine\ today.}}
+\DoxyCodeLine{00034\ \textcolor{comment}{\ \ \ To\ be\ sure,\ as\ new\ system-\/level\ video\ and\ audio\ APIs\ are\ introduced,\ an}}
+\DoxyCodeLine{00035\ \textcolor{comment}{\ \ \ updated\ SDL\ can\ transparently\ take\ advantage\ of\ them,\ but\ your\ program\ will}}
+\DoxyCodeLine{00036\ \textcolor{comment}{\ \ \ not\ without\ this\ feature.\ Think\ hard\ before\ turning\ it\ off.}}
+\DoxyCodeLine{00037\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#ifdef\ SDL\_DYNAMIC\_API\ }\textcolor{comment}{//\ Tried\ to\ force\ it\ on\ the\ command\ line?}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#error\ Nope,\ you\ have\ to\ edit\ this\ file\ to\ force\ this\ off.}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{preprocessor}{\#ifdef\ SDL\_PLATFORM\_APPLE}}
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#include\ "{}TargetConditionals.h"{}}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_PRIVATE)\ }\textcolor{comment}{//\ probably\ not\ useful\ on\ private\ platforms.}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#elif\ defined(TARGET\_OS\_IPHONE)\ \&\&\ TARGET\_OS\_IPHONE\ }\textcolor{comment}{//\ probably\ not\ useful\ on\ iOS.}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_ANDROID)\ }\textcolor{comment}{//\ probably\ not\ useful\ on\ Android.}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_EMSCRIPTEN)\ }\textcolor{comment}{//\ probably\ not\ useful\ on\ Emscripten.}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_PS2)\ \&\&\ SDL\_PLATFORM\_PS2}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_PSP)\ \&\&\ SDL\_PLATFORM\_PSP}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_RISCOS)\ }\textcolor{comment}{//\ probably\ not\ useful\ on\ RISC\ OS,\ since\ dlopen()\ can't\ be\ used\ when\ using\ static\ linking.}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#elif\ defined(\_\_clang\_analyzer\_\_)\ ||\ defined(\_\_INTELLISENSE\_\_)\ ||\ defined(SDL\_THREAD\_SAFETY\_ANALYSIS)\ ||\ defined(\_\_RESHARPER\_\_)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0\ }\textcolor{comment}{//\ Turn\ off\ for\ static\ analysis,\ so\ reports\ are\ more\ clear.}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_VITA)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0\ }\textcolor{comment}{//\ vitasdk\ doesn't\ support\ dynamic\ linking}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_3DS)}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0\ }\textcolor{comment}{//\ devkitARM\ doesn't\ support\ dynamic\ linking}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_NGAGE)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#elif\ defined(SDL\_PLATFORM\_DOS)}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0\ }\textcolor{comment}{//\ DJGPP\ doesn't\ support\ dynamic\ linking}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#elif\ defined(DYNAPI\_NEEDS\_DLOPEN)\ \&\&\ !defined(HAVE\_DLOPEN)}}
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 0\ }\textcolor{comment}{//\ we\ need\ dlopen(),\ but\ don't\ have\ it....}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{comment}{//\ everyone\ else.\ This\ is\ where\ we\ turn\ on\ the\ API\ if\ nothing\ forced\ it\ off.}}
+\DoxyCodeLine{00075\ \textcolor{preprocessor}{\#ifndef\ SDL\_DYNAMIC\_API}}
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ SDL\_DYNAMIC\_API\ 1}}
+\DoxyCodeLine{00077\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

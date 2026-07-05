@@ -1,0 +1,121 @@
+\doxysection{circular\+\_\+q.\+h}
+\hypertarget{circular__q_8h_source}{}\label{circular__q_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/details/circular\_q.h@{MonoEngine/thirdparty/spdlog/include/spdlog/details/circular\_q.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\ circular\ q\ view\ of\ std::vector.}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}spdlog/common.h"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ SPDLOG\_NAMESPACE\_BEGIN}
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }details\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }circular\_q\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ max\_items\_\ =\ 0;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{typename}\ std::vector<T>::size\_type\ head\_\ =\ 0;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{typename}\ std::vector<T>::size\_type\ tail\_\ =\ 0;}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ overrun\_counter\_\ =\ 0;}
+\DoxyCodeLine{00020\ \ \ \ \ std::vector<T>\ v\_;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{using\ }value\_type\ =\ T;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{comment}{//\ empty\ ctor\ -\/\ create\ a\ disabled\ queue\ with\ no\ elements\ allocated\ at\ all}}
+\DoxyCodeLine{00026\ \ \ \ \ circular\_q()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{explicit}\ circular\_q(\textcolor{keywordtype}{size\_t}\ max\_items)}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ :\ max\_items\_(max\_items\ +\ 1)\ \ \textcolor{comment}{//\ one\ item\ is\ reserved\ as\ marker\ for\ full\ q}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ ,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ v\_(max\_items\_)\ \{\}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ circular\_q(\textcolor{keyword}{const}\ circular\_q\ \&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00034\ \ \ \ \ circular\_q\ \&operator=(\textcolor{keyword}{const}\ circular\_q\ \&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ move\ cannot\ be\ default,}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{comment}{//\ since\ we\ need\ to\ reset\ head\_,\ tail\_,\ etc\ to\ zero\ in\ the\ moved\ object}}
+\DoxyCodeLine{00038\ \ \ \ \ circular\_q(circular\_q\ \&\&other)\ SPDLOG\_NOEXCEPT\ \{\ copy\_moveable(std::move(other));\ \}}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ circular\_q\ \&operator=(circular\_q\ \&\&other)\ SPDLOG\_NOEXCEPT\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ copy\_moveable(std::move(other));}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ push\ back,\ overrun\ (oldest)\ item\ if\ no\ room\ left}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ push\_back(T\ \&\&item)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_items\_\ >\ 0)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ v\_[tail\_]\ =\ std::move(item);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ tail\_\ =\ (tail\_\ +\ 1)\ \%\ max\_items\_;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tail\_\ ==\ head\_)\ \ \textcolor{comment}{//\ overrun\ last\ item\ if\ full}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ head\_\ =\ (head\_\ +\ 1)\ \%\ max\_items\_;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++overrun\_counter\_;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{//\ Return\ reference\ to\ the\ front\ item.}}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ If\ there\ are\ no\ elements\ in\ the\ container,\ the\ behavior\ is\ undefined.}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{const}\ T\ \&front()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ v\_[head\_];\ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ T\ \&front()\ \{\ \textcolor{keywordflow}{return}\ v\_[head\_];\ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//\ Return\ number\ of\ elements\ actually\ stored}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ size()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (tail\_\ >=\ head\_)\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ tail\_\ -\/\ head\_;}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ max\_items\_\ -\/\ (head\_\ -\/\ tail\_);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ Return\ const\ reference\ to\ item\ by\ index.}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{comment}{//\ If\ index\ is\ out\ of\ range\ 0…size()-\/1,\ the\ behavior\ is\ undefined.}}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{const}\ T\ \&at(\textcolor{keywordtype}{size\_t}\ i)\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ assert(i\ <\ size());}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ v\_[(head\_\ +\ i)\ \%\ max\_items\_];}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{comment}{//\ Pop\ item\ from\ front.}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ If\ there\ are\ no\ elements\ in\ the\ container,\ the\ behavior\ is\ undefined.}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ pop\_front()\ \{\ head\_\ =\ (head\_\ +\ 1)\ \%\ max\_items\_;\ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keywordtype}{bool}\ empty()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ tail\_\ ==\ head\_;\ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{bool}\ full()\textcolor{keyword}{\ const\ }\{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ head\ is\ ahead\ of\ the\ tail\ by\ 1}}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (max\_items\_\ >\ 0)\ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ((tail\_\ +\ 1)\ \%\ max\_items\_)\ ==\ head\_;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00093\ \ \ \ \ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ overrun\_counter()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ overrun\_counter\_;\ \}}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{void}\ reset\_overrun\_counter()\ \{\ overrun\_counter\_\ =\ 0;\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{comment}{//\ copy\ from\ other\&\&\ and\ reset\ it\ to\ disabled\ state}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ copy\_moveable(circular\_q\ \&\&other)\ SPDLOG\_NOEXCEPT\ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ max\_items\_\ =\ other.max\_items\_;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ head\_\ =\ other.head\_;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ tail\_\ =\ other.tail\_;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ overrun\_counter\_\ =\ other.overrun\_counter\_;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ v\_\ =\ std::move(other.v\_);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ put\ \&\&other\ in\ disabled,\ but\ valid\ state}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ other.max\_items\_\ =\ 0;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ other.head\_\ =\ other.tail\_\ =\ 0;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ other.overrun\_counter\_\ =\ 0;}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ \};}
+\DoxyCodeLine{00114\ \}\ \ \textcolor{comment}{//\ namespace\ details}}
+\DoxyCodeLine{00115\ SPDLOG\_NAMESPACE\_END}
+
+\end{DoxyCode}

@@ -1,0 +1,346 @@
+\doxysection{pca.\+inl}
+\hypertarget{pca_8inl_source}{}\label{pca_8inl_source}\index{MonoEngine/thirdparty/glm/glm/gtx/pca.inl@{MonoEngine/thirdparty/glm/glm/gtx/pca.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00010\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}*\ v,\ \textcolor{keywordtype}{size\_t}\ n)}
+\DoxyCodeLine{00011\ \ \ \ \ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix<D,\ T,\ Q,\ vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}*>(v,\ v\ +\ n);}
+\DoxyCodeLine{00013\ \ \ \ \ \}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00017\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}*\ v,\ \textcolor{keywordtype}{size\_t}\ n,\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ c)}
+\DoxyCodeLine{00018\ \ \ \ \ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix<D,\ T,\ Q,\ vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}*>(v,\ v\ +\ n,\ c);}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00024\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(I\ \textcolor{keyword}{const}\&\ b,\ I\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}})}
+\DoxyCodeLine{00025\ \ \ \ \ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1mat}{glm::mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{structm}{m}}(0);}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ cnt\ =\ 0;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(I\ i\ =\ b;\ i\ !=\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}};\ i++)}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v\ =\ *i;}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ x\ =\ 0;\ x\ <\ D;\ ++x)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ y\ =\ 0;\ y\ <\ D;\ ++y)}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}[x][y]\ +=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v[x]\ *\ v[y]);}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ cnt++;}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cnt\ >\ 0)}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}\ /=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(cnt);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00041\ \ \ \ \ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q,\ \textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00045\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__gtx__pca_ga4290358424d0cb9bcdfc5106f1db557e}{computeCovarianceMatrix}}(I\ \textcolor{keyword}{const}\&\ b,\ I\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}},\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ c)}
+\DoxyCodeLine{00046\ \ \ \ \ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1mat}{glm::mat<D,\ D,\ T,\ Q>}}\ \doxymbox{\hyperlink{structm}{m}}(0);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{glm::vec<D,\ T,\ Q>}}\ v;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ cnt\ =\ 0;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(I\ i\ =\ b;\ i\ !=\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}};\ i++)}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ *i\ -\/\ c;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ x\ =\ 0;\ x\ <\ D;\ ++x)}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ y\ =\ 0;\ y\ <\ D;\ ++y)}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}[x][y]\ +=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(v[x]\ *\ v[y]);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ cnt++;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(cnt\ >\ 0)}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structm}{m}}\ /=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(cnt);}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structm}{m}};}
+\DoxyCodeLine{00063\ \ \ \ \ \}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{namespace\ }\_internal\_}
+\DoxyCodeLine{00066\ \ \ \ \ \{}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ T\ transferSign(T\ \textcolor{keyword}{const}\&\ v,\ T\ \textcolor{keyword}{const}\&\ s)}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ((s)\ >=\ 0\ ?\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(v)\ :\ -\/\doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(v));}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keyword}{static}\ T\ pythag(T\ \textcolor{keyword}{const}\&\ a,\ T\ \textcolor{keyword}{const}\&\ b)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ T\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}}\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.0000001);}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ T\ absa\ =\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(a);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ T\ absb\ =\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(b);}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(absa\ >\ absb)\ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ absb\ /=\ absa;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ absb\ *=\ absb;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ absa\ *\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{glm::sqrt}}(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ +\ absb);}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{group__core__func__vector__relational_gaf539cf490630ba648dfd6e36aef910a1}{glm::equal<T>}}(absb,\ 0,\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}}))\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0);}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ absa\ /=\ absb;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ absa\ *=\ absa;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ absb\ *\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{glm::sqrt}}(\textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ +\ absa);}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ D,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00093\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ findEigenvaluesSymReal}
+\DoxyCodeLine{00094\ \ \ \ \ (}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ covarMat,}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1vec}{vec<D,\ T,\ Q>}}\&\ outEigenvalues,}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structglm_1_1mat}{mat<D,\ D,\ T,\ Q>}}\&\ outEigenvectors}
+\DoxyCodeLine{00098\ \ \ \ \ )}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\_internal\_::transferSign;}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\_internal\_::pythag;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ T\ a[D\ *\ D];\ \textcolor{comment}{//\ matrix\ -\/-\/\ input\ and\ workspace\ for\ algorithm\ (will\ be\ changed\ inplace)}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ T\ d[D];\ \textcolor{comment}{//\ diagonal\ elements}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ T\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[D];\ \textcolor{comment}{//\ off-\/diagonal\ elements}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ r\ =\ 0;\ r\ <\ D;\ r++)}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(length\_t\ c\ =\ 0;\ c\ <\ D;\ c++)}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(r)\ *\ D\ +\ (c)]\ =\ covarMat[c][r];}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 1.\ Householder\ reduction.}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ length\_t\ l,\ k,\ j,\ i;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ T\ \doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}},\ hh,\ h,\ g,\ f;}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ T\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}}\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.0000001);}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ D;\ i\ >=\ 2;\ i-\/-\/)}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ l\ =\ i\ -\/\ 1;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ h\ =\ \doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}}\ =\ 0;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(l\ >\ 1)}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ 1;\ k\ <=\ l;\ k++)}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}}\ +=\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)]);}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{group__core__func__vector__relational_gaf539cf490630ba648dfd6e36aef910a1}{glm::equal<T>}}(\doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}},\ 0,\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}}))}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 1]\ =\ a[(i\ -\/\ 1)\ *\ D\ +\ (l\ -\/\ 1)];}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ 1;\ k\ <=\ l;\ k++)}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)]\ /=\ \doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}};}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ h\ +=\ a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)]\ *\ a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)];}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ a[(i\ -\/\ 1)\ *\ D\ +\ (l\ -\/\ 1)];}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ ((f\ >=\ 0)\ ?\ -\/\doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{glm::sqrt}}(h)\ :\ glm::\doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(h));}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 1]\ =\ \doxymbox{\hyperlink{group__ext__matrix__transform_gaae2f8b2080622b24b85e1096748599b6}{scale}}\ *\ g;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ h\ -\/=\ f\ *\ g;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(i\ -\/\ 1)\ *\ D\ +\ (l\ -\/\ 1)]\ =\ f\ -\/\ g;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ 0;}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(j\ =\ 1;\ j\ <=\ l;\ j++)}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(j\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)]\ =\ a[(i\ -\/\ 1)\ *\ D\ +\ (j\ -\/\ 1)]\ /\ h;}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ 0;}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ 1;\ k\ <=\ j;\ k++)}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ +=\ a[(j\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)]\ *\ a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)];}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ j\ +\ 1;\ k\ <=\ l;\ k++)}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ +=\ a[(k\ -\/\ 1)\ *\ D\ +\ (j\ -\/\ 1)]\ *\ a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)];}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[j\ -\/\ 1]\ =\ g\ /\ h;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\ +=\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[j\ -\/\ 1]\ *\ a[(i\ -\/\ 1)\ *\ D\ +\ (j\ -\/\ 1)];}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hh\ =\ f\ /\ (h\ +\ h);}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(j\ =\ 1;\ j\ <=\ l;\ j++)}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ a[(i\ -\/\ 1)\ *\ D\ +\ (j\ -\/\ 1)];}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[j\ -\/\ 1]\ =\ g\ =\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[j\ -\/\ 1]\ -\/\ hh\ *\ f;}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ 1;\ k\ <=\ j;\ k++)}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(j\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)]\ -\/=\ (f\ *\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[k\ -\/\ 1]\ +\ g\ *\ a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)]);}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 1]\ =\ a[(i\ -\/\ 1)\ *\ D\ +\ (l\ -\/\ 1)];}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \ \ \ \ d[i\ -\/\ 1]\ =\ h;}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ d[0]\ =\ 0;}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[0]\ =\ 0;}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ 1;\ i\ <=\ D;\ i++)}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ l\ =\ i\ -\/\ 1;}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\doxymbox{\hyperlink{group__core__func__vector__relational_gaf539cf490630ba648dfd6e36aef910a1}{glm::equal<T>}}(d[i\ -\/\ 1],\ 0,\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}}))}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(j\ =\ 1;\ j\ <=\ l;\ j++)}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ 0;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ 1;\ k\ <=\ l;\ k++)}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ +=\ a[(i\ -\/\ 1)\ *\ D\ +\ (k\ -\/\ 1)]\ *\ a[(k\ -\/\ 1)\ *\ D\ +\ (j\ -\/\ 1)];}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ 1;\ k\ <=\ l;\ k++)}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(k\ -\/\ 1)\ *\ D\ +\ (j\ -\/\ 1)]\ -\/=\ g\ *\ a[(k\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)];}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ d[i\ -\/\ 1]\ =\ a[(i\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)];}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ a[(i\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)]\ =\ 1;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(j\ =\ 1;\ j\ <=\ l;\ j++)}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(j\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)]\ =\ a[(i\ -\/\ 1)\ *\ D\ +\ (j\ -\/\ 1)]\ =\ 0;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 2.\ Calculation\ of\ eigenvalues\ and\ eigenvectors\ (QL\ algorithm)}}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ length\_t\ m,\ iter;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ T\ s,\ r,\ p,\ dd,\ c,\ b;}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ length\_t\ MAX\_ITER\ =\ 30;}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ 2;\ i\ <=\ D;\ i++)}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 2]\ =\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 1];}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[D\ -\/\ 1]\ =\ 0;}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(l\ =\ 1;\ l\ <=\ D;\ l++)}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ iter\ =\ 0;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(m\ =\ l;\ m\ <=\ D\ -\/\ 1;\ m++)}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dd\ =\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(d[m\ -\/\ 1])\ +\ \doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(d[m\ -\/\ 1\ +\ 1]);}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{group__core__func__vector__relational_gaf539cf490630ba648dfd6e36aef910a1}{glm::equal<T>}}(\doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{glm::abs}}(\doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[m\ -\/\ 1])\ +\ dd,\ dd,\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}}))}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(m\ !=\ l)}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(iter++\ ==\ MAX\_ITER)}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;\ \textcolor{comment}{//\ Too\ many\ iterations\ in\ FindEigenvalues}}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ (d[l\ -\/\ 1\ +\ 1]\ -\/\ d[l\ -\/\ 1])\ /\ (2\ *\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[l\ -\/\ 1]);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ pythag<T>(g,\ 1);}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ d[m\ -\/\ 1]\ -\/\ d[l\ -\/\ 1]\ +\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[l\ -\/\ 1]\ /\ (g\ +\ transferSign(r,\ g));}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s\ =\ c\ =\ 1;}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ =\ 0;}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ m\ -\/\ 1;\ i\ >=\ l;\ i-\/-\/)}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ s\ *\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 1];}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ b\ =\ c\ *\ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 1];}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[i\ -\/\ 1\ +\ 1]\ =\ r\ =\ pythag(f,\ g);}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{group__core__func__vector__relational_gaf539cf490630ba648dfd6e36aef910a1}{glm::equal<T>}}(r,\ 0,\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}}))}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ d[i\ -\/\ 1\ +\ 1]\ -\/=\ p;}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[m\ -\/\ 1]\ =\ 0;}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s\ =\ f\ /\ r;}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ g\ /\ r;}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ d[i\ -\/\ 1\ +\ 1]\ -\/\ p;}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r\ =\ (d[i\ -\/\ 1]\ -\/\ g)\ *\ s\ +\ 2\ *\ c\ *\ b;}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ d[i\ -\/\ 1\ +\ 1]\ =\ g\ +\ (p\ =\ s\ *\ r);}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ c\ *\ r\ -\/\ b;}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(k\ =\ 1;\ k\ <=\ D;\ k++)}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ a[(k\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1\ +\ 1)];}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(k\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1\ +\ 1)]\ =\ s\ *\ a[(k\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)]\ +\ c\ *\ f;}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a[(k\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)]\ =\ c\ *\ a[(k\ -\/\ 1)\ *\ D\ +\ (i\ -\/\ 1)]\ -\/\ s\ *\ f;}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\doxymbox{\hyperlink{group__core__func__vector__relational_gaf539cf490630ba648dfd6e36aef910a1}{glm::equal<T>}}(r,\ 0,\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga2a1e57fc5592b69cfae84174cbfc9429}{epsilon}})\ \&\&\ (i\ >=\ l))}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ d[l\ -\/\ 1]\ -\/=\ p;}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[l\ -\/\ 1]\ =\ g;}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{group__gtc__constants_ga4b7956eb6e2fbedfc7cf2e46e85c5139}{e}}[m\ -\/\ 1]\ =\ 0;}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{while}(m\ !=\ l);}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 3.\ output}}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ 0;\ i\ <\ D;\ i++)}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ outEigenvalues[i]\ =\ d[i];}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(i\ =\ 0;\ i\ <\ D;\ i++)}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(j\ =\ 0;\ j\ <\ D;\ j++)}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ outEigenvectors[i][j]\ =\ a[(j)\ *\ D\ +\ (i)];}
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ D;}
+\DoxyCodeLine{00278\ \ \ \ \ \}}
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00281\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__gtx__pca_ga2824ef6f23df255f86b9c33cebd5da2f}{sortEigenvalues}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<2,\ T,\ Q>}}\&\ eigenvalues,\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<2,\ 2,\ T,\ Q>}}\&\ eigenvectors)}
+\DoxyCodeLine{00282\ \ \ \ \ \{}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[0]\ <\ eigenvalues[1])}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[0],\ eigenvalues[1]);}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[0],\ eigenvectors[1]);}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00288\ \ \ \ \ \}}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00291\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__gtx__pca_ga2824ef6f23df255f86b9c33cebd5da2f}{sortEigenvalues}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\&\ eigenvalues,\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<3,\ 3,\ T,\ Q>}}\&\ eigenvectors)}
+\DoxyCodeLine{00292\ \ \ \ \ \{}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[0]\ <\ eigenvalues[1])}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[0],\ eigenvalues[1]);}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[0],\ eigenvectors[1]);}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[0]\ <\ eigenvalues[2])}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[0],\ eigenvalues[2]);}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[0],\ eigenvectors[2]);}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[1]\ <\ eigenvalues[2])}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[1],\ eigenvalues[2]);}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[1],\ eigenvectors[2]);}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00308\ \ \ \ \ \}}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00311\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{group__gtx__pca_ga2824ef6f23df255f86b9c33cebd5da2f}{sortEigenvalues}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<4,\ T,\ Q>}}\&\ eigenvalues,\ \doxymbox{\hyperlink{structglm_1_1mat}{mat<4,\ 4,\ T,\ Q>}}\&\ eigenvectors)}
+\DoxyCodeLine{00312\ \ \ \ \ \{}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[0]\ <\ eigenvalues[2])}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[0],\ eigenvalues[2]);}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[0],\ eigenvectors[2]);}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[1]\ <\ eigenvalues[3])}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[1],\ eigenvalues[3]);}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[1],\ eigenvectors[3]);}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[0]\ <\ eigenvalues[1])}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[0],\ eigenvalues[1]);}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[0],\ eigenvectors[1]);}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[2]\ <\ eigenvalues[3])}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[2],\ eigenvalues[3]);}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[2],\ eigenvectors[3]);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (eigenvalues[1]\ <\ eigenvalues[2])}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvalues[1],\ eigenvalues[2]);}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ std::swap(eigenvectors[1],\ eigenvectors[2]);}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00338\ \ \ \ \ \}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

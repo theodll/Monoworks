@@ -1,0 +1,33 @@
+\doxysection{namespace.\+h}
+\hypertarget{namespace_8h_source}{}\label{namespace_8h_source}\index{MonoEngine/thirdparty/spdlog/include/spdlog/namespace.h@{MonoEngine/thirdparty/spdlog/include/spdlog/namespace.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//\ Copyright(c)\ 2015-\/present,\ Gabi\ Melman\ \&\ spdlog\ contributors.}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Distributed\ under\ the\ MIT\ License\ (http://opensource.org/licenses/MIT)}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//\ SPDLOG\_NAMESPACE\ is\ the\ outermost\ namespace\ token\ used\ to\ qualify\ spdlog\ names}}
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ in\ contexts\ outside\ a\ SPDLOG\_NAMESPACE\_BEGIN\ block\ (e.g.\ logging\ macros).}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//\ Override\ it\ to\ rename\ the\ outer\ namespace.}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_NAMESPACE}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\ \ \ \ \#define\ SPDLOG\_NAMESPACE\ spdlog}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00012\ \textcolor{comment}{//\ SPDLOG\_NAMESPACE\_BEGIN\ /\ SPDLOG\_NAMESPACE\_END\ delimit\ every\ spdlog}}
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ declaration,\ defaulting\ to\ "{}namespace\ SPDLOG\_NAMESPACE\ \{\ ...\ \}"{}.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ Override\ both\ to\ use\ a\ more\ complex\ namespace\ expression,\ e.g.\ to\ wrap}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ symbols\ in\ an\ inline\ sub-\/namespace\ (keeps\ "{}spdlog::"{}\ accessible).}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ In\ C++11/17:}}
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ \ \ \#define\ SPDLOG\_NAMESPACE\_BEGIN\ \ namespace\ spdlog\ \{\ inline\ namespace\ my\_copy\ \{}}
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ \ \ \#define\ SPDLOG\_NAMESPACE\_END\ \ \ \ \}\ \}}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ In\ C++20,\ the\ nested\ inline-\/namespace\ syntax\ may\ be\ used\ instead:}}
+\DoxyCodeLine{00020\ \textcolor{comment}{//\ \ \ \#define\ SPDLOG\_NAMESPACE\_BEGIN\ \ namespace\ spdlog::inline\ my\_copy\ \{}}
+\DoxyCodeLine{00021\ \textcolor{comment}{//\ \ \ \#define\ SPDLOG\_NAMESPACE\_END\ \ \ \ \}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_NAMESPACE\_BEGIN}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\ \ \ \ \#define\ SPDLOG\_NAMESPACE\_BEGIN\ namespace\ SPDLOG\_NAMESPACE\ \{}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#ifndef\ SPDLOG\_NAMESPACE\_END}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\ \ \ \ \#define\ SPDLOG\_NAMESPACE\_END\ \}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,197 @@
+\doxysection{edid.\+h}
+\hypertarget{edid_8h_source}{}\label{edid_8h_source}\index{MonoRuntime/extern/sdl/src/video/x11/edid.h@{MonoRuntime/extern/sdl/src/video/x11/edid.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ *\ Copyright\ 2007\ Red\ Hat,\ Inc.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00004\ \textcolor{comment}{\ *\ Permission\ is\ hereby\ granted,\ free\ of\ charge,\ to\ any\ person\ obtaining\ a}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ *\ copy\ of\ this\ software\ and\ associated\ documentation\ files\ (the\ "{}Software"{}),}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ *\ to\ deal\ in\ the\ Software\ without\ restriction,\ including\ without\ limitation}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ *\ on\ the\ rights\ to\ use,\ copy,\ modify,\ merge,\ publish,\ distribute,\ sub}}
+\DoxyCodeLine{00008\ \textcolor{comment}{\ *\ license,\ and/or\ sell\ copies\ of\ the\ Software,\ and\ to\ permit\ persons\ to\ whom}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ *\ the\ Software\ is\ furnished\ to\ do\ so,\ subject\ to\ the\ following\ conditions:}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *\ The\ above\ copyright\ notice\ and\ this\ permission\ notice\ (including\ the\ next}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ paragraph)\ shall\ be\ included\ in\ all\ copies\ or\ substantial\ portions\ of\ the}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ Software.}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ THE\ SOFTWARE\ IS\ PROVIDED\ "{}AS\ IS"{},\ WITHOUT\ WARRANTY\ OF\ ANY\ KIND,\ EXPRESS\ OR}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ IMPLIED,\ INCLUDING\ BUT\ NOT\ LIMITED\ TO\ THE\ WARRANTIES\ OF\ MERCHANTABILITY,}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ FITNESS\ FOR\ A\ PARTICULAR\ PURPOSE\ AND\ NON-\/INFRINGEMENT.\ \ IN\ NO\ EVENT\ SHALL}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ THE\ AUTHORS\ BE\ LIABLE\ FOR\ ANY\ CLAIM,\ DAMAGES\ OR\ OTHER\ LIABILITY,\ WHETHER}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *\ IN\ AN\ ACTION\ OF\ CONTRACT,\ TORT\ OR\ OTHERWISE,\ ARISING\ FROM,\ OUT\ OF\ OR\ IN}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ *\ CONNECTION\ WITH\ THE\ SOFTWARE\ OR\ THE\ USE\ OR\ OTHER\ DEALINGS\ IN\ THE\ SOFTWARE.}}
+\DoxyCodeLine{00021\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{comment}{/*\ Author:\ Soren\ Sandmann\ <sandmann@redhat.com>\ */}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ uchar;}
+\DoxyCodeLine{00026\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_monitor_info}{MonitorInfo}}\ \doxymbox{\hyperlink{struct_monitor_info}{MonitorInfo}};}
+\DoxyCodeLine{00027\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_timing}{Timing}}\ \doxymbox{\hyperlink{struct_timing}{Timing}};}
+\DoxyCodeLine{00028\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_detailed_timing}{DetailedTiming}}\ \doxymbox{\hyperlink{struct_detailed_timing}{DetailedTiming}};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ UNDEFINED,}
+\DoxyCodeLine{00033\ \ \ \ \ DVI,}
+\DoxyCodeLine{00034\ \ \ \ \ HDMI\_A,}
+\DoxyCodeLine{00035\ \ \ \ \ HDMI\_B,}
+\DoxyCodeLine{00036\ \ \ \ \ MDDI,}
+\DoxyCodeLine{00037\ \ \ \ \ DISPLAY\_PORT}
+\DoxyCodeLine{00038\ \}\ Interface;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00041\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ UNDEFINED\_COLOR,}
+\DoxyCodeLine{00043\ \ \ \ \ MONOCHROME,}
+\DoxyCodeLine{00044\ \ \ \ \ RGB,}
+\DoxyCodeLine{00045\ \ \ \ \ OTHER\_COLOR}
+\DoxyCodeLine{00046\ \}\ ColorType;}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ NO\_STEREO,}
+\DoxyCodeLine{00051\ \ \ \ \ FIELD\_RIGHT,}
+\DoxyCodeLine{00052\ \ \ \ \ FIELD\_LEFT,}
+\DoxyCodeLine{00053\ \ \ \ \ TWO\_WAY\_RIGHT\_ON\_EVEN,}
+\DoxyCodeLine{00054\ \ \ \ \ TWO\_WAY\_LEFT\_ON\_EVEN,}
+\DoxyCodeLine{00055\ \ \ \ \ FOUR\_WAY\_INTERLEAVED,}
+\DoxyCodeLine{00056\ \ \ \ \ SIDE\_BY\_SIDE}
+\DoxyCodeLine{00057\ \}\ StereoType;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_timing}{Timing}}}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ width;}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{int}\ height;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{int}\ frequency;}
+\DoxyCodeLine{00064\ \};}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_detailed_timing}{DetailedTiming}}}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{int}\ pixel\_clock;}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{int}\ h\_addr;}
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{int}\ h\_blank;}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{int}\ h\_sync;}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keywordtype}{int}\ h\_front\_porch;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{int}\ v\_addr;}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{int}\ v\_blank;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keywordtype}{int}\ v\_sync;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordtype}{int}\ v\_front\_porch;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{int}\ width\_mm;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{int}\ height\_mm;}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{int}\ right\_border;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{int}\ top\_border;}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keywordtype}{int}\ interlaced;}
+\DoxyCodeLine{00082\ \ \ \ \ StereoType\ stereo;}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{int}\ digital\_sync;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00086\ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bipolar;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ serrations;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ sync\_on\_green;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \}\ analog;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ composite;}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ serrations;}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ negative\_vsync;}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ negative\_hsync;}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \}\ digital;}
+\DoxyCodeLine{00101\ \ \ \ \ \}\ ad;}
+\DoxyCodeLine{00102\ \};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_monitor_info}{MonitorInfo}}}
+\DoxyCodeLine{00105\ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{int}\ checksum;}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{char}\ manufacturer\_code[4];}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{int}\ product\_code;}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ serial\_number;}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{int}\ production\_week;\ \textcolor{comment}{//\ -\/1\ if\ not\ specified}}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{int}\ production\_year;\ \textcolor{comment}{//\ -\/1\ if\ not\ specified}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{int}\ model\_year;\ \ \ \ \ \ \textcolor{comment}{//\ -\/1\ if\ not\ specified}}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{int}\ major\_version;}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keywordtype}{int}\ minor\_version;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keywordtype}{int}\ is\_digital;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keyword}{union}}
+\DoxyCodeLine{00121\ \ \ \ \ \{}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bits\_per\_primary;}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ Interface\ interface;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ rgb444;}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ycrcb444;}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ycrcb422;}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \}\ digital;}
+\DoxyCodeLine{00130\ }
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ video\_signal\_level;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sync\_signal\_level;}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ total\_signal\_level;}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ blank\_to\_black;}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ separate\_hv\_sync;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ composite\_sync\_on\_h;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ composite\_sync\_on\_green;}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ serration\_on\_vsync;}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ ColorType\ color\_type;}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \}\ analog;}
+\DoxyCodeLine{00145\ \ \ \ \ \}\ ad;}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00147\ \ \ \ \ \textcolor{keywordtype}{int}\ width\_mm;\ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/1\ if\ not\ specified}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{int}\ height\_mm;\ \ \ \ \ \ \ \textcolor{comment}{//\ -\/1\ if\ not\ specified}}
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{double}\ aspect\_ratio;\ \textcolor{comment}{//\ -\/1.0\ if\ not\ specififed}}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{double}\ gamma;\ \textcolor{comment}{//\ -\/1.0\ if\ not\ specified}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{int}\ standby;}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keywordtype}{int}\ suspend;}
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{int}\ active\_off;}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keywordtype}{int}\ srgb\_is\_standard;}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordtype}{int}\ preferred\_timing\_includes\_native;}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordtype}{int}\ continuous\_frequency;}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{keywordtype}{double}\ red\_x;}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{double}\ red\_y;}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{double}\ green\_x;}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordtype}{double}\ green\_y;}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keywordtype}{double}\ blue\_x;}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordtype}{double}\ blue\_y;}
+\DoxyCodeLine{00167\ \ \ \ \ \textcolor{keywordtype}{double}\ white\_x;}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{double}\ white\_y;}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \doxymbox{\hyperlink{struct_timing}{Timing}}\ established[24];\ \textcolor{comment}{//\ Terminated\ by\ 0x0x0}}
+\DoxyCodeLine{00171\ \ \ \ \ \doxymbox{\hyperlink{struct_timing}{Timing}}\ standard[8];}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordtype}{int}\ n\_detailed\_timings;}
+\DoxyCodeLine{00174\ \ \ \ \ \doxymbox{\hyperlink{struct_detailed_timing}{DetailedTiming}}\ detailed\_timings[4];\ \textcolor{comment}{/*\ If\ monitor\ has\ a\ preferred}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ mode,\ it\ is\ the\ first\ one}}
+\DoxyCodeLine{00176\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ (whether\ it\ has,\ is}}
+\DoxyCodeLine{00177\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ determined\ by\ the}}
+\DoxyCodeLine{00178\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ preferred\_timing\_includes}}
+\DoxyCodeLine{00179\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *\ bit.}}
+\DoxyCodeLine{00180\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{comment}{//\ Optional\ product\ description}}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keywordtype}{char}\ dsc\_serial\_number[14];}
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keywordtype}{char}\ dsc\_product\_name[14];}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keywordtype}{char}\ dsc\_string[14];\ \textcolor{comment}{//\ Unspecified\ ASCII\ data}}
+\DoxyCodeLine{00186\ \};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \doxymbox{\hyperlink{struct_monitor_info}{MonitorInfo}}\ *decode\_edid(\textcolor{keyword}{const}\ uchar\ *data);}
+\DoxyCodeLine{00189\ \textcolor{keywordtype}{void}\ dump\_monitor\_info(\doxymbox{\hyperlink{struct_monitor_info}{MonitorInfo}}\ *info);}
+\DoxyCodeLine{00190\ \textcolor{keywordtype}{char}\ *make\_display\_name(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *output\_name,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_monitor_info}{MonitorInfo}}\ *info);}
+
+\end{DoxyCode}

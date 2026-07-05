@@ -1,0 +1,115 @@
+\doxysection{vulkan\+\_\+video\+\_\+codec\+\_\+av1std\+\_\+decode.\+h}
+\hypertarget{vulkan__video__codec__av1std__decode_8h_source}{}\label{vulkan__video__codec__av1std__decode_8h_source}\index{MonoRuntime/extern/sdl/src/video/khronos/vk\_video/vulkan\_video\_codec\_av1std\_decode.h@{MonoRuntime/extern/sdl/src/video/khronos/vk\_video/vulkan\_video\_codec\_av1std\_decode.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VULKAN\_VIDEO\_CODEC\_AV1STD\_DECODE\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VULKAN\_VIDEO\_CODEC\_AV1STD\_DECODE\_H\_\ 1}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00005\ \textcolor{comment}{**\ Copyright\ 2015-\/2026\ The\ Khronos\ Group\ Inc.}}
+\DoxyCodeLine{00006\ \textcolor{comment}{**}}
+\DoxyCodeLine{00007\ \textcolor{comment}{**\ SPDX-\/License-\/Identifier:\ Apache-\/2.0\ OR\ MIT}}
+\DoxyCodeLine{00008\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00011\ \textcolor{comment}{**\ This\ header\ is\ generated\ from\ the\ Khronos\ Vulkan\ XML\ API\ Registry.}}
+\DoxyCodeLine{00012\ \textcolor{comment}{**}}
+\DoxyCodeLine{00013\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{extern}\ \textcolor{stringliteral}{"{}C"{}}\ \{}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//\ vulkan\_video\_codec\_av1std\_decode\ is\ a\ preprocessor\ guard.\ Do\ not\ pass\ it\ to\ API\ calls.}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ vulkan\_video\_codec\_av1std\_decode\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}vulkan\_video\_codec\_av1std.h"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#define\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_AV1\_DECODE\_API\_VERSION\_1\_0\_0\ VK\_MAKE\_VIDEO\_STD\_VERSION(1,\ 0,\ 0)}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#define\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_AV1\_DECODE\_SPEC\_VERSION\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_AV1\_DECODE\_API\_VERSION\_1\_0\_0}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ VK\_STD\_VULKAN\_VIDEO\_CODEC\_AV1\_DECODE\_EXTENSION\_NAME\ "{}VK\_STD\_vulkan\_video\_codec\_av1\_decode"{}}}
+\DoxyCodeLine{00030\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_decode_a_v1_picture_info_flags}{StdVideoDecodeAV1PictureInfoFlags}}\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ uint32\_t\ \ \ \ error\_resilient\_mode\ :\ 1;}
+\DoxyCodeLine{00032\ \ \ \ \ uint32\_t\ \ \ \ disable\_cdf\_update\ :\ 1;}
+\DoxyCodeLine{00033\ \ \ \ \ uint32\_t\ \ \ \ use\_superres\ :\ 1;}
+\DoxyCodeLine{00034\ \ \ \ \ uint32\_t\ \ \ \ render\_and\_frame\_size\_different\ :\ 1;}
+\DoxyCodeLine{00035\ \ \ \ \ uint32\_t\ \ \ \ allow\_screen\_content\_tools\ :\ 1;}
+\DoxyCodeLine{00036\ \ \ \ \ uint32\_t\ \ \ \ is\_filter\_switchable\ :\ 1;}
+\DoxyCodeLine{00037\ \ \ \ \ uint32\_t\ \ \ \ force\_integer\_mv\ :\ 1;}
+\DoxyCodeLine{00038\ \ \ \ \ uint32\_t\ \ \ \ frame\_size\_override\_flag\ :\ 1;}
+\DoxyCodeLine{00039\ \ \ \ \ uint32\_t\ \ \ \ buffer\_removal\_time\_present\_flag\ :\ 1;}
+\DoxyCodeLine{00040\ \ \ \ \ uint32\_t\ \ \ \ allow\_intrabc\ :\ 1;}
+\DoxyCodeLine{00041\ \ \ \ \ uint32\_t\ \ \ \ frame\_refs\_short\_signaling\ :\ 1;}
+\DoxyCodeLine{00042\ \ \ \ \ uint32\_t\ \ \ \ allow\_high\_precision\_mv\ :\ 1;}
+\DoxyCodeLine{00043\ \ \ \ \ uint32\_t\ \ \ \ is\_motion\_mode\_switchable\ :\ 1;}
+\DoxyCodeLine{00044\ \ \ \ \ uint32\_t\ \ \ \ use\_ref\_frame\_mvs\ :\ 1;}
+\DoxyCodeLine{00045\ \ \ \ \ uint32\_t\ \ \ \ disable\_frame\_end\_update\_cdf\ :\ 1;}
+\DoxyCodeLine{00046\ \ \ \ \ uint32\_t\ \ \ \ allow\_warped\_motion\ :\ 1;}
+\DoxyCodeLine{00047\ \ \ \ \ uint32\_t\ \ \ \ reduced\_tx\_set\ :\ 1;}
+\DoxyCodeLine{00048\ \ \ \ \ uint32\_t\ \ \ \ reference\_select\ :\ 1;}
+\DoxyCodeLine{00049\ \ \ \ \ uint32\_t\ \ \ \ skip\_mode\_present\ :\ 1;}
+\DoxyCodeLine{00050\ \ \ \ \ uint32\_t\ \ \ \ delta\_q\_present\ :\ 1;}
+\DoxyCodeLine{00051\ \ \ \ \ uint32\_t\ \ \ \ delta\_lf\_present\ :\ 1;}
+\DoxyCodeLine{00052\ \ \ \ \ uint32\_t\ \ \ \ delta\_lf\_multi\ :\ 1;}
+\DoxyCodeLine{00053\ \ \ \ \ uint32\_t\ \ \ \ segmentation\_enabled\ :\ 1;}
+\DoxyCodeLine{00054\ \ \ \ \ uint32\_t\ \ \ \ segmentation\_update\_map\ :\ 1;}
+\DoxyCodeLine{00055\ \ \ \ \ uint32\_t\ \ \ \ segmentation\_temporal\_update\ :\ 1;}
+\DoxyCodeLine{00056\ \ \ \ \ uint32\_t\ \ \ \ segmentation\_update\_data\ :\ 1;}
+\DoxyCodeLine{00057\ \ \ \ \ uint32\_t\ \ \ \ UsesLr\ :\ 1;}
+\DoxyCodeLine{00058\ \ \ \ \ uint32\_t\ \ \ \ usesChromaLr\ :\ 1;}
+\DoxyCodeLine{00059\ \ \ \ \ uint32\_t\ \ \ \ apply\_grain\ :\ 1;}
+\DoxyCodeLine{00060\ \ \ \ \ uint32\_t\ \ \ \ reserved\ :\ 3;}
+\DoxyCodeLine{00061\ \}\ \doxymbox{\hyperlink{struct_std_video_decode_a_v1_picture_info_flags}{StdVideoDecodeAV1PictureInfoFlags}};}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_decode_a_v1_picture_info}{StdVideoDecodeAV1PictureInfo}}\ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_decode_a_v1_picture_info_flags}{StdVideoDecodeAV1PictureInfoFlags}}\ \ \ \ flags;}
+\DoxyCodeLine{00065\ \ \ \ \ StdVideoAV1FrameType\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ frame\_type;}
+\DoxyCodeLine{00066\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ current\_frame\_id;}
+\DoxyCodeLine{00067\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OrderHint;}
+\DoxyCodeLine{00068\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ primary\_ref\_frame;}
+\DoxyCodeLine{00069\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ refresh\_frame\_flags;}
+\DoxyCodeLine{00070\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved1;}
+\DoxyCodeLine{00071\ \ \ \ \ StdVideoAV1InterpolationFilter\ \ \ \ \ \ \ interpolation\_filter;}
+\DoxyCodeLine{00072\ \ \ \ \ StdVideoAV1TxMode\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TxMode;}
+\DoxyCodeLine{00073\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\_q\_res;}
+\DoxyCodeLine{00074\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ delta\_lf\_res;}
+\DoxyCodeLine{00075\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SkipModeFrame[STD\_VIDEO\_AV1\_SKIP\_MODE\_FRAMES];}
+\DoxyCodeLine{00076\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ coded\_denom;}
+\DoxyCodeLine{00077\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reserved2[3];}
+\DoxyCodeLine{00078\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OrderHints[STD\_VIDEO\_AV1\_NUM\_REF\_FRAMES];}
+\DoxyCodeLine{00079\ \ \ \ \ uint32\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ expectedFrameId[STD\_VIDEO\_AV1\_NUM\_REF\_FRAMES];}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_tile_info}{StdVideoAV1TileInfo}}*\ \ \ \ \ \ \ \ \ \ \ pTileInfo;}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_quantization}{StdVideoAV1Quantization}}*\ \ \ \ \ \ \ pQuantization;}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_segmentation}{StdVideoAV1Segmentation}}*\ \ \ \ \ \ \ pSegmentation;}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_loop_filter}{StdVideoAV1LoopFilter}}*\ \ \ \ \ \ \ \ \ pLoopFilter;}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_c_d_e_f}{StdVideoAV1CDEF}}*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pCDEF;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_loop_restoration}{StdVideoAV1LoopRestoration}}*\ \ \ \ pLoopRestoration;}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_global_motion}{StdVideoAV1GlobalMotion}}*\ \ \ \ \ \ \ pGlobalMotion;}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_std_video_a_v1_film_grain}{StdVideoAV1FilmGrain}}*\ \ \ \ \ \ \ \ \ \ pFilmGrain;}
+\DoxyCodeLine{00088\ \}\ \doxymbox{\hyperlink{struct_std_video_decode_a_v1_picture_info}{StdVideoDecodeAV1PictureInfo}};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_decode_a_v1_reference_info_flags}{StdVideoDecodeAV1ReferenceInfoFlags}}\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ uint32\_t\ \ \ \ disable\_frame\_end\_update\_cdf\ :\ 1;}
+\DoxyCodeLine{00092\ \ \ \ \ uint32\_t\ \ \ \ segmentation\_enabled\ :\ 1;}
+\DoxyCodeLine{00093\ \ \ \ \ uint32\_t\ \ \ \ reserved\ :\ 30;}
+\DoxyCodeLine{00094\ \}\ \doxymbox{\hyperlink{struct_std_video_decode_a_v1_reference_info_flags}{StdVideoDecodeAV1ReferenceInfoFlags}};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_std_video_decode_a_v1_reference_info}{StdVideoDecodeAV1ReferenceInfo}}\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \doxymbox{\hyperlink{struct_std_video_decode_a_v1_reference_info_flags}{StdVideoDecodeAV1ReferenceInfoFlags}}\ \ \ \ flags;}
+\DoxyCodeLine{00098\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ frame\_type;}
+\DoxyCodeLine{00099\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RefFrameSignBias;}
+\DoxyCodeLine{00100\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ OrderHint;}
+\DoxyCodeLine{00101\ \ \ \ \ uint8\_t\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ SavedOrderHints[STD\_VIDEO\_AV1\_NUM\_REF\_FRAMES];}
+\DoxyCodeLine{00102\ \}\ \doxymbox{\hyperlink{struct_std_video_decode_a_v1_reference_info}{StdVideoDecodeAV1ReferenceInfo}};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00106\ \}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

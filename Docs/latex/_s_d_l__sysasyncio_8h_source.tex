@@ -1,0 +1,151 @@
+\doxysection{SDL\+\_\+sysasyncio.\+h}
+\hypertarget{_s_d_l__sysasyncio_8h_source}{}\label{_s_d_l__sysasyncio_8h_source}\index{MonoRuntime/extern/sdl/src/io/SDL\_sysasyncio.h@{MonoRuntime/extern/sdl/src/io/SDL\_sysasyncio.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_sysasyncio\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_sysasyncio\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#if\ defined(SDL\_PLATFORM\_WINDOWS)\ \&\&\ defined(NTDDI\_WIN10\_NI)}}
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#if\ WINAPI\_FAMILY\_PARTITION(WINAPI\_PARTITION\_APP)\ \&\&\ NTDDI\_VERSION\ >=\ NTDDI\_WIN10\_NI}}
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#define\ HAVE\_IORINGAPI\_H}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ If\ your\ platform\ has\ an\ option\ other\ than\ the\ "{}generic"{}\ code,\ make\ sure\ this}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ is\ \#defined\ to\ 0\ instead\ and\ implement\ the\ SDL\_SYS\_*\ functions\ below\ in\ your}}
+\DoxyCodeLine{00035\ \textcolor{comment}{//\ backend\ (having\ them\ maybe\ call\ into\ the\ SDL\_SYS\_*\_Generic\ versions\ as\ a}}
+\DoxyCodeLine{00036\ \textcolor{comment}{//\ fallback\ if\ the\ platform\ has\ functionality\ that\ isn't\ always\ available).}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#if\ defined(HAVE\_LIBURING\_H)\ ||\ defined(HAVE\_IORINGAPI\_H)}}
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#define\ SDL\_ASYNCIO\_ONLY\_HAVE\_GENERIC\ 0}}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ SDL\_ASYNCIO\_ONLY\_HAVE\_GENERIC\ 1}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{comment}{//\ this\ entire\ thing\ is\ just\ juggling\ doubly-\/linked\ lists,\ so\ make\ some\ helper\ macros.}}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ LINKED\_LIST\_DECLARE\_FIELDS(type,\ prefix)\ \(\backslash\)}}
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\ \ \ \ type\ *prefix\#\#prev;\ \(\backslash\)}}
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\ \ \ \ type\ *prefix\#\#next}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ LINKED\_LIST\_PREPEND(item,\ list,\ prefix)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\ \ \ \ item-\/>prefix\#\#prev\ =\ \&list;\ \(\backslash\)}}
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\ \ \ \ item-\/>prefix\#\#next\ =\ list.prefix\#\#next;\ \(\backslash\)}}
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\ \ \ \ if\ (item-\/>prefix\#\#next)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00052\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ item-\/>prefix\#\#next-\/>prefix\#\#prev\ =\ item;\ \(\backslash\)}}
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\ \ \ \ list.prefix\#\#next\ =\ item;\ \(\backslash\)}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\}\ while\ (false)}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#define\ LINKED\_LIST\_UNLINK(item,\ prefix)\ do\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\ \ \ \ if\ (item-\/>prefix\#\#next)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ item-\/>prefix\#\#next-\/>prefix\#\#prev\ =\ item-\/>prefix\#\#prev;\ \(\backslash\)}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\ \ \ \ item-\/>prefix\#\#prev-\/>prefix\#\#next\ =\ task-\/>prefix\#\#next;\ \(\backslash\)}}
+\DoxyCodeLine{00062\ \textcolor{preprocessor}{\ \ \ \ item-\/>prefix\#\#prev\ =\ item-\/>prefix\#\#next\ =\ NULL;\ \(\backslash\)}}
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\}\ while\ (false)}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ LINKED\_LIST\_START(list,\ prefix)\ (list.prefix\#\#next)}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#define\ LINKED\_LIST\_NEXT(item,\ prefix)\ (item-\/>prefix\#\#next)}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#define\ LINKED\_LIST\_PREV(item,\ prefix)\ (item-\/>prefix\#\#prev)}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}}
+\DoxyCodeLine{00072\ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o}{SDL\_AsyncIO}}\ *asyncio;}
+\DoxyCodeLine{00074\ \ \ \ \ SDL\_AsyncIOTaskType\ type;}
+\DoxyCodeLine{00075\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_queue}{SDL\_AsyncIOQueue}}\ *queue;}
+\DoxyCodeLine{00076\ \ \ \ \ Uint64\ offset;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{bool}\ flush;}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordtype}{void}\ *buffer;}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{char}\ *error;}
+\DoxyCodeLine{00080\ \ \ \ \ SDL\_AsyncIOResult\ result;}
+\DoxyCodeLine{00081\ \ \ \ \ Uint64\ requested\_size;}
+\DoxyCodeLine{00082\ \ \ \ \ Uint64\ result\_size;}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ *app\_userdata;}
+\DoxyCodeLine{00084\ \ \ \ \ LINKED\_LIST\_DECLARE\_FIELDS(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}},\ asyncio);}
+\DoxyCodeLine{00085\ \ \ \ \ LINKED\_LIST\_DECLARE\_FIELDS(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}},\ queue);\ \ \ \ \ \ \textcolor{comment}{//\ the\ generic\ backend\ uses\ this,\ so\ I've\ added\ it\ here\ to\ avoid\ the\ extra\ allocation.}}
+\DoxyCodeLine{00086\ \ \ \ \ LINKED\_LIST\_DECLARE\_FIELDS(\textcolor{keyword}{struct}\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}},\ threadpool);\ \textcolor{comment}{//\ the\ generic\ backend\ uses\ this,\ so\ I've\ added\ it\ here\ to\ avoid\ the\ extra\ allocation.}}
+\DoxyCodeLine{00087\ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___async_i_o_queue_interface}{SDL\_AsyncIOQueueInterface}}}
+\DoxyCodeLine{00090\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ bool\ (*queue\_task)(\textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *task);}
+\DoxyCodeLine{00092\ \ \ \ \ void\ (*cancel\_task)(\textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *task);}
+\DoxyCodeLine{00093\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *\ (*get\_results)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00094\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *\ (*wait\_results)(\textcolor{keywordtype}{void}\ *userdata,\ Sint32\ timeoutMS);}
+\DoxyCodeLine{00095\ \ \ \ \ void\ (*signal)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00096\ \ \ \ \ void\ (*destroy)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00097\ \}\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_queue_interface}{SDL\_AsyncIOQueueInterface}};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___async_i_o_queue}{SDL\_AsyncIOQueue}}}
+\DoxyCodeLine{00100\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_queue_interface}{SDL\_AsyncIOQueueInterface}}\ iface;}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ *userdata;}
+\DoxyCodeLine{00103\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___atomic_int}{SDL\_AtomicInt}}\ tasks\_inflight;}
+\DoxyCodeLine{00104\ \};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{comment}{//\ this\ interface\ is\ kept\ per-\/object,\ even\ though\ generally\ it's\ going\ to\ decide}}
+\DoxyCodeLine{00107\ \textcolor{comment}{//\ on\ a\ single\ interface\ that\ is\ the\ same\ for\ the\ entire\ process,\ but\ I've\ kept}}
+\DoxyCodeLine{00108\ \textcolor{comment}{//\ the\ abstraction\ in\ case\ we\ start\ exposing\ more\ types\ of\ async\ i/o,\ like}}
+\DoxyCodeLine{00109\ \textcolor{comment}{//\ sockets,\ in\ the\ future.}}
+\DoxyCodeLine{00110\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___async_i_o_interface}{SDL\_AsyncIOInterface}}}
+\DoxyCodeLine{00111\ \{}
+\DoxyCodeLine{00112\ \ \ \ \ Sint64\ (*size)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00113\ \ \ \ \ bool\ (*read)(\textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *task);}
+\DoxyCodeLine{00114\ \ \ \ \ bool\ (*write)(\textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *task);}
+\DoxyCodeLine{00115\ \ \ \ \ bool\ (*close)(\textcolor{keywordtype}{void}\ *userdata,\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *task);}
+\DoxyCodeLine{00116\ \ \ \ \ void\ (*destroy)(\textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00117\ \}\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_interface}{SDL\_AsyncIOInterface}};}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___async_i_o}{SDL\_AsyncIO}}}
+\DoxyCodeLine{00120\ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_interface}{SDL\_AsyncIOInterface}}\ iface;}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ *userdata;}
+\DoxyCodeLine{00123\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___mutex}{SDL\_Mutex}}\ *lock;}
+\DoxyCodeLine{00124\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ tasks;}
+\DoxyCodeLine{00125\ \ \ \ \ \doxymbox{\hyperlink{struct_s_d_l___async_i_o_task}{SDL\_AsyncIOTask}}\ *closing;\ \ \textcolor{comment}{//\ The\ close\ task,\ which\ isn't\ queued\ until\ all\ pending\ work\ for\ this\ file\ is\ done.}}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordtype}{bool}\ oneshot;\ \ \textcolor{comment}{//\ true\ if\ this\ is\ a\ SDL\_LoadFileAsync\ open.}}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keywordtype}{bool}\ readonly;\ \ \textcolor{comment}{//\ true\ if\ this\ file\ is\ opened\ read-\/only.}}
+\DoxyCodeLine{00128\ \};}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \textcolor{comment}{//\ This\ is\ implemented\ for\ various\ platforms;\ param\ validation\ is\ done\ before\ calling\ this.\ Open\ file,\ fill\ in\ iface\ and\ userdata.}}
+\DoxyCodeLine{00131\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_AsyncIOFromFile(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode,\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o}{SDL\_AsyncIO}}\ *asyncio);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \textcolor{comment}{//\ This\ is\ implemented\ for\ various\ platforms.\ Call\ SDL\_OpenAsyncIOQueue\ from\ in\ here.}}
+\DoxyCodeLine{00134\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_CreateAsyncIOQueue(\doxymbox{\hyperlink{struct_s_d_l___async_i_o_queue}{SDL\_AsyncIOQueue}}\ *queue);}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \textcolor{comment}{//\ This\ is\ called\ during\ SDL\_QuitAsyncIO,\ after\ all\ tasks\ have\ completed\ and\ all\ files\ are\ closed,\ to\ let\ the\ platform\ clean\ up\ global\ backend\ details.}}
+\DoxyCodeLine{00137\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SYS\_QuitAsyncIO(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{comment}{//\ the\ "{}generic"{}\ version\ is\ always\ available,\ since\ it\ is\ almost\ always\ needed\ as\ a\ fallback\ even\ on\ platforms\ that\ might\ offer\ something\ better.}}
+\DoxyCodeLine{00140\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_AsyncIOFromFile\_Generic(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *file,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *mode,\ \doxymbox{\hyperlink{struct_s_d_l___async_i_o}{SDL\_AsyncIO}}\ *asyncio);}
+\DoxyCodeLine{00141\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_SYS\_CreateAsyncIOQueue\_Generic(\doxymbox{\hyperlink{struct_s_d_l___async_i_o_queue}{SDL\_AsyncIOQueue}}\ *queue);}
+\DoxyCodeLine{00142\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SYS\_QuitAsyncIO\_Generic(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00145\ }
+
+\end{DoxyCode}

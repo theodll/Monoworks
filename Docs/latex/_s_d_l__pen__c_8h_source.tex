@@ -1,0 +1,114 @@
+\doxysection{SDL\+\_\+pen\+\_\+c.\+h}
+\hypertarget{_s_d_l__pen__c_8h_source}{}\label{_s_d_l__pen__c_8h_source}\index{MonoRuntime/extern/sdl/src/events/SDL\_pen\_c.h@{MonoRuntime/extern/sdl/src/events/SDL\_pen\_c.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00002\ \textcolor{comment}{\ \ Simple\ DirectMedia\ Layer}}
+\DoxyCodeLine{00003\ \textcolor{comment}{\ \ Copyright\ (C)\ 1997-\/2026\ Sam\ Lantinga\ <slouken@libsdl.org>}}
+\DoxyCodeLine{00004\ \textcolor{comment}{}}
+\DoxyCodeLine{00005\ \textcolor{comment}{\ \ This\ software\ is\ provided\ 'as-\/is',\ without\ any\ express\ or\ implied}}
+\DoxyCodeLine{00006\ \textcolor{comment}{\ \ warranty.\ \ In\ no\ event\ will\ the\ authors\ be\ held\ liable\ for\ any\ damages}}
+\DoxyCodeLine{00007\ \textcolor{comment}{\ \ arising\ from\ the\ use\ of\ this\ software.}}
+\DoxyCodeLine{00008\ \textcolor{comment}{}}
+\DoxyCodeLine{00009\ \textcolor{comment}{\ \ Permission\ is\ granted\ to\ anyone\ to\ use\ this\ software\ for\ any\ purpose,}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ \ including\ commercial\ applications,\ and\ to\ alter\ it\ and\ redistribute\ it}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ \ freely,\ subject\ to\ the\ following\ restrictions:}}
+\DoxyCodeLine{00012\ \textcolor{comment}{}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ \ 1.\ The\ origin\ of\ this\ software\ must\ not\ be\ misrepresented;\ you\ must\ not}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ \ \ \ \ claim\ that\ you\ wrote\ the\ original\ software.\ If\ you\ use\ this\ software}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ \ \ \ \ in\ a\ product,\ an\ acknowledgment\ in\ the\ product\ documentation\ would\ be}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ \ \ \ \ appreciated\ but\ is\ not\ required.}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ \ 2.\ Altered\ source\ versions\ must\ be\ plainly\ marked\ as\ such,\ and\ must\ not\ be}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ \ \ \ \ misrepresented\ as\ being\ the\ original\ software.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ \ 3.\ This\ notice\ may\ not\ be\ removed\ or\ altered\ from\ any\ source\ distribution.}}
+\DoxyCodeLine{00020\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}../SDL\_internal.h"{}}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#ifndef\ SDL\_pen\_c\_h\_}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ SDL\_pen\_c\_h\_}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}SDL\_mouse\_c.h"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{typedef}\ Uint32\ SDL\_PenCapabilityFlags;}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_PRESSURE\ \ (1u\ <<\ 0)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_XTILT\ \ \ \ \ (1u\ <<\ 1)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_YTILT\ \ \ \ \ (1u\ <<\ 2)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00033\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_DISTANCE\ \ (1u\ <<\ 3)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_ROTATION\ \ (1u\ <<\ 4)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_SLIDER\ \ \ \ (1u\ <<\ 5)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_TANGENTIAL\_PRESSURE\ (1u\ <<\ 6)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00037\ \textcolor{preprocessor}{\#define\ SDL\_PEN\_CAPABILITY\_ERASER\ \ \ \ (1u\ <<\ 7)\ \ }\textcolor{preprocessor}{}}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ Rename\ before\ making\ this\ public\ as\ it\ clashes\ with\ SDL\_PenDeviceType.}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ Prior\ art\ in\ Android\ calls\ this\ "{}tool\ type"{}.}}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{enum}\ SDL\_PenSubtype}
+\DoxyCodeLine{00042\ \{}
+\DoxyCodeLine{00043\ \ \ \ \ SDL\_PEN\_TYPE\_UNKNOWN,\ \ \ }
+\DoxyCodeLine{00044\ \ \ \ \ SDL\_PEN\_TYPE\_ERASER,\ \ \ \ }
+\DoxyCodeLine{00045\ \ \ \ \ SDL\_PEN\_TYPE\_PEN,\ \ \ \ \ \ \ }
+\DoxyCodeLine{00046\ \ \ \ \ SDL\_PEN\_TYPE\_PENCIL,\ \ \ \ }
+\DoxyCodeLine{00047\ \ \ \ \ SDL\_PEN\_TYPE\_BRUSH,\ \ \ \ \ }
+\DoxyCodeLine{00048\ \ \ \ \ SDL\_PEN\_TYPE\_AIRBRUSH\ \ \ }
+\DoxyCodeLine{00049\ \}\ SDL\_PenSubtype;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_s_d_l___pen_info}{SDL\_PenInfo}}}
+\DoxyCodeLine{00052\ \{}
+\DoxyCodeLine{00053\ \ \ \ \ SDL\_PenCapabilityFlags\ \doxymbox{\hyperlink{struct_s_d_l___pen_info_ac35dcb3b317b27027eeac6b27c736d18}{capabilities}};\ \ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{struct_s_d_l___pen_info_afd460ae254e8dc563c67a1895305cc59}{max\_tilt}};\ \ \ \ }
+\DoxyCodeLine{00055\ \ \ \ \ Uint32\ \doxymbox{\hyperlink{struct_s_d_l___pen_info_a7a008a9d7e6ec7bc83019edd2908ad5c}{wacom\_id}};\ \ \ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_s_d_l___pen_info_afe3261eab909ccdd0d5f491e46a213d4}{num\_buttons}};\ }
+\DoxyCodeLine{00057\ \ \ \ \ SDL\_PenSubtype\ \doxymbox{\hyperlink{struct_s_d_l___pen_info_a1d386cf0ff9d973b0bdd75fdf936c7d7}{subtype}};\ \ }
+\DoxyCodeLine{00058\ \ \ \ \ SDL\_PenDeviceType\ device\_type;}
+\DoxyCodeLine{00059\ \}\ \doxymbox{\hyperlink{struct_s_d_l___pen_info}{SDL\_PenInfo}};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \textcolor{comment}{//\ Backend\ calls\ this\ when\ a\ new\ pen\ device\ is\ hotplugged,\ plus\ once\ for\ each\ pen\ already\ connected\ at\ startup.}}
+\DoxyCodeLine{00062\ \textcolor{comment}{//\ Note\ that\ name\ and\ info\ are\ copied\ but\ currently\ unused;\ this\ is\ placeholder\ for\ a\ potentially\ more\ robust\ API\ later.}}
+\DoxyCodeLine{00063\ \textcolor{comment}{//\ Both\ are\ allowed\ to\ be\ NULL.}}
+\DoxyCodeLine{00064\ \textcolor{keyword}{extern}\ SDL\_PenID\ SDL\_AddPenDevice(Uint64\ timestamp,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *name,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_s_d_l___pen_info}{SDL\_PenInfo}}\ *info,\ \textcolor{keywordtype}{void}\ *handle,\ \textcolor{keywordtype}{bool}\ in\_proximity);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \textcolor{comment}{//\ Backend\ calls\ this\ when\ an\ existing\ pen\ device\ is\ disconnected\ during\ runtime.\ They\ must\ free\ their\ own\ stuff\ separately.}}
+\DoxyCodeLine{00067\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_RemovePenDevice(Uint64\ timestamp,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_PenID\ instance\_id);}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \textcolor{comment}{//\ Backend\ can\ call\ this\ to\ remove\ all\ pens,\ probably\ during\ shutdown,\ with\ a\ callback\ to\ let\ them\ free\ their\ own\ handle.}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_RemoveAllPenDevices(\textcolor{keywordtype}{void}\ (*callback)(SDL\_PenID\ instance\_id,\ \textcolor{keywordtype}{void}\ *handle,\ \textcolor{keywordtype}{void}\ *userdata),\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \textcolor{comment}{//\ Backend\ calls\ this\ when\ a\ pen's\ button\ changes,\ to\ generate\ events\ and\ update\ state.}}
+\DoxyCodeLine{00073\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendPenTouch(Uint64\ timestamp,\ SDL\_PenID\ instance\_id,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ eraser,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \textcolor{comment}{//\ Backend\ calls\ this\ when\ a\ pen\ moves\ on\ the\ tablet,\ to\ generate\ events\ and\ update\ state.}}
+\DoxyCodeLine{00076\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendPenMotion(Uint64\ timestamp,\ SDL\_PenID\ instance\_id,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{comment}{//\ Backend\ calls\ this\ when\ a\ pen's\ axis\ changes,\ to\ generate\ events\ and\ update\ state.}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendPenAxis(Uint64\ timestamp,\ SDL\_PenID\ instance\_id,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ SDL\_PenAxis\ axis,\ \textcolor{keywordtype}{float}\ value);}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{comment}{//\ Backend\ calls\ this\ when\ a\ pen's\ button\ changes,\ to\ generate\ events\ and\ update\ state.}}
+\DoxyCodeLine{00082\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendPenButton(Uint64\ timestamp,\ SDL\_PenID\ instance\_id,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ Uint8\ button,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \textcolor{comment}{//\ Backend\ calls\ this\ when\ a\ pen's\ proximity\ changes,\ to\ generate\ events\ and\ update\ state.}}
+\DoxyCodeLine{00085\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendPenProximity(Uint64\ timestamp,\ SDL\_PenID\ instance\_id,\ \doxymbox{\hyperlink{struct_s_d_l___window}{SDL\_Window}}\ *window,\ \textcolor{keywordtype}{bool}\ in,\ \textcolor{keywordtype}{bool}\ immediate);}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \textcolor{comment}{//\ Pumping\ events\ calls\ this\ to\ generate\ pending\ pen\ proximity\ events}}
+\DoxyCodeLine{00088\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_SendPendingPenProximity(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \textcolor{comment}{//\ Backend\ can\ optionally\ use\ this\ to\ find\ the\ SDL\_PenID\ for\ the\ \`{}handle`\ that\ was\ passed\ to\ SDL\_AddPenDevice.}}
+\DoxyCodeLine{00091\ \textcolor{keyword}{extern}\ SDL\_PenID\ SDL\_FindPenByHandle(\textcolor{keywordtype}{void}\ *handle);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \textcolor{comment}{//\ Backend\ can\ optionally\ use\ this\ to\ find\ a\ SDL\_PenID,\ selected\ by\ a\ callback\ examining\ all\ devices.\ Zero\ if\ not\ found.}}
+\DoxyCodeLine{00094\ \textcolor{keyword}{extern}\ SDL\_PenID\ SDL\_FindPenByCallback(\textcolor{keywordtype}{bool}\ (*callback)(\textcolor{keywordtype}{void}\ *handle,\ \textcolor{keywordtype}{void}\ *userdata),\ \textcolor{keywordtype}{void}\ *userdata);}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \textcolor{comment}{//\ Backend\ can\ use\ this\ to\ query\ current\ pen\ status.}}
+\DoxyCodeLine{00097\ SDL\_PenInputFlags\ SDL\_GetPenStatus(SDL\_PenID\ instance\_id,\ \textcolor{keywordtype}{float}\ *axes,\ \textcolor{keywordtype}{int}\ num\_axes);}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{comment}{//\ Backend\ can\ use\ this\ to\ map\ an\ axis\ to\ a\ capability\ bit.}}
+\DoxyCodeLine{00100\ SDL\_PenCapabilityFlags\ SDL\_GetPenCapabilityFromAxis(SDL\_PenAxis\ axis);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \textcolor{comment}{//\ Higher-\/level\ SDL\ video\ subsystem\ code\ calls\ this\ when\ starting\ up.\ Backends\ shouldn't.}}
+\DoxyCodeLine{00103\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ SDL\_InitPen(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \textcolor{comment}{//\ Higher-\/level\ SDL\ video\ subsystem\ code\ calls\ this\ when\ shutting\ down.\ Backends\ shouldn't.}}
+\DoxyCodeLine{00106\ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{void}\ SDL\_QuitPen(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ SDL\_pen\_c\_h\_}}
+
+\end{DoxyCode}

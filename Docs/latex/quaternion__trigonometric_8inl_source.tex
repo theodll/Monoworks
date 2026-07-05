@@ -1,0 +1,43 @@
+\doxysection{quaternion\+\_\+trigonometric.\+inl}
+\hypertarget{quaternion__trigonometric_8inl_source}{}\label{quaternion__trigonometric_8inl_source}\index{MonoEngine/thirdparty/glm/glm/ext/quaternion\_trigonometric.inl@{MonoEngine/thirdparty/glm/glm/ext/quaternion\_trigonometric.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{scalar__constants_8hpp}{scalar\_constants.hpp}}"{}}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00004\ \{}
+\DoxyCodeLine{00005\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00006\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ T\ \doxymbox{\hyperlink{group__ext__quaternion__trigonometric_ga8aa248b31d5ade470c87304df5eb7bd8}{angle}}(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00007\ \ \ \ \ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\doxymbox{\hyperlink{group__core__func__common_ga439e60a72eadecfeda2df5449c613a64}{abs}}(x.w)\ >\ \doxymbox{\hyperlink{group__ext__scalar__constants_gae8d1938913da2e5b2e102b9076cd0389}{cos\_one\_over\_two<T>}}())}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ a\ =\ \doxymbox{\hyperlink{group__core__func__trigonometric_gad3628b879437a75d1941f965b2893db7}{asin}}(\doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(x.x\ *\ x.x\ +\ x.y\ *\ x.y\ +\ x.z\ *\ x.z))\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(2);}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x.w\ <\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0))}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__ext__scalar__constants_ga94bafeb2a0f23ab6450fed1f98ee4e45}{pi<T>}}()\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(2)\ -\/\ a;}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__trigonometric_gaf621a212fa21c1009344895a52e9c82c}{acos}}(x.w)\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(2);}
+\DoxyCodeLine{00017\ \ \ \ \ \}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00020\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__quaternion__trigonometric_gac2b65b953ea72827e172fc39035964a7}{axis}}(\doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00021\ \ \ \ \ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ tmp1\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ -\/\ x.w\ *\ x.w;}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(tmp1\ <=\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0))}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}(0,\ 0,\ 1);}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ tmp2\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ \doxymbox{\hyperlink{group__core__func__exponential_ga1f904e09827e939a56e4158f45ca8ede}{sqrt}}(tmp1);}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}(x.x\ *\ tmp2,\ x.y\ *\ tmp2,\ x.z\ *\ tmp2);}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00030\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__quaternion__trigonometric_gaff39bc5f51f734fea1170ba68da07268}{angleAxis}}(T\ \textcolor{keyword}{const}\&\ \doxymbox{\hyperlink{group__ext__quaternion__trigonometric_ga8aa248b31d5ade470c87304df5eb7bd8}{angle}},\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<3,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ v)}
+\DoxyCodeLine{00031\ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ a(\doxymbox{\hyperlink{group__ext__quaternion__trigonometric_ga8aa248b31d5ade470c87304df5eb7bd8}{angle}});}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ s\ =\ \doxymbox{\hyperlink{group__core__func__trigonometric_ga3fcdcfa2d2ac38de9ba1885cd1c79414}{glm::sin}}(a\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5));}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1qua}{qua<T,\ Q>}}(\doxymbox{\hyperlink{group__core__func__trigonometric_ga54745147add8b4fa05642f5c71f6833e}{glm::cos}}(a\ *\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(0.5)),\ v\ *\ s);}
+\DoxyCodeLine{00036\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

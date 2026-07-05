@@ -1,0 +1,111 @@
+\doxysection{vector\+\_\+reciprocal.\+inl}
+\hypertarget{vector__reciprocal_8inl_source}{}\label{vector__reciprocal_8inl_source}\index{MonoEngine/thirdparty/glm/glm/ext/vector\_reciprocal.inl@{MonoEngine/thirdparty/glm/glm/ext/vector\_reciprocal.inl}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{trigonometric_8hpp}{../trigonometric.hpp}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceglm}{glm}}}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{comment}{//\ sec}}
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00010\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_gae4bcbebee670c5ea155f0777b3acbd84}{sec}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00011\ \ \ \ \ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'sec'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_ga54745147add8b4fa05642f5c71f6833e}{cos}},\ x);}
+\DoxyCodeLine{00014\ \ \ \ \ \}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ csc}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00018\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga59dd0005b6474eea48af743b4f14ebbb}{csc}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00019\ \ \ \ \ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'csc'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_ga3fcdcfa2d2ac38de9ba1885cd1c79414}{sin}},\ x);}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{comment}{//\ cot}}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00026\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga3a7b517a95bbd3ad74da3aea87a66314}{cot}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00027\ \ \ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'cot'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ pi\_over\_2\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(3.1415926535897932384626433832795\ /\ 2.0);}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_gae5727eacf7692c197af6298b6d4ad922}{tan}},\ pi\_over\_2\ -\/\ x);}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ asec}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00035\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga2c5b7f962c2c9ff684e6d2de48db1f10}{asec}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00036\ \ \ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'asec'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_gaf621a212fa21c1009344895a52e9c82c}{acos}},\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ x);}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{comment}{//\ acsc}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00043\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga1b4bed91476b9b915e76b4a30236d330}{acsc}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'acsc'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_gad3628b879437a75d1941f965b2893db7}{asin}},\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ x);}
+\DoxyCodeLine{00047\ \ \ \ \ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ acot}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00051\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_gaeadfb9c9d71093f7865b2ba2ca8d104d}{acot}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00052\ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'acot'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ T\ \textcolor{keyword}{const}\ pi\_over\_2\ =\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(3.1415926535897932384626433832795\ /\ 2.0);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ pi\_over\_2\ -\/\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(atan,\ x);}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ sech}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00060\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga9a5cfd1e7170104a7b33863b1b75e5ae}{sech}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00061\ \ \ \ \ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'sech'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_gadc7baaf1f2e79f0883c7ead8abb3040e}{cosh}},\ x);}
+\DoxyCodeLine{00064\ \ \ \ \ \}}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{comment}{//\ csch}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00068\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga6d95843ff3ca6472ab399ba171d290a0}{csch}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00069\ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'csch'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_ga6fa8d0d5565c424ca5149aeed90368e9}{sinh}},\ x);}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ coth}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00076\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga6b8b770eb7198e4dea59d52e6db81442}{coth}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'coth'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{group__core__func__trigonometric_gadc7baaf1f2e79f0883c7ead8abb3040e}{glm::cosh}}(x)\ /\ \doxymbox{\hyperlink{group__core__func__trigonometric_ga6fa8d0d5565c424ca5149aeed90368e9}{glm::sinh}}(x);}
+\DoxyCodeLine{00080\ \ \ \ \ \}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ asech}}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00084\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_gaec7586dccfe431f850d006f3824b8ca6}{asech}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00085\ \ \ \ \ \{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'asech'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_ga6cc737d23e600f02d4cdd37877ca8967}{acosh}},\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ x);}
+\DoxyCodeLine{00088\ \ \ \ \ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{comment}{//\ acsch}}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00092\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_ga4b50aa5e5afc7e19ec113ab91596c576}{acsch}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00093\ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'acsch'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_gac0829fbd0739069af59cfb96d269b7ee}{asinh}},\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ x);}
+\DoxyCodeLine{00096\ \ \ \ \ \}}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{comment}{//\ acoth}}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{template}<length\_t\ L,\ \textcolor{keyword}{typename}\ T,\ qualifier\ Q>}
+\DoxyCodeLine{00100\ \ \ \ \ GLM\_FUNC\_QUALIFIER\ \doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \doxymbox{\hyperlink{group__ext__scalar__reciprocal_gafaca98a7100170db8841f446282debfa}{acoth}}(\doxymbox{\hyperlink{structglm_1_1vec}{vec<L,\ T,\ Q>}}\ \textcolor{keyword}{const}\&\ x)}
+\DoxyCodeLine{00101\ \ \ \ \ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::numeric\_limits<T>::is\_iec559\ ||\ GLM\_CONFIG\_UNRESTRICTED\_FLOAT,\ \textcolor{stringliteral}{"{}'acoth'\ only\ accept\ floating-\/point\ inputs"{}});}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{structglm_1_1detail_1_1functor1}{detail::functor1<vec,\ L,\ T,\ T,\ Q>::call}}(\doxymbox{\hyperlink{group__core__func__trigonometric_ga1979e784b65e71f2591a415581d39c59}{atanh}},\ \textcolor{keyword}{static\_cast<}T\textcolor{keyword}{>}(1)\ /\ x);}
+\DoxyCodeLine{00104\ \ \ \ \ \}}
+\DoxyCodeLine{00105\ \}\textcolor{comment}{//namespace\ glm}}
+
+\end{DoxyCode}

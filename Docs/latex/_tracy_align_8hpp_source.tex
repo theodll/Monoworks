@@ -1,0 +1,35 @@
+\doxysection{Tracy\+Align.\+hpp}
+\hypertarget{_tracy_align_8hpp_source}{}\label{_tracy_align_8hpp_source}\index{MonoEngine/thirdparty/tracy/public/common/TracyAlign.hpp@{MonoEngine/thirdparty/tracy/public/common/TracyAlign.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_TRACYALIGN\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_TRACYALIGN\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}TracyForceInline.hpp"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }tracy}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00013\ tracy\_force\_inline\ T\ MemRead(\ \textcolor{keyword}{const}\ T*\ ptr\ )}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ T\ val;}
+\DoxyCodeLine{00016\ \ \ \ \ memcpy(\ \&val,\ ptr,\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordflow}{return}\ val;}
+\DoxyCodeLine{00018\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ U>}
+\DoxyCodeLine{00021\ tracy\_force\_inline\ \textcolor{keywordtype}{void}\ MemWrite(\ T*\ ptr,\ U\ val\ )}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{static\_assert}(\ std::is\_same<T,\ U>::value,\ \textcolor{stringliteral}{"{}MemWrite\ type\ mismatch"{}}\ );}
+\DoxyCodeLine{00024\ \ \ \ \ memcpy(\ (\textcolor{keywordtype}{void}*)ptr,\ \&val,\ \textcolor{keyword}{sizeof}(\ T\ )\ );}
+\DoxyCodeLine{00025\ \}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
