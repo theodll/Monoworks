@@ -137,7 +137,7 @@ namespace Monoworks
 		template <typename... Args>
 		[[nodiscard]] static CRef<T> Create(Args&&... args)
 		{
-			SHandle handle = CMemoryManager::Allocate(sizeof(ControlBlock));
+			SHandle handle = CMemoryManager::Allocate(sizeof(SControlBlock));
 			void* rawMem = CMemoryManager::Get(handle);
 
 			new (rawMem) SControlBlock(std::forward<Args>(args)...);

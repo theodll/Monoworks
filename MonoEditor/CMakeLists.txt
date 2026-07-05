@@ -4,7 +4,7 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
 
-add_executable(MonoEditor "source/core/Entrypoint.hh" "source/core/Entrypoint.cc"  ${QRC_RESOURCEN} )
+add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc"  ${QRC_RESOURCEN} )
 
 target_link_libraries(MonoEditor PRIVATE
     MonoEngine

@@ -22,7 +22,7 @@ namespace Monoworks
 		u32 Generation = 0;
 	};
 
-	static constexpr SHandle MW_NULL_MEMORY = { .Index{0}, .Generation{0} };
+	static constexpr SHandle MW_NULL_MEMORY = { 0, 0 };
 
 	class CMemoryManager
 	{
@@ -30,7 +30,7 @@ namespace Monoworks
 		CMemoryManager() = delete;
 
 		/**
-		 * @brief Initialises the Memory Manager
+		 * @brief Initializes the Memory Manager
 		 */
 		static void Init() noexcept;
 

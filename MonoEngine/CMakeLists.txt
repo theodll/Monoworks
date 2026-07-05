@@ -10,14 +10,14 @@ add_subdirectory("thirdparty/volk")
 
 find_package(Vulkan REQUIRED)
 
-target_include_directories(MonoEngine PUBLIC "source/" "specific/")
+target_include_directories(MonoEngine PUBLIC "source/" "specific/" ".")
 
 target_link_libraries(MonoEngine PRIVATE
     Vulkan::Vulkan
     spdlog::spdlog
+    glm::glm
     Tracy::TracyClient
     volk::volk
-    doctest::doctest
 )
 
 target_link_libraries(MonoEngine PUBLIC

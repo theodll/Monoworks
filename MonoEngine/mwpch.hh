@@ -18,3 +18,5 @@
 
 // Engine
 #include <common/Math.hh>
+#include <common/Base.hh>
+#include <common/Memory.hh>
