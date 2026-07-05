@@ -1,6 +1,6 @@
 #include <Monoworks.hh>
 #include <core/Application.hh>
-#include "MonoEditor.hh"
+#include "MonoRuntime.hh"
 
 
 int main(int argc, char** argv)
