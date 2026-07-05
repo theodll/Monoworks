@@ -15,7 +15,7 @@ jobs:
 
 
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release, Debug]
         c_compiler: [gcc, clang, cl]
         include:
@@ -25,7 +25,7 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-          - os: ubuntu-latest
+          - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
         exclude:
@@ -35,7 +35,10 @@ jobs:
             c_compiler: clang
           - os: ubuntu-latest
             c_compiler: cl
-
+          - os: macos-latest
+            c_compiler: cl
+          - os: macos-latest
+            c_compiler: gcc
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -53,6 +56,12 @@ jobs:
       with:
             version: 1.4.309.0
             cache: true
+
+    - name: Install Qt
+      uses: trollixx/setup-qt@v1
+      with:
+        version: "6.11.1"
+        cache: true
 
     - name: Setup SDL3 (macOS)
       if: runner.os == 'macOS'
