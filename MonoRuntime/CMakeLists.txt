@@ -1,4 +1,4 @@
-add_executable(MonoRuntime "source/core/Entrypoint.hh" "source/core/Entrypoint.cc")
+add_executable(MonoRuntime "source/core/MonoRuntime.hh" "source/core/MonoRuntime.cc")
 
 if(USE_SYSTEM_SDL3)
     find_package(SDL3 REQUIRED CONFIG COMPONENTS SDL3-shared)
