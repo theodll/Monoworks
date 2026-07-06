@@ -1,5 +1,5 @@
 #include <Monoworks.hh>
-
+#include "EngineBridge.hh"
 
 
 namespace Monoworks 
