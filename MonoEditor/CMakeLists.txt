@@ -1,10 +1,13 @@
+cmake_policy(SET CMP0100 NEW)
+
 set(CMAKE_AUTOMOC ON) 
 set(CMAKE_AUTOUIC ON) 
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
-add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc"  "source/core/EngineBridge.hh" "source/core/EngineBridge.cc" ${QRC_RESOURCEN} )
+add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/ui/MainWindow.cpp" "source/ui/MainWindow.hh" ${QRC_RESOURCEN}
+    source/ui/MainWindow.ui )
 
 target_link_libraries(MonoEditor PRIVATE
     MonoEngine
@@ -12,6 +15,7 @@ target_link_libraries(MonoEditor PRIVATE
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick 
+    Qt6::Widgets
 )
 
 target_include_directories(MonoEditor PRIVATE "source/" "specific/")

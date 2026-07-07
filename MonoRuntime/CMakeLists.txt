@@ -1,3 +1,5 @@
+cmake_policy(SET CMP0100 NEW)
+
 add_executable(MonoRuntime "source/core/MonoRuntime.hh" "source/core/MonoRuntime.cc")
 
 if(USE_SYSTEM_SDL3)

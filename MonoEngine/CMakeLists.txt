@@ -1,4 +1,4 @@
-
+cmake_policy(SET CMP0100 NEW)
 
 add_library(MonoEngine STATIC "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh")
 

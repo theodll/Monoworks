@@ -16,32 +16,42 @@ namespace Monoworks
 {
 	[[nodiscard]] int EditorMain(int argc, char** argv) 
 	{
-		QCoreApplication app(argc, argv);
+		CMonoworksEditor editor;
 
-		CApplication* engine = new CApplication;
-		CEngineBridge bridge(engine);
+		editor.Init(argc, argv);
 
+		editor.Run();
+
+		editor.Shutdown();
+
+		return 0;
+	}
+
+	void CMonoworksEditor::Init(int argc, char** argv)
+	{
+		m_QtApplication = new QCoreApplication(argc, argv);
+
+		m_Engine = new CApplication;
 
 		SApplicationCreateInfos appInfos{};
 		appInfos.Name = "MonoEditor";
 		appInfos.RenderableExtent = { 670, 480 };
 
-		engine->Init(&appInfos);
+		m_Engine->Init(&appInfos);
+	};
 
-		QQmlApplicationEngine qmlEngine;
-		qmlEngine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
-		
+	void CMonoworksEditor::Run()
+	{
 
-		QObject* rootObject = qmlEngine.rootObjects().first();
-		QQuickWindow* window = qobject_cast<QQuickWindow*>(rootObject); 
 
-		if (window)
-			bridge.SetWindow(window);
 
-		int result = app.exec();
+		int result = m_QtApplication->exec();
+	};
 
-		engine->Shutdown();
+	void CMonoworksEditor::Shutdown()
+	{
+		delete m_Engine;
+		delete m_QtApplication;
+	};
 
-		return 0;
-	}
 }

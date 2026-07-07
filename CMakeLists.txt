@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+cmake_policy(SET CMP0100 NEW)
 
 project(Monoworks LANGUAGES CXX)
 option(USE_SYSTEM_SDL3 "Use system-installed SDL3 via find_package" OFF)
