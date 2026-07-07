@@ -16,9 +16,19 @@
 
 namespace Monoworks
 {
+	/**
+	 * @brief Handle Instance inexplicitly pointing to the corresponding pointer in the table of allocations.
+	 */
 	struct SHandle
 	{
+		/**
+		 * @brief Index into the array of pointers.
+		 */
 		u32 Index = 0;
+
+		/**
+		 * @brief Generation of the handle.
+		 */
 		u32 Generation = 0;
 	};
 

@@ -5,6 +5,7 @@
 
 namespace Monoworks 
 {
+
 	struct SExtent2D 
 	{
 		int Height;
@@ -12,9 +13,11 @@ namespace Monoworks
 	};
 
 	struct SApplicationCreateInfos 
-	{
-		std::string Name;
-		SExtent2D RenderableExtent;
+	{	
+		[[maybe_unused]] std::string Name = "MonoEngine";
+		[[maybe_unused]] SExtent2D RenderableExtent = { 640, 480 };
+		[[maybe_unused]] int ArgumentCount = 0;
+		[[maybe_unused]] char** Arguments = nullptr;
 	};
 
 

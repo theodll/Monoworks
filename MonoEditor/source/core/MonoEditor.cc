@@ -36,6 +36,9 @@ namespace Monoworks
 		SApplicationCreateInfos appInfos{};
 		appInfos.Name = "MonoEditor";
 		appInfos.RenderableExtent = { 670, 480 };
+		appInfos.ArgumentCount = argc;
+		appInfos.Arguments = argv;
+
 
 		m_Engine->Init(&appInfos);
 	};

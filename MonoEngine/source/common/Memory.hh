@@ -163,6 +163,33 @@ namespace Monoworks
 			return nullptr;
 		}
 
+			/**
+		 * @brief Accesses the underlying pointer
+		 * @return T const * Returns the underlying pointer as mutable
+		*/
+		[[nodiscard]] T* raw() noexcept
+		{
+			if (!CMemoryManager::IsValid(m_Handle))
+				return nullptr;
+
+			if (SControlBlock* cb = GetControlBlock())
+			{
+				return &cb->Object;
+			}
+			return nullptr;
+		}
+
+		[[nodiscard]] T& operator*() noexcept
+		{
+			return *raw();
+		}
+
+		[[nodiscard]] T* operator->() noexcept
+		{
+			return raw();
+		}
+
+
 		[[nodiscard]] T const* operator->() const noexcept
 		{
 			return raw();
@@ -198,3 +225,6 @@ namespace Monoworks
 		return !(a == b);
 	}
 }
+
+template <typename T>
+using Ref = Monoworks::CRef<T>;

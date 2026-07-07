@@ -11,6 +11,7 @@
 
 // Common
 #include <common/Math.hh>
+#include <common/Memory.hh>
 
 // Core
 #include <core/Application.hh>
