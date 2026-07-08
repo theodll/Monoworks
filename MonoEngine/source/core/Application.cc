@@ -1,5 +1,6 @@
 #include "Application.hh"
 
+
 namespace Monoworks
 {
 	CApplication* CApplication::m_Singleton;
