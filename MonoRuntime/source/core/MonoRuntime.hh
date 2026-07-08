@@ -1,3 +1,19 @@
+/**
+ * @defgroup Runtime Runtime
+ * @brief Everything in the Runtime Project
+ */
+
+/**
+ * @file MonoRuntime.hh
+ * @author Theo Wimber (theowimber@abeams.app) 
+ * @brief MonoRuntimes's root file
+ * @version 0.1
+ * @date 2026-07-08
+ * @ingroup Runtime
+ * @copyright Copyright (c) 2026
+ * 
+ */
+
 #include <Monoworks.hh>
 
 namespace Monoworks 

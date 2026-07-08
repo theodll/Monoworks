@@ -5,9 +5,8 @@
  * @brief Defines aliases of glm types
  * @version 0.1
  * @date 2026-07-01
- * 
+ * @ingroup Common
  * @copyright Copyright (c) 2026
- * 
  */
 
 #include <glm/glm.hpp>
