@@ -1,6 +1,6 @@
 cmake_policy(SET CMP0100 NEW)
 
-add_library(MonoEngine STATIC "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.h")
+add_library(MonoEngine STATIC "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/memory/MemoryManager.hh" "source/memory/MemoryManager.cc" "source/core/LoggingManager.hh" "source/core/LoggingManager.cc" "source/common/Log.h")
 
 add_subdirectory("thirdparty/glm")
 # add_subdirectory("extern/imgui")

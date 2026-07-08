@@ -4,12 +4,12 @@
  * @brief Reference counting system for automatic memory management
  * @version 0.2
  * @date 2026-07-05
- * @ingroup Common
+ *
  * @copyright Copyright (c) 2026
  */
 
 #pragma once
-#include <core/MemoryManager.hh>
+#include <memory/MemoryManager.hh>
 #include <common/Base.hh>
 
 #include <atomic>

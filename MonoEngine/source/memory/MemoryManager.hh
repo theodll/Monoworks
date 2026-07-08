@@ -4,8 +4,9 @@
  * @brief System to manage raw memory and defragment memory
  * @version 0.1
  * @date 2026-07-03
+ *
  * @copyright Copyright (c) 2026
- * @ingroup Core
+ *
  */
 
 #pragma once
@@ -33,10 +34,6 @@ namespace Monoworks
 
 	static constexpr SHandle MW_NULL_MEMORY = { 0, 0 };
 
-
-	/**
-	 * @brief Class to manage raw memory and defragment memory
-	 */
 	class CMemoryManager
 	{
 	public:

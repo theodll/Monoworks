@@ -1,16 +1,10 @@
 /**
- * @defgroup Common Common
- * @brief Common Components shared between every Application
- */
- 
-
-/**
  * @file Base.hh
  * @author Theo Wimber (theowimber@abeams.app)
  * @brief Common definitions for the entire engine
  * @version 0.1
  * @date 2026-07-03
- * @ingroup Common
+ * 
  * @copyright Copyright (c) 2026
  * 
  */

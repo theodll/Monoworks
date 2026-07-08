@@ -1,15 +1,15 @@
 #include <mwpch.hh>
 
-#include "core/LogManager.hh"
+#include "core/LoggingManager.hh"
 
 
 
 namespace Monoworks 
 {
-    std::shared_ptr<spdlog::logger> CLogManager::s_CoreLogger;
-    std::shared_ptr<spdlog::sinks::basic_file_sink_mt> CLogManager::s_FileSink;
+    std::shared_ptr<spdlog::logger> CLog::s_CoreLogger;
+    std::shared_ptr<spdlog::sinks::basic_file_sink_mt> CLog::s_FileSink;
 
-    void CLogManager::Init()
+    void CLog::Init()
     {
         auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         //consoleSink->set_pattern("[%T] %n: %^[%l] %v%$");
@@ -25,13 +25,13 @@ namespace Monoworks
         spdlog::register_logger(s_CoreLogger);
     }
 
-    void CLogManager::Flush()
+    void CLog::Flush()
     {
         if (s_CoreLogger)
             s_CoreLogger->flush();
     }
 
-    void CLogManager::SetLogFile(const std::string& filepath)
+    void CLog::SetLogFile(const std::string& filepath)
     {
         s_FileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filepath, true);
         s_FileSink->set_pattern("[%T] [%l] %n: %v");
