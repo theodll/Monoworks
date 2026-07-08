@@ -8,6 +8,7 @@
  * @ingroup Core
  */
 
+#pragma once
 #include <common/Memory.hh>
 #include <memory>
 

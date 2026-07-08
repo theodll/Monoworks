@@ -8,9 +8,10 @@
  * @copyright Copyright Sklout (c) 2026
  * 
  */
-
+#pragma once
 // Common
 #include <common/Math.hh>
+#include <common/Memory.hh>
 #include <common/Memory.hh>
 
 // Core

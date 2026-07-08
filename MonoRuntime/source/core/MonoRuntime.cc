@@ -28,12 +28,23 @@ namespace Monoworks
 		m_Application = new CApplication;
 
 		SApplicationCreateInfos appInfos{};
-		appInfos.Name = "MonoEditor";
-		appInfos.RenderableExtent = { 670, 480 };
+		appInfos.Name = "Mono Runtime";
+		appInfos.RenderableExtent = { 640, 480 };
 		appInfos.ArgumentCount = argc;
 		appInfos.Arguments = argv;
 
 		m_Application->Init(&appInfos);
+
+		SWindowCreateInfos windowInfos{};
+		windowInfos.GraphicsAPI = MW_GAPI_NONE;
+		windowInfos.WindowTitle = "Mono Runtime";
+		windowInfos.Resizable = false;
+		windowInfos.WindowExtent = { 640, 480 };
+
+		m_Window = Ref<CWindow>::Create();
+		m_Window->Init(&windowInfos);
+
+		Ref<int> test = Ref<int>::Create();
 	}
 
 	void CMonoRuntime::Run()
@@ -46,6 +57,8 @@ namespace Monoworks
 
 	void CMonoRuntime::Shutdown()
 	{
+
+		m_Window->Shutdown();
 		m_Application->Shutdown();
 	}
 

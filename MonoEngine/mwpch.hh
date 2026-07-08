@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2026
  * 
  */
-
+#pragma once
 #include <string>
 #include <iostream>
 
@@ -26,5 +26,6 @@
 
 // Engine
 #include <common/Math.hh>
+#include <common/Log.h>
 #include <common/Base.hh>
 #include <common/Memory.hh>

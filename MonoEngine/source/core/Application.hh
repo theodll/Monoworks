@@ -20,23 +20,6 @@
 
 namespace Monoworks 
 {
-
-	/**
-	 * @brief Two-Dimensional Extent Structure
-	 */
-	struct SExtent2D 
-	{
-		/**
-		 * @brief Height component of the Two-Dimensional Extent.
-		 */
-		int Height;
-
-		/**
-		 * @brief Width component of the Two-Dimensional Extent.
-		 */
-		int Width;
-	};
-
 	/**
 	 * @brief All infos the Engine needs to initialize
 	 */

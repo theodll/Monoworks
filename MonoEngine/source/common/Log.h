@@ -8,14 +8,14 @@
  * @copyright Copyright (c) 2026
  * 
  */
-
+#pragma once
 #include <core/LogManager.hh>
 
-#define VT_TRACE(...)    if(::Velt::CLogManager::GetCoreLogger()) ::Velt::CLogManager::GetCoreLogger()->trace(__VA_ARGS__)
-#define VT_INFO(...)     if(::Velt::CLogManager::GetCoreLogger()) ::Velt::CLogManager::GetCoreLogger()->info(__VA_ARGS__)
-#define VT_WARN(...)     if(::Velt::CLogManager::GetCoreLogger()) ::Velt::CLogManager::GetCoreLogger()->warn(__VA_ARGS__)
-#define VT_ERROR(...)    if(::Velt::CLogManager::GetCoreLogger()) ::Velt::CLogManager::GetCoreLogger()->error(__VA_ARGS__)
-#define VT_FATAL(...)    if(::Velt::CLogManager::GetCoreLogger()) ::Velt::CLogManager::GetCoreLogger()->critical(__VA_ARGS_)
+#define MW_TRACE(...)    if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->trace(__VA_ARGS__)
+#define MW_INFO(...)     if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->info(__VA_ARGS__)
+#define MW_WARN(...)     if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->warn(__VA_ARGS__)
+#define MW_ERROR(...)    if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->error(__VA_ARGS__)
+#define MW_FATAL(...)    if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->critical(__VA_ARGS_)
 
 
 

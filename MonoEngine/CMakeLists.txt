@@ -12,14 +12,11 @@ find_package(Vulkan REQUIRED)
 
 target_include_directories(MonoEngine PUBLIC "source/" "specific/" ".")
 
-target_link_libraries(MonoEngine PRIVATE
+target_link_libraries(MonoEngine PUBLIC
     Vulkan::Vulkan
     spdlog::spdlog
     Tracy::TracyClient
     volk::volk
-)
-
-target_link_libraries(MonoEngine PUBLIC
     doctest::doctest
     glm::glm
 )

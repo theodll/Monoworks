@@ -13,8 +13,9 @@
  * @copyright Copyright (c) 2026
  * 
  */
-
+#pragma once
 #include <Monoworks.hh>
+#include "Window.hh"
 
 namespace Monoworks 
 {
@@ -54,6 +55,7 @@ namespace Monoworks
 	
 	private:
 		CApplication* m_Application;
+		Ref<CWindow> m_Window; 
 
 		bool m_Running;
 	};

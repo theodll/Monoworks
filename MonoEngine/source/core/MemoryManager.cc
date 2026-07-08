@@ -12,6 +12,9 @@ namespace Monoworks
 	{
 		s_EntryTable.reserve(1024);
 		s_EntryTable.emplace_back();
+
+		MW_TRACE("Initialize CMemoryManger");
+
 	}
 
 	void CMemoryManager::Shutdown() noexcept
@@ -24,6 +27,8 @@ namespace Monoworks
 		}
 		s_EntryTable.clear();
 		s_FreeList.clear();
+
+		MW_TRACE("Shutdown CMemoryManger");
 	}
 
 	[[nodiscard]] SHandle CMemoryManager::Allocate(u32 size) noexcept
@@ -54,6 +59,8 @@ namespace Monoworks
 		Entry.Size = size;
 		Entry.Alive = true;
 
+		MW_TRACE("Allocated {} bytes at {}", size, pMemory);
+
 		return SHandle{ Index, Entry.Generation };
 	}
 
@@ -68,10 +75,13 @@ namespace Monoworks
 		if (!Entry.Alive || Entry.Generation != handle.Generation)
 			return; 
 
+		MW_TRACE("Deleted {} bytes at handle index {} with address {}", Entry.Size, handle.Index, Entry.pMemory);
+
 		::operator delete(Entry.pMemory);
 		Entry.pMemory = nullptr;
 		Entry.Alive = false;
 		Entry.Generation++;
+
 
 		s_FreeList.push_back(handle.Index);
 	}
