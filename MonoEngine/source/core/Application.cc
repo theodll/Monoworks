@@ -1,5 +1,5 @@
 #include "Application.hh"
-
+#include "CVarManager.hh"
 
 namespace Monoworks
 {
@@ -7,6 +7,7 @@ namespace Monoworks
 
 	void CApplication::Init(const SApplicationCreateInfos* pInfos) noexcept
 	{
+		CCvarManager::Init();
 		CLogManager::Init();
 		CMemoryManager::Init();
 	}
@@ -15,6 +16,7 @@ namespace Monoworks
 	{
 		CMemoryManager::Shutdown();
 		CLogManager::Shutdown();
+		CCvarManager::Shutdown();
 	}
 
 	void CApplication::Frame()
