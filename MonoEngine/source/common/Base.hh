@@ -17,6 +17,14 @@
 
 #pragma once
 #include <cstdint>
+#include <common/Log.h>
+#include <core/CVarManager.hh>
+
+using cvar_t = Monoworks::SCVar;
+
+#define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
+#define MW_SET_CVAR(varName, value) Monoworks::CCvarManager::Set(varName, value);
+#define MW_SET_FLOAT_CVAR(varName, value) Monoworks::CCvarManager::SetValue(varName, value);
 
 using u8 = uint8_t;
 using u16 = uint16_t;

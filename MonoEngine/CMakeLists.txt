@@ -1,12 +1,13 @@
 cmake_policy(SET CMP0100 NEW)
 
-add_library(MonoEngine STATIC "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.h" "source/core/CVarManager.hh" "source/core/CVarManager.cc")
+add_library(MonoEngine STATIC "thirdparty/iniparser/src/dictionary.c" "thirdparty/iniparser/src/dictionary.h" "thirdparty/iniparser/src/iniparser.c" "thirdparty/iniparser/src/iniparser.h" "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.h" "source/core/CVarManager.hh" "source/core/CVarManager.cc" "source/core/ConfigManager.hh" "source/core/ConfigManager.cc")
 
 add_subdirectory("thirdparty/glm")
 # add_subdirectory("extern/imgui")
 add_subdirectory("thirdparty/spdlog")
 add_subdirectory("thirdparty/tracy")
 add_subdirectory("thirdparty/volk")
+
 
 find_package(Vulkan REQUIRED)
 
@@ -21,7 +22,9 @@ target_link_libraries(MonoEngine PUBLIC
     glm::glm
 )
 
-target_precompile_headers(MonoEngine PUBLIC mwpch.hh)
+target_precompile_headers(MonoEngine PUBLIC 
+    $<$<COMPILE_LANGUAGE:CXX>:mwpch.hh>
+)
 
 if (WIN32)
     target_compile_definitions(MonoEngine PRIVATE VT_PLATFORM_WINDOWS)

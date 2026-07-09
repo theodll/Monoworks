@@ -1,5 +1,6 @@
 #include "Application.hh"
 #include "CVarManager.hh"
+#include "ConfigManager.hh"
 
 namespace Monoworks
 {
@@ -10,6 +11,12 @@ namespace Monoworks
 		CCvarManager::Init();
 		CLogManager::Init();
 		CMemoryManager::Init();
+
+		CConfigManager cfg("config.cfg");
+		cfg.RegisterSection("TestSection");
+		cfg.RegisterValue("TestSection", "TestKey", "TestDefVar");
+		cfg.Flush();
+
 	}
 
 	void CApplication::Shutdown() noexcept
