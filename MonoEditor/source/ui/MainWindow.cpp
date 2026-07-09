@@ -6,7 +6,7 @@ namespace Monoworks
 {
 
 	CMainWindow::CMainWindow(QObject* parent)
-		: QMainWindow(parent), m_UI(new ::Ui::CMainWindow)
+		: QMainWindow(), m_UI(new ::Ui::CMainWindow)
 	{
 		m_UI->setupUi(this);
 	}

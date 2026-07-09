@@ -14,11 +14,11 @@ namespace Monoworks
 	void CApplication::Shutdown() noexcept
 	{
 		CMemoryManager::Shutdown();
-		// CLogManager::Shutdown();
+		CLogManager::Shutdown();
 	}
 
 	void CApplication::Frame()
 	{
-		
+	
 	}
 }

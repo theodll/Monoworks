@@ -13,7 +13,7 @@ namespace Monoworks
 		s_EntryTable.reserve(1024);
 		s_EntryTable.emplace_back();
 
-		MW_TRACE("Initialize CMemoryManger");
+		MW_INFO("Initialize CMemoryManger");
 
 	}
 
@@ -28,7 +28,7 @@ namespace Monoworks
 		s_EntryTable.clear();
 		s_FreeList.clear();
 
-		MW_TRACE("Shutdown CMemoryManger");
+		MW_INFO("Shutdown CMemoryManger");
 	}
 
 	[[nodiscard]] SHandle CMemoryManager::Allocate(u32 size) noexcept

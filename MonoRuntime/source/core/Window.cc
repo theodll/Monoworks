@@ -18,13 +18,14 @@ namespace Monoworks
 
 		m_SDLWindow = SDL_CreateWindow(title, pInfos->WindowExtent.Width, pInfos->WindowExtent.Height, flags);
 		
-		MW_INFO("Created a SDL Window");
+		MW_INFO("Initialize CWindow");
 	}
 
 	void CWindow::Shutdown() noexcept
 	{
 		SDL_DestroyWindow(m_SDLWindow);
+		MW_INFO("Shutdown CWindow");
 	}
-}
+}	
 
 

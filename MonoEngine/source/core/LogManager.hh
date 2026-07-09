@@ -29,10 +29,14 @@ namespace Monoworks
          */
         static void Init();
 
+        static void Shutdown();
+
         /**
          * @brief Flushes the Logs to disk
          */
         static void Flush();
+
+
 
         /**
          * @brief Set the Log File object
