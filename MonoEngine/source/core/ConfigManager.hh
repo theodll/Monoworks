@@ -19,7 +19,7 @@ namespace Monoworks
 	class CConfigManager 
 	{
 	public:
-		CConfigManager(const std::filesystem::path& path) noexcept;
+		CConfigManager(const char* path) noexcept;
 		virtual ~CConfigManager() noexcept;
 	
 

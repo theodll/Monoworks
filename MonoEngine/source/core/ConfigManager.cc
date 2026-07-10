@@ -8,16 +8,14 @@ namespace Monoworks
 {
 
 
-	CConfigManager::CConfigManager(const std::filesystem::path& path) noexcept : m_Path(path)
+	CConfigManager::CConfigManager(const char* path) noexcept : m_Path(path)
 	{
 		m_ConfigExists = std::filesystem::exists(path);
 
 		if (!m_ConfigExists)
 			return;
 
-		const char* cstr = path.string().c_str();
-
-		m_Inifile = iniparser_load(cstr);
+		m_Inifile = iniparser_load(path);
 
 		iniparser_dump(m_Inifile, stderr); 
 	}
