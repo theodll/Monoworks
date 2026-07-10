@@ -13,7 +13,7 @@ namespace Monoworks
 {
 	template <typename T>
 	concept IniGettable =
-		std::integral<T> || std::floating_point<T> || std::same_as<T, std::string> || std::same_as<T, bool>;
+		std::integral<T> || std::floating_point<T> || std::same_as<std::decay_t<T>, std::string> || std::same_as<std::decay_t<T>, bool>;
 
 	// small disposable class
 	class CConfigManager 
