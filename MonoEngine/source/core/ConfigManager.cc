@@ -8,16 +8,19 @@ namespace Monoworks
 {
 
 
-	CConfigManager::CConfigManager(const char* path) noexcept : m_Path(path)
+	CConfigManager::CConfigManager(const char* path) noexcept : m_Path(path), m_CPath(path)
 	{
 		m_ConfigExists = std::filesystem::exists(path);
-
-		if (!m_ConfigExists)
-			return;
-
+		
 		m_Inifile = iniparser_load(path);
 
-		iniparser_dump(m_Inifile, stderr); 
+		if (m_ConfigExists)
+			return;
+
+		/*
+		std::filesystem::path dirPath = m_Path.parent_path();
+		if (!dirPath.empty())
+			std::filesystem::create_directories(dirPath); */
 	}
 
 	CConfigManager::~CConfigManager() noexcept
@@ -72,18 +75,31 @@ namespace Monoworks
 
 	void CConfigManager::Flush() noexcept
 	{
+	
 		if (m_ConfigExists)
+		{
 			return;
+		}
+
+		std::filesystem::path dirPath = m_Path.parent_path();
+		if (!dirPath.empty()) {
+			std::filesystem::create_directories(dirPath);
+		}
 
 		std::ofstream cfgFile(m_Path);
-		
+		if (!cfgFile.is_open()) {
+			MW_WARN("Unable to open config file for flushing: {}", m_Path.string());
+			return;
+		}
+
 		for (auto& it : m_Sections)
 		{
 			cfgFile << it.second.str();
 		}
-		
+
 		cfgFile.close();
 		MW_INFO("Flush config file to disk {}", m_Path.string());
+		
 	}
 
 

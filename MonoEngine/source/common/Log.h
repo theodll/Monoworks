@@ -25,10 +25,13 @@ constexpr std::string_view StripNamespace(std::string_view name) {
     return name;
 }
 
-#define MW_LOG(fn, fmt, ...) \
+#define MW_LOG(fn, fmt_str, ...) \
     do { \
         if (auto logger = ::Monoworks::CLogManager::GetCoreLogger()) { \
-            logger->fn("[{}] " fmt, StripNamespace(__FUNCTION__), ##__VA_ARGS__); \
+            logger->fn("[{}] " fmt_str, StripNamespace(__FUNCTION__), ##__VA_ARGS__); \
+        } \
+        else { \
+            fmt::print("[{}] " fmt_str "\n", StripNamespace(__FUNCTION__), ##__VA_ARGS__); \
         } \
     } while (0)
 

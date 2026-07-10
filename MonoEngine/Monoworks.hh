@@ -16,3 +16,4 @@
 
 // Core
 #include <core/Application.hh>
+#include <core/ConfigManager.hh>

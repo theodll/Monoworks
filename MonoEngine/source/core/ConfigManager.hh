@@ -29,8 +29,11 @@ namespace Monoworks
 		void Flush() noexcept;
 		
 		template <typename T = std::string> requires IniGettable<T>
-		[[nodiscard]] T Get(const std::string& section, const std::string& key) const noexcept
+		[[nodiscard]] T Get(const std::string& section, const std::string& key) noexcept
 		{
+			if (!m_Inifile)
+				m_Inifile = iniparser_load(m_CPath);
+
 			T temp;
 
 			auto keyValS = std::format("{}:{}", section, key);
@@ -79,8 +82,9 @@ namespace Monoworks
 
 
 		std::unordered_map<std::string, std::stringstream> m_Sections;
+		const char* m_CPath;
 		std::filesystem::path m_Path;
-		dictionary* m_Inifile;
+		dictionary* m_Inifile = nullptr;
 		bool m_ConfigExists = false;
 
 

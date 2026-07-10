@@ -27,19 +27,35 @@ namespace Monoworks
 	{
 		m_Application = new CApplication;
 
+		CConfigManager cfg("Config/MonoRuntime.cfg");
+		cfg.RegisterSection("Runtime");
+		cfg.RegisterSection("Rendering");
+
+		cfg.RegisterValue("Runtime", "Title", "MonoEditor");
+		cfg.RegisterValue("Runtime", "Window W", "1920");
+		cfg.RegisterValue("Runtime", "Window H", "1080");
+
+		cfg.RegisterValue("Rendering", "GAPI", std::format("{}", (int)MW_GAPI_NONE));
+		cfg.RegisterValue("Rendering", "Default Width", "1920");
+		cfg.RegisterValue("Rendering", "Default Height", "1080");
+		cfg.RegisterValue("Rendering", "Resizable", "true");
+
+		cfg.Flush();
+
 		SApplicationCreateInfos appInfos{};
-		appInfos.Name = "Mono Runtime";
-		appInfos.RenderableExtent = { 640, 480 };
+		appInfos.Name = cfg.Get("Runtime", "Title");
+		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height") };
+		appInfos.GraphicsAPI = (EGraphicsAPI)cfg.Get<u32>("Rendering", "GAPI");
 		appInfos.ArgumentCount = argc;
 		appInfos.Arguments = argv;
 
 		m_Application->Init(&appInfos);
 
 		SWindowCreateInfos windowInfos{};
-		windowInfos.GraphicsAPI = MW_GAPI_NONE;
-		windowInfos.WindowTitle = "Mono Runtime";
-		windowInfos.Resizable = false;
-		windowInfos.WindowExtent = { 640, 480 };
+		windowInfos.GraphicsAPI = (EGraphicsAPI)cfg.Get<u32>("Rendering", "GAPI");;
+		windowInfos.WindowTitle = cfg.Get("Runtime", "Title");
+		windowInfos.Resizable = cfg.Get<bool>("Rendering", "Resizable");
+		windowInfos.WindowExtent = { cfg.Get<u32>("Rendering", "Default Height"), cfg.Get<u32>("Rendering", "Default Width") };
 
 		m_Window = Ref<CWindow>::Create();
 		m_Window->Init(&windowInfos);

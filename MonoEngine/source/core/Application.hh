@@ -34,7 +34,10 @@ namespace Monoworks
 		 * @brief Extent the engine is able to render to (eg. Window/Viewport size)
 		 */
 		[[maybe_unused]] SExtent2D RenderableExtent = { 640, 480 };
-
+		/**
+		 * @brief Graphics API used by the renderer.
+		 */
+		[[maybe_unused]] EGraphicsAPI GraphicsAPI;
 		/**
 		 * @brief Number of items in the Arguments array.
 		 */
