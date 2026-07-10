@@ -2,6 +2,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <type_traits>
 
 namespace Monoworks 
 {
@@ -10,6 +11,20 @@ namespace Monoworks
 	CConfigManager::CConfigManager(const std::filesystem::path& path) noexcept : m_Path(path)
 	{
 		m_ConfigExists = std::filesystem::exists(path);
+
+		if (!m_ConfigExists)
+			return;
+
+		const char* cstr = path.string().c_str();
+
+		m_Inifile = iniparser_load(cstr);
+
+		iniparser_dump(m_Inifile, stderr); 
+	}
+
+	CConfigManager::~CConfigManager() noexcept
+	{
+		iniparser_freedict(m_Inifile);
 	}
 
 	void CConfigManager::RegisterSection(const std::string& section) noexcept
@@ -73,4 +88,6 @@ namespace Monoworks
 		MW_INFO("Flush config file to disk {}", m_Path.string());
 	}
 
+
+	
 }
