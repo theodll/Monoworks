@@ -1,6 +1,6 @@
 cmake_policy(SET CMP0100 NEW)
 
-add_library(MonoEngine STATIC "thirdparty/iniparser/src/dictionary.c" "thirdparty/iniparser/src/dictionary.h" "thirdparty/iniparser/src/iniparser.c" "thirdparty/iniparser/src/iniparser.h" "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.h" "source/core/CVarManager.hh" "source/core/CVarManager.cc" "source/core/ConfigManager.hh" "source/core/ConfigManager.cc" "source/events/Event.hh" "source/common/SafeQueue.hh")
+add_library(MonoEngine STATIC "thirdparty/iniparser/src/dictionary.c" "thirdparty/iniparser/src/dictionary.h" "thirdparty/iniparser/src/iniparser.c" "thirdparty/iniparser/src/iniparser.h" "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.h" "source/core/CVarManager.hh" "source/core/CVarManager.cc" "source/core/ConfigManager.hh" "source/core/ConfigManager.cc" "source/events/Event.hh" "source/common/SafeQueue.hh" "source/events/EventManager.hh")
 
 set(GLM_BUILD_LIBRARY OFF CACHE INTERNAL "") 
 add_subdirectory("thirdparty/glm")

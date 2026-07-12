@@ -1,0 +1,81 @@
+#pragma once
+#include <common/Base.hh>
+#include <common/SafeQueue.hh>
+
+#include "Event.hh"
+
+#include <functional>
+#include <array>
+#include <vector>
+
+namespace Monoworks 
+{
+	/**
+	 * @brief Callback struct to house any data related to event callbacks.
+	 */
+	struct SCallback 
+	{
+		/**
+		 * @brief Callback function of the callback.
+		 */
+		std::function<bool(SEvent&)> Function;
+	};
+
+	/**
+	* @brief Static class to manage Events
+	*/
+	class CEventManager 
+	{
+	public:
+		/**
+		 * @brief Initializes the Event Manager.
+		 */
+		static void Init() noexcept;
+
+		/**
+		 * @brief Shuts the Event Manager down.
+		 */
+		static void Shutdown() noexcept;
+
+		/**
+		 * @brief Function to subscribe a listener to an event.
+		 * Subscribe to the actions of one certain event type.
+		 * 
+		 * @param type Type of the Event to subscribe
+		 * @param func Function Pointer to the function that should be executed when this event is processed
+		 */
+		static void Subscribe(EEventType type, std::function<bool(SEvent&)>& func);
+
+		/**
+		 * @brief Thread-Safe way to enlist a generic event into the event queue.
+		 * 
+		 * @param event Event you want to enlist.
+		 */
+		static void EnlistEvent(SEvent& event) noexcept;
+
+
+		/**
+		 * @brief Process all the events in the event queue.
+		 * Must be called before beginning to process any frame to avoid conflicts!
+		 */
+		static void ProcessEvents() noexcept;
+
+	private:
+		/**
+		 * @brief Two dimensional array of all registered callbacks.
+		 * 
+		 * The index to index into the array holding the vector of the callbacks is equivalent to the type of any event (eg. MW_EVENT_TYPE_MOUSE_CLICKED) and therefore has a size of MW_EVENT_TYPE_COUNT.
+		 * The inner array contains all registered callbacks corresponding to the event type in an arbitrary order. 
+		 */
+		static std::array<std::vector<SCallback>, MW_EVENT_TYPE_COUNT> m_Callbacks;
+
+
+		/**
+		 * @brief Thread-Safe blocking Event Queue of generic Events.
+		 */
+		static CSafeQueue<SEvent> m_EventQueue;
+
+	};
+
+
+}
