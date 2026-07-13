@@ -56,6 +56,7 @@ namespace Monoworks
 	private:
 		CApplication* m_Application;
 		Ref<CWindow> m_Window; 
+		CSDLEventDispatcher m_Dispatcher;
 
 		bool m_Running;
 	};

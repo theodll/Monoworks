@@ -1,6 +1,6 @@
 cmake_policy(SET CMP0100 NEW)
 
-add_executable(MonoRuntime "source/core/MonoRuntime.hh" "source/core/MonoRuntime.cc" "source/core/Window.hh" "source/core/Window.cc")
+add_executable(MonoRuntime "source/core/MonoRuntime.hh" "source/core/MonoRuntime.cc" "source/core/Window.hh" "source/core/Window.cc" "specific/sdl/EventDispatcher.hh" "specific/sdl/EventDispatcher.cc")
 
 if(USE_SYSTEM_SDL3)
     find_package(SDL3 REQUIRED CONFIG COMPONENTS SDL3-shared)

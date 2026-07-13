@@ -88,7 +88,7 @@ namespace Monoworks
 
         Modified Scancode implementation by libsdl-org
     */
-    enum Scancode : u16
+    enum Scancode 
     {
 		MW_SCANCODE_UNKNOWN = 0,
 		MW_SCANCODE_A = 4,

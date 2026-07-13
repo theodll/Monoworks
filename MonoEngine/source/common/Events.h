@@ -41,8 +41,6 @@ namespace Monoworks
 		/// @brief Triggered when the window is resized.
 		struct SWindowResize
 		{
-			/// @brief The previous window dimensions.
-			SExtent2D	OldExtent;
 			/// @brief The new window dimensions.
 			SExtent2D	NewExtent;
 		};
@@ -79,6 +77,11 @@ namespace Monoworks
 		{
 			/// @brief The mouse button that was pressed.
 			Mousebutton Button;
+
+			/// @brief The X position of the mouse cursor.
+			f32			MouseX;
+			/// @brief The Y position of the mouse cursor.
+			f32			MouseY;
 		};
 
 		/// @brief Triggered when a mouse button is released.
@@ -86,6 +89,11 @@ namespace Monoworks
 		{
 			/// @brief The mouse button that was released.
 			Mousebutton Button;
+
+			/// @brief The X position of the mouse cursor.
+			f32			MouseX;
+			/// @brief The Y position of the mouse cursor.
+			f32			MouseY;
 		};
 
 		/// @brief Triggered when the mouse cursor is moved.

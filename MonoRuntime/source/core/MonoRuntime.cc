@@ -1,5 +1,6 @@
 #include <Monoworks.hh>
 #include <core/Application.hh>
+#include "../../specific/sdl/EventDispatcher.hh"
 #include "MonoRuntime.hh"
 
 
@@ -59,30 +60,22 @@ namespace Monoworks
 
 		m_Window = Ref<CWindow>::Create();
 		m_Window->Init(&windowInfos);
-
-		Ref<int> test = Ref<int>::Create();
+		m_Dispatcher.Init();
 	}
 
 	void CMonoRuntime::Run()
 	{
 		while(m_Running) 
 		{
-			SDL_Event event;
-			while(SDL_PollEvent(&event))
-			{
-				switch (event.type)
-				{
-				case SDL_EVENT_QUIT:
-					m_Running = false;
-				}
-			}
+			m_Dispatcher.ProcessEvents();
+
 			m_Application->Frame();
 		}
 	}
 
 	void CMonoRuntime::Shutdown()
 	{
-
+		m_Dispatcher.Shutdown();
 		m_Window->Shutdown();
 		m_Application->Shutdown();
 	}
