@@ -33,8 +33,29 @@ namespace Monoworks
 	 */
 	enum EEventType : u8
 	{
-		MW_EVENT_TYPE_MOUSE_CLICKED, 
-		
+		// Window events
+		MW_EVENT_WINDOW_CLOSE = 0,
+		MW_EVENT_WINDOW_FOCUS,
+		MW_EVENT_WINDOW_LOST_FOCUS,
+		MW_EVENT_WINDOW_MINIMIZE,
+		MW_EVENT_WINDOW_RESIZE,
+
+		// App events
+		MW_EVENT_APP_TICK,
+		MW_EVENT_APP_UPDATE,
+		MW_EVENT_APP_RENDER,
+
+		// Keyboard events
+		MW_EVENT_KEY_PRESSED,
+		MW_EVENT_KEY_RELEASED,
+		MW_EVENT_KEY_TYPED,
+
+		// Mouse events
+		MW_EVENT_MOUSE_BUTTON_PRESSED,
+		MW_EVENT_MOUSE_BUTTON_RELEASED,
+		MW_EVENT_MOUSE_MOVED,
+		MW_EVENT_MOUSE_SCROLLED,
+
 		MW_EVENT_TYPE_COUNT
 	};
 
@@ -126,14 +147,6 @@ namespace Monoworks
 
 		friend class CEventManager;
 	};
-
-	struct SClickedEvent
-	{
-		int x = 0;
-		int y = 0;
-	};
-
-
 
 
 

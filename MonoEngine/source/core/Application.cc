@@ -12,18 +12,18 @@ namespace Monoworks
 
 	void CApplication::Init(const SApplicationCreateInfos* pInfos) noexcept
 	{
-		CCvarManager::Init();
 		CLogManager::Init();
+		CCvarManager::Init();
 		CMemoryManager::Init();
 		CEventManager::Init();
 		
-		auto callb = [](SEvent&) 
-			{
-				fmt::print("click event"); 
-				return false; 
-			};
+ 
 
-		CEventManager::Subscribe(MW_EVENT_TYPE_MOUSE_CLICKED, callb);
+		CEventManager::Subscribe(MW_EVENT_MOUSE_BUTTON_PRESSED, +[](SEvent&)
+		{
+			fmt::print("click event");
+			return false;
+		});
 
 	}
 
@@ -31,8 +31,9 @@ namespace Monoworks
 	{
 		CEventManager::Shutdown();
 		CMemoryManager::Shutdown();
-		CLogManager::Shutdown();
 		CCvarManager::Shutdown();
+		CLogManager::Shutdown();
+
 	}
 
 	void CApplication::Frame()
