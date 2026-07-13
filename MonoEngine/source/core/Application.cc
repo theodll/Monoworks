@@ -1,6 +1,7 @@
 #include "Application.hh"
 #include "CVarManager.hh"
 #include "ConfigManager.hh"
+#include <events/EventManager.hh>
 
 namespace Monoworks
 {
@@ -11,8 +12,8 @@ namespace Monoworks
 		CCvarManager::Init();
 		CLogManager::Init();
 		CMemoryManager::Init();
+		CEventManager
 		
-	
 
 
 	}

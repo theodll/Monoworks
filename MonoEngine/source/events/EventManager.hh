@@ -15,6 +15,7 @@ namespace Monoworks
 	 */
 	struct SCallback 
 	{
+		u8 Alive;
 		/**
 		 * @brief Callback function of the callback.
 		 */

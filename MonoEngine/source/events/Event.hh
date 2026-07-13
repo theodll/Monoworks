@@ -97,6 +97,36 @@ namespace Monoworks
 		{
 			return (EEventType)(u8)((Header >> 24) & 0xFF);
 		}
+
+	private:
+
+		/**
+		* @brief Shifts a boolean (represented as 1 byte unsigned integer) into the header at byte 2
+		* @param handled
+		*/
+		void SetHandled(u8 handled) noexcept
+		{
+			// little endian
+			Header = (Header & 0xFF00FFFF) | (handled << 16);
+		}
+
+
+		/**
+		* @brief Get the Handled
+		* @return bool Handle bool
+		*/
+		[[nodiscard]] bool GetHandled() const noexcept
+		{
+			return (bool)((Header >> 16) & 0xFF);
+		}
+
+		friend class CEventManager;
+	};
+
+	struct SClickedEvent
+	{
+		int x = 0;
+		int y = 0;
 	};
 
 
