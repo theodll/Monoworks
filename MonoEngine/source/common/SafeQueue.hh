@@ -24,18 +24,18 @@ namespace Monoworks
 	class CSafeQueue 
 	{
 	public:
-		[[nodiscard]] T Front() requires impl::CanFront<Q> noexcept
+		[[nodiscard]] T Front() noexcept requires impl::CanFront<Q>
 		{
-			std::lock_guard<std::mutex> lock;
+			std::scoped_lock<std::mutex> lock(m_Mutex);
 			--m_Size;
 			T temp = std::move(m_Queue.front());
 			m_Queue.pop();
 			return temp;
 		};
 
-		[[nodiscard]] T Front() requires impl::CanTop<Q> noexcept
+		[[nodiscard]] T Front() noexcept requires impl::CanTop<Q>
 		{
-			std::lock_guard<std::mutex> lock;
+			std::scoped_lock<std::mutex> lock(m_Mutex);
 			--m_Size;
 			T temp = std::move(m_Queue.top());
 			m_Queue.pop();
@@ -44,15 +44,14 @@ namespace Monoworks
 
 		void Push(T&& value) noexcept
 		{
-			std::lock_guard<std::mutex> lock(m_Mutex);
+			std::scoped_lock<std::mutex> lock(m_Mutex);
 			++m_Size;
 			m_Queue.push(std::forward<T>(value));
-			m_ConditionVariable.notify_one();
 		}
 
 		[[nodiscard]] bool IsEmpty() const noexcept 
 		{
-			std::lock_guard<std::mutex> lock(m_Mutex);
+			std::scoped_lock<std::mutex> lock(m_Mutex);
 			return m_Size == 0;
 		}
 

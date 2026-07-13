@@ -2,6 +2,9 @@
 #include "CVarManager.hh"
 #include "ConfigManager.hh"
 #include <events/EventManager.hh>
+#include <events/Event.hh>
+
+#include <functional>
 
 namespace Monoworks
 {
@@ -12,14 +15,21 @@ namespace Monoworks
 		CCvarManager::Init();
 		CLogManager::Init();
 		CMemoryManager::Init();
-		CEventManager
+		CEventManager::Init();
 		
+		auto callb = [](SEvent&) 
+			{
+				fmt::print("click event"); 
+				return false; 
+			};
 
+		CEventManager::Subscribe(MW_EVENT_TYPE_MOUSE_CLICKED, callb);
 
 	}
 
 	void CApplication::Shutdown() noexcept
 	{
+		CEventManager::Shutdown();
 		CMemoryManager::Shutdown();
 		CLogManager::Shutdown();
 		CCvarManager::Shutdown();
@@ -27,6 +37,8 @@ namespace Monoworks
 
 	void CApplication::Frame()
 	{
-	
+		// called once per frame
+
+		CEventManager::ProcessEvents();
 	}
 }

@@ -45,15 +45,47 @@ namespace Monoworks
 		 * @param type Type of the Event to subscribe
 		 * @param func Function Pointer to the function that should be executed when this event is processed
 		 */
-		static void Subscribe(EEventType type, std::function<bool(SEvent&)>& func);
+		static void Subscribe(EEventType type, std::function<bool(SEvent&)> func);
 
 		/**
 		 * @brief Thread-Safe way to enlist a generic event into the event queue.
 		 * 
 		 * @param event Event you want to enlist.
 		 */
-		static void EnlistEvent(SEvent& event) noexcept;
+		template <typename T> requires impl::ValidEvent<T>
+		static void EmitEvent(T& e, EEventType type) noexcept
+		{
+			SEvent event{};
+			event.SetType(type);
+			event.SetHandled(false);
+			event.SetPayload<T>(e);
 
+			m_EventQueue.Push(std::move(event));
+		}
+
+		template <typename T> requires impl::ValidEvent<T>
+		static void EmitEventNonDeffered(T& e, EEventType type) noexcept
+		{
+			SEvent event{};
+			event.SetType(type);
+			event.SetHandled(false);
+			event.SetPayload<T>(e);
+
+			for (auto& callb : m_Callbacks[type])
+			{
+				if (!callb.Alive)
+					return;
+
+				auto func = callb.Function;
+
+				auto res = func(event);
+				if (res)
+				{
+					event.SetHandled(res);
+					break;
+				}
+			}
+		}
 
 		/**
 		 * @brief Process all the events in the event queue.

@@ -20,9 +20,13 @@ namespace Monoworks
 	 * @brief All constraints an Event type has to meet to be classified and available as Event
 	 * @tparam T The type of the Event
 	 */
-	template <typename T>
-	concept ValidEvent = std::is_trivially_copyable_v<T> && !std::is_pointer_v<T> && (sizeof(T) <= 60);
+	namespace impl 
+	{
+		template <typename T>
+		concept ValidEvent = std::is_trivially_copyable_v<T> && !std::is_pointer_v<T> && (sizeof(T) <= 60);
 
+	}
+	
 	/**
 	 * @brief Type of the Event that a SEvent represents.
 	 * This type allows a maximum of 256 different types of Events to take place. This enum is always bitshiftet into the first byte (or rather last byte) of the SEvent struct and is required to ensure safe casting and dispatching of these events.
@@ -59,7 +63,7 @@ namespace Monoworks
 		 * @tparam T Type of the Event
 		 * @param data The Event
 		 */
-		template <typename T> requires ValidEvent<T>
+		template <typename T> requires impl::ValidEvent<T>
 		void SetPayload(const T& data) noexcept
 		{
 			std::memcpy(Payload, &data, sizeof(T));
@@ -71,7 +75,7 @@ namespace Monoworks
 		 * @tparam T Type of the eventy
 		 * @return T Copy of the data in the Payload object casted into T
 		 */
-		template <typename T> requires ValidEvent<T>
+		template <typename T> requires impl::ValidEvent<T>
 		[[nodiscard]] T GetPayload() const noexcept
 		{
 			T temp;

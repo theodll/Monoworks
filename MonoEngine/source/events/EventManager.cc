@@ -1,8 +1,9 @@
 #include <events/EventManager.hh>
+#include <utility>
 
 namespace Monoworks 
 {
-	std::array<std::vector<std::function<bool(SEvent&)>>, MW_EVENT_TYPE_COUNT> CEventManager::m_Callbacks;
+	std::array<std::vector<SCallback>, MW_EVENT_TYPE_COUNT> CEventManager::m_Callbacks;
 
 	CSafeQueue<SEvent> CEventManager::m_EventQueue;
 
@@ -15,20 +16,15 @@ namespace Monoworks
 	{
 	};
 
-	void CEventManager::Subscribe(EEventType type, std::function<bool(SEvent&)>& func)
+	void CEventManager::Subscribe(EEventType type, std::function<bool(SEvent&)> func)
 	{
-		m_Callbacks[(u8)type].emplace_back( 1, std::move(func));
-	};
 
-	void CEventManager::EnlistEvent(SEvent& event) noexcept
-	{
-		event.SetHandled(false);
-		m_EventQueue.Push(std::move(event));
+		m_Callbacks[(u8)type].emplace_back( 1, std::move(func));
 	};
 
 	void CEventManager::ProcessEvents() noexcept
 	{
-		while (m_EventQueue.GetSize() != 0)
+		while (m_EventQueue.GetSize() > 0)
 		{
 			auto event = m_EventQueue.Front();
 			u8 type = (u8)event.GetType();
@@ -39,16 +35,14 @@ namespace Monoworks
 					return;
 
 				auto func = callb.Function;
+				
 				auto res = func(event);
 				if (res)
 				{
 					event.SetHandled(res);
-					goto FINISH_EVENT; 
+					break; 
 				}
 			}
-
-		FINISH_EVENT:
-
 		}
 	};
 
