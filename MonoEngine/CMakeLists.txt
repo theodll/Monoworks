@@ -12,7 +12,7 @@ add_subdirectory("thirdparty/volk")
 
 find_package(Vulkan REQUIRED)
 
-target_include_directories(MonoEngine PUBLIC "source/" "specific/" "." "thirdparty/iniparser/src/")
+target_include_directories(MonoEngine PUBLIC "source/" "specific/" "." "thirdparty/iniparser/src/" )
 
 target_link_libraries(MonoEngine PUBLIC
     Vulkan::Vulkan
@@ -28,11 +28,13 @@ target_precompile_headers(MonoEngine PUBLIC
 )
 
 if (WIN32)
-    target_compile_definitions(MonoEngine PRIVATE VT_PLATFORM_WINDOWS)
-elseif (UNIX AND NOT APPLE)
-    target_compile_definitions(MonoEngine PRIVATE VT_PLATFORM_LINUX)
-elseif (APPLE)
-    target_compile_definitions(MonoEngine PRIVATE VT_PLATFORM_OSX)
+    target_compile_definitions(MonoEngine PRIVATE MW_PLATFORM_WINDOWS)
+elseif (UNIX AND NOT APPLE)                       
+    target_compile_definitions(MonoEngine PRIVATE MW_PLATFORM_LINUX)
+elseif (APPLE)                                    
+    target_compile_definitions(MonoEngine PRIVATE MW_PLATFORM_OSX)
 endif()
+
+target_compile_definitions(MonoEngine PUBLIC MW_COMPILE_PROFILER)
 
 target_compile_definitions(MonoEngine PRIVATE MW_ENGINE)

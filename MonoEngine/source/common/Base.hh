@@ -20,6 +20,14 @@
 #include <common/Log.h>
 #include <core/CVarManager.hh>
 
+#ifdef MW_COMPILE_PROFILING
+
+#include <Tracy/Tracy.hpp>
+
+#define MW_PROFILE_FUNC() ZoneScopedN(__FUNCTION__);
+#define MW_PROFILE_FRAME_MARK() FrameMark;
+
+#endif
 using cvar_t = Monoworks::SCVar;
 
 #define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
