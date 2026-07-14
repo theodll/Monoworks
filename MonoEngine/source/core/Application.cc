@@ -3,7 +3,7 @@
 #include "ConfigManager.hh"
 #include <events/EventManager.hh>
 #include <events/Event.hh>
-
+#include <common/Base.hh>
 #include <functional>
 
 namespace Monoworks
@@ -16,15 +16,6 @@ namespace Monoworks
 		CCvarManager::Init();
 		CMemoryManager::Init();
 		CEventManager::Init();
-		
- 
-
-		CEventManager::Subscribe(MW_EVENT_MOUSE_BUTTON_PRESSED, +[](SEvent&)
-		{
-			fmt::print("click event");
-			return false;
-		});
-
 	}
 
 	void CApplication::Shutdown() noexcept

@@ -92,7 +92,7 @@ namespace Monoworks
 
 				e.MouseX = event.motion.x;
 				e.MouseY = event.motion.y;
-				CEventManager::EmitEvent(e, MW_EVENT_KEY_PRESSED);
+				CEventManager::EmitEvent(e, MW_EVENT_MOUSE_BUTTON_PRESSED);
 				break;
 			}
 			case SDL_EVENT_MOUSE_BUTTON_UP:
@@ -115,7 +115,7 @@ namespace Monoworks
 
 				e.MouseX = event.motion.x;
 				e.MouseY = event.motion.y;
-				CEventManager::EmitEvent(e, MW_EVENT_KEY_PRESSED);
+				CEventManager::EmitEvent(e, MW_EVENT_MOUSE_BUTTON_RELEASED);
 				break;
 			}
 			case SDL_EVENT_MOUSE_MOTION:
@@ -123,7 +123,7 @@ namespace Monoworks
 				Events::SMouseMoved e{};
 				e.MouseX = event.motion.x;
 				e.MouseY = event.motion.y;
-				CEventManager::EmitEvent(e, MW_EVENT_KEY_PRESSED);
+				CEventManager::EmitEvent(e, MW_EVENT_MOUSE_MOVED);
 				break;
 			}
 			case SDL_EVENT_MOUSE_WHEEL:
@@ -131,7 +131,7 @@ namespace Monoworks
 				Events::SMouseScrolled e{};
 				e.XOffset = event.motion.xrel;
 				e.YOffset = event.motion.yrel;
-				CEventManager::EmitEvent(e, MW_EVENT_KEY_PRESSED);
+				CEventManager::EmitEvent(e, MW_EVENT_MOUSE_SCROLLED);
 				break;
 			}
 

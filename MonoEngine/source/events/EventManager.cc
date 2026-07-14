@@ -45,12 +45,6 @@ namespace Monoworks
 					break; 
 				}
 			}
-
-			if (type == MW_EVENT_MOUSE_MOVED)
-			{
-				auto me = event.GetPayload<Events::SMouseMoved>();
-				fmt::print("Mouse moved event x: {}, y: {}", me.MouseX, me.MouseY);
-			}
 		}
 	};
 
