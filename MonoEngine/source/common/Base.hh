@@ -20,7 +20,7 @@
 #include <common/Log.h>
 #include <core/CVarManager.hh>
 
-#ifdef MW_COMPILE_PROFILING
+#ifdef MW_PROFILING
 
 #include <Tracy/Tracy.hpp>
 

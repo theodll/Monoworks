@@ -20,6 +20,8 @@ elseif(UNIX)
     add_compile_definitions(MW_PLATFORM_LINUX)
 endif()
 
+add_compile_definitions(MW_PROFILING)
+
 add_compile_definitions(
     FMT_UNICODE=0
     $<$<CONFIG:Debug>:MW_DEBUG>

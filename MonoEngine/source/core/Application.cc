@@ -12,6 +12,7 @@ namespace Monoworks
 
 	void CApplication::Init(const SApplicationCreateInfos* pInfos) noexcept
 	{
+		MW_PROFILE_FUNC();
 		CLogManager::Init();
 		CCvarManager::Init();
 		CMemoryManager::Init();
@@ -20,6 +21,7 @@ namespace Monoworks
 
 	void CApplication::Shutdown() noexcept
 	{
+		MW_PROFILE_FUNC();
 		CEventManager::Shutdown();
 		CMemoryManager::Shutdown();
 		CCvarManager::Shutdown();
@@ -29,6 +31,7 @@ namespace Monoworks
 
 	void CApplication::Frame()
 	{
+		MW_PROFILE_FUNC();
 		// called once per frame
 
 		CEventManager::ProcessEvents();

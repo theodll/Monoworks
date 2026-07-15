@@ -51,6 +51,7 @@ namespace Monoworks
 
 		[[nodiscard]] SControlBlock* GetControlBlock() const noexcept
 		{
+			MW_PROFILE_FUNC();
 			if (m_Handle != MW_NULL_MEMORY && CMemoryManager::IsValid(m_Handle))
 			{
 				return static_cast<SControlBlock*>(CMemoryManager::Get(m_Handle));
@@ -60,6 +61,7 @@ namespace Monoworks
 
 		void IncRef() noexcept
 		{
+			MW_PROFILE_FUNC();
 			if (SControlBlock* cb = GetControlBlock())
 			{
 				cb->RefCount.fetch_add(1, std::memory_order_relaxed);
@@ -68,6 +70,7 @@ namespace Monoworks
 
 		void DecRef() noexcept
 		{
+			MW_PROFILE_FUNC();
 			SControlBlock* cb = GetControlBlock();
 			if (cb)
 			{
@@ -87,17 +90,20 @@ namespace Monoworks
 		CRef(const CRef<T>& other) noexcept
 			: m_Handle(other.m_Handle)
 		{
+			MW_PROFILE_FUNC();
 			IncRef();
 		}
 
 		CRef(CRef<T>&& other) noexcept
 			: m_Handle(other.m_Handle)
 		{
+			MW_PROFILE_FUNC();
 			other.m_Handle = MW_NULL_MEMORY;
 		}
 
 		~CRef() noexcept
 		{
+			MW_PROFILE_FUNC();
 			DecRef();
 		}
 
@@ -137,6 +143,7 @@ namespace Monoworks
 		template <typename... Args>
 		[[nodiscard]] static CRef<T> Create(Args&&... args)
 		{
+			MW_PROFILE_FUNC();
 			SHandle handle = CMemoryManager::Allocate(sizeof(SControlBlock));
 			void* rawMem = CMemoryManager::Get(handle);
 
@@ -207,6 +214,7 @@ namespace Monoworks
 
 		[[nodiscard]] const SHandle& GetHandle() const noexcept
 		{
+			MW_PROFILE_FUNC();
 			if (CMemoryManager::IsValid(m_Handle))
 				return m_Handle;
 			return MW_NULL_MEMORY;
