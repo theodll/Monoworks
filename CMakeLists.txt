@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 cmake_policy(SET CMP0100 NEW)
 
-project(Monoworks LANGUAGES C CXX)
+project(Monoworks LANGUAGES C CXX ASM)
 option(USE_SYSTEM_SDL3 "Use system-installed SDL3 via find_package" OFF)
 #list(APPEND CMAKE_PREFIX_PATH "C:/Qt/6.11.1/msvc2022_64")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
