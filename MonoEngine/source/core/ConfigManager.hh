@@ -31,6 +31,7 @@ namespace Monoworks
 		template <typename T = std::string> requires IniGettable<T>
 		[[nodiscard]] T Get(const std::string& section, const std::string& key) noexcept
 		{
+			MW_PROFILE_FUNC();
 			if (!m_Inifile)
 				m_Inifile = iniparser_load(m_CPath);
 

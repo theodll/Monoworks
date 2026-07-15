@@ -26,6 +26,7 @@ namespace Monoworks
 
 	void CMonoRuntime::Init(int argc, char** argv)
 	{
+		MW_PROFILE_FUNC();
 		m_Application = new CApplication;
 
 		CConfigManager cfg("Config/MonoRuntime.cfg");
@@ -65,6 +66,7 @@ namespace Monoworks
 
 	void CMonoRuntime::Run()
 	{
+		MW_PROFILE_FUNC();
 		while(m_Running) 
 		{
 			m_Dispatcher.ProcessEvents();
@@ -75,6 +77,7 @@ namespace Monoworks
 
 	void CMonoRuntime::Shutdown()
 	{
+		MW_PROFILE_FUNC();
 		m_Dispatcher.Shutdown();
 		m_Window->Shutdown();
 		m_Application->Shutdown();

@@ -11,6 +11,7 @@ namespace Monoworks
 
     void CLogManager::Init()
     {
+        MW_PROFILE_FUNC();
         auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         //consoleSink->set_pattern("[%T] %n: %^[%l] %v%$");
         consoleSink->set_pattern("[%T : %n] %^[%l]%$ %v");
@@ -29,18 +30,21 @@ namespace Monoworks
 
     void CLogManager::Flush()
     {
+        MW_PROFILE_FUNC();
         if (s_CoreLogger)
             s_CoreLogger->flush();
     }
 
     void CLogManager::SetLogFile(const std::string& filepath)
     {
+        MW_PROFILE_FUNC();
         s_FileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filepath, true);
         s_FileSink->set_pattern("[%T] [%l] %n: %v");
     }
 
     void CLogManager::Shutdown()
     {
+        MW_PROFILE_FUNC();
         MW_INFO("Shutdown CLogManager");
         Flush();
     }

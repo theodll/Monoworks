@@ -10,6 +10,7 @@ namespace Monoworks
 
 	void CMemoryManager::Init() noexcept
 	{
+		MW_PROFILE_FUNC();
 		s_EntryTable.reserve(1024);
 		s_EntryTable.emplace_back();
 
@@ -19,6 +20,7 @@ namespace Monoworks
 
 	void CMemoryManager::Shutdown() noexcept
 	{
+		MW_PROFILE_FUNC();
 		std::lock_guard<std::mutex> Lock(s_Mutex);
 		for (auto& Entry : s_EntryTable)
 		{
@@ -33,6 +35,7 @@ namespace Monoworks
 
 	[[nodiscard]] SHandle CMemoryManager::Allocate(u32 size) noexcept
 	{
+		MW_PROFILE_FUNC();
 		if (size == 0)
 			return SHandle{};
 
@@ -66,6 +69,7 @@ namespace Monoworks
 
 	void CMemoryManager::Delete(const SHandle handle) noexcept
 	{
+		MW_PROFILE_FUNC();
 		std::lock_guard<std::mutex> Lock(s_Mutex);
 
 		if (handle.Index == 0 || handle.Index >= s_EntryTable.size())
@@ -88,6 +92,7 @@ namespace Monoworks
 
 	[[nodiscard]] void* CMemoryManager::Get(const SHandle handle) noexcept
 	{
+		MW_PROFILE_FUNC();
 		std::lock_guard<std::mutex> Lock(s_Mutex);
 
 		if (handle.Index == 0 || handle.Index >= s_EntryTable.size())
@@ -102,6 +107,7 @@ namespace Monoworks
     
 	[[nodiscard]] bool CMemoryManager::IsValid(const SHandle handle) noexcept
     {
+		MW_PROFILE_FUNC();
 		if (handle.Index == 0)
 			return false;
 
