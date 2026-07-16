@@ -18,6 +18,7 @@
 #pragma once
 #include <cstdint>
 #include <common/Log.h>
+#include <common/Memory.hh>
 #include <core/CVarManager.hh>
 
 #ifdef MW_PROFILING
@@ -51,6 +52,7 @@ using byte_t = unsigned char;
 
 namespace Monoworks
 {
+
     enum EGraphicsAPI
     {
         MW_GAPI_NONE = 0x0,
