@@ -4,6 +4,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON) 
 set(CMAKE_AUTORCC ON)
 
+if(WIN32)
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/mingw_64")
+endif()
+
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
 add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/ui/MainWindow.cpp" "source/ui/MainWindow.hh" ${QRC_RESOURCEN}

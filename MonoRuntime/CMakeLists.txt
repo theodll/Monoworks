@@ -8,7 +8,9 @@ else()
     add_subdirectory(extern/sdl)
 endif()
 
-target_link_libraries(MonoRuntime PRIVATE MonoEngine SDL3::SDL3)
+target_link_libraries(MonoRuntime PRIVATE MonoEngine SDL3::SDL3 Tracy::TracyClient)
+
+
 target_include_directories(MonoRuntime PRIVATE "source/" "specific/")
 
 if (WIN32)

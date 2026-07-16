@@ -2,7 +2,7 @@
 #include <core/Application.hh>
 #include "../../specific/sdl/EventDispatcher.hh"
 #include "MonoRuntime.hh"
-
+#include <events/EventManager.cc>
 
 int main(int argc, char** argv)
 {
@@ -66,6 +66,8 @@ namespace Monoworks
 
 	void CMonoRuntime::Run()
 	{
+		CEventManager::Subscribe(MW_EVENT_WINDOW_CLOSE, [this](SEvent& event) { m_Running = false; return true; });
+
 		MW_PROFILE_FUNC();
 		while(m_Running) 
 		{

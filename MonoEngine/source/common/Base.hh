@@ -21,7 +21,6 @@
 #include <core/CVarManager.hh>
 
 #ifdef MW_PROFILING
-
 #include <Tracy/Tracy.hpp>
 
 #define MW_PROFILE_FUNC() ZoneScopedN(__FUNCTION__);
