@@ -9,8 +9,11 @@
 namespace Monoworks
 {
 	CApplication* CApplication::m_Singleton;
+	Ref<Monoworks::RHI::CVulkanContext> CApplication::m_GraphicsContext;
+	SApplicationCreateInfos CApplication::m_pApplicationCreationInfos;
 
-	void CApplication::Init(const SApplicationCreateInfos* pInfos) noexcept
+
+	CApplication::CApplication() noexcept
 	{
 		MW_PROFILE_FUNC();
 		CLogManager::Init();
@@ -19,13 +22,29 @@ namespace Monoworks
 		CEventManager::Init();
 	}
 
-	void CApplication::Shutdown() noexcept
+	CApplication::~CApplication() noexcept
 	{
 		MW_PROFILE_FUNC();
 		CEventManager::Shutdown();
 		CMemoryManager::Shutdown();
 		CCvarManager::Shutdown();
 		CLogManager::Shutdown();
+	}
+
+	void CApplication::Init(const SApplicationCreateInfos* pInfos) noexcept
+	{
+		MW_PROFILE_FUNC();
+
+		m_pApplicationCreationInfos = *pInfos;
+
+		m_GraphicsContext = Ref<RHI::CVulkanContext>::Create();
+		m_GraphicsContext->Init();
+	}
+
+	void CApplication::Shutdown() noexcept
+	{
+		MW_PROFILE_FUNC();
+
 
 	}
 

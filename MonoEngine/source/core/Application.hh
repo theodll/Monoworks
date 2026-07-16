@@ -15,6 +15,7 @@
 
 #pragma once
 #include <common/Base.hh>
+#include <rhi/specific/vulkan/VulkanContext.hh>
 
 #include <string>
 
@@ -47,6 +48,16 @@ namespace Monoworks
 		 * @brief Array of arguments.
 		 */
 		[[maybe_unused]] char** Arguments = nullptr;
+
+		/**
+		 * @brief Version of the associated Application.
+		 */
+		[[maybe_unused]] SAppVersion Version;
+
+		/**
+		 * @brief Callback to retrieve  
+		 */
+		[[maybe_unused]] const char**(*RequiredExtensionCallback)(u32 *extensionCount);
 	};
 
 	/**
@@ -55,11 +66,11 @@ namespace Monoworks
 	class CApplication 
 	{
 	public:
-		CApplication() noexcept = default;
-		virtual ~CApplication() noexcept = default;
+		CApplication() noexcept;
+		virtual ~CApplication() noexcept;
 		
 		/**
-		 * @brief Initializes the engine.
+		 * @brief Initializes the non "ultra"-core engine, like Rendering and not Memory Allocation or Logging - That is done by the constructor.
 		 * @param pInfos All configuration parameters via the SApplicationCreateInfos associated to the engine
 		 */
 		void Init(const SApplicationCreateInfos* pInfos) noexcept;
@@ -83,9 +94,14 @@ namespace Monoworks
 		 */
 		[[nodiscard]] static CApplication* Get() noexcept { if (m_Singleton) return m_Singleton; else return nullptr;  }
 	
+		[[nodiscard]] static SApplicationCreateInfos* GetCreateInfos() noexcept { return &m_pApplicationCreationInfos; };
+
 	private:
 		static CApplication* m_Singleton;
 
+		static Ref<RHI::CVulkanContext> m_GraphicsContext;
+		static SApplicationCreateInfos m_pApplicationCreationInfos;
+	
 	};
 
 

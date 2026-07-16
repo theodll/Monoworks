@@ -1,0 +1,251 @@
+#include <mwpch.hh>
+
+#include "VulkanContext.hh"
+#include "VulkanDevice.h"
+
+
+#define VOLK_IMPLEMENTATION
+#include <Volk/volk.h>
+
+#include <core/Application.hh>
+
+namespace Monoworks::RHI 
+{
+
+	Monoworks::RHI::CVulkanDevice CVulkanContext::m_Device;
+	VkInstance CVulkanContext::m_Instance;
+
+	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT messageType,
+		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+		void* pUserData)
+	{
+		MW_PROFILE_FUNC();
+
+		switch (messageSeverity)
+		{
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+			MW_TRACE("Vulkan Trace: {}", pCallbackData->pMessage);
+			break;
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+			MW_INFO("Vulkan Info: {}", pCallbackData->pMessage);
+			break;
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+			MW_WARN("Vulkan Warning: {}", pCallbackData->pMessage);
+			break;
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+			MW_ERROR("Vulkan Error: {}", pCallbackData->pMessage);
+			break;
+		}
+
+
+		return VK_FALSE;
+	}
+
+	void CVulkanContext::Init()
+	{
+		MW_PROFILE_FUNC();
+		MW_INFO("Initialize CVulkanContext");
+
+		MW_VK_CHECK(volkInitialize(), "Failed to Initialize Volk");
+
+		CreateInstance();
+		SetupDebugMessenger();
+
+	}
+
+	static inline bool CheckValidationLayerSupport(const std::vector<const char*>& validationLayers)
+	{
+		MW_PROFILE_FUNC();
+
+		u32 layerCount;
+		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+		std::vector<VkLayerProperties> availableLayers(layerCount);
+		vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+		for (const char* layerName : validationLayers)
+		{
+			bool layerFound = false;
+
+			for (const auto& layerProperties : availableLayers)
+			{
+				if (strcmp(layerName, layerProperties.layerName) == 0)
+				{
+					layerFound = true;
+					break;
+				}
+			}
+
+			if (!layerFound)
+			{
+				return false;
+			}
+		}
+
+		return true;
+
+	}
+
+	void CVulkanContext::Shutdown()
+	{
+		MW_PROFILE_FUNC();
+		MW_INFO("Shutdown CVulkanContext");
+	}
+
+	void CVulkanContext::CreateInstance()
+	{
+		MW_PROFILE_FUNC();
+		if (m_EnableValidationLayers && !CheckValidationLayerSupport(m_ValidationLayers))
+		{
+			MW_ERROR("Validation layers requested, but not available!");
+		}
+
+		auto ApplicationInfos = CApplication::GetCreateInfos();
+
+		VkApplicationInfo appInfo{};
+		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		appInfo.pApplicationName = ApplicationInfos->Name.c_str();
+		appInfo.applicationVersion = VK_MAKE_VERSION(ApplicationInfos->Version.Major, ApplicationInfos->Version.Minor, ApplicationInfos->Version.Patch);
+		appInfo.pEngineName = EngineName;
+		appInfo.engineVersion = VK_MAKE_VERSION(MonoworksVersion.Major, MonoworksVersion.Minor, MonoworksVersion.Patch);
+		appInfo.apiVersion = VK_API_VERSION_1_4;
+
+		VkInstanceCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		createInfo.pApplicationInfo = &appInfo;
+#ifdef MW_PLATFORM_OSX
+		createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
+		auto extensions = GetRequiredExtensions();
+		createInfo.enabledExtensionCount = (u32)extensions.size();
+		createInfo.ppEnabledExtensionNames = extensions.data();
+
+		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
+		if (m_EnableValidationLayers)
+		{
+			createInfo.enabledLayerCount = static_cast<u32>(m_ValidationLayers.size());
+			createInfo.ppEnabledLayerNames = m_ValidationLayers.data();
+
+			debugCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+			debugCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+				VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+			debugCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+				VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+				VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+			debugCreateInfo.pfnUserCallback = DebugCallback;
+			debugCreateInfo.pUserData = nullptr;
+
+			createInfo.pNext = &debugCreateInfo;
+		}
+		else
+		{
+			createInfo.enabledLayerCount = 0;
+			createInfo.pNext = nullptr;
+		}
+		// TODO ALLOC CALLBACKS 
+		MW_VK_CHECK(vkCreateInstance(&createInfo, nullptr, &m_Instance), "Failed to create Vulkan Instance");
+
+		u32 extensionCount = 0;
+		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+		std::vector<VkExtensionProperties> appExtensions(extensionCount);
+		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, appExtensions.data());
+
+		std::unordered_set<std::string> available;
+		for (const auto& extension : appExtensions)
+		{
+			available.insert(extension.extensionName);
+		}
+
+		auto requiredExtensions = GetRequiredExtensions();
+		for (const auto& required : requiredExtensions)
+		{
+			if (available.find(required) == available.end())
+			{
+				MW_ERROR("Missing required App extension: {}", required);
+			}
+		}
+		
+		volkLoadInstance(m_Instance);
+
+	}
+
+	void CVulkanContext::SetupDebugMessenger() noexcept
+	{
+		MW_PROFILE_FUNC();
+		if (!m_EnableValidationLayers) return;
+		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
+		debugCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+		debugCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+		debugCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
+			VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+		debugCreateInfo.pfnUserCallback = DebugCallback;
+		debugCreateInfo.pUserData = nullptr;
+
+		MW_VK_CHECK(CreateDebugUtilsMessengerEXT(m_Instance, &debugCreateInfo, nullptr, &m_DebugMessenger), "Failed to setup debug messenger");
+	}
+
+
+	std::vector<const char*> CVulkanContext::GetRequiredExtensions() noexcept
+	{
+		MW_PROFILE_FUNC();
+
+		u32 extensionCount2 = 0;
+
+		auto appDetails = CApplication::GetCreateInfos();
+
+		const char** clientExtensions = nullptr;
+
+		if (appDetails->RequiredExtensionCallback)
+		{
+
+			clientExtensions = appDetails->RequiredExtensionCallback(&extensionCount2);
+		}
+
+		std::vector<const char*> requiredExtensions;
+		if (clientExtensions != nullptr && extensionCount2 > 0)
+		{
+			requiredExtensions.assign(clientExtensions, clientExtensions + extensionCount2);
+		}
+
+#ifdef MW_PLATFORM_OSX
+		extensions.push_back("VK_KHR_portability_enumeration");
+#endif
+
+		requiredExtensions.push_back("VK_KHR_get_physical_device_properties2");
+
+		if (m_EnableValidationLayers)
+		{
+			requiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+		}
+		
+		return requiredExtensions;
+
+	}
+	
+
+	VkResult CVulkanContext::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) noexcept
+	{
+		MW_PROFILE_FUNC();
+		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
+			instance,
+			"vkCreateDebugUtilsMessengerEXT");
+		if (func != nullptr)
+		{
+			return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+		}
+		else
+		{
+			return VK_ERROR_EXTENSION_NOT_PRESENT;
+		}
+	}
+
+	void CVulkanContext::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) noexcept
+	{
+
+	}
+
+}

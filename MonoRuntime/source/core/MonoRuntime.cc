@@ -4,6 +4,9 @@
 #include "MonoRuntime.hh"
 #include <events/EventManager.cc>
 
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_vulkan.h>
+
 int main(int argc, char** argv)
 {
 	return Monoworks::RuntimeMain(argc, argv);
@@ -44,23 +47,25 @@ namespace Monoworks
 
 		cfg.Flush();
 
-		SApplicationCreateInfos appInfos{};
-		appInfos.Name = cfg.Get("Runtime", "Title");
-		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height") };
-		appInfos.GraphicsAPI = (EGraphicsAPI)cfg.Get<u32>("Rendering", "GAPI");
-		appInfos.ArgumentCount = argc;
-		appInfos.Arguments = argv;
-
-		m_Application->Init(&appInfos);
-
 		SWindowCreateInfos windowInfos{};
 		windowInfos.GraphicsAPI = (EGraphicsAPI)cfg.Get<u32>("Rendering", "GAPI");;
 		windowInfos.WindowTitle = cfg.Get("Runtime", "Title");
 		windowInfos.Resizable = cfg.Get<bool>("Rendering", "Resizable");
 		windowInfos.WindowExtent = { cfg.Get<u32>("Rendering", "Default Height"), cfg.Get<u32>("Rendering", "Default Width") };
 
-		m_Window = Ref<CWindow>::Create();
-		m_Window->Init(&windowInfos);
+		m_Window = Ref<CWindow>::Create(&windowInfos);
+
+		SApplicationCreateInfos appInfos{};
+		appInfos.Name = cfg.Get("Runtime", "Title");
+		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height") };
+		appInfos.GraphicsAPI = (EGraphicsAPI)cfg.Get<u32>("Rendering", "GAPI");
+		appInfos.ArgumentCount = argc;
+		appInfos.Arguments = argv;
+		appInfos.Version = { 1, 0, 0 };
+		appInfos.RequiredExtensionCallback = +[](u32* extensionCount) { return (const char**)SDL_Vulkan_GetInstanceExtensions(extensionCount); };
+
+		m_Application->Init(&appInfos);
+
 		m_Dispatcher.Init();
 	}
 
@@ -83,6 +88,8 @@ namespace Monoworks
 		m_Dispatcher.Shutdown();
 		m_Window->Shutdown();
 		m_Application->Shutdown();
+
+		delete m_Application;
 	}
 
 }

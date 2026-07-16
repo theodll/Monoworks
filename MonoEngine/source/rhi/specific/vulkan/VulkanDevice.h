@@ -10,7 +10,7 @@ namespace Monoworks::RHI
 		void Init();
 		void Shutdown();
 
-		const VkDevice* GetDevice() { return m_Device; };
+		const VkDevice* GetDevice() { return &m_Device; };
 	private:
 		VkDevice m_Device;
 

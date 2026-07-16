@@ -26,8 +26,13 @@
 
 #define MW_PROFILE_FUNC() ZoneScopedN(__FUNCTION__);
 #define MW_PROFILE_FRAME_MARK() FrameMark;
-
 #endif
+
+
+#ifdef MW_VULKAN
+#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ERROR(err, __VA_ARGS__); };
+#endif
+
 using cvar_t = Monoworks::SCVar;
 
 #define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
@@ -50,8 +55,19 @@ using f64 = double;
 using uptr_t = uintptr_t;
 using byte_t = unsigned char;
 
+
+
+
+
 namespace Monoworks
 {
+
+	struct SAppVersion
+	{
+		u8 Major;
+		u8 Minor;
+		u8 Patch;
+	};
 
     enum EGraphicsAPI
     {
@@ -357,5 +373,8 @@ namespace Monoworks
 		MW_NOUSE_4_BUTTON,
 		MW_MOUSE_5_BUTTON
 	};
+
+	constexpr SAppVersion MonoworksVersion = { .Major = 1, .Minor = 0, .Patch = 0 };
+	constexpr const char* EngineName = "MonoEngine";
 
 }
