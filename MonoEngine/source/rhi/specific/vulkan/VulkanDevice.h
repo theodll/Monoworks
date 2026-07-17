@@ -5,15 +5,7 @@
 
 namespace Monoworks::RHI 
 {
-	struct SwapChainSupportDetails
-	{
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
-	};
-
-
-	struct QueueFamilyIndicies
+	struct QueueFamilyIndices
 	{
 		u32 GraphicsFamily;
 		bool GraphicsFamilyHasValue = false;
@@ -65,9 +57,8 @@ namespace Monoworks::RHI
 		const VkQueue* GetGraphicsQueue() const noexcept { return &m_GraphicsQueue; }
 		const u32 GetQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
 
-		SwapChainSupportDetails GetSwapChainSupport() { return QuerySwapChainSupport(&m_PhysicalDevice); }
 		u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
-		QueueFamilyIndicies FindPhysicalQueueFamilies() { return FindQueueFamilies(&m_PhysicalDevice); }
+		QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(&m_PhysicalDevice); }
 		VkFormat FindSupportedFormat(
 			const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
@@ -77,10 +68,11 @@ namespace Monoworks::RHI
 		void CreateLogicalDevice() noexcept;
 		void CreateCommandPool() noexcept;
 
-		[[nodiscard]] bool IsDeviceSuitable(const VkPhysicalDevice* pPhysDevice) const noexcept;
-		[[nodiscard]] QueueFamilyIndicies FindQueueFamilies(const VkPhysicalDevice* pPhysDevice) noexcept;
-		[[nodiscard]] SwapChainSupportDetails QuerySwapChainSupport(const VkPhysicalDevice* pPhysDevice) noexcept;
+		[[nodiscard]] bool IsDeviceSuitable(const VkPhysicalDevice* pPhysDevice) noexcept;
+		[[nodiscard]] QueueFamilyIndices FindQueueFamilies(const VkPhysicalDevice* pPhysDevice) noexcept;
 		[[nodiscard]] bool CheckDeviceExtensionSupport(const VkPhysicalDevice* pPhysDevice) noexcept;
+
+		VkPhysicalDeviceProperties m_Properties;
 
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;
@@ -93,8 +85,10 @@ namespace Monoworks::RHI
 		const std::vector<const char*> deviceExtensions =
 		{
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+			VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME, 
+			VK_KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME, 
 #ifdef MW_PLATFORM_OSX
-			VK_KHR_portability_subset
+			VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
 #endif
 		};
 
