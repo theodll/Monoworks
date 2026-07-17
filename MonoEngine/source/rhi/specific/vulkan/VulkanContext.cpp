@@ -7,6 +7,9 @@
 #define VOLK_IMPLEMENTATION
 #include <Volk/volk.h>
 
+#define VMA_IMPLEMENTATION
+#include <vk_mem_alloc.h>
+
 #include <core/Application.hh>
 
 namespace Monoworks::RHI 
@@ -106,7 +109,7 @@ namespace Monoworks::RHI
 
 		VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		appInfo.pApplicationName = ApplicationInfos->Name.c_str();
+		appInfo.pApplicationName = ApplicationInfos->Name;
 		appInfo.applicationVersion = VK_MAKE_VERSION(ApplicationInfos->Version.Major, ApplicationInfos->Version.Minor, ApplicationInfos->Version.Patch);
 		appInfo.pEngineName = EngineName;
 		appInfo.engineVersion = VK_MAKE_VERSION(MonoworksVersion.Major, MonoworksVersion.Minor, MonoworksVersion.Patch);
@@ -168,6 +171,14 @@ namespace Monoworks::RHI
 		}
 		
 		volkLoadInstance(m_Instance);
+
+	}
+
+	void CVulkanContext::CreateVmaAllocator()
+	{
+		MW_PROFILE_FUNC();
+		VmaVulkanFunctions vulkanFunctions{};
+
 
 	}
 

@@ -1,6 +1,6 @@
 cmake_policy(SET CMP0100 NEW)
 
-add_library(MonoEngine STATIC "thirdparty/iniparser/src/dictionary.c" "thirdparty/iniparser/src/dictionary.h" "thirdparty/iniparser/src/iniparser.c" "thirdparty/iniparser/src/iniparser.h" "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.h" "source/core/CVarManager.hh" "source/core/CVarManager.cc" "source/core/ConfigManager.hh" "source/core/ConfigManager.cc" "source/events/Event.hh" "source/common/SafeQueue.hh" "source/events/EventManager.hh" "source/events/EventManager.cc" "source/common/Events.h" "source/jobs/Threadpool.hh" "source/jobs/Fibers.hh" "source/rhi/GraphicsAPI.h" "source/rhi/specific/vulkan/VulkanContext.hh" "source/rhi/agnostic/GraphicsContext.hh"  "source/rhi/specific/vulkan/VulkanDevice.h" "source/rhi/specific/vulkan/VulkanContext.cpp")
+add_library(MonoEngine STATIC "thirdparty/iniparser/src/dictionary.c" "thirdparty/iniparser/src/dictionary.h" "thirdparty/iniparser/src/iniparser.c" "thirdparty/iniparser/src/iniparser.h" "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.h" "source/core/CVarManager.hh" "source/core/CVarManager.cc" "source/core/ConfigManager.hh" "source/core/ConfigManager.cc" "source/events/Event.hh" "source/common/SafeQueue.hh" "source/events/EventManager.hh" "source/events/EventManager.cc" "source/common/Events.h" "source/jobs/Threadpool.hh" "source/jobs/Fibers.hh" "source/rhi/GraphicsAPI.h" "source/rhi/specific/vulkan/VulkanContext.hh" "source/rhi/agnostic/GraphicsContext.hh"  "source/rhi/specific/vulkan/VulkanDevice.h" "source/rhi/specific/vulkan/VulkanDevice.cpp" "source/rhi/specific/vulkan/VulkanContext.cpp")
 
 set(GLM_BUILD_LIBRARY OFF CACHE INTERNAL "") 
 add_subdirectory("thirdparty/glm")
@@ -8,6 +8,9 @@ add_subdirectory("thirdparty/glm")
 add_subdirectory("thirdparty/spdlog")
 add_subdirectory("thirdparty/tracy")
 add_subdirectory("thirdparty/volk")
+
+target_include_directories(MonoEngine PUBLIC "extern/VulkanMemoryAllocator/include")
+add_subdirectory("extern/VulkanMemoryAllocator")
 
 find_package(Vulkan REQUIRED)
 

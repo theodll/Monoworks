@@ -7,6 +7,11 @@
 
 #include <Volk/volk.h>
 
+#define WMA_VULKAN_VERSION 1004000
+#define VMA_STATIC_VULKAN_FUNCTIONS 0
+#define WMA_DYNAMIC_VULKAN_FUNCTIONS 0 
+#include <vk_mem_alloc.h>
+
 namespace Monoworks::RHI
 {
 	class CVulkanContext : public IGraphicsContext 
@@ -20,6 +25,7 @@ namespace Monoworks::RHI
 
 	private:
 		void CreateInstance();
+		void CreateVmaAllocator();
 
 		[[nodiscard]] std::vector<const char*> GetRequiredExtensions() noexcept;
 	
@@ -30,6 +36,7 @@ namespace Monoworks::RHI
 
 		VkDebugUtilsMessengerEXT m_DebugMessenger;
 		static VkInstance m_Instance;
+		static VmaAllocator m_Allocator;
 		static CVulkanDevice m_Device;
 		const std::vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 		bool m_EnableValidationLayers;

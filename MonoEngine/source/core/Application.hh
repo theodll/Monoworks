@@ -28,9 +28,16 @@ namespace Monoworks
 	{	
 		/**
 		 * @brief Name of the Application the engine is integrated in.
+		*/
+		[[maybe_unused]] const char* Name = "MonoEngine";
+		/**
+		* @brief Array of arguments.
+		*/
+		[[maybe_unused]] char** Arguments = nullptr;
+		/**
+		 * @brief Callback to retrieve
 		 */
-		[[maybe_unused]] std::string Name = "MonoEngine";
-
+		[[maybe_unused]] const char** (*RequiredExtensionCallback)(u32* extensionCount);
 		/**
 		 * @brief Extent the engine is able to render to (eg. Window/Viewport size)
 		 */
@@ -40,24 +47,13 @@ namespace Monoworks
 		 */
 		[[maybe_unused]] EGraphicsAPI GraphicsAPI;
 		/**
-		 * @brief Number of items in the Arguments array.
-		 */
+		* @brief Number of items in the Arguments array.
+		*/
 		[[maybe_unused]] int ArgumentCount = 0;
-
-		/**
-		 * @brief Array of arguments.
-		 */
-		[[maybe_unused]] char** Arguments = nullptr;
-
 		/**
 		 * @brief Version of the associated Application.
 		 */
-		[[maybe_unused]] SAppVersion Version;
-
-		/**
-		 * @brief Callback to retrieve  
-		 */
-		[[maybe_unused]] const char**(*RequiredExtensionCallback)(u32 *extensionCount);
+		[[maybe_unused]] SAppVersion Version;		
 	};
 
 	/**
