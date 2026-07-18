@@ -23,10 +23,23 @@
 
 #include <volk/volk.h>
 
+#define MW_PROFILING 1
+#define MW_VULKAN 1
+
 #ifdef MW_PROFILING
 #include <Tracy/Tracy.hpp>
 
-#define MW_PROFILE_FUNC() ZoneScopedN(__FUNCTION__);
+#define MW_PROFILE_ALLOC(x, y) TracyAlloc(x, y)
+#define MW_PROFILE_ALLOC_N(x, y, z) TracyAllocN(x, y, z)
+
+#define MW_PROFILE_PLOT(x, y) TracyPlot(x, y)
+
+#define MW_PROFILE_FREE(x) TracyFree(x)
+#define MW_PROFILE_FREE_N(x, y) TracyFreeN(x, y)
+
+#define MW_PROFILE_FUNC  ZoneScopedN(__FUNCTION__);
+// #define MW_PROFILE_FUNC __debugbreak();
+
 #define MW_PROFILE_FRAME_MARK() FrameMark;
 #endif
 
@@ -58,7 +71,6 @@ using f64 = double;
 
 using uptr_t = uintptr_t;
 using byte_t = unsigned char;
-
 
 namespace Monoworks
 {

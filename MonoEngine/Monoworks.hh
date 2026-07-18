@@ -10,6 +10,7 @@
  */
 #pragma once
 // Common
+#include <common/Base.hh>
 #include <common/Math.hh>
 #include <common/Memory.hh>
 #include <common/Memory.hh>

@@ -5,15 +5,18 @@
 #include <set>
 
 #include "VulkanDevice.h"
+#include "VulkanContext.hh"
 
 namespace Monoworks::RHI 
 {
 
 
-	void CVulkanDevice::Init() noexcept
+	void CVulkanDevice::Init(VkInstance* instance) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		MW_INFO("Initialize CVulkanDevice");
+
+		m_Instance = instance;
 
 		CreatePhysicalDevice();
 		CreateLogicalDevice();
@@ -22,7 +25,7 @@ namespace Monoworks::RHI
 
 	void CVulkanDevice::Shutdown() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		MW_INFO("Shutdown CVulkanDevice");
 
 		vkDeviceWaitIdle(m_Device);
@@ -33,7 +36,7 @@ namespace Monoworks::RHI
 
 	u32 CVulkanDevice::FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties)
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		VkPhysicalDeviceMemoryProperties memProperties;
 		vkGetPhysicalDeviceMemoryProperties(m_PhysicalDevice, &memProperties);
 		for (u32 i = 0; i < memProperties.memoryTypeCount; i++)
@@ -50,7 +53,7 @@ namespace Monoworks::RHI
 
 	VkFormat CVulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		for (VkFormat format : candidates)
 		{
 			VkFormatProperties props;
@@ -73,7 +76,7 @@ namespace Monoworks::RHI
 
 	void CVulkanDevice::CreatePhysicalDevice() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		u32 deviceCount = 0;
 		vkEnumeratePhysicalDevices(*m_Instance, &deviceCount, nullptr);
 		if (deviceCount == 0)
@@ -104,7 +107,7 @@ namespace Monoworks::RHI
 
 	void CVulkanDevice::CreateLogicalDevice() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		QueueFamilyIndices indices = FindQueueFamilies(&m_PhysicalDevice);
 
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -167,7 +170,7 @@ namespace Monoworks::RHI
 
 	void CVulkanDevice::CreateCommandPool() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(&m_PhysicalDevice);
 
 		VkCommandPoolCreateInfo poolInfo = {};
@@ -208,7 +211,7 @@ namespace Monoworks::RHI
 
 	QueueFamilyIndices CVulkanDevice::FindQueueFamilies(const VkPhysicalDevice* pPhysDevice) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		QueueFamilyIndices indices;
 
 		u32 queueFamilyCount = 0;
@@ -238,7 +241,7 @@ namespace Monoworks::RHI
 
 	bool CVulkanDevice::CheckDeviceExtensionSupport(const VkPhysicalDevice* pPhysDevice) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		uint32_t extensionCount;
 		vkEnumerateDeviceExtensionProperties(*pPhysDevice, nullptr, &extensionCount, nullptr);
 
@@ -259,24 +262,100 @@ namespace Monoworks::RHI
 		return requiredExtensions.empty();
 	}
 
-	VkResult CVulkanDevice::CreateBuffer(VkDevice* device, VkBuffer* buffer, VkDeviceMemory* bufferMemorey, VkDeviceSize size, VkBufferUsageFlagBits usage, VkMemoryPropertyFlags properties) noexcept
+	VkResult CVulkanDevice::CreateBuffer(
+		VmaAllocator* pAllocator,
+		VkBuffer* pBuffer, 
+		VmaAllocation* pBufferMemorey,
+		VkDeviceSize size,
+		VkBufferUsageFlagBits usage,
+		VkMemoryPropertyFlags properties) noexcept
 	{
-		return VK_SUCCESS;
+		MW_PROFILE_FUNC;
+
+		VkBufferCreateInfo bufferInfo{};
+		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		bufferInfo.size = size;
+		bufferInfo.usage = usage;
+		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		VmaAllocationCreateInfo allocInfo{};
+		allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
+		allocInfo.requiredFlags = properties;
+
+		auto res = vmaCreateBuffer(*pAllocator, &bufferInfo, &allocInfo, pBuffer, pBufferMemorey, nullptr);
+		MW_VK_CHECK(res, "Failed to create buffer");
+		MW_PROFILE_ALLOC_N((void*)pBuffer, size, "GPU VRAM");
+
+		return res;
 	}
 
-	VkResult CVulkanDevice::CopyBuffer(VkBuffer* pSrc, VkBuffer* pDst, VkDeviceSize size) noexcept
+	VkResult CVulkanDevice::CreateImage(
+		VmaAllocator* pAllocator, 
+		VkImage* pImage, 
+		const VkImageCreateInfo* pImageInfo,
+		VmaAllocation* pImageMemory, 
+		VkMemoryPropertyFlags properties) noexcept
 	{
-		return VK_SUCCESS;
+		MW_PROFILE_FUNC;
+
+		VmaAllocationCreateInfo allocInfo{};
+		allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
+		allocInfo.requiredFlags = properties;
+
+		auto res = vmaCreateImage(*pAllocator, pImageInfo, &allocInfo, pImage, pImageMemory, nullptr);
+		MW_VK_CHECK(res, "Failed to create buffer");
+		MW_PROFILE_ALLOC_N((void*)pImage, pImageInfo->extent.width * pImageInfo->extent.height, "GPU VRAM");
+
+		return res;
 	}
 
-	VkResult CVulkanDevice::CopyBufferToImage(VkCommandBuffer* pCommandBuffer, VkBuffer* pSrc, VkImage* pDst, u32 width, u32 height, u32 layerCount) noexcept
+	void CVulkanDevice::CopyBuffer(
+		VkCommandBuffer* pCmdBuffer,
+		VkBuffer* pSrc,
+		VkBuffer* pDst,
+		VkDeviceSize size) noexcept
 	{
-		return VK_SUCCESS;
+		MW_PROFILE_FUNC;
+
+		VkBufferCopy copyRegion{};
+		copyRegion.srcOffset = 0; 
+		copyRegion.dstOffset = 0; 
+		copyRegion.size = size;
+		vkCmdCopyBuffer(*pCmdBuffer, *pSrc, *pDst, 1, &copyRegion);
+
 	}
 
-	VkResult CVulkanDevice::CreateImage(VkImage* pImage, const VkImageCreateInfo* pImageInfo, VkDeviceMemory* pImageMemory, VkMemoryPropertyFlags properties) noexcept
+	void CVulkanDevice::CopyBufferToImage(
+		VkCommandBuffer* pCmdBuffer,
+		VkBuffer* pSrc,
+		VkImage* pDst,
+		u32 width,
+		u32 height,
+		u32 layerCount) noexcept
 	{
-		return VK_SUCCESS;
+		MW_PROFILE_FUNC;
+
+		VkBufferImageCopy region{};
+		region.bufferOffset = 0;
+		region.bufferRowLength = 0;
+		region.bufferImageHeight = 0;
+
+		region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		region.imageSubresource.mipLevel = 0;
+		region.imageSubresource.baseArrayLayer = 0;
+		region.imageSubresource.layerCount = layerCount;
+
+		region.imageOffset = { 0, 0, 0 };
+		region.imageExtent = { width, height, 1 };
+
+		vkCmdCopyBufferToImage(
+			*pCmdBuffer,
+			*pSrc,
+			*pDst,
+			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			1,
+			&region);
 	}
+
 
 }

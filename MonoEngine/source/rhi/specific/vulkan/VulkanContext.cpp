@@ -2,7 +2,7 @@
 
 #include "VulkanContext.hh"
 #include "VulkanDevice.h"
-
+#include <events/EventManager.hh>
 
 #define VOLK_IMPLEMENTATION
 #include <Volk/volk.h>
@@ -24,7 +24,7 @@ namespace Monoworks::RHI
 		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 		void* pUserData)
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 
 		switch (messageSeverity)
 		{
@@ -48,7 +48,7 @@ namespace Monoworks::RHI
 
 	void CVulkanContext::Init()
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		MW_INFO("Initialize CVulkanContext");
 
 		MW_VK_CHECK(volkInitialize(), "Failed to Initialize Volk");
@@ -58,7 +58,7 @@ namespace Monoworks::RHI
 		volkLoadInstance(m_Instance);
 		
 		SetupDebugMessenger();
-		m_Device.Init();
+		m_Device.Init(&m_Instance);
 
 		VmaAllocatorCreateInfo allocatorCreateInfo{};
 		allocatorCreateInfo.physicalDevice = *m_Device.GetPhysicalDevice();
@@ -74,12 +74,25 @@ namespace Monoworks::RHI
 
 		allocatorCreateInfo.pVulkanFunctions = &vulkanFunctions;
 
-		MW_VK_CHECK(vmaCreateAllocator(&allocatorCreateInfo, &m_Allocator), "Failed to create VMA Allocator")
+		MW_VK_CHECK(vmaCreateAllocator(&allocatorCreateInfo, &m_Allocator), "Failed to create VMA Allocator");
+
+#ifdef MW_PROFILING
+		VmaTotalStatistics stats;
+		vmaCalculateStatistics(m_Allocator, &stats);
+
+		CEventManager::Subscribe(MW_EVENT_APP_FRAME, [&](SEvent& event)
+			{
+				MW_PROFILE_PLOT("VRAM Total Allocated", (s64)stats.total.statistics.blockBytes);
+				MW_PROFILE_PLOT("VRAM Usage", (s64)stats.total.statistics.allocationBytes);
+				MW_PROFILE_PLOT("Total GPU Allocations", (s64)stats.total.statistics.allocationCount);
+				return false;
+			});
+#endif
 	}
 
 	static inline bool CheckValidationLayerSupport(const std::vector<const char*>& validationLayers)
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 
 		u32 layerCount;
 		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -112,13 +125,13 @@ namespace Monoworks::RHI
 
 	void CVulkanContext::Shutdown()
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		MW_INFO("Shutdown CVulkanContext");
 	}
 
 	void CVulkanContext::CreateInstance()
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		if (m_EnableValidationLayers && !CheckValidationLayerSupport(m_ValidationLayers))
 		{
 			MW_ERROR("Validation layers requested, but not available!");
@@ -194,7 +207,7 @@ namespace Monoworks::RHI
 
 	void CVulkanContext::CreateVmaAllocator()
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		VmaVulkanFunctions vulkanFunctions{};
 
 
@@ -202,7 +215,7 @@ namespace Monoworks::RHI
 
 	void CVulkanContext::SetupDebugMessenger() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		if (!m_EnableValidationLayers) return;
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
 		debugCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -220,7 +233,7 @@ namespace Monoworks::RHI
 
 	std::vector<const char*> CVulkanContext::GetRequiredExtensions() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 
 		u32 extensionCount2 = 0;
 
@@ -258,7 +271,7 @@ namespace Monoworks::RHI
 
 	VkResult CVulkanContext::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
 			instance,
 			"vkCreateDebugUtilsMessengerEXT");

@@ -10,26 +10,26 @@ namespace Monoworks
 
 	void CEventManager::Init() noexcept 
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;;
 		MW_INFO("Initialize CEventManager");
 	};
 
 	void CEventManager::Shutdown() noexcept 
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;;
 		MW_INFO("Shutdown CEventManager");
 	};
 
 	void CEventManager::Subscribe(EEventType type, std::function<bool(SEvent&)> func)
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;;
 		MW_TRACE("Subscribed listener {} to event {}", reinterpret_cast<void*>(func.target<bool(*)(SEvent&)>()), EventTypeToString(type));
 		m_Callbacks[(u8)type].emplace_back( 1, std::move(func));
 	};
 
 	void CEventManager::ProcessEvents() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;;
 		while (m_EventQueue.GetSize() > 0)
 		{
 			auto event = m_EventQueue.Front();

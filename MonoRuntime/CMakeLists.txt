@@ -21,4 +21,4 @@ elseif (APPLE)
     target_compile_definitions(MonoRuntime PRIVATE VT_PLATFORM_OSX)
 endif()
 
-target_compile_definitions(MonoRuntime PRIVATE MW_RUNTIME)
+target_compile_definitions(MonoRuntime PRIVATE MW_RUNTIME TRACY_ENABLE)

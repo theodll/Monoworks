@@ -10,7 +10,7 @@ namespace Monoworks
 
 	CConfigManager::CConfigManager(const char* path) noexcept : m_Path(path), m_CPath(path)
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		m_ConfigExists = std::filesystem::exists(path);
 		
 		m_Inifile = iniparser_load(path);
@@ -26,13 +26,13 @@ namespace Monoworks
 
 	CConfigManager::~CConfigManager() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		iniparser_freedict(m_Inifile);
 	}
 
 	void CConfigManager::RegisterSection(const std::string& section) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		if (m_ConfigExists)
 			return;
 
@@ -53,7 +53,7 @@ namespace Monoworks
 
 	void CConfigManager::RegisterValue(const std::string& section, const std::string& key, const std::string& defval) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		if (m_ConfigExists)
 			return;
 
@@ -79,7 +79,7 @@ namespace Monoworks
 
 	void CConfigManager::Flush() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		if (m_ConfigExists)
 		{
 			return;

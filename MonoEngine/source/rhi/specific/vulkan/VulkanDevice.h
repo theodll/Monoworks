@@ -2,6 +2,7 @@
 #include <common/Base.hh>
 
 #include <Volk/volk.h>
+#include <vk_mem_alloc.h>
 
 namespace Monoworks::RHI 
 {
@@ -14,42 +15,44 @@ namespace Monoworks::RHI
 	class CVulkanDevice 
 	{
 	public:
-		void Init() noexcept;
+		void Init(VkInstance* instance) noexcept;
 		void Shutdown() noexcept;
 
-		[[nodiscard]] VkResult CreateBuffer
+		[[nodiscard]] static VkResult CreateBuffer
 		(
-			VkDevice* device,
-			VkBuffer* buffer,
-			VkDeviceMemory* bufferMemorey,
+			VmaAllocator* pAllocator,
+			VkBuffer* pBuffer,
+			VmaAllocation* pBufferMemorey,
 			VkDeviceSize size,
 			VkBufferUsageFlagBits usage,
 			VkMemoryPropertyFlags properties
 		) noexcept;
 
-		[[nodiscard]] VkResult CopyBuffer
+		[[nodiscard]] static VkResult CreateImage
 		(
+			VmaAllocator* pAllocator,
+			VkImage* pImage,
+			const VkImageCreateInfo* pImageInfo,
+			VmaAllocation* pImageMemory,
+			VkMemoryPropertyFlags properties
+		) noexcept;
+
+		static void CopyBuffer
+		(
+			VkCommandBuffer* pCmdBuffer,
 			VkBuffer* pSrc,
 			VkBuffer* pDst,
 			VkDeviceSize size
 		) noexcept;
 
-		[[nodiscard]] VkResult CopyBufferToImage
+		static void CopyBufferToImage
 		(
-			VkCommandBuffer* pCommandBuffer,
+			VkCommandBuffer* pCmdBuffer,
 			VkBuffer* pSrc,
 			VkImage* pDst,
 			u32 width,
 			u32 height,
 			u32 layerCount
-		) noexcept;
-
-		[[nodiscard]] VkResult CreateImage
-		(
-			VkImage* pImage,
-			const VkImageCreateInfo* pImageInfo,
-			VkDeviceMemory* pImageMemory,
-			VkMemoryPropertyFlags properties
 		) noexcept;
 
 		const VkDevice* GetDevice() const noexcept { return &m_Device; };

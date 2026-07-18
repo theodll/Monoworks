@@ -5,7 +5,7 @@ namespace Monoworks
 {
 	CWindow::CWindow(const SWindowCreateInfos* pInfos) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		m_WindowExtent = pInfos->WindowExtent;
 
 		const char* title = pInfos->WindowTitle.c_str();
@@ -22,7 +22,7 @@ namespace Monoworks
 
 	void CWindow::Shutdown() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		SDL_DestroyWindow(m_SDLWindow);
 		MW_INFO("Shutdown CWindow");
 	}

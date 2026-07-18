@@ -1,10 +1,45 @@
 #include "Application.hh"
 #include "CVarManager.hh"
 #include "ConfigManager.hh"
+
 #include <events/EventManager.hh>
 #include <events/Event.hh>
+
+#include <common/Events.h>
 #include <common/Base.hh>
+
 #include <functional>
+
+void* operator new(size_t count)
+{
+	void* ptr = std::malloc(count);
+	if (!ptr) throw std::bad_alloc();
+	MW_PROFILE_ALLOC(ptr, count);
+	return ptr;
+}
+
+void operator delete(void* ptr) noexcept 
+{
+	if(ptr)
+	{
+		TracyFree(ptr);
+		std::free(ptr);
+	}
+}
+
+void* operator new[](std::size_t count) {
+	void* ptr = std::malloc(count);
+	if (!ptr) throw std::bad_alloc();
+	MW_PROFILE_ALLOC(ptr, count);
+	return ptr;
+}
+
+void operator delete[](void* ptr) noexcept {
+	if (ptr) {
+		TracyFree(ptr);
+		std::free(ptr);
+	}
+}
 
 namespace Monoworks
 {
@@ -12,10 +47,9 @@ namespace Monoworks
 	Ref<Monoworks::RHI::CVulkanContext> CApplication::m_GraphicsContext;
 	SApplicationCreateInfos CApplication::m_pApplicationCreationInfos;
 
-
 	CApplication::CApplication() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		CLogManager::Init();
 		CCvarManager::Init();
 		CMemoryManager::Init();
@@ -24,7 +58,7 @@ namespace Monoworks
 
 	CApplication::~CApplication() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		CEventManager::Shutdown();
 		CMemoryManager::Shutdown();
 		CCvarManager::Shutdown();
@@ -33,7 +67,7 @@ namespace Monoworks
 
 	void CApplication::Init(const SApplicationCreateInfos* pInfos) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 
 		m_pApplicationCreationInfos = *pInfos;
 
@@ -43,16 +77,31 @@ namespace Monoworks
 
 	void CApplication::Shutdown() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		free((void*)m_pApplicationCreationInfos.Name);
 
 	}
 
 	void CApplication::Frame()
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
+
 		// called once per frame
+		Events::SAppFrame frame{};
+		CEventManager::EmitEventNonDeffered(frame, MW_EVENT_APP_FRAME);
 
 		CEventManager::ProcessEvents();
+
+		Events::SAppTick tick{};
+		CEventManager::EmitEventNonDeffered(tick, MW_EVENT_APP_TICK);
+		// simulate here
+
+
+		Events::SAppRender render{};
+		CEventManager::EmitEventNonDeffered(render, MW_EVENT_APP_RENDER);
+		// render here
+
+
+		FrameMark;
 	}
 }

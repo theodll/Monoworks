@@ -37,4 +37,4 @@ elseif (APPLE)
     target_compile_definitions(MonoEngine PRIVATE MW_PLATFORM_OSX)
 endif()
 
-target_compile_definitions(MonoEngine PRIVATE MW_ENGINE)
+target_compile_definitions(MonoEngine PRIVATE MW_ENGINE TRACY_ENABLE)

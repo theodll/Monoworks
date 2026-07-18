@@ -22,6 +22,7 @@ namespace Monoworks::RHI
 
 		static const VkInstance* GetInstance() { return &m_Instance; }
 		static const CVulkanDevice* GetDevice() { return &m_Device; }
+		static const VmaAllocator* GetAllocator() { return &m_Allocator; }
 
 	private:
 		void CreateInstance();

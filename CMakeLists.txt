@@ -23,9 +23,8 @@ elseif(UNIX)
     add_compile_definitions(MW_PLATFORM_LINUX)
 endif()
 
-if (MW_PROFILING)
 add_compile_definitions(TRACY_ENABLE)
-endif()
+
 
 
 add_compile_definitions(

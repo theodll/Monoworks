@@ -50,7 +50,7 @@ namespace Monoworks
 		m_Engine = new CApplication;
 
 		SApplicationCreateInfos appInfos{};
-		appInfos.Name = cfg.Get("Editor", "Title");;
+		appInfos.Name = cfg.Get("Editor", "Title");
 		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height")};
 		appInfos.ArgumentCount = argc;
 		appInfos.Arguments = argv;
