@@ -13,6 +13,7 @@ namespace Monoworks::RHI
 
 	class CVulkanDevice 
 	{
+	public:
 		void Init() noexcept;
 		void Shutdown() noexcept;
 
@@ -87,6 +88,7 @@ namespace Monoworks::RHI
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 			VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME, 
 			VK_KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME, 
+			VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
 #ifdef MW_PLATFORM_OSX
 			VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
 #endif

@@ -54,8 +54,27 @@ namespace Monoworks::RHI
 		MW_VK_CHECK(volkInitialize(), "Failed to Initialize Volk");
 
 		CreateInstance();
-		SetupDebugMessenger();
 
+		volkLoadInstance(m_Instance);
+		
+		SetupDebugMessenger();
+		m_Device.Init();
+
+		VmaAllocatorCreateInfo allocatorCreateInfo{};
+		allocatorCreateInfo.physicalDevice = *m_Device.GetPhysicalDevice();
+		allocatorCreateInfo.device = *m_Device.GetDevice();
+		allocatorCreateInfo.instance = m_Instance;
+		allocatorCreateInfo.vulkanApiVersion = MW_VK_VERSION;
+		allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT
+			| VMA_ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT
+			| VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
+
+		VmaVulkanFunctions vulkanFunctions;
+		MW_VK_CHECK(vmaImportVulkanFunctionsFromVolk(&allocatorCreateInfo, &vulkanFunctions), "Failed to import vulkan functions from volk for VMA");
+
+		allocatorCreateInfo.pVulkanFunctions = &vulkanFunctions;
+
+		MW_VK_CHECK(vmaCreateAllocator(&allocatorCreateInfo, &m_Allocator), "Failed to create VMA Allocator")
 	}
 
 	static inline bool CheckValidationLayerSupport(const std::vector<const char*>& validationLayers)
@@ -113,7 +132,7 @@ namespace Monoworks::RHI
 		appInfo.applicationVersion = VK_MAKE_VERSION(ApplicationInfos->Version.Major, ApplicationInfos->Version.Minor, ApplicationInfos->Version.Patch);
 		appInfo.pEngineName = EngineName;
 		appInfo.engineVersion = VK_MAKE_VERSION(MonoworksVersion.Major, MonoworksVersion.Minor, MonoworksVersion.Patch);
-		appInfo.apiVersion = VK_API_VERSION_1_4;
+		appInfo.apiVersion = MW_VK_VERSION;
 
 		VkInstanceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -169,8 +188,7 @@ namespace Monoworks::RHI
 				MW_ERROR("Missing required App extension: {}", required);
 			}
 		}
-		
-		volkLoadInstance(m_Instance);
+	
 
 	}
 
@@ -258,5 +276,12 @@ namespace Monoworks::RHI
 	{
 
 	}
+
+	void CVulkanContext::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& pCreateInfo) noexcept
+	{
+
+	}
+
+	VmaAllocator CVulkanContext::m_Allocator;
 
 }

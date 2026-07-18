@@ -56,7 +56,7 @@ namespace Monoworks
 		m_Window = Ref<CWindow>::Create(&windowInfos);
 
 		SApplicationCreateInfos appInfos{};
-		appInfos.Name = cfg.Get("Runtime", "Title");
+		appInfos.Name = strdup(cfg.Get("Runtime", "Title").c_str());
 		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height") };
 		appInfos.GraphicsAPI = (EGraphicsAPI)cfg.Get<u32>("Rendering", "GAPI");
 		appInfos.ArgumentCount = argc;

@@ -44,7 +44,7 @@ namespace Monoworks
 	void CApplication::Shutdown() noexcept
 	{
 		MW_PROFILE_FUNC();
-
+		free((void*)m_pApplicationCreationInfos.Name);
 
 	}
 

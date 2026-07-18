@@ -21,6 +21,8 @@
 #include <common/Memory.hh>
 #include <core/CVarManager.hh>
 
+#include <volk/volk.h>
+
 #ifdef MW_PROFILING
 #include <Tracy/Tracy.hpp>
 
@@ -39,6 +41,8 @@ using cvar_t = Monoworks::SCVar;
 #define MW_SET_CVAR(varName, value) Monoworks::CCvarManager::Set(varName, value);
 #define MW_SET_FLOAT_CVAR(varName, value) Monoworks::CCvarManager::SetValue(varName, value);
 
+#define MW_VK_VERSION VK_API_VERSION_1_4
+
 using u8 = uint8_t;
 using u16 = uint16_t;
 using u32 = uint32_t;
@@ -56,9 +60,6 @@ using uptr_t = uintptr_t;
 using byte_t = unsigned char;
 
 
-
-
-
 namespace Monoworks
 {
 
@@ -68,6 +69,8 @@ namespace Monoworks
 		u8 Minor;
 		u8 Patch;
 	};
+
+	
 
     enum EGraphicsAPI
     {

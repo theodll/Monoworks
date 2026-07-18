@@ -261,22 +261,22 @@ namespace Monoworks::RHI
 
 	VkResult CVulkanDevice::CreateBuffer(VkDevice* device, VkBuffer* buffer, VkDeviceMemory* bufferMemorey, VkDeviceSize size, VkBufferUsageFlagBits usage, VkMemoryPropertyFlags properties) noexcept
 	{
-
+		return VK_SUCCESS;
 	}
 
 	VkResult CVulkanDevice::CopyBuffer(VkBuffer* pSrc, VkBuffer* pDst, VkDeviceSize size) noexcept
 	{
-
+		return VK_SUCCESS;
 	}
 
 	VkResult CVulkanDevice::CopyBufferToImage(VkCommandBuffer* pCommandBuffer, VkBuffer* pSrc, VkImage* pDst, u32 width, u32 height, u32 layerCount) noexcept
 	{
-
+		return VK_SUCCESS;
 	}
 
 	VkResult CVulkanDevice::CreateImage(VkImage* pImage, const VkImageCreateInfo* pImageInfo, VkDeviceMemory* pImageMemory, VkMemoryPropertyFlags properties) noexcept
 	{
-
+		return VK_SUCCESS;
 	}
 
 }
