@@ -10,6 +10,10 @@ namespace Monoworks::RHI
 	{
 		u32 GraphicsFamily;
 		bool GraphicsFamilyHasValue = false;
+		u32 TransferFamily;
+		bool TransferFamilyHasValue = false;
+		u32 ComputeFamily;
+		bool ComputeFamilyHasValue = false; 
 	};
 
 	class CVulkanDevice 
@@ -57,8 +61,16 @@ namespace Monoworks::RHI
 
 		const VkDevice* GetDevice() const noexcept { return &m_Device; };
 		const VkPhysicalDevice* GetPhysicalDevice() const noexcept { return &m_PhysicalDevice; }
-		const VkCommandPool* GetCommandPool() const noexcept { return &m_CommandPool; }
+
+		const VkCommandPool* GetGraphicsCommandPool() const noexcept { return &m_GraphicsCommandPool; }
 		const VkQueue* GetGraphicsQueue() const noexcept { return &m_GraphicsQueue; }
+		
+		const VkCommandPool* GetComputeCommandPool() const noexcept { return &m_ComputeCommandPool; }
+		const VkQueue* GetComputeQueue() const noexcept { return &m_ComputeQueue; }
+
+		const VkCommandPool* GetTransferCommandPool() const noexcept { return &m_TransferCommandPool; }
+		const VkQueue* GetTransferQueue() const noexcept { return &m_TransferQueue; }
+
 		const u32 GetQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
 
 		u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
@@ -81,14 +93,19 @@ namespace Monoworks::RHI
 		VkDevice m_Device;
 		VkPhysicalDevice m_PhysicalDevice;
 
-		VkCommandPool m_CommandPool;
+		VkCommandPool m_GraphicsCommandPool;
 		VkQueue m_GraphicsQueue;
+
+		VkCommandPool m_TransferCommandPool;
+		VkQueue m_TransferQueue;
+
+		VkCommandPool m_ComputeCommandPool;
+		VkQueue m_ComputeQueue;
 
 		VkInstance* m_Instance;
 
-		const std::vector<const char*> deviceExtensions =
+		std::vector<const char*> m_DeviceExtensions =
 		{
-			VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 			VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME, 
 			VK_KHR_SHADER_SUBGROUP_ROTATE_EXTENSION_NAME, 
 			VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,

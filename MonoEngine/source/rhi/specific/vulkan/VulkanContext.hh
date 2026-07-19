@@ -4,12 +4,15 @@
 #include <rhi/agnostic/GraphicsContext.hh>
 
 #include <rhi/specific/vulkan/VulkanDevice.h>
+#include <rhi/specific/vulkan/VulkanResourceUploader.hh>
 
-#include <Volk/volk.h>
+#include <volk/volk.h>
 
-#define WMA_VULKAN_VERSION 1004000
+#ifndef VMA_STATIC_VULKAN_FUNCTIONS
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
-#define WMA_DYNAMIC_VULKAN_FUNCTIONS 0 
+#define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
+#endif
+
 #include <vk_mem_alloc.h>
 
 namespace Monoworks::RHI
@@ -21,8 +24,12 @@ namespace Monoworks::RHI
 		void Shutdown() override;
 
 		static const VkInstance* GetInstance() { return &m_Instance; }
+
 		static const CVulkanDevice* GetDevice() { return &m_Device; }
+		static const CVulkanResourceUploader* GetUploader() { return &m_ResouceUploader; }
+
 		static const VmaAllocator* GetAllocator() { return &m_Allocator; }
+		
 
 	private:
 		void CreateInstance();
@@ -39,6 +46,8 @@ namespace Monoworks::RHI
 		static VkInstance m_Instance;
 		static VmaAllocator m_Allocator;
 		static CVulkanDevice m_Device;
+		static CVulkanResourceUploader m_ResouceUploader;
+
 		const std::vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 		bool m_EnableValidationLayers;
 

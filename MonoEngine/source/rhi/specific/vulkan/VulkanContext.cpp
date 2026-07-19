@@ -7,16 +7,30 @@
 #define VOLK_IMPLEMENTATION
 #include <Volk/volk.h>
 
+#define VMA_STATIC_VULKAN_FUNCTIONS 0
+#define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
+
 #define VMA_IMPLEMENTATION
+#define VMA_VULKAN_VERSION 1004000
 #include <vk_mem_alloc.h>
 
 #include <core/Application.hh>
+
+#ifdef MW_PROFILING
+#include <tracy/Tracy.hpp>
+
+TracyVkCtx TracyGraphicsContext = nullptr;
+TracyVkCtx TracyComputeContext	= nullptr;
+TracyVkCtx TracyTransferContext = nullptr;
+
+#endif
 
 namespace Monoworks::RHI 
 {
 
 	Monoworks::RHI::CVulkanDevice CVulkanContext::m_Device;
 	VkInstance CVulkanContext::m_Instance;
+	CVulkanResourceUploader CVulkanContext::m_ResouceUploader;
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -60,6 +74,8 @@ namespace Monoworks::RHI
 		SetupDebugMessenger();
 		m_Device.Init(&m_Instance);
 
+		volkLoadDevice(*m_Device.GetDevice());
+
 		VmaAllocatorCreateInfo allocatorCreateInfo{};
 		allocatorCreateInfo.physicalDevice = *m_Device.GetPhysicalDevice();
 		allocatorCreateInfo.device = *m_Device.GetDevice();
@@ -76,29 +92,40 @@ namespace Monoworks::RHI
 
 		MW_VK_CHECK(vmaCreateAllocator(&allocatorCreateInfo, &m_Allocator), "Failed to create VMA Allocator");
 
+		m_ResouceUploader.Init(); 
+
 #ifdef MW_PROFILING
 		VmaTotalStatistics stats;
 		vmaCalculateStatistics(m_Allocator, &stats);
 
-		CEventManager::Subscribe(MW_EVENT_APP_FRAME, [&](SEvent& event)
+		CEventManager::Subscribe(MW_EVENT_APP_FRAME, [&] (SEvent& event )
 			{
 				MW_PROFILE_PLOT("VRAM Total Allocated", (s64)stats.total.statistics.blockBytes);
 				MW_PROFILE_PLOT("VRAM Usage", (s64)stats.total.statistics.allocationBytes);
 				MW_PROFILE_PLOT("Total GPU Allocations", (s64)stats.total.statistics.allocationCount);
 				return false;
 			});
+
+		m_ResouceUploader.Begin();
+		TracyGraphicsContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetGraphicsQueue(), *m_ResouceUploader.GetCommandBuffer() );
+		TracyComputeContext	 = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetComputeQueue(), *m_ResouceUploader.GetCommandBuffer() );
+		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), *m_ResouceUploader.GetCommandBuffer() );
+		m_ResouceUploader.End();
+
 #endif
+
+
 	}
 
-	static inline bool CheckValidationLayerSupport(const std::vector<const char*>& validationLayers)
+	static inline bool CheckValidationLayerSupport( const std::vector<const char*>& validationLayers )
 	{
 		MW_PROFILE_FUNC;
 
 		u32 layerCount;
-		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+		vkEnumerateInstanceLayerProperties( &layerCount, nullptr );
 
-		std::vector<VkLayerProperties> availableLayers(layerCount);
-		vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+		std::vector<VkLayerProperties> availableLayers( layerCount );
+		vkEnumerateInstanceLayerProperties( &layerCount, availableLayers.data() );
 
 		for (const char* layerName : validationLayers)
 		{
@@ -106,7 +133,7 @@ namespace Monoworks::RHI
 
 			for (const auto& layerProperties : availableLayers)
 			{
-				if (strcmp(layerName, layerProperties.layerName) == 0)
+				if (strcmp( layerName, layerProperties.layerName ) == 0)
 				{
 					layerFound = true;
 					break;
@@ -179,7 +206,7 @@ namespace Monoworks::RHI
 			createInfo.enabledLayerCount = 0;
 			createInfo.pNext = nullptr;
 		}
-		// TODO ALLOC CALLBACKS 
+		
 		MW_VK_CHECK(vkCreateInstance(&createInfo, nullptr, &m_Instance), "Failed to create Vulkan Instance");
 
 		u32 extensionCount = 0;

@@ -1,6 +1,8 @@
 #include <mwpch.hh>
 #include <common/Base.hh>
 
+#include <core/Application.hh>
+
 #include <Volk/volk.h>
 #include <set>
 
@@ -18,6 +20,11 @@ namespace Monoworks::RHI
 
 		m_Instance = instance;
 
+		if (CApplication::GetCreateInfos()->UseSwapchain)
+		{
+			m_DeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+		}
+
 		CreatePhysicalDevice();
 		CreateLogicalDevice();
 		CreateCommandPool();
@@ -29,7 +36,8 @@ namespace Monoworks::RHI
 		MW_INFO("Shutdown CVulkanDevice");
 
 		vkDeviceWaitIdle(m_Device);
-		vkDestroyCommandPool(m_Device, m_CommandPool, nullptr);
+		vkDestroyCommandPool(m_Device, m_GraphicsCommandPool, nullptr);
+		vkDestroyCommandPool(m_Device, m_TransferCommandPool, nullptr);
 		vkDestroyDevice(m_Device, nullptr);
 	}
 
@@ -110,18 +118,37 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 		QueueFamilyIndices indices = FindQueueFamilies(&m_PhysicalDevice);
 
-		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-		std::set<u32> uniqueQueueFamilies = { indices.GraphicsFamily };
+		std::set<u32> uniqueQueueFamilies = { indices.GraphicsFamily, indices.ComputeFamily, indices.TransferFamily };
 
-		float queuePriority = 1.0f;
+		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+		queueCreateInfos.reserve(uniqueQueueFamilies.size());
+
+		std::array<float, 3> priorities = {};
+		u32 priorityIndex = 0;
+
 		for (u32 queueFamily : uniqueQueueFamilies)
 		{
+			float currentPriority = 1.0f;
+
+			if (queueFamily == indices.TransferFamily && queueFamily != indices.GraphicsFamily)
+			{
+				currentPriority = 0.2f; 
+			}
+			else if (queueFamily == indices.ComputeFamily && queueFamily != indices.GraphicsFamily)
+			{
+				currentPriority = 0.5f;
+			}
+
+			priorities[priorityIndex] = currentPriority;
+
 			VkDeviceQueueCreateInfo queueCreateInfo = {};
 			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 			queueCreateInfo.queueFamilyIndex = queueFamily;
 			queueCreateInfo.queueCount = 1;
-			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfo.pQueuePriorities = &priorities[priorityIndex];
+
 			queueCreateInfos.push_back(queueCreateInfo);
+			priorityIndex++;
 		}
 
 		VkPhysicalDeviceVulkan14Features vulkan14Features{};
@@ -144,8 +171,8 @@ namespace Monoworks::RHI
 		createInfo.pEnabledFeatures = nullptr;
 		createInfo.pNext = &deviceFeatures2;
 
-		createInfo.enabledExtensionCount = static_cast<u32>(deviceExtensions.size());
-		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+		createInfo.enabledExtensionCount = static_cast<u32>(m_DeviceExtensions.size());
+		createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();
 
 		std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
@@ -161,11 +188,12 @@ namespace Monoworks::RHI
 
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
 		{
-			MW_ERROR("Failed to create logical device");
-			__debugbreak();
+			MW_ASSERT(false, "Failed to create logical device");
 		}
 
 		vkGetDeviceQueue(m_Device, indices.GraphicsFamily, 0, &m_GraphicsQueue);
+		vkGetDeviceQueue(m_Device, indices.ComputeFamily, 0, &m_ComputeQueue);
+		vkGetDeviceQueue(m_Device, indices.TransferFamily, 0, &m_TransferQueue);
 	}
 
 	void CVulkanDevice::CreateCommandPool() noexcept
@@ -173,17 +201,30 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 		QueueFamilyIndices queueFamilyIndices = FindQueueFamilies(&m_PhysicalDevice);
 
-		VkCommandPoolCreateInfo poolInfo = {};
-		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.queueFamilyIndex = queueFamilyIndices.GraphicsFamily;
-		poolInfo.flags =
+		VkCommandPoolCreateInfo graphicsPoolInfo{};
+		graphicsPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+		graphicsPoolInfo.queueFamilyIndex = queueFamilyIndices.GraphicsFamily;
+		graphicsPoolInfo.flags =
 			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-		if (vkCreateCommandPool(m_Device, &poolInfo, nullptr, &m_CommandPool) != VK_SUCCESS)
-		{
-			MW_ERROR("Failed to create command pool");
-			__debugbreak();
-		}
+		MW_VK_CHECK(vkCreateCommandPool(m_Device, &graphicsPoolInfo, nullptr, &m_GraphicsCommandPool), "Failed to create graphics command pool");
+
+		VkCommandPoolCreateInfo computePoolInfo{};
+		computePoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+		computePoolInfo.queueFamilyIndex = queueFamilyIndices.ComputeFamily;
+		computePoolInfo.flags =
+			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+		MW_VK_CHECK(vkCreateCommandPool(m_Device, &computePoolInfo, nullptr, &m_ComputeCommandPool), "Failed to create compute command pool");
+	
+
+		VkCommandPoolCreateInfo transferPoolInfo{};
+		transferPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+		transferPoolInfo.queueFamilyIndex = queueFamilyIndices.TransferFamily;
+		transferPoolInfo.flags =
+			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+		MW_VK_CHECK(vkCreateCommandPool(m_Device, &transferPoolInfo, nullptr, &m_TransferCommandPool), "Failed to create transfer command pool");
 	}
 
 	bool CVulkanDevice::IsDeviceSuitable(const VkPhysicalDevice* pPhysDevice) noexcept
@@ -204,7 +245,9 @@ namespace Monoworks::RHI
 
 		vkGetPhysicalDeviceFeatures2(*pPhysDevice, &features2);
 
-		return indices.GraphicsFamilyHasValue &&
+		return	indices.GraphicsFamilyHasValue	&&
+				indices.ComputeFamilyHasValue	&&
+				indices.TransferFamilyHasValue	&&
 			extensionsSupported &&
 			supportedFeatures.samplerAnisotropy;
 	}
@@ -215,20 +258,30 @@ namespace Monoworks::RHI
 		QueueFamilyIndices indices;
 
 		u32 queueFamilyCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(*pPhysDevice, &queueFamilyCount, nullptr);
+		vkGetPhysicalDeviceQueueFamilyProperties( *pPhysDevice, &queueFamilyCount, nullptr );
 
-		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(*pPhysDevice, &queueFamilyCount, queueFamilies.data());
+		std::vector<VkQueueFamilyProperties> queueFamilies( queueFamilyCount );
+		vkGetPhysicalDeviceQueueFamilyProperties( *pPhysDevice, &queueFamilyCount, queueFamilies.data() );
 
 		int i = 0;
-		for (const auto& queueFamily : queueFamilies)
+		for ( const auto& queueFamily : queueFamilies )
 		{
-			if (queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+			if ( queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT )
 			{
 				indices.GraphicsFamily = i;
 				indices.GraphicsFamilyHasValue = true;
 			}
-			if (indices.GraphicsFamilyHasValue)
+			if ( queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT )
+			{
+				indices.ComputeFamily = i;
+				indices.ComputeFamilyHasValue = true;
+			}
+			if ( queueFamily.queueCount > 0 && queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT )
+			{
+				indices.TransferFamily = i;
+				indices.TransferFamilyHasValue = true;
+			}
+			if (indices.GraphicsFamilyHasValue && indices.ComputeFamilyHasValue && indices.TransferFamilyHasValue)
 			{
 				break;
 			}
@@ -252,7 +305,7 @@ namespace Monoworks::RHI
 			&extensionCount,
 			availableExtensions.data());
 
-		std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+		std::set<std::string> requiredExtensions(m_DeviceExtensions.begin(), m_DeviceExtensions.end());
 
 		for (const auto& extension : availableExtensions)
 		{

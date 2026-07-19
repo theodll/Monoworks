@@ -26,8 +26,54 @@
 #define MW_PROFILING 1
 #define MW_VULKAN 1
 
+#ifdef	MW_PLATFORM_WINDOWS
+#define MW_DEBUG_BREAK __debugbreak()
+#elif defined(__clang__)
+#define MW_DEBUG_BREAK __builtin_debugtrap()
+#elif defined(__GNUC__)
+#include <csignal>
+#define MW_DEBUG_BREAK std::raise(SIGTRAP);
+#else
+#define MW_DEBUG_BREAK
+#endif
+
+#ifdef MW_DEBUG
+#define MW_ENABLE_ASSERTS
+#endif
+
+#define MW_ENABLE_VERIFY
+
+#define MW_ENABLE_ASSERTS 1
+#ifdef	MW_ENABLE_ASSERTS
+
+ // Note [21.02.26, Theo]: Do not use VT_CORE_ASSERT / VT_ASSERT when a function/check also needs to be run in a dist
+ // build. e.g. vkCreatePipeline. For Vulkan Functions use VT_VK_CHECK (Core.h)
+#define MW_ASSERT(condition, ...) { if(!(condition)) { MW_ERROR(__VA_ARGS__); MW_DEBUG_BREAK; } }
+#else
+#define MW_CORE_ASSERT(condition, ...)
+#define MW_ASSERT(condition, ...)
+#endif
+
+
 #ifdef MW_PROFILING
 #include <Tracy/Tracy.hpp>
+
+#ifdef MW_VULKAN
+
+#include <Tracy/TracyVulkan.hpp>
+extern TracyVkCtx TracyGraphicsContext;
+extern TracyVkCtx TracyComputeContext;
+extern TracyVkCtx TracyTransferContext;
+
+#define MW_PROFILE_VK_GRAPHICS_ZONE(cmd, name) if(TracyGraphicsContext) { TracyVkZone(TracyGraphicsContext, cmd, name); }
+#define MW_PROFILE_VK_COMPUTE_ZONE(cmd, name) if(TracyComputeContext) { TracyVkZone(TracyComputeContext, cmd, name); }
+#define MW_PROFILE_VK_TRANSFER_ZONE(cmd, name) if(TracyTransferContext) { TracyVkZone(TracyTransferContext, cmd, name); }
+
+#define MW_PROFILE_VK_CREATE_CTX(physdev, device, queue, cmdbuf) TracyVkContext( physdev, device, queue, cmdbuf );
+#define MW_PROFILE_VK_DESTROY_CTX(ctx) TracyVkDestroy(ctx);
+
+#endif 
+
 
 #define MW_PROFILE_ALLOC(x, y) TracyAlloc(x, y)
 #define MW_PROFILE_ALLOC_N(x, y, z) TracyAllocN(x, y, z)
@@ -38,9 +84,9 @@
 #define MW_PROFILE_FREE_N(x, y) TracyFreeN(x, y)
 
 #define MW_PROFILE_FUNC  ZoneScopedN(__FUNCTION__);
-// #define MW_PROFILE_FUNC __debugbreak();
 
 #define MW_PROFILE_FRAME_MARK() FrameMark;
+
 #endif
 
 

@@ -49,11 +49,15 @@ namespace Monoworks
 		/**
 		* @brief Number of items in the Arguments array.
 		*/
-		[[maybe_unused]] int ArgumentCount = 0;
+		[[maybe_unused]] s32 ArgumentCount = 0;
 		/**
 		 * @brief Version of the associated Application.
 		 */
-		[[maybe_unused]] SAppVersion Version;		
+		[[maybe_unused]] SAppVersion Version;	
+		/**
+		 * @brief Define whether to use the Vulkan swapchain.
+		 */
+		[[maybe_unused]] bool UseSwapchain;
 	};
 
 	/**
