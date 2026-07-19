@@ -12,6 +12,7 @@
 
 void* operator new(size_t count)
 {
+	MW_PROFILE_FUNC;
 	void* ptr = std::malloc(count);
 	if (!ptr) throw std::bad_alloc();
 	MW_PROFILE_ALLOC(ptr, count);
@@ -20,23 +21,28 @@ void* operator new(size_t count)
 
 void operator delete(void* ptr) noexcept 
 {
+	MW_PROFILE_FUNC;
 	if(ptr)
 	{
-		TracyFree(ptr);
+		MW_PROFILE_FREE(ptr);
 		std::free(ptr);
 	}
 }
 
-void* operator new[](std::size_t count) {
+void* operator new[](std::size_t count) 
+{
+	MW_PROFILE_FUNC;
 	void* ptr = std::malloc(count);
 	if (!ptr) throw std::bad_alloc();
 	MW_PROFILE_ALLOC(ptr, count);
 	return ptr;
 }
 
-void operator delete[](void* ptr) noexcept {
+void operator delete[](void* ptr) noexcept 
+{
+	MW_PROFILE_FUNC;
 	if (ptr) {
-		TracyFree(ptr);
+		MW_PROFILE_FREE(ptr);
 		std::free(ptr);
 	}
 }
@@ -46,6 +52,7 @@ namespace Monoworks
 	CApplication* CApplication::m_Singleton;
 	Ref<Monoworks::RHI::CVulkanContext> CApplication::m_GraphicsContext;
 	SApplicationCreateInfos CApplication::m_pApplicationCreationInfos;
+	EGraphicsAPI CApplication::m_GraphicsAPI;
 
 	CApplication::CApplication() noexcept
 	{

@@ -91,13 +91,15 @@ namespace Monoworks
 		[[nodiscard]] static CApplication* Get() noexcept { if (m_Singleton) return m_Singleton; else return nullptr;  }
 	
 		[[nodiscard]] static SApplicationCreateInfos* GetCreateInfos() noexcept { return &m_pApplicationCreationInfos; };
-
+		[[nodiscard]] static EGraphicsAPI* GetGraphicsAPI() noexcept { return &m_GraphicsAPI; }
 	private:
 		static CApplication* m_Singleton;
 
 		static Ref<RHI::CVulkanContext> m_GraphicsContext;
 		static SApplicationCreateInfos m_pApplicationCreationInfos;
 	
+		static EGraphicsAPI m_GraphicsAPI;
+
 	};
 
 
