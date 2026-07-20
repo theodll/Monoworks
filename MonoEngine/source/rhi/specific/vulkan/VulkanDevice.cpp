@@ -316,9 +316,9 @@ namespace Monoworks::RHI
 	VkResult CVulkanDevice::CreateBuffer(
 		VmaAllocator* pAllocator,
 		VkBuffer* pBuffer, 
-		VmaAllocation* pBufferMemorey,
+		VmaAllocation* pBufferMemory,
 		VkDeviceSize size,
-		VkBufferUsageFlagBits usage,
+		VkBufferUsageFlags usage,
 		VkMemoryPropertyFlags properties) noexcept
 	{
 		MW_PROFILE_FUNC;
@@ -333,7 +333,7 @@ namespace Monoworks::RHI
 		allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
 		allocInfo.requiredFlags = properties;
 
-		auto res = vmaCreateBuffer(*pAllocator, &bufferInfo, &allocInfo, pBuffer, pBufferMemorey, nullptr);
+		auto res = vmaCreateBuffer(*pAllocator, &bufferInfo, &allocInfo, pBuffer, pBufferMemory, nullptr);
 		MW_VK_CHECK(res, "Failed to create buffer");
 		MW_PROFILE_ALLOC_N((void*)pBuffer, size, "GPU VRAM");
 

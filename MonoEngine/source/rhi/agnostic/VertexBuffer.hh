@@ -51,7 +51,7 @@ namespace Monoworks::RHI
 		u32 Count;
 		u32 Offset{};
 
-		SBufferElement(ShaderDataType type, const std::string& name)
+		SBufferElement(EShaderDataType type, const std::string& name)
 			: Name(name), Type(type), Size(ShaderDataTypeSize(type)) {
 		};
 
@@ -109,18 +109,18 @@ namespace Monoworks::RHI
 	class IVertexBuffer 
 	{
 	public:
-		IVertexBuffer() = delete;
-		virtual ~IVertexBuffer() = default;
+		virtual ~IVertexBuffer() NOEXCEPT = default;
 
-		virtual void SetData(void* data, u64 size, u64 offset = 0) = 0;
-		virtual void SetLayout(const BufferLayout& layout) = 0;
+		virtual void SetData(void* data, u64 size, u64 offset = 0)	NOEXCEPT = 0;
+		virtual void SetLayout(const CBufferLayout& layout)			NOEXCEPT = 0;
 
-		virtual void Upload(VkCommandBuffer commandBuffer) = 0;
+		virtual void Upload(VkCommandBuffer commandBuffer)			NOEXCEPT = 0;
 
-		virtual CBufferLayout GetLayout() const = 0;
-		virtual VkBuffer GetVulkanBuffer() const = 0;
+		virtual NODISCARD CBufferLayout*	GetLayout()				NOEXCEPT = 0;
+		virtual NODISCARD VkBuffer*			GetVulkanBuffer()		NOEXCEPT = 0;
 
-		static Ref<IVertexBuffer> Create(void* vertexData, u64 vertexCount, u64 vertexStride, bool autoupload = false);
-
+		static NODISCARD Ref<IVertexBuffer> Create(void* vertexData, u64 vertexCount, u64 vertexStride, bool autoupload = false) NOEXCEPT;
+	protected:
+		IVertexBuffer() = default;
 	};
 }

@@ -2,8 +2,8 @@
  * @file Memory.hh
  * @author Theo Wimber (theowimber@abeams.app)
  * @brief Reference counting system for automatic memory management
- * @version 0.2
- * @date 2026-07-05
+ * @version 0.3
+ * @date 2026-07-20
  * @ingroup Common
  * @copyright Copyright (c) 2026
  */
@@ -15,121 +15,203 @@
 #include <atomic>
 #include <utility>
 #include <type_traits>
-#include <new> 
+#include <new>
 
 namespace Monoworks
 {
-	inline bool operator==(const SHandle& a, const SHandle& b) noexcept {
+	inline bool operator==(const SHandle& a, const SHandle& b) NOEXCEPT {
 		return a.Index == b.Index && a.Generation == b.Generation;
 	}
-	inline bool operator!=(const SHandle& a, const SHandle& b) noexcept {
+	inline bool operator!=(const SHandle& a, const SHandle& b) NOEXCEPT {
 		return !(a == b);
 	}
 
 	/**
+	 * @brief Type-erased base of SControlBlock<U>. Owns the refcount and, via its
+	 * virtual destructor, the correct destruction of whatever concrete U was
+	 * allocated - independent of what CRef<T> is currently viewing it as.
+	 */
+	struct SControlBlockBase
+	{
+		std::atomic<u32> RefCount;
+
+		SControlBlockBase() NOEXCEPT : RefCount(1) {}
+
+		virtual ~SControlBlockBase() NOEXCEPT = default;
+	};
+
+	/**
+	 * @brief Concrete control block holding the object of type U.
+	 * Allocated via CMemoryManager as SControlBlock<U>, but only ever referenced
+	 * afterwards through the type-erased SControlBlockBase* for lifetime handling.
+	 *
+	 * @tparam U Concrete type of the object in memory
+	 */
+	template <typename U>
+	struct SControlBlock : SControlBlockBase
+	{
+		U Object;
+
+		template <typename... Args>
+		SControlBlock(Args&&... args)
+			: SControlBlockBase()
+			, Object(std::forward<Args>(args)...)
+		{
+		}
+	};
+
+	/**
 	 * @brief Shared Pointer wrapper for custom SHandle memory allocations.
+	 * Supports upcasting: CRef<T> can be constructed/assigned from a CRef<U>
+	 * whenever U* implicitly converts to T*, e.g. CRef<IBase> = CRef<CDerived>::Create( ... );
 	 *
 	 * @tparam T Type of the object in memory
 	 */
 	template <typename T>
 	class CRef
 	{
+		template <typename>
+		friend class CRef;
+
 	private:
 
-		struct SControlBlock
-		{
-			std::atomic<u32> RefCount;
-			T Object;
-
-			template <typename... Args>
-			SControlBlock(Args&&... args)
-				: RefCount(1), Object(std::forward<Args>(args)...) {
-			}
-		};
-
 		SHandle m_Handle = MW_NULL_MEMORY;
+		T* m_pPtr = nullptr;
 
-		[[nodiscard]] SControlBlock* GetControlBlock() const noexcept
+		NODISCARD SControlBlockBase* GetControlBlock() const NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			if (m_Handle != MW_NULL_MEMORY && CMemoryManager::IsValid(m_Handle))
 			{
-				return static_cast<SControlBlock*>(CMemoryManager::Get(m_Handle));
+				return static_cast<SControlBlockBase*>(CMemoryManager::Get(m_Handle));
 			}
 			return nullptr;
 		}
 
-		void IncRef() noexcept
+		void IncRef() NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			if (SControlBlock* cb = GetControlBlock())
+			if (SControlBlockBase* pBlock = GetControlBlock())
 			{
-				cb->RefCount.fetch_add(1, std::memory_order_relaxed);
+				pBlock->RefCount.fetch_add(1, std::memory_order_relaxed);
 			}
 		}
 
-		void DecRef() noexcept
+		void DecRef() NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			SControlBlock* cb = GetControlBlock();
-			if (cb)
+			SControlBlockBase* pBlock = GetControlBlock();
+			if (pBlock)
 			{
-				if (cb->RefCount.fetch_sub(1, std::memory_order_acq_rel) == 1)
+				if (pBlock->RefCount.fetch_sub(1, std::memory_order_acq_rel) == 1)
 				{
-					cb->~SControlBlock();
+					pBlock->~SControlBlockBase();
 					CMemoryManager::Delete(m_Handle);
 				}
 			}
 			m_Handle = MW_NULL_MEMORY;
+			m_pPtr = nullptr;
 		}
 
 	public:
-		CRef() noexcept = default;
-		CRef(std::nullptr_t) noexcept {}
+		CRef() NOEXCEPT = default;
+		CRef(std::nullptr_t) NOEXCEPT {}
 
-		CRef(const CRef<T>& other) noexcept
+		CRef(const CRef<T>& other) NOEXCEPT
 			: m_Handle(other.m_Handle)
+			, m_pPtr(other.m_pPtr)
 		{
 			MW_PROFILE_FUNC;
 			IncRef();
 		}
 
-		CRef(CRef<T>&& other) noexcept
+		CRef(CRef<T>&& other) NOEXCEPT
 			: m_Handle(other.m_Handle)
+			, m_pPtr(other.m_pPtr)
 		{
 			MW_PROFILE_FUNC;
 			other.m_Handle = MW_NULL_MEMORY;
+			other.m_pPtr = nullptr;
 		}
 
-		~CRef() noexcept
+		/**
+		 * @brief Converting copy constructor, enabled when U* converts to T* (upcast).
+		 */
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		CRef(const CRef<U>& other) NOEXCEPT
+			: m_Handle(other.m_Handle)
+			, m_pPtr(other.m_pPtr)
+		{
+			MW_PROFILE_FUNC;
+			IncRef();
+		}
+
+		/**
+		 * @brief Converting move constructor, enabled when U* converts to T* (upcast).
+		 */
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		CRef(CRef<U>&& other) NOEXCEPT
+			: m_Handle(other.m_Handle)
+			, m_pPtr(other.m_pPtr)
+		{
+			MW_PROFILE_FUNC;
+			other.m_Handle = MW_NULL_MEMORY;
+			other.m_pPtr = nullptr;
+		}
+
+		~CRef() NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			DecRef();
 		}
 
-		CRef& operator=(const CRef<T>& other) noexcept
+		NODISCARD CRef& operator=(const CRef<T>& other) NOEXCEPT
 		{
 			if (this != &other)
 			{
 				DecRef();
 				m_Handle = other.m_Handle;
+				m_pPtr = other.m_pPtr;
 				IncRef();
 			}
 			return *this;
 		}
 
-		CRef& operator=(CRef<T>&& other) noexcept
+		NODISCARD CRef& operator=(CRef<T>&& other) NOEXCEPT
 		{
 			if (this != &other)
 			{
 				DecRef();
 				m_Handle = other.m_Handle;
+				m_pPtr = other.m_pPtr;
 				other.m_Handle = MW_NULL_MEMORY;
+				other.m_pPtr = nullptr;
 			}
 			return *this;
 		}
 
-		CRef& operator=(std::nullptr_t) noexcept
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		NODISCARD CRef& operator=(const CRef<U>& other) NOEXCEPT
+		{
+			DecRef();
+			m_Handle = other.m_Handle;
+			m_pPtr = other.m_pPtr;
+			IncRef();
+			return *this;
+		}
+
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		NODISCARD CRef& operator=(CRef<U>&& other) NOEXCEPT
+		{
+			DecRef();
+			m_Handle = other.m_Handle;
+			m_pPtr = other.m_pPtr;
+			other.m_Handle = MW_NULL_MEMORY;
+			other.m_pPtr = nullptr;
+			return *this;
+		}
+
+		NODISCARD CRef& operator=(std::nullptr_t) NOEXCEPT
 		{
 			DecRef();
 			return *this;
@@ -141,16 +223,19 @@ namespace Monoworks
 		 * @return Ref<T> Returns the created shared pointer
 		 */
 		template <typename... Args>
-		[[nodiscard]] static CRef<T> Create(Args&&... args)
+		NODISCARD static CRef<T> Create(Args&&... args)
 		{
 			MW_PROFILE_FUNC;
-			SHandle handle = CMemoryManager::Allocate(sizeof(SControlBlock));
+			using SBlock = SControlBlock<T>;
+
+			SHandle handle = CMemoryManager::Allocate(sizeof(SBlock));
 			void* rawMem = CMemoryManager::Get(handle);
 
-			new (rawMem) SControlBlock(std::forward<Args>(args)...);
+			SBlock* pBlock = new (rawMem) SBlock(std::forward<Args>(args)...);
 
 			CRef<T> ref;
 			ref.m_Handle = handle;
+			ref.m_pPtr = &pBlock->Object;
 			return ref;
 		};
 
@@ -158,61 +243,50 @@ namespace Monoworks
 		 * @brief Accesses the underlying pointer
 		 * @return T const * Returns the underlying pointer as immutable
 		*/
-		[[nodiscard]] T const* raw() const noexcept
+		NODISCARD T const* raw() const NOEXCEPT
 		{
 			if (!CMemoryManager::IsValid(m_Handle))
 				return nullptr;
-
-			if (SControlBlock* cb = GetControlBlock())
-			{
-				return &cb->Object;
-			}
-			return nullptr;
+			return m_pPtr;
 		}
 
-			/**
+		/**
 		 * @brief Accesses the underlying pointer
 		 * @return T const * Returns the underlying pointer as mutable
 		*/
-		[[nodiscard]] T* raw() noexcept
+		NODISCARD T* raw() NOEXCEPT
 		{
 			if (!CMemoryManager::IsValid(m_Handle))
 				return nullptr;
-
-			if (SControlBlock* cb = GetControlBlock())
-			{
-				return &cb->Object;
-			}
-			return nullptr;
+			return m_pPtr;
 		}
 
-		[[nodiscard]] T& operator*() noexcept
+		NODISCARD T& operator*() NOEXCEPT
 		{
 			return *raw();
 		}
 
-		[[nodiscard]] T* operator->() noexcept
+		NODISCARD T* operator->() NOEXCEPT
 		{
 			return raw();
 		}
 
-
-		[[nodiscard]] T const* operator->() const noexcept
+		NODISCARD T const* operator->() const NOEXCEPT
 		{
 			return raw();
 		}
 
-		[[nodiscard]] T& operator*() const noexcept
+		NODISCARD T& operator*() const NOEXCEPT
 		{
 			return *raw();
 		}
 
-		[[nodiscard]] explicit operator bool() const noexcept
+		NODISCARD explicit operator bool() const NOEXCEPT
 		{
-			return GetControlBlock() != nullptr && CMemoryManager::IsValid(m_Handle);
+			return m_pPtr != nullptr && CMemoryManager::IsValid(m_Handle);
 		}
 
-		[[nodiscard]] const SHandle& GetHandle() const noexcept
+		NODISCARD const SHandle& GetHandle() const NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			if (CMemoryManager::IsValid(m_Handle))
@@ -221,14 +295,14 @@ namespace Monoworks
 		}
 	};
 
-	template<class T, class U>
-	inline bool operator==(const CRef<T>& a, const CRef<U>& b) noexcept
+	template <class T, class U>
+	inline bool operator==(const CRef<T>& a, const CRef<U>& b) NOEXCEPT
 	{
 		return a.GetHandle() == b.GetHandle();
 	}
 
-	template<class T, class U>
-	inline bool operator!=(const CRef<T>& a, const CRef<U>& b) noexcept
+	template <class T, class U>
+	inline bool operator!=(const CRef<T>& a, const CRef<U>& b) NOEXCEPT
 	{
 		return !(a == b);
 	}
@@ -236,4 +310,3 @@ namespace Monoworks
 
 template <typename T>
 using Ref = Monoworks::CRef<T>;
-

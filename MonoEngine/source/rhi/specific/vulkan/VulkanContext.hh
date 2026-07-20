@@ -23,12 +23,12 @@ namespace Monoworks::RHI
 		void Init() override;
 		void Shutdown() override;
 
-		static const VkInstance* GetInstance() { return &m_Instance; }
+		static VkInstance* GetInstance() { return &m_Instance; }
 
-		static const CVulkanDevice* GetDevice() { return &m_Device; }
-		static const CVulkanResourceUploader* GetUploader() { return &m_ResouceUploader; }
+		static CVulkanDevice* GetDevice() { return &m_Device; }
+		static CVulkanResourceUploader* GetUploader() { return &m_ResouceUploader; }
 
-		static const VmaAllocator* GetAllocator() { return &m_Allocator; }
+		static VmaAllocator* GetAllocator() { return &m_Allocator; }
 		
 
 	private:

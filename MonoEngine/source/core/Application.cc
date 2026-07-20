@@ -9,6 +9,8 @@
 #include <common/Base.hh>
 
 #include <functional>
+#include <thread>
+#include <chrono>
 
 void* operator new(size_t count)
 {
@@ -107,6 +109,7 @@ namespace Monoworks
 		Events::SAppRender render{};
 		CEventManager::EmitEventNonDeffered(render, MW_EVENT_APP_RENDER);
 		// render here
+		std::this_thread::sleep_for(std::chrono::milliseconds(7));
 
 
 		FrameMark;

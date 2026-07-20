@@ -40,7 +40,7 @@ namespace Monoworks::RHI
 			&m_Fence), "Failed to create Transfer Fence")
 	}
 
-	void CVulkanResourceUploader::Shutdown() noexcept
+	void CVulkanResourceUploader::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		MW_TRACE("Shutdown CVulkanResourceUploader");
@@ -51,7 +51,7 @@ namespace Monoworks::RHI
 		m_Commandbuffer = VK_NULL_HANDLE;
 	}
 
-	void CVulkanResourceUploader::Begin() noexcept
+	void CVulkanResourceUploader::Begin() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		MW_VK_CHECK(vkWaitForFences(
@@ -71,13 +71,16 @@ namespace Monoworks::RHI
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 		vkBeginCommandBuffer(m_Commandbuffer, &beginInfo);
-		MW_PROFILE_VK_TRANSFER_ZONE(m_Commandbuffer, "Vulkan Resouce Uploader")
+		MW_PROFILE_VK_TRANSFER_ZONE(m_Commandbuffer, "Vulkan resource transfer begin")
 	}
 
-	void CVulkanResourceUploader::End() noexcept
+	void CVulkanResourceUploader::End() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		vkEndCommandBuffer(m_Commandbuffer);
+	
+		MW_PROFILE_VK_TRANSFER_COLLECT( m_Commandbuffer );
+
+		vkEndCommandBuffer( m_Commandbuffer );
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -98,5 +101,6 @@ namespace Monoworks::RHI
 			VK_TRUE,
 			UINT64_MAX
 		);
+
 	}
 }

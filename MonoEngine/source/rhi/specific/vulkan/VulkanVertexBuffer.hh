@@ -6,19 +6,19 @@
 
 namespace Monoworks::RHI 
 {
-	class VulkanVertexBuffer : public IVertexBuffer
+	class CVulkanVertexBuffer : public IVertexBuffer
 	{
 	public:
-		VulkanVertexBuffer();
-		~VulkanVertexBuffer();
+		CVulkanVertexBuffer( void* data, u64 size, u64 offset = 0, bool autoUpload = false ) NOEXCEPT;
+		~CVulkanVertexBuffer() NOEXCEPT;
 
-		virtual void SetData(void* data, u64 size, u64 offset = 0) = 0;
-		virtual void SetLayout(const CBufferLayout& layout) = 0;
+		void SetData( void* data, u64 size, u64 offset = 0 ) NOEXCEPT;
+		void SetLayout( const CBufferLayout& layout ) NOEXCEPT;
 
-		virtual void Upload(VkCommandBuffer commandBuffer) = 0;
+		void Upload(VkCommandBuffer commandBuffer) NOEXCEPT;
 
-		virtual CBufferLayout GetLayout() const = 0;
-		virtual VkBuffer GetVulkanBuffer() const = 0;
+		NODISCARD CBufferLayout*    GetLayout()			NOEXCEPT override { return &m_Layout;  };
+		NODISCARD VkBuffer*			GetVulkanBuffer()	NOEXCEPT override { return &m_VertexBuffer; };
 
 	private:
 		VkBuffer m_VertexBuffer;
@@ -26,5 +26,12 @@ namespace Monoworks::RHI
 
 		VkBuffer m_StagingBuffer;
 		VmaAllocation m_StagingBufferAllocation;
+
+		CBufferLayout m_Layout;
+
+		u64 m_Size				= 0;
+		u64 m_UploadSize		= 0;
+		u64 m_StagingBufferSize = 0;
+		u64 m_Offset			= 0;
 	};
 }

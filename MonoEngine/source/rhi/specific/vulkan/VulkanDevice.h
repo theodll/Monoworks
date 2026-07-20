@@ -22,24 +22,24 @@ namespace Monoworks::RHI
 		void Init(VkInstance* instance) noexcept;
 		void Shutdown() noexcept;
 
-		[[nodiscard]] static VkResult CreateBuffer
+		NODISCARD static VkResult CreateBuffer
 		(
 			VmaAllocator* pAllocator,
 			VkBuffer* pBuffer,
-			VmaAllocation* pBufferMemorey,
+			VmaAllocation* pBufferMemory,
 			VkDeviceSize size,
-			VkBufferUsageFlagBits usage,
+			VkBufferUsageFlags usage,
 			VkMemoryPropertyFlags properties
-		) noexcept;
+		) NOEXCEPT;
 
-		[[nodiscard]] static VkResult CreateImage
+		NODISCARD static VkResult CreateImage
 		(
 			VmaAllocator* pAllocator,
 			VkImage* pImage,
 			const VkImageCreateInfo* pImageInfo,
 			VmaAllocation* pImageMemory,
 			VkMemoryPropertyFlags properties
-		) noexcept;
+		) NOEXCEPT;
 
 		static void CopyBuffer
 		(
@@ -47,7 +47,7 @@ namespace Monoworks::RHI
 			VkBuffer* pSrc,
 			VkBuffer* pDst,
 			VkDeviceSize size
-		) noexcept;
+		) NOEXCEPT;
 
 		static void CopyBufferToImage
 		(
@@ -57,7 +57,7 @@ namespace Monoworks::RHI
 			u32 width,
 			u32 height,
 			u32 layerCount
-		) noexcept;
+		) NOEXCEPT;
 
 		const VkDevice* GetDevice() const noexcept { return &m_Device; };
 		const VkPhysicalDevice* GetPhysicalDevice() const noexcept { return &m_PhysicalDevice; }

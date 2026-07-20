@@ -26,6 +26,10 @@
 #define MW_PROFILING 1
 #define MW_VULKAN 1
 
+#define NOEXCEPT noexcept
+#define NODISCARD [[nodiscarrd]]
+#define MAYBE_UNUSED [[maybe_unused]]
+
 #ifdef	MW_PLATFORM_WINDOWS
 #define MW_DEBUG_BREAK __debugbreak()
 #elif defined(__clang__)
@@ -65,9 +69,13 @@ extern TracyVkCtx TracyGraphicsContext;
 extern TracyVkCtx TracyComputeContext;
 extern TracyVkCtx TracyTransferContext;
 
-#define MW_PROFILE_VK_GRAPHICS_ZONE(cmd, name) if(TracyGraphicsContext) { TracyVkZone(TracyGraphicsContext, cmd, name); }
-#define MW_PROFILE_VK_COMPUTE_ZONE(cmd, name) if(TracyComputeContext) { TracyVkZone(TracyComputeContext, cmd, name); }
-#define MW_PROFILE_VK_TRANSFER_ZONE(cmd, name) if(TracyTransferContext) { TracyVkZone(TracyTransferContext, cmd, name); }
+#define MW_PROFILE_VK_GRAPHICS_ZONE(cmd, name) if(TracyGraphicsContext) { TracyVkZone( TracyGraphicsContext, cmd, name ); }
+#define MW_PROFILE_VK_COMPUTE_ZONE(cmd, name) if(TracyComputeContext) { TracyVkZone( TracyComputeContext, cmd, name ); }
+#define MW_PROFILE_VK_TRANSFER_ZONE(cmd, name) if(TracyTransferContext) { TracyVkZone( TracyTransferContext, cmd, name ); }
+
+#define MW_PROFILE_VK_GRAPHICS_COLLECT(cmd) if(TracyGraphicsContext) { TracyVkCollect( TracyGraphicsContext, cmd ); }
+#define MW_PROFILE_VK_COMPUTE_COLLECT(cmd) if(TracyComputeContext) { TracyVkCollect( TracyComputeContext, cmd ); }
+#define MW_PROFILE_VK_TRANSFER_COLLECT(cmd) if(TracyTransferContext) { TracyVkCollect( TracyTransferContext, cmd ); }
 
 #define MW_PROFILE_VK_CREATE_CTX(physdev, device, queue, cmdbuf) TracyVkContext( physdev, device, queue, cmdbuf );
 #define MW_PROFILE_VK_DESTROY_CTX(ctx) TracyVkDestroy(ctx);

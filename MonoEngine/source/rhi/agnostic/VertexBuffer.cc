@@ -1,7 +1,8 @@
 #include <mwpch.hh>
-#include <common/Memory.hh>
-
 #include "VertexBuffer.hh"
+
+#include <core/Application.hh>
+#include <rhi/specific/vulkan/VulkanVertexBuffer.hh>
 
 namespace Monoworks::RHI
 {
@@ -18,17 +19,17 @@ namespace Monoworks::RHI
 	};
 
 
-	Ref<IVertexBuffer> IVertexBuffer::Create(void* vertexData, u64 vertexCount, u64 vertexStride, bool autoupload)
+	Ref<IVertexBuffer> IVertexBuffer::Create(void* vertexData, u64 vertexCount, u64 vertexStride, bool autoupload) NOEXCEPT
 	{
-		VT_PROFILE_FUNCTION();
+		MW_PROFILE_FUNC;
 
 		u64 bytes = vertexCount * vertexStride;
-		switch (Renderer::GetAPI())
+		switch (CApplication::GetGraphicsAPI())
 		{
-		case RenderAPI::API::None:    return nullptr;
-		case RenderAPI::API::Vulkan:  return CreateRef<RHI::VulkanVertexBuffer>(vertexData, bytes, 0, autoupload);
+			case MW_GAPI_NONE:    return nullptr;
+			case MW_GAPI_VULKAN:  return Ref<CVulkanVertexBuffer>::Create(vertexData, bytes, 0, autoupload);
 		}
-		VT_CORE_ASSERT(false, "Unknown RendererAPI");
+		MW_ASSERT(false, "Unknown Graphics API");
 		return nullptr;
 	}
 
