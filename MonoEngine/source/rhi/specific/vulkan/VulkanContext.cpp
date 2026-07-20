@@ -5,7 +5,7 @@
 #include <events/EventManager.hh>
 
 #define VOLK_IMPLEMENTATION
-#include <Volk/volk.h>
+#include <volk/volk.h>
 
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_DYNAMIC_VULKAN_FUNCTIONS 1

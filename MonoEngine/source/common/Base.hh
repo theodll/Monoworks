@@ -56,11 +56,11 @@
 
 
 #ifdef MW_PROFILING
-#include <Tracy/Tracy.hpp>
+#include <tracy/Tracy.hpp>
 
 #ifdef MW_VULKAN
 
-#include <Tracy/TracyVulkan.hpp>
+#include <tracy/TracyVulkan.hpp>
 extern TracyVkCtx TracyGraphicsContext;
 extern TracyVkCtx TracyComputeContext;
 extern TracyVkCtx TracyTransferContext;
@@ -91,7 +91,7 @@ extern TracyVkCtx TracyTransferContext;
 
 
 #ifdef MW_VULKAN
-#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ERROR(err, __VA_ARGS__); };
+#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ASSERT(err, __VA_ARGS__); };
 #endif
 
 using cvar_t = Monoworks::SCVar;

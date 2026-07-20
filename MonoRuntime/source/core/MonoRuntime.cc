@@ -4,7 +4,7 @@
 #include "MonoRuntime.hh"
 #include <events/EventManager.cc>
 
-#include <Tracy/Tracy.hpp>
+#include <tracy/Tracy.hpp>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
@@ -73,7 +73,7 @@ namespace Monoworks
 
 	void CMonoRuntime::Run()
 	{
-		CEventManager::Subscribe(MW_EVENT_WINDOW_CLOSE, [this](SEvent& event) { m_Running = false; return true; });
+		//CEventManager::Subscribe(MW_EVENT_WINDOW_CLOSE, [this](SEvent& event) { m_Running = false; return true; });
 
 		MW_PROFILE_FUNC;
 		while(m_Running) 

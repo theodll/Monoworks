@@ -1,7 +1,7 @@
 #pragma once
 #include <common/Base.hh>
 
-#include <Volk/volk.h>
+#include <volk/volk.h>
 #include <vk_mem_alloc.h>
 
 namespace Monoworks::RHI 

@@ -3,7 +3,7 @@
 
 #include <core/Application.hh>
 
-#include <Volk/volk.h>
+#include <volk/volk.h>
 #include <set>
 
 #include "VulkanDevice.h"
@@ -55,8 +55,7 @@ namespace Monoworks::RHI
 				return i;
 			}
 		}
-		MW_ERROR("Failed to find suitable memory type");
-		__debugbreak();
+		MW_ASSERT(false, "Failed to find suitable memory type");
 	}
 
 	VkFormat CVulkanDevice::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
@@ -77,8 +76,7 @@ namespace Monoworks::RHI
 				return format;
 			}
 		}
-		MW_ERROR("Failed to find supported format");
-		__debugbreak();
+		MW_ASSERT(false, "Failed to find supported format");
 		return VK_FORMAT_UNDEFINED;
 	}
 

@@ -14,7 +14,7 @@ add_subdirectory("extern/VulkanMemoryAllocator")
 
 find_package(Vulkan REQUIRED)
 
-target_include_directories(MonoEngine PUBLIC "source/" "specific/" "." "thirdparty/iniparser/src/" )
+target_include_directories(MonoEngine PUBLIC "source/" "specific/" "." "thirdparty/iniparser/src/" "thirdparty/")
 
 target_link_libraries(MonoEngine PUBLIC
     spdlog::spdlog 
