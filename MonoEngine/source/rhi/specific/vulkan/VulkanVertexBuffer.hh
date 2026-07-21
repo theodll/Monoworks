@@ -15,7 +15,7 @@ namespace Monoworks::RHI
 		void SetData( void* data, u64 size, u64 offset = 0 ) NOEXCEPT;
 		void SetLayout( const CBufferLayout& layout ) NOEXCEPT;
 
-		void Upload(VkCommandBuffer commandBuffer) NOEXCEPT;
+		void Upload( VkCommandBuffer commandBuffer ) NOEXCEPT;
 
 		NODISCARD CBufferLayout*    GetLayout()			NOEXCEPT override { return &m_Layout;  };
 		NODISCARD VkBuffer*			GetVulkanBuffer()	NOEXCEPT override { return &m_VertexBuffer; };

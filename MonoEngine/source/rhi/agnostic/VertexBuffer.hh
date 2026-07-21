@@ -1,8 +1,13 @@
 #pragma once
 #include <common/Base.hh>
+#include <common/Math.hh>
 
 namespace Monoworks::RHI 
 {
+	struct SVertex
+	{
+		Vector Position;
+	};
 
 	enum EShaderDataType : uint8_t
 	{

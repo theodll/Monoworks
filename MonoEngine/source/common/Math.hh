@@ -14,9 +14,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-
-
-namespace MonoWorks 
+namespace Monoworks 
 {
     using Vector     = ::glm::vec3;
     using Vector2    = ::glm::vec2;
