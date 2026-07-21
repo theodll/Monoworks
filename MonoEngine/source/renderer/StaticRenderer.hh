@@ -4,7 +4,7 @@
 
 #include <rhi/GraphicsAPI.hh>
 
-namespace Monoworks::RHI 
+namespace Monoworks
 {
     class CStaticRenderer
     {

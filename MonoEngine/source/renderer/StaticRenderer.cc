@@ -1,4 +1,5 @@
 #include <mwpch.hh>
+#include <core/Application.hh>
 
 #include "StaticRenderer.hh"
 
@@ -12,9 +13,10 @@ namespace Monoworks
         {
             MW_PROFILE_FUNC;
 
-            switch (*CApplication::GetGraphicsAPI())
+            switch (CApplication::GetGraphicsAPI())
             {
-                case MW_GAPI_VULKAN: m_Instance = Ref<RHI::VulkanRenderer>::Create(); break;
+            case MW_GAPI_NONE: MW_ASSERT("Headless mode not supported");
+            case MW_GAPI_VULKAN: m_Instance = Ref<RHI::CVulkanRenderer>::Create(); break;
             }
 
             m_Instance->Init();

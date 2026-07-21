@@ -5,9 +5,9 @@
 
 namespace Monoworks::RHI
 {
-    class CVulkanRenderer : public IGraphicsAPI  
+    class CVulkanRenderer : public IGraphicsAPI
     {
-        virtual void Init() override noexcept;
-        virtual void Shutdown() override noexcept; 
-    }
+        virtual void Init() NOEXCEPT override;
+        virtual void Shutdown() NOEXCEPT override;
+    };
 }
