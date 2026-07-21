@@ -27,7 +27,7 @@
 #define MW_VULKAN 1
 
 #define NOEXCEPT noexcept
-#define NODISCARD [[nodiscarrd]]
+#define NODISCARD [[nodiscard]]
 #define MAYBE_UNUSED [[maybe_unused]]
 
 #ifdef	MW_PLATFORM_WINDOWS
