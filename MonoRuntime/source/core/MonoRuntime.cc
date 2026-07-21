@@ -73,7 +73,7 @@ namespace Monoworks
 
 	void CMonoRuntime::Run()
 	{
-		//CEventManager::Subscribe(MW_EVENT_WINDOW_CLOSE, [this](SEvent& event) { m_Running = false; return true; });
+		CEventManager::Subscribe(MW_EVENT_WINDOW_CLOSE, [this](SEvent& event) { m_Running = false; return true; });
 
 		MW_PROFILE_FUNC;
 		while(m_Running) 

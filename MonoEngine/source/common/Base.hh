@@ -102,8 +102,6 @@ extern TracyVkCtx TracyTransferContext;
 #define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ASSERT(err, __VA_ARGS__); };
 #endif
 
-using cvar_t = Monoworks::SCVar;
-
 #define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
 #define MW_SET_CVAR(varName, value) Monoworks::CCvarManager::Set(varName, value);
 #define MW_SET_FLOAT_CVAR(varName, value) Monoworks::CCvarManager::SetValue(varName, value);
@@ -125,6 +123,10 @@ using f64 = double;
 
 using uptr_t = uintptr_t;
 using byte_t = unsigned char;
+
+using cvar_t = Monoworks::SCVar;
+
+using path_t = std::filesystem::path;
 
 namespace Monoworks
 {

@@ -3,6 +3,7 @@
 #include <core/Application.hh>
 
 #include "UniformBuffer.h"
+#include <rhi/specific/vulkan/VulkanUniformBuffer.h>
 
 namespace Monoworks::RHI 
 {
@@ -15,7 +16,7 @@ namespace Monoworks::RHI
 		switch ( CApplication::GetGraphicsAPI() )
 		{
 		case MW_GAPI_NONE:    return nullptr;
-		case MW_GAPI_VULKAN:  return Ref<CVulkanIndexBuffer>::Create( size );
+		case MW_GAPI_VULKAN:  return Ref<CVulkanUniformBuffer>::Create( size, false, offset );
 		}
 		MW_ASSERT( false, "Unknown Graphics API" );
 		return nullptr;
