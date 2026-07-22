@@ -1,0 +1,48 @@
+language: "en-US"
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: true
+  review_status: true
+  review_details: false
+  auto_review:
+    enabled: true
+    drafts: false
+  path_instructions:
+    - path: "**/*"
+      instructions: |
+        - Pay close attention to naming conventions:
+          * Classes must be in UpperCamelCase prefixed with a C.
+          * Structs must be in UpperCamelCase prefixed with a S.
+          * Enumerations Type definitions must be in UpperCamelCase prefixed with an E.
+          * Enumeration-Content must be in all caps.
+          * Functions and methods must be in UpperCamelCase with one space padding in the parenthesis when filled.
+          * User Defined Pointers, not external handles like typedef VkBuffer_T VkBuffer, must be directly prefixed with a lowercase 'p' like this: *pBuf, *m_pBuf.
+          * Member Variables must be prefixed with 'm_' followed by an uppercase letter or if it is a pointer a lowercase 'p' followed by an uppercase letter.
+          * Constants: UpperCamelCase
+          * Macros: ALL_CAPS seperated by underscores.
+          * Files must be named in UpperCamelCase. 
+          * Most Folders must be named in single word lowercase.
+          * Typenames are arbitrary. Some might be suffixed with an _t, some might not. Do not pay close attention to that.
+          * C++ Source files must have the .cc extension and C++ Header files must have the .hh extension
+          * If parenthesis are filled, they must have an internal padding of one space. Like this: if( check ), ( VulkanVertexBuffer )vertexBuffer.
+          * Parameters of functions must be named un lowerCamelCase.
+          * Members of Structs must be named in UpperCamelCase.
+        - API Inconsistency: Pay close attention to the api. If a function does something like returning a vulkan buffer and in one file its name is GetBuffer but everywhere else its name is GetVulkanBuffer, flag it.
+        - Things that might seem redundant like passing or returning Handles, which already are pointers, by pointer instead of by value, it is to signal that it is being used and is good for clear code. If something does not return something non trivial greater than a 8 bytes by pointer, flag it.
+        - Flag functions or methonds that are not properly profiled for example dont include the MW_PROFILE_FUNC macro. 
+        - Ignore functions that might throw exceptions but are marked to be noexcept.
+        - Point out uses of [[nodiscard]] [[maybe_unused]] and noexcept when used instead of the corresponding macro, NODISCARD, MAYBE_UNUSED and NOEXCEPT.
+        - Ignore C Style Casts.
+        - Check for consistency. Code always must be as consitent as possible. Flag every inconsistency.
+        - Flag bad abstraction or missing error handling in api methonds.
+
+    # 2. Architektur-Schranken (z.B. Vulkan-Kapselung)
+    - path: "source/**/!(rhi/specific/vulkan)/**/*"
+      instructions: |
+        - ARCHITECTURE-RULE: Vulkan-API-Calls or related platform-specific calls (eg. Vma..., vmaCreate...) (eg. `VkDevice`, `vkCreate...`,  `#include <volk/volk.h>`) must not be referenced or called outside of the specific rhi part 'source/rhi/specific/vulkan/'.
+        - Vulkan or vulkan-related things must be encased in the macro MW_VULKAN.
+        - Never ever include vulkan/vulkan.h in anything. Always use volk/volk.h
+chat:
+  auto_reply: true
