@@ -22,7 +22,7 @@ namespace Monoworks::RHI
 		void Init(VkInstance* instance) noexcept;
 		void Shutdown() noexcept;
 
-		NODISCARD static VkResult CreateBuffer
+		static VkResult CreateBuffer
 		(
 			VmaAllocator* pAllocator,
 			VkBuffer* pBuffer,
@@ -32,7 +32,7 @@ namespace Monoworks::RHI
 			VkMemoryPropertyFlags properties
 		) NOEXCEPT;
 
-		NODISCARD static VkResult CreateImage
+		static VkResult CreateImage
 		(
 			VmaAllocator* pAllocator,
 			VkImage* pImage,

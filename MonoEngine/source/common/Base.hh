@@ -138,8 +138,6 @@ namespace Monoworks
 		u8 Patch;
 	};
 
-	
-
     enum EGraphicsAPI
     {
         MW_GAPI_NONE = 0x0,
@@ -151,17 +149,37 @@ namespace Monoworks
      */
     struct SExtent2D
     {
+		/**
+		 * @brief Width component of the Two-Dimensional Extent.
+		 */
+		u32 Width = 0;
+
         /**
          * @brief Height component of the Two-Dimensional Extent.
          */
         u32 Height = 0;
-
-        /**
-         * @brief Width component of the Two-Dimensional Extent.
-         */
-        u32 Width = 0;
     };
 
+	/**
+	 * @brief Three-Dimensional Extent Structure.
+	 */
+	struct SExtent3D
+	{
+		/**
+		 * @brief Width component of the Three-Dimensional Extent.
+		 */
+		u32 Width = 0;
+
+		/**
+		 * @brief Height component of the Three-Dimensional Extent.
+		 */
+		u32 Height = 0;
+
+		/**
+		 * @brief Depth component of the Three-Dimensional Extent.
+		 */
+		u32 Depth = 0;
+	};
 
     /*
        Copyright (C) 1997-2026 Sam Lantinga <slouken@libsdl.org>
