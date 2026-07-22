@@ -1,9 +1,9 @@
 #pragma once
 #include <common/Base.hh>
 
-#include <rhi/Types.hh>
+#include <rhi/Utils.hh>
 
-namespace Monoworks::RHI 
+namespace Monoworks::RHI
 {
 	struct STextureCreateInfo 
 	{
@@ -24,7 +24,8 @@ namespace Monoworks::RHI
 
 		NODISCARD virtual u32 ReadPixel( s32 x, s32 y ) NOEXCEPT = 0;
 
-		EImageLayout Layout;
+		EImageLayout Layout = MW_IMAGE_LAYOUT_UNDEFINED;
+		EPipelineFlags PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 		
 	};
 

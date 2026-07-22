@@ -2,6 +2,7 @@
 #include <common/Base.hh>
 
 #include <rhi/agnostic/Texture.hh>
+#include <rhi/Utils.hh>
 
 #include <volk/volk.h>
 #include <vk_mem_alloc.h>
@@ -15,6 +16,8 @@ namespace Monoworks::RHI
 		CVulkanTexture2D( const path_t path ) NOEXCEPT;
 		CVulkanTexture2D( s32 width, s32 height ) NOEXCEPT;
 		CVulkanTexture2D( const STextureCreateInfo* pInfo ) NOEXCEPT;
+
+		~CVulkanTexture2D() NOEXCEPT;
 
 		NODISCARD u32 ReadPixel( s32 x, s32 y ) NOEXCEPT override;
 

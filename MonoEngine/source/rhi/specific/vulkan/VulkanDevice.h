@@ -59,6 +59,16 @@ namespace Monoworks::RHI
 			u32 layerCount
 		) NOEXCEPT;
 
+		static void CopyImageToBuffer
+		(
+			VkCommandBuffer* pCmdBuffer,
+			VkImage* pSrc,
+			VkBuffer* pDst,
+			u32 width,
+			u32 height,
+			u32 layerCount
+		) NOEXCEPT;
+
 		const VkDevice* GetDevice() const noexcept { return &m_Device; };
 		const VkPhysicalDevice* GetPhysicalDevice() const noexcept { return &m_PhysicalDevice; }
 

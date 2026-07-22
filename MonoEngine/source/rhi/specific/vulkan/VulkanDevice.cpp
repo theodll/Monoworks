@@ -408,5 +408,28 @@ namespace Monoworks::RHI
 			&region);
 	}
 
+	void CVulkanDevice::CopyImageToBuffer(
+		VkCommandBuffer* pCmdBuffer,
+		VkImage* pSrc,
+		VkBuffer* pDst,
+		u32 width, 
+		u32 height, 
+		u32 layerCount ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		VkBufferImageCopy bufferRegion{};
+		bufferRegion.bufferOffset = 0;
+		bufferRegion.bufferRowLength = 0;
+		bufferRegion.bufferImageHeight = 0;
+		bufferRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		bufferRegion.imageSubresource.mipLevel = 0;
+		bufferRegion.imageSubresource.baseArrayLayer = 0;
+		bufferRegion.imageSubresource.layerCount = 1;
+		bufferRegion.imageOffset = { 0, 0, 0 };
+		bufferRegion.imageExtent = { width, height };
+
+		vkCmdCopyImageToBuffer( *pCmdBuffer, *pSrc, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, *pDst, 1, &bufferRegion );
+
+	}
 
 }

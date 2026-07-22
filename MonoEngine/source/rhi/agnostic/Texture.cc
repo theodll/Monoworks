@@ -1,5 +1,5 @@
 #include <mwpch.hh>
-#include <rhi/Types.hh>
+#include <rhi/Utils.hh>
 
 #include <core/Application.hh>
 
@@ -16,7 +16,7 @@ namespace Monoworks::RHI
 		switch (CApplication::GetGraphicsAPI())
 		{
 		case MW_GAPI_NONE:    return nullptr;
-		case MW_GAPI_VULKAN:  return Ref<CVulkanTexture2D>::Create(pPath);
+		case MW_GAPI_VULKAN:  return Ref<CVulkanTexture2D>::Create(*pPath);
 		}
 		MW_ASSERT(false, "Unknown Graphics API");
 		return nullptr;
