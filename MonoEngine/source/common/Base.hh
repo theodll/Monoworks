@@ -130,7 +130,7 @@ using path_t = std::filesystem::path;
 
 namespace Monoworks
 {
-	constexpr u32 FramesInFlight = 3;
+	constexpr u32 MaxFramesInFlight = 3;
 
 	struct SAppVersion
 	{

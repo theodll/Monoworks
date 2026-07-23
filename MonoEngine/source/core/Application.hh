@@ -15,6 +15,9 @@
 
 #pragma once
 #include <common/Base.hh>
+
+#include <rhi/agnostic/Presenter.hh>
+
 #include <rhi/specific/vulkan/VulkanContext.hh>
 
 #include <string>
@@ -29,35 +32,47 @@ namespace Monoworks
 		/**
 		 * @brief Name of the Application the engine is integrated in.
 		*/
-		[[maybe_unused]] const char* Name = "MonoEngine";
+		MAYBE_UNUSED const char* Name = "MonoEngine";
 		/**
 		* @brief Array of arguments.
 		*/
-		[[maybe_unused]] char** Arguments = nullptr;
+		MAYBE_UNUSED char** Arguments = nullptr;
 		/**
 		 * @brief Callback to retrieve
 		 */
-		[[maybe_unused]] const char** (*RequiredExtensionCallback)(u32* extensionCount);
+		MAYBE_UNUSED const char** (*RequiredExtensionCallback)(u32* extensionCount);
 		/**
 		 * @brief Extent the engine is able to render to (eg. Window/Viewport size)
 		 */
-		[[maybe_unused]] SExtent2D RenderableExtent = { 640, 480 };
+		MAYBE_UNUSED SExtent2D RenderableExtent = { 640, 480 };
+		/**
+		* @brief Presentation Interface.
+		*/
+		MAYBE_UNUSED RHI::IPresenter* Presenter;
 		/**
 		 * @brief Graphics API used by the renderer.
 		 */
-		[[maybe_unused]] EGraphicsAPI GraphicsAPI;
+		MAYBE_UNUSED EGraphicsAPI GraphicsAPI;
 		/**
 		* @brief Number of items in the Arguments array.
 		*/
-		[[maybe_unused]] s32 ArgumentCount = 0;
+		MAYBE_UNUSED s32 ArgumentCount = 0;
 		/**
 		 * @brief Version of the associated Application.
 		 */
-		[[maybe_unused]] SAppVersion Version;	
+		MAYBE_UNUSED SAppVersion Version;
 		/**
 		 * @brief Define whether to use the Vulkan swapchain.
 		 */
-		[[maybe_unused]] bool UseSwapchain;
+		MAYBE_UNUSED bool UseSwapchain;
+		/**
+		 * @brief Define whether to use SDL.
+		 */
+		MAYBE_UNUSED bool UseSDL;
+		/**
+		 * @brief Define whether to use Qt.
+		 */
+		MAYBE_UNUSED bool UseQt;
 	};
 
 	/**
@@ -73,7 +88,7 @@ namespace Monoworks
 		 * @brief Initializes the non "ultra"-core engine, like Rendering and not Memory Allocation or Logging - That is done by the constructor.
 		 * @param pInfos All configuration parameters via the SApplicationCreateInfos associated to the engine
 		 */
-		void Init(const SApplicationCreateInfos* pInfos) noexcept;
+		void Init( const SApplicationCreateInfos* pInfos ) noexcept;
 
 		/**
 		 * @brief Shuts the engine down.

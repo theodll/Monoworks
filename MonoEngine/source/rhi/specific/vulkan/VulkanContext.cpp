@@ -2,6 +2,10 @@
 
 #include "VulkanContext.hh"
 #include "VulkanDevice.h"
+
+#include "VulkanPresenter.hh"
+
+#include <core/Application.hh>
 #include <events/EventManager.hh>
 
 #define VOLK_IMPLEMENTATION
@@ -13,8 +17,6 @@
 #define VMA_IMPLEMENTATION
 #define VMA_VULKAN_VERSION 1004000
 #include <vk_mem_alloc.h>
-
-#include <core/Application.hh>
 
 #ifdef MW_PROFILING
 #include <tracy/Tracy.hpp>
@@ -28,7 +30,10 @@ TracyVkCtx TracyTransferContext = nullptr;
 namespace Monoworks::RHI 
 {
 
-	Monoworks::RHI::CVulkanDevice CVulkanContext::m_Device;
+	CVulkanDevice CVulkanContext::m_Device;
+	IPresenter* CVulkanContext::m_Presenter;
+	 
+	VmaAllocator CVulkanContext::m_Allocator;
 	VkInstance CVulkanContext::m_Instance;
 	CVulkanResourceUploader CVulkanContext::m_ResouceUploader;
 
@@ -43,19 +48,18 @@ namespace Monoworks::RHI
 		switch (messageSeverity)
 		{
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
-			MW_TRACE("Vulkan Trace: {}", pCallbackData->pMessage);
+			MW_TRACE("Vulkan: {}", pCallbackData->pMessage);
 			break;
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
-			MW_INFO("Vulkan Info: {}", pCallbackData->pMessage);
+			MW_INFO("Vulkan: {}", pCallbackData->pMessage);
 			break;
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-			MW_WARN("Vulkan Warning: {}", pCallbackData->pMessage);
+			MW_WARN("Vulkan: {}", pCallbackData->pMessage);
 			break;
 		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
-			MW_ERROR("Vulkan Error: {}", pCallbackData->pMessage);
+			MW_ERROR("Vulkan: {}", pCallbackData->pMessage);
 			break;
 		}
-
 
 		return VK_FALSE;
 	}
@@ -72,9 +76,17 @@ namespace Monoworks::RHI
 		volkLoadInstance(m_Instance);
 		
 		SetupDebugMessenger();
-		m_Device.Init(&m_Instance);
+		m_Device.CreatePhysicalDevice(&m_Instance);
+		
+		SVulkanSDLPresentationInitializationInfo presentationInfo;
 
+		m_Presenter->Init( &presentationInfo );
+
+		m_Device.Init(&m_Instance);
 		volkLoadDevice(*m_Device.GetDevice());
+
+		SVulkanSDLPresentationInitialization2Info presentationInfo2;
+		m_Presenter->Init2( &presentationInfo2 );
 
 		VmaAllocatorCreateInfo allocatorCreateInfo{};
 		allocatorCreateInfo.physicalDevice = *m_Device.GetPhysicalDevice();
@@ -93,6 +105,7 @@ namespace Monoworks::RHI
 		MW_VK_CHECK(vmaCreateAllocator(&allocatorCreateInfo, &m_Allocator), "Failed to create VMA Allocator");
 
 		m_ResouceUploader.Init(); 
+
 
 #ifdef MW_PROFILING
 		VmaTotalStatistics stats;
@@ -321,7 +334,5 @@ namespace Monoworks::RHI
 	{
 
 	}
-
-	VmaAllocator CVulkanContext::m_Allocator;
 
 }

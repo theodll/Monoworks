@@ -9,6 +9,8 @@
 #include "VulkanDevice.h"
 #include "VulkanContext.hh"
 
+#include <../../MonoRuntime/source/rhi/specific/vulkan/VulkanSDLPresenter.hh>
+
 namespace Monoworks::RHI 
 {
 
@@ -25,7 +27,6 @@ namespace Monoworks::RHI
 			m_DeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 		}
 
-		CreatePhysicalDevice();
 		CreateLogicalDevice();
 		CreateCommandPool();
 	}
@@ -80,18 +81,18 @@ namespace Monoworks::RHI
 		return VK_FORMAT_UNDEFINED;
 	}
 
-	void CVulkanDevice::CreatePhysicalDevice() noexcept
+	void CVulkanDevice::CreatePhysicalDevice(VkInstance* instance) noexcept
 	{
 		MW_PROFILE_FUNC;
 		u32 deviceCount = 0;
-		vkEnumeratePhysicalDevices(*m_Instance, &deviceCount, nullptr);
+		vkEnumeratePhysicalDevices(*instance, &deviceCount, nullptr);
 		if (deviceCount == 0)
 		{
 			MW_ERROR("Failed to find GPUs with Vulkan support!");
 		}
 		MW_INFO("Device count: {}", deviceCount);
 		std::vector<VkPhysicalDevice> devices(deviceCount);
-		vkEnumeratePhysicalDevices(*m_Instance, &deviceCount, devices.data());
+		vkEnumeratePhysicalDevices(*instance, &deviceCount, devices.data());
 
 		for (const auto& device : devices)
 		{
@@ -279,6 +280,27 @@ namespace Monoworks::RHI
 				indices.TransferFamily = i;
 				indices.TransferFamilyHasValue = true;
 			}
+
+			if ( CApplication::GetCreateInfos()->UseSwapchain && CVulkanContext::GetPresenter()->GetMedium() == MW_PRESENTATION_MEDIUM_VULKAN_SDL )
+			{
+				auto presenter = ( CVulkanSDLPresenter* )CVulkanContext::GetPresenter();
+				VkBool32 presentSupport = false;
+				vkGetPhysicalDeviceSurfaceSupportKHR( *pPhysDevice, i, *presenter->GetSurface(), &presentSupport );
+				if ( queueFamily.queueCount > 0 && presentSupport )
+				{
+					indices.PresentFamily = i;
+					indices.PresentFamilyHasValue = true;
+				}
+			}
+
+			if ( CApplication::GetCreateInfos()->UseSwapchain )
+			{
+				if ( indices.GraphicsFamilyHasValue && indices.ComputeFamilyHasValue && indices.TransferFamilyHasValue && indices.PresentFamilyHasValue )
+				{
+					break;
+				}
+			} 
+
 			if (indices.GraphicsFamilyHasValue && indices.ComputeFamilyHasValue && indices.TransferFamilyHasValue)
 			{
 				break;
@@ -430,6 +452,42 @@ namespace Monoworks::RHI
 
 		vkCmdCopyImageToBuffer( *pCmdBuffer, *pSrc, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, *pDst, 1, &bufferRegion );
 
+	}
+
+	NODISCARD SwapChainSupportDetails CVulkanDevice::QuerySwapChainSupport( const VkPhysicalDevice* pPhysDevice, VkSurfaceKHR* pSurface )
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !CApplication::GetCreateInfos()->UseSwapchain )
+		{
+			MW_ERROR("Illegal function call: Unable to queury swapchain support. UseSwapchain is false");
+		}
+
+		SwapChainSupportDetails details;
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR( *pPhysDevice, *pSurface, &details.Capabilities );
+
+		u32 formatCount;
+		vkGetPhysicalDeviceSurfaceFormatsKHR( *pPhysDevice, *pSurface, &formatCount, nullptr);
+
+		if ( formatCount != 0 )
+		{
+			details.Formats.resize( formatCount );
+			vkGetPhysicalDeviceSurfaceFormatsKHR( *pPhysDevice, *pSurface, &formatCount, details.Formats.data() );
+		}
+
+		u32 presentModeCount;
+		vkGetPhysicalDeviceSurfacePresentModesKHR( *pPhysDevice, *pSurface, &presentModeCount, nullptr );
+
+		if ( presentModeCount != 0 )
+		{
+			details.PresentModes.resize( presentModeCount );
+			vkGetPhysicalDeviceSurfacePresentModesKHR(
+				*pPhysDevice,
+				*pSurface,
+				&presentModeCount,
+				details.PresentModes.data() );
+		}
+		return details;
 	}
 
 }

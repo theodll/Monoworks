@@ -14,6 +14,15 @@ namespace Monoworks::RHI
 		bool TransferFamilyHasValue = false;
 		u32 ComputeFamily;
 		bool ComputeFamilyHasValue = false; 
+		u32 PresentFamily;
+		bool PresentFamilyHasValue = false;
+	};
+
+	struct SwapChainSupportDetails
+	{
+		VkSurfaceCapabilitiesKHR Capabilities;
+		std::vector<VkSurfaceFormatKHR> Formats;
+		std::vector<VkPresentModeKHR> PresentModes;
 	};
 
 	class CVulkanDevice 
@@ -72,25 +81,30 @@ namespace Monoworks::RHI
 		const VkDevice* GetDevice() const noexcept { return &m_Device; };
 		const VkPhysicalDevice* GetPhysicalDevice() const noexcept { return &m_PhysicalDevice; }
 
-		const VkCommandPool* GetGraphicsCommandPool() const noexcept { return &m_GraphicsCommandPool; }
-		const VkQueue* GetGraphicsQueue() const noexcept { return &m_GraphicsQueue; }
+		NODISCARD const VkCommandPool* GetGraphicsCommandPool() const noexcept { return &m_GraphicsCommandPool; }
+		NODISCARD const VkQueue* GetGraphicsQueue() const noexcept { return &m_GraphicsQueue; }
 		
-		const VkCommandPool* GetComputeCommandPool() const noexcept { return &m_ComputeCommandPool; }
-		const VkQueue* GetComputeQueue() const noexcept { return &m_ComputeQueue; }
+		NODISCARD const VkCommandPool* GetComputeCommandPool() const noexcept { return &m_ComputeCommandPool; }
+		NODISCARD const VkQueue* GetComputeQueue() const noexcept { return &m_ComputeQueue; }
 
-		const VkCommandPool* GetTransferCommandPool() const noexcept { return &m_TransferCommandPool; }
-		const VkQueue* GetTransferQueue() const noexcept { return &m_TransferQueue; }
+		NODISCARD const VkCommandPool* GetTransferCommandPool() const noexcept { return &m_TransferCommandPool; }
+		NODISCARD const VkQueue* GetTransferQueue() const noexcept { return &m_TransferQueue; }
 
-		const u32 GetQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
+		NODISCARD const VkQueue* GetPresentQueue() const NOEXCEPT { if ( !CApplication::GetCreateInfos()->UseSwapchain ) { MW_ERROR( "Illegal function call: Unable to get Present Queue. UseSwapchain is false" ); return nullptr; } return &m_PresentQueue; }
 
-		u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
-		QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(&m_PhysicalDevice); }
-		VkFormat FindSupportedFormat(
-			const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+		NODISCARD const u32 GetGraphicsQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
 
+		NODISCARD u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
+
+		NODISCARD QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(&m_PhysicalDevice); }
+		
+		NODISCARD VkFormat FindSupportedFormat( const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features );
+
+		NODISCARD SwapChainSupportDetails QuerySwapChainSupport( const VkPhysicalDevice* pPhysDevice, VkSurfaceKHR* pSurface );
+
+		void CreatePhysicalDevice(VkInstance* instance) noexcept;
 
 	private:
-		void CreatePhysicalDevice() noexcept;
 		void CreateLogicalDevice() noexcept;
 		void CreateCommandPool() noexcept;
 
@@ -111,6 +125,8 @@ namespace Monoworks::RHI
 
 		VkCommandPool m_ComputeCommandPool;
 		VkQueue m_ComputeQueue;
+
+		VkQueue m_PresentQueue;
 
 		VkInstance* m_Instance;
 

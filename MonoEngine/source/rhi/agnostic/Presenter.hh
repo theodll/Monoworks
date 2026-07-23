@@ -8,36 +8,51 @@ namespace Monoworks::RHI
 	enum EPresentationMedium : u8
 	{
 		MW_PRESENTATION_MEDIUM_NONE = 0,
-		MW_PRESENTATION_MEDIUM_VULKAN_SDL, 
+		MW_PRESENTATION_MEDIUM_VULKAN_SDL,
 		MW_PRESENTATION_MEDIUM_VULKAN_QT
 	};
 
 	struct IPresentationInitializationInfo 
 	{
-		const EPresentationMedium Medium;
+		static const EPresentationMedium Medium;
 	};
+
+	struct IPresentationInitialization2Info
+	{
+		static const EPresentationMedium Medium;
+	};
+
 
 	struct IPresentationAcquisitionInfo 
 	{
-		const EPresentationMedium Medium;
+		static const EPresentationMedium Medium;
 	};
+
 
 	struct IPresentationPresentInfo 
 	{
-		const EPresentationMedium Medium;
+		static const EPresentationMedium Medium;
 	};
 
 	class IPresenter 
 	{
 	public:
+		virtual ~IPresenter() = default;
+
 		virtual void Init( const IPresentationInitializationInfo* pInfo ) NOEXCEPT;
+		virtual void Init2( const IPresentationInitialization2Info* pInfo ) NOEXCEPT;
 		virtual void Shutdown() NOEXCEPT;
 
-		NODISCARD u32 Aquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT;
-		void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT;
+		virtual bool OnResize( SEvent& event );
 
-		NODISCARD const virtual std::array<ITexture2D, FramesInFlight> GetSwapchainImages() NOEXCEPT;
-		NODISCARD const virtual EPresentationMedium GetMode() const NOEXCEPT;
+		NODISCARD virtual u32 Aquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT;
+		virtual void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT;
+
+		NODISCARD const virtual std::array<ITexture2D, MaxFramesInFlight> GetSwapchainImages() NOEXCEPT = 0;
+		NODISCARD const EPresentationMedium GetMedium() const NOEXCEPT { return m_PresentationMedium; };
+
+	protected: 
+		EPresentationMedium m_PresentationMedium = MW_PRESENTATION_MEDIUM_NONE;
 	};
 }
 

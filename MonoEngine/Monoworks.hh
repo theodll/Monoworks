@@ -18,3 +18,11 @@
 // Core
 #include <core/Application.hh>
 #include <core/ConfigManager.hh>
+
+// Events
+#include <common/Events.h>
+#include <events/Event.hh>
+#include <events/EventManager.hh>
+
+
+
