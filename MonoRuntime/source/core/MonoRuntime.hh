@@ -15,7 +15,12 @@
  */
 #pragma once
 #include <Monoworks.hh>
+
+#include <rhi/agnostic/Presenter.hh>
+#include "../../specific/sdl/EventDispatcher.hh"
+
 #include "Window.hh"
+
 
 namespace Monoworks 
 {
@@ -26,7 +31,7 @@ namespace Monoworks
 	 * @param argv Array of arguments
 	 * @return int Return code.
 	 */
-	[[nodiscard]] int RuntimeMain(int argc, char** argv);
+	[[nodiscard]] int RuntimeMain(int pArgc, char** pArgv);
 
 	/**
 	 * @brief Class to house the MonoRuntime
@@ -41,7 +46,7 @@ namespace Monoworks
 		 * @param argc Number of arguments in the array of arguments
 		 * @param argv Array of arguments
 		 */
-		void Init(int argc, char** argv);
+		void Init(int pArgc, char** pArgv);
 
 		/**
 		 * @brief Main Loop of the runtime
@@ -54,8 +59,9 @@ namespace Monoworks
 		void Shutdown();
 	
 	private:
-		CApplication* m_Application;
-		Ref<CWindow> m_Window; 
+		CApplication* m_pApplication;
+		Ref<CWindow> m_pWindow; 
+		Ref<RHI::IPresenter> m_pPresenter;
 		CSDLEventDispatcher m_Dispatcher;
 
 		bool m_Running;

@@ -26,6 +26,8 @@ namespace Monoworks
 		/// @brief Triggered when the application renders a frame.
 		struct SAppRender {};
 
+		/// @brief Triggered when the application starts an entire frame cycle (before deffered event-processing)
+		struct SAppFrame {};
 
 		// data events 
 

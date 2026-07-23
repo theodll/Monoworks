@@ -16,9 +16,7 @@ namespace Monoworks
 	class CWindow
 	{
 	public:
-		CWindow() noexcept = default;
-
-		void Init(const SWindowCreateInfos* pInfos) noexcept; 
+		CWindow(const SWindowCreateInfos* pInfos) noexcept;
 		void Shutdown() noexcept;
 
 

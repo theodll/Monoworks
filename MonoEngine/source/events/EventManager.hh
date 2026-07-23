@@ -35,6 +35,7 @@ namespace Monoworks
 		case MW_EVENT_APP_TICK:              return "MW_EVENT_APP_TICK";
 		case MW_EVENT_APP_UPDATE:            return "MW_EVENT_APP_UPDATE";
 		case MW_EVENT_APP_RENDER:            return "MW_EVENT_APP_RENDER";
+		case MW_EVENT_APP_FRAME: 			 return "MW_EVENT_APP_FRAME";
 
 		case MW_EVENT_KEY_PRESSED:           return "MW_EVENT_KEY_PRESSED";
 		case MW_EVENT_KEY_RELEASED:          return "MW_EVENT_KEY_RELEASED";

@@ -44,6 +44,7 @@ namespace Monoworks
 		MW_EVENT_APP_TICK,
 		MW_EVENT_APP_UPDATE,
 		MW_EVENT_APP_RENDER,
+		MW_EVENT_APP_FRAME,
 
 		// Keyboard events
 		MW_EVENT_KEY_PRESSED,

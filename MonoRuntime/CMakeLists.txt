@@ -1,8 +1,8 @@
 cmake_policy(SET CMP0100 NEW)
 
-add_executable(MonoRuntime "source/core/MonoRuntime.hh" "source/core/MonoRuntime.cc" "source/core/Window.hh" "source/core/Window.cc" "specific/sdl/EventDispatcher.hh" "specific/sdl/EventDispatcher.cc")
+add_executable(MonoRuntime "source/core/MonoRuntime.hh" "source/core/MonoRuntime.cc" "source/core/Window.hh" "source/core/Window.cc" "specific/sdl/EventDispatcher.hh" "specific/sdl/EventDispatcher.cc" "source/rhi/specific/vulkan/VulkanSDLPresenter.hh" "source/rhi/specific/vulkan/VulkanSDLPresenter.cc")
 
-if(USE_SYSTEM_SDL3)
+if(MW_USE_SYSTEM_SDL3)
     find_package(SDL3 REQUIRED CONFIG COMPONENTS SDL3-shared)
 else()
     add_subdirectory(extern/sdl)
@@ -21,4 +21,4 @@ elseif (APPLE)
     target_compile_definitions(MonoRuntime PRIVATE VT_PLATFORM_OSX)
 endif()
 
-target_compile_definitions(MonoRuntime PRIVATE MW_RUNTIME)
+target_compile_definitions(MonoRuntime PRIVATE MW_RUNTIME TRACY_ENABLE)

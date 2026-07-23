@@ -7,13 +7,13 @@ namespace Monoworks
 
 	void  CCvarManager::Init() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		MW_INFO("Initialize CCvarManager");
 	};
 
 	void  CCvarManager::Shutdown() noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		Serialize("cvar_config.cfg");
 		MW_INFO("Shutdown CCvarManager");
 	};
@@ -21,7 +21,7 @@ namespace Monoworks
 
 	void  CCvarManager::RegisterVariable(SCVar* var) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		if (Find(var->Name))
 		{
 			MW_WARN("Unable to define cvar: {}: Already defined", var->Name);
@@ -43,7 +43,7 @@ namespace Monoworks
 
 	void  CCvarManager::Set(std::string_view varName, const std::string& value) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		SCVar* var;
 		bool changed;
 
@@ -60,7 +60,7 @@ namespace Monoworks
 
 	void  CCvarManager::SetValue(std::string_view varName, float value) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		std::string temp;
 
 		temp = std::format("{}", value);
@@ -69,7 +69,7 @@ namespace Monoworks
 
 	float CCvarManager::GetValue(std::string_view varName) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		SCVar* var;
 
 		var = Find(varName);
@@ -81,7 +81,7 @@ namespace Monoworks
 
 	std::string  CCvarManager::GetString(std::string_view varName) noexcept
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		SCVar* var;
 
 		var = Find(varName);
@@ -93,12 +93,12 @@ namespace Monoworks
 
 	void  CCvarManager::Serialize(const std::filesystem::path& filePath)
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 	};
 
 	SCVar* CCvarManager::Find(std::string_view varName) 
 	{
-		MW_PROFILE_FUNC();
+		MW_PROFILE_FUNC;
 		SCVar* var;
 
 		for (var = m_CVarVars; var; var = var->Next)

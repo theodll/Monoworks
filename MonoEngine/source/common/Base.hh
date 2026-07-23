@@ -21,18 +21,92 @@
 #include <common/Memory.hh>
 #include <core/CVarManager.hh>
 
-#ifdef MW_PROFILING
-#include <Tracy/Tracy.hpp>
+#include <volk/volk.h>
 
-#define MW_PROFILE_FUNC() ZoneScopedN(__FUNCTION__);
+#define MW_PROFILING 1
+#define MW_VULKAN 1
+
+#define NOEXCEPT noexcept
+#define NODISCARD [[nodiscard]]
+#define MAYBE_UNUSED [[maybe_unused]]
+
+#ifdef	MW_PLATFORM_WINDOWS
+#define MW_DEBUG_BREAK __debugbreak()
+#elif defined(__clang__)
+#define MW_DEBUG_BREAK __builtin_debugtrap()
+#elif defined(__GNUC__)
+#include <csignal>
+#define MW_DEBUG_BREAK std::raise(SIGTRAP);
+#else
+#define MW_DEBUG_BREAK
+#endif
+
+#ifdef MW_DEBUG
+#define MW_ENABLE_ASSERTS
+#endif
+
+#define MW_ENABLE_VERIFY
+
+#define MW_ENABLE_ASSERTS 1
+#ifdef	MW_ENABLE_ASSERTS
+
+ // Note [21.02.26, Theo]: Do not use VT_CORE_ASSERT / VT_ASSERT when a function/check also needs to be run in a dist
+ // build. e.g. vkCreatePipeline. For Vulkan Functions use VT_VK_CHECK (Core.h)
+#define MW_ASSERT(condition, ...) { if(!(condition)) { MW_ERROR(__VA_ARGS__); MW_DEBUG_BREAK; } }
+#else
+#define MW_CORE_ASSERT(condition, ...)
+#define MW_ASSERT(condition, ...)
+#endif
+
+
+#ifdef MW_PROFILING
+#include <tracy/Tracy.hpp>
+
+#ifdef MW_VULKAN
+
+#include <tracy/TracyVulkan.hpp>
+extern TracyVkCtx TracyGraphicsContext;
+extern TracyVkCtx TracyComputeContext;
+extern TracyVkCtx TracyTransferContext;
+
+#define MW_PROFILE_VK_GRAPHICS_ZONE(cmd, name) if(TracyGraphicsContext) { TracyVkZone( TracyGraphicsContext, cmd, name ); }
+#define MW_PROFILE_VK_COMPUTE_ZONE(cmd, name) if(TracyComputeContext) { TracyVkZone( TracyComputeContext, cmd, name ); }
+#define MW_PROFILE_VK_TRANSFER_ZONE(cmd, name) if(TracyTransferContext) { TracyVkZone( TracyTransferContext, cmd, name ); }
+
+#define MW_PROFILE_VK_GRAPHICS_COLLECT(cmd) if(TracyGraphicsContext) { TracyVkCollect( TracyGraphicsContext, cmd ); }
+#define MW_PROFILE_VK_COMPUTE_COLLECT(cmd) if(TracyComputeContext) { TracyVkCollect( TracyComputeContext, cmd ); }
+#define MW_PROFILE_VK_TRANSFER_COLLECT(cmd) if(TracyTransferContext) { TracyVkCollect( TracyTransferContext, cmd ); }
+
+#define MW_PROFILE_VK_CREATE_CTX(physdev, device, queue, cmdbuf) TracyVkContext( physdev, device, queue, cmdbuf );
+#define MW_PROFILE_VK_DESTROY_CTX(ctx) TracyVkDestroy(ctx);
+
+#endif 
+
+
+#define MW_PROFILE_ALLOC(x, y) TracyAlloc(x, y)
+#define MW_PROFILE_ALLOC_N(x, y, z) TracyAllocN(x, y, z)
+
+#define MW_PROFILE_PLOT(x, y) TracyPlot(x, y)
+
+#define MW_PROFILE_FREE(x) TracyFree(x)
+#define MW_PROFILE_FREE_N(x, y) TracyFreeN(x, y)
+
+#define MW_PROFILE_FUNC  ZoneScopedN(__FUNCTION__);
+
 #define MW_PROFILE_FRAME_MARK() FrameMark;
 
 #endif
-using cvar_t = Monoworks::SCVar;
+
+
+#ifdef MW_VULKAN
+#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ASSERT(err, __VA_ARGS__); };
+#endif
 
 #define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
 #define MW_SET_CVAR(varName, value) Monoworks::CCvarManager::Set(varName, value);
 #define MW_SET_FLOAT_CVAR(varName, value) Monoworks::CCvarManager::SetValue(varName, value);
+
+#define MW_VK_VERSION VK_API_VERSION_1_4
 
 using u8 = uint8_t;
 using u16 = uint16_t;
@@ -50,8 +124,20 @@ using f64 = double;
 using uptr_t = uintptr_t;
 using byte_t = unsigned char;
 
+using cvar_t = Monoworks::SCVar;
+
+using path_t = std::filesystem::path;
+
 namespace Monoworks
 {
+	constexpr u32 MaxFramesInFlight = 3;
+
+	struct SAppVersion
+	{
+		u8 Major;
+		u8 Minor;
+		u8 Patch;
+	};
 
     enum EGraphicsAPI
     {
@@ -64,17 +150,37 @@ namespace Monoworks
      */
     struct SExtent2D
     {
+		/**
+		 * @brief Width component of the Two-Dimensional Extent.
+		 */
+		u32 Width = 0;
+
         /**
          * @brief Height component of the Two-Dimensional Extent.
          */
         u32 Height = 0;
-
-        /**
-         * @brief Width component of the Two-Dimensional Extent.
-         */
-        u32 Width = 0;
     };
 
+	/**
+	 * @brief Three-Dimensional Extent Structure.
+	 */
+	struct SExtent3D
+	{
+		/**
+		 * @brief Width component of the Three-Dimensional Extent.
+		 */
+		u32 Width = 0;
+
+		/**
+		 * @brief Height component of the Three-Dimensional Extent.
+		 */
+		u32 Height = 0;
+
+		/**
+		 * @brief Depth component of the Three-Dimensional Extent.
+		 */
+		u32 Depth = 0;
+	};
 
     /*
        Copyright (C) 1997-2026 Sam Lantinga <slouken@libsdl.org>
@@ -357,5 +463,8 @@ namespace Monoworks
 		MW_NOUSE_4_BUTTON,
 		MW_MOUSE_5_BUTTON
 	};
+
+	constexpr SAppVersion MonoworksVersion = { .Major = 1, .Minor = 0, .Patch = 0 };
+	constexpr const char* EngineName = "MonoEngine";
 
 }

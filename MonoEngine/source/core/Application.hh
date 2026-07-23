@@ -16,6 +16,10 @@
 #pragma once
 #include <common/Base.hh>
 
+#include <rhi/agnostic/Presenter.hh>
+
+#include <rhi/specific/vulkan/VulkanContext.hh>
+
 #include <string>
 
 namespace Monoworks 
@@ -27,26 +31,48 @@ namespace Monoworks
 	{	
 		/**
 		 * @brief Name of the Application the engine is integrated in.
+		*/
+		MAYBE_UNUSED const char* pName = "MonoEngine";
+		/**
+		* @brief Array of arguments.
+		*/
+		MAYBE_UNUSED char** pArguments = nullptr;
+		/**
+		 * @brief Callback to retrieve
 		 */
-		[[maybe_unused]] std::string Name = "MonoEngine";
-
+		MAYBE_UNUSED const char** (*RequiredExtensionCallback)(u32* extensionCount);
 		/**
 		 * @brief Extent the engine is able to render to (eg. Window/Viewport size)
 		 */
-		[[maybe_unused]] SExtent2D RenderableExtent = { 640, 480 };
+		MAYBE_UNUSED SExtent2D RenderableExtent = { 640, 480 };
+		/**
+		* @brief Presentation Interface.
+		*/
+		MAYBE_UNUSED RHI::IPresenter* pPresenter;
 		/**
 		 * @brief Graphics API used by the renderer.
 		 */
-		[[maybe_unused]] EGraphicsAPI GraphicsAPI;
+		MAYBE_UNUSED EGraphicsAPI GraphicsAPI;
 		/**
-		 * @brief Number of items in the Arguments array.
-		 */
-		[[maybe_unused]] int ArgumentCount = 0;
-
+		* @brief Number of items in the Arguments array.
+		*/
+		MAYBE_UNUSED s32 ArgumentCount = 0;
 		/**
-		 * @brief Array of arguments.
+		 * @brief Version of the associated Application.
 		 */
-		[[maybe_unused]] char** Arguments = nullptr;
+		MAYBE_UNUSED SAppVersion Version;
+		/**
+		 * @brief Define whether to use the Vulkan swapchain.
+		 */
+		MAYBE_UNUSED bool UseSwapchain;
+		/**
+		 * @brief Define whether to use SDL.
+		 */
+		MAYBE_UNUSED bool UseSDL;
+		/**
+		 * @brief Define whether to use Qt.
+		 */
+		MAYBE_UNUSED bool UseQt;
 	};
 
 	/**
@@ -55,14 +81,14 @@ namespace Monoworks
 	class CApplication 
 	{
 	public:
-		CApplication() noexcept = default;
-		virtual ~CApplication() noexcept = default;
+		CApplication() noexcept;
+		virtual ~CApplication() noexcept;
 		
 		/**
-		 * @brief Initializes the engine.
+		 * @brief Initializes the non "ultra"-core engine, like Rendering and not Memory Allocation or Logging - That is done by the constructor.
 		 * @param pInfos All configuration parameters via the SApplicationCreateInfos associated to the engine
 		 */
-		void Init(const SApplicationCreateInfos* pInfos) noexcept;
+		void Init( const SApplicationCreateInfos* pInfos ) noexcept;
 
 		/**
 		 * @brief Shuts the engine down.
@@ -81,10 +107,17 @@ namespace Monoworks
 		 * @brief Generic Getter for the Application Singleton
 		 * @return CApplication* Singleton of the Application
 		 */
-		[[nodiscard]] static CApplication* Get() noexcept { if (m_Singleton) return m_Singleton; else return nullptr;  }
-	
+		NODISCARD static CApplication* Get() noexcept { if ( m_Singleton ) return m_Singleton; else return nullptr; }
+		
+		NODISCARD static SApplicationCreateInfos* GetCreateInfos() noexcept { return &m_pApplicationCreationInfos; };
+		NODISCARD static EGraphicsAPI GetGraphicsAPI() noexcept { return m_GraphicsAPI; }
 	private:
 		static CApplication* m_Singleton;
+
+		static Ref<RHI::CVulkanContext> m_GraphicsContext;
+		static SApplicationCreateInfos m_pApplicationCreationInfos;
+	
+		static EGraphicsAPI m_GraphicsAPI;
 
 	};
 
