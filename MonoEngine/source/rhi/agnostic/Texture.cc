@@ -9,7 +9,7 @@
 
 namespace Monoworks::RHI
 {
-	NODISCARD static Ref<ITexture2D> Create(const path_t* pPath) NOEXCEPT
+	NODISCARD Ref<ITexture2D> ITexture2D::Create(const path_t* pPath) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -22,7 +22,7 @@ namespace Monoworks::RHI
 		return nullptr;
 	};
 
-	NODISCARD static Ref<ITexture2D> Create(s32 width, s32 height) NOEXCEPT
+	NODISCARD Ref<ITexture2D> ITexture2D::Create(s32 width, s32 height) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -35,7 +35,7 @@ namespace Monoworks::RHI
 		return nullptr;
 	};
 	
-	NODISCARD static Ref<ITexture2D> Create(const STextureCreateInfo* pInfo) NOEXCEPT
+	NODISCARD Ref<ITexture2D> ITexture2D::Create(const STextureCreateInfo* pInfo) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 

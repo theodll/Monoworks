@@ -48,44 +48,58 @@ namespace Monoworks::RHI
 		m_ImageExtent.Width = pInfo->Extent.Width;
 		m_ImageExtent.Height = pInfo->Extent.Height;
 
-		VkImageCreateInfo imageInfo{};
-		imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-		imageInfo.imageType = VK_IMAGE_TYPE_2D;
-		imageInfo.format = ( VkFormat )pInfo->Format;
-		imageInfo.extent = { pInfo->Extent.Width, pInfo->Extent.Height, pInfo->Extent.Depth };
-		imageInfo.mipLevels = 1;
-		imageInfo.arrayLayers = 1;
-		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-		imageInfo.usage = pInfo->Usage;
-		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		imageInfo.initialLayout = ( VkImageLayout )pInfo->ImageLayout;
+		m_GenerateImage = pInfo->GenerateImage;
+		m_GenerateImageView = pInfo->GenerateImageView;
+		m_GenerateSampler = pInfo->GenerateSampler;
 
 		auto allocator = CVulkanContext::GetAllocator();
 
-		CVulkanContext::GetDevice()->CreateImage( allocator, &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+		if ( pInfo->GenerateImage ) 
+		{
+			VkImageCreateInfo imageInfo{};
+			imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+			imageInfo.imageType = VK_IMAGE_TYPE_2D;
+			imageInfo.format = ( VkFormat )pInfo->Format;
+			imageInfo.extent = { pInfo->Extent.Width, pInfo->Extent.Height, pInfo->Extent.Depth };
+			imageInfo.mipLevels = 1;
+			imageInfo.arrayLayers = 1;
+			imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+			imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+			imageInfo.usage = pInfo->Usage;
+			imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			imageInfo.initialLayout = ( VkImageLayout )pInfo->ImageLayout;
 
-		VkImageViewCreateInfo viewInfo{};
-		viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-		viewInfo.image = m_Image;
-		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-		viewInfo.format = ( VkFormat )pInfo->Format;
-		viewInfo.subresourceRange.aspectMask = pInfo->AspectMask;
-		viewInfo.subresourceRange.baseMipLevel = 0;
-		viewInfo.subresourceRange.levelCount = 1;
-		viewInfo.subresourceRange.baseArrayLayer = 0;
-		viewInfo.subresourceRange.layerCount = 1;
+			CVulkanContext::GetDevice()->CreateImage( allocator, &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT );
 
-		MW_VK_CHECK( vkCreateImageView( *CVulkanContext::GetDevice()->GetDevice(), &viewInfo, nullptr, &m_ImageView ), "Failed to create Image View" );
+			auto&& uploader = CVulkanContext::GetUploader();
+			uploader->Begin();
+			TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, pInfo->Format, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, pInfo->AspectMask );
+			Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			PipelineFlags = MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			uploader->End();
 
-		auto&& uploader = CVulkanContext::GetUploader();
-		uploader->Begin();
-		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, pInfo->Format, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, pInfo->AspectMask );
-		Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		PipelineFlags = MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-		uploader->End();
+		}
 
-		CreateImageSampler();
+		if ( pInfo->GenerateImageView )
+		{
+			VkImageViewCreateInfo viewInfo{};
+			viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+			viewInfo.image = m_Image;
+			viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			viewInfo.format = ( VkFormat )pInfo->Format;
+			viewInfo.subresourceRange.aspectMask = pInfo->AspectMask;
+			viewInfo.subresourceRange.baseMipLevel = 0;
+			viewInfo.subresourceRange.levelCount = 1;
+			viewInfo.subresourceRange.baseArrayLayer = 0;
+			viewInfo.subresourceRange.layerCount = 1;
+
+			MW_VK_CHECK( vkCreateImageView( *CVulkanContext::GetDevice()->GetDevice(), &viewInfo, nullptr, &m_ImageView ), "Failed to create Image View" );
+		}
+		
+		if ( pInfo->GenerateSampler )
+		{
+			CreateImageSampler();
+		}
 	}
 
 	CVulkanTexture2D::~CVulkanTexture2D() NOEXCEPT

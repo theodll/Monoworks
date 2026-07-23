@@ -78,14 +78,18 @@ namespace Monoworks::RHI
 		SetupDebugMessenger();
 		m_Device.CreatePhysicalDevice(&m_Instance);
 		
-		SVulkanSDLPresentationInitializationInfo presentationInfo;
+		m_Presenter = CApplication::GetCreateInfos()->pPresenter;
 
+		SVulkanSDLPresentationInitializationInfo presentationInfo;
+		presentationInfo.pInstance = &m_Instance;
+		presentationInfo.pVulkanDevice = &m_Device;
 		m_Presenter->Init( &presentationInfo );
 
 		m_Device.Init(&m_Instance);
 		volkLoadDevice(*m_Device.GetDevice());
 
 		SVulkanSDLPresentationInitialization2Info presentationInfo2;
+		presentationInfo2.pVulkanDevice = &m_Device;
 		m_Presenter->Init2( &presentationInfo2 );
 
 		VmaAllocatorCreateInfo allocatorCreateInfo{};
@@ -181,7 +185,7 @@ namespace Monoworks::RHI
 
 		VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		appInfo.pApplicationName = ApplicationInfos->Name;
+		appInfo.pApplicationName = ApplicationInfos->pName;
 		appInfo.applicationVersion = VK_MAKE_VERSION(ApplicationInfos->Version.Major, ApplicationInfos->Version.Minor, ApplicationInfos->Version.Patch);
 		appInfo.pEngineName = EngineName;
 		appInfo.engineVersion = VK_MAKE_VERSION(MonoworksVersion.Major, MonoworksVersion.Minor, MonoworksVersion.Patch);

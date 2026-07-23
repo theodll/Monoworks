@@ -24,7 +24,7 @@ namespace Monoworks::RHI
 		NODISCARD u32 Aquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT override;
 		void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT override;
 
-		NODISCARD const std::array<ITexture2D, MaxFramesInFlight> GetSwapchainImages() NOEXCEPT override;
+		NODISCARD const std::vector<Ref<ITexture2D>>& GetSwapchainImages() NOEXCEPT override { return m_SwapchainImages; };
 		NODISCARD VkSurfaceKHR* GetSurface() NOEXCEPT { return &m_Surface; };
 		NODISCARD VkSwapchainKHR* GetSwapchain() NOEXCEPT { return &m_Swapchain; }
 	private:
@@ -39,7 +39,7 @@ namespace Monoworks::RHI
 
 		u32 m_CurrentImageIndex = 0;
 
-		std::vector<ITexture2D*> m_SwapchainImages;
+		std::vector<Ref<ITexture2D>> m_SwapchainImages;
 
 		std::vector<u32> m_ImagePresentedOnce;
 

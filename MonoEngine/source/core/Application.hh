@@ -32,11 +32,11 @@ namespace Monoworks
 		/**
 		 * @brief Name of the Application the engine is integrated in.
 		*/
-		MAYBE_UNUSED const char* Name = "MonoEngine";
+		MAYBE_UNUSED const char* pName = "MonoEngine";
 		/**
 		* @brief Array of arguments.
 		*/
-		MAYBE_UNUSED char** Arguments = nullptr;
+		MAYBE_UNUSED char** pArguments = nullptr;
 		/**
 		 * @brief Callback to retrieve
 		 */
@@ -48,7 +48,7 @@ namespace Monoworks
 		/**
 		* @brief Presentation Interface.
 		*/
-		MAYBE_UNUSED RHI::IPresenter* Presenter;
+		MAYBE_UNUSED RHI::IPresenter* pPresenter;
 		/**
 		 * @brief Graphics API used by the renderer.
 		 */
@@ -107,10 +107,10 @@ namespace Monoworks
 		 * @brief Generic Getter for the Application Singleton
 		 * @return CApplication* Singleton of the Application
 		 */
-		[[nodiscard]] static CApplication* Get() noexcept { if (m_Singleton) return m_Singleton; else return nullptr;  }
-	
-		[[nodiscard]] static SApplicationCreateInfos* GetCreateInfos() noexcept { return &m_pApplicationCreationInfos; };
-		[[nodiscard]] static EGraphicsAPI GetGraphicsAPI() noexcept { return m_GraphicsAPI; }
+		NODISCARD static CApplication* Get() noexcept { if ( m_Singleton ) return m_Singleton; else return nullptr; }
+		
+		NODISCARD static SApplicationCreateInfos* GetCreateInfos() noexcept { return &m_pApplicationCreationInfos; };
+		NODISCARD static EGraphicsAPI GetGraphicsAPI() noexcept { return m_GraphicsAPI; }
 	private:
 		static CApplication* m_Singleton;
 

@@ -27,12 +27,20 @@ namespace Monoworks::RHI
 		NODISCARD VkImage* GetImage() NOEXCEPT { return &m_Image; }
 		NODISCARD VkImageView* GetImageView() NOEXCEPT { return &m_ImageView; }
 
+		void SetSampler( VkSampler* pSampler ) { MW_WARN( "Manually overwriting the Sampler is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_Sampler = *pSampler; }
+		void SetImage( VkImage* pImage ) { MW_WARN( "Manually overwriting the Image is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_Image = *pImage; }
+		void SetImageView( VkImageView* pImageView ) { MW_WARN( "Manually overwriting the Image View is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_ImageView = *pImageView; }
+
 	private:
 		void CreateImage( stbi_uc* pPixelData ) NOEXCEPT;
 		void CreateImageWithoutData() NOEXCEPT;
 		void CreateImageView() NOEXCEPT;
 		void CreateImageSampler() NOEXCEPT;
 		void CreateStagingData() NOEXCEPT;
+
+		bool m_GenerateImage = true;
+		bool m_GenerateImageView = true;
+		bool m_GenerateSampler = true;
 
 		// TODO: Move to asset manager.
 		path_t m_Path;

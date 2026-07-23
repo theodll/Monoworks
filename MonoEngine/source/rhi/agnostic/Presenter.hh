@@ -1,5 +1,7 @@
 #pragma once
 #include <common/Base.hh>
+#include <common/Events.h>
+#include <events/Event.hh>
 
 #include "Texture.hh"
 
@@ -14,24 +16,24 @@ namespace Monoworks::RHI
 
 	struct IPresentationInitializationInfo 
 	{
-		static const EPresentationMedium Medium;
+		const EPresentationMedium Medium = MW_PRESENTATION_MEDIUM_NONE;
 	};
 
 	struct IPresentationInitialization2Info
 	{
-		static const EPresentationMedium Medium;
+		const EPresentationMedium Medium = MW_PRESENTATION_MEDIUM_NONE;
 	};
 
 
 	struct IPresentationAcquisitionInfo 
 	{
-		static const EPresentationMedium Medium;
+		const EPresentationMedium Medium = MW_PRESENTATION_MEDIUM_NONE;
 	};
 
 
 	struct IPresentationPresentInfo 
 	{
-		static const EPresentationMedium Medium;
+		const EPresentationMedium Medium = MW_PRESENTATION_MEDIUM_NONE;
 	};
 
 	class IPresenter 
@@ -39,16 +41,16 @@ namespace Monoworks::RHI
 	public:
 		virtual ~IPresenter() = default;
 
-		virtual void Init( const IPresentationInitializationInfo* pInfo ) NOEXCEPT;
-		virtual void Init2( const IPresentationInitialization2Info* pInfo ) NOEXCEPT;
-		virtual void Shutdown() NOEXCEPT;
+		virtual void Init( const IPresentationInitializationInfo* pInfo ) NOEXCEPT = 0;
+		virtual void Init2( const IPresentationInitialization2Info* pInfo ) NOEXCEPT = 0;
+		virtual void Shutdown() NOEXCEPT = 0;
 
-		virtual bool OnResize( SEvent& event );
+		virtual bool OnResize( SEvent& event ) = 0;
 
-		NODISCARD virtual u32 Aquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT;
-		virtual void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT;
+		NODISCARD virtual u32 Aquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT = 0;
+		virtual void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT = 0;
 
-		NODISCARD const virtual std::array<ITexture2D, MaxFramesInFlight> GetSwapchainImages() NOEXCEPT = 0;
+		NODISCARD const virtual std::vector<Ref<ITexture2D>>& GetSwapchainImages() NOEXCEPT = 0;
 		NODISCARD const EPresentationMedium GetMedium() const NOEXCEPT { return m_PresentationMedium; };
 
 	protected: 

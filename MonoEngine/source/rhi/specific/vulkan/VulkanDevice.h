@@ -4,6 +4,11 @@
 #include <volk/volk.h>
 #include <vk_mem_alloc.h>
 
+namespace Monoworks 
+{
+	class CApplication;
+}
+
 namespace Monoworks::RHI 
 {
 	struct QueueFamilyIndices
@@ -90,7 +95,7 @@ namespace Monoworks::RHI
 		NODISCARD const VkCommandPool* GetTransferCommandPool() const noexcept { return &m_TransferCommandPool; }
 		NODISCARD const VkQueue* GetTransferQueue() const noexcept { return &m_TransferQueue; }
 
-		NODISCARD const VkQueue* GetPresentQueue() const NOEXCEPT { if ( !CApplication::GetCreateInfos()->UseSwapchain ) { MW_ERROR( "Illegal function call: Unable to get Present Queue. UseSwapchain is false" ); return nullptr; } return &m_PresentQueue; }
+		NODISCARD const VkQueue* GetPresentQueue() const NOEXCEPT;
 
 		NODISCARD const u32 GetGraphicsQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
 
@@ -108,9 +113,9 @@ namespace Monoworks::RHI
 		void CreateLogicalDevice() noexcept;
 		void CreateCommandPool() noexcept;
 
-		[[nodiscard]] bool IsDeviceSuitable(const VkPhysicalDevice* pPhysDevice) noexcept;
-		[[nodiscard]] QueueFamilyIndices FindQueueFamilies(const VkPhysicalDevice* pPhysDevice) noexcept;
-		[[nodiscard]] bool CheckDeviceExtensionSupport(const VkPhysicalDevice* pPhysDevice) noexcept;
+		NODISCARD bool IsDeviceSuitable( const VkPhysicalDevice* pPhysDevice ) noexcept;
+		NODISCARD QueueFamilyIndices FindQueueFamilies( const VkPhysicalDevice* pPhysDevice ) noexcept;
+		NODISCARD bool CheckDeviceExtensionSupport( const VkPhysicalDevice* pPhysDevice ) noexcept;
 
 		VkPhysicalDeviceProperties m_Properties;
 

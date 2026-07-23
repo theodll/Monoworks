@@ -240,6 +240,29 @@ namespace Monoworks
 		};
 
 		/**
+		* @brief Dynamic downcast (z.B. CRef<ITexture2D> zu CRef<CVulkanTexture2D>)
+		*/
+		template <typename U>
+		NODISCARD CRef<U> As() const NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+
+			U* pCastPtr = dynamic_cast< U* >( m_pPtr );
+
+			if ( !pCastPtr || !CMemoryManager::IsValid( m_Handle ) )
+			{
+				return CRef<U>();
+			}
+
+			CRef<U> result;
+			result.m_Handle = m_Handle;
+			result.m_pPtr = pCastPtr;
+			result.IncRef(); 
+
+			return result;
+		}
+
+		/**
 		 * @brief Accesses the underlying pointer
 		 * @return T const * Returns the underlying pointer as immutable
 		*/

@@ -4,14 +4,18 @@
 #include <rhi/Utils.hh>
 
 namespace Monoworks::RHI
+
 {
 	struct STextureCreateInfo 
 	{
+		SExtent3D Extent;
 		EImageFormat Format;
 		EImageUsageFlags Usage;
-		SExtent3D Extent;
 		EImageLayout ImageLayout;
 		EImageAspectFlags AspectMask;
+		bool GenerateImage = true;
+		bool GenerateImageView = true;
+		bool GenerateSampler = true;
 	};
 
 	class ITexture 
