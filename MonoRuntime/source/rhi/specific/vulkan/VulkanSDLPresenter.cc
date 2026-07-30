@@ -448,7 +448,7 @@ namespace Monoworks::RHI
 		auto info = ( SVulkanSDLPresentationTransitionPresentInfo* )pInfo;
 		auto texture = m_SwapchainImages[info->ImageIndex].As<CVulkanTexture2D>();
 	
-		if ( texture->Layout = MW_IMAGE_LAYOUT_PRESENT_SRC_KHR )
+		if ( texture->Layout == MW_IMAGE_LAYOUT_PRESENT_SRC_KHR )
 			return;
 
 		TransitionImageLayout3(
