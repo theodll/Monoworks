@@ -68,7 +68,7 @@ namespace Monoworks::RHI
 		SPipelineCreationInfo pipelineInfo{};
 
 		pipelineInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_TEST_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
-		pipelineInfo.ColorFormats = { MW_FORMAT_B8G8R8_UNORM };
+		pipelineInfo.ColorFormats = { MW_FORMAT_B8G8R8A8_SRGB };
 		pipelineInfo.ColorBlendAttachments = { { MW_BLEND_MODE_OPAQUE, true } };
         std::vector<SShaderObject> objects;
         objects.push_back( vertex );
@@ -126,9 +126,11 @@ namespace Monoworks::RHI
         auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
         auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
 
+        MW_ASSERT( *imageIndex < presenter->GetSwapchainImages().size(), "Invalid swapchain image index" );
+
         VkRenderingAttachmentInfo colorAttachment{};
         colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-        colorAttachment.imageView = *presenter->GetSwapchainImages()[frameIndex].As<CVulkanTexture2D>()->GetImageView();
+        colorAttachment.imageView = *presenter->GetSwapchainImages()[*imageIndex].As<CVulkanTexture2D>()->GetImageView();
         colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
