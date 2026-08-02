@@ -10,7 +10,7 @@ endif()
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
 
-add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/ui/MainWindow.cpp" "source/ui/MainWindow.hh" ${QRC_RESOURCEN}
+add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/ui/MainWindow.cpp" "source/ui/MainWindow.hh" "source/rhi/specific/vulkan/VulkanQtPresenter.hh" ${QRC_RESOURCEN}
     source/ui/MainWindow.ui )
 
 target_link_libraries(MonoEditor PRIVATE
@@ -25,11 +25,11 @@ target_link_libraries(MonoEditor PRIVATE
 target_include_directories(MonoEditor PRIVATE "source/" "specific/")
 
 if (WIN32)
-    target_compile_definitions(MonoEditor PRIVATE VT_PLATFORM_WINDOWS)
-elseif (UNIX AND NOT APPLE)
-    target_compile_definitions(MonoEditor PRIVATE VT_PLATFORM_LINUX)
-elseif (APPLE)
-    target_compile_definitions(MonoEditor PRIVATE VT_PLATFORM_OSX)
+    target_compile_definitions(MonoEditor PRIVATE MW_PLATFORM_WINDOWS)
+elseif (UNIX AND NOT APPLE)                       
+    target_compile_definitions(MonoEditor PRIVATE MW_PLATFORM_LINUX)
+elseif (APPLE)                                    
+    target_compile_definitions(MonoEditor PRIVATE MW_PLATFORM_OSX)
 endif()
 
 target_compile_definitions(MonoEditor PRIVATE MW_EDITOR)

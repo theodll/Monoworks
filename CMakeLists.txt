@@ -35,6 +35,6 @@ add_compile_definitions(
 )
 
 add_subdirectory(MonoEngine)
-#add_subdirectory(MonoEditor)
+add_subdirectory(MonoEditor)
 add_subdirectory(MonoRuntime)
 add_subdirectory(Common/extern/doctest)

@@ -33,11 +33,11 @@ target_precompile_headers(MonoEngine PUBLIC
 )
 
 if (WIN32)
-    target_compile_definitions(MonoEngine PRIVATE MW_PLATFORM_WINDOWS)
+    add_compile_definitions(MW_PLATFORM_WINDOWS)
 elseif (UNIX AND NOT APPLE)                       
-    target_compile_definitions(MonoEngine PRIVATE MW_PLATFORM_LINUX)
+    add_compile_definitions(MW_PLATFORM_LINUX)
 elseif (APPLE)                                    
-    target_compile_definitions(MonoEngine PRIVATE MW_PLATFORM_OSX)
+    target_compile_definitions(MW_PLATFORM_OSX)
 endif()
 
 target_compile_definitions(MonoEngine PRIVATE MW_ENGINE TRACY_ENABLE)

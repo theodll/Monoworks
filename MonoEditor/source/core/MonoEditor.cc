@@ -49,12 +49,16 @@ namespace Monoworks
 
 		m_Engine = new CApplication;
 
-		SApplicationCreateInfos appInfos{};
-		appInfos.Name = cfg.Get("Editor", "Title");
-		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height")};
+		SApplicationCreateInfos appInfos {};
+		appInfos.pName = strdup( cfg.Get( "Runtime", "Title" ).c_str() );
+		appInfos.RenderableExtent = { cfg.Get<u32>( "Rendering", "Default Width" ), cfg.Get<u32>( "Rendering", "Default Height" ) };
+		appInfos.GraphicsAPI = MW_GAPI_VULKAN;
 		appInfos.ArgumentCount = argc;
-		appInfos.Arguments = argv;
-
+		appInfos.pArguments = argv;
+		appInfos.Version = { 1, 0, 0 };
+		appInfos.RequiredExtensionCallback = nullptr;
+		// appInfos.pPresenter = m_pPresenter.raw();
+		appInfos.UseQt  = true;
 
 		m_Engine->Init(&appInfos);
 	};

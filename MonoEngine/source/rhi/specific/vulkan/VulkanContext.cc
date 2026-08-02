@@ -366,7 +366,7 @@ namespace Monoworks::RHI
 		}
 
 		std::vector<const char*> requiredExtensions;
-		if (clientExtensions != nullptr && extensionCount2 > 0)
+		if (clientExtensions && extensionCount2 > 0)
 		{
 			requiredExtensions.assign(clientExtensions, clientExtensions + extensionCount2);
 		}
