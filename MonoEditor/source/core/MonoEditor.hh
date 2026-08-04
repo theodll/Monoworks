@@ -13,12 +13,15 @@
  * @copyright Copyright (c) 2026
  * 
  */
-
+#pragma once
 #include <Monoworks.hh>
 #include <QCoreApplication>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
+
+#include <kddockwidgets/MainWindow.h>
+#include <kddockwidgets/DockWidget.h>
 
 namespace Monoworks 
 {
@@ -46,6 +49,7 @@ namespace Monoworks
 	private:
 		CApplication* m_Engine;
 		QCoreApplication* m_QtApplication;
+		KDDockWidgets::QtWidgets::MainWindow* m_MainWindow;
 	};
 	
 }

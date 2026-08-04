@@ -8,10 +8,19 @@ if(WIN32)
     set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/mingw_64")
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick Widgets)
+find_package(
+    Qt6
+    REQUIRED COMPONENTS 
+    Core 
+    Gui
+    Qml
+    Quick
+    Widgets
+    OpenGLWidgets)
 
-add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/ui/MainWindow.cpp" "source/ui/MainWindow.hh" "source/rhi/specific/vulkan/VulkanQtPresenter.hh" ${QRC_RESOURCEN}
-    source/ui/MainWindow.ui )
+add_subdirectory(thirdparty/KDDockWidgets)
+
+add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/rhi/specific/vulkan/VulkanQtPresenter.hh" ${QRC_RESOURCEN}  "source/widgets/ViewportWidget.cpp" "source/widgets/ViewportWidget.h" "source/core/EngineManager.h" "source/core/EngineManager.cpp")
 
 target_link_libraries(MonoEditor PRIVATE
     MonoEngine
@@ -20,6 +29,8 @@ target_link_libraries(MonoEditor PRIVATE
     Qt6::Qml
     Qt6::Quick 
     Qt6::Widgets
+    Qt6::OpenGLWidgets
+    KDAB::kddockwidgets
 )
 
 target_include_directories(MonoEditor PRIVATE "source/" "specific/")

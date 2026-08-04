@@ -8,6 +8,10 @@
 #include <QQuickWindow>
 
 
+#include <kddockwidgets/MainWindow.h>
+#include <kddockwidgets/DockWidget.h>
+
+
 int main(int argc, char** argv)
 {
 	return Monoworks::EditorMain(argc, argv);
@@ -45,8 +49,7 @@ namespace Monoworks
 
 		cfg.Flush();
 
-		m_QtApplication = new QCoreApplication(argc, argv);
-
+		m_QtApplication = new QCoreApplication( argc, argv );
 		m_Engine = new CApplication;
 
 		SApplicationCreateInfos appInfos {};
@@ -61,6 +64,16 @@ namespace Monoworks
 		appInfos.UseQt  = true;
 
 		m_Engine->Init(&appInfos);
+
+
+		m_QtApplication->setOrganizationName( "Monoworks" );
+		m_QtApplication->setApplicationName( "MonoEditor" );
+		
+		m_MainWindow = new KDDockWidgets::QtWidgets::MainWindow( appInfos.pName );
+		m_MainWindow->setWindowTitle( appInfos.pName );
+		m_MainWindow->resize( cfg.Get<int>( "Editor", "Window W" ), cfg.Get<int>( "Editor", "Window H" ) );
+		m_MainWindow->show();
+
 	};
 
 	void CMonoworksEditor::Run()
@@ -73,6 +86,7 @@ namespace Monoworks
 
 	void CMonoworksEditor::Shutdown()
 	{
+		delete m_MainWindow;
 		delete m_Engine;
 		delete m_QtApplication;
 	};

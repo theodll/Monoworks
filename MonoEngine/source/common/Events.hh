@@ -28,6 +28,7 @@ namespace Monoworks
 		/// @brief Triggered when the application starts an entire frame cycle (before deffered event-processing).
 		MW_DEFINE_DISPATCHABLE_EVENT( AppFrame );
 
+
 		namespace Events
 		{
 		// data events 
@@ -45,6 +46,15 @@ namespace Monoworks
 		struct SWindowResize
 		{
 			/// @brief The new window dimensions.
+			SExtent2D	NewExtent;
+		};
+#
+		// renderer
+
+		/// @brief Triggered when viewport/renderable extent space changes
+		struct SViewportResize
+		{
+			/// @brief The new viewport dimensions.
 			SExtent2D	NewExtent;
 		};
 
