@@ -24,6 +24,18 @@ namespace Monoworks::RHI
 			m_DeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 		}
 
+		if ( !CApplication::GetCreateInfos()->UseSwapchain )
+		{
+			// for qt viewport
+#ifdef MW_PLATFORM_WINDOWS
+			m_DeviceExtensions.push_back( "VK_KHR_external_semaphore_win32" );
+			m_DeviceExtensions.push_back( "VK_KHR_external_memory_win32" );
+#else
+			m_DeviceExtensions.push_back( "VK_KHR_external_semaphore_fd" );
+			m_DeviceExtensions.push_back( "VK_KHR_external_memory_fd" ); 
+#endif
+		}
+
 		CreateLogicalDevice();
 		CreateCommandPool();
 		

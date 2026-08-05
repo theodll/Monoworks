@@ -44,6 +44,7 @@ namespace Monoworks
             MW_PROFILE_FUNC;
 
             m_pInstance->EndRendering();
+            u32 temp = m_CurrentFrameIndex;
             m_CurrentFrameIndex = ( m_CurrentFrameIndex + 1 ) % MFIF;
         };
 }

@@ -67,15 +67,6 @@ namespace Monoworks::RHI
 		u32						ImageIndex;
 	};
 
-	struct SVulkanSDLPresentationInitializationInfo : public IPresentationInitializationInfo
-	{
-		SVulkanSDLPresentationInitializationInfo() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_SDL; };
-		CVulkanDevice*			pVulkanDevice;
-		const VkInstance*		pInstance;
-		const VkPhysicalDevice* pPhysDevice;
-		const VkDevice*			pDevice;
-	};
-
 	// Qt
 
 	struct SVulkanQtPresentationInitializationInfo : public IPresentationInitializationInfo
@@ -114,16 +105,16 @@ namespace Monoworks::RHI
 	};
 
 
-	struct SVulkanSDLPresentationTransitionPresentInfo : public IPresentationTransitionPresentInfo
+	struct SVulkanQtPresentationTransitionPresentInfo : public IPresentationTransitionPresentInfo
 	{
-		SVulkanSDLPresentationTransitionPresentInfo() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_QT; }
+		SVulkanQtPresentationTransitionPresentInfo() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_QT; }
 		const VkCommandBuffer*	pCmdBuffer;
 		u32						ImageIndex;
 	};
 
-	struct SVulkanSDLPresentationTransitionRenderInfo : public IPresentationTransitionRenderInfo
+	struct SVulkanQtPresentationTransitionRenderInfo : public IPresentationTransitionRenderInfo
 	{
-		SVulkanSDLPresentationTransitionRenderInfo() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_QT; }
+		SVulkanQtPresentationTransitionRenderInfo() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_QT; }
 		const VkCommandBuffer*	pCmdBuffer;
 		u32						ImageIndex;
 	};

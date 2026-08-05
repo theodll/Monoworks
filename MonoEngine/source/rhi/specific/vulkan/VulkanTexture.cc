@@ -48,21 +48,37 @@ namespace Monoworks::RHI
 		m_ImageExtent.Width = pInfo->Extent.Width;
 		m_ImageExtent.Height = pInfo->Extent.Height;
 
-		m_GenerateImage = pInfo->GenerateImage;
-		m_GenerateImageView = pInfo->GenerateImageView;
-		m_GenerateSampler = pInfo->GenerateSampler;
+		m_GenerateImage = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT );
+		m_GenerateImageView = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT );
+		m_GenerateSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT );
 
 
-		m_ManageImage = pInfo->ManageImage;
-		m_ManageImageView = pInfo->ManageImageView;
-		m_ManageSampler = pInfo->ManageSampler;
+		m_ManageImage = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT );
+		m_ManageImageView = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_MANAGEMENT_BIT );
+		m_ManageSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT );
+
+		m_EnableMemoryExporting = pInfo->Flags & MW_TEXTURE_CREATION_FLAG_ENABLE_MEMORY_EXPORTING;
 
 
 		auto allocator = CVulkanContext::GetAllocator();
 
-		if ( pInfo->GenerateImage ) 
+		if ( m_GenerateImage ) 
 		{
 			VkImageCreateInfo imageInfo{};
+
+			VkExternalMemoryImageCreateInfo externalImageInfo{};
+			externalImageInfo.sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
+
+			if ( m_EnableMemoryExporting )
+			{
+#ifdef MW_PLATFORM_WINDOWS
+				externalImageInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+#else
+				externalImageInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
+#endif
+				imageInfo.pNext = &externalImageInfo;
+			}
+
 			imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 			imageInfo.imageType = VK_IMAGE_TYPE_2D;
 			imageInfo.format = ( VkFormat )pInfo->Format;
@@ -86,7 +102,7 @@ namespace Monoworks::RHI
 
 		}
 
-		if ( pInfo->GenerateImageView )
+		if ( m_GenerateImageView )
 		{
 			VkImageViewCreateInfo viewInfo{};
 			viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -102,7 +118,7 @@ namespace Monoworks::RHI
 			MW_VK_CHECK( vkCreateImageView( *CVulkanContext::GetDevice()->GetDevice(), &viewInfo, nullptr, &m_ImageView ), "Failed to create Image View" );
 		}
 		
-		if ( pInfo->GenerateSampler )
+		if ( m_GenerateSampler )
 		{
 			CreateImageSampler();
 		}

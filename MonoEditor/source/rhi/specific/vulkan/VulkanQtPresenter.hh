@@ -7,6 +7,8 @@
 #ifdef MW_PLATFORM_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#define VK_USE_PLATFORM_WIN32
+#include <volk/volk.h>
 #endif
 
 namespace Monoworks::RHI 
@@ -15,10 +17,12 @@ namespace Monoworks::RHI
 	class CVulkanQtPresenter : public IPresenter
 	{
 	public:
-		void Init( const IPresentationInitializationInfo* pInfo ) NOEXCEPT;
+		CVulkanQtPresenter( SExtent2D presenterExtent ) NOEXCEPT { MW_PROFILE_FUNC; m_SwapchainExtent = presenterExtent; };
+
+		void Init( const IPresentationInitializationInfo* pInfo ) NOEXCEPT {};
 		void Init2( const IPresentationInitialization2Info* pInfo ) NOEXCEPT;
 		void Shutdown() NOEXCEPT;
-		void CreateSurface( const IPresentationSurfaceCreationInfo* pInfo ) NOEXCEPT;
+		void CreateSurface( const IPresentationSurfaceCreationInfo* pInfo ) NOEXCEPT {};
 		bool OnResize( SEvent& event );
 
 		NODISCARD u32 Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT;
@@ -48,6 +52,10 @@ namespace Monoworks::RHI
 		int m_PresentationImageWin32Handles[MFIF] = { -1 };
 		int m_RenderFinishedSemaphoreFds[MFIF] = { -1 };	
 #endif
+		SExtent2D m_SwapchainExtent;
+
+		u32 m_CurrentImageIndex = 0;
+		EImageFormat m_ColorImageFormat;
 	};
 
 }

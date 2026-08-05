@@ -26,9 +26,12 @@ namespace Monoworks::RHI
 
 		NODISCARD u32 GetWidth() const NOEXCEPT override { return m_ImageExtent.Width; };
 		NODISCARD u32 GetHeight() const NOEXCEPT override { return m_ImageExtent.Height; };
+
 		NODISCARD VkSampler* GetSampler() NOEXCEPT { return &m_Sampler; }
 		NODISCARD VkImage* GetImage() NOEXCEPT { return &m_Image; }
 		NODISCARD VkImageView* GetImageView() NOEXCEPT { return &m_ImageView; }
+
+		NODISCARD VmaAllocation* GetVmaAllocation() NOEXCEPT { return &m_ImageAllocation; }
 
 		void SetSampler( VkSampler* pSampler ) { MW_WARN( "Manually overwriting the Sampler is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_Sampler = *pSampler; }
 		void SetImage( VkImage* pImage ) { MW_WARN( "Manually overwriting the Image is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_Image = *pImage; }
@@ -40,6 +43,8 @@ namespace Monoworks::RHI
 		void CreateImageView() NOEXCEPT;
 		void CreateImageSampler() NOEXCEPT;
 		void CreateStagingData() NOEXCEPT;
+
+		bool m_EnableMemoryExporting = false;
 
 		bool m_GenerateImage = true;
 		bool m_GenerateImageView = true;
