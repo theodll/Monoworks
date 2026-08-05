@@ -12,7 +12,7 @@
 namespace Monoworks::RHI 
 {
 
-	class CVulkanQtPresenter : public IPresenter 
+	class CVulkanQtPresenter : public IPresenter
 	{
 	public:
 		void Init( const IPresentationInitializationInfo* pInfo ) NOEXCEPT;
@@ -27,11 +27,11 @@ namespace Monoworks::RHI
 		void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT;
 
 #ifdef MW_PLATFORM_WINDOWS
-		HANDLE GetPresentationImageWin32Handle( u32 imageIndex );
-		HANDLE GetRenderFinishedSemaphoreWin32Handle( u32 imageIndex ) { return m_RenderFinishedSemaphoreWin32Handles[imageIndex]; };
+		HANDLE GetPresentationImageWin32Handle( u32 imageIndex ) { if ( m_PresentationImageWin32Handles[imageIndex] ) { return m_PresentationImageWin32Handles[imageIndex]; } else { MW_ASSERT("Requested Presentation Image Finished Win32 Handle is invalid."); return nullptr; } };
+		HANDLE GetRenderFinishedSemaphoreWin32Handle( u32 imageIndex ) { if ( m_RenderFinishedSemaphoreWin32Handles[imageIndex] ) { return m_RenderFinishedSemaphoreWin32Handles[imageIndex]; } else { MW_ASSERT("Requested Render Finished Semaphore Win32 Handle is invalid."); return nullptr; } };
 #else 
-		int GetPresentationImageFd( u32 imageIndex ) { return (m_RenderFinishedSemaphoreFds[imageIndex] >= 0) ? return m_RenderFinishedSemaphoreFds[imageIndex] : MW_ASSERT( "Requested Presentation Image File Descriptor is invalid." ); };
-		int GetRenderFinishedSemaphoreFd( u32 imageIndex ) { return (m_RenderFinishedSemaphoreFds[imageIndex] >= 0) ? return m_RenderFinishedSemaphoreFds[imageIndex] : MW_ASSERT( "Requested Render Finished Semaphore File Descriptor is invalid." ); };
+		int GetPresentationImageFd( u32 imageIndex ) { (m_RenderFinishedSemaphoreFds[imageIndex] >= 0) ? return m_RenderFinishedSemaphoreFds[imageIndex] : MW_ASSERT( "Requested Presentation Image File Descriptor is invalid." ); return -1; };
+		int GetRenderFinishedSemaphoreFd( u32 imageIndex ) { (m_RenderFinishedSemaphoreFds[imageIndex] >= 0) ? return m_RenderFinishedSemaphoreFds[imageIndex] : MW_ASSERT( "Requested Render Finished Semaphore File Descriptor is invalid." ); return -1; };
 #endif
 
 
@@ -42,11 +42,11 @@ namespace Monoworks::RHI
 		std::vector<Ref<ITexture2D>> m_PresentationImages;
 
 #ifdef MW_PLATFORM_WINDOWS
-		HANDLE m_PresentationImageWin32Handles[MFIF];
-		HANDLE m_RenderFinishedSemaphoreWin32Handles[MFIF];
+		HANDLE m_PresentationImageWin32Handles[MFIF] = { nullptr };
+		HANDLE m_RenderFinishedSemaphoreWin32Handles[MFIF] { nullptr };
 #else
 		int m_PresentationImageWin32Handles[MFIF] = { -1 };
-		int m_RenderFinishedSemaphoreFds[MFIF] = { -1 };
+		int m_RenderFinishedSemaphoreFds[MFIF] = { -1 };	
 #endif
 	};
 

@@ -11,13 +11,14 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 		m_pEngine = new CApplication();
+
+		m_pPresenter = new RHI::CVulkanQtPresenter;
+		createInfos->pPresenter = m_pPresenter;
+
 		m_pEngine->Init( createInfos ); 
 
 		// TODO: GAPI Agnostic
-		m_pPresenter = new RHI::CVulkanQtPresenter;
 		
-
-
 		m_pViewports[0] = new CViewportWidget(m_pPresenter, mainWindow);
 	}
 

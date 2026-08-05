@@ -26,10 +26,11 @@ namespace Monoworks
 
 	private:
 		CApplication* m_pEngine;
+		KDDockWidgets::QtWidgets::MainWindow* m_pMainWindow;
+
 		RHI::IPresenter* m_pPresenter;
+
 		CViewportWidget** m_pViewports;
 		size_t m_ViewportCount;
-		KDDockWidgets::QtWidgets::MainWindow* m_pMainWindow; 
-		
 	};
 }
