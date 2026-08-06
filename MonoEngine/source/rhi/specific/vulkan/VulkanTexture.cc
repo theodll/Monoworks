@@ -91,8 +91,37 @@ namespace Monoworks::RHI
 			imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 			imageInfo.initialLayout = ( VkImageLayout )pInfo->ImageLayout;
 
-			CVulkanContext::GetDevice()->CreateImage( allocator, &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT );
+			VmaAllocationCreateInfo allocInfo {};
+			allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
+			allocInfo.requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
+			if ( m_EnableMemoryExporting )
+			{
+				uint32_t memTypeIndex;
+				MW_VK_CHECK(vmaFindMemoryTypeIndexForImageInfo( *allocator,
+					&imageInfo, &allocInfo, &memTypeIndex ), "Fail to find memory index for custom external memory VMA pool.");
+
+				VkExportMemoryAllocateInfo exportMemAllocInfo{};
+				exportMemAllocInfo.sType = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
+#ifdef MW_PLATFORM_WINDOWS
+				exportMemAllocInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+#else
+				exportMemAllocInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
+#endif
+				VmaPoolCreateInfo poolCreateInfo = {};
+				poolCreateInfo.memoryTypeIndex = memTypeIndex;
+				poolCreateInfo.pMemoryAllocateNext = ( void* )&exportMemAllocInfo;
+
+				vmaCreatePool( *allocator, &poolCreateInfo, &m_ExternalMemoryPool );
+
+				allocInfo.pool = m_ExternalMemoryPool;
+			}
+
+			auto res = vmaCreateImage( *allocator, &imageInfo, &allocInfo, &m_Image, &m_ImageAllocation, nullptr );
+			MW_VK_CHECK( res, "Failed to create buffer" );
+			MW_PROFILE_ALLOC_N( ( void* )m_Image, imageInfo.extent.width * imageInfo.extent.height, "GPU VRAM" );
+
+			
 			auto&& uploader = CVulkanContext::GetUploader();
 			uploader->Begin();
 			TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, pInfo->Format, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, pInfo->AspectMask );
@@ -130,7 +159,10 @@ namespace Monoworks::RHI
 		auto allocator = CVulkanContext::GetAllocator();
 		auto device = CVulkanContext::GetDevice();
 		if ( m_Image && m_ManageImage )
+		{
 			vmaDestroyImage( *allocator, m_Image, m_ImageAllocation );
+			MW_PROFILE_FREE_N( ( void* )m_Image, "GPU VRAM" );
+		}
 
 		// TODO: AllocationCallbacks
 		if ( m_ImageView && m_ManageImageView )
@@ -138,6 +170,9 @@ namespace Monoworks::RHI
 
 		if ( m_Sampler && m_ManageSampler )
 			vkDestroySampler( *device->GetDevice(), m_Sampler, nullptr );
+
+		if ( m_ExternalMemoryPool && m_EnableMemoryExporting )
+			vmaDestroyPool( *allocator, m_ExternalMemoryPool );
 
 	}
 

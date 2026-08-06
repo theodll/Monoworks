@@ -37,27 +37,73 @@ namespace Monoworks::RHI
 			texture = ITexture2D::Create( &createInfo );
 		}
 
-#ifdef MW_PLATFORM_WINDOWS
+
 		for ( u32 i {}; i < m_PresentationImages.size(); i++ )
 		{
 			auto texture = m_PresentationImages[i].As<CVulkanTexture2D>();
+			auto allocator = CVulkanContext::GetAllocator();
+#ifdef MW_PLATFORM_WINDOWS
+			MW_VK_CHECK( vmaGetMemoryWin32Handle2(
+				*allocator,
+				*texture->GetVmaAllocation(),
+				VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT,
+				nullptr,
+				&m_PresentationImageWin32Handles[i] ), "Failed to retrieve Presentation Image Win32 Handle at index {}", i );
 
-			VmaAllocationInfo allocInfo;
-			vmaGetAllocationInfo( *CVulkanContext::GetAllocator(), *texture->GetVmaAllocation(), &allocInfo );
+			VmaAllocationInfo2 allocInfo {};
+			vmaGetAllocationInfo2( *allocator, *texture->GetVmaAllocation(), &allocInfo );
+#else
+			VkMemoryGetFdInfoKHR getFdInfo{};
+			getFdInfo.sType = VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR;
+			getFdInfo.memory = allocInfo.allocationInfo.deviceMemory;
+			getFdInfo.handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
 
-			VkMemoryGetWin32HandleInfoKHR getHandleInfo{};
-			getHandleInfo.sType = VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR;
-			getHandleInfo.memory = allocInfo.deviceMemory;
-			getHandleInfo.handleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
-
-			vkGetMemoryWin32HandleKHR( );
-		}
+			vkGetMemoryFdKHR( *info->pVulkanDevice->GetDevice(), &getFdInfo, &m_PresentationImageFds[i] );
 #endif
+		}
+
+		if ( info->RenderFinishedSemaphoreCount < MFIF )
+			MW_ASSERT( false, "Insufficient Number of RenderFinishedSemaphores" );
+
+		for (u32 i{}; i < info->RenderFinishedSemaphoreCount; i++ )
+		{
+#ifdef MW_PLATFORM_WINDOWS
+			VkSemaphoreGetWin32HandleInfoKHR getSemaphoreHandleInfo{};
+			getSemaphoreHandleInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR;
+			getSemaphoreHandleInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+			getSemaphoreHandleInfo.semaphore = *info->pRenderFinishedSemaphores[i];
+
+			vkGetSemaphoreWin32HandleKHR( *info->pVulkanDevice->GetDevice(), &getSemaphoreHandleInfo, &m_RenderFinishedSemaphoreWin32Handles[i] );
+
+#else
+			VkSemaphoreGetFdInfoKHR getSemaphoreFdInfo {};
+			getSemaphoreFdInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR;
+			getSemaphoreFdInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
+			getSemaphoreFdInfo.semaphore = *info->pRenderFinishedSemaphores[i];
+
+			vkGetSemaphoreFdKHR( *info->pVulkanDevice->GetDevice(), &getSemaphoreFdInfo, &m_RenderFinishedSemaphoreFds[i] );
+#endif
+		}
+
+
+
 	};
 
 	void CVulkanQtPresenter::Shutdown() NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
+
+		m_PresentationImages.clear();
+
+		for (u32 i{}; i < m_PresentationImages.size(); i++ )
+		{
+#ifdef MW_PLATFORM_WINDOWS
+			CloseHandle( m_PresentationImageWin32Handles[i] );
+#else
+			m_PresentationImageFd[i] = -1;
+#endif
+		}
+
 	};
 
 	bool CVulkanQtPresenter::OnResize( SEvent& event ) 

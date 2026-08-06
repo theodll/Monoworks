@@ -45,6 +45,7 @@ namespace Monoworks::RHI
 		void CreateStagingData() NOEXCEPT;
 
 		bool m_EnableMemoryExporting = false;
+		VmaPool m_ExternalMemoryPool;
 
 		bool m_GenerateImage = true;
 		bool m_GenerateImageView = true;

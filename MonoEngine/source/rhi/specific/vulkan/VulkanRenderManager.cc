@@ -18,8 +18,24 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		MW_INFO( "Initializa CVulkanRenderManager" );
+		
+		VkExportSemaphoreCreateInfo exportSemaphoreCreateInfo{};
+		exportSemaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO;
+		if ( !CApplication::GetCreateInfos()->UseSwapchain )
+		{
+
+#ifdef MW_PLATFORM_WINDOWS
+			exportSemaphoreCreateInfo.handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+#else
+			exportSemaphoreCreateInfo.handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
+#endif
+		}
+
 		VkSemaphoreCreateInfo semaphoreCreateInfo{};
 		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+		if ( !CApplication::GetCreateInfos()->UseSwapchain )
+			semaphoreCreateInfo.pNext = &exportSemaphoreCreateInfo;
 
 		VkFenceCreateInfo fenceCreateInfo{};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;

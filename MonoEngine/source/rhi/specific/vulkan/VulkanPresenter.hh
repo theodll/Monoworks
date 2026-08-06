@@ -78,9 +78,7 @@ namespace Monoworks::RHI
 	{
 		SVulkanQtPresentationInitialization2Info() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_QT; };
 		CVulkanDevice*			pVulkanDevice;
-		VkSemaphore**			pImageAvailableSemaphores; // for handle exporting 
-		VkSemaphore**			pRenderFinishedSemaphores; // also for handle exporting
-		u32						ImageAvailableSemaphoreCount;
+		VkSemaphore**			pRenderFinishedSemaphores; // for handle exporting
 		u32						RenderFinishedSemaphoreCount;
 	};
 
