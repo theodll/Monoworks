@@ -63,6 +63,7 @@ namespace Monoworks
 
 		m_pQtApplication->setOrganizationName( "Monoworks" );
 		m_pQtApplication->setApplicationName( "MonoEditor" );
+
 		
 		m_pMainWindow = new KDDockWidgets::QtWidgets::MainWindow( appInfos.pName );
 		m_pMainWindow->setWindowTitle( appInfos.pName );

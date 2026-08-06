@@ -20,7 +20,7 @@ find_package(
 
 add_subdirectory(thirdparty/KDDockWidgets)
 
-add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/rhi/specific/vulkan/VulkanQtPresenter.hh" ${QRC_RESOURCEN}  "source/widgets/ViewportWidget.cpp" "source/widgets/ViewportWidget.h" "source/core/EngineManager.h" "source/core/EngineManager.cpp" "source/rhi/specific/vulkan/VulkanQtPresenter.cpp")
+add_executable(MonoEditor "source/core/MonoEditor.hh" "source/core/MonoEditor.cc" "source/rhi/specific/vulkan/VulkanQtPresenter.hh" ${QRC_RESOURCEN}  "source/widgets/ViewportWidget.cpp" "source/widgets/ViewportWidget.h" "source/core/EngineManager.h" "source/core/EngineManager.cpp" "source/rhi/specific/vulkan/VulkanQtPresenter.cpp" "source/common/QOpenGLExternalObjectsExtraFunctions.hh" "source/common/QOpenGLExternalObjectsExtraFunctions.cc")
 
 target_link_libraries(MonoEditor PRIVATE
     MonoEngine
