@@ -5,7 +5,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 if(WIN32)
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/mingw_64")
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/msvc2022_64")
 endif()
 
 find_package(

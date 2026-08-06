@@ -20,6 +20,8 @@
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 
+#include <core/EngineManager.h>
+
 #include <kddockwidgets/MainWindow.h>
 #include <kddockwidgets/DockWidget.h>
 
@@ -47,9 +49,9 @@ namespace Monoworks
 		void Shutdown();
 
 	private:
-		CApplication* m_Engine;
-		QCoreApplication* m_QtApplication;
-		KDDockWidgets::QtWidgets::MainWindow* m_MainWindow;
+		CEngineManager* m_pEngineManager;
+		QCoreApplication* m_pQtApplication;
+		KDDockWidgets::QtWidgets::MainWindow* m_pMainWindow;
 	};
 	
 }

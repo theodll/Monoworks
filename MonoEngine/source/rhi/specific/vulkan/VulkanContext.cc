@@ -16,6 +16,12 @@
 
 #define VMA_IMPLEMENTATION
 #define VMA_VULKAN_VERSION 1003000
+
+#if MW_PLATFORM_WINDOWS
+#define VMA_EXTERNAL_MEMORY_WIN32 1
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
 #include <vk_mem_alloc.h>
 
 #ifdef MW_PROFILING

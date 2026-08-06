@@ -19,7 +19,7 @@ namespace Monoworks
 		virtual void resizeGL( int w, int h ) override;
 	private:
 
-		RHI::IPresenter* m_Presenter;
+		RHI::IPresenter* m_pPresenter;
 
 	};
 }

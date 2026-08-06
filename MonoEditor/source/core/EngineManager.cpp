@@ -12,7 +12,7 @@ namespace Monoworks
 
 		m_pEngine = new CApplication();
 
-		m_pPresenter = new RHI::CVulkanQtPresenter;
+		m_pPresenter = new RHI::CVulkanQtPresenter( createInfos->RenderableExtent );
 		createInfos->pPresenter = m_pPresenter;
 
 		m_pEngine->Init( createInfos ); 

@@ -1,3 +1,12 @@
+#ifdef MW_PLATFORM_WINDOWS
+#include <Windows.h>
+#define VK_USE_PLATFORM_WIN32 1 
+#include <volk/volk.h>
+#define VMA_EXTERNAL_MEMORY_WIN32 1
+#endif
+
+#include "VulkanQtPresenter.hh"
+
 #include <Monoworks.hh>
 
 #include <rhi/agnostic/Texture.hh>
@@ -5,12 +14,7 @@
 #include <rhi/specific/vulkan/VulkanPresenter.hh>
 #include <rhi/specific/vulkan/VulkanTexture.hh>
 
-#include "VulkanQtPresenter.hh"
 
-#ifdef MW_PLATFORM_WINDOWS
-#include <Windows.h>
-#include <volk/volk.h>
-#endif
 
 namespace Monoworks::RHI 
 {
@@ -43,16 +47,17 @@ namespace Monoworks::RHI
 			auto texture = m_PresentationImages[i].As<CVulkanTexture2D>();
 			auto allocator = CVulkanContext::GetAllocator();
 #ifdef MW_PLATFORM_WINDOWS
-			MW_VK_CHECK( vmaGetMemoryWin32Handle2(
+			vmaGetMemoryWin32Handle2(
 				*allocator,
 				*texture->GetVmaAllocation(),
 				VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT,
 				nullptr,
-				&m_PresentationImageWin32Handles[i] ), "Failed to retrieve Presentation Image Win32 Handle at index {}", i );
+				&m_PresentationImageWin32Handles[i] );
+#else
 
 			VmaAllocationInfo2 allocInfo {};
 			vmaGetAllocationInfo2( *allocator, *texture->GetVmaAllocation(), &allocInfo );
-#else
+
 			VkMemoryGetFdInfoKHR getFdInfo{};
 			getFdInfo.sType = VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR;
 			getFdInfo.memory = allocInfo.allocationInfo.deviceMemory;
@@ -109,6 +114,7 @@ namespace Monoworks::RHI
 	bool CVulkanQtPresenter::OnResize( SEvent& event ) 
 	{
 		MW_PROFILE_FUNC;
+		return false;
 	};
 
 	NODISCARD u32 CVulkanQtPresenter::Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT 
@@ -129,7 +135,7 @@ namespace Monoworks::RHI
 			1,
 			info->pInFlightFence,
 			VK_TRUE,
-			UINT64_MAX ), "Failed to wait for InFlightFence at index {}", m_CurrentImageIndex );
+			UINT64_MAX ), "Failed to wait for InFlightFence" );
 
 		vkResetFences(
 			*info->pVulkanDevice->GetDevice(),

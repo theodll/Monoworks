@@ -49,8 +49,7 @@ namespace Monoworks
 
 		cfg.Flush();
 
-		m_QtApplication = new QCoreApplication( argc, argv );
-		m_Engine = new CApplication;
+		m_pQtApplication = new QCoreApplication( argc, argv );
 
 		SApplicationCreateInfos appInfos {};
 		appInfos.pName = strdup( cfg.Get( "Runtime", "Title" ).c_str() );
@@ -60,20 +59,17 @@ namespace Monoworks
 		appInfos.pArguments = argv;
 		appInfos.Version = { 1, 0, 0 };
 		appInfos.RequiredExtensionCallback = nullptr;
-		// appInfos.pPresenter = m_pPresenter.raw();
 		appInfos.UseQt  = true;
 
-		m_Engine->Init(&appInfos);
-
-
-		m_QtApplication->setOrganizationName( "Monoworks" );
-		m_QtApplication->setApplicationName( "MonoEditor" );
+		m_pQtApplication->setOrganizationName( "Monoworks" );
+		m_pQtApplication->setApplicationName( "MonoEditor" );
 		
-		m_MainWindow = new KDDockWidgets::QtWidgets::MainWindow( appInfos.pName );
-		m_MainWindow->setWindowTitle( appInfos.pName );
-		m_MainWindow->resize( cfg.Get<int>( "Editor", "Window W" ), cfg.Get<int>( "Editor", "Window H" ) );
-		m_MainWindow->show();
+		m_pMainWindow = new KDDockWidgets::QtWidgets::MainWindow( appInfos.pName );
+		m_pMainWindow->setWindowTitle( appInfos.pName );
+		m_pMainWindow->resize( cfg.Get<int>( "Editor", "Window W" ), cfg.Get<int>( "Editor", "Window H" ) );
+		m_pMainWindow->show();
 
+		m_pEngineManager = new CEngineManager( &appInfos, m_pMainWindow, m_pQtApplication );
 	};
 
 	void CMonoworksEditor::Run()

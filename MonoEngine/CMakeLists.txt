@@ -34,6 +34,10 @@ target_precompile_headers(MonoEngine PUBLIC
 
 if (WIN32)
     add_compile_definitions(MW_PLATFORM_WINDOWS)
+    add_compile_definitions(
+        VK_USE_PLATFORM_WIN32_KHR
+        VMA_EXTERNAL_MEMORY_WIN32=1
+    )
 elseif (UNIX AND NOT APPLE)                       
     add_compile_definitions(MW_PLATFORM_LINUX)
 elseif (APPLE)                                    
