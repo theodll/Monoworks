@@ -16,12 +16,12 @@ namespace Monoworks
 	{
 		Q_OBJECT;
 	public:
-		CEngineManager( SApplicationCreateInfos* createInfos, KDDockWidgets::QtWidgets::MainWindow* mainWindow, QObject* pParent = nullptr );
+		CEngineManager( SApplicationCreateInfos* pCreateInfos, KDDockWidgets::QtWidgets::MainWindow* pMainWindow, QObject* pParent = nullptr );
 		~CEngineManager();
 		
 		void Tick();
 
-		CViewportWidget** GetViewports() { return m_pViewports; }
+		CViewportWidget** GetViewports() { return m_pViewports.data(); }
 		size_t GetViewportCount() { return m_ViewportCount; }
 
 	private:
@@ -30,7 +30,7 @@ namespace Monoworks
 
 		RHI::IPresenter* m_pPresenter;
 
-		CViewportWidget** m_pViewports;
-		size_t m_ViewportCount;
+		std::vector<CViewportWidget*> m_pViewports;
+		size_t m_ViewportCount = 0;
 	};
 }

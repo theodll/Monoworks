@@ -116,7 +116,16 @@ namespace Monoworks::RHI
 
             *imageIndex = presenter->Acquire( &acquisitionInfo );
         }
+        else if ( CApplication::GetCreateInfos()->UseQt )
+        {
+            SVulkanQtPresentationAcquisitionInfo acquisitionInfo{};
+            acquisitionInfo.pGraphicsQueue = CVulkanContext::GetDevice()->GetGraphicsQueue();
+            acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
+            acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
+            acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
 
+            *imageIndex = presenter->Acquire( &acquisitionInfo );
+        }
 
         CVulkanRenderManager::BeginRootCommandBuffer( frameIndex );
         CVulkanRenderManager::BeginWorkerCommandBuffers( frameIndex );
@@ -126,6 +135,7 @@ namespace Monoworks::RHI
         auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
         auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
 
+        auto siye = presenter->GetSwapchainImages().size();
         MW_ASSERT( *imageIndex < presenter->GetSwapchainImages().size(), "Invalid swapchain image index" );
 
         VkRenderingAttachmentInfo colorAttachment{};

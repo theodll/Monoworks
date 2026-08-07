@@ -14,8 +14,9 @@ namespace Monoworks
 		Q_OBJECT;
 	public:
 		CViewportWidget( RHI::IPresenter* presenter, QWidget* parent = nullptr );
+		~CViewportWidget();
 
-		void Update();
+		void Update( u32 imageIndex );
 
 		virtual void initializeGL() override;
 		virtual void resizeGL( int w, int h ) override;
@@ -25,6 +26,8 @@ namespace Monoworks
 		GLuint m_PresentationImages[MFIF];
 		GLuint m_RenderFinishedSemaphores[MFIF];
 		GLuint m_ShaderProgram;
+		GLuint m_EmptyVAO;
+		GLint m_ImageLocation;
 
 
 	};

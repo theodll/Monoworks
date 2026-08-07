@@ -6,7 +6,7 @@ namespace Monoworks
 {
 
 #define GL_EXT_CALL_VOID(ptr, ...) \
-    do { if ((ptr) != nullptr) { (ptr)(__VA_ARGS__); } else { MW_WARN( " OpenGL Function at adress {} not loaded", ptr ); } } while (false)
+    do { if ((ptr) != nullptr) { (ptr)(__VA_ARGS__); } else { MW_WARN( " OpenGL Function at adress {} not loaded", ( const void* )ptr ); } } while (false)
 
     QOpenGLExternalObjectsExtraFunctions::QOpenGLExternalObjectsExtraFunctions( QOpenGLContext* pContext )
     {

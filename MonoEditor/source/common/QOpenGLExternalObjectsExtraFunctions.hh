@@ -32,7 +32,6 @@ namespace Monoworks
     static constexpr GLenum kGlTilingTypesEXT = 0x9583;
     static constexpr GLenum kGlOptimalTilingEXT = 0x9584;
     static constexpr GLenum kGlLinearTilingEXT = 0x9585;
-    static constexpr GLenum kGlHandleTypeOpaqueFdEXT = 0x9586;
     static constexpr GLenum kGlLayoutGeneralEXT = 0x958D;
     static constexpr GLenum kGlLayoutColorAttachmentEXT = 0x958E;
     static constexpr GLenum kGlLayoutDepthStencilAttachmentEXT = 0x958F;
@@ -62,7 +61,8 @@ namespace Monoworks
     static constexpr GLint  kGlLuidSizeEXT = 8;
 
     // GL_EXT_memory_ojects_fd
-    static constexpr GLenum  kGlHandleTypeOpaqueFdEXT = 0x9586;
+    static constexpr GLenum kGlHandleTypeOpaqueFdEXT = 0x9586;
+
     // TODO: rename this class 
     class QOpenGLExternalObjectsExtraFunctions : public QOpenGLFunctions_4_5_Core
     {

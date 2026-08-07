@@ -28,6 +28,7 @@ namespace Monoworks::RHI
 		// TODO: check this somehow
 		m_ColorImageFormat = MW_FORMAT_B8G8R8A8_SRGB;
 
+		m_PresentationImages.resize( MFIF );
 		for ( auto& texture : m_PresentationImages )
 		{
 			STextureCreateInfo createInfo{};
@@ -167,6 +168,8 @@ namespace Monoworks::RHI
 		MW_ASSERT( pInfo->Medium == MW_PRESENTATION_MEDIUM_VULKAN_QT, "Invalid Presentation Medium" );
 
 		auto info = ( SVulkanQtPresentationTransitionRenderInfo* )pInfo;
+
+		
 	};
 
 	void CVulkanQtPresenter::TransitionPresent( const IPresentationTransitionPresentInfo* pInfo ) NOEXCEPT 

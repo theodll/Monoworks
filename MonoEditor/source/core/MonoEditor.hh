@@ -50,7 +50,7 @@ namespace Monoworks
 
 	private:
 		CEngineManager* m_pEngineManager;
-		QCoreApplication* m_pQtApplication;
+		QApplication* m_pQtApplication;
 		KDDockWidgets::QtWidgets::MainWindow* m_pMainWindow;
 	};
 	

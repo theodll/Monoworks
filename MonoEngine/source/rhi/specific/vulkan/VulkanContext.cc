@@ -2,6 +2,7 @@
 
 #include "VulkanContext.hh"
 #include "VulkanDevice.hh"
+#include "VulkanRenderManager.hh"
 
 #include "VulkanPresenter.hh"
 
@@ -154,14 +155,32 @@ namespace Monoworks::RHI
 
 		MW_VK_CHECK( vmaCreateAllocator( &allocatorCreateInfo, &m_Allocator ), "Failed to create VMA Allocator" );
 
+		m_ResouceUploader.Init();
 
-		SVulkanSDLPresentationInitialization2Info presentationInfo2;
-		presentationInfo2.pVulkanDevice = &m_Device;
-		presentationInfo2.pDevice = m_Device.GetDevice();
-		presentationInfo2.pPhysDevice = *m_Device.GetPhysicalDevice(); 
-		m_Presenter->Init2( &presentationInfo2 );
+		if ( CApplication::GetCreateInfos()->UseSDL )
+		{
+			SVulkanSDLPresentationInitialization2Info presentationInfo2;
+			presentationInfo2.pVulkanDevice = &m_Device;
+			presentationInfo2.pDevice = m_Device.GetDevice();
+			presentationInfo2.pPhysDevice = *m_Device.GetPhysicalDevice();
+			m_Presenter->Init2( &presentationInfo2 );
+		}
+		else if ( CApplication::GetCreateInfos()->UseQt )
+		{
+			VkSemaphore* renderFinishedSemaphores[MFIF];
+			for ( u32 i {}; i < MFIF; i++ )
+			{
+				renderFinishedSemaphores[i] = CVulkanRenderManager::GetRenderFinishedSemaphore( i );
+			};
 
-		m_ResouceUploader.Init(); 
+			SVulkanQtPresentationInitialization2Info presentationInfo2;
+			presentationInfo2.pRenderFinishedSemaphores = renderFinishedSemaphores;
+			presentationInfo2.RenderFinishedSemaphoreCount = MFIF;
+			presentationInfo2.pVulkanDevice = &m_Device;
+
+			m_Presenter->Init2( &presentationInfo2 );
+		}
+
 
 
 #ifdef MW_PROFILING

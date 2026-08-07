@@ -2,7 +2,7 @@
 #include <core/Application.hh>
 #include "MonoEditor.hh"
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
@@ -49,10 +49,12 @@ namespace Monoworks
 
 		cfg.Flush();
 
-		m_pQtApplication = new QCoreApplication( argc, argv );
+		QApplication::setAttribute( Qt::AA_UseDesktopOpenGL );
+
+		m_pQtApplication = new QApplication( argc, argv );
 
 		SApplicationCreateInfos appInfos {};
-		appInfos.pName = strdup( cfg.Get( "Runtime", "Title" ).c_str() );
+		appInfos.pName = strdup( cfg.Get( "Editor", "Title" ).c_str() );
 		appInfos.RenderableExtent = { cfg.Get<u32>( "Rendering", "Default Width" ), cfg.Get<u32>( "Rendering", "Default Height" ) };
 		appInfos.GraphicsAPI = MW_GAPI_VULKAN;
 		appInfos.ArgumentCount = argc;
@@ -63,9 +65,12 @@ namespace Monoworks
 
 		m_pQtApplication->setOrganizationName( "Monoworks" );
 		m_pQtApplication->setApplicationName( "MonoEditor" );
-
 		
-		m_pMainWindow = new KDDockWidgets::QtWidgets::MainWindow( appInfos.pName );
+		KDDockWidgets::initFrontend( KDDockWidgets::FrontendType::QtWidgets );
+
+		KDDockWidgets::MainWindowOptions options = KDDockWidgets::MainWindowOption_HasCentralGroup;
+		m_pMainWindow = new KDDockWidgets::QtWidgets::MainWindow( appInfos.pName, options );
+
 		m_pMainWindow->setWindowTitle( appInfos.pName );
 		m_pMainWindow->resize( cfg.Get<int>( "Editor", "Window W" ), cfg.Get<int>( "Editor", "Window H" ) );
 		m_pMainWindow->show();
@@ -75,17 +80,14 @@ namespace Monoworks
 
 	void CMonoworksEditor::Run()
 	{
-
-
-
-		int result = m_QtApplication->exec();
+		int result = m_pQtApplication->exec();
 	};
 
 	void CMonoworksEditor::Shutdown()
 	{
-		delete m_MainWindow;
-		delete m_Engine;
-		delete m_QtApplication;
+		delete m_pMainWindow;
+		delete m_pEngineManager;
+		delete m_pQtApplication;
 	};
 
 }

@@ -561,11 +561,11 @@ namespace Monoworks::RHI
 		return details;
 	}
 
-	NODISCARD const VkQueue* CVulkanDevice::GetPresentQueue() const NOEXCEPT
+	NODISCARD VkQueue* CVulkanDevice::GetPresentQueue() NOEXCEPT
 	{
 		 if ( !CApplication::GetCreateInfos()->UseSwapchain )
 		 {
-			 MW_ERROR( "Illegal function call: Unable to get Present Queue. UseSwapchain is false" );
+			 MW_API_ERROR( "Illegal function call: Unable to get Present Queue. UseSwapchain is false" );
 			 return nullptr; 
 		 }
 		 return &m_PresentQueue; 
