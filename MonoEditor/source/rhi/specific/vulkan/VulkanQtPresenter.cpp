@@ -35,7 +35,7 @@ namespace Monoworks::RHI
 			createInfo.Format = m_ColorImageFormat; 
 			createInfo.Flags = MW_TEXTURE_CREATION_FLAG_ENABLE_MEMORY_EXPORTING;
 			createInfo.ImageLayout = MW_IMAGE_LAYOUT_UNDEFINED;
-			createInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			createInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | MW_IMAGE_USAGE_SAMPLED_BIT;
 			createInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
 			createInfo.Extent = { m_SwapchainExtent.Width, m_SwapchainExtent.Height, 1 };
 
@@ -130,8 +130,8 @@ namespace Monoworks::RHI
 
 		if ( m_PresentationImages.size() < MFIF )
 			MW_ASSERT("Insufficient Presentation Images.");
-
-		MW_VK_CHECK( vkWaitForFences(
+		// TODO: something with this
+		/*MW_VK_CHECK(vkWaitForFences(
 			*info->pVulkanDevice->GetDevice(),
 			1,
 			info->pInFlightFence,
@@ -142,10 +142,11 @@ namespace Monoworks::RHI
 			*info->pVulkanDevice->GetDevice(),
 			1,
 			info->pInFlightFence );
-
+			*/
 		m_CurrentImageIndex = ( m_CurrentImageIndex + 1 ) % MFIF;
-
-		// empty submit to signal the semaphore
+		 
+		// TODO: change to timeline semaphores
+		// empty submit to ONLY signal the semaphore
 		VkSubmitInfo submitInfo {};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.commandBufferCount = 0;
@@ -169,6 +170,21 @@ namespace Monoworks::RHI
 
 		auto info = ( SVulkanQtPresentationTransitionRenderInfo* )pInfo;
 
+		auto texture = m_PresentationImages[info->ImageIndex].As<CVulkanTexture2D>();
+
+		if ( texture->Layout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
+			return;
+
+		TransitionImageLayout2(
+			*info->pCmdBuffer,
+			*texture->GetImage(),
+			( VkImageLayout )texture->Layout,
+			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+			VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
+		);
+
+		texture->Layout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 		
 	};
 
@@ -178,6 +194,22 @@ namespace Monoworks::RHI
 		MW_ASSERT( pInfo->Medium == MW_PRESENTATION_MEDIUM_VULKAN_QT, "Invalid Presentation Medium" );
 
 		auto info = ( SVulkanQtPresentationTransitionPresentInfo* )pInfo;
+
+		auto texture = m_PresentationImages[info->ImageIndex].As<CVulkanTexture2D>();
+
+		if ( texture->Layout == MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL )
+			return;
+
+		TransitionImageLayout2(
+			*info->pCmdBuffer,
+			*texture->GetImage(),
+			( VkImageLayout )texture->Layout,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT
+		);
+
+		texture->Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	};
 
 	void CVulkanQtPresenter::Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT 

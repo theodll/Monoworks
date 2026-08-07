@@ -134,10 +134,19 @@ namespace Monoworks::RHI
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		vkBeginCommandBuffer( m_RootFrameData[frameIndex].CommandBuffer, &beginInfo );
 
+
+		auto presenter = CVulkanContext::GetPresenter();
 		if ( CApplication::GetCreateInfos()->UseSDL )
 		{
-			auto presenter = CVulkanContext::GetPresenter();
 			SVulkanSDLPresentationTransitionRenderInfo renderInfo{};
+			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootCommandBuffer( frameIndex );
+			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+
+			presenter->TransitionRender( &renderInfo );
+		} 
+		else if ( CApplication::GetCreateInfos()->UseQt )
+		{
+			SVulkanQtPresentationTransitionRenderInfo renderInfo {};
 			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootCommandBuffer( frameIndex );
 			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 

@@ -157,6 +157,8 @@ namespace Monoworks::RHI
 
 		m_ResouceUploader.Init();
 
+		CVulkanRenderManager::Init();
+
 		if ( CApplication::GetCreateInfos()->UseSDL )
 		{
 			SVulkanSDLPresentationInitialization2Info presentationInfo2;

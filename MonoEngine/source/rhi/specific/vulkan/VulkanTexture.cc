@@ -124,7 +124,7 @@ namespace Monoworks::RHI
 			
 			auto&& uploader = CVulkanContext::GetUploader();
 			uploader->Begin();
-			TransitionImageLayout2( *uploader->GetCommandBuffer(), m_Image, (VkImageLayout)MW_IMAGE_LAYOUT_UNDEFINED, (VkImageLayout)MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, 0, VK_ACCESS_SHADER_READ_BIT );
+			TransitionImageLayout2( *uploader->GetCommandBuffer(), m_Image, (VkImageLayout)MW_IMAGE_LAYOUT_UNDEFINED, (VkImageLayout)MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT );
 			Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			PipelineFlags = MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			uploader->End();

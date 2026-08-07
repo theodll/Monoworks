@@ -39,8 +39,7 @@ namespace Monoworks::RHI
     void CVulkanRenderer::Init() NOEXCEPT
     {
         MW_PROFILE_FUNC;
-        MW_INFO("Initialize CVulkanRenderer");
-        CVulkanRenderManager::Init();
+        MW_INFO( "Initialize CVulkanRenderer" );
 
 		SShaderByteCode vertexCode{};
 		auto vertextSpirv = readFile( "shaders/vertex.spirv", &vertexCode.Size );
@@ -232,11 +231,23 @@ namespace Monoworks::RHI
         if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
         {
             CVulkanContext::GetUploader()->Begin();
-            SVulkanSDLPresentationTransitionPresentInfo renderInfo{};
-            renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
-            renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 
-            presenter->TransitionPresent( &renderInfo );
+            if ( CApplication::GetCreateInfos()->UseSDL )
+            {
+                SVulkanSDLPresentationTransitionPresentInfo renderInfo {};
+                renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
+                renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+
+                presenter->TransitionPresent( &renderInfo );
+            }
+            else if ( CApplication::GetCreateInfos()->UseQt )
+            {
+                SVulkanQtPresentationTransitionPresentInfo renderInfo {};
+                renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
+                renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+
+                presenter->TransitionPresent( &renderInfo );
+            }
             CVulkanContext::GetUploader()->End();
 
             SVulkanSDLPresentationPresentInfo presentInfo{};

@@ -55,8 +55,11 @@ namespace Monoworks
 
 		auto presenter = ( RHI::CVulkanQtPresenter* )m_pPresenter; 
 
+		makeCurrent();
+
 		for ( u32 i{}; i < MFIF; i++ )
 		{
+			// TODO: platform independant
 			VmaAllocationInfo2 info {};
 			vmaGetAllocationInfo2( *RHI::CVulkanContext::GetAllocator(), *presenter->GetSwapchainImages()[i].As<RHI::CVulkanTexture2D>()->GetVmaAllocation(), &info );
 
