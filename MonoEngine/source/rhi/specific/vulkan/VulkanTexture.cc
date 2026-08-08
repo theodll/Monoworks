@@ -91,15 +91,17 @@ namespace Monoworks::RHI
 			imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 			imageInfo.initialLayout = ( VkImageLayout )pInfo->ImageLayout;
 
-			VmaAllocationCreateInfo allocInfo {};
+			VmaAllocationCreateInfo allocInfo{};
 			allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
 			allocInfo.requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
 			if ( m_EnableMemoryExporting )
 			{
+				allocInfo.flags |= VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT; 
+
 				uint32_t memTypeIndex;
-				MW_VK_CHECK(vmaFindMemoryTypeIndexForImageInfo( *allocator,
-					&imageInfo, &allocInfo, &memTypeIndex ), "Fail to find memory index for custom external memory VMA pool.");
+				MW_VK_CHECK( vmaFindMemoryTypeIndexForImageInfo( *allocator,
+					&imageInfo, &allocInfo, &memTypeIndex ), "..." );
 
 				VkExportMemoryAllocateInfo exportMemAllocInfo{};
 				exportMemAllocInfo.sType = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
@@ -108,12 +110,13 @@ namespace Monoworks::RHI
 #else
 				exportMemAllocInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
 #endif
+
 				VmaPoolCreateInfo poolCreateInfo = {};
 				poolCreateInfo.memoryTypeIndex = memTypeIndex;
+				poolCreateInfo.flags = VMA_POOL_CREATE_LINEAR_ALGORITHM_BIT; 
 				poolCreateInfo.pMemoryAllocateNext = ( void* )&exportMemAllocInfo;
 
 				vmaCreatePool( *allocator, &poolCreateInfo, &m_ExternalMemoryPool );
-
 				allocInfo.pool = m_ExternalMemoryPool;
 			}
 

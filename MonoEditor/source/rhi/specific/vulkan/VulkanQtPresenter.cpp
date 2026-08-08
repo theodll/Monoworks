@@ -83,7 +83,7 @@ namespace Monoworks::RHI
 
 #else
 			VkSemaphoreGetFdInfoKHR getSemaphoreFdInfo {};
-			getSemaphoreFdInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR;
+			getSemaphoreFdInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR;
 			getSemaphoreFdInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
 			getSemaphoreFdInfo.semaphore = *info->pRenderFinishedSemaphores[i];
 
@@ -99,16 +99,17 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 
-		m_PresentationImages.clear();
-
 		for (u32 i{}; i < m_PresentationImages.size(); i++ )
 		{
 #ifdef MW_PLATFORM_WINDOWS
 			CloseHandle( m_PresentationImageWin32Handles[i] );
 #else
+			close( m_PresentationImageFds[i] );
 			m_PresentationImageFd[i] = -1;
 #endif
 		}
+		m_PresentationImages.clear();
+
 
 	};
 
@@ -194,19 +195,19 @@ namespace Monoworks::RHI
 
 		auto texture = m_PresentationImages[info->ImageIndex].As<CVulkanTexture2D>();
 
-		if ( texture->Layout == MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL )
+		if ( texture->Layout == MW_IMAGE_LAYOUT_GENERAL )
 			return;
 
 		TransitionImageLayout2(
 			*info->pCmdBuffer,
 			*texture->GetImage(),
 			( VkImageLayout )texture->Layout,
-			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			VK_IMAGE_LAYOUT_GENERAL,
 			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-			VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT
+			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
 		);
 
-		texture->Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		texture->Layout = MW_IMAGE_LAYOUT_GENERAL;
 	};
 
 	void CVulkanQtPresenter::Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT 

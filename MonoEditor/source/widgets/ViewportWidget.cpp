@@ -33,10 +33,10 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
-		constexpr GLenum srcEnum = kGlLayoutShaderReadOnlyEXT;
+		constexpr GLenum srcEnum = kGlLayoutGeneralEXT;
 
 		glClear( GL_COLOR_BUFFER_BIT );
-
+		/*
 		glWaitSemaphoreEXT(
 			m_RenderFinishedSemaphores[m_CurrentImageIndex],
 			0,
@@ -44,7 +44,7 @@ namespace Monoworks
 			1,
 			&m_PresentationImages[m_CurrentImageIndex],
 			&srcEnum
-		);
+		);*/
 
 		glUseProgram( m_ShaderProgram );
 		glBindTextureUnit( 0, m_PresentationImages[m_CurrentImageIndex] );
@@ -54,6 +54,13 @@ namespace Monoworks
 		glBindVertexArray( m_EmptyVAO );
 		glDrawArrays( GL_TRIANGLES, 0, 3 );
 		glBindVertexArray( 0 );
+		/*
+		glSignalSemaphoreEXT(
+			m_RenderFinishedSemaphores[m_CurrentImageIndex],
+			0, nullptr, 1,
+			&m_PresentationImages[m_CurrentImageIndex],
+			&src
+		);*/
 	};
 
 	void CViewportWidget::initializeGL()
@@ -61,6 +68,17 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 		initializeExternalObjectsFunctions();
+
+
+		glEnable( GL_DEBUG_OUTPUT );
+		glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS ); 
+		glDebugMessageCallback( []( GLenum source, GLenum type, GLuint id, GLenum severity,
+			GLsizei length, const GLchar* message, const void* userParam )
+			{
+				if ( severity == GL_DEBUG_SEVERITY_NOTIFICATION )
+					return;
+				MW_ERROR( "GL Debug [{}]: {}", id, message ); 
+			}, nullptr );
 
 		auto presenter = ( RHI::CVulkanQtPresenter* )m_pPresenter;
 
@@ -75,13 +93,19 @@ namespace Monoworks
 			// TODO: batch this
 			GLuint memory;
 			glCreateMemoryObjectsEXT( 1, &memory );
+			glGenSemaphoresEXT( 1, &m_RenderFinishedSemaphores[i] );
+
+			GLint dedicated = GL_TRUE;
+			glMemoryObjectParameterivEXT( memory, kGlDedicatedMemoryObjectEXT, &dedicated );
+
 
 #ifdef MW_PLATFORM_WINDOWS
 			HANDLE imageHandle = presenter->GetPresentationImageWin32Handle( i );
 			HANDLE semaphoreHandle = presenter->GetRenderFinishedSemaphoreWin32Handle( i );
 
+			MW_INFO("Allocation Info: {}", info.allocationInfo.size);
 			glImportSemaphoreWin32HandleEXT( m_RenderFinishedSemaphores[i], kGlHandleTypeOpaqueWin32EXT, semaphoreHandle );
-			glImportMemoryWin32HandleEXT( memory, info.blockSize, kGlHandleTypeOpaqueWin32EXT, imageHandle );
+			glImportMemoryWin32HandleEXT( memory, info.allocationInfo.size, kGlHandleTypeOpaqueWin32EXT, imageHandle );
 
 #else
 
@@ -98,11 +122,14 @@ namespace Monoworks
 			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
 			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_MAX_LEVEL, 0 );
+			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_SWIZZLE_R, GL_BLUE );
+			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_SWIZZLE_B, GL_RED );
 
 			glTextureStorageMem2DEXT(
 				m_PresentationImages[i],
 				1,
-				GL_BGRA,
+				GL_SRGB8_ALPHA8,
 				presenter->GetSwapchainImages()[i].As<RHI::CVulkanTexture2D>()->GetWidth(),
 				presenter->GetSwapchainImages()[i].As<RHI::CVulkanTexture2D>()->GetHeight(),
 				memory,

@@ -39,6 +39,7 @@ namespace Monoworks::RHI
 #endif
 		}
 
+
 		VkSemaphoreCreateInfo semaphoreCreateInfo{};
 		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -53,8 +54,9 @@ namespace Monoworks::RHI
 		for ( auto& frameData : m_RootFrameData )
 		{
 			// TODO: allocation callbacks
-			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.ImageAvailableSemaphore), "Failed to create ImageAvailableSemaphore.");
-			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.RenderFinishedSemaphore), "Failed to create RenderFinishedSemaphore.");
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.QtReadFinishedSemaphore ), "Failed to create QtReadFinishedSemaphore." );
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.ImageAvailableSemaphore ), "Failed to create ImageAvailableSemaphore." );
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.RenderFinishedSemaphore ), "Failed to create RenderFinishedSemaphore." );
 			MW_VK_CHECK( vkCreateFence( *device->GetDevice(), &fenceCreateInfo, nullptr, &frameData.InFlightFence), "Failed to create InFlightFence.");
 
 			VkCommandPoolCreateInfo poolCreateInfo{};
@@ -102,7 +104,7 @@ namespace Monoworks::RHI
 		auto device = *CVulkanContext::GetDevice()->GetDevice();
 		
 		vkDeviceWaitIdle( device );
-
+		// TODO: allocation callbacks
 		for ( auto& workerData : m_WorkerRenderData )
 		{
 			for ( auto& commandPool : workerData.CommandPools )
@@ -121,6 +123,9 @@ namespace Monoworks::RHI
 			
 			if ( frameData.RenderFinishedSemaphore )
 				vkDestroySemaphore( device, frameData.RenderFinishedSemaphore, nullptr );
+
+			if ( frameData.QtReadFinishedSemaphore )
+				vkDestroySemaphore( device, frameData.QtReadFinishedSemaphore, nullptr );
 
 			if ( frameData.InFlightFence )
 				vkDestroyFence( device, frameData.InFlightFence, nullptr );

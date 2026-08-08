@@ -315,6 +315,12 @@ namespace Monoworks::RHI
 			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 		}
+		else if ( oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL &&
+			newLayout == VK_IMAGE_LAYOUT_GENERAL )
+		{
+			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			barrier.dstAccessMask = 0;
+		}
 		else
 		{
 			MW_ASSERT( false, "Unsupported layout transition" );

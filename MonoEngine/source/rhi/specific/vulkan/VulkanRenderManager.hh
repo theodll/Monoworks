@@ -14,6 +14,7 @@ namespace Monoworks::RHI
 		VkCommandBuffer CommandBuffer;
 		VkCommandPool	CommandPool;
 
+		VkSemaphore		QtReadFinishedSemaphore;
 		VkSemaphore		ImageAvailableSemaphore;
 		VkSemaphore		RenderFinishedSemaphore;
 
@@ -44,6 +45,7 @@ namespace Monoworks::RHI
 
 		NODISCARD static VkSemaphore* GetImageAvailableSemaphore( u32 frameIndex )					NOEXCEPT { return &m_RootFrameData[frameIndex].ImageAvailableSemaphore; };
 		NODISCARD static VkSemaphore* GetRenderFinishedSemaphore( u32 frameIndex )					NOEXCEPT { return &m_RootFrameData[frameIndex].RenderFinishedSemaphore; };
+		NODISCARD static VkSemaphore* GetQtReadFinishedSemaphore( u32 frameIndex )					NOEXCEPT { if ( !CApplication::GetCreateInfos()->UseQt ) { MW_API_ERROR( "Illegal function call: Accessing Qt specific render elements without UseQt flag specified. " ); return nullptr; } return &m_RootFrameData[frameIndex].QtReadFinishedSemaphore; }
 
 		NODISCARD static VkFence* GetInFlightFence( u32 frameIndex )								NOEXCEPT { return &m_RootFrameData[frameIndex].InFlightFence; };
 
