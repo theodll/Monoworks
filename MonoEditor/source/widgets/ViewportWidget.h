@@ -20,6 +20,7 @@ namespace Monoworks
 
 		virtual void initializeGL() override;
 		virtual void resizeGL( int w, int h ) override;
+		virtual void paintGL() override;
 	private:
 		RHI::IPresenter* m_pPresenter;
 
@@ -28,7 +29,7 @@ namespace Monoworks
 		GLuint m_ShaderProgram;
 		GLuint m_EmptyVAO;
 		GLint m_ImageLocation;
-
+		u32 m_CurrentImageIndex{};
 
 	};
 }

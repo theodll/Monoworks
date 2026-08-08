@@ -6,6 +6,14 @@
 #include <rhi/specific/vulkan/VulkanContext.hh>
 #include <rhi/specific/vulkan/VulkanPresenter.hh>
 
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+#include <renderdoc_app.h>
+#endif
+
+#ifdef MW_PLATFORM_WINDOWS
+#include <Windows.h>
+#endif
+
 #include "VulkanRenderManager.hh"
 
 
@@ -17,7 +25,7 @@ namespace Monoworks::RHI
 	void CVulkanRenderManager::Init() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		MW_INFO( "Initializa CVulkanRenderManager" );
+		MW_INFO( "Initialize CVulkanRenderManager" );
 		
 		VkExportSemaphoreCreateInfo exportSemaphoreCreateInfo{};
 		exportSemaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO;
@@ -85,7 +93,6 @@ namespace Monoworks::RHI
 				MW_VK_CHECK( vkAllocateCommandBuffers( *device->GetDevice(), &allocInfo, &workerData.CommandBuffers[i] ), "Failed to allocate CommandBuffer.");
 			}
 		}
-
 
 	};
 
@@ -159,6 +166,7 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 
 		vkEndCommandBuffer( m_RootFrameData[frameIndex].CommandBuffer );
+
 	};
 
 	void CVulkanRenderManager::SubmitRootCommandBuffer( u32 frameIndex ) NOEXCEPT
@@ -217,7 +225,7 @@ namespace Monoworks::RHI
 		// batching worker command buffers for optimal submission
 		static std::vector<VkCommandBuffer> workerCommandBuffers;
 		workerCommandBuffers.reserve( m_WorkerRenderData.size() );
-			
+
 		for ( auto& workerData : m_WorkerRenderData )
 		{
 			workerCommandBuffers.push_back( workerData.CommandBuffers[frameIndex] );
@@ -231,6 +239,5 @@ namespace Monoworks::RHI
 			vkEndCommandBuffer( workerData.CommandBuffers[frameIndex] );
 		}
 	};
-
 
 }

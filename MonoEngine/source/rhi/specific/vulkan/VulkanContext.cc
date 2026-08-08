@@ -43,7 +43,7 @@ namespace Monoworks::RHI
 	VmaAllocator CVulkanContext::m_Allocator;
 	VkInstance CVulkanContext::m_Instance;
 	VkPipelineCache CVulkanContext::m_PipelineCache;
-	CVulkanResourceUploader CVulkanContext::m_ResouceUploader;
+	CVulkanResourceUploader CVulkanContext::m_ResourceUploader;
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -155,7 +155,7 @@ namespace Monoworks::RHI
 
 		MW_VK_CHECK( vmaCreateAllocator( &allocatorCreateInfo, &m_Allocator ), "Failed to create VMA Allocator" );
 
-		m_ResouceUploader.Init();
+		m_ResourceUploader.Init();
 
 		CVulkanRenderManager::Init();
 
@@ -187,6 +187,9 @@ namespace Monoworks::RHI
 
 #ifdef MW_PROFILING
 
+		m_ResourceUploader.Begin();
+		m_ResourceUploader.End();
+		
 		CEventManager::Subscribe(MW_EVENT_APP_FRAME, +[] (SEvent& event )
 			{
 				VmaTotalStatistics stats;
@@ -197,9 +200,9 @@ namespace Monoworks::RHI
 				return false;
 			});
 
-		TracyGraphicsContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetGraphicsQueue(), *m_ResouceUploader.GetCommandBuffer() );
-		TracyComputeContext	 = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetComputeQueue(), *m_ResouceUploader.GetCommandBuffer() );
-		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), *m_ResouceUploader.GetCommandBuffer() );
+		TracyGraphicsContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetGraphicsQueue(), *m_ResourceUploader.GetCommandBuffer() );
+		TracyComputeContext	 = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetComputeQueue(), *m_ResourceUploader.GetCommandBuffer() );
+		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), *m_ResourceUploader.GetCommandBuffer() );
 
 #endif
 	}
@@ -257,7 +260,7 @@ namespace Monoworks::RHI
 			vmaDestroyAllocator( m_Allocator );
 		}
 
-		m_ResouceUploader.Shutdown();
+		m_ResourceUploader.Shutdown();
 		m_Presenter->Shutdown();
 		
 		m_Device.Shutdown();

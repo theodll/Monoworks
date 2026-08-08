@@ -25,6 +25,7 @@ endif()
 
 add_compile_definitions(TRACY_ENABLE)
 
+# add_compile_definitions(MW_ENABLE_MANUAL_RENDERDOC)
 
 
 add_compile_definitions(

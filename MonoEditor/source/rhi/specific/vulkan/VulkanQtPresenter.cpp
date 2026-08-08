@@ -125,40 +125,37 @@ namespace Monoworks::RHI
 
 		auto info = ( SVulkanQtPresentationAcquisitionInfo* )pInfo;
 
-		if ( m_CurrentImageIndex >= m_PresentationImages.size() )
-			m_CurrentImageIndex = 0;
-
 		if ( m_PresentationImages.size() < MFIF )
-			MW_ASSERT("Insufficient Presentation Images.");
-		// TODO: something with this
-		/*MW_VK_CHECK(vkWaitForFences(
+			MW_ASSERT( false && "Insufficient Presentation Images." );
+
+		m_CurrentImageIndex = ( m_CurrentImageIndex + 1 ) % MFIF;
+
+		MW_VK_CHECK( vkWaitForFences(
 			*info->pVulkanDevice->GetDevice(),
 			1,
-			info->pInFlightFence,
+			info->pInFlightFence, 
 			VK_TRUE,
 			UINT64_MAX ), "Failed to wait for InFlightFence" );
 
-		vkResetFences(
+		MW_VK_CHECK( vkResetFences(
 			*info->pVulkanDevice->GetDevice(),
 			1,
-			info->pInFlightFence );
-			*/
-		m_CurrentImageIndex = ( m_CurrentImageIndex + 1 ) % MFIF;
-		 
-		// TODO: change to timeline semaphores
-		// empty submit to ONLY signal the semaphore
-		VkSubmitInfo submitInfo {};
+			info->pInFlightFence ), "Failed to reset InFlightFence" );
+
+		// TODO: use timeline semaphores
+		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.commandBufferCount = 0;
 		submitInfo.pCommandBuffers = nullptr;
 		submitInfo.pSignalSemaphores = info->pImageAvailableSemaphore;
-		submitInfo.signalSemaphoreCount = 1;
+		submitInfo.signalSemaphoreCount = ( info->pImageAvailableSemaphore != nullptr ) ? 1 : 0;
 
-		vkQueueSubmit(
+		MW_VK_CHECK( vkQueueSubmit(
 			*info->pGraphicsQueue,
 			1,
 			&submitInfo,
-			nullptr );
+			*info->pInFlightFence 
+		), "Failed to submit acquire semaphore trigger" );
 
 		return m_CurrentImageIndex;
 	};

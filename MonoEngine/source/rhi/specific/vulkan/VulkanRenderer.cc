@@ -87,6 +87,24 @@ namespace Monoworks::RHI
 
 		std::vector<Index> indices = { 0, 1, 2, 2, 3, 0 };
         m_Indices = IIndexBuffer::Create( indices.data(), indices.size(), 0, true );
+
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+#ifdef MW_PLATFORM_WINDOWS
+		if ( HMODULE mod = GetModuleHandleA( "renderdoc.dll" ) )
+		{
+			pRENDERDOC_GetAPI rd_GetAPI = ( pRENDERDOC_GetAPI )GetProcAddress( mod, "RENDERDOC_GetAPI" );
+			rd_GetAPI( eRENDERDOC_API_Version_1_1_2, ( void** )&m_RenderDocAPI );
+		}
+#else
+		if ( void* mod = dlopen( "librenderdoc.so", RTLD_NOW | RTLD_NOLOAD ) )
+		{
+			pRENDERDOC_GetAPI rd_GetAPI = ( pRENDERDOC_GetAPI )dlsym( mod, "RENDERDOC_GetAPI" );
+			int ret = rd_GetAPI( eRENDERDOC_API_Version_1_1_2, ( void** )&m_RenderDocAPI );
+		}
+#endif
+#endif
+
+
     } 
 
     void CVulkanRenderer::Shutdown() NOEXCEPT 
@@ -103,6 +121,10 @@ namespace Monoworks::RHI
         u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
         auto presenter = CVulkanContext::GetPresenter();
+
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+		if ( m_RenderDocAPI ) m_RenderDocAPI->StartFrameCapture( nullptr, nullptr );
+#endif 
 
         if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
         {
@@ -259,6 +281,11 @@ namespace Monoworks::RHI
             presentInfo.pVulkanDevice = CVulkanContext::GetDevice();
 
             presenter->Present( &presentInfo );
+
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+			if ( m_RenderDocAPI ) m_RenderDocAPI->EndFrameCapture( nullptr, nullptr );
+#endif 
+
         }
         
     };

@@ -43,6 +43,10 @@ namespace Monoworks
 	CEngineManager::~CEngineManager()
 	{
 		MW_PROFILE_FUNC;
+
+		// m_pPresenter->Shutdown();
+
+//		m_pEngine->Shutdown();
 	}
 
 	void CEngineManager::Tick() 

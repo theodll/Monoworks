@@ -43,4 +43,7 @@ elseif (APPLE)
     target_compile_definitions(MonoEditor PRIVATE MW_PLATFORM_OSX)
 endif()
 
+
+
+
 target_compile_definitions(MonoEditor PRIVATE MW_EDITOR)

@@ -7,7 +7,7 @@
 
 #include "ViewportWidget.h"
 
-namespace Monoworks 
+namespace Monoworks
 {
 	CViewportWidget::CViewportWidget( RHI::IPresenter* presenter, QWidget* parent ) : QOpenGLWidget( parent )
 	{
@@ -25,20 +25,29 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		m_CurrentImageIndex = imageIndex;
+		update();
+	};
+
+	void CViewportWidget::paintGL()
+	{
+		MW_PROFILE_FUNC;
+
 		constexpr GLenum srcEnum = kGlLayoutShaderReadOnlyEXT;
-		
-		glClear(GL_COLOR_BUFFER_BIT),
+
+		glClear( GL_COLOR_BUFFER_BIT );
 
 		glWaitSemaphoreEXT(
-			m_RenderFinishedSemaphores[imageIndex],
+			m_RenderFinishedSemaphores[m_CurrentImageIndex],
 			0,
 			nullptr,
 			1,
-			&m_PresentationImages[imageIndex],
+			&m_PresentationImages[m_CurrentImageIndex],
 			&srcEnum
 		);
 
-		glBindTextureUnit( 0, m_PresentationImages[imageIndex] );
+		glUseProgram( m_ShaderProgram );
+		glBindTextureUnit( 0, m_PresentationImages[m_CurrentImageIndex] );
 
 		glUniform1i( m_ImageLocation, 0 );
 
@@ -47,20 +56,20 @@ namespace Monoworks
 		glBindVertexArray( 0 );
 	};
 
-	void CViewportWidget::initializeGL() 
+	void CViewportWidget::initializeGL()
 	{
 		MW_PROFILE_FUNC;
 
 		initializeExternalObjectsFunctions();
 
-		auto presenter = ( RHI::CVulkanQtPresenter* )m_pPresenter; 
+		auto presenter = ( RHI::CVulkanQtPresenter* )m_pPresenter;
 
 		makeCurrent();
 
 		for ( u32 i{}; i < MFIF; i++ )
 		{
 			// TODO: platform independant
-			VmaAllocationInfo2 info {};
+			VmaAllocationInfo2 info{};
 			vmaGetAllocationInfo2( *RHI::CVulkanContext::GetAllocator(), *presenter->GetSwapchainImages()[i].As<RHI::CVulkanTexture2D>()->GetVmaAllocation(), &info );
 
 			// TODO: batch this
@@ -82,14 +91,13 @@ namespace Monoworks
 			glImportMemoryFdEXT( memory, info.blockSize, kGlHandleTypeOpaqueFdEXT, imageFd );
 			glImportSemaphoreFdEXT( m_RenderFinishedSemaphores[i], kGlHandleTypeOpaqueFdEXT, semaphoreFd );
 #endif
-			auto image = m_PresentationImages[i];
-			
-			glCreateTextures( GL_TEXTURE_2D, 1, &image );
 
-			glTextureParameteri( image, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-			glTextureParameteri( image, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-			glTextureParameteri( image, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-			glTextureParameteri( image, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+			glCreateTextures( GL_TEXTURE_2D, 1, &m_PresentationImages[i] );
+
+			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+			glTextureParameteri( m_PresentationImages[i], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
 			glTextureStorageMem2DEXT(
 				m_PresentationImages[i],
@@ -103,10 +111,8 @@ namespace Monoworks
 
 		}
 
-		glGenVertexArrays(1, &m_EmptyVAO);
-		glClearColor( 1, 0, 0, 1 );
-
-		m_ImageLocation = glGetUniformLocation( m_ShaderProgram, "u_Texture" );
+		glGenVertexArrays( 1, &m_EmptyVAO );
+		glClearColor( 1, 0, 1, 1 );
 
 		static const char* fullscreenTriangleVertexShader = R"(
 		#version 330 core
@@ -115,10 +121,6 @@ namespace Monoworks
 		
 		void main()
 		{
-		    // Generiert ein Fullscreen-Dreieck aus 3 Vertices ohne Buffer
-		    // Vertex 0: (-1, -1), UV: (0, 0)
-		    // Vertex 1: ( 3, -1), UV: (2, 0)
-		    // Vertex 2: (-1,  3), UV: (0, 2)
 		    float x = -1.0 + float((gl_VertexID & 1) << 2);
 		    float y = -1.0 + float((gl_VertexID & 2) << 1);
 		
@@ -139,16 +141,16 @@ namespace Monoworks
 		in vec2 vTexCoord;
 		out vec4 FragColor;
 		
-		uniform sampler2D uTexture;
+		uniform sampler2D u_Texture;
 		
 		void main()
 		{
-		    FragColor = texture(uTexture, vTexCoord);
+		    FragColor = texture(u_Texture, vTexCoord);
 		}
 		)";
 
 		GLuint fragmentShader;
-		fragmentShader = glCreateShader( GL_VERTEX_SHADER );
+		fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
 
 		glShaderSource( fragmentShader, 1, &fullscreenTriangleFragmentShader, NULL );
 		glCompileShader( fragmentShader );
@@ -163,9 +165,12 @@ namespace Monoworks
 
 		glUseProgram( m_ShaderProgram );
 
+
+		m_ImageLocation = glGetUniformLocation( m_ShaderProgram, "u_Texture" );
+
 	};
 
-	void CViewportWidget::resizeGL( int w, int h ) 
+	void CViewportWidget::resizeGL( int w, int h )
 	{
 		MW_PROFILE_FUNC;
 	};

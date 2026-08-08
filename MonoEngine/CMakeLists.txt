@@ -32,6 +32,7 @@ target_precompile_headers(MonoEngine PUBLIC
     $<$<COMPILE_LANGUAGE:CXX>:mwpch.hh>
 )
 
+
 if (WIN32)
     add_compile_definitions(MW_PLATFORM_WINDOWS)
     add_compile_definitions(
@@ -42,6 +43,14 @@ elseif (UNIX AND NOT APPLE)
     add_compile_definitions(MW_PLATFORM_LINUX)
 elseif (APPLE)                                    
     target_compile_definitions(MW_PLATFORM_OSX)
+endif()
+
+
+get_directory_property(current_defs COMPILE_DEFINITIONS)
+if ("MW_ENABLE_MANUAL_RENDERDOC" IN_LIST current_defs)
+    if (WIN32)
+     target_include_directories(MonoEngine PUBLIC "C:/Program Files/RenderDoc")
+    endif()
 endif()
 
 target_compile_definitions(MonoEngine PRIVATE MW_ENGINE TRACY_ENABLE)
