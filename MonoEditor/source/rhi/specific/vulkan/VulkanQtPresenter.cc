@@ -85,10 +85,11 @@ namespace Monoworks::RHI
 #endif
 		}
 
-		if ( info->RenderFinishedSemaphoreCount < MFIF )
-			MW_ASSERT( false, "Insufficient Number of RenderFinishedSemaphores" );
+		MW_ASSERT( info->RenderFinishedSemaphoreCount >= MFIF, "Insufficient Number of RenderFinishedSemaphores" );
+		MW_ASSERT( info->QtReadFinishedSemaphoreCount >= MFIF, "Insufficient Number of QtReadFinishedSemaphores" );
 
-		for (u32 i{}; i < info->RenderFinishedSemaphoreCount; i++ )
+
+		for (u32 i{}; i < MFIF; i++ )
 		{
 #ifdef MW_PLATFORM_WINDOWS
 			VkSemaphoreGetWin32HandleInfoKHR getRenderFinishedSemaphoreHandleInfo{};

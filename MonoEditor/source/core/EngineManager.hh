@@ -1,10 +1,10 @@
 #pragma once
 #include <Monoworks.hh>
 
-#include <widgets/ViewportWidget.h>
+#include <widgets/ViewportWidget.hh>
 #include <rhi/agnostic/Presenter.hh>
 
-#include <kddockwidgets/MainWindow.h>s
+#include <kddockwidgets/MainWindow.h>
 #include <QWidget>
 
 namespace Monoworks 
@@ -21,8 +21,8 @@ namespace Monoworks
 		
 		void Tick();
 
-		CViewportWidget** GetViewports() { return m_pViewports.data(); }
-		size_t GetViewportCount() { return m_ViewportCount; }
+		CViewportWidget** GetViewports() { return m_Viewports.data(); }
+		size_t GetViewportCount() { return m_Viewports.size(); }
 
 	private:
 		CApplication* m_pEngine;
@@ -30,7 +30,6 @@ namespace Monoworks
 
 		RHI::IPresenter* m_pPresenter;
 
-		std::vector<CViewportWidget*> m_pViewports;
-		size_t m_ViewportCount = 0;
+		std::vector<CViewportWidget*> m_Viewports;
 	};
 }

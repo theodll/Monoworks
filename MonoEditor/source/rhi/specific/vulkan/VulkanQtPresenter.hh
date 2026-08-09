@@ -8,8 +8,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #define VK_USE_PLATFORM_WIN32
-#include <volk/volk.h>
+#else
+#include <unistd.h>
 #endif
+#include <volk/volk.h>
 
 namespace Monoworks::RHI 
 {
@@ -35,9 +37,9 @@ namespace Monoworks::RHI
 		HANDLE GetRenderFinishedSemaphoreWin32Handle( u32 imageIndex ) { if ( m_RenderFinishedSemaphoreWin32Handles[imageIndex] ) { return m_RenderFinishedSemaphoreWin32Handles[imageIndex]; } else { MW_ASSERT(false, "Requested Render Finished Semaphore Win32 Handle is invalid."); return nullptr; } };
 		HANDLE GetQtReadFinishedSemaphoreWin32Handle( u32 imageIndex ) { if ( m_QtReadFinishedSemaphoreWin32Handles[imageIndex] ) { return m_QtReadFinishedSemaphoreWin32Handles[imageIndex]; } else { MW_ASSERT( false, "Requested Qt Read Finished Semaphore Win32 Handle is invalid. " ); return nullptr; } }
 #else 
-		int GetPresentationImageFd( u32 imageIndex ) { (m_PresentationImageFds[imageIndex] > 0) ? return m_PresentationImageFds[imageIndex] : MW_ASSERT( false,  "Requested Presentation Image File Descriptor is invalid." ); return -1; };
-		int GetRenderFinishedSemaphoreFd( u32 imageIndex ) { (m_RenderFinishedSemaphoreFds[imageIndex] > 0) ? return m_RenderFinishedSemaphoreFds[imageIndex] : MW_ASSERT( false,  "Requested Render Finished Semaphore File Descriptor is invalid." ); return -1; };
-		int GetQtReadFinishedSemaphoreFd( u32 imageIndex ) { ( m_QtReadFinishedSemaphoreFds[imageIndex] > 0 ) ? return m_QtReadFinishedSemaphoreFds[imageIndex] : MW_ASSERT( false, "Requested Qt Read Finished Semaphore File Descriptor is invalid." ); return -1; }
+		int GetPresentationImageFd( u32 imageIndex ) { if ( m_PresentationImageFds[imageIndex] >= 0 ) { return m_PresentationImageFds[imageIndex] } else { MW_ASSERT( false, "Requested Presentation Image File Descriptor is invalid." ); return -1; } };
+		int GetRenderFinishedSemaphoreFd( u32 imageIndex ) { ( m_RenderFinishedSemaphoreFds[imageIndex] >= 0 ) { return m_RenderFinishedSemaphoreFds[imageIndex] } else { MW_ASSERT( false, "Requested Render Finished Semaphore File Descriptor is invalid." ); return -1; } };
+		int GetQtReadFinishedSemaphoreFd( u32 imageIndex ) { ( m_QtReadFinishedSemaphoreFds[imageIndex] >= 0 ) { return m_QtReadFinishedSemaphoreFds[imageIndex] } else { MW_ASSERT( false, "Requested Qt Read Finished Semaphore File Descriptor is invalid." ); return -1; } };
 #endif
 
 

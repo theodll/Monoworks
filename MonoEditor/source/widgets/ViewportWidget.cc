@@ -4,7 +4,7 @@
 #include <rhi/specific/vulkan/VulkanQtPresenter.hh>
 #include <rhi/specific/vulkan/VulkanTexture.hh>
 
-#include "ViewportWidget.h"
+#include "ViewportWidget.hh"
 
 // If anyone bothers or if it becomes a problem, this should probably be changed 
 // to be realized with QML like this:

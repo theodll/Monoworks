@@ -20,7 +20,7 @@
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 
-#include <core/EngineManager.h>
+#include <core/EngineManager.hh>
 
 #include <kddockwidgets/MainWindow.h>
 #include <kddockwidgets/DockWidget.h>

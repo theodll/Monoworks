@@ -2,10 +2,9 @@
 
 // TODO: make agnostic
 #include <rhi/specific/vulkan/VulkanQtPresenter.hh>
-
 #include <renderer/StaticRenderer.hh>
 
-#include "EngineManager.h"
+#include "EngineManager.hh"
 
 #include <QTimer>
 #include <kddockwidgets/qtwidgets/views/DockWidget.h>
@@ -18,20 +17,19 @@ namespace Monoworks
 
 		m_pEngine = new CApplication();
 
+		// TODO: api agnostic
 		m_pPresenter = new RHI::CVulkanQtPresenter( pCreateInfos->RenderableExtent );
 		pCreateInfos->pPresenter = m_pPresenter;
 
 		m_pEngine->Init( pCreateInfos );
 
-		// TODO: GAPI Agnostig
-		m_ViewportCount++;
-		m_pViewports.push_back( new CViewportWidget(m_pPresenter, pMainWindow ) );
+		m_Viewports.push_back( new CViewportWidget(m_pPresenter, pMainWindow ) );
 		
-
-		for ( u32 i {}; i < m_ViewportCount; i++ )
+		for ( size_t i {}; i < m_Viewports.size(); i++ )
 		{
-			auto dock = new KDDockWidgets::QtWidgets::DockWidget( QString::fromStdString( std::format( "Viewport {}", i ) ) );
-			dock->setWidget( m_pViewports[i] );
+			std::string viewportName = ( i > 0 ) ? "Viewport" : std::format( "Viewport {}", i);
+			auto dock = new KDDockWidgets::QtWidgets::DockWidget( QString::fromStdString( viewportName ) );
+			dock->setWidget( m_Viewports[i] );
 			pMainWindow->addDockWidgetAsTab( dock );
 		}
 
@@ -56,9 +54,9 @@ namespace Monoworks
 		m_pEngine->Frame();
 
 
-		for ( u32 i{}; i < m_ViewportCount; i++ )
+		for ( auto& viewport : m_Viewports )
 		{
-			m_pViewports[i]->Update( CStaticRenderer::GetCurrentImageIndex() );
+			viewport->Update( CStaticRenderer::GetCurrentImageIndex() );
 		}
 		
 

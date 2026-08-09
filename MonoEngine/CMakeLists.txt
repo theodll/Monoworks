@@ -42,7 +42,7 @@ if (WIN32)
 elseif (UNIX AND NOT APPLE)                       
     add_compile_definitions(MW_PLATFORM_LINUX)
 elseif (APPLE)                                    
-    target_compile_definitions(MW_PLATFORM_OSX)
+    add_compile_definitions(MW_PLATFORM_OSX)
 endif()
 
 

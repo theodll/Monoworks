@@ -11,7 +11,7 @@
 #include <QtCore/QtGlobal>
 
 #if defined(Q_OS_WIN)
-#  include <windows.h>
+#  include <Windows.h>
 #endif
 #include <GL/gl.h>
 
