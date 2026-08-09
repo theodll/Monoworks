@@ -152,8 +152,33 @@ namespace Monoworks::RHI
 		MW_VK_CHECK( vmaImportVulkanFunctionsFromVolk( &allocatorCreateInfo, &vulkanFunctions ), "Failed to import vulkan functions from volk for VMA" );
 
 		allocatorCreateInfo.pVulkanFunctions = &vulkanFunctions;
+		vulkanFunctions.vkGetMemoryWin32HandleKHR = vkGetMemoryWin32HandleKHR;
+
+#ifdef MW_DEBUG
+		MW_TRACE( "VMA Function Pointers: " );
+		MW_TRACE( "PFN_vkGetInstanceProcAddr: {}",					( void* )vulkanFunctions.vkGetInstanceProcAddr );
+		MW_TRACE( "PFN_vkGetDeviceProcAddr: {}",					( void* )vulkanFunctions.vkGetDeviceProcAddr );
+		MW_TRACE( "PFN_vkGetPhysicalDeviceProperties: {}",			( void* )vulkanFunctions.vkGetPhysicalDeviceProperties );
+		MW_TRACE( "PFN_vkGetPhysicalDeviceMemoryProperties: {}",	( void* )vulkanFunctions.vkGetPhysicalDeviceMemoryProperties );
+		MW_TRACE( "PFN_vkAllocateMemory: {}",						( void* )vulkanFunctions.vkAllocateMemory );
+		MW_TRACE( "PFN_vkFreeMemory: {}",							( void* )vulkanFunctions.vkFreeMemory );
+		MW_TRACE( "PFN_vkMapMemory: {}",							( void* )vulkanFunctions.vkMapMemory );
+		MW_TRACE( "PFN_vkUnmapMemory: {}",							( void* )vulkanFunctions.vkUnmapMemory );
+		MW_TRACE( "PFN_vkFlushMappedMemoryRanges: {}",				( void* )vulkanFunctions.vkFlushMappedMemoryRanges );
+		MW_TRACE( "PFN_vkInvalidateMappedMemoryRanges: {}",			( void* )vulkanFunctions.vkInvalidateMappedMemoryRanges );
+		MW_TRACE( "PFN_vkBindBufferMemory: {}",						( void* )vulkanFunctions.vkBindBufferMemory );
+		MW_TRACE( "PFN_vkGetBufferMemoryRequirements: {}",			( void* )vulkanFunctions.vkGetBufferMemoryRequirements );
+		MW_TRACE( "PFN_vkGetImageMemoryRequirements: {}",			( void* )vulkanFunctions.vkGetImageMemoryRequirements );
+		MW_TRACE( "PFN_vkCreateBuffer: {}",							( void* )vulkanFunctions.vkCreateBuffer );
+		MW_TRACE( "PFN_vkDestroyBuffer: {}",						( void* )vulkanFunctions.vkDestroyBuffer );
+		MW_TRACE( "PFN_vkCreateImage: {}",							( void* )vulkanFunctions.vkCreateImage );
+		MW_TRACE( "PFN_vkDestroyImage: {}",							( void* )vulkanFunctions.vkDestroyImage );
+		MW_TRACE( "PFN_vkCmdCopyBuffer: {}",						( void* )vulkanFunctions.vkCmdCopyBuffer );
+		MW_TRACE( "PFN_vkGetMemoryWin32HandleKHR: {}",				( void* )vulkanFunctions.vkGetMemoryWin32HandleKHR );
+#endif
 
 		MW_VK_CHECK( vmaCreateAllocator( &allocatorCreateInfo, &m_Allocator ), "Failed to create VMA Allocator" );
+
 
 		m_ResourceUploader.Init();
 

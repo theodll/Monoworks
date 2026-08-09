@@ -1,8 +1,16 @@
 #ifdef MW_PLATFORM_WINDOWS
 #include <Windows.h>
+#undef ERROR
+
+#ifndef VK_USE_PLATFORM_WIN32
 #define VK_USE_PLATFORM_WIN32 1 
+#endif
+
 #include <volk/volk.h>
+#ifndef VMA_EXTERNAL_MEMORY_WIN32
 #define VMA_EXTERNAL_MEMORY_WIN32 1
+#endif
+
 #endif
 
 #include "VulkanQtPresenter.hh"
@@ -43,17 +51,26 @@ namespace Monoworks::RHI
 		}
 
 
-		for ( u32 i {}; i < m_PresentationImages.size(); i++ )
+		for ( u32 i{}; i < m_PresentationImages.size(); i++ )
 		{
 			auto texture = m_PresentationImages[i].As<CVulkanTexture2D>();
 			auto allocator = CVulkanContext::GetAllocator();
+
 #ifdef MW_PLATFORM_WINDOWS
-			vmaGetMemoryWin32Handle2(
+
+			
+			VkResult res = vmaGetMemoryWin32Handle2(
 				*allocator,
 				*texture->GetVmaAllocation(),
 				VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT,
 				nullptr,
 				&m_PresentationImageWin32Handles[i] );
+
+			if ( !( res == VK_SUCCESS && m_PresentationImageWin32Handles[i] != nullptr ) )
+			{
+				MW_ERROR( "Failed to export Win32 Handle of Presentation Texture at index {}", i );
+				MW_DEBUG_BREAK;
+			}
 #else
 
 			VmaAllocationInfo2 allocInfo {};

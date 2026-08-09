@@ -2,6 +2,7 @@
 #include <common/Base.hh>
 
 #include <renderer/StaticRenderer.hh>
+#include <core/Application.hh>
 
 #include <volk/volk.h>
 
