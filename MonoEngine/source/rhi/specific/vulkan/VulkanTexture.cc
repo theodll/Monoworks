@@ -48,21 +48,37 @@ namespace Monoworks::RHI
 		m_ImageExtent.Width = pInfo->Extent.Width;
 		m_ImageExtent.Height = pInfo->Extent.Height;
 
-		m_GenerateImage = pInfo->GenerateImage;
-		m_GenerateImageView = pInfo->GenerateImageView;
-		m_GenerateSampler = pInfo->GenerateSampler;
+		m_GenerateImage = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT );
+		m_GenerateImageView = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT );
+		m_GenerateSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT );
 
 
-		m_ManageImage = pInfo->ManageImage;
-		m_ManageImageView = pInfo->ManageImageView;
-		m_ManageSampler = pInfo->ManageSampler;
+		m_ManageImage = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT );
+		m_ManageImageView = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_MANAGEMENT_BIT );
+		m_ManageSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT );
+
+		m_EnableMemoryExporting = pInfo->Flags & MW_TEXTURE_CREATION_FLAG_ENABLE_MEMORY_EXPORTING;
 
 
 		auto allocator = CVulkanContext::GetAllocator();
 
-		if ( pInfo->GenerateImage ) 
+		if ( m_GenerateImage ) 
 		{
 			VkImageCreateInfo imageInfo{};
+
+			VkExternalMemoryImageCreateInfo externalImageInfo{};
+			externalImageInfo.sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
+
+			if ( m_EnableMemoryExporting )
+			{
+#ifdef MW_PLATFORM_WINDOWS
+				externalImageInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+#else
+				externalImageInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
+#endif
+				imageInfo.pNext = &externalImageInfo;
+			}
+
 			imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 			imageInfo.imageType = VK_IMAGE_TYPE_2D;
 			imageInfo.format = ( VkFormat )pInfo->Format;
@@ -75,18 +91,50 @@ namespace Monoworks::RHI
 			imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 			imageInfo.initialLayout = ( VkImageLayout )pInfo->ImageLayout;
 
-			CVulkanContext::GetDevice()->CreateImage( allocator, &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT );
+			VmaAllocationCreateInfo allocInfo{};
+			allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
+			allocInfo.requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
+			if ( m_EnableMemoryExporting )
+			{
+				allocInfo.flags |= VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT; 
+
+				uint32_t memTypeIndex;
+				MW_VK_CHECK( vmaFindMemoryTypeIndexForImageInfo( *allocator,
+					&imageInfo, &allocInfo, &memTypeIndex ), "..." );
+
+				VkExportMemoryAllocateInfo exportMemAllocInfo{};
+				exportMemAllocInfo.sType = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
+#ifdef MW_PLATFORM_WINDOWS
+				exportMemAllocInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+#else
+				exportMemAllocInfo.handleTypes = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
+#endif
+
+				VmaPoolCreateInfo poolCreateInfo = {};
+				poolCreateInfo.memoryTypeIndex = memTypeIndex;
+				poolCreateInfo.flags = VMA_POOL_CREATE_LINEAR_ALGORITHM_BIT; 
+				poolCreateInfo.pMemoryAllocateNext = ( void* )&exportMemAllocInfo;
+
+				vmaCreatePool( *allocator, &poolCreateInfo, &m_ExternalMemoryPool );
+				allocInfo.pool = m_ExternalMemoryPool;
+			}
+
+			auto res = vmaCreateImage( *allocator, &imageInfo, &allocInfo, &m_Image, &m_ImageAllocation, nullptr );
+			MW_VK_CHECK( res, "Failed to create buffer" );
+			MW_PROFILE_ALLOC_N( ( void* )m_Image, imageInfo.extent.width * imageInfo.extent.height, "GPU VRAM" );
+
+			
 			auto&& uploader = CVulkanContext::GetUploader();
 			uploader->Begin();
-			TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, pInfo->Format, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, pInfo->AspectMask );
+			TransitionImageLayout2( *uploader->GetCommandBuffer(), m_Image, (VkImageLayout)MW_IMAGE_LAYOUT_UNDEFINED, (VkImageLayout)MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT );
 			Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			PipelineFlags = MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 			uploader->End();
 
 		}
 
-		if ( pInfo->GenerateImageView )
+		if ( m_GenerateImageView )
 		{
 			VkImageViewCreateInfo viewInfo{};
 			viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -102,7 +150,7 @@ namespace Monoworks::RHI
 			MW_VK_CHECK( vkCreateImageView( *CVulkanContext::GetDevice()->GetDevice(), &viewInfo, nullptr, &m_ImageView ), "Failed to create Image View" );
 		}
 		
-		if ( pInfo->GenerateSampler )
+		if ( m_GenerateSampler )
 		{
 			CreateImageSampler();
 		}
@@ -114,7 +162,10 @@ namespace Monoworks::RHI
 		auto allocator = CVulkanContext::GetAllocator();
 		auto device = CVulkanContext::GetDevice();
 		if ( m_Image && m_ManageImage )
+		{
 			vmaDestroyImage( *allocator, m_Image, m_ImageAllocation );
+			MW_PROFILE_FREE_N( ( void* )m_Image, "GPU VRAM" );
+		}
 
 		// TODO: AllocationCallbacks
 		if ( m_ImageView && m_ManageImageView )
@@ -122,6 +173,9 @@ namespace Monoworks::RHI
 
 		if ( m_Sampler && m_ManageSampler )
 			vkDestroySampler( *device->GetDevice(), m_Sampler, nullptr );
+
+		if ( m_ExternalMemoryPool && m_EnableMemoryExporting )
+			vmaDestroyPool( *allocator, m_ExternalMemoryPool );
 
 	}
 

@@ -7,6 +7,10 @@
 
 #include <rhi/GraphicsAPI.hh>
 
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+#include <renderdoc_app.h>
+#endif 
+
 namespace Monoworks::RHI
 {
     class CVulkanRenderer : public IGraphicsAPI
@@ -18,6 +22,11 @@ namespace Monoworks::RHI
         virtual void EndRendering() NOEXCEPT override;
 
     private:
+
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+		RENDERDOC_API_1_1_2* m_RenderDocAPI = nullptr;
+#endif 
+
         Ref<IVertexBuffer> m_Vertices;
         Ref<IIndexBuffer> m_Indices;
         Ref<IGraphicsPipeline> m_Pipeline;

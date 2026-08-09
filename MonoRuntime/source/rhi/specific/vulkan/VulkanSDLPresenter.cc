@@ -380,23 +380,6 @@ namespace Monoworks::RHI
 
 		vkGetSwapchainImagesKHR( *info->pVulkanDevice->GetDevice(), m_Swapchain, &imageCount, nullptr );
 		m_SwapchainImages.resize( imageCount );
-
-		for ( size_t i = 0; i < imageCount; i++ )
-		{
-			STextureCreateInfo textureInfo{};
-			textureInfo.Format = ( EImageFormat )surfaceFormat.format;
-			textureInfo.Extent = { extent.width, extent.height, 1 };
-			textureInfo.GenerateImage = false;
-			textureInfo.GenerateSampler = false;
-			textureInfo.GenerateImageView = false;
-			textureInfo.ImageLayout = MW_IMAGE_LAYOUT_UNDEFINED;
-			textureInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-			textureInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
-
-			m_SwapchainImages[i] = ITexture2D::Create( &textureInfo );
-		};
-
-
 		std::vector<VkImage> images( imageCount );
 		vkGetSwapchainImagesKHR( *info->pVulkanDevice->GetDevice(), m_Swapchain, &imageCount, images.data() );
 
@@ -405,10 +388,10 @@ namespace Monoworks::RHI
 			STextureCreateInfo textureInfo {};
 			textureInfo.Format = ( EImageFormat )surfaceFormat.format;
 			textureInfo.Extent = { extent.width, extent.height, 1 };
-			textureInfo.GenerateImage = false;
-			textureInfo.GenerateSampler = false;
-			textureInfo.GenerateImageView = false;
-			textureInfo.ManageImage = false;
+			textureInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT 
+				| MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT 
+				| MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT 
+				| MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT;
 			textureInfo.ImageLayout = MW_IMAGE_LAYOUT_UNDEFINED;
 			textureInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 			textureInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;

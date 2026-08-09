@@ -2,6 +2,7 @@
 
 #include "VulkanContext.hh"
 #include "VulkanDevice.hh"
+#include "VulkanRenderManager.hh"
 
 #include "VulkanPresenter.hh"
 
@@ -16,6 +17,12 @@
 
 #define VMA_IMPLEMENTATION
 #define VMA_VULKAN_VERSION 1003000
+
+#if MW_PLATFORM_WINDOWS
+#define VMA_EXTERNAL_MEMORY_WIN32 1
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif
 #include <vk_mem_alloc.h>
 
 #ifdef MW_PROFILING
@@ -36,7 +43,7 @@ namespace Monoworks::RHI
 	VmaAllocator CVulkanContext::m_Allocator;
 	VkInstance CVulkanContext::m_Instance;
 	VkPipelineCache CVulkanContext::m_PipelineCache;
-	CVulkanResourceUploader CVulkanContext::m_ResouceUploader;
+	CVulkanResourceUploader CVulkanContext::m_ResourceUploader;
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -146,20 +153,79 @@ namespace Monoworks::RHI
 
 		allocatorCreateInfo.pVulkanFunctions = &vulkanFunctions;
 
+#ifdef MW_PLATFORM_WINDOWS
+		vulkanFunctions.vkGetMemoryWin32HandleKHR = vkGetMemoryWin32HandleKHR;
+#endif
+
+#ifdef MW_DEBUG
+		MW_TRACE( "VMA Function Pointers: " );
+		MW_TRACE( "PFN_vkGetInstanceProcAddr: {}",					( void* )vulkanFunctions.vkGetInstanceProcAddr );
+		MW_TRACE( "PFN_vkGetDeviceProcAddr: {}",					( void* )vulkanFunctions.vkGetDeviceProcAddr );
+		MW_TRACE( "PFN_vkGetPhysicalDeviceProperties: {}",			( void* )vulkanFunctions.vkGetPhysicalDeviceProperties );
+		MW_TRACE( "PFN_vkGetPhysicalDeviceMemoryProperties: {}",	( void* )vulkanFunctions.vkGetPhysicalDeviceMemoryProperties );
+		MW_TRACE( "PFN_vkAllocateMemory: {}",						( void* )vulkanFunctions.vkAllocateMemory );
+		MW_TRACE( "PFN_vkFreeMemory: {}",							( void* )vulkanFunctions.vkFreeMemory );
+		MW_TRACE( "PFN_vkMapMemory: {}",							( void* )vulkanFunctions.vkMapMemory );
+		MW_TRACE( "PFN_vkUnmapMemory: {}",							( void* )vulkanFunctions.vkUnmapMemory );
+		MW_TRACE( "PFN_vkFlushMappedMemoryRanges: {}",				( void* )vulkanFunctions.vkFlushMappedMemoryRanges );
+		MW_TRACE( "PFN_vkInvalidateMappedMemoryRanges: {}",			( void* )vulkanFunctions.vkInvalidateMappedMemoryRanges );
+		MW_TRACE( "PFN_vkBindBufferMemory: {}",						( void* )vulkanFunctions.vkBindBufferMemory );
+		MW_TRACE( "PFN_vkGetBufferMemoryRequirements: {}",			( void* )vulkanFunctions.vkGetBufferMemoryRequirements );
+		MW_TRACE( "PFN_vkGetImageMemoryRequirements: {}",			( void* )vulkanFunctions.vkGetImageMemoryRequirements );
+		MW_TRACE( "PFN_vkCreateBuffer: {}",							( void* )vulkanFunctions.vkCreateBuffer );
+		MW_TRACE( "PFN_vkDestroyBuffer: {}",						( void* )vulkanFunctions.vkDestroyBuffer );
+		MW_TRACE( "PFN_vkCreateImage: {}",							( void* )vulkanFunctions.vkCreateImage );
+		MW_TRACE( "PFN_vkDestroyImage: {}",							( void* )vulkanFunctions.vkDestroyImage );
+		MW_TRACE( "PFN_vkCmdCopyBuffer: {}",						( void* )vulkanFunctions.vkCmdCopyBuffer );
+		MW_TRACE( "PFN_vkGetMemoryWin32HandleKHR: {}",				( void* )vulkanFunctions.vkGetMemoryWin32HandleKHR );
+#endif
+
 		MW_VK_CHECK( vmaCreateAllocator( &allocatorCreateInfo, &m_Allocator ), "Failed to create VMA Allocator" );
 
 
-		SVulkanSDLPresentationInitialization2Info presentationInfo2;
-		presentationInfo2.pVulkanDevice = &m_Device;
-		presentationInfo2.pDevice = m_Device.GetDevice();
-		presentationInfo2.pPhysDevice = *m_Device.GetPhysicalDevice(); 
-		m_Presenter->Init2( &presentationInfo2 );
+		m_ResourceUploader.Init();
 
-		m_ResouceUploader.Init(); 
+		CVulkanRenderManager::Init();
+
+		if ( CApplication::GetCreateInfos()->UseSDL )
+		{
+			SVulkanSDLPresentationInitialization2Info presentationInfo2;
+			presentationInfo2.pVulkanDevice = &m_Device;
+			presentationInfo2.pDevice = m_Device.GetDevice();
+			presentationInfo2.pPhysDevice = *m_Device.GetPhysicalDevice();
+			m_Presenter->Init2( &presentationInfo2 );
+		}
+		else if ( CApplication::GetCreateInfos()->UseQt )
+		{
+			VkSemaphore* renderFinishedSemaphores[MFIF];
+			for ( u32 i {}; i < MFIF; i++ )
+			{
+				renderFinishedSemaphores[i] = CVulkanRenderManager::GetRenderFinishedSemaphore( i );
+			};
+
+			VkSemaphore* qtReadFinishedSemaphores[MFIF];
+			for ( u32 i{}; i < MFIF; i++ )
+			{
+				qtReadFinishedSemaphores[i] = CVulkanRenderManager::GetQtReadFinishedSemaphore( i );
+			}
+
+			SVulkanQtPresentationInitialization2Info presentationInfo2;
+			presentationInfo2.pRenderFinishedSemaphores = renderFinishedSemaphores;
+			presentationInfo2.RenderFinishedSemaphoreCount = MFIF;
+			presentationInfo2.pQtReadFinishedSemaphores = qtReadFinishedSemaphores;
+			presentationInfo2.QtReadFinishedSemaphoreCount = MFIF;
+			presentationInfo2.pVulkanDevice = &m_Device;
+
+			m_Presenter->Init2( &presentationInfo2 );
+		}
+
 
 
 #ifdef MW_PROFILING
 
+		m_ResourceUploader.Begin();
+		m_ResourceUploader.End();
+		
 		CEventManager::Subscribe(MW_EVENT_APP_FRAME, +[] (SEvent& event )
 			{
 				VmaTotalStatistics stats;
@@ -170,9 +236,9 @@ namespace Monoworks::RHI
 				return false;
 			});
 
-		TracyGraphicsContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetGraphicsQueue(), *m_ResouceUploader.GetCommandBuffer() );
-		TracyComputeContext	 = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetComputeQueue(), *m_ResouceUploader.GetCommandBuffer() );
-		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), *m_ResouceUploader.GetCommandBuffer() );
+		TracyGraphicsContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetGraphicsQueue(), *m_ResourceUploader.GetCommandBuffer() );
+		TracyComputeContext	 = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetComputeQueue(), *m_ResourceUploader.GetCommandBuffer() );
+		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), *m_ResourceUploader.GetCommandBuffer() );
 
 #endif
 	}
@@ -230,7 +296,7 @@ namespace Monoworks::RHI
 			vmaDestroyAllocator( m_Allocator );
 		}
 
-		m_ResouceUploader.Shutdown();
+		m_ResourceUploader.Shutdown();
 		m_Presenter->Shutdown();
 		
 		m_Device.Shutdown();
@@ -366,7 +432,7 @@ namespace Monoworks::RHI
 		}
 
 		std::vector<const char*> requiredExtensions;
-		if (clientExtensions != nullptr && extensionCount2 > 0)
+		if (clientExtensions && extensionCount2 > 0)
 		{
 			requiredExtensions.assign(clientExtensions, clientExtensions + extensionCount2);
 		}

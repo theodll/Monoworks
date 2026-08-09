@@ -253,6 +253,12 @@ namespace Monoworks::RHI
 			barrier.srcAccessMask = 0;
 			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 		}
+		else if ( oldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
+			newLayout == VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL )
+		{
+			barrier.srcAccessMask = 0;
+			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		}
 		else if ( oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL &&
 			newLayout == VK_IMAGE_LAYOUT_UNDEFINED )
 		{
@@ -308,6 +314,12 @@ namespace Monoworks::RHI
 		{
 			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		}
+		else if ( oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL &&
+			newLayout == VK_IMAGE_LAYOUT_GENERAL )
+		{
+			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			barrier.dstAccessMask = 0;
 		}
 		else
 		{

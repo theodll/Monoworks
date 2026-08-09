@@ -40,7 +40,7 @@ namespace Monoworks
 		/**
 		 * @brief Callback to retrieve required extensions
 		 */
-		MAYBE_UNUSED const char** (*RequiredExtensionCallback)(u32* extensionCount);
+		MAYBE_UNUSED const char** (*RequiredExtensionCallback)(u32* extensionCount) = nullptr;
 		/**
 		 * @brief Extent the engine is able to render to (eg. Window/Viewport size)
 		 */
@@ -64,15 +64,15 @@ namespace Monoworks
 		/**
 		 * @brief Define whether to use the Vulkan swapchain.
 		 */
-		MAYBE_UNUSED bool UseSwapchain;
+		MAYBE_UNUSED bool UseSwapchain = false;
 		/**
 		 * @brief Define whether to use SDL.
 		 */
-		MAYBE_UNUSED bool UseSDL;
+		MAYBE_UNUSED bool UseSDL = false;
 		/**
 		 * @brief Define whether to use Qt.
 		 */
-		MAYBE_UNUSED bool UseQt;
+		MAYBE_UNUSED bool UseQt = false;
 	};
 
 	/**

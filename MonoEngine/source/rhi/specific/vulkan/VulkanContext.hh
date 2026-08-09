@@ -27,7 +27,7 @@ namespace Monoworks::RHI
 		NODISCARD static VkPipelineCache* GetPipelineCache() NOEXCEPT { return &m_PipelineCache; }
 
 		NODISCARD static CVulkanDevice* GetDevice() NOEXCEPT { return &m_Device; }
-		NODISCARD static CVulkanResourceUploader* GetUploader() NOEXCEPT { return &m_ResouceUploader; }
+		NODISCARD static CVulkanResourceUploader* GetUploader() NOEXCEPT { return &m_ResourceUploader; }
 		NODISCARD static IPresenter* GetPresenter() NOEXCEPT { return m_Presenter; }
 
 		NODISCARD static VmaAllocator* GetAllocator() NOEXCEPT { return &m_Allocator; }
@@ -51,7 +51,7 @@ namespace Monoworks::RHI
 		static VmaAllocator m_Allocator;
 		
 		static CVulkanDevice m_Device;
-		static CVulkanResourceUploader m_ResouceUploader;
+		static CVulkanResourceUploader m_ResourceUploader;
 		
 		static IPresenter* m_Presenter;
 

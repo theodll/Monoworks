@@ -4,22 +4,29 @@
 #include <rhi/Utils.hh>
 
 namespace Monoworks::RHI
-
 {
+	enum ETextureCreationFlagBits
+	{
+		MW_TEXTURE_CREATION_FLAG_NONE_BIT = 0,
+		MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT = 0x01,
+		MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT = 0x02,
+		MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT = 0x04,
+		MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT = 0x08,
+		MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_MANAGEMENT_BIT = 0x10,
+		MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_MANAGEMENT_BIT = 0x20,
+		MW_TEXTURE_CREATION_FLAG_ENABLE_MEMORY_EXPORTING = 0x40
+	};
+
+	using ETextureCreationFlags = flags_t;
+
 	struct STextureCreateInfo 
 	{
 		SExtent3D Extent;
+		ETextureCreationFlags Flags;
 		EImageFormat Format;
 		EImageUsageFlags Usage;
 		EImageLayout ImageLayout;
 		EImageAspectFlags AspectMask;
-		bool GenerateImage = true;
-		bool GenerateImageView = true;
-		bool GenerateSampler = true;
-
-		bool ManageImage = true;
-		bool ManageImageView = true;
-		bool ManageSampler = true;
 	};
 
 	class ITexture 

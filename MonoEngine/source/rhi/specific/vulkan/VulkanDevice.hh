@@ -86,20 +86,20 @@ namespace Monoworks::RHI
 		) NOEXCEPT;
 
 		VkDevice* GetDevice() noexcept { return &m_Device; };
-		const VkPhysicalDevice* GetPhysicalDevice() const noexcept { return &m_PhysicalDevice; }
+		const VkPhysicalDevice* GetPhysicalDevice() noexcept { return &m_PhysicalDevice; }
 
-		NODISCARD const VkCommandPool* GetGraphicsCommandPool() const noexcept { return &m_GraphicsCommandPool; }
-		NODISCARD const VkQueue* GetGraphicsQueue() const noexcept { return &m_GraphicsQueue; }
+		NODISCARD VkCommandPool* GetGraphicsCommandPool() noexcept { return &m_GraphicsCommandPool; }
+		NODISCARD VkQueue* GetGraphicsQueue() noexcept { return &m_GraphicsQueue; }
 		
-		NODISCARD const VkCommandPool* GetComputeCommandPool() const noexcept { return &m_ComputeCommandPool; }
-		NODISCARD const VkQueue* GetComputeQueue() const noexcept { return &m_ComputeQueue; }
+		NODISCARD VkCommandPool* GetComputeCommandPool() noexcept { return &m_ComputeCommandPool; }
+		NODISCARD VkQueue* GetComputeQueue() noexcept { return &m_ComputeQueue; }
 
-		NODISCARD const VkCommandPool* GetTransferCommandPool() const noexcept { return &m_TransferCommandPool; }
-		NODISCARD const VkQueue* GetTransferQueue() const noexcept { return &m_TransferQueue; }
+		NODISCARD VkCommandPool* GetTransferCommandPool() noexcept { return &m_TransferCommandPool; }
+		NODISCARD VkQueue* GetTransferQueue() noexcept { return &m_TransferQueue; }
 
-		NODISCARD const VkQueue* GetPresentQueue() const NOEXCEPT;
+		NODISCARD VkQueue* GetPresentQueue() NOEXCEPT;
 
-		NODISCARD const u32 GetGraphicsQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
+		NODISCARD u32 GetGraphicsQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
 
 		NODISCARD u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
 

@@ -39,8 +39,7 @@ namespace Monoworks::RHI
     void CVulkanRenderer::Init() NOEXCEPT
     {
         MW_PROFILE_FUNC;
-        MW_INFO("Initialize CVulkanRenderer");
-        CVulkanRenderManager::Init();
+        MW_INFO( "Initialize CVulkanRenderer" );
 
 		SShaderByteCode vertexCode{};
 		auto vertextSpirv = readFile( "shaders/vertex.spirv", &vertexCode.Size );
@@ -88,6 +87,24 @@ namespace Monoworks::RHI
 
 		std::vector<Index> indices = { 0, 1, 2, 2, 3, 0 };
         m_Indices = IIndexBuffer::Create( indices.data(), indices.size(), 0, true );
+
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+#ifdef MW_PLATFORM_WINDOWS
+		if ( HMODULE mod = GetModuleHandleA( "renderdoc.dll" ) )
+		{
+			pRENDERDOC_GetAPI rd_GetAPI = ( pRENDERDOC_GetAPI )GetProcAddress( mod, "RENDERDOC_GetAPI" );
+			rd_GetAPI( eRENDERDOC_API_Version_1_1_2, ( void** )&m_RenderDocAPI );
+		}
+#else
+		if ( void* mod = dlopen( "librenderdoc.so", RTLD_NOW | RTLD_NOLOAD ) )
+		{
+			pRENDERDOC_GetAPI rd_GetAPI = ( pRENDERDOC_GetAPI )dlsym( mod, "RENDERDOC_GetAPI" );
+			int ret = rd_GetAPI( eRENDERDOC_API_Version_1_1_2, ( void** )&m_RenderDocAPI );
+		}
+#endif
+#endif
+
+
     } 
 
     void CVulkanRenderer::Shutdown() NOEXCEPT 
@@ -105,6 +122,10 @@ namespace Monoworks::RHI
 
         auto presenter = CVulkanContext::GetPresenter();
 
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+		if ( m_RenderDocAPI ) m_RenderDocAPI->StartFrameCapture( nullptr, nullptr );
+#endif 
+
         if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
         {
             SVulkanSDLPresentationAcquisitionInfo acquisitionInfo{};
@@ -116,7 +137,17 @@ namespace Monoworks::RHI
 
             *imageIndex = presenter->Acquire( &acquisitionInfo );
         }
+        else if ( CApplication::GetCreateInfos()->UseQt )
+        {
+            SVulkanQtPresentationAcquisitionInfo acquisitionInfo{};
+            acquisitionInfo.pGraphicsQueue = CVulkanContext::GetDevice()->GetGraphicsQueue();
+            acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
+            acquisitionInfo.pQtReadFinishedSemaphore = CVulkanRenderManager::GetQtReadFinishedSemaphore( frameIndex );
+            acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
+            acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
 
+            *imageIndex = presenter->Acquire( &acquisitionInfo );
+        }
 
         CVulkanRenderManager::BeginRootCommandBuffer( frameIndex );
         CVulkanRenderManager::BeginWorkerCommandBuffers( frameIndex );
@@ -126,6 +157,7 @@ namespace Monoworks::RHI
         auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
         auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
 
+        auto siye = presenter->GetSwapchainImages().size();
         MW_ASSERT( *imageIndex < presenter->GetSwapchainImages().size(), "Invalid swapchain image index" );
 
         VkRenderingAttachmentInfo colorAttachment{};
@@ -167,6 +199,7 @@ namespace Monoworks::RHI
         vkCmdBindVertexBuffers( cmd, 0, 1, m_Vertices.As<CVulkanVertexBuffer>()->GetVulkanBuffer(), offset );
         vkCmdBindIndexBuffer( cmd, *m_Indices.As<CVulkanIndexBuffer>()->GetVulkanBuffer(), 0, VK_INDEX_TYPE_UINT32 );
 
+        
         vkCmdDrawIndexed( cmd, m_Indices->GetCount(), 1, 0, 0, 0 );
 
     };
@@ -222,11 +255,23 @@ namespace Monoworks::RHI
         if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
         {
             CVulkanContext::GetUploader()->Begin();
-            SVulkanSDLPresentationTransitionPresentInfo renderInfo{};
-            renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
-            renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 
-            presenter->TransitionPresent( &renderInfo );
+            if ( CApplication::GetCreateInfos()->UseSDL )
+            {
+                SVulkanSDLPresentationTransitionPresentInfo renderInfo {};
+                renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
+                renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+
+                presenter->TransitionPresent( &renderInfo );
+            }
+            else if ( CApplication::GetCreateInfos()->UseQt )
+            {
+                SVulkanQtPresentationTransitionPresentInfo renderInfo {};
+                renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
+                renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+
+                presenter->TransitionPresent( &renderInfo );
+            }
             CVulkanContext::GetUploader()->End();
 
             SVulkanSDLPresentationPresentInfo presentInfo{};
@@ -238,6 +283,11 @@ namespace Monoworks::RHI
             presentInfo.pVulkanDevice = CVulkanContext::GetDevice();
 
             presenter->Present( &presentInfo );
+
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+			if ( m_RenderDocAPI ) m_RenderDocAPI->EndFrameCapture( nullptr, nullptr );
+#endif 
+
         }
         
     };

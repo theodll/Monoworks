@@ -6,6 +6,14 @@
 #include <rhi/specific/vulkan/VulkanContext.hh>
 #include <rhi/specific/vulkan/VulkanPresenter.hh>
 
+#ifdef MW_ENABLE_MANUAL_RENDERDOC
+#include <renderdoc_app.h>
+#endif
+
+#ifdef MW_PLATFORM_WINDOWS
+#include <Windows.h>
+#endif
+
 #include "VulkanRenderManager.hh"
 
 
@@ -17,9 +25,26 @@ namespace Monoworks::RHI
 	void CVulkanRenderManager::Init() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		MW_INFO( "Initializa CVulkanRenderManager" );
+		MW_INFO( "Initialize CVulkanRenderManager" );
+		
+		VkExportSemaphoreCreateInfo exportSemaphoreCreateInfo{};
+		exportSemaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO;
+		if ( !CApplication::GetCreateInfos()->UseSwapchain )
+		{
+
+#ifdef MW_PLATFORM_WINDOWS
+			exportSemaphoreCreateInfo.handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+#else
+			exportSemaphoreCreateInfo.handleTypes = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
+#endif
+		}
+
+
 		VkSemaphoreCreateInfo semaphoreCreateInfo{};
 		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+		if ( !CApplication::GetCreateInfos()->UseSwapchain )
+			semaphoreCreateInfo.pNext = &exportSemaphoreCreateInfo;
 
 		VkFenceCreateInfo fenceCreateInfo{};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
@@ -29,8 +54,9 @@ namespace Monoworks::RHI
 		for ( auto& frameData : m_RootFrameData )
 		{
 			// TODO: allocation callbacks
-			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.ImageAvailableSemaphore), "Failed to create ImageAvailableSemaphore.");
-			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.RenderFinishedSemaphore), "Failed to create RenderFinishedSemaphore.");
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.QtReadFinishedSemaphore ), "Failed to create QtReadFinishedSemaphore." );
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.ImageAvailableSemaphore ), "Failed to create ImageAvailableSemaphore." );
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.RenderFinishedSemaphore ), "Failed to create RenderFinishedSemaphore." );
 			MW_VK_CHECK( vkCreateFence( *device->GetDevice(), &fenceCreateInfo, nullptr, &frameData.InFlightFence), "Failed to create InFlightFence.");
 
 			VkCommandPoolCreateInfo poolCreateInfo{};
@@ -70,7 +96,6 @@ namespace Monoworks::RHI
 			}
 		}
 
-
 	};
 
 	void CVulkanRenderManager::Shutdown() NOEXCEPT
@@ -79,7 +104,7 @@ namespace Monoworks::RHI
 		auto device = *CVulkanContext::GetDevice()->GetDevice();
 		
 		vkDeviceWaitIdle( device );
-
+		// TODO: allocation callbacks
 		for ( auto& workerData : m_WorkerRenderData )
 		{
 			for ( auto& commandPool : workerData.CommandPools )
@@ -98,6 +123,9 @@ namespace Monoworks::RHI
 			
 			if ( frameData.RenderFinishedSemaphore )
 				vkDestroySemaphore( device, frameData.RenderFinishedSemaphore, nullptr );
+
+			if ( frameData.QtReadFinishedSemaphore )
+				vkDestroySemaphore( device, frameData.QtReadFinishedSemaphore, nullptr );
 
 			if ( frameData.InFlightFence )
 				vkDestroyFence( device, frameData.InFlightFence, nullptr );
@@ -118,10 +146,19 @@ namespace Monoworks::RHI
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		vkBeginCommandBuffer( m_RootFrameData[frameIndex].CommandBuffer, &beginInfo );
 
+
+		auto presenter = CVulkanContext::GetPresenter();
 		if ( CApplication::GetCreateInfos()->UseSDL )
 		{
-			auto presenter = CVulkanContext::GetPresenter();
 			SVulkanSDLPresentationTransitionRenderInfo renderInfo{};
+			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootCommandBuffer( frameIndex );
+			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+
+			presenter->TransitionRender( &renderInfo );
+		} 
+		else if ( CApplication::GetCreateInfos()->UseQt )
+		{
+			SVulkanQtPresentationTransitionRenderInfo renderInfo {};
 			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootCommandBuffer( frameIndex );
 			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 
@@ -134,6 +171,7 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 
 		vkEndCommandBuffer( m_RootFrameData[frameIndex].CommandBuffer );
+
 	};
 
 	void CVulkanRenderManager::SubmitRootCommandBuffer( u32 frameIndex ) NOEXCEPT
@@ -192,7 +230,7 @@ namespace Monoworks::RHI
 		// batching worker command buffers for optimal submission
 		static std::vector<VkCommandBuffer> workerCommandBuffers;
 		workerCommandBuffers.reserve( m_WorkerRenderData.size() );
-			
+
 		for ( auto& workerData : m_WorkerRenderData )
 		{
 			workerCommandBuffers.push_back( workerData.CommandBuffers[frameIndex] );
@@ -206,6 +244,5 @@ namespace Monoworks::RHI
 			vkEndCommandBuffer( workerData.CommandBuffers[frameIndex] );
 		}
 	};
-
 
 }

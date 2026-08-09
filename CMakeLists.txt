@@ -9,7 +9,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin-int)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin-int)
 
 set(CMAKE_CXX_STANDARD 23)
-
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(COMPILE_WARNING_AS_ERROR ON)
 
 add_compile_definitions(MW_PROFILING MW_VULKAN)
@@ -25,6 +25,7 @@ endif()
 
 add_compile_definitions(TRACY_ENABLE)
 
+# add_compile_definitions(MW_ENABLE_MANUAL_RENDERDOC)
 
 
 add_compile_definitions(
@@ -35,6 +36,6 @@ add_compile_definitions(
 )
 
 add_subdirectory(MonoEngine)
-#add_subdirectory(MonoEditor)
+add_subdirectory(MonoEditor)
 add_subdirectory(MonoRuntime)
 add_subdirectory(Common/extern/doctest)

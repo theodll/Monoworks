@@ -2,10 +2,14 @@
 #include <core/Application.hh>
 #include "MonoEditor.hh"
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
+
+
+#include <kddockwidgets/MainWindow.h>
+#include <kddockwidgets/DockWidget.h>
 
 
 int main(int argc, char** argv)
@@ -45,32 +49,45 @@ namespace Monoworks
 
 		cfg.Flush();
 
-		m_QtApplication = new QCoreApplication(argc, argv);
+		QApplication::setAttribute( Qt::AA_UseDesktopOpenGL );
 
-		m_Engine = new CApplication;
+		m_pQtApplication = new QApplication( argc, argv );
 
-		SApplicationCreateInfos appInfos{};
-		appInfos.Name = cfg.Get("Editor", "Title");
-		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height")};
+		SApplicationCreateInfos appInfos {};
+		appInfos.pName = strdup( cfg.Get( "Editor", "Title" ).c_str() );
+		appInfos.RenderableExtent = { cfg.Get<u32>( "Rendering", "Default Width" ), cfg.Get<u32>( "Rendering", "Default Height" ) };
+		appInfos.GraphicsAPI = MW_GAPI_VULKAN;
 		appInfos.ArgumentCount = argc;
-		appInfos.Arguments = argv;
+		appInfos.pArguments = argv;
+		appInfos.Version = { 1, 0, 0 };
+		appInfos.RequiredExtensionCallback = nullptr;
+		appInfos.UseQt  = true;
 
+		m_pQtApplication->setOrganizationName( "Monoworks" );
+		m_pQtApplication->setApplicationName( "MonoEditor" );
+		
+		KDDockWidgets::initFrontend( KDDockWidgets::FrontendType::QtWidgets );
 
-		m_Engine->Init(&appInfos);
+		KDDockWidgets::MainWindowOptions options = KDDockWidgets::MainWindowOption_HasCentralGroup;
+		m_pMainWindow = new KDDockWidgets::QtWidgets::MainWindow( appInfos.pName, options );
+
+		m_pMainWindow->setWindowTitle( appInfos.pName );
+		m_pMainWindow->resize( cfg.Get<int>( "Editor", "Window W" ), cfg.Get<int>( "Editor", "Window H" ) );
+		m_pMainWindow->show();
+
+		m_pEngineManager = new CEngineManager( &appInfos, m_pMainWindow, m_pQtApplication );
 	};
 
 	void CMonoworksEditor::Run()
 	{
-
-
-
-		int result = m_QtApplication->exec();
+		int result = m_pQtApplication->exec();
 	};
 
 	void CMonoworksEditor::Shutdown()
 	{
-		delete m_Engine;
-		delete m_QtApplication;
+		delete m_pMainWindow;
+		delete m_pEngineManager;
+		delete m_pQtApplication;
 	};
 
 }
