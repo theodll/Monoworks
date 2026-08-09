@@ -200,9 +200,17 @@ namespace Monoworks::RHI
 				renderFinishedSemaphores[i] = CVulkanRenderManager::GetRenderFinishedSemaphore( i );
 			};
 
+			VkSemaphore* qtReadFinishedSemaphores[MFIF];
+			for ( u32 i{}; i < MFIF; i++ )
+			{
+				qtReadFinishedSemaphores[i] = CVulkanRenderManager::GetQtReadFinishedSemaphore( i );
+			}
+
 			SVulkanQtPresentationInitialization2Info presentationInfo2;
 			presentationInfo2.pRenderFinishedSemaphores = renderFinishedSemaphores;
 			presentationInfo2.RenderFinishedSemaphoreCount = MFIF;
+			presentationInfo2.pQtReadFinishedSemaphores = qtReadFinishedSemaphores;
+			presentationInfo2.QtReadFinishedSemaphoreCount = MFIF;
 			presentationInfo2.pVulkanDevice = &m_Device;
 
 			m_Presenter->Init2( &presentationInfo2 );

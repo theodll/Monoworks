@@ -80,6 +80,8 @@ namespace Monoworks::RHI
 		CVulkanDevice*			pVulkanDevice;
 		VkSemaphore**			pRenderFinishedSemaphores; // for handle exporting
 		u32						RenderFinishedSemaphoreCount;
+		VkSemaphore**			pQtReadFinishedSemaphores;
+		u32						QtReadFinishedSemaphoreCount;
 	};
 
 	struct SVulkanQtPresentationAcquisitionInfo : public IPresentationAcquisitionInfo
@@ -88,6 +90,7 @@ namespace Monoworks::RHI
 		CVulkanDevice*			pVulkanDevice; 
 		VkFence*				pInFlightFence;
 		VkSemaphore*			pImageAvailableSemaphore;
+		VkSemaphore*			pQtReadFinishedSemaphore;
 		VkQueue*				pGraphicsQueue; // for semaphore signalisation
 	};
 

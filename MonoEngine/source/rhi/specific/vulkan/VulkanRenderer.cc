@@ -142,6 +142,7 @@ namespace Monoworks::RHI
             SVulkanQtPresentationAcquisitionInfo acquisitionInfo{};
             acquisitionInfo.pGraphicsQueue = CVulkanContext::GetDevice()->GetGraphicsQueue();
             acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
+            acquisitionInfo.pQtReadFinishedSemaphore = CVulkanRenderManager::GetQtReadFinishedSemaphore( frameIndex );
             acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
             acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
 
@@ -198,6 +199,7 @@ namespace Monoworks::RHI
         vkCmdBindVertexBuffers( cmd, 0, 1, m_Vertices.As<CVulkanVertexBuffer>()->GetVulkanBuffer(), offset );
         vkCmdBindIndexBuffer( cmd, *m_Indices.As<CVulkanIndexBuffer>()->GetVulkanBuffer(), 0, VK_INDEX_TYPE_UINT32 );
 
+        
         vkCmdDrawIndexed( cmd, m_Indices->GetCount(), 1, 0, 0, 0 );
 
     };

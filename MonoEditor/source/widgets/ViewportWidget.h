@@ -25,7 +25,10 @@ namespace Monoworks
 		RHI::IPresenter* m_pPresenter;
 
 		GLuint m_PresentationImages[MFIF];
+		
 		GLuint m_RenderFinishedSemaphores[MFIF];
+		GLuint m_QtReadFinishedSemaphores[MFIF];
+
 		GLuint m_ShaderProgram;
 		GLuint m_EmptyVAO;
 		GLint m_ImageLocation;

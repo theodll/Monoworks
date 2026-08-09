@@ -1,11 +1,15 @@
 #include <Monoworks.hh>
 
-// todo make platform dependant
-
+// TODO: make platform dependant
 #include <rhi/specific/vulkan/VulkanQtPresenter.hh>
 #include <rhi/specific/vulkan/VulkanTexture.hh>
 
 #include "ViewportWidget.h"
+
+// If anyone bothers or if it becomes a problem, this should probably be changed 
+// to be realized with QML like this:
+// the texture still gets imported, then gets wrapped into a qml texture. This qml texture then simply is rendered by 
+// the QML RHI. But this works right now andf if it works dont fix it.
 
 namespace Monoworks
 {
@@ -18,7 +22,12 @@ namespace Monoworks
 
 	CViewportWidget::~CViewportWidget()
 	{
+		MW_PROFILE_FUNC;
 
+		glDeleteSemaphoresEXT( MFIF, m_RenderFinishedSemaphores );
+		glDeleteSemaphoresEXT( MFIF, m_QtReadFinishedSemaphores );
+
+		glDeleteTextures( MFIF, m_PresentationImages );
 	}
 
 	void CViewportWidget::Update( u32 imageIndex )
@@ -36,7 +45,7 @@ namespace Monoworks
 		constexpr GLenum srcEnum = kGlLayoutGeneralEXT;
 
 		glClear( GL_COLOR_BUFFER_BIT );
-		/*
+		
 		glWaitSemaphoreEXT(
 			m_RenderFinishedSemaphores[m_CurrentImageIndex],
 			0,
@@ -44,7 +53,7 @@ namespace Monoworks
 			1,
 			&m_PresentationImages[m_CurrentImageIndex],
 			&srcEnum
-		);*/
+		); // fix the opengl errors here
 
 		glUseProgram( m_ShaderProgram );
 		glBindTextureUnit( 0, m_PresentationImages[m_CurrentImageIndex] );
@@ -54,13 +63,13 @@ namespace Monoworks
 		glBindVertexArray( m_EmptyVAO );
 		glDrawArrays( GL_TRIANGLES, 0, 3 );
 		glBindVertexArray( 0 );
-		/*
+		
 		glSignalSemaphoreEXT(
-			m_RenderFinishedSemaphores[m_CurrentImageIndex],
+			m_QtReadFinishedSemaphores[m_CurrentImageIndex],
 			0, nullptr, 1,
 			&m_PresentationImages[m_CurrentImageIndex],
-			&src
-		);*/
+			&srcEnum
+		);
 	};
 
 	void CViewportWidget::initializeGL()
@@ -94,6 +103,7 @@ namespace Monoworks
 			GLuint memory;
 			glCreateMemoryObjectsEXT( 1, &memory );
 			glGenSemaphoresEXT( 1, &m_RenderFinishedSemaphores[i] );
+			glGenSemaphoresEXT( 1, &m_QtReadFinishedSemaphores[i] );
 
 			GLint dedicated = GL_TRUE;
 			glMemoryObjectParameterivEXT( memory, kGlDedicatedMemoryObjectEXT, &dedicated );
@@ -101,19 +111,24 @@ namespace Monoworks
 
 #ifdef MW_PLATFORM_WINDOWS
 			HANDLE imageHandle = presenter->GetPresentationImageWin32Handle( i );
-			HANDLE semaphoreHandle = presenter->GetRenderFinishedSemaphoreWin32Handle( i );
+			HANDLE renderSemaphoreHandle = presenter->GetRenderFinishedSemaphoreWin32Handle( i );
+			HANDLE readSemaphoreHandle = presenter->GetQtReadFinishedSemaphoreWin32Handle( i );
 
-			MW_INFO("Allocation Info: {}", info.allocationInfo.size);
-			glImportSemaphoreWin32HandleEXT( m_RenderFinishedSemaphores[i], kGlHandleTypeOpaqueWin32EXT, semaphoreHandle );
 			glImportMemoryWin32HandleEXT( memory, info.allocationInfo.size, kGlHandleTypeOpaqueWin32EXT, imageHandle );
+
+			glImportSemaphoreWin32HandleEXT( m_RenderFinishedSemaphores[i], kGlHandleTypeOpaqueWin32EXT, renderSemaphoreHandle );
+			glImportSemaphoreWin32HandleEXT( m_QtReadFinishedSemaphores[i], kGlHandleTypeOpaqueWin32EXT, readSemaphoreHandle );
 
 #else
 
 			int imageFd = presenter->GetPresentationImageFd( i );
-			int semaphoreFd = presenter->GetRenderFinishedSemaphoreFd( i );
+			int renderSemaphoreFd = presenter->GetRenderFinishedSemaphoreFd( i );
+			int readSemaphoreFd = presenter->GetQtReadFinishedSemaphoreFd( i ); 
 
 			glImportMemoryFdEXT( memory, info.blockSize, kGlHandleTypeOpaqueFdEXT, imageFd );
-			glImportSemaphoreFdEXT( m_RenderFinishedSemaphores[i], kGlHandleTypeOpaqueFdEXT, semaphoreFd );
+
+			glImportSemaphoreFdEXT( m_RenderFinishedSemaphores[i], kGlHandleTypeOpaqueFdEXT, renderSemaphoreFd );
+			glImportSemaphoreFdEXT( m_QtReadFinishedSemaphores[i], kGlHandleTypeOpaqueFdEXT, readSemaphoreFd );
 #endif
 
 			glCreateTextures( GL_TEXTURE_2D, 1, &m_PresentationImages[i] );

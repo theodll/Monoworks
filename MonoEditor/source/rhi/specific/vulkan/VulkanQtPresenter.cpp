@@ -91,23 +91,41 @@ namespace Monoworks::RHI
 		for (u32 i{}; i < info->RenderFinishedSemaphoreCount; i++ )
 		{
 #ifdef MW_PLATFORM_WINDOWS
-			VkSemaphoreGetWin32HandleInfoKHR getSemaphoreHandleInfo{};
-			getSemaphoreHandleInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR;
-			getSemaphoreHandleInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT;
-			getSemaphoreHandleInfo.semaphore = *info->pRenderFinishedSemaphores[i];
+			VkSemaphoreGetWin32HandleInfoKHR getRenderFinishedSemaphoreHandleInfo{};
+			getRenderFinishedSemaphoreHandleInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR;
+			getRenderFinishedSemaphoreHandleInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+			getRenderFinishedSemaphoreHandleInfo.semaphore = *info->pRenderFinishedSemaphores[i];
 
-			vkGetSemaphoreWin32HandleKHR( *info->pVulkanDevice->GetDevice(), &getSemaphoreHandleInfo, &m_RenderFinishedSemaphoreWin32Handles[i] );
+			vkGetSemaphoreWin32HandleKHR( *info->pVulkanDevice->GetDevice(), &getRenderFinishedSemaphoreHandleInfo, &m_RenderFinishedSemaphoreWin32Handles[i] );
 
 #else
-			VkSemaphoreGetFdInfoKHR getSemaphoreFdInfo {};
-			getSemaphoreFdInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR;
-			getSemaphoreFdInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
-			getSemaphoreFdInfo.semaphore = *info->pRenderFinishedSemaphores[i];
+			VkSemaphoreGetFdInfoKHR getRenderFinishedSemaphoreFdInfo{};
+			getRenderFinishedSemaphoreFdInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR;
+			getRenderFinishedSemaphoreFdInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
+			getRenderFinishedSemaphoreFdInfo.semaphore = *info->pRenderFinishedSemaphores[i];
 
-			vkGetSemaphoreFdKHR( *info->pVulkanDevice->GetDevice(), &getSemaphoreFdInfo, &m_RenderFinishedSemaphoreFds[i] );
+			MW_VK_CHECK( vkGetSemaphoreFdKHR( *info->pVulkanDevice->GetDevice(), &getRenderFinishedSemaphoreFdInfo, &m_RenderFinishedSemaphoreFds[i] ), "Failed to export Qt Read Finished Semaphore at index {}", i );
 #endif
 		}
 
+		for ( u32 i{}; i < info->QtReadFinishedSemaphoreCount; i++ )
+		{
+#ifdef MW_PLATFORM_WINDOWS
+			VkSemaphoreGetWin32HandleInfoKHR getQtReadFinishedSemaphoreHandleInfo{};
+			getQtReadFinishedSemaphoreHandleInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR;
+			getQtReadFinishedSemaphoreHandleInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+			getQtReadFinishedSemaphoreHandleInfo.semaphore = *info->pQtReadFinishedSemaphores[i];
+
+			vkGetSemaphoreWin32HandleKHR( *info->pVulkanDevice->GetDevice(), &getQtReadFinishedSemaphoreHandleInfo, &m_QtReadFinishedSemaphoreWin32Handles[i] );
+#else
+			VkSemaphoreGetFdInfoKHR getQtReadFinishedSemaphoreFdInfo{};
+			getQtReadFinishedSemaphoreFdInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR;
+			getQtReadFinishedSemaphoreFdInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT;
+			getQtReadFinishedSemaphoreFdInfo.semaphore = *info->pQtReadFinishedSemaphores[i];
+
+			MW_VK_CHECK( vkGetSemaphoreFdKHR( *info->pVulkanDevice->GetDevice(), &getQtReadFinishedSemaphoreFdInfo, &m_QtReadFinishedSemaphoreFds[i] ), "Failed to export Qt Read Finished Semaphore at index {}", i );
+#endif
+		}
 
 
 	};
@@ -120,13 +138,21 @@ namespace Monoworks::RHI
 		{
 #ifdef MW_PLATFORM_WINDOWS
 			CloseHandle( m_PresentationImageWin32Handles[i] );
+			CloseHandle( m_RenderFinishedSemaphoreWin32Handles[i] );
+			CloseHandle( m_QtReadFinishedSemaphoreWin32Handles[i] );
+			m_PresentationImageWin32Handles[i] = nullptr;
+			m_RenderFinishedSemaphoreWin32Handles[i] = nullptr;
+			m_QtReadFinishedSemaphoreWin32Handles[i] = nullptr;
 #else
 			close( m_PresentationImageFds[i] );
+			close( m_RenderFinishedSemaphoreFds[i] );
+			close( m_QtReadFinishedSemaphoreFds[i] );
 			m_PresentationImageFd[i] = -1;
+			m_RenderFinishedSemaphoreFds[i] = -1;
+			m_QtReadFinishedSemaphoreFds[i] = -1;
 #endif
 		}
 		m_PresentationImages.clear();
-
 
 	};
 
