@@ -152,8 +152,10 @@ namespace Monoworks::RHI
 		MW_VK_CHECK( vmaImportVulkanFunctionsFromVolk( &allocatorCreateInfo, &vulkanFunctions ), "Failed to import vulkan functions from volk for VMA" );
 
 		allocatorCreateInfo.pVulkanFunctions = &vulkanFunctions;
-		vulkanFunctions.vkGetMemoryWin32HandleKHR = vkGetMemoryWin32HandleKHR;
 
+#ifdef MW_PLATFORM_WINDOWS
+		vulkanFunctions.vkGetMemoryWin32HandleKHR = vkGetMemoryWin32HandleKHR;
+#endif
 #ifdef MW_DEBUG
 		MW_TRACE( "VMA Function Pointers: " );
 		MW_TRACE( "PFN_vkGetInstanceProcAddr: {}",					( void* )vulkanFunctions.vkGetInstanceProcAddr );
