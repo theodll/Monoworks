@@ -156,6 +156,7 @@ namespace Monoworks::RHI
 #ifdef MW_PLATFORM_WINDOWS
 		vulkanFunctions.vkGetMemoryWin32HandleKHR = vkGetMemoryWin32HandleKHR;
 #endif
+
 #ifdef MW_DEBUG
 		MW_TRACE( "VMA Function Pointers: " );
 		MW_TRACE( "PFN_vkGetInstanceProcAddr: {}",					( void* )vulkanFunctions.vkGetInstanceProcAddr );

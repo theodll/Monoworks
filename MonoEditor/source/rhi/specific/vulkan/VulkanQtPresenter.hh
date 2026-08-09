@@ -38,8 +38,8 @@ namespace Monoworks::RHI
 		HANDLE GetQtReadFinishedSemaphoreWin32Handle( u32 imageIndex ) { if ( m_QtReadFinishedSemaphoreWin32Handles[imageIndex] ) { return m_QtReadFinishedSemaphoreWin32Handles[imageIndex]; } else { MW_ASSERT( false, "Requested Qt Read Finished Semaphore Win32 Handle is invalid. " ); return nullptr; } }
 #else 
 		int GetPresentationImageFd( u32 imageIndex ) { if ( m_PresentationImageFds[imageIndex] >= 0 ) { return m_PresentationImageFds[imageIndex] } else { MW_ASSERT( false, "Requested Presentation Image File Descriptor is invalid." ); return -1; } };
-		int GetRenderFinishedSemaphoreFd( u32 imageIndex ) { ( m_RenderFinishedSemaphoreFds[imageIndex] >= 0 ) { return m_RenderFinishedSemaphoreFds[imageIndex] } else { MW_ASSERT( false, "Requested Render Finished Semaphore File Descriptor is invalid." ); return -1; } };
-		int GetQtReadFinishedSemaphoreFd( u32 imageIndex ) { ( m_QtReadFinishedSemaphoreFds[imageIndex] >= 0 ) { return m_QtReadFinishedSemaphoreFds[imageIndex] } else { MW_ASSERT( false, "Requested Qt Read Finished Semaphore File Descriptor is invalid." ); return -1; } };
+		int GetRenderFinishedSemaphoreFd( u32 imageIndex ) { if ( m_RenderFinishedSemaphoreFds[imageIndex] >= 0 ) { return m_RenderFinishedSemaphoreFds[imageIndex] } else { MW_ASSERT( false, "Requested Render Finished Semaphore File Descriptor is invalid." ); return -1; } };
+		int GetQtReadFinishedSemaphoreFd( u32 imageIndex ) { if ( m_QtReadFinishedSemaphoreFds[imageIndex] >= 0 ) { return m_QtReadFinishedSemaphoreFds[imageIndex] } else { MW_ASSERT( false, "Requested Qt Read Finished Semaphore File Descriptor is invalid." ); return -1; } };
 #endif
 
 

@@ -33,6 +33,7 @@ target_link_libraries(MonoEditor PRIVATE
     KDAB::kddockwidgets
 )
 
+
 target_include_directories(MonoEditor PRIVATE "source/" "specific/")
 
 if (WIN32)

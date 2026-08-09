@@ -13,7 +13,9 @@
 #if defined(Q_OS_WIN)
 #  include <Windows.h>
 #endif
-#include <GL/gl.h>
+
+#include <QtGui/qopengl.h>
+
 
 #ifndef APIENTRY
 #  define APIENTRY
@@ -70,16 +72,16 @@ namespace Monoworks
         QOpenGLExternalObjectsExtraFunctions() = default;
         explicit QOpenGLExternalObjectsExtraFunctions( QOpenGLContext* pContext );
 
-        [[nodiscard]] bool initializeExternalObjectsFunctions();
-        [[nodiscard]] bool isInitialized() const noexcept { return m_Initialized; }
+        bool initializeExternalObjectsFunctions();
+        NODISCARD bool isInitialized() const noexcept { return m_Initialized; }
 
-        [[nodiscard]] bool hasMemoryObjectEXT() const noexcept { return m_HasMemoryObjectEXT; }
-        [[nodiscard]] bool hasSemaphoreEXT() const noexcept { return m_HasSemaphoreEXT; }
-        [[nodiscard]] bool hasMemoryObjectFdEXT() const noexcept { return m_HasMemoryObjectFdEXT; }
-        [[nodiscard]] bool hasSemaphoreFdEXT() const noexcept { return m_HasSemaphoreFdEXT; }
+		NODISCARD bool hasMemoryObjectEXT() const noexcept { return m_HasMemoryObjectEXT; }
+		NODISCARD bool hasSemaphoreEXT() const noexcept { return m_HasSemaphoreEXT; }
+		NODISCARD bool hasMemoryObjectFdEXT() const noexcept { return m_HasMemoryObjectFdEXT; }
+		NODISCARD bool hasSemaphoreFdEXT() const noexcept { return m_HasSemaphoreFdEXT; }
 
-        [[nodiscard]] bool hasMemoryObjectWin32EXT() const noexcept { return m_HasMemoryObjectWin32EXT; }
-        [[nodiscard]] bool hasSemaphoreWin32EXT() const noexcept { return m_HasSemaphoreWin32EXT; }
+        NODISCARD bool hasMemoryObjectWin32EXT() const noexcept { return m_HasMemoryObjectWin32EXT; }
+        NODISCARD bool hasSemaphoreWin32EXT() const noexcept { return m_HasSemaphoreWin32EXT; }
 
         // common
         void glGetUnsignedBytevEXT( GLenum pname, GLubyte* pData );
