@@ -78,7 +78,8 @@ namespace Monoworks
 
 		initializeExternalObjectsFunctions();
 
-
+#ifdef MW_PLATFORM_OSX
+#else
 		glEnable( GL_DEBUG_OUTPUT );
 		glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS ); 
 		glDebugMessageCallback( []( GLenum source, GLenum type, GLuint id, GLenum severity,
@@ -88,7 +89,7 @@ namespace Monoworks
 					return;
 				MW_ERROR( "GL Debug [{}]: {}", id, message ); 
 			}, nullptr );
-
+#endif
 		auto presenter = ( RHI::CVulkanQtPresenter* )m_pPresenter;
 
 		makeCurrent();
