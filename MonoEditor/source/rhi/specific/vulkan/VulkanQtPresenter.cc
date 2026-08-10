@@ -148,7 +148,7 @@ namespace Monoworks::RHI
 			close( m_PresentationImageFds[i] );
 			close( m_RenderFinishedSemaphoreFds[i] );
 			close( m_QtReadFinishedSemaphoreFds[i] );
-			m_PresentationImageFd[i] = -1;
+			m_PresentationImageFds[i] = -1;
 			m_RenderFinishedSemaphoreFds[i] = -1;
 			m_QtReadFinishedSemaphoreFds[i] = -1;
 #endif
