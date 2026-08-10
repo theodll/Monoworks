@@ -34,6 +34,8 @@ TracyVkCtx TracyTransferContext = nullptr;
 
 #endif
 
+constexpr size_t g_AllocationWarnLimit = 0x1000000;
+
 namespace Monoworks::RHI 
 {
 
@@ -44,6 +46,186 @@ namespace Monoworks::RHI
 	VkInstance CVulkanContext::m_Instance;
 	VkPipelineCache CVulkanContext::m_PipelineCache;
 	CVulkanResourceUploader CVulkanContext::m_ResourceUploader;
+	VkAllocationCallbacks CVulkanContext::m_AllocationCallbacks;
+
+#ifdef MW_PROFILING
+	STotalAllocs CVulkanContext::m_TotalVulkanAllocated{};
+#endif
+
+	static constexpr size_t AlingUp(size_t value, size_t alignment)
+	{
+		return ( value + ( alignment - 1 ) ) & ~( alignment - 1 );
+	}
+
+	static void* AlignedAlloc( size_t size, size_t alignment )
+	{
+		MW_PROFILE_FUNC;
+
+		constexpr auto alignUp = []( size_t value, size_t alignment ) constexpr { return ( value + ( alignment - 1 ) ) & ~( alignment - 1 ); };
+
+		void* pPtr = nullptr;
+#ifdef MW_PLATFORM_WINDOWS
+		pPtr = _aligned_malloc( size, alignment );
+#else
+		pPtr = std::aligned_alloc( alignment, alingUp( size, alignment ) );
+#endif
+
+		MW_PROFILE_ALLOC( pPtr, size );
+		return pPtr;
+
+	}
+
+	static void AlignedFree( void* pBlock, size_t size ) 
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !pBlock )
+			MW_WARN( "Requested to free an already free block." );
+
+		MW_PROFILE_FREE( pBlock );
+
+#ifdef MW_PLATFORM_WINDOWS
+		_aligned_free( pBlock );
+#else
+		std::free( pBlock );
+#endif
+
+		pBlock = nullptr;
+
+	}
+
+
+	void* VKAPI_ATTR VkAllocate( void*, size_t size, size_t alignment, VkSystemAllocationScope scope )
+	{
+		MW_PROFILE_FUNC;
+		if ( size == 0 )
+			return nullptr;
+
+		constexpr auto alignUp = []( size_t value, size_t alignment ) constexpr { return ( value + ( alignment - 1 ) ) & ~( alignment - 1 ); };
+
+		alignment = std::max<size_t>( alignment, alignof( std::max_align_t ) );
+		const size_t headerPad = alignUp( sizeof(SAllocHeader), alignment );
+
+		void* pRaw = AlignedAlloc( headerPad + size, alignment  );
+		if ( !pRaw )
+		{
+			MW_ERROR( "Vulkan Allocation of size {} failed.", size );
+			return nullptr;
+		}
+
+		if ( size > 0x1000000 )
+			MW_WARN( "Large Vulkan Allocation: Allocation at {} exceeding 16 Mebibytes: {} Bytes.", ( void* )pRaw, size );
+
+
+		byte_t* pUser = static_cast< byte_t* >( pRaw ) + headerPad;
+		auto* pHeader = reinterpret_cast< SAllocHeader* >( pUser - sizeof( SAllocHeader ) );
+		pHeader->pRawBlock = pRaw;
+		pHeader->Size = size;
+		pHeader->Scope = scope;
+
+#ifdef MW_PROFILING
+		auto& total = CVulkanContext::GetTotalVulkanAllocations();
+
+		switch ( scope )
+		{
+		case VK_SYSTEM_ALLOCATION_SCOPE_COMMAND:
+		{
+			total.CommandAllocs += size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_OBJECT:
+		{
+			total.ObjectAllocs += size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_CACHE:
+		{
+			total.CacheAllocs += size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_DEVICE:
+		{
+			total.DeviceAllocs += size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE:
+		{
+			total.InstanceAllocs += size;
+			break;
+		}
+		}
+#endif
+		return pUser;
+
+	}
+
+	void VKAPI_ATTR VkFree( void*, void* pMemory )
+	{
+		if ( !pMemory )
+			return;
+
+		auto* pHeader = reinterpret_cast< SAllocHeader* >( static_cast< byte_t* >( pMemory ) - sizeof( SAllocHeader ) );
+
+#ifdef MW_PROFILING
+		auto& total = CVulkanContext::GetTotalVulkanAllocations();
+
+		switch ( pHeader->Scope )
+		{
+		case VK_SYSTEM_ALLOCATION_SCOPE_COMMAND:
+		{
+			total.CommandAllocs -= pHeader->Size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_OBJECT:
+		{
+			total.ObjectAllocs -= pHeader->Size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_CACHE:
+		{
+			total.CacheAllocs -= pHeader->Size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_DEVICE:
+		{
+			total.DeviceAllocs -= pHeader->Size;
+			break;
+		}
+		case VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE:
+		{
+			total.InstanceAllocs -= pHeader->Size;
+			break;
+		}
+		}
+#endif
+
+		AlignedFree( pHeader->pRawBlock, pHeader->Size );
+
+	}
+
+	void* VKAPI_ATTR VkReallocate( void* pUserData, void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope scope )
+	{
+		if ( !pOriginal )
+			return VkAllocate( pUserData, size, alignment, scope );
+
+		if ( size == 0 )
+		{
+			VkFree( pUserData, pOriginal );
+			return nullptr;
+		}
+
+		auto* pOldHeader = reinterpret_cast< SAllocHeader* >( static_cast< byte_t* >( pOriginal ) - sizeof( SAllocHeader ) );
+		const size_t oldSize = pOldHeader->Size;
+
+		void* pNew = VkAllocate( pUserData, size, alignment, scope );
+		if ( !pNew )
+			return nullptr;
+
+		memcpy( pNew, pOriginal, ( ( ( oldSize ) < ( size ) ) ? ( oldSize ) : ( size ) ) );
+		VkFree( pUserData, pOriginal );
+		return pNew;
+	}
+
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -114,6 +296,11 @@ namespace Monoworks::RHI
 
 		MW_VK_CHECK(volkInitialize(), "Failed to Initialize Volk");
 
+		m_AllocationCallbacks.pUserData = nullptr;
+		m_AllocationCallbacks.pfnAllocation = &VkAllocate;
+		m_AllocationCallbacks.pfnFree = &VkFree;
+		m_AllocationCallbacks.pfnReallocation = &VkReallocate;
+
 		CreateInstance();
 
 		volkLoadInstance(m_Instance);
@@ -144,6 +331,7 @@ namespace Monoworks::RHI
 		allocatorCreateInfo.device = *m_Device.GetDevice();
 		allocatorCreateInfo.instance = m_Instance;
 		allocatorCreateInfo.vulkanApiVersion = MW_VK_VERSION;
+		allocatorCreateInfo.pAllocationCallbacks = &m_AllocationCallbacks;
 		allocatorCreateInfo.flags = VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT
 			| VMA_ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT
 			| VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
@@ -362,8 +550,9 @@ namespace Monoworks::RHI
 			createInfo.enabledLayerCount = 0;
 			createInfo.pNext = nullptr;
 		}
-		
-		MW_VK_CHECK(vkCreateInstance(&createInfo, nullptr, &m_Instance), "Failed to create Vulkan Instance");
+		VkResult res = vkCreateInstance( &createInfo, &m_AllocationCallbacks, &m_Instance );
+
+		MW_VK_CHECK(res, "Failed to create Vulkan Instance");
 
 		u32 extensionCount = 0;
 		vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -411,7 +600,7 @@ namespace Monoworks::RHI
 		debugCreateInfo.pfnUserCallback = DebugCallback;
 		debugCreateInfo.pUserData = nullptr;
 
-		MW_VK_CHECK( CreateDebugUtilsMessengerEXT( m_Instance, &debugCreateInfo, nullptr, &m_DebugMessenger ), "Failed to setup debug messenger" );
+		MW_VK_CHECK( CreateDebugUtilsMessengerEXT( m_Instance, &debugCreateInfo, &m_AllocationCallbacks, &m_DebugMessenger ), "Failed to setup debug messenger" );
 	}
 
 

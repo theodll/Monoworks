@@ -236,7 +236,7 @@ namespace Monoworks::RHI
 			createInfo.enabledLayerCount = 0;
 		}
 
-		if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS)
+		if (vkCreateDevice(m_PhysicalDevice, &createInfo, CVulkanContext::GetCallbacks(), &m_Device) != VK_SUCCESS)
 		{
 			MW_ASSERT(false, "Failed to create logical device");
 		}
@@ -263,7 +263,7 @@ namespace Monoworks::RHI
 		graphicsPoolInfo.flags =
 			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-		MW_VK_CHECK(vkCreateCommandPool(m_Device, &graphicsPoolInfo, nullptr, &m_GraphicsCommandPool), "Failed to create graphics command pool");
+		MW_VK_CHECK(vkCreateCommandPool(m_Device, &graphicsPoolInfo, CVulkanContext::GetCallbacks(), &m_GraphicsCommandPool), "Failed to create graphics command pool");
 
 		VkCommandPoolCreateInfo computePoolInfo{};
 		computePoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -271,7 +271,7 @@ namespace Monoworks::RHI
 		computePoolInfo.flags =
 			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-		MW_VK_CHECK(vkCreateCommandPool(m_Device, &computePoolInfo, nullptr, &m_ComputeCommandPool), "Failed to create compute command pool");
+		MW_VK_CHECK(vkCreateCommandPool(m_Device, &computePoolInfo, CVulkanContext::GetCallbacks(), &m_ComputeCommandPool), "Failed to create compute command pool");
 	
 
 		VkCommandPoolCreateInfo transferPoolInfo{};
@@ -280,7 +280,7 @@ namespace Monoworks::RHI
 		transferPoolInfo.flags =
 			VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-		MW_VK_CHECK(vkCreateCommandPool(m_Device, &transferPoolInfo, nullptr, &m_TransferCommandPool), "Failed to create transfer command pool");
+		MW_VK_CHECK(vkCreateCommandPool(m_Device, &transferPoolInfo, CVulkanContext::GetCallbacks(), &m_TransferCommandPool), "Failed to create transfer command pool");
 	}
 
 	bool CVulkanDevice::IsDeviceSuitable(const VkPhysicalDevice* pPhysDevice) noexcept

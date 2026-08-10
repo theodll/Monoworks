@@ -17,6 +17,23 @@
 
 namespace Monoworks::RHI
 {
+	struct SAllocHeader
+	{
+		void* pRawBlock;
+		size_t Size;
+		VkSystemAllocationScope Scope;
+	};
+#ifdef MW_PROFILING
+	struct STotalAllocs 
+	{
+		size_t	CommandAllocs; 
+		size_t	ObjectAllocs;
+		size_t	CacheAllocs;
+		size_t	DeviceAllocs;
+		size_t	InstanceAllocs;
+	};
+#endif 
+
 	class CVulkanContext : public IGraphicsContext 
 	{
 	public:
@@ -31,7 +48,10 @@ namespace Monoworks::RHI
 		NODISCARD static IPresenter* GetPresenter() NOEXCEPT { return m_Presenter; }
 
 		NODISCARD static VmaAllocator* GetAllocator() NOEXCEPT { return &m_Allocator; }
-		
+		NODISCARD static VkAllocationCallbacks* GetCallbacks() NOEXCEPT { return &m_AllocationCallbacks; }
+#ifdef MW_PROFILING
+		NODISCARD static STotalAllocs& GetTotalVulkanAllocations() NOEXCEPT { return m_TotalVulkanAllocated; }
+#endif
 
 	private:
 		void CreateInstance() NOEXCEPT;
@@ -45,8 +65,13 @@ namespace Monoworks::RHI
 		void DestroyDebugUtilsMessengerEXT( VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator ) NOEXCEPT;
 
 		VkDebugUtilsMessengerEXT m_DebugMessenger = nullptr;
+#ifdef MW_PROFILING
+		static STotalAllocs m_TotalVulkanAllocated;
+#endif
+
 		static VkInstance m_Instance;
 		static VkPipelineCache m_PipelineCache;
+		static VkAllocationCallbacks m_AllocationCallbacks;
 
 		static VmaAllocator m_Allocator;
 		
