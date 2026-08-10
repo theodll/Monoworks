@@ -38,8 +38,8 @@ namespace Monoworks::RHI
 
 		auto device = CVulkanContext::GetDevice()->GetDevice();
 
-		vkDestroyPipeline( *device, m_VulkanPipeline, nullptr );
-		vkDestroyPipelineLayout( *device, m_VulkanPipelineLayout, nullptr );
+		vkDestroyPipeline( *device, m_VulkanPipeline, CVulkanContext::GetCallbacks() );
+		vkDestroyPipelineLayout( *device, m_VulkanPipelineLayout, CVulkanContext::GetCallbacks() );
 	}
 
 	static VkFormat ShaderDataTypeToVulkanFormat( EShaderDataType type )
@@ -209,8 +209,7 @@ namespace Monoworks::RHI
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &range;
 
-		// TODO: Allocation Callbacks
-		vkCreatePipelineLayout( *device, &pipelineLayoutInfo, nullptr, &m_VulkanPipelineLayout );
+		vkCreatePipelineLayout( *device, &pipelineLayoutInfo, CVulkanContext::GetCallbacks(), &m_VulkanPipelineLayout );
 
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 		std::vector<VkShaderModule> modules;
@@ -224,7 +223,7 @@ namespace Monoworks::RHI
 			createInfo.codeSize = object.Code.Size;
 			createInfo.pCode = ( u32* )object.Code.pCode;
 
-			MW_VK_CHECK( vkCreateShaderModule( *CVulkanContext::GetDevice()->GetDevice(), &createInfo, nullptr, &module ), "Failed to create Shader Module" );
+			MW_VK_CHECK( vkCreateShaderModule( *CVulkanContext::GetDevice()->GetDevice(), &createInfo, CVulkanContext::GetCallbacks(), &module ), "Failed to create Shader Module" );
 
 			modules.push_back( module );
 
@@ -427,15 +426,14 @@ namespace Monoworks::RHI
 		graphicsPipelineCreateInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
 		graphicsPipelineCreateInfo.pDynamicState = &pipelineDynamicStateCreateInfo;
 
-		// TODO: Allocation Callbacks
-		if ( vkCreateGraphicsPipelines( *device, *CVulkanContext::GetPipelineCache(), 1, &graphicsPipelineCreateInfo, nullptr, &m_VulkanPipeline ) != VK_SUCCESS )
+		if ( vkCreateGraphicsPipelines( *device, *CVulkanContext::GetPipelineCache(), 1, &graphicsPipelineCreateInfo, CVulkanContext::GetCallbacks(), &m_VulkanPipeline ) != VK_SUCCESS )
 		{
 			MW_ERROR("Non-Fataly failed to create some graphics pipelines");
 		};
 
 		for ( const auto& module : modules )
 		{
-			vkDestroyShaderModule( *device, module, nullptr );
+			vkDestroyShaderModule( *device, module, CVulkanContext::GetCallbacks() );
 		}
 
 	};

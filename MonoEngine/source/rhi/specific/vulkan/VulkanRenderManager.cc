@@ -53,18 +53,18 @@ namespace Monoworks::RHI
 		auto device = CVulkanContext::GetDevice();
 		for ( auto& frameData : m_RootFrameData )
 		{
-			// TODO: allocation callbacks
-			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.QtReadFinishedSemaphore ), "Failed to create QtReadFinishedSemaphore." );
-			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.ImageAvailableSemaphore ), "Failed to create ImageAvailableSemaphore." );
-			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, nullptr, &frameData.RenderFinishedSemaphore ), "Failed to create RenderFinishedSemaphore." );
-			MW_VK_CHECK( vkCreateFence( *device->GetDevice(), &fenceCreateInfo, nullptr, &frameData.InFlightFence), "Failed to create InFlightFence.");
+			
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.QtReadFinishedSemaphore ), "Failed to create QtReadFinishedSemaphore." );
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.ImageAvailableSemaphore ), "Failed to create ImageAvailableSemaphore." );
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.RenderFinishedSemaphore ), "Failed to create RenderFinishedSemaphore." );
+			MW_VK_CHECK( vkCreateFence( *device->GetDevice(), &fenceCreateInfo, CVulkanContext::GetCallbacks(), &frameData.InFlightFence), "Failed to create InFlightFence.");
 
 			VkCommandPoolCreateInfo poolCreateInfo{};
 			poolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 			poolCreateInfo.queueFamilyIndex = device->GetGraphicsQueueFamilyIndex();
 			poolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-			MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolCreateInfo, nullptr, &frameData.CommandPool ), "Failed to create CommandPool." );
+			MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolCreateInfo, CVulkanContext::GetCallbacks(), &frameData.CommandPool ), "Failed to create CommandPool." );
 
 			VkCommandBufferAllocateInfo allocCreateInfo{};
 			allocCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -84,7 +84,7 @@ namespace Monoworks::RHI
 
 			for ( auto i{0}; i < MFIF; i++ )
 			{
-				MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolInfo, nullptr, &workerData.CommandPools[i] ), "Failed to create CommandPool.");
+				MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolInfo, CVulkanContext::GetCallbacks(), &workerData.CommandPools[i] ), "Failed to create CommandPool.");
 			
 				VkCommandBufferAllocateInfo allocInfo{};
 				allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -104,13 +104,13 @@ namespace Monoworks::RHI
 		auto device = *CVulkanContext::GetDevice()->GetDevice();
 		
 		vkDeviceWaitIdle( device );
-		// TODO: allocation callbacks
+		
 		for ( auto& workerData : m_WorkerRenderData )
 		{
 			for ( auto& commandPool : workerData.CommandPools )
 			{
 				if ( commandPool )
-					vkDestroyCommandPool( device, commandPool, nullptr);
+					vkDestroyCommandPool( device, commandPool, CVulkanContext::GetCallbacks() );
 			}
 		}
 

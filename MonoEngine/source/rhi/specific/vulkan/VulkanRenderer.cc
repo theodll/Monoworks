@@ -126,6 +126,15 @@ namespace Monoworks::RHI
 		if ( m_RenderDocAPI ) m_RenderDocAPI->StartFrameCapture( nullptr, nullptr );
 #endif 
 
+#ifdef MW_PROFILING
+        auto& total = CVulkanContext::GetTotalVulkanAllocations();
+        MW_PROFILE_PLOT( "Vulkan Command Allocations", ( s64 )total.CommandAllocs );
+        MW_PROFILE_PLOT( "Vulkan Object Allocations", ( s64 )total.ObjectAllocs );
+        MW_PROFILE_PLOT( "Vulkan Cache Allocations", ( s64 )total.ObjectAllocs );
+        MW_PROFILE_PLOT( "Vulkan Device Allocations", ( s64 )total.DeviceAllocs );
+        MW_PROFILE_PLOT( "Vulkan Instance Allocations", ( s64 )total.InstanceAllocs );
+#endif
+
         if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
         {
             SVulkanSDLPresentationAcquisitionInfo acquisitionInfo{};

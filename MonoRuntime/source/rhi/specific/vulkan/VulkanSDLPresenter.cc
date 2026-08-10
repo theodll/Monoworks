@@ -256,7 +256,7 @@ namespace Monoworks::RHI
 
 		MW_INFO( "Create Surface" );
 
-		if ( !SDL_Vulkan_CreateSurface( m_Window, *info->pInstance, nullptr, &m_Surface ) )
+		if ( !SDL_Vulkan_CreateSurface( m_Window, *info->pInstance, CVulkanContext::GetCallbacks(), &m_Surface ) )
 		{
 			MW_ERROR( "Failed to create window surface: {}", SDL_GetError() );
 		}
@@ -376,7 +376,7 @@ namespace Monoworks::RHI
 
 		createInfoVk.oldSwapchain = VK_NULL_HANDLE;
 
-		MW_VK_CHECK( vkCreateSwapchainKHR( *info->pVulkanDevice->GetDevice(), &createInfoVk, nullptr, &m_Swapchain ), "Failed to create Swapchain" );
+		MW_VK_CHECK( vkCreateSwapchainKHR( *info->pVulkanDevice->GetDevice(), &createInfoVk, CVulkanContext::GetCallbacks(), &m_Swapchain ), "Failed to create Swapchain" );
 
 		vkGetSwapchainImagesKHR( *info->pVulkanDevice->GetDevice(), m_Swapchain, &imageCount, nullptr );
 		m_SwapchainImages.resize( imageCount );
@@ -414,8 +414,7 @@ namespace Monoworks::RHI
 			viewInfo.subresourceRange.baseArrayLayer = 0;
 			viewInfo.subresourceRange.layerCount = 1;
 
-			// TODO: allocation callbacks
-			MW_VK_CHECK( vkCreateImageView( *info->pDevice, &viewInfo, nullptr, vulkanTexture->GetImageView() ), "Failed to create Image View" );
+			MW_VK_CHECK( vkCreateImageView( *info->pDevice, &viewInfo, CVulkanContext::GetCallbacks(), vulkanTexture->GetImageView() ), "Failed to create Image View" );
 
 			
 		}
@@ -481,15 +480,14 @@ namespace Monoworks::RHI
 
 		m_SwapchainImages.clear();
 
-		// TODO: Allocation Callbacks
 		if ( m_Swapchain )
 		{
-			vkDestroySwapchainKHR( *device->GetDevice(), m_Swapchain, nullptr );
+			vkDestroySwapchainKHR( *device->GetDevice(), m_Swapchain, CVulkanContext::GetCallbacks() );
 			m_Swapchain = nullptr;
 		}
 
 		if ( m_Surface )
-			vkDestroySurfaceKHR( *CVulkanContext::GetInstance(), m_Surface, nullptr);
+			vkDestroySurfaceKHR( *CVulkanContext::GetInstance(), m_Surface, CVulkanContext::GetCallbacks() );
 
 
 	}

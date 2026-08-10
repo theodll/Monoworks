@@ -34,7 +34,7 @@ namespace Monoworks::RHI
 		MW_VK_CHECK( vkCreateFence(
 			*CVulkanContext::GetDevice()->GetDevice(),
 			&fenceInfo,
-			nullptr,
+			CVulkanContext::GetCallbacks(),
 			&m_Fence ), "Failed to create Transfer Fence" );
 	}
 
@@ -42,7 +42,7 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		if (m_Fence)
-			vkDestroyFence(*CVulkanContext::GetDevice()->GetDevice(), m_Fence, nullptr);
+			vkDestroyFence(*CVulkanContext::GetDevice()->GetDevice(), m_Fence, CVulkanContext::GetCallbacks() );
 
 		m_Fence = VK_NULL_HANDLE;
 		m_Commandbuffer = VK_NULL_HANDLE;

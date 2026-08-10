@@ -147,7 +147,7 @@ namespace Monoworks::RHI
 			viewInfo.subresourceRange.baseArrayLayer = 0;
 			viewInfo.subresourceRange.layerCount = 1;
 
-			MW_VK_CHECK( vkCreateImageView( *CVulkanContext::GetDevice()->GetDevice(), &viewInfo, nullptr, &m_ImageView ), "Failed to create Image View" );
+			MW_VK_CHECK( vkCreateImageView( *CVulkanContext::GetDevice()->GetDevice(), &viewInfo, CVulkanContext::GetCallbacks(), &m_ImageView ), "Failed to create Image View" );
 		}
 		
 		if ( m_GenerateSampler )
@@ -167,12 +167,14 @@ namespace Monoworks::RHI
 			MW_PROFILE_FREE_N( ( void* )m_Image, "GPU VRAM" );
 		}
 
-		// TODO: AllocationCallbacks
+		if ( m_Fence )
+			vkDestroyFence( *device->GetDevice(), m_Fence, CVulkanContext::GetCallbacks() );
+
 		if ( m_ImageView && m_ManageImageView )
-			vkDestroyImageView( *device->GetDevice(), m_ImageView, nullptr );
+			vkDestroyImageView( *device->GetDevice(), m_ImageView, CVulkanContext::GetCallbacks() );
 
 		if ( m_Sampler && m_ManageSampler )
-			vkDestroySampler( *device->GetDevice(), m_Sampler, nullptr );
+			vkDestroySampler( *device->GetDevice(), m_Sampler, CVulkanContext::GetCallbacks() );
 
 		if ( m_ExternalMemoryPool && m_EnableMemoryExporting )
 			vmaDestroyPool( *allocator, m_ExternalMemoryPool );
@@ -327,7 +329,7 @@ namespace Monoworks::RHI
 		viewInfo.subresourceRange.baseArrayLayer = 0;
 		viewInfo.subresourceRange.layerCount = 1;
 
-		MW_VK_CHECK( vkCreateImageView( *device->GetDevice(), &viewInfo, nullptr, &m_ImageView), "Failed to create Image View");
+		MW_VK_CHECK( vkCreateImageView( *device->GetDevice(), &viewInfo, CVulkanContext::GetCallbacks(), &m_ImageView), "Failed to create Image View");
 	}
 
 	void CVulkanTexture2D::CreateImageSampler() NOEXCEPT
@@ -358,7 +360,7 @@ namespace Monoworks::RHI
 		samplerInfo.minLod = 0.0f;
 		samplerInfo.maxLod = 0.0f;
 
-		MW_VK_CHECK( vkCreateSampler( *device->GetDevice(), &samplerInfo, nullptr, &m_Sampler ), "Failed to create Texture Sampler" );
+		MW_VK_CHECK( vkCreateSampler( *device->GetDevice(), &samplerInfo, CVulkanContext::GetCallbacks(), &m_Sampler ), "Failed to create Texture Sampler" );
 
 	}
 
@@ -394,7 +396,7 @@ namespace Monoworks::RHI
 			fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 			fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-			vkCreateFence( *CVulkanContext::GetDevice()->GetDevice(), &fenceInfo, nullptr, &m_Fence );
+			vkCreateFence( *CVulkanContext::GetDevice()->GetDevice(), &fenceInfo, CVulkanContext::GetCallbacks(), &m_Fence );
 		}
 	}
 }
