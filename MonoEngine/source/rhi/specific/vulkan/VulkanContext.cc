@@ -34,10 +34,10 @@ TracyVkCtx TracyTransferContext = nullptr;
 
 #endif
 
-constexpr size_t g_AllocationWarnLimit = 0x1000000;
 
 namespace Monoworks::RHI 
 {
+	constexpr size_t g_AllocationWarnLimit = 0x1000000;
 
 	CVulkanDevice CVulkanContext::m_Device;
 	IPresenter* CVulkanContext::m_Presenter;
@@ -52,22 +52,17 @@ namespace Monoworks::RHI
 	STotalAllocs CVulkanContext::m_TotalVulkanAllocated{};
 #endif
 
-	static constexpr size_t AlingUp(size_t value, size_t alignment)
-	{
-		return ( value + ( alignment - 1 ) ) & ~( alignment - 1 );
-	}
 
 	static void* AlignedAlloc( size_t size, size_t alignment )
 	{
 		MW_PROFILE_FUNC;
 
-		constexpr auto alignUp = []( size_t value, size_t alignment ) constexpr { return ( value + ( alignment - 1 ) ) & ~( alignment - 1 ); };
-
 		void* pPtr = nullptr;
 #ifdef MW_PLATFORM_WINDOWS
 		pPtr = _aligned_malloc( size, alignment );
 #else
-		pPtr = std::aligned_alloc( alignment, alingUp( size, alignment ) );
+		constexpr auto alignUp = []( size_t value, size_t alignment ) constexpr { return ( value + ( alignment - 1 ) ) & ~( alignment - 1 ); };
+		pPtr = std::aligned_alloc( alignment, alignUp( size, alignment ) );
 #endif
 
 		MW_PROFILE_ALLOC( pPtr, size );
@@ -75,12 +70,15 @@ namespace Monoworks::RHI
 
 	}
 
-	static void AlignedFree( void* pBlock, size_t size ) 
+	static void AlignedFree( void* pBlock ) 
 	{
 		MW_PROFILE_FUNC;
 
 		if ( !pBlock )
+		{
 			MW_WARN( "Requested to free an already free block." );
+			return;
+		}
 
 		MW_PROFILE_FREE( pBlock );
 
@@ -113,7 +111,7 @@ namespace Monoworks::RHI
 			return nullptr;
 		}
 
-		if ( size > 0x1000000 )
+		if ( size > g_AllocationWarnLimit )
 			MW_WARN( "Large Vulkan Allocation: Allocation at {} exceeding 16 Mebibytes: {} Bytes.", ( void* )pRaw, size );
 
 
@@ -199,7 +197,7 @@ namespace Monoworks::RHI
 		}
 #endif
 
-		AlignedFree( pHeader->pRawBlock, pHeader->Size );
+		AlignedFree( pHeader->pRawBlock );
 
 	}
 
@@ -468,7 +466,6 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		
-		// TODO: Allocation Callbacks
 
 		MW_PROFILE_VK_DESTROY_CTX( TracyGraphicsContext );
 		MW_PROFILE_VK_DESTROY_CTX( TracyComputeContext );
@@ -476,7 +473,7 @@ namespace Monoworks::RHI
 
 		if ( m_PipelineCache )
 		{
-			vkDestroyPipelineCache( *m_Device.GetDevice(), m_PipelineCache, nullptr );
+			vkDestroyPipelineCache( *m_Device.GetDevice(), m_PipelineCache, CVulkanContext::GetCallbacks() );
 		}
 
 		if ( m_Allocator )
@@ -489,12 +486,11 @@ namespace Monoworks::RHI
 		
 		m_Device.Shutdown();
 
-		// TODO: Allocation Callbacks
-		vkDestroyDebugUtilsMessengerEXT( m_Instance, m_DebugMessenger, nullptr );
+		vkDestroyDebugUtilsMessengerEXT( m_Instance, m_DebugMessenger, CVulkanContext::GetCallbacks() );
 
 		if ( m_Instance )
 		{
-			vkDestroyInstance( m_Instance, nullptr );
+			vkDestroyInstance( m_Instance, CVulkanContext::GetCallbacks() );
 		}
 
 		MW_INFO( "Shutdown CVulkanContext" );

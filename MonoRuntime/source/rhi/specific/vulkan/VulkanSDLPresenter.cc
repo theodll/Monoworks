@@ -414,7 +414,6 @@ namespace Monoworks::RHI
 			viewInfo.subresourceRange.baseArrayLayer = 0;
 			viewInfo.subresourceRange.layerCount = 1;
 
-			// TODO: allocation callbacks
 			MW_VK_CHECK( vkCreateImageView( *info->pDevice, &viewInfo, CVulkanContext::GetCallbacks(), vulkanTexture->GetImageView() ), "Failed to create Image View" );
 
 			
@@ -481,15 +480,14 @@ namespace Monoworks::RHI
 
 		m_SwapchainImages.clear();
 
-		// TODO: Allocation Callbacks
 		if ( m_Swapchain )
 		{
-			vkDestroySwapchainKHR( *device->GetDevice(), m_Swapchain, nullptr );
+			vkDestroySwapchainKHR( *device->GetDevice(), m_Swapchain, CVulkanContext::GetCallbacks() );
 			m_Swapchain = nullptr;
 		}
 
 		if ( m_Surface )
-			vkDestroySurfaceKHR( *CVulkanContext::GetInstance(), m_Surface, nullptr);
+			vkDestroySurfaceKHR( *CVulkanContext::GetInstance(), m_Surface, CVulkanContext::GetCallbacks() );
 
 
 	}

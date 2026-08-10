@@ -167,7 +167,9 @@ namespace Monoworks::RHI
 			MW_PROFILE_FREE_N( ( void* )m_Image, "GPU VRAM" );
 		}
 
-		// TODO: AllocationCallbacks
+		if ( m_Fence )
+			vkDestroyFence( *device->GetDevice(), m_Fence, CVulkanContext::GetCallbacks() );
+
 		if ( m_ImageView && m_ManageImageView )
 			vkDestroyImageView( *device->GetDevice(), m_ImageView, CVulkanContext::GetCallbacks() );
 

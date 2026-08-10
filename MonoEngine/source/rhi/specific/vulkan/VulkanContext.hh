@@ -26,6 +26,7 @@ namespace Monoworks::RHI
 #ifdef MW_PROFILING
 	struct STotalAllocs 
 	{
+		// TODO: Make thread safe
 		size_t	CommandAllocs; 
 		size_t	ObjectAllocs;
 		size_t	CacheAllocs;

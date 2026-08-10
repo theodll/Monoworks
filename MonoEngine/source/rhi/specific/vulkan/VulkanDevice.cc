@@ -46,18 +46,17 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 
 		vkDeviceWaitIdle(m_Device);
-		// TODO: Allocation Callbacks
 		if ( m_GraphicsCommandPool )
-			vkDestroyCommandPool(m_Device, m_GraphicsCommandPool, nullptr);
+			vkDestroyCommandPool(m_Device, m_GraphicsCommandPool, CVulkanContext::GetCallbacks() );
 
 		if ( m_ComputeCommandPool )
-			vkDestroyCommandPool( m_Device, m_ComputeCommandPool, nullptr );
+			vkDestroyCommandPool( m_Device, m_ComputeCommandPool, CVulkanContext::GetCallbacks() );
 
 		if ( m_TransferCommandPool )
-			vkDestroyCommandPool(m_Device, m_TransferCommandPool, nullptr);
+			vkDestroyCommandPool(m_Device, m_TransferCommandPool, CVulkanContext::GetCallbacks() );
 
 		if ( m_Device )
-			vkDestroyDevice(m_Device, nullptr);
+			vkDestroyDevice(m_Device, CVulkanContext::GetCallbacks() );
 
 		MW_INFO( "Shutdown CVulkanDevice" );
 	}

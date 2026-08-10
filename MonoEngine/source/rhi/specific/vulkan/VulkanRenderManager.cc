@@ -53,7 +53,7 @@ namespace Monoworks::RHI
 		auto device = CVulkanContext::GetDevice();
 		for ( auto& frameData : m_RootFrameData )
 		{
-			// TODO: allocation callbacks
+			
 			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.QtReadFinishedSemaphore ), "Failed to create QtReadFinishedSemaphore." );
 			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.ImageAvailableSemaphore ), "Failed to create ImageAvailableSemaphore." );
 			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.RenderFinishedSemaphore ), "Failed to create RenderFinishedSemaphore." );
@@ -104,7 +104,7 @@ namespace Monoworks::RHI
 		auto device = *CVulkanContext::GetDevice()->GetDevice();
 		
 		vkDeviceWaitIdle( device );
-		// TODO: allocation callbacks
+		
 		for ( auto& workerData : m_WorkerRenderData )
 		{
 			for ( auto& commandPool : workerData.CommandPools )

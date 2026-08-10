@@ -209,7 +209,6 @@ namespace Monoworks::RHI
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &range;
 
-		// TODO: Allocation Callbacks
 		vkCreatePipelineLayout( *device, &pipelineLayoutInfo, CVulkanContext::GetCallbacks(), &m_VulkanPipelineLayout );
 
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
@@ -427,7 +426,6 @@ namespace Monoworks::RHI
 		graphicsPipelineCreateInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
 		graphicsPipelineCreateInfo.pDynamicState = &pipelineDynamicStateCreateInfo;
 
-		// TODO: Allocation Callbacks
 		if ( vkCreateGraphicsPipelines( *device, *CVulkanContext::GetPipelineCache(), 1, &graphicsPipelineCreateInfo, CVulkanContext::GetCallbacks(), &m_VulkanPipeline ) != VK_SUCCESS )
 		{
 			MW_ERROR("Non-Fataly failed to create some graphics pipelines");
