@@ -286,7 +286,7 @@ namespace Monoworks::RHI
 
 		VkVertexInputBindingDescription bindingDesc{};
 		bindingDesc.binding = 0;
-		bindingDesc.stride = m_VertexLayout.GetStride();
+		bindingDesc.stride = (u32)m_VertexLayout.GetStride();
 		bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 		std::vector<VkVertexInputAttributeDescription> attributeDescs;
@@ -383,7 +383,7 @@ namespace Monoworks::RHI
 		pipelineRasterizationCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		pipelineRasterizationCreateInfo.rasterizerDiscardEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT;
 		pipelineRasterizationCreateInfo.depthClampEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_CLAMP_BIT;
-		pipelineRasterizationCreateInfo.depthBiasClamp = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT;
+		pipelineRasterizationCreateInfo.depthBiasEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT;
 		pipelineRasterizationCreateInfo.cullMode = ToVulkanCullMode( pInfo->CullMode );
 		pipelineRasterizationCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
 		pipelineRasterizationCreateInfo.polygonMode = ToVulkanPolygonMode( pInfo->PolygonMode );

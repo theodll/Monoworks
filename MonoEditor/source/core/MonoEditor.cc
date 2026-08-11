@@ -54,7 +54,11 @@ namespace Monoworks
 		m_pQtApplication = new QApplication( argc, argv );
 
 		SApplicationCreateInfos appInfos {};
+#ifdef MW_PLATFORM_WINDOWS
+		appInfos.pName = _strdup( cfg.Get( "Editor", "Title" ).c_str() );
+#else
 		appInfos.pName = strdup( cfg.Get( "Editor", "Title" ).c_str() );
+#endif
 		appInfos.RenderableExtent = { cfg.Get<u32>( "Rendering", "Default Width" ), cfg.Get<u32>( "Rendering", "Default Height" ) };
 		appInfos.GraphicsAPI = MW_GAPI_VULKAN;
 		appInfos.ArgumentCount = argc;
@@ -80,7 +84,7 @@ namespace Monoworks
 
 	void CMonoworksEditor::Run()
 	{
-		int result = m_pQtApplication->exec();
+		m_pQtApplication->exec();
 	};
 
 	void CMonoworksEditor::Shutdown()

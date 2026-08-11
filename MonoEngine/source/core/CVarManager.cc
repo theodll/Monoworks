@@ -32,7 +32,7 @@ namespace Monoworks
 
 		temp = var->String;
 		
-		var->Value = std::stod(var->String);
+		var->Value = static_cast<float>(std::stod(var->String));
 
 		// link the variable in
 		var->Next = m_CVarVars;
@@ -55,7 +55,7 @@ namespace Monoworks
 		changed = (var->String == value);
 
 		var->String = std::string();
-		var->Value = std::stod(var->String);
+		var->Value = static_cast<float>(std::stod(var->String));
 	};
 
 	void  CCvarManager::SetValue(std::string_view varName, float value) noexcept
@@ -76,7 +76,7 @@ namespace Monoworks
 		if (!var)
 			return 0;
 
-		return std::stod(var->String);
+		return static_cast<float>(std::stod(var->String));
 	};
 
 	std::string  CCvarManager::GetString(std::string_view varName) noexcept
@@ -91,9 +91,10 @@ namespace Monoworks
 		return var->String;
 	};
 
-	void  CCvarManager::Serialize(const std::filesystem::path& filePath)
+	void  CCvarManager::Serialize(MAYBE_UNUSED const std::filesystem::path& filePath)
 	{
 		MW_PROFILE_FUNC;
+		MW_ERROR( "CCvarManager::Serialize not yet implemented" );
 	};
 
 	SCVar* CCvarManager::Find(std::string_view varName) 

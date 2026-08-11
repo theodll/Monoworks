@@ -64,7 +64,12 @@ namespace Monoworks
 		m_pPresenter = Ref<RHI::CVulkanSDLPresenter>::Create( windowInfos.WindowExtent, true, ( SDL_Window* )m_pWindow->GetNative() );
 
 		SApplicationCreateInfos appInfos{};
-		appInfos.pName = strdup(cfg.Get("Runtime", "Title").c_str());
+		// fight /WX & /W4
+#ifdef MW_PLATFORM_WINDOWS
+		appInfos.pName = _strdup(cfg.Get("Runtime", "Title").c_str());
+#else
+		appInfos.pName = strdup( cfg.Get( "Runtime", "Title" ).c_str() );
+#endif
 		appInfos.RenderableExtent = { cfg.Get<u32>("Rendering", "Default Width"), cfg.Get<u32>("Rendering", "Default Height") };
 		appInfos.GraphicsAPI = MW_GAPI_VULKAN;
 		appInfos.ArgumentCount = pArgc;
@@ -82,7 +87,7 @@ namespace Monoworks
 
 	void CMonoRuntime::Run()
 	{
-		CEventManager::Subscribe(MW_EVENT_WINDOW_CLOSE, [this](SEvent& event) { m_Running = false; return true; });
+		CEventManager::Subscribe( MW_EVENT_WINDOW_CLOSE, [this]( MAYBE_UNUSED SEvent& event ) { m_Running = false; return true; } );
 
 		MW_PROFILE_FUNC;
 		while(m_Running) 

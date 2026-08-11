@@ -396,7 +396,8 @@ namespace Monoworks::RHI
 			textureInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 			textureInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
 
-			m_SwapchainImages[i] = ITexture2D::Create( &textureInfo );
+			// to combat /W4 & WX
+			static_cast<void>(m_SwapchainImages[i] = ITexture2D::Create( &textureInfo ));
 
 			// mega freaky unsafe casting action
 			const auto texture = m_SwapchainImages[i];
@@ -455,7 +456,7 @@ namespace Monoworks::RHI
 
 		auto texture = m_SwapchainImages[info->ImageIndex].As<CVulkanTexture2D>();
 
-		if ( texture->Layout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
+		if ( texture->Layout == MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
 			return;
 
 		TransitionImageLayout3(
@@ -492,7 +493,7 @@ namespace Monoworks::RHI
 
 	}
 
-	bool CVulkanSDLPresenter::OnResize( SEvent& event )
+	bool CVulkanSDLPresenter::OnResize( MAYBE_UNUSED SEvent& event )
 	{
 		MW_PROFILE_FUNC;
 		return false;
@@ -542,6 +543,8 @@ namespace Monoworks::RHI
 		presentInfo.pImageIndices = info->pImageIndex;
 
 		auto result = vkQueuePresentKHR( *info->pPresentQueue, &presentInfo );
+
+		MW_VK_CHECK( result, "Failed to submit present queue via vkQueuePresentKHR" );
 
 		// Mark this image as having been presented at least once
 		m_ImagePresentedOnce[*info->pImageIndex] = true;

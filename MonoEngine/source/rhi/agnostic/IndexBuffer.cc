@@ -26,7 +26,7 @@ namespace Monoworks::RHI
 		switch (CApplication::GetGraphicsAPI())
 		{
 			case MW_GAPI_NONE:    return nullptr;
-			case MW_GAPI_VULKAN:  return Ref<CVulkanIndexBuffer>::Create(pData, size, 0, autoupload);
+			case MW_GAPI_VULKAN:  return Ref<CVulkanIndexBuffer>::Create(pData, size, offset, autoupload);
 		}
 		MW_ASSERT(false, "Unknown Graphics API");
 		return nullptr;

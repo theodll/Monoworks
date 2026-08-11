@@ -69,6 +69,8 @@ namespace Monoworks::RHI
 			);
 			
 			m_StagingBufferSize = size;
+			m_Offset = offset;
+			m_Size = size;
 		}
 
 		void* mapped = nullptr;
@@ -101,7 +103,7 @@ namespace Monoworks::RHI
 
 	void CVulkanVertexBuffer::SetLayout( const CBufferLayout& layout ) NOEXCEPT
 	{
-
+		m_Layout = layout;
 	}
 
 }

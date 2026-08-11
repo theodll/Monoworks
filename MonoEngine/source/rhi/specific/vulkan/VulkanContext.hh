@@ -60,11 +60,9 @@ namespace Monoworks::RHI
 
 		NODISCARD std::vector<const char*> GetRequiredExtensions() NOEXCEPT;
 	
-		void PopulateDebugMessengerCreateInfo( VkDebugUtilsMessengerCreateInfoEXT& pCreateInfo ) NOEXCEPT;
 		void SetupDebugMessenger() NOEXCEPT;
 		VkResult CreateDebugUtilsMessengerEXT( VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger ) NOEXCEPT;
-		void DestroyDebugUtilsMessengerEXT( VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator ) NOEXCEPT;
-
+		
 		VkDebugUtilsMessengerEXT m_DebugMessenger = nullptr;
 #ifdef MW_PROFILING
 		static STotalAllocs m_TotalVulkanAllocated;

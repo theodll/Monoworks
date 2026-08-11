@@ -75,8 +75,6 @@ namespace Monoworks::RHI
 		m_UploadSize = size;
 		m_Offset = offset;
 
-		const auto& device = CVulkanContext::GetDevice();
-
 		if ( !m_UseStaging )
 		{
 			memcpy( static_cast<std::byte*>( m_pMapped ) + offset, pData, ( size_t )size );

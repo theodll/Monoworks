@@ -237,7 +237,7 @@ namespace Monoworks::RHI
 		}
 
 		if ( !workerCommandBuffers.empty() )
-			vkCmdExecuteCommands( m_RootFrameData[frameIndex].CommandBuffer, workerCommandBuffers.size(), workerCommandBuffers.data() );
+			vkCmdExecuteCommands( m_RootFrameData[frameIndex].CommandBuffer, (u32)workerCommandBuffers.size(), workerCommandBuffers.data() );
 
 		for ( auto& workerData : m_WorkerRenderData )
 		{

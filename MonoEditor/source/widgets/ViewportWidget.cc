@@ -78,12 +78,17 @@ namespace Monoworks
 
 		initializeExternalObjectsFunctions();
 
-#ifdef MW_PLATFORM_OSX
-#else
+#ifndef MW_PLATFORM_OSX
 		glEnable( GL_DEBUG_OUTPUT );
 		glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS ); 
-		glDebugMessageCallback( []( GLenum source, GLenum type, GLuint id, GLenum severity,
-			GLsizei length, const GLchar* message, const void* userParam )
+		glDebugMessageCallback( []( 
+			MAYBE_UNUSED GLenum source, 
+			MAYBE_UNUSED GLenum type,
+			MAYBE_UNUSED GLuint id,
+			MAYBE_UNUSED GLenum severity,
+			MAYBE_UNUSED GLsizei length,
+			MAYBE_UNUSED const GLchar* message, 
+			MAYBE_UNUSED const void* userParam )
 			{
 				if ( severity == GL_DEBUG_SEVERITY_NOTIFICATION )
 					return;
@@ -213,7 +218,7 @@ namespace Monoworks
 
 	};
 
-	void CViewportWidget::resizeGL( int w, int h )
+	void CViewportWidget::resizeGL( MAYBE_UNUSED int w, MAYBE_UNUSED int h )
 	{
 		MW_PROFILE_FUNC;
 	};

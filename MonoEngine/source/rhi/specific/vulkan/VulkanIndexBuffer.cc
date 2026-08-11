@@ -7,7 +7,7 @@
 namespace Monoworks::RHI
 {
 
-	CVulkanIndexBuffer::CVulkanIndexBuffer( u64 size ) NOEXCEPT
+	CVulkanIndexBuffer::CVulkanIndexBuffer( MAYBE_UNUSED u64 size ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 	}
@@ -65,6 +65,8 @@ namespace Monoworks::RHI
 	void CVulkanIndexBuffer::SetData( void* pData, u64 size, u64 offset /*= 0 */ ) NOEXCEPT
 	{
 		auto allocator = CVulkanContext::GetAllocator();
+
+		m_Offset = offset;
 
 		if ( m_StagingBuffer == VK_NULL_HANDLE || m_StagingBufferSize < size ) 
 		{

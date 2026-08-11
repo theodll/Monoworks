@@ -20,8 +20,8 @@ namespace Monoworks::RHI
 		void SetData( void* pData, u64 size, u64 offset = 0 ) NOEXCEPT override;
 		void Upload( VkCommandBuffer* pCmdBuffer ) NOEXCEPT override;
 
-		NODISCARD VkBuffer* GetVulkanBuffer() NOEXCEPT override { return &m_IndexBuffer; };
-		NODISCARD u32 GetCount() NOEXCEPT override { return m_Count; };
+		NODISCARD VkBuffer* GetVulkanBuffer() NOEXCEPT { return &m_IndexBuffer; };
+		NODISCARD u64 GetCount() NOEXCEPT override { return m_Count; };
 
 	private:
 		VkBuffer m_IndexBuffer = nullptr;

@@ -195,7 +195,7 @@ namespace Monoworks::RHI
 		MW_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
 
-	static void TransitionImageLayout2(
+	MAYBE_UNUSED static void TransitionImageLayout2(
 		VkCommandBuffer commandBuffer,
 		VkImage image,
 		VkImageLayout oldLayout,
@@ -337,15 +337,17 @@ namespace Monoworks::RHI
 		);
 	}
 
-	static void TransitionImageLayout(
-		VkCommandBuffer* pCmdBuffer,
+	MAYBE_UNUSED static void TransitionImageLayout(
+		VkCommandBuffer* pCmdBuffer, 
 		VkImage* pImage,
-		EImageFormat format,
-		EImageLayout oldLayout,
-		EImageLayout newLayout,
+		EImageLayout oldLayoutMW,
+		EImageLayout newLayoutMW,
 		EImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT
 	)
 	{
+		VkImageLayout oldLayout = static_cast< VkImageLayout >( oldLayoutMW );
+		VkImageLayout newLayout = static_cast< VkImageLayout >( newLayoutMW );
+
 		VkImageMemoryBarrier barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		barrier.oldLayout = ( VkImageLayout )oldLayout;
