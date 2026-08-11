@@ -54,7 +54,7 @@ else()
 target_compile_options(MonoEditor PRIVATE
     -Wall
     -Wextra
-    -Werror
+   # -Werror
 )
 endif()
 

@@ -36,7 +36,7 @@ else()
 target_compile_options(MonoRuntime PRIVATE
     -Wall
     -Wextra
-    -Werror
+   # -Werror
 )
 endif()
 

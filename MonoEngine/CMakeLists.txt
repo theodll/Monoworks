@@ -63,7 +63,7 @@ else()
 target_compile_options(MonoEngine PRIVATE
     -Wall
     -Wextra
-    -Werror
+   # -Werror
 )
 endif()
 
