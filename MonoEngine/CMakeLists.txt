@@ -31,6 +31,15 @@ target_precompile_headers(MonoEngine PUBLIC
     $<$<COMPILE_LANGUAGE:CXX>:mwpch.hh>
 )
 
+enable_testing()
+add_executable(EngineTests tests/core/ConfigManagerTests.cc tests/core/EventSystemTests.cpp)
+
+target_link_libraries( EngineTests PRIVATE doctest::doctest MonoEngine )
+
+target_include_directories( EngineTests PRIVATE "${CMAKE_SOURCE_DIR}/Common/extern/doctest")
+
+include(CTest)
+add_test(NAME EngineTest COMMAND EngineTests)
 
 if (WIN32)
     add_compile_definitions(MW_PLATFORM_WINDOWS)

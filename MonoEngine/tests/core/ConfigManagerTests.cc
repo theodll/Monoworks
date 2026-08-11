@@ -31,3 +31,26 @@ TEST_CASE("CConfigManager - Access config values")
 	
 }
 
+TEST_CASE("CConfigManager - Access non existant config values")
+{
+	Monoworks::CConfigManager cfg( "TestConfig.cfg" );
+	cfg.RegisterSection( "Section 1" );
+	cfg.Flush();
+
+	SUBCASE( "Access non existant string value" )
+	{
+		CHECK( cfg.Get<std::string>( "Section 2", "String" ) == std::string() );
+	}
+
+	SUBCASE( "Access non existant integer value" )
+	{
+		CHECK( cfg.Get<int>( "Section 2", "Integer" ) == 0 );
+	}
+
+	SUBCASE( "Access non existant boolean value" )
+	{
+		CHECK( cfg.Get<bool>( "Section 2", "Integer" ) == false );
+	}
+}
+
+
