@@ -45,6 +45,4 @@ elseif (APPLE)
 endif()
 
 
-
-
 target_compile_definitions(MonoEditor PRIVATE MW_EDITOR)

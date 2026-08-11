@@ -21,7 +21,6 @@ target_link_libraries(MonoEngine PUBLIC
     spdlog::spdlog 
     Tracy::TracyClient
     volk::volk
-    doctest::doctest
     glm::glm
     stb::stb
 )
