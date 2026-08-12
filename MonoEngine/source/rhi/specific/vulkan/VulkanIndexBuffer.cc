@@ -7,12 +7,12 @@
 namespace Monoworks::RHI
 {
 
-	CVulkanIndexBuffer::CVulkanIndexBuffer( MAYBE_UNUSED u64 size ) NOEXCEPT
+	CVulkanIndexBuffer::CVulkanIndexBuffer( MAYBE_UNUSED u32 size ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 	}
 
-	CVulkanIndexBuffer::CVulkanIndexBuffer( void* pData, u64 size, u64 offset, bool autoUpload ) NOEXCEPT
+	CVulkanIndexBuffer::CVulkanIndexBuffer( void* pData, u32 size, u32 offset, bool autoUpload ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		auto allocator = CVulkanContext::GetAllocator();
@@ -31,7 +31,7 @@ namespace Monoworks::RHI
 			VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
 		);
 
-		SetData( pData, m_UploadBytes, 0 );
+		SetData( pData, m_UploadBytes, offset );
 
 
 		if ( autoUpload )
@@ -62,7 +62,7 @@ namespace Monoworks::RHI
 	}
 
 
-	void CVulkanIndexBuffer::SetData( void* pData, u64 size, u64 offset /*= 0 */ ) NOEXCEPT
+	void CVulkanIndexBuffer::SetData( void* pData, u32 size, u32 offset /*= 0 */ ) NOEXCEPT
 	{
 		auto allocator = CVulkanContext::GetAllocator();
 

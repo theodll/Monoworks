@@ -544,6 +544,7 @@ namespace Monoworks::RHI
 
 		auto result = vkQueuePresentKHR( *info->pPresentQueue, &presentInfo );
 
+		// TODO: Resizing
 		MW_VK_CHECK( result, "Failed to submit present queue via vkQueuePresentKHR" );
 
 		// Mark this image as having been presented at least once

@@ -7,7 +7,7 @@
 namespace Monoworks::RHI 
 {
 
-	CVulkanUniformBuffer::CVulkanUniformBuffer( u64 size, bool useStaging, u64 offset ) 
+	CVulkanUniformBuffer::CVulkanUniformBuffer( u32 size, bool useStaging, u32 offset )
 		: m_UseStaging( useStaging ), m_Size( size ), m_Offset( offset )
 	{
 		MW_PROFILE_FUNC;
@@ -62,7 +62,7 @@ namespace Monoworks::RHI
 
 	}
 
-	void CVulkanUniformBuffer::SetData( void* pData, u64 size, u64 offset /*= 0 */ ) NOEXCEPT
+	void CVulkanUniformBuffer::SetData( void* pData, u32 size, u32 offset /*= 0 */ ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -128,7 +128,7 @@ namespace Monoworks::RHI
 		}
 	}
 
-	void CVulkanUniformBuffer::CreateOrResizeStaging( u64 size )
+	void CVulkanUniformBuffer::CreateOrResizeStaging( u32 size )
 	{
 		MW_PROFILE_FUNC;
 

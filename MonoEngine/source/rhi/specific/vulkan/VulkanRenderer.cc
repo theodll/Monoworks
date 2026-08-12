@@ -83,10 +83,10 @@ namespace Monoworks::RHI
 			{ Vector( 0.5f,  0.5f, 0.5f ),  },
 			{ Vector( -0.5f,  0.5f, 0.5f ), }
 		};
-		m_Vertices = IVertexBuffer::Create( quadVertices.data(), quadVertices.size(), sizeof( SVertex ), true );
+		m_Vertices = IVertexBuffer::Create( quadVertices.data(), ( u32 )quadVertices.size(), sizeof( SVertex ), true );
 
 		std::vector<Index> indices = { 0, 1, 2, 2, 3, 0 };
-        m_Indices = IIndexBuffer::Create( indices.data(), indices.size(), 0, true );
+        m_Indices = IIndexBuffer::Create( indices.data(), ( u32 )indices.size(), 0, true );
 
 #ifdef MW_ENABLE_MANUAL_RENDERDOC
 #ifdef MW_PLATFORM_WINDOWS

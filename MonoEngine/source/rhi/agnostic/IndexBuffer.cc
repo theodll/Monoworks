@@ -6,7 +6,7 @@
 
 namespace Monoworks::RHI
 {
-	NODISCARD Ref<IIndexBuffer> IIndexBuffer::Create( u64 size ) NOEXCEPT
+	NODISCARD Ref<IIndexBuffer> IIndexBuffer::Create( u32 size ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -19,7 +19,7 @@ namespace Monoworks::RHI
 		return nullptr;
 	};
 
-	NODISCARD Ref<IIndexBuffer> IIndexBuffer::Create( void* pData, u64 size, u64 offset, bool autoupload ) NOEXCEPT 
+	NODISCARD Ref<IIndexBuffer> IIndexBuffer::Create( void* pData, u32 size, u32 offset, bool autoupload ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 

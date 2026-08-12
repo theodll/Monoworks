@@ -381,9 +381,9 @@ namespace Monoworks::RHI
 
 		VkPipelineRasterizationStateCreateInfo pipelineRasterizationCreateInfo{};
 		pipelineRasterizationCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		pipelineRasterizationCreateInfo.rasterizerDiscardEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT;
-		pipelineRasterizationCreateInfo.depthClampEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_CLAMP_BIT;
-		pipelineRasterizationCreateInfo.depthBiasEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT;
+		pipelineRasterizationCreateInfo.rasterizerDiscardEnable =	((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;;
+		pipelineRasterizationCreateInfo.depthClampEnable =			((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_CLAMP_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;
+		pipelineRasterizationCreateInfo.depthBiasEnable =			((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;
 		pipelineRasterizationCreateInfo.cullMode = ToVulkanCullMode( pInfo->CullMode );
 		pipelineRasterizationCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
 		pipelineRasterizationCreateInfo.polygonMode = ToVulkanPolygonMode( pInfo->PolygonMode );

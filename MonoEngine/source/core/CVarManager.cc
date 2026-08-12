@@ -54,8 +54,9 @@ namespace Monoworks
 
 		changed = (var->String == value);
 
-		var->String = std::string();
-		var->Value = static_cast<float>(std::stod(var->String));
+		var->String = value;
+		var->Value = static_cast<float>(std::stod(value));
+
 	};
 
 	void  CCvarManager::SetValue(std::string_view varName, float value) noexcept

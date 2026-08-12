@@ -9,7 +9,7 @@ namespace Monoworks::RHI
 {
 
 
-	NODISCARD Ref<IUniformBuffer> IUniformBuffer::Create( u64 size, u64 offset /*= 0 */ ) NOEXCEPT
+	NODISCARD Ref<IUniformBuffer> IUniformBuffer::Create( u32 size, u32 offset /*= 0 */ ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 

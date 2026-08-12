@@ -34,6 +34,7 @@ namespace Monoworks
 
 	void CMonoworksEditor::Init(int argc, char** argv)
 	{
+		MW_PROFILE_FUNC;
 		CConfigManager cfg("Config/MonoEditor.cfg");
 		cfg.RegisterSection("Editor");
 		cfg.RegisterSection("Qt");
@@ -84,11 +85,13 @@ namespace Monoworks
 
 	void CMonoworksEditor::Run()
 	{
+		MW_PROFILE_FUNC;
 		m_pQtApplication->exec();
 	};
 
 	void CMonoworksEditor::Shutdown()
 	{
+		MW_PROFILE_FUNC;
 		delete m_pMainWindow;
 		delete m_pEngineManager;
 		delete m_pQtApplication;
