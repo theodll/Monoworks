@@ -1,6 +1,8 @@
 #include <events/EventManager.hh>
 #include <common/Events.hh>
+
 #include <utility>
+#include <functional>
 
 namespace Monoworks 
 {
@@ -24,7 +26,7 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;;
 		MW_TRACE("Subscribed listener {} to event {}", reinterpret_cast<void*>(func.target<bool(*)(SEvent&)>()), EventTypeToString(type));
-		m_Callbacks[(u8)type].emplace_back( 1, std::move(func));
+		m_Callbacks[( u8 )type].emplace_back( 1, std::move( func ) );
 	};
 
 	void CEventManager::ProcessEvents() noexcept
@@ -42,7 +44,8 @@ namespace Monoworks
 
 				auto func = callb.Function;
 				
-				auto res = func(event);
+				auto res = std::invoke(func, event);
+
 				if (res)
 				{
 					event.SetHandled(res);
