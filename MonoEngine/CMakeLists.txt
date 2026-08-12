@@ -32,7 +32,8 @@ target_precompile_headers(MonoEngine PUBLIC
 )
 
 enable_testing()
-add_executable(EngineTests tests/core/ConfigManagerTests.cc tests/core/EventSystemTests.cpp)
+add_executable(EngineTests tests/core/TestMain.cpp tests/core/ConfigManagerTests.cc tests/core/EventSystemTests.cpp tests/core/CommonTests.cpp)
+target_compile_options(EngineTests PRIVATE "-UMW_PROFILING")
 
 target_link_libraries( EngineTests PRIVATE doctest::doctest MonoEngine )
 
