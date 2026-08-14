@@ -15,7 +15,7 @@ set(COMPILE_WARNING_AS_ERROR ON)
 add_compile_definitions(MW_PROFILING MW_VULKAN)
 
 if(WIN32)
-    set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/mingw_64")
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/msvc2022_64")
     add_compile_definitions(MW_PLATFORM_WINDOWS)
 elseif(APPLE)
     add_compile_definitions(MW_PLATFORM_OSX)
@@ -26,7 +26,6 @@ endif()
 add_compile_definitions(TRACY_ENABLE)
 
 # add_compile_definitions(MW_ENABLE_MANUAL_RENDERDOC)
-
 
 add_compile_definitions(
     FMT_UNICODE=0

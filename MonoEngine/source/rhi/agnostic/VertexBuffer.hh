@@ -43,9 +43,10 @@ namespace Monoworks::RHI
 		case MW_SHADER_DATA_TYPE_INT_4:     return 4 * 4;
 		case MW_SHADER_DATA_TYPE_BOOL:		return 4;
 		case MW_SHADER_DATA_TYPE_NONE:		return 0;
+		default:
+			MW_API_ERROR("Invalid Shader Data Type or MW_SHADER_DATA_TYPE_COUNT passed.");
+			return 0; 
 		}
-		MW_ASSERT(false, "Unknown ShaderDataType");
-		return 0;
 	}
 
 	struct SBufferElement
@@ -76,9 +77,10 @@ namespace Monoworks::RHI
 			case MW_SHADER_DATA_TYPE_INT_4:     return 4;
 			case MW_SHADER_DATA_TYPE_BOOL:		return 1;
 			case MW_SHADER_DATA_TYPE_NONE:		return 0;
+			default: 
+				MW_API_ERROR("Invalid Shader Data Type or MW_SHADER_DATA_TYPE_COUNT passed.");
+				return 0;
 			}
-
-			return 0;
 		}
 	};
 
@@ -116,15 +118,12 @@ namespace Monoworks::RHI
 	public:
 		virtual ~IVertexBuffer() NOEXCEPT = default;
 
-		virtual void SetData(void* data, u64 size, u64 offset = 0)	NOEXCEPT = 0;
+		virtual void SetData(void* data, u32 size, u32 offset = 0)	NOEXCEPT = 0;
 		virtual void SetLayout(const CBufferLayout& layout)			NOEXCEPT = 0;
 
-		virtual void Upload(VkCommandBuffer commandBuffer)			NOEXCEPT = 0;
-
 		NODISCARD virtual CBufferLayout*	GetLayout()				NOEXCEPT = 0;
-		NODISCARD virtual VkBuffer*			GetVulkanBuffer()		NOEXCEPT = 0;
 
-		NODISCARD static Ref<IVertexBuffer> Create(void* vertexData, u64 vertexCount, u64 vertexStride, bool autoupload = false) NOEXCEPT;
+		NODISCARD static Ref<IVertexBuffer> Create(void* vertexData, u32 vertexCount, u32 vertexStride, bool autoupload = false) NOEXCEPT;
 	protected:
 		IVertexBuffer() = default;
 	};

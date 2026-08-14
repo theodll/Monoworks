@@ -82,7 +82,7 @@ namespace Monoworks::RHI
 			poolInfo.queueFamilyIndex = device->GetGraphicsQueueFamilyIndex();
 			poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-			for ( auto i{0}; i < MFIF; i++ )
+			for ( u32 i{0}; i < MFIF; i++ )
 			{
 				MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolInfo, CVulkanContext::GetCallbacks(), &workerData.CommandPools[i] ), "Failed to create CommandPool.");
 			
@@ -237,7 +237,7 @@ namespace Monoworks::RHI
 		}
 
 		if ( !workerCommandBuffers.empty() )
-			vkCmdExecuteCommands( m_RootFrameData[frameIndex].CommandBuffer, workerCommandBuffers.size(), workerCommandBuffers.data() );
+			vkCmdExecuteCommands( m_RootFrameData[frameIndex].CommandBuffer, (u32)workerCommandBuffers.size(), workerCommandBuffers.data() );
 
 		for ( auto& workerData : m_WorkerRenderData )
 		{

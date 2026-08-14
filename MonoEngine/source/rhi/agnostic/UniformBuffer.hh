@@ -8,12 +8,10 @@ namespace Monoworks::RHI
 	public:
 		virtual ~IUniformBuffer() NOEXCEPT = default;
 
-		virtual void SetData( void* pData, u64 size, u64 offset = 0 ) NOEXCEPT = 0;
-		virtual void Upload( VkCommandBuffer* pCmdBuffer ) NOEXCEPT = 0;
+		virtual void SetData( void* pData, u32 size, u32 offset = 0 ) NOEXCEPT = 0;
 		
-		NODISCARD virtual VkBuffer* GetVulkanBuffer() NOEXCEPT = 0;
-		NODISCARD virtual u64 GetSize() NOEXCEPT = 0;
+		NODISCARD virtual u32 GetSize() NOEXCEPT = 0;
 
-		NODISCARD static Ref<IUniformBuffer> Create( u64 size, u64 offset = 0 ) NOEXCEPT;
+		NODISCARD static Ref<IUniformBuffer> Create( u32 size, u32 offset = 0 ) NOEXCEPT;
 	};
 }

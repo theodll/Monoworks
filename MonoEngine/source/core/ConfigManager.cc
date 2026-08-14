@@ -8,7 +8,7 @@ namespace Monoworks
 {
 
 
-	CConfigManager::CConfigManager(const char* path) noexcept : m_Path(path), m_CPath(path)
+	CConfigManager::CConfigManager(const char* path) noexcept : m_CPath(path), m_Path(path)
 	{
 		MW_PROFILE_FUNC;
 		m_ConfigExists = std::filesystem::exists(path);

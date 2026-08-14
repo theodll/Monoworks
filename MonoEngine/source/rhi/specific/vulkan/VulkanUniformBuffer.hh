@@ -12,17 +12,17 @@ namespace Monoworks::RHI
 	{
 
 	public:
-		CVulkanUniformBuffer( u64 size, bool useStaging, u64 offset );
+		CVulkanUniformBuffer( u32 size, bool useStaging, u32 offset );
 		~CVulkanUniformBuffer();
 
-		void SetData( void* pData, u64 size, u64 offset = 0 ) NOEXCEPT override;
-		void Upload( VkCommandBuffer* pCmdBuffer ) NOEXCEPT override;
+		void SetData( void* pData, u32 size, u32 offset = 0 ) NOEXCEPT override;
+		void Upload( VkCommandBuffer* pCmdBuffer ) NOEXCEPT;
 
-		NODISCARD VkBuffer* GetVulkanBuffer() NOEXCEPT override { return &m_UniformBuffer; };
-		NODISCARD u64 GetSize() NOEXCEPT override { return m_Size; };
+		NODISCARD VkBuffer* GetVulkanBuffer() NOEXCEPT { return &m_UniformBuffer; };
+		NODISCARD u32 GetSize() NOEXCEPT override { return m_Size; };
 	private:
 		void DestroyStaging(); 
-		void CreateOrResizeStaging( u64 size );
+		void CreateOrResizeStaging( u32 size );
 
 
 		VkBuffer m_UniformBuffer;
@@ -34,9 +34,9 @@ namespace Monoworks::RHI
 		void* m_pMapped;
 		bool m_UseStaging;
 
-		u64 m_Size = 0;
-		u64 m_UploadSize = 0;
-		u64 m_StagingBufferSize = 0;
-		u64 m_Offset = 0;
+		u32 m_Size = 0;
+		u32 m_UploadSize = 0;
+		u32 m_StagingBufferSize = 0;
+		u32 m_Offset = 0;
 	};
 }

@@ -7,7 +7,7 @@
 namespace Monoworks::RHI 
 {
 
-	CVulkanUniformBuffer::CVulkanUniformBuffer( u64 size, bool useStaging, u64 offset ) 
+	CVulkanUniformBuffer::CVulkanUniformBuffer( u32 size, bool useStaging, u32 offset )
 		: m_UseStaging( useStaging ), m_Size( size ), m_Offset( offset )
 	{
 		MW_PROFILE_FUNC;
@@ -38,9 +38,9 @@ namespace Monoworks::RHI
 			);
 		}
 
-		auto res = vmaMapMemory( *allocator, m_UniformBufferAllocation, &m_pMapped );
+		// MW_ASSERT is not compiled in release builds, so res won't be referenced and it will throw a warning or rather an error.
+		MAYBE_UNUSED auto res = vmaMapMemory( *allocator, m_UniformBufferAllocation, &m_pMapped );
 		MW_ASSERT( res == VK_SUCCESS && m_pMapped != nullptr, "Failed to map uniform buffer memory" );
-
 
 	}
 
@@ -62,7 +62,7 @@ namespace Monoworks::RHI
 
 	}
 
-	void CVulkanUniformBuffer::SetData( void* pData, u64 size, u64 offset /*= 0 */ ) NOEXCEPT
+	void CVulkanUniformBuffer::SetData( void* pData, u32 size, u32 offset /*= 0 */ ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -75,8 +75,6 @@ namespace Monoworks::RHI
 		m_UploadSize = size;
 		m_Offset = offset;
 
-		const auto& device = CVulkanContext::GetDevice();
-
 		if ( !m_UseStaging )
 		{
 			memcpy( static_cast<std::byte*>( m_pMapped ) + offset, pData, ( size_t )size );
@@ -87,7 +85,7 @@ namespace Monoworks::RHI
 		CreateOrResizeStaging( size );
 
 		void* mapped = nullptr;
-		VkResult res = vmaMapMemory( *allocator, m_StagingBufferAllocation, &mapped );
+		MAYBE_UNUSED VkResult res = vmaMapMemory( *allocator, m_StagingBufferAllocation, &mapped );
 		MW_ASSERT( res == VK_SUCCESS && mapped != nullptr, "Failed to map staging buffer memory" );
 
 		memcpy( mapped, pData, ( size_t )(size) );
@@ -130,7 +128,7 @@ namespace Monoworks::RHI
 		}
 	}
 
-	void CVulkanUniformBuffer::CreateOrResizeStaging( u64 size )
+	void CVulkanUniformBuffer::CreateOrResizeStaging( u32 size )
 	{
 		MW_PROFILE_FUNC;
 

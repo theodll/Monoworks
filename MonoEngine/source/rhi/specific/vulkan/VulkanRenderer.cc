@@ -83,10 +83,10 @@ namespace Monoworks::RHI
 			{ Vector( 0.5f,  0.5f, 0.5f ),  },
 			{ Vector( -0.5f,  0.5f, 0.5f ), }
 		};
-		m_Vertices = IVertexBuffer::Create( quadVertices.data(), quadVertices.size(), sizeof( SVertex ), true );
+		m_Vertices = IVertexBuffer::Create( quadVertices.data(), ( u32 )quadVertices.size(), sizeof( SVertex ), true );
 
 		std::vector<Index> indices = { 0, 1, 2, 2, 3, 0 };
-        m_Indices = IIndexBuffer::Create( indices.data(), indices.size(), 0, true );
+        m_Indices = IIndexBuffer::Create( indices.data(), ( u32 )indices.size(), 0, true );
 
 #ifdef MW_ENABLE_MANUAL_RENDERDOC
 #ifdef MW_PLATFORM_WINDOWS
@@ -166,7 +166,6 @@ namespace Monoworks::RHI
         auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
         auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
 
-        auto siye = presenter->GetSwapchainImages().size();
         MW_ASSERT( *imageIndex < presenter->GetSwapchainImages().size(), "Invalid swapchain image index" );
 
         VkRenderingAttachmentInfo colorAttachment{};
@@ -209,7 +208,7 @@ namespace Monoworks::RHI
         vkCmdBindIndexBuffer( cmd, *m_Indices.As<CVulkanIndexBuffer>()->GetVulkanBuffer(), 0, VK_INDEX_TYPE_UINT32 );
 
         
-        vkCmdDrawIndexed( cmd, m_Indices->GetCount(), 1, 0, 0, 0 );
+        vkCmdDrawIndexed( cmd, (u32)m_Indices->GetCount(), 1, 0, 0, 0 );
 
     };
 

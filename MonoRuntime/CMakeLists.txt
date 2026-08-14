@@ -27,6 +27,19 @@ target_link_libraries(MonoRuntime PRIVATE MonoEngine SDL3::SDL3 Tracy::TracyClie
 
 target_include_directories(MonoRuntime PRIVATE "source/" "specific/" "extern/sdl/include")
 
+if (MSVC)
+    target_compile_options(MonoRuntime PRIVATE
+        /W4
+        /WX
+    )
+else()
+target_compile_options(MonoRuntime PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+endif()
+
 if (WIN32)
     target_compile_definitions(MonoRuntime PRIVATE MW_PLATFORM_WINDOWS)
 elseif (UNIX AND NOT APPLE)                        

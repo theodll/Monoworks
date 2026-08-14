@@ -17,7 +17,7 @@ namespace Monoworks
             MW_INFO( "Initialize CStaticRenderer" );
             switch ( CApplication::GetGraphicsAPI() )
             {
-            case MW_GAPI_NONE: MW_ASSERT( "Headless mode not supported" ); break;
+            case MW_GAPI_NONE: MW_ASSERT( false, "Headless mode not supported" ); break;
             case MW_GAPI_VULKAN: m_pInstance = Ref<RHI::CVulkanRenderer>::Create(); break;
             }
 
@@ -44,7 +44,6 @@ namespace Monoworks
             MW_PROFILE_FUNC;
 
             m_pInstance->EndRendering();
-            u32 temp = m_CurrentFrameIndex;
             m_CurrentFrameIndex = ( m_CurrentFrameIndex + 1 ) % MFIF;
         };
 }

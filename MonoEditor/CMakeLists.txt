@@ -45,4 +45,17 @@ elseif (APPLE)
 endif()
 
 
+if (MSVC)
+    target_compile_options(MonoEditor PRIVATE
+        /W4
+        /WX
+    )
+else()
+target_compile_options(MonoEditor PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+)
+endif()
+
 target_compile_definitions(MonoEditor PRIVATE MW_EDITOR)

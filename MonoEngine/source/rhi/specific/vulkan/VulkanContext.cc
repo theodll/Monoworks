@@ -1,3 +1,11 @@
+#ifndef VMA_VULKAN_VERSION
+#define VMA_VULKAN_VERSION 1003000
+#elif VMA_VULKAN_VERSION != 1003000
+#undef VMA_VULKAN_VERSION
+#define VMA_VULKAN_VERSION 1003000
+#endif
+
+
 #include <mwpch.hh>
 
 #include "VulkanContext.hh"
@@ -15,8 +23,16 @@
 #define VMA_STATIC_VULKAN_FUNCTIONS 0
 #define VMA_DYNAMIC_VULKAN_FUNCTIONS 1
 
+#ifdef VK_VERSION_1_4
+#undef VK_VERSION_1_4
+#define VK_VERSION_1_4 0
+#endif
+
+#ifndef VK_VERSION_1_3
+#define VK_VERSION_1_3
+#endif 
+
 #define VMA_IMPLEMENTATION
-#define VMA_VULKAN_VERSION 1003000
 
 #if MW_PLATFORM_WINDOWS
 #define VMA_EXTERNAL_MEMORY_WIN32 1
@@ -151,6 +167,9 @@ namespace Monoworks::RHI
 			total.InstanceAllocs += size;
 			break;
 		}
+		default:
+		MW_API_ERROR("Invalid VKSystemAllocation or VK_SYSTEM_ALLOCATION_MAX_ENUM passed.");
+		break;
 		}
 #endif
 		return pUser;
@@ -194,6 +213,9 @@ namespace Monoworks::RHI
 			total.InstanceAllocs -= pHeader->Size;
 			break;
 		}
+		default:
+		MW_API_ERROR("Invalid VkSystemAllocation or VK_SYSTEM_ALLOCATION_MAX_ENUM passed.");
+		break;
 		}
 #endif
 
@@ -226,10 +248,10 @@ namespace Monoworks::RHI
 
 
 	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
-		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-		VkDebugUtilsMessageTypeFlagsEXT messageType,
-		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-		void* pUserData )
+		MAYBE_UNUSED VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+		MAYBE_UNUSED VkDebugUtilsMessageTypeFlagsEXT messageType,
+		MAYBE_UNUSED const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+		MAYBE_UNUSED void* pUserData )
 	{
 		MW_PROFILE_FUNC;
 
@@ -412,7 +434,7 @@ namespace Monoworks::RHI
 		m_ResourceUploader.Begin();
 		m_ResourceUploader.End();
 		
-		CEventManager::Subscribe(MW_EVENT_APP_FRAME, +[] (SEvent& event )
+		CEventManager::Subscribe(MW_EVENT_APP_FRAME, +[] ( MAYBE_UNUSED SEvent& event )
 			{
 				VmaTotalStatistics stats;
 				vmaCalculateStatistics( m_Allocator, &stats );
@@ -573,13 +595,6 @@ namespace Monoworks::RHI
 
 	}
 
-	void CVulkanContext::CreateVmaAllocator() NOEXCEPT
-	{
-		MW_PROFILE_FUNC;
-		VmaVulkanFunctions vulkanFunctions{};
-
-
-	}
 
 	void CVulkanContext::SetupDebugMessenger() NOEXCEPT
 	{
@@ -653,15 +668,4 @@ namespace Monoworks::RHI
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 		}
 	}
-
-	void CVulkanContext::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) NOEXCEPT
-	{
-
-	}
-
-	void CVulkanContext::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& pCreateInfo) NOEXCEPT
-	{
-
-	}
-
 }

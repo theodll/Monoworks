@@ -19,11 +19,11 @@ namespace Monoworks::RHI
 	};
 
 
-	Ref<IVertexBuffer> IVertexBuffer::Create(void* vertexData, u64 vertexCount, u64 vertexStride, bool autoupload) NOEXCEPT
+	Ref<IVertexBuffer> IVertexBuffer::Create(void* vertexData, u32 vertexCount, u32 vertexStride, bool autoupload) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
-		u64 bytes = vertexCount * vertexStride;
+		u32 bytes = vertexCount * vertexStride;
 		switch (CApplication::GetGraphicsAPI())
 		{
 			case MW_GAPI_NONE:    return nullptr;
