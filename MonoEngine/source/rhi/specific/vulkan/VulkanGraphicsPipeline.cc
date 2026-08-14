@@ -279,6 +279,10 @@ namespace Monoworks::RHI
 				attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 				attachment.alphaBlendOp = VK_BLEND_OP_ADD;
 				break;
+
+			default:
+			MW_API_ERROR("Invalid Blend Mode or MW_BLEND_MODE_COUNT passed.");
+			break;
 			}
 
 			m_ColorAttachmentStates.push_back(attachment);
@@ -286,7 +290,7 @@ namespace Monoworks::RHI
 
 		VkVertexInputBindingDescription bindingDesc{};
 		bindingDesc.binding = 0;
-		bindingDesc.stride = m_VertexLayout.GetStride();
+		bindingDesc.stride = (u32)m_VertexLayout.GetStride();
 		bindingDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 		std::vector<VkVertexInputAttributeDescription> attributeDescs;
@@ -381,9 +385,9 @@ namespace Monoworks::RHI
 
 		VkPipelineRasterizationStateCreateInfo pipelineRasterizationCreateInfo{};
 		pipelineRasterizationCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		pipelineRasterizationCreateInfo.rasterizerDiscardEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT;
-		pipelineRasterizationCreateInfo.depthClampEnable = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_CLAMP_BIT;
-		pipelineRasterizationCreateInfo.depthBiasClamp = pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT;
+		pipelineRasterizationCreateInfo.rasterizerDiscardEnable =	((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;;
+		pipelineRasterizationCreateInfo.depthClampEnable =			((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_CLAMP_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;
+		pipelineRasterizationCreateInfo.depthBiasEnable =			((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;
 		pipelineRasterizationCreateInfo.cullMode = ToVulkanCullMode( pInfo->CullMode );
 		pipelineRasterizationCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
 		pipelineRasterizationCreateInfo.polygonMode = ToVulkanPolygonMode( pInfo->PolygonMode );

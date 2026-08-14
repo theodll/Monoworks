@@ -166,7 +166,7 @@ namespace Monoworks
 			DecRef();
 		}
 
-		NODISCARD CRef& operator=(const CRef<T>& other) NOEXCEPT
+		CRef& operator=(const CRef<T>& other) NOEXCEPT
 		{
 			if (this != &other)
 			{
@@ -178,7 +178,7 @@ namespace Monoworks
 			return *this;
 		}
 
-		NODISCARD CRef& operator=(CRef<T>&& other) NOEXCEPT
+		CRef& operator=(CRef<T>&& other) NOEXCEPT
 		{
 			if (this != &other)
 			{
@@ -192,7 +192,7 @@ namespace Monoworks
 		}
 
 		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
-		NODISCARD CRef& operator=(const CRef<U>& other) NOEXCEPT
+		CRef& operator=(const CRef<U>& other) NOEXCEPT
 		{
 			DecRef();
 			m_Handle = other.m_Handle;
@@ -202,7 +202,7 @@ namespace Monoworks
 		}
 
 		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
-		NODISCARD CRef& operator=(CRef<U>&& other) NOEXCEPT
+		CRef& operator=(CRef<U>&& other) NOEXCEPT
 		{
 			DecRef();
 			m_Handle = other.m_Handle;
@@ -212,7 +212,7 @@ namespace Monoworks
 			return *this;
 		}
 
-		NODISCARD CRef& operator=(std::nullptr_t) NOEXCEPT
+		CRef& operator=(std::nullptr_t) NOEXCEPT
 		{
 			DecRef();
 			return *this;

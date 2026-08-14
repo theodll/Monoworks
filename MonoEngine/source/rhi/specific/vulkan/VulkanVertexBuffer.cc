@@ -7,8 +7,8 @@
 
 namespace Monoworks::RHI
 {
-	CVulkanVertexBuffer::CVulkanVertexBuffer( void* data, u64 size, u64 offset, bool autoupload ) NOEXCEPT
-		: m_UploadSize(size), m_Size(size)
+	CVulkanVertexBuffer::CVulkanVertexBuffer( void* data, u32 size, u32 offset, bool autoupload ) NOEXCEPT
+		: m_Size(size), m_UploadSize(size)
 	{
 		MW_PROFILE_FUNC;
 
@@ -49,7 +49,7 @@ namespace Monoworks::RHI
 		}
 	}
 
-	void CVulkanVertexBuffer::SetData( void* data, u64 size, u64 offset ) NOEXCEPT
+	void CVulkanVertexBuffer::SetData( void* data, u32 size, u32 offset ) NOEXCEPT
 	{
 		auto allocator = CVulkanContext::GetAllocator();
 
@@ -69,6 +69,8 @@ namespace Monoworks::RHI
 			);
 			
 			m_StagingBufferSize = size;
+			m_Offset = offset;
+			m_Size = size;
 		}
 
 		void* mapped = nullptr;
@@ -101,7 +103,7 @@ namespace Monoworks::RHI
 
 	void CVulkanVertexBuffer::SetLayout( const CBufferLayout& layout ) NOEXCEPT
 	{
-
+		m_Layout = layout;
 	}
 
 }

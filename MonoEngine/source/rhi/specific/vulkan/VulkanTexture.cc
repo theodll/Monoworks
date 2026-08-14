@@ -36,7 +36,7 @@ namespace Monoworks::RHI
 
 		auto uploader = CVulkanContext::GetUploader();
 		uploader->Begin();
-		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_FORMAT_B8G8R8A8_SRGB, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
+		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 		Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		PipelineFlags = MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
 		uploader->End();
@@ -188,8 +188,6 @@ namespace Monoworks::RHI
 		auto uploader = CVulkanContext::GetUploader();
 		auto allocator = CVulkanContext::GetAllocator();
 
-		u64 size = sizeof( u32 ) * m_ImageExtent.Width * m_ImageExtent.Height;
-
 		if ( m_Fence == VK_NULL_HANDLE || m_StagingBuffer == VK_NULL_HANDLE )
 		{
 			CreateStagingData();
@@ -224,7 +222,7 @@ namespace Monoworks::RHI
 		vmaMapMemory( *allocator, m_StagingBufferAllocation, &pData );
 
 		u32* pIDs = reinterpret_cast< u32* >( pData );
-		u32 id = 0xFFFFFFFF;
+		u32 id = 0xFFFFFFFF; 
 
 		if ( x >= 0 && x < ( s32 )m_ImageExtent.Width && y >= 0 && y < ( s32 )m_ImageExtent.Height )
 		{
@@ -281,11 +279,11 @@ namespace Monoworks::RHI
 
 		CVulkanContext::GetDevice()->CreateImage(allocator, &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_FORMAT_R8G8B8A8_SRGB, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
+		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
 		Layout = MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 		CVulkanContext::GetDevice()->CopyBufferToImage(uploader->GetCommandBuffer(), &m_StagingBuffer, &m_Image, m_ImageExtent.Width, m_ImageExtent.Height, 1);
 
-		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_FORMAT_R8G8B8A8_SRGB, MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
+		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
 		Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		uploader->End();
 

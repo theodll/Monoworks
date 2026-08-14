@@ -5,9 +5,17 @@
 #include <rhi/agnostic/Presenter.hh>
 
 #ifdef MW_PLATFORM_WINDOWS
+
+#ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <Windows.h>
+
+#ifndef VK_USE_PLATFORM_WIN32
 #define VK_USE_PLATFORM_WIN32
+#endif
+
 #else
 #include <unistd.h>
 #endif
@@ -21,11 +29,11 @@ namespace Monoworks::RHI
 	public:
 		CVulkanQtPresenter( SExtent2D presenterExtent ) NOEXCEPT { MW_PROFILE_FUNC; m_SwapchainExtent = presenterExtent; };
 
-		void Init( const IPresentationInitializationInfo* pInfo ) NOEXCEPT {};
+		void Init( MAYBE_UNUSED const IPresentationInitializationInfo* pInfo ) NOEXCEPT {};
 		void Init2( const IPresentationInitialization2Info* pInfo ) NOEXCEPT;
 		void Shutdown() NOEXCEPT;
-		void CreateSurface( const IPresentationSurfaceCreationInfo* pInfo ) NOEXCEPT {};
-		bool OnResize( SEvent& event );
+		void CreateSurface( MAYBE_UNUSED const IPresentationSurfaceCreationInfo* pInfo ) NOEXCEPT {};
+		bool OnResize( MAYBE_UNUSED SEvent& event );
 
 		NODISCARD u32 Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT;
 		void TransitionRender( const IPresentationTransitionRenderInfo* pInfo ) NOEXCEPT;
