@@ -81,8 +81,6 @@ namespace Monoworks::RHI
 				MW_API_ERROR("Invalid Shader Data Type or MW_SHADER_DATA_TYPE_COUNT passed.");
 				return 0;
 			}
-
-			return 0;
 		}
 	};
 
