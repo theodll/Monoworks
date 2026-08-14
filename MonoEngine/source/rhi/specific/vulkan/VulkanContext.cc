@@ -167,6 +167,9 @@ namespace Monoworks::RHI
 			total.InstanceAllocs += size;
 			break;
 		}
+		default:
+		MW_API_ERROR("Invalid VKSystemAllocation or VK_SYSTEM_ALLOCATION_MAX_ENUM passed.");
+		break;
 		}
 #endif
 		return pUser;
@@ -210,6 +213,9 @@ namespace Monoworks::RHI
 			total.InstanceAllocs -= pHeader->Size;
 			break;
 		}
+		default:
+		MW_API_ERROR("Invalid VkSystemAllocation or VK_SYSTEM_ALLOCATION_MAX_ENUM passed.");
+		break;
 		}
 #endif
 
@@ -589,13 +595,6 @@ namespace Monoworks::RHI
 
 	}
 
-	void CVulkanContext::CreateVmaAllocator() NOEXCEPT
-	{
-		MW_PROFILE_FUNC;
-		VmaVulkanFunctions vulkanFunctions{};
-
-
-	}
 
 	void CVulkanContext::SetupDebugMessenger() NOEXCEPT
 	{

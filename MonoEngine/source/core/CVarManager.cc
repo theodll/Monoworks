@@ -45,7 +45,8 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		SCVar* var;
-		bool changed;
+		// Note [14.08.26, Theo]: Used by the Quake Engine to broadcast cvar changes to the server (https://github.com/id-Software/Quake/blob/master/WinQuake/cvar.c, line 123)
+		MAYBE_UNUSED bool changed;
 
 		var = Find(varName);
 		
@@ -56,6 +57,8 @@ namespace Monoworks
 
 		var->String = value;
 		var->Value = static_cast<float>(std::stod(value));
+
+
 
 	};
 

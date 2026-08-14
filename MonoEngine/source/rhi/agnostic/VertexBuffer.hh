@@ -43,8 +43,12 @@ namespace Monoworks::RHI
 		case MW_SHADER_DATA_TYPE_INT_4:     return 4 * 4;
 		case MW_SHADER_DATA_TYPE_BOOL:		return 4;
 		case MW_SHADER_DATA_TYPE_NONE:		return 0;
+		default:
+		{
+			MW_API_ERROR("Invalid Shader Data Type or MW_SHADER_DATA_TYPE_COUNT passed.");
+			return 0; 
 		}
-		MW_ASSERT(false, "Unknown ShaderDataType");
+		}
 		return 0;
 	}
 
@@ -76,6 +80,11 @@ namespace Monoworks::RHI
 			case MW_SHADER_DATA_TYPE_INT_4:     return 4;
 			case MW_SHADER_DATA_TYPE_BOOL:		return 1;
 			case MW_SHADER_DATA_TYPE_NONE:		return 0;
+			default: 
+			{
+				MW_API_ERROR("Invalid Shader Data Type or MW_SHADER_DATA_TYPE_COUNT passed.");
+				return 0;
+			}
 			}
 
 			return 0;

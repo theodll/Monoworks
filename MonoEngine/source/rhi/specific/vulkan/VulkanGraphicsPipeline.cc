@@ -279,6 +279,10 @@ namespace Monoworks::RHI
 				attachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 				attachment.alphaBlendOp = VK_BLEND_OP_ADD;
 				break;
+
+			default:
+			MW_API_ERROR("Invalid Blend Mode or MW_BLEND_MODE_COUNT passed.");
+			break;
 			}
 
 			m_ColorAttachmentStates.push_back(attachment);

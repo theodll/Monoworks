@@ -82,7 +82,7 @@ namespace Monoworks::RHI
 			poolInfo.queueFamilyIndex = device->GetGraphicsQueueFamilyIndex();
 			poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-			for ( auto i{0}; i < MFIF; i++ )
+			for ( u32 i{0}; i < MFIF; i++ )
 			{
 				MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolInfo, CVulkanContext::GetCallbacks(), &workerData.CommandPools[i] ), "Failed to create CommandPool.");
 			

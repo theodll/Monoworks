@@ -13,42 +13,60 @@
 #include <functional>
 #include <thread>
 #include <chrono>
-
-void* operator new(size_t count)
+void* operator new(std::size_t count)
 {
-	MW_PROFILE_FUNC;
-	void* ptr = std::malloc(count);
-	if (!ptr) throw std::bad_alloc();
-	MW_PROFILE_ALLOC(ptr, count);
-	return ptr;
+    MW_PROFILE_FUNC;
+    void* pPtr = std::malloc(count);
+    if (!pPtr) throw std::bad_alloc();
+    MW_PROFILE_ALLOC(pPtr, count);
+    return pPtr;
 }
 
-void operator delete(void* ptr) noexcept 
+void operator delete(void* pPtr) noexcept
 {
-	MW_PROFILE_FUNC;
-	if(ptr)
-	{
-		MW_PROFILE_FREE(ptr);
-		std::free(ptr);
-	}
+    MW_PROFILE_FUNC;
+    if (pPtr) {
+        MW_PROFILE_FREE(pPtr);
+        std::free(pPtr);
+    }
 }
 
-void* operator new[](std::size_t count) 
+void operator delete(void* pPtr, MAYBE_UNUSED size_t size) noexcept
 {
-	MW_PROFILE_FUNC;
-	void* ptr = std::malloc(count);
-	if (!ptr) throw std::bad_alloc();
-	MW_PROFILE_ALLOC(ptr, count);
-	return ptr;
+    MW_PROFILE_FUNC;
+    if (pPtr) {
+        // Tipp: Wenn dein Profiler Size-Aware-Frees unterstützt (z. B. Tracy), 
+        // nutze MW_PROFILE_FREE_N(pPtr, size), ansonsten reicht MW_PROFILE_FREE:
+        MW_PROFILE_FREE(pPtr);
+        std::free(pPtr);
+    }
 }
 
-void operator delete[](void* ptr) noexcept 
+void* operator new[](std::size_t count)
 {
-	MW_PROFILE_FUNC;
-	if (ptr) {
-		MW_PROFILE_FREE(ptr);
-		std::free(ptr);
-	}
+    MW_PROFILE_FUNC;
+    void* pPtr = std::malloc(count);
+    if (!pPtr) throw std::bad_alloc();
+    MW_PROFILE_ALLOC(pPtr, count);
+    return pPtr;
+}
+
+void operator delete[](void* pPtr) noexcept
+{
+    MW_PROFILE_FUNC;
+    if (pPtr) {
+        MW_PROFILE_FREE(pPtr);
+        std::free(pPtr);
+    }
+}
+
+void operator delete[](void* pPtr, MAYBE_UNUSED size_t size) noexcept
+{
+    MW_PROFILE_FUNC;
+    if (pPtr) {
+        MW_PROFILE_FREE(pPtr);
+        std::free(pPtr);
+    }
 }
 
 namespace Monoworks

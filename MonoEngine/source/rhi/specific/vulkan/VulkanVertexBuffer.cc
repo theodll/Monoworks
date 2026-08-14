@@ -8,7 +8,7 @@
 namespace Monoworks::RHI
 {
 	CVulkanVertexBuffer::CVulkanVertexBuffer( void* data, u32 size, u32 offset, bool autoupload ) NOEXCEPT
-		: m_UploadSize(size), m_Size(size)
+		: m_Size(size), m_UploadSize(size)
 	{
 		MW_PROFILE_FUNC;
 

@@ -70,7 +70,7 @@ namespace Monoworks::RHI
 		// TODO: rename this
 		NODISCARD virtual std::vector<Ref<ITexture2D>>& GetSwapchainImages() NOEXCEPT = 0;
 		NODISCARD virtual void* GetSurface() NOEXCEPT = 0;
-		NODISCARD const EPresentationMedium GetMedium() const NOEXCEPT { return m_PresentationMedium; };
+		NODISCARD EPresentationMedium GetMedium() NOEXCEPT { return m_PresentationMedium; };
 
 	protected: 
 		EPresentationMedium m_PresentationMedium = MW_PRESENTATION_MEDIUM_NONE;
