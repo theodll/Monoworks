@@ -23,7 +23,7 @@
 
 #include <volk/volk.h>
 
-#define MW_PROFILING 1
+// #define MW_PROFILING 1
 #define MW_VULKAN 1
 
 #define NOEXCEPT noexcept
@@ -77,6 +77,17 @@ extern TracyVkCtx TracyTransferContext;
 #define MW_PROFILE_VK_CREATE_CTX(physdev, device, queue, cmdbuf) TracyVkContext( physdev, device, queue, cmdbuf );
 #define MW_PROFILE_VK_DESTROY_CTX(ctx) TracyVkDestroy(ctx);
 
+#else
+#define MW_PROFILE_VK_GRAPHICS_ZONE(cmd, name);
+#define MW_PROFILE_VK_COMPUTE_ZONE(cmd, name);
+#define MW_PROFILE_VK_TRANSFER_ZONE(cmd, name);
+
+#define MW_PROFILE_VK_GRAPHICS_COLLECT(cmd);
+#define MW_PROFILE_VK_COMPUTE_COLLECT(cmd);
+#define MW_PROFILE_VK_TRANSFER_COLLECT(cmd);
+
+#define MW_PROFILE_VK_CREATE_CTX(physdev, device, queue, cmdbuf);
+#define MW_PROFILE_VK_DESTROY_CTX(ctx);
 #endif 
 
 #define MW_PROFILE_ALLOC(x, y) TracyAlloc(x, y)
@@ -90,7 +101,29 @@ extern TracyVkCtx TracyTransferContext;
 #define MW_PROFILE_FUNC  ZoneScopedN(__FUNCTION__);
 
 #define MW_PROFILE_FRAME_MARK() FrameMark;
+#else 
+#define MW_PROFILE_VK_GRAPHICS_ZONE(cmd, name);
+#define MW_PROFILE_VK_COMPUTE_ZONE(cmd, name);
+#define MW_PROFILE_VK_TRANSFER_ZONE(cmd, name);
 
+#define MW_PROFILE_VK_GRAPHICS_COLLECT(cmd);
+#define MW_PROFILE_VK_COMPUTE_COLLECT(cmd);
+#define MW_PROFILE_VK_TRANSFER_COLLECT(cmd);
+
+#define MW_PROFILE_VK_CREATE_CTX(physdev, device, queue, cmdbuf);
+#define MW_PROFILE_VK_DESTROY_CTX(ctx);
+
+#define MW_PROFILE_ALLOC(x, y);
+#define MW_PROFILE_ALLOC_N(x, y, z);
+
+#define MW_PROFILE_PLOT(x, y);
+
+#define MW_PROFILE_FREE(x);
+#define MW_PROFILE_FREE_N(x, y);
+
+#define MW_PROFILE_FUNC
+
+#define MW_PROFILE_FRAME_MARK();
 #endif
 
 
