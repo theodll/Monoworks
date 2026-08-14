@@ -12,8 +12,8 @@ namespace Monoworks::RHI
 		CVulkanVertexBuffer( void* data, u32 size, u32 offset = 0, bool autoUpload = false ) NOEXCEPT;
 		~CVulkanVertexBuffer() NOEXCEPT;
 
-		void SetData( void* data, u32 size, u32 offset = 0 ) NOEXCEPT;
-		void SetLayout( const CBufferLayout& layout ) NOEXCEPT;
+		void SetData( void* data, u32 size, u32 offset = 0 ) NOEXCEPT override;
+		void SetLayout( const CBufferLayout& layout ) NOEXCEPT override;
 
 		void Upload( VkCommandBuffer commandBuffer ) NOEXCEPT;
 

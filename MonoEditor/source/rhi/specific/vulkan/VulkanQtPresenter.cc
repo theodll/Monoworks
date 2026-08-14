@@ -171,7 +171,9 @@ namespace Monoworks::RHI
 		auto info = ( SVulkanQtPresentationAcquisitionInfo* )pInfo;
 
 		if ( m_PresentationImages.size() < MFIF )
+		{
 			MW_ASSERT( false, "Insufficient Presentation Images." );
+		}
 
 		m_CurrentImageIndex = ( m_CurrentImageIndex + 1 ) % MFIF;
 
@@ -254,7 +256,7 @@ namespace Monoworks::RHI
 		texture->Layout = MW_IMAGE_LAYOUT_GENERAL;
 	};
 
-	void CVulkanQtPresenter::Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT 
+	void CVulkanQtPresenter::Present( MAYBE_UNUSED const IPresentationPresentInfo* pInfo ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
 		MW_ASSERT( pInfo->Medium == MW_PRESENTATION_MEDIUM_VULKAN_QT, "Invalid Presentation Medium" );
