@@ -23,6 +23,8 @@ namespace Monoworks
 
             m_pInstance->Init();
 
+            slang::createGlobalSession( m_SlangGlobalSession.writeRef() );
+
         };
         
         void CStaticRenderer::Shutdown() noexcept 

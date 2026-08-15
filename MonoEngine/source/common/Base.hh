@@ -31,6 +31,8 @@
 #define MAYBE_UNUSED [[maybe_unused]]
 #define UNLIKELY [[unlikely]]
 
+#define MW_NULLABLE
+
 #ifdef	MW_PLATFORM_WINDOWS
 #define MW_DEBUG_BREAK __debugbreak()
 #elif defined(__clang__)
