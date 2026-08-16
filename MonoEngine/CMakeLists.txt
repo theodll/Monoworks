@@ -15,7 +15,7 @@ add_subdirectory("thirdparty/spdlog")
 add_subdirectory("thirdparty/tracy")
 add_subdirectory("thirdparty/volk")
 add_subdirectory("thirdparty/stb")
-add_subdirectory("thirdparty/slang" EXCLUDE_FROM_ALL)
+add_subdirectory("thirdparty/slang")
 
 target_include_directories(MonoEngine SYSTEM PUBLIC "extern/VulkanMemoryAllocator/include")
 add_subdirectory("extern/VulkanMemoryAllocator")

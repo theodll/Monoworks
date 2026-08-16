@@ -1,5 +1,8 @@
 #pragma once
 #include <common/Base.hh>
+#include <rhi/agnostic/GraphicsPipeline.hh>
+
+#include <unordered_map>
 
 #include <slang.h>
 #include <slang-com-ptr.h>
@@ -25,7 +28,7 @@ namespace Monoworks
 		
 		Slang::ComPtr<slang::ISession> MW_NULLABLE SlangSession; // NOTE: null when MW_SHADER_FLAG_INTERNAL_SLAG_SESSION is disabled.
 		
-		const char const* const* MW_NULLABLE SlangSessionSearchPaths;
+		char const* const* MW_NULLABLE SlangSessionSearchPaths;
 		SlangInt SlangSessionSearchPathCount;
 		
 		slang::PreprocessorMacroDesc const* MW_NULLABLE SlangPreprocessorMacros;
@@ -42,9 +45,10 @@ namespace Monoworks
 
 	private:
 		ShaderCreateInfo m_CreateInfo;
+		std::array<std::string, RHI::MW_SHADER_STAGE_COUNT> m_Entrypoints;
 		path_t m_Path;
 		Slang::ComPtr<slang::ISession> m_SlangSession;
-		Slang::ComPtr<slang::IBlob> m_SlangCompiledBinaryData;
+		Slang::ComPtr<slang::IComponentType> m_SlangProgram;
 		bool m_Ready;
 	};
 }

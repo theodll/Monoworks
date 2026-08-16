@@ -10,7 +10,8 @@ namespace Monoworks
         Ref<RHI::IGraphicsAPI> CStaticRenderer::m_pInstance;
         u32                    CStaticRenderer::m_CurrentFrameIndex;
 		u32                    CStaticRenderer::m_CurrentImageIndex;
-         
+        Slang::ComPtr<slang::IGlobalSession>    CStaticRenderer::m_SlangGlobalSession;
+
 		void CStaticRenderer::Init() noexcept
         {
             MW_PROFILE_FUNC;
