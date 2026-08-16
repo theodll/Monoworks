@@ -9,7 +9,7 @@ namespace Monoworks::RHI
 {
 
 
-	CVulkanGraphicsPipeline::CVulkanGraphicsPipeline( const SPipelineCreationInfo* pInfo ) NOEXCEPT
+	CVulkanGraphicsPipeline::CVulkanGraphicsPipeline( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -25,7 +25,7 @@ namespace Monoworks::RHI
 		Shutdown();
 	}
 
-	void CVulkanGraphicsPipeline::Init( const SPipelineCreationInfo* pInfo ) NOEXCEPT
+	void CVulkanGraphicsPipeline::Init( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_VertexLayout = pInfo->VertexLayout;
@@ -186,7 +186,7 @@ namespace Monoworks::RHI
 		};
 	};
 
-	void CVulkanGraphicsPipeline::Invalidate( const SPipelineCreationInfo* pInfo ) NOEXCEPT
+	void CVulkanGraphicsPipeline::Invalidate( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		auto device = CVulkanContext::GetDevice()->GetDevice();

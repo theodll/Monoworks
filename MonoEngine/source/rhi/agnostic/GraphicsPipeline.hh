@@ -128,13 +128,17 @@ namespace Monoworks::RHI
 		bool BlendEnable;
 	};
 
-	struct SPipelineCreationInfo
+	struct SGraphicsPipelineCreationInfo
 	{ 
 		CVertexLayout VertexLayout;
 		std::vector<SShaderObject> ShaderObjects;
 		std::vector<EImageFormat> ColorFormats;
 		std::vector<SColorBlendAttachmentState> ColorBlendAttachments;
 		std::vector<EDynamicState> DynamicStates = { MW_DYNAMIC_STATE_VIEWPORT, MW_DYNAMIC_STATE_SCISSOR };
+
+		// TODO: Implement custom signature for Graphics Pipeline
+		void* MW_NULLABLE Signature = nullptr; // VkPipelineLayout / D3D12RootSignature
+
 		EPipelineCreationFlags Flags;
 		EImageFormat DepthAttachmentFormat;
 		EImageFormat StencilAttachmentFormat;
@@ -152,11 +156,11 @@ namespace Monoworks::RHI
 	public:
 		virtual ~IGraphicsPipeline() NOEXCEPT = default;
 		
-		virtual void Init( const SPipelineCreationInfo* pInfo ) = 0;
+		virtual void Init( const SGraphicsPipelineCreationInfo* pInfo ) = 0;
 		virtual void Shutdown() = 0;
 		
-		virtual void Invalidate( const SPipelineCreationInfo* pInfo ) = 0;
+		virtual void Invalidate( const SGraphicsPipelineCreationInfo* pInfo ) = 0;
 
-		static Ref<IGraphicsPipeline> Create( const SPipelineCreationInfo* pInfo ) NOEXCEPT;
+		static Ref<IGraphicsPipeline> Create( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
 	};
 }
