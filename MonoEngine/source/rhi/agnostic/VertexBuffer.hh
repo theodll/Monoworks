@@ -98,6 +98,8 @@ namespace Monoworks::RHI
 			CalculateOffsetAndStride();
 		};
 
+		u64 GetHash() const NOEXCEPT;
+
 		inline const std::vector<SBufferElement>& GetElements() const { return m_Elements; }
 		u32 GetElementCount() const { return (u32)m_Elements.size(); }
 		u64 GetStride() const { return m_Stride; }

@@ -511,4 +511,61 @@ namespace Monoworks
 
 	// max frames in flight 
 	constexpr u32 MFIF = 3;
+
+	constexpr inline u64 FastHashBytes( const void* pData, size_t size, u64 seed = 0 ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		if ( !pData || size == 0 ) return seed;
+
+		const uint8_t* pBytes = static_cast< const uint8_t* >( pData );
+		u64 hash = seed ^ ( size * 0xc6a4a7935bd1e995ULL );
+
+		while ( size >= 8 )
+		{
+			u64 k;
+			std::memcpy( &k, pBytes, sizeof( u64 ) );
+
+			k *= 0xc6a4a7935bd1e995ULL;
+			k ^= k >> 47;
+			k *= 0xc6a4a7935bd1e995ULL;
+
+			hash ^= k;
+			hash *= 0xc6a4a7935bd1e995ULL;
+
+			pBytes += 8;
+			size -= 8;
+		}
+
+		if ( size > 0 )
+		{
+			u64 k = 0;
+			std::memcpy( &k, pBytes, size );
+			hash ^= k;
+			hash *= 0xc6a4a7935bd1e995ULL;
+		}
+
+		hash ^= hash >> 47;
+		hash *= 0xc6a4a7935bd1e995ULL;
+		hash ^= hash >> 47;
+
+		return hash;
+	}
+
+	constexpr inline void HashCombine( u64& rSeed, u64 hash ) NOEXCEPT
+	{
+		rSeed ^= hash + 0x9e3779b97f4a7c15ULL + ( rSeed << 6 ) + ( rSeed >> 2 );
+	}
+
+	template <typename T>
+	inline u64 HashVector( const std::vector<T>& rVec ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		u64 seed = rVec.size();
+		for ( const auto& rItem : rVec )
+		{
+			HashCombine( seed, static_cast< u64 >( rItem ) );
+		}
+		return seed;
+	}
+
 }

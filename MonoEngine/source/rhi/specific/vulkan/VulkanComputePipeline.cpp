@@ -116,7 +116,6 @@ namespace Monoworks::RHI
 
 		if ( res < 0 )
 		{
-
 			MW_ERROR( "Non-Fataly failed to create compute pipeline.");
 		}
 

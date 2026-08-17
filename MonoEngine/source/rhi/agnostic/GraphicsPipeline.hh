@@ -128,7 +128,7 @@ namespace Monoworks::RHI
 		bool BlendEnable;
 	};
 
-	struct SGraphicsPipelineCreationInfo
+	struct GraphicsPipelineCreationInfo
 	{ 
 		CVertexLayout VertexLayout;
 		std::vector<SShaderObject> ShaderObjects;
