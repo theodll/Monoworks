@@ -21,6 +21,8 @@
 #include <common/Memory.hh>
 #include <core/CVarManager.hh>
 
+#include <type_traits>
+
 #include <volk/volk.h>
 
 // #define MW_PROFILING 1
@@ -512,60 +514,69 @@ namespace Monoworks
 	// max frames in flight 
 	constexpr u32 MFIF = 3;
 
-	constexpr inline u64 FastHashBytes( const void* pData, size_t size, u64 seed = 0 ) NOEXCEPT
+	namespace Hash 
 	{
-		MW_PROFILE_FUNC;
-		if ( !pData || size == 0 ) return seed;
 
-		const uint8_t* pBytes = static_cast< const uint8_t* >( pData );
-		u64 hash = seed ^ ( size * 0xc6a4a7935bd1e995ULL );
+		using hash_t = u64;
+		using Hash = hash_t;
 
-		while ( size >= 8 )
+		constexpr inline hash_t FastHashBytes( const void* pData, size_t size, hash_t seed = 0 ) NOEXCEPT
 		{
-			u64 k;
-			std::memcpy( &k, pBytes, sizeof( u64 ) );
+			MW_PROFILE_FUNC;
+			if ( !pData || size == 0 ) return seed;
 
-			k *= 0xc6a4a7935bd1e995ULL;
-			k ^= k >> 47;
-			k *= 0xc6a4a7935bd1e995ULL;
+			const byte_t* pBytes = static_cast< const byte_t* >( pData );
+			hash_t hash = seed ^ ( size * 0xc6a4a7935bd1e995ULL );
 
-			hash ^= k;
+			while ( size >= 8 )
+			{
+				u64 k;
+				std::memcpy( &k, pBytes, sizeof u64 );
+
+				k *= 0xc6a4a7935bd1e995ULL;
+				k ^= k >> 47;
+				k *= 0xc6a4a7935bd1e995ULL;
+
+				hash ^= k;
+				hash *= 0xc6a4a7935bd1e995ULL;
+
+				pBytes += 8;
+				size -= 8;
+			}
+
+			if ( size > 0 )
+			{
+				u64 k = 0;
+				std::memcpy( &k, pBytes, size );
+				hash ^= k;
+				hash *= 0xc6a4a7935bd1e995ULL;
+			}
+
+			hash ^= hash >> 47;
 			hash *= 0xc6a4a7935bd1e995ULL;
+			hash ^= hash >> 47;
 
-			pBytes += 8;
-			size -= 8;
+			return hash;
 		}
 
-		if ( size > 0 )
+		constexpr inline void HashCombine( hash_t& rSeed, u64 hash ) NOEXCEPT
 		{
-			u64 k = 0;
-			std::memcpy( &k, pBytes, size );
-			hash ^= k;
-			hash *= 0xc6a4a7935bd1e995ULL;
+			rSeed ^= hash + 0x9e3779b97f4a7c15ULL + ( rSeed << 6 ) + ( rSeed >> 2 );
 		}
 
-		hash ^= hash >> 47;
-		hash *= 0xc6a4a7935bd1e995ULL;
-		hash ^= hash >> 47;
-
-		return hash;
-	}
-
-	constexpr inline void HashCombine( u64& rSeed, u64 hash ) NOEXCEPT
-	{
-		rSeed ^= hash + 0x9e3779b97f4a7c15ULL + ( rSeed << 6 ) + ( rSeed >> 2 );
-	}
-
-	template <typename T>
-	inline u64 HashVector( const std::vector<T>& rVec ) NOEXCEPT
-	{
-		MW_PROFILE_FUNC;
-		u64 seed = rVec.size();
-		for ( const auto& rItem : rVec )
+		template <typename T> requires std::is_enum_v<T> || std::is_integral_v<T>
+		constexpr inline void HashCombine( hash_t & rSeed, T value ) NOEXCEPT
 		{
-			HashCombine( seed, static_cast< u64 >( rItem ) );
+			HashCombine( rSeed, static_cast< hash_t >( value ) );
+		};
+
+		template <typename T> requires std::is_trivially_copyable_v<T>
+		inline hash_t HashVector( const std::vector<T>& rVec ) NOEXCEPT
+		{
+			hash_t hash = FastHashBytes( rVec.data(), rVec.size() * sizeof( T ) );
+
+			return hash;
 		}
-		return seed;
 	}
 
 }

@@ -5,67 +5,54 @@
 #include "ComputePipeline.hh"
 
 #include <boost/unordered/unordered_map.hpp>
+#include <tuple>
 
 namespace Monoworks::RHI 
 {
-	namespace Monoworks::RHI
+	constexpr inline static Hash::hash_t GetGraphicsPipelineInfoHash( const GraphicsPipelineCreationInfo* pInfo)
 	{
+		MW_PROFILE_FUNC;
+		Hash::hash_t hash;
 
-		struct GraphicsPipelineCreationInfoHasher
+		Hash::HashCombine( hash, pInfo->Flags );
+		Hash::HashCombine( hash, pInfo->DepthAttachmentFormat );
+		Hash::HashCombine( hash, pInfo->ViewportCount );
+		Hash::HashCombine( hash, pInfo->ScissorCount );
+		Hash::HashCombine( hash, pInfo->StencilAttachmentFormat );
+		Hash::HashCombine( hash, pInfo->CompareOp );
+		Hash::HashCombine( hash, pInfo->CullMode );
+		Hash::HashCombine( hash, pInfo->Topology );
+		Hash::HashCombine( hash, pInfo->PolygonMode );
+
+		Hash::HashCombine( hash, Hash::HashVector(pInfo->ColorBlendAttachments) );
+		Hash::HashCombine( hash, Hash::HashVector( pInfo->DynamicStates ) );
+		Hash::HashCombine( hash, Hash::HashVector( pInfo->ColorFormats ) );
+
+		for ( const auto& shaderObjects  : pInfo->ShaderObjects )
 		{
-			u64 operator()( const GraphicsPipelineCreationInfo& rInfo ) const noexcept
-			{
-				u64 seed = 0;
+			Hash::HashCombine( hash, Hash::FastHashBytes( shaderObjects.pEntrypoint, std::strlen( shaderObjects.pEntrypoint ) ) );
+			Hash::HashCombine( hash, shaderObjects.ShaderStage );
+			
+			Hash::HashCombine( hash, Hash::FastHashBytes( shaderObjects.Code.pCode, shaderObjects.Code.Size ) );
+		}
 
-				// 1. Primitive Typen & Enums
-				HashCombine( seed, static_cast< u64 >( rInfo.Flags ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.DepthAttachmentFormat ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.StencilAttachmentFormat ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.ViewportCount ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.ScissorCount ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.CompareOp ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.CullMode ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.Topology ) );
-				HashCombine( seed, static_cast< u64 >( rInfo.PolygonMode ) );
+		Hash::HashCombine( hash, pInfo->VertexLayout.GetHash() );
 
-				HashCombine( seed, rInfo.VertexLayout.GetHash() );
+		return hash;
 
-				HashCombine( seed, HashVector( rInfo.ColorFormats ) );
-				HashCombine( seed, HashVector( rInfo.DynamicStates ) );
+	};
 
-				u64 blendSeed = rInfo.ColorBlendAttachments.size();
-				for ( const auto& rAttachment : rInfo.ColorBlendAttachments )
-				{
-					u64 attachmentHash = static_cast< u64 >( rAttachment.BlendMode );
-					HashCombine( attachmentHash, static_cast< u64 >( rAttachment.BlendEnable ) );
-					HashCombine( blendSeed, attachmentHash );
-				}
-				HashCombine( seed, blendSeed );
+	constexpr inline static Hash::hash_t GetComputePipelineInfoHash( const ComputePipelineCreationInfo* pInfo )
+	{
+		MW_PROFILE_FUNC;
+		Hash::hash_t hash;
 
-				u64 shaderSeed = rInfo.ShaderObjects.size();
-				for ( const auto& rShader : rInfo.ShaderObjects )
-				{
-					u64 singleShaderHash = static_cast< u64 >( rShader.ShaderStage );
+		Hash::HashCombine( hash, pInfo->Flags );
 
-					if ( rShader.pEntrypoint )
-					{
-						const std::string_view entryView( rShader.pEntrypoint );
-						HashCombine( singleShaderHash, FastHashBytes( entryView.data(), entryView.size() ) );
-					}
-
-					if ( rShader.Code.pCode && rShader.Code.Size > 0 )
-					{
-						HashCombine( singleShaderHash, FastHashBytes( rShader.Code.pCode, rShader.Code.Size ) );
-					}
-
-					HashCombine( shaderSeed, singleShaderHash );
-				}
-				HashCombine( seed, shaderSeed );
-				HashCombine( seed, reinterpret_cast< uintptr_t >( rInfo.Signature ) );
-
-				return seed;
-			}
-		};
+		Hash::HashCombine( hash, pInfo->ComputeShader.ShaderStage );
+		Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.Code.pCode, pInfo->ComputeShader.Code.Size ) );
+		Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.pEntrypoint, pInfo->ComputeShader.Code.Size ) );
+		return hash;
 	}
 
 	class CPipelineManager 
@@ -74,9 +61,11 @@ namespace Monoworks::RHI
 		static void Init();
 		static void Shutdown();
 
+		static Ref<IGraphicsPipeline> CreateGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr );
+		static Ref<IComputePipeline> CreateComputePipeline( const ComputePipelineCreationInfo* pInfo );
+
 	private:
-		// TODO: UUID  
-		boost::unordered::unordered_map<GraphicsPipelineCreationInfo, Ref<IGraphicsPipeline>> m_GraphicPipelines;
-		boost::unordered::unordered_map<ComputePipelineCreationInfo, Ref<IComputePipeline>> m_ComputePipelines;
+		boost::unordered::unordered_map<Hash::hash_t, Ref<IGraphicsPipeline>> m_GraphicPipelines;
+		boost::unordered::unordered_map<Hash::hash_t, Ref<IComputePipeline>> m_ComputePipelines;
 	};
 }

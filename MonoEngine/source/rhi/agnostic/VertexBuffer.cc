@@ -18,18 +18,18 @@ namespace Monoworks::RHI
 		}
 	};
 
-	u64 CBufferLayout::GetHash() const NOEXCEPT
+	Hash::hash_t CBufferLayout::GetHash() const NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		u64 seed = m_Elements.size();
-		HashCombine( seed, m_Stride );
+		Hash::hash_t seed = m_Elements.size();
+		Hash::HashCombine( seed, m_Stride );
 
 		for ( const auto& element : m_Elements )
 		{
-			HashCombine( seed, static_cast< u64 >( element.Type ) );
-			HashCombine( seed, static_cast< u64 >( element.Size ) );
-			HashCombine( seed, static_cast< u64 >( element.Offset ) );
-			HashCombine( seed, static_cast< u64 >( element.Count ) );
+			Hash::HashCombine( seed, element.Type );
+			Hash::HashCombine( seed, element.Size );
+			Hash::HashCombine( seed, element.Offset );
+			Hash::HashCombine( seed, element.Count );
 		}
 
 		return seed;

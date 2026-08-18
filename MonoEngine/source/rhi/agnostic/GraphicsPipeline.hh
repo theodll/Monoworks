@@ -156,11 +156,11 @@ namespace Monoworks::RHI
 	public:
 		virtual ~IGraphicsPipeline() NOEXCEPT = default;
 		
-		virtual void Init( const SGraphicsPipelineCreationInfo* pInfo ) = 0;
+		virtual void Init( const GraphicsPipelineCreationInfo* pInfo ) = 0;
 		virtual void Shutdown() = 0;
 		
-		virtual void Invalidate( const SGraphicsPipelineCreationInfo* pInfo ) = 0;
+		virtual void Invalidate( const GraphicsPipelineCreationInfo* pInfo ) = 0;
 
-		static Ref<IGraphicsPipeline> Create( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
+		static Ref<IGraphicsPipeline> Create( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
 	};
 }
