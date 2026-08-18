@@ -18,9 +18,12 @@ namespace Monoworks::RHI
 
 		virtual void Invalidate( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT override;
 
+		NODISCARD virtual bool IsCompiled() NOEXCEPT override { return m_IsCompiled; };
 	private:
 		VkPipeline m_VulkanPipeline;
 		VkPipelineLayout m_VulkanPipelineLayout;
+
+		bool m_IsCompiled = false;
 	};
 
 }

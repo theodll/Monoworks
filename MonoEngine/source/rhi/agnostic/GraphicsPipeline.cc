@@ -8,7 +8,7 @@
 
 namespace Monoworks::RHI 
 {
-	Ref<IGraphicsPipeline> IGraphicsPipeline::Create( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	Ref<IGraphicsPipeline> IGraphicsPipeline::Create( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 

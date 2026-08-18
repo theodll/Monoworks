@@ -23,6 +23,8 @@ namespace Monoworks::RHI
 
 		virtual void Invalidate( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT = 0;
 
+		virtual bool IsCompiled() = 0;
+
 		static Ref<IComputePipeline> Create( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT;
 	
 	};

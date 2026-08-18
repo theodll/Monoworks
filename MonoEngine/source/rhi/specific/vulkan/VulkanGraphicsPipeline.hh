@@ -12,16 +12,18 @@ namespace Monoworks::RHI
 	class CVulkanGraphicsPipeline : public IGraphicsPipeline
 	{
 	public:
-		CVulkanGraphicsPipeline( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
+		CVulkanGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
 		~CVulkanGraphicsPipeline() NOEXCEPT;
 
-		void Init( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
+		void Init( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
 		void Shutdown() override;
 
-		void Invalidate( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
+		void Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
 	
 		NODISCARD VkPipeline* GetVulkanPipeline() NOEXCEPT { return &m_VulkanPipeline; }
 		NODISCARD VkPipelineLayout* GetVulkanPipelineLayout ( ) NOEXCEPT { return &m_VulkanPipelineLayout; }
+
+		NODISCARD bool IsCompiled() NOEXCEPT override { return m_IsCompiled; };
 
 	private:
 		std::vector<VkPipelineColorBlendAttachmentState> m_ColorAttachmentStates; 
@@ -30,5 +32,7 @@ namespace Monoworks::RHI
 		CVertexLayout m_VertexLayout;
 		VkPipelineLayout m_VulkanPipelineLayout;
 		VkPipeline m_VulkanPipeline;
+
+		bool m_IsCompiled = false;
 	};
 }

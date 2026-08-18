@@ -9,7 +9,7 @@ namespace Monoworks::RHI
 {
 
 
-	CVulkanGraphicsPipeline::CVulkanGraphicsPipeline( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	CVulkanGraphicsPipeline::CVulkanGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -25,7 +25,7 @@ namespace Monoworks::RHI
 		Shutdown();
 	}
 
-	void CVulkanGraphicsPipeline::Init( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	void CVulkanGraphicsPipeline::Init( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_VertexLayout = pInfo->VertexLayout;
@@ -186,7 +186,7 @@ namespace Monoworks::RHI
 		};
 	};
 
-	void CVulkanGraphicsPipeline::Invalidate( const SGraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	void CVulkanGraphicsPipeline::Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		auto device = CVulkanContext::GetDevice()->GetDevice();
@@ -441,5 +441,10 @@ namespace Monoworks::RHI
 		}
 
 	};
+
+	NODISCARD bool CVulkanGraphicsPipeline::IsCompiled() NOEXCEPT
+	{
+		throw std::logic_error( "The method or operation is not implemented." );
+	}
 
 }
