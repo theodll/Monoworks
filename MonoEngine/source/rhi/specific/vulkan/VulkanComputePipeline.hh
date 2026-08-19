@@ -13,10 +13,10 @@ namespace Monoworks::RHI
 		CVulkanComputePipeline( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT;
 		~CVulkanComputePipeline() NOEXCEPT;
 
-		virtual void Init( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT override;
+		virtual void Init( const ComputePipelineCreationInfo* pInfo ) override;
 		virtual void Shutdown() NOEXCEPT override;
 
-		virtual void Invalidate( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT override;
+		virtual EResult Invalidate( const ComputePipelineCreationInfo* pInfo ) override;
 
 		NODISCARD virtual bool IsCompiled() NOEXCEPT override { return m_IsCompiled; };
 	private:

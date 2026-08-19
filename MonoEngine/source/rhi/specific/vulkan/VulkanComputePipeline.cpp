@@ -46,7 +46,7 @@ namespace Monoworks::RHI
 	}
 
 
-	void CVulkanComputePipeline::Invalidate( const ComputePipelineCreationInfo* pInfo )
+	EResult CVulkanComputePipeline::Invalidate( const ComputePipelineCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
 
@@ -105,9 +105,13 @@ namespace Monoworks::RHI
 			VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT;
 		createInfo.layout = m_VulkanPipelineLayout;
 		
-		VkResult res = vkCreateComputePipelines(
+		auto cache = *CVulkanContext::GetPipelineCache();
+		if ( pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT )
+			cache = nullptr;
+
+		auto res = vkCreateComputePipelines(
 			*CVulkanContext::GetDevice()->GetDevice(),
-			*CVulkanContext::GetPipelineCache(),
+			cache,
 			1,
 			&createInfo,
 			CVulkanContext::GetCallbacks(),
@@ -118,12 +122,13 @@ namespace Monoworks::RHI
 		{
 			MW_ERROR( "Non-Fataly failed to create compute pipeline.");
 			m_IsCompiled = false; 
+			throw VkResultToEResult( res );
 		}
-		else 
+		else
 		{
-			m_IsCompiled = true; 
+			m_IsCompiled = true;
 		}
-
+		return VkResultToEResult( res );
 	}
 
 }

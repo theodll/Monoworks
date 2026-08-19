@@ -90,12 +90,13 @@ namespace Monoworks::RHI
 		MW_BLEND_MODE_COUNT
 	};
 
-	enum EPipelineCreationFlagBits 
+	enum EPipelineCreationFlagBits
 	{
 		MW_PIPELINE_CREATION_FLAGS_NONE_BIT = 0,
 
 		// Shared 
 		MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT = 0x08,
+		MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT = 0x400, 
 		// TODO: Implement
 		MW_PIPELINE_CREATION_FLAGS_EXTERNAL_CREATE_CALL = 0x200,
 		
@@ -164,7 +165,7 @@ namespace Monoworks::RHI
 		virtual void Init( const GraphicsPipelineCreationInfo* pInfo ) = 0;
 		virtual void Shutdown() = 0;
 		
-		virtual void Invalidate( const GraphicsPipelineCreationInfo* pInfo ) = 0;
+		virtual EResult Invalidate( const GraphicsPipelineCreationInfo* pInfo ) = 0;
 		
 		NODISCARD virtual bool IsCompiled() NOEXCEPT = 0;
 		

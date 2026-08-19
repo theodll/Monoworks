@@ -136,11 +136,6 @@ extern TracyVkCtx TracyTransferContext;
 #define MW_VK_VERSION VK_API_VERSION_1_3
 #endif
 
-#ifdef MW_VULKAN
-#define MW_VK_CHECK( x, ... ) do { const VkResult mwVkRes__ = ( x ); if ( mwVkRes__ != VK_SUCCESS ) { MW_ASSERT( false, __VA_ARGS__ ); } } while ( 0 )
-#define MW_VK_VERSION VK_API_VERSION_1_3
-#endif
-
 #define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
 #define MW_SET_CVAR(varName, value) Monoworks::CCvarManager::Set(varName, value);
 #define MW_SET_FLOAT_CVAR(varName, value) Monoworks::CCvarManager::SetValue(varName, value);
@@ -173,6 +168,7 @@ namespace Monoworks
 {
 	constexpr u32 MaxFramesInFlight = 3;
 
+	class CFatalException : public std::runtime_error { CFatalException( const std::string& rMsg ) : std::runtime_error( rMsg ) {} };
 
 	struct SVersion
 	{
@@ -224,6 +220,19 @@ namespace Monoworks
 		 * @brief Depth component of the Three-Dimensional Extent.
 		 */
 		u32 Depth = 0;
+	};
+
+	enum EResult
+	{
+		MW_SUCCESS_UNKOWN = 1,
+		MW_SUCCESS = 0,
+		MW_ERROR_UNKNOWN = -1,
+		MW_ERROR_HOST_OUT_OF_MEMORY = -2,
+		MW_ERROR_GPU_OUT_OF_MEMORY = -3,
+		MW_ERROR_CACHE_INVALID = -4,
+		MW_ERROR_INITIALIZATION_FAILED = -5,
+		MW_ERROR_FRAGMENTATION = -6,
+		MW_ERROR_GPU_PIPELINE_COMPILATION_REQUIRED = -7
 	};
 
 	/*
@@ -510,9 +519,7 @@ namespace Monoworks
 
 	constexpr SAppVersion MonoworksVersion = { .Major = 1, .Minor = 0, .Patch = 0 };
 	constexpr const char* EngineName = "MonoEngine";
-
-	// max frames in flight 
-	constexpr u32 MFIF = 3;
+	constexpr u32 MFIF = MaxFramesInFlight;
 
 
 	namespace Hash 
@@ -579,5 +586,42 @@ namespace Monoworks
 			return hash;
 		}
 	}
+
+	consteval auto operator""uz( unsigned long long value ) { return static_cast< size_t >( value ); };
+	constexpr auto operator""uzr( unsigned long long value ) { return static_cast< size_t >( value ); };
+
+#ifdef MW_VULKAN
+	EResult VkResultToEResult( const VkResult r )
+	{
+		switch( r )
+		{
+		case VK_SUCCESS:
+			return MW_SUCCESS;
+			break;
+		case VK_ERROR_OUT_OF_HOST_MEMORY:
+			return MW_ERROR_HOST_OUT_OF_MEMORY;
+			break;
+		case VK_ERROR_OUT_OF_DEVICE_MEMORY:
+			return MW_ERROR_GPU_OUT_OF_MEMORY;
+			break;
+		case VK_ERROR_UNKNOWN:
+			return MW_ERROR_UNKNOWN;
+			break;
+		case VK_ERROR_FRAGMENTATION || VK_ERROR_FRAGMENTED_POOL:
+			return MW_ERROR_FRAGMENTATION;
+			break;
+		case VK_PIPELINE_COMPILE_REQUIRED:
+			return MW_ERROR_GPU_PIPELINE_COMPILATION_REQUIRED;
+			break;
+		default:
+			if ( r > 0 )
+				return MW_SUCCESS_UNKOWN;
+			else
+				return MW_ERROR_UNKNOWN;
+			break;
+		}
+	}
+
+#endif 
 
 }

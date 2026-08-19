@@ -24,12 +24,63 @@ namespace Monoworks
 	NODISCARD int RuntimeMain([[maybe_unused]] int pArgc, [[maybe_unused]] char** pArgv) 
 	{
 		CMonoRuntime runtime;
+		try 
+		{
+			runtime.Init( pArgc, pArgv );
+		}
+		catch ( const CFatalException& e)
+		{
+			MW_API_ERROR( "Unhandled runtime initialization fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			std::terminate();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR( "Unhandled runtime intialization exception: {}.", e.what() );
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled runtime initialization throw." );
+		}
 
-		runtime.Init( pArgc, pArgv );
+		try 
+		{
+			runtime.Run();
+		}
+		catch ( const CFatalException& e )
+		{
+			MW_API_ERROR( "Unhandled runtime frame fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			std::terminate();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR("Unhandled runtime frame exception: {}.", e.what() );
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled runtime frame throw." );
+		}
+	
+		try
+		{
+			runtime.Shutdown();
+		} 
+		catch ( const CFatalException& e )
+		{
+			MW_API_ERROR( "Unhandled runtime shutdown fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			std::terminate();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR( "Unhandled runtime shutdown exception: {}.", e.what() );
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled runtime shutdown throw." );
+		}
 
-		runtime.Run();
-
-		runtime.Shutdown();
 
 		return 0;
 	}

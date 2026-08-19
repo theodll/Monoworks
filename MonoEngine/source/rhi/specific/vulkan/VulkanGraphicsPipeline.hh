@@ -18,7 +18,7 @@ namespace Monoworks::RHI
 		void Init( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
 		void Shutdown() override;
 
-		void Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
+		EResult Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
 	
 		NODISCARD VkPipeline* GetVulkanPipeline() NOEXCEPT { return &m_VulkanPipeline; }
 		NODISCARD VkPipelineLayout* GetVulkanPipelineLayout ( ) NOEXCEPT { return &m_VulkanPipelineLayout; }

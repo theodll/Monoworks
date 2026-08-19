@@ -186,7 +186,7 @@ namespace Monoworks::RHI
 		};
 	};
 
-	void CVulkanGraphicsPipeline::Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	EResult CVulkanGraphicsPipeline::Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		auto device = CVulkanContext::GetDevice()->GetDevice();
@@ -430,21 +430,38 @@ namespace Monoworks::RHI
 		graphicsPipelineCreateInfo.pColorBlendState = &pipelineColorBlendStateCreateInfo;
 		graphicsPipelineCreateInfo.pDynamicState = &pipelineDynamicStateCreateInfo;
 
-		if ( vkCreateGraphicsPipelines( *device, *CVulkanContext::GetPipelineCache(), 1, &graphicsPipelineCreateInfo, CVulkanContext::GetCallbacks(), &m_VulkanPipeline ) != VK_SUCCESS )
+		auto cache = *CVulkanContext::GetPipelineCache();
+		if ( pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT )
+			cache = nullptr;
+
+		auto res = vkCreateGraphicsPipelines(
+				*device,
+				cache,
+				1,
+				&graphicsPipelineCreateInfo,
+				CVulkanContext::GetCallbacks(),
+				&m_VulkanPipeline );
+
+		if ( res < 0 )
 		{
-			MW_ERROR("Non-Fataly failed to create some graphics pipelines");
-		};
+			MW_ERROR( "Non-Fataly failed to create compute pipeline." );
+			m_IsCompiled = false;
+			throw VkResultToEResult( res );
+		}
+		else
+		{
+			m_IsCompiled = true;
+		}
 
 		for ( const auto& module : modules )
 		{
 			vkDestroyShaderModule( *device, module, CVulkanContext::GetCallbacks() );
 		}
 
+		return VkResultToEResult( res );
+
 	};
 
-	NODISCARD bool CVulkanGraphicsPipeline::IsCompiled() NOEXCEPT
-	{
-		throw std::logic_error( "The method or operation is not implemented." );
-	}
+	NODISCARD bool CVulkanGraphicsPipeline::IsCompiled() NOEXCEPT { return m_IsCompiled;  }
 
 }

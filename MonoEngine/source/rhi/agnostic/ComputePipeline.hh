@@ -18,14 +18,14 @@ namespace Monoworks::RHI
 	public:
 		virtual ~IComputePipeline() NOEXCEPT = default;
 
-		virtual void Init( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT = 0;
+		virtual void Init( const ComputePipelineCreationInfo* pInfo ) = 0;
 		virtual void Shutdown() NOEXCEPT = 0;
 
-		virtual void Invalidate( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT = 0;
+		virtual EResult Invalidate( const ComputePipelineCreationInfo* pInfo ) = 0;
 
 		virtual bool IsCompiled() = 0;
 
-		static Ref<IComputePipeline> Create( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT;
+		static Ref<IComputePipeline> Create( const ComputePipelineCreationInfo* pInfo );
 	
 	};
 }

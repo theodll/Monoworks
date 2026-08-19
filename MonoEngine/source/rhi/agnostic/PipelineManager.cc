@@ -42,17 +42,41 @@ namespace Monoworks::RHI
 			defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
 			p = IGraphicsPipeline::Create( &defInfo );
 		}
-		p = IGraphicsPipeline::Create( pInfo );
-
+		else 
+		{
+			p = IGraphicsPipeline::Create( pInfo );
+		}
+		
 		m_GraphicPipelineCache[hash] = p;
 		m_TotalPipelineCount++;
 		m_GraphicsPipelineCount++;
 
 		if ( !deffered && !p->IsCompiled() )
 		{
-			p->Invalidate( &defInfo );
 			m_TotalCompiledPipelineCount++;
 			m_CompiledGraphicsPipelineCount++;
+			try
+			{ p->Invalidate( &defInfo ); }
+			catch ( EResult r )
+			{
+				switch ( r )
+				{
+				case MW_ERROR_UNKNOWN || MW_ERROR_CACHE_INVALID:
+					defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT;
+					break;
+				default:
+					break;
+				};
+
+				try { p->Invalidate( &defInfo ); }
+				catch ( ... ) 
+				{
+					MW_ERROR("Discarding Pipeline as unable to compile.");
+					m_TotalCompiledPipelineCount--;
+					m_CompiledGraphicsPipelineCount--;
+				};
+				
+			}
 		}
 		
 		if ( pHash )
