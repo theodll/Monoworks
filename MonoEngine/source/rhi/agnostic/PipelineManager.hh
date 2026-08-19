@@ -1,5 +1,6 @@
 #pragma once
 #include <common/Base.hh>
+#include <common/SafeQueue.hh>
 
 #include "GraphicsPipeline.hh"
 #include "ComputePipeline.hh"
@@ -64,10 +65,7 @@ namespace Monoworks::RHI
 		/// @brief Shutdown the Pipeline Manager
 		static void Shutdown();
 
-		static void BatchCompile() 
-		{
-
-		}
+		static void BatchCompile();
 
 		/**
 		 * @brief Creates or returns the graphics pipeline matching the given info.
@@ -83,48 +81,33 @@ namespace Monoworks::RHI
 		 */
 		static Ref<IComputePipeline>			CreateComputePipeline( const ComputePipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr, bool deffered = true ) NOEXCEPT;
 
-		/**
-		 * @brief Recreates the graphics pipeline at the location refereed to by pipelineHash in the hash map.
-		 * @param pNewInfo The info with which the given graphics pipeline will be created.
-		 * @param pipelineHash The hash where the pipeline is located.
-		 */
-		static Ref<IGraphicsPipeline>			RecreateGraphicsPipeline( const GraphicsPipelineCreationInfo* pNewInfo, Hash::hash_t pipelineHash, bool deffered = false ) NOEXCEPT;
-
-		/*
-		 * @brief Recreates the graphics pipeline at the location refereed to by the hash of pOldInfo in the hash map.
-		 * @param pNewInfo The info with which the given graphics pipeline will be created.
-		 * @param pOldInfo The hash of pOldInfo is where the pipeline is located.
-		 */
-		static Ref<IGraphicsPipeline>			RecreateGraphicsPipeline( const GraphicsPipelineCreationInfo* pNewInfo, const GraphicsPipelineCreationInfo* pOldInfo, bool deffered = false ) NOEXCEPT;
-
-		/**
-		 * @brief Recreates the compute pipeline at the location refereed to by pipelineHash in the hash map.
-		 * @param pNewInfo The info with which the given graphics pipeline will be created.
-		 * @param pipelineHash The hash where the pipeline is located.
-		 */
-		static Ref<IComputePipeline>			RecreateComputePipeline( const ComputePipelineCreationInfo* pNewInfo, Hash::hash_t pipelineHash, bool deffered = false ) NOEXCEPT;
-
-		/*
-		 * @brief Recreates the compute pipeline at the location refereed to by the hash of pOldInfo in the hash map.
-		 * @param pNewInfo The info with which the given graphics pipeline will be created.
-		 * @param pOldInfo The hash of pOldInfo is where the pipeline is located.
-		 */
-		static Ref<IComputePipeline>			RecreateComputePipeline( const ComputePipelineCreationInfo* pNewInfo, const ComputePipelineCreationInfo* pOldInfo, bool deffered = false ) NOEXCEPT;
-
 		/// @brief Gets graphics pipeline by hash
-		NODISCARD static Ref<IGraphicsPipeline> GetGraphicsPipelineByHash( Hash::hash_t hash ) NOEXCEPT;
+		NODISCARD static std::expected<Ref<IGraphicsPipeline>, EResult> GetGraphicsPipelineByHash( Hash::hash_t hash ) NOEXCEPT;
 		/// @brief Gets compute pipeline by hash
-		NODISCARD static Ref<IComputePipeline>	GetComputePipelineByHash( Hash::hash_t hash ) NOEXCEPT;
+		NODISCARD static std::expected<Ref<IComputePipeline>, EResult>	GetComputePipelineByHash( Hash::hash_t hash ) NOEXCEPT;
 
 		/// @brief Gets graphics pipeline by info 
-		NODISCARD static Ref<IGraphicsPipeline> GetGraphicsPipelineByInfo( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
+		NODISCARD static std::expected<Ref<IGraphicsPipeline>, EResult> GetGraphicsPipelineByInfo( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
 
 		/// @brief Gets compute pipeline by info
-		NODISCARD static Ref<IComputePipeline>	GetComputePipelineByInfo( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT;
+		NODISCARD static std::expected<Ref<IComputePipeline>, EResult>	GetComputePipelineByInfo( const ComputePipelineCreationInfo* pInfo ) NOEXCEPT;
+
+		NODISCARD static u32 GetTotalPipelineCount() NOEXCEPT { return m_TotalPipelineCount; };
+		NODISCARD static u32 GetTotalCompiledPipelineCount() NOEXCEPT { return m_TotalCompiledPipelineCount; };
+		
+		NODISCARD static u32 GetGraphicsPipelineCount() NOEXCEPT { return m_GraphicsPipelineCount; };
+		NODISCARD static u32 GetCompiledGraphicsPipelineCount() NOEXCEPT { return m_CompiledGraphicsPipelineCount; };
+		
+		NODISCARD static u32 GetComputePipelineCount() NOEXCEPT { return m_ComputePipelineCount; };
+		NODISCARD static u32 GetCompiledComputePipelineCount() NOEXCEPT { return m_CompiledComputePipelineCount; };
+
 
 	private:
 		static boost::unordered::unordered_map<Hash::hash_t, Ref<IGraphicsPipeline>> m_GraphicPipelineCache;
-		static boost::unordered::unordered_map<Hash::hash_t, Ref<IComputePipeline>> m_ComputePipelinesCache;
+		static boost::unordered::unordered_map<Hash::hash_t, Ref<IComputePipeline>> m_ComputePipelineCache;
+
+		// u8 component is 0 if graphics and 1 if compute
+		static CSafeQueue<std::tuple<std::variant<GraphicsPipelineCreationInfo, ComputePipelineCreationInfo>, Hash::hash_t, u8>> m_PipelinesToCompile;
 
 		static u32 m_TotalPipelineCount;
 		static u32 m_TotalCompiledPipelineCount;

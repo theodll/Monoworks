@@ -19,11 +19,15 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <map>
+#include <tuple>
 #include <queue>
 #include <stack>
 
 #include <algorithm>
 #include <numeric>
+
+#include <expected>
+#include <stdexcept>
 
 // Engine
 #include <common/Math.hh>
