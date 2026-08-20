@@ -134,6 +134,8 @@ namespace Monoworks::RHI
 		bool BlendEnable;
 	};
 
+	using PipelineSignature = void*; 
+
 	struct GraphicsPipelineCreationInfo
 	{ 
 		CVertexLayout VertexLayout;
@@ -143,7 +145,7 @@ namespace Monoworks::RHI
 		std::vector<EDynamicState> DynamicStates = { MW_DYNAMIC_STATE_VIEWPORT, MW_DYNAMIC_STATE_SCISSOR };
 
 		// TODO: Implement custom signature for Graphics Pipeline
-		void* MW_NULLABLE Signature = nullptr; // VkPipelineLayout / D3D12RootSignature
+		PipelineSignature MW_NULLABLE Signature = nullptr; // VkPipelineLayout / D3D12RootSignature
 
 		EPipelineCreationFlags Flags;
 		EImageFormat DepthAttachmentFormat;

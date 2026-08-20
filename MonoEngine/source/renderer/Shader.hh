@@ -40,15 +40,16 @@ namespace Monoworks
 	public:
 		CShader( const ShaderCreateInfo* pInfo )	NOEXCEPT;
 
-		void CompileShader()	NOEXCEPT;
-		void ReflectOnShader()	NOEXCEPT;
+		void CompileShader() NOEXCEPT;
+		RHI::PipelineSignature ReflectOnShader() NOEXCEPT; 
 
 	private:
+
 		ShaderCreateInfo m_CreateInfo;
 		std::array<std::string, RHI::MW_SHADER_STAGE_COUNT> m_Entrypoints;
 		path_t m_Path;
-		Slang::ComPtr<slang::ISession> m_SlangSession;
-		Slang::ComPtr<slang::IComponentType> m_SlangProgram;
+		Slang::ComPtr<slang::ISession> m_pSlangSession;
+		Slang::ComPtr<slang::IComponentType> m_pSlangProgram;
 		bool m_Ready;
 	};
 }
