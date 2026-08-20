@@ -132,8 +132,10 @@ extern TracyVkCtx TracyTransferContext;
 
 
 #ifdef MW_VULKAN
-#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ASSERT(false, __VA_ARGS__); };
+#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ASSERT(false, err, __VA_ARGS__); };
 #define MW_VK_VERSION VK_API_VERSION_1_3
+#else
+#define MW_VK_CHECK(x, err, ...)
 #endif
 
 #define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
@@ -592,7 +594,7 @@ namespace Monoworks
 	constexpr auto operator""uzr( unsigned long long value ) { return static_cast< size_t >( value ); };
 
 #ifdef MW_VULKAN
-	EResult VkResultToEResult( const VkResult r )
+	static EResult VkResultToEResult( const VkResult r )
 	{
 		switch( r )
 		{

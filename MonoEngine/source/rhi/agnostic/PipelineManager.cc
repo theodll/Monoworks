@@ -2,7 +2,7 @@
 
 #include "PipelineManager.hh"
 
-namespace Monoworks::RHI 
+namespace Monoworks::RHI
 {
 	u32 CPipelineManager::m_CompiledComputePipelineCount;
 	u32 CPipelineManager::m_CompiledGraphicsPipelineCount;
@@ -17,16 +17,27 @@ namespace Monoworks::RHI
 	void CPipelineManager::Init()
 	{
 		MW_PROFILE_FUNC;
-
+		MW_INFO( "Initialize CPipelineManager" );
 	}
 
 	void CPipelineManager::Shutdown()
 	{
 		MW_PROFILE_FUNC;
+		for ( auto& p : m_GraphicPipelineCache )
+		{
+			p.second->Shutdown();
+		}
+		for ( auto& p : m_ComputePipelineCache )
+		{
+			p.second->Shutdown();
+		}
+		m_GraphicPipelineCache.clear();
+		m_ComputePipelineCache.clear();
 
+		MW_INFO( "Shutdown CPipelineManager" );
 	}
 
-	Ref<IGraphicsPipeline> CPipelineManager::CreateGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash /*= nullptr */, bool deffered ) NOEXCEPT
+	std::expected<Ref<IGraphicsPipeline>, EResult> CPipelineManager::CreateGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash /*= nullptr */, bool deffered ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		// TODO: thread safe
@@ -77,7 +88,7 @@ namespace Monoworks::RHI
 		return p;
 	}
 
-	Ref<IComputePipeline> CPipelineManager::CreateComputePipeline( const ComputePipelineCreationInfo * pInfo, Hash::hash_t* MW_NULLABLE pHash /*= nullptr */, bool deffered ) NOEXCEPT
+	std::expected<Ref<IComputePipeline>, EResult> CPipelineManager::CreateComputePipeline( const ComputePipelineCreationInfo * pInfo, Hash::hash_t* MW_NULLABLE pHash /*= nullptr */, bool deffered ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		// TODO: thread safe

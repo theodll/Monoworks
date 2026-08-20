@@ -12,13 +12,13 @@ namespace Monoworks::RHI
 	class CVulkanGraphicsPipeline : public IGraphicsPipeline
 	{
 	public:
-		CVulkanGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
+		CVulkanGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo );
 		~CVulkanGraphicsPipeline() NOEXCEPT;
 
-		void Init( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
+		void Init( const GraphicsPipelineCreationInfo* pInfo ) override;
 		void Shutdown() override;
 
-		EResult Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT override;
+		EResult Invalidate( const GraphicsPipelineCreationInfo* pInfo ) override;
 	
 		NODISCARD VkPipeline* GetVulkanPipeline() NOEXCEPT { return &m_VulkanPipeline; }
 		NODISCARD VkPipelineLayout* GetVulkanPipelineLayout ( ) NOEXCEPT { return &m_VulkanPipelineLayout; }

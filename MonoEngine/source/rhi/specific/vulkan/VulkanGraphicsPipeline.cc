@@ -9,7 +9,7 @@ namespace Monoworks::RHI
 {
 
 
-	CVulkanGraphicsPipeline::CVulkanGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	CVulkanGraphicsPipeline::CVulkanGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
 
@@ -25,7 +25,7 @@ namespace Monoworks::RHI
 		Shutdown();
 	}
 
-	void CVulkanGraphicsPipeline::Init( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	void CVulkanGraphicsPipeline::Init( const GraphicsPipelineCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
 		m_VertexLayout = pInfo->VertexLayout;
@@ -186,7 +186,7 @@ namespace Monoworks::RHI
 		};
 	};
 
-	EResult CVulkanGraphicsPipeline::Invalidate( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT
+	EResult CVulkanGraphicsPipeline::Invalidate( const GraphicsPipelineCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
 		auto device = CVulkanContext::GetDevice()->GetDevice();
@@ -462,6 +462,5 @@ namespace Monoworks::RHI
 
 	};
 
-	NODISCARD bool CVulkanGraphicsPipeline::IsCompiled() NOEXCEPT { return m_IsCompiled;  }
 
 }

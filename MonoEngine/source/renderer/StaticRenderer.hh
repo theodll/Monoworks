@@ -3,6 +3,7 @@
 #include <common/Memory.hh>
 #include <common/Math.hh>
 
+#include <rhi/agnostic/PipelineManager.hh>
 #include <rhi/GraphicsAPI.hh>
 
 #include <slang.h>

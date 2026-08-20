@@ -1,5 +1,6 @@
 #include <mwpch.hh>
 #include <core/Application.hh>
+#include <events/EventManager.hh>
 
 #include <rhi/specific/vulkan/VulkanRenderer.hh>
 
@@ -26,11 +27,24 @@ namespace Monoworks
 
             slang::createGlobalSession( m_SlangGlobalSession.writeRef() );
 
+            RHI::CPipelineManager::Init();
+
+            CEventManager::Subscribe( MW_EVENT_APP_FRAME, +[]( SEvent& e )
+                {
+                    MW_PROFILE_FUNC;
+                    if ( RHI::CPipelineManager::GetTotalCompiledPipelineCount() < RHI::CPipelineManager::GetTotalPipelineCount() )
+                    {
+                        RHI::CPipelineManager::BatchCompile();
+                    }
+                    return false;
+                } );
+
         };
         
         void CStaticRenderer::Shutdown() noexcept 
         {
             MW_PROFILE_FUNC;
+            RHI::CPipelineManager::Shutdown();
             m_pInstance->Shutdown();
             MW_INFO( "Shutdown CStaticRenderer" );
         }; 

@@ -34,7 +34,7 @@ namespace Monoworks::RHI
 		Invalidate( pInfo );
 	}
 
-	void CVulkanComputePipeline::Shutdown()
+	void CVulkanComputePipeline::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -79,8 +79,8 @@ namespace Monoworks::RHI
 			m_VulkanPipelineLayout = static_cast< VkPipelineLayout >( pInfo->Signature );
 		}
 
-		VkPipelineShaderStageCreateInfo computeShaderStage;
-		VkShaderModule computeModule;
+		VkPipelineShaderStageCreateInfo computeShaderStage{};
+		VkShaderModule computeModule{};
 
 		{
 			VkShaderModuleCreateInfo createInfo{};

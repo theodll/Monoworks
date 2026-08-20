@@ -72,14 +72,14 @@ namespace Monoworks::RHI
 		 * @param pInfo Pointer to the struct of which a graphics pipeline will be created or returned.
 		 * @param Optional Pointer to the hash variable which is to be filled with the hash the pipeline is refereed to by the hash map.
 		 */
-		static Ref<IGraphicsPipeline>			CreateGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr, bool deffered = true ) NOEXCEPT;
+		static std::expected<Ref<IGraphicsPipeline>, EResult>	CreateGraphicsPipeline( const GraphicsPipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr, bool deffered = true ) NOEXCEPT;
 		
 		/**
 		 * @brief Creates or returns the compute pipeline matching the given info.
 		 * @param pInfo Pointer to the struct of which a compute pipeline will be created or returned.
 		 * @param Optional Pointer to the hash variable which is to be filled with the hash the pipeline is refereed to by the hash map.
 		 */
-		static Ref<IComputePipeline>			CreateComputePipeline( const ComputePipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr, bool deffered = true ) NOEXCEPT;
+		static std::expected<Ref<IComputePipeline>, EResult>			CreateComputePipeline( const ComputePipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr, bool deffered = true ) NOEXCEPT;
 
 		/// @brief Gets graphics pipeline by hash
 		NODISCARD static std::expected<Ref<IGraphicsPipeline>, EResult> GetGraphicsPipelineByHash( Hash::hash_t hash ) NOEXCEPT;

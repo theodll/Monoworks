@@ -64,7 +64,7 @@ namespace Monoworks::RHI
 			{ MW_SHADER_DATA_TYPE_FLOAT_3, "position" }
 		};
 
-		SPipelineCreationInfo pipelineInfo{};
+		GraphicsPipelineCreationInfo pipelineInfo{};
 
 		pipelineInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_TEST_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
 		pipelineInfo.ColorFormats = { MW_FORMAT_B8G8R8A8_SRGB };

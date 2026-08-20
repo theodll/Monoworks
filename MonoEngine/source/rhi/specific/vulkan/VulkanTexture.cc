@@ -101,7 +101,7 @@ namespace Monoworks::RHI
 
 				uint32_t memTypeIndex;
 				MW_VK_CHECK( vmaFindMemoryTypeIndexForImageInfo( *allocator,
-					&imageInfo, &allocInfo, &memTypeIndex ), "..." );
+					&imageInfo, &allocInfo, &memTypeIndex ), "Faild to find memory type index for image info." );
 
 				VkExportMemoryAllocateInfo exportMemAllocInfo{};
 				exportMemAllocInfo.sType = VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO;
