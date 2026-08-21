@@ -3,6 +3,22 @@
 
 namespace Monoworks::RHI 
 {
+	enum EShaderStageBits : u32
+	{
+		MW_SHADER_STAGE_UNKNOWN = 0x0,
+
+		MW_SHADER_STAGE_VERTEX					= 0b00000001,
+		MW_SHADER_STAGE_TESSELATION_CONTROL		= 0b00000010,
+		MW_SHADER_STAGE_TESSELATION_EVALUATION	= 0b00000100,
+		MW_SHADER_STAGE_GEOMETRY				= 0b00001000,
+		MW_SHADER_STAGE_FRAGMENT				= 0b00010000,
+		MW_SHADER_STAGE_COMPUTE					= 0b00100000,
+
+		MW_SHADER_STAGE_MAX_ENUM				= 0x7FFFFFFF
+	};
+
+	using EShaderStage = flags_t;
+
 	/** 
 	* @brief Vulkan Compatible Texture Format Enumeration based on VkFormat. Philosophy: put the DirectX in the Vulkan, not the Vulkan in the DirectX.
 	* When using DirectX, Setup a translate function to translate it into the DirectX equivalent.
