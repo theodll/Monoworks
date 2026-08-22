@@ -121,6 +121,7 @@ namespace Monoworks::RHI
 	};
 
 	using PipelineSignature = void*; 
+	using DescriptorSignature = void*;
 
 	struct GraphicsPipelineCreationInfo
 	{ 

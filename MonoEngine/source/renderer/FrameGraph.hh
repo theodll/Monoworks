@@ -3,20 +3,35 @@
 #include <boost/unordered_map.hpp>
 
 #include <rhi/agnostic/Texture.hh>
+#include <rhi/agnostic/UniformBuffer.hh>
+#include <rhi/agnostic/ComputePipeline.hh>
 
 #include "Shader.hh"
 
 namespace Monoworks 
 {
-	class CDefferedResolvePass 
+	struct DefferedResolutionPassCreationInfo 
 	{
 		Ref<CShader> hShader;
+	};
 
-		void Set( u32 binding, Ref<RHI::ITexture2D> hTexture );
-		void Set( u32 binding, const Vector* pVector );
+	class CDefferedResolutionPass 
+	{
+		CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo );
+	
+		// 1. reflection -> descriptor layout creation
+		// 2. descriptor set allocation
+		// 3. Buffer & texture upload
+
+		void BindTexture( std::string_view name, Ref<RHI::ITexture2D> hTexture );
+		void BindUBO( std::string_view name, Ref<RHI::IUniformBuffer> hUniformBuffer);
 
 	private:
-		boost::unordered_map<u32, Ref<RHI::ITexture2D>> hTextures;
+		Ref<RHI::IComputePipeline> m_hComputePipeline;
+		Ref<CShader> m_hShader;
+
+		bool m_SamplerBound;
+
 		friend class CFrameGraph;
 	};
 
@@ -36,12 +51,12 @@ namespace Monoworks
 		/**
 		 * @brief Hooks a user specified deffered resolution pass into the frame graph.
 		 */
-		void AddDefferedResolutionPass( Ref<CDefferedResolvePass> hComputePass, u32 MW_NULLABLE executionPriority = UINT32_MAX );
+		void AddDefferedResolutionPass( Ref<CDefferedResolutionPass> hComputePass, u32 MW_NULLABLE executionPriority = UINT32_MAX );
 		void AddPostProcessPass( Ref<CPostProcessPass> hPostProcessPass, u32 MW_NULLABLE executionPriority = UINT32_MAX );
 
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
-		std::vector<Ref<CDefferedResolvePass>>	m_hDefferedResolutionPasses;
+		std::vector<Ref<CDefferedResolutionPass>>	m_hDefferedResolutionPasses;
 		std::vector<Ref<CPostProcessPass>>		m_hPostProcessPasses;
 
 	};

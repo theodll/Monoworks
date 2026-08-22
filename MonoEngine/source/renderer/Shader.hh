@@ -35,13 +35,26 @@ namespace Monoworks
 		SlangInt SlangPreprocessorMacroCount;
 	};
 
+	struct PushConstantRanges 
+	{
+		uint32_t              Offset;
+		uint32_t              Size;
+	};
+	
+	struct ShaderReflectionData
+	{
+		RHI::PipelineSignature						pPipelineSignature; // void* 
+		std::vector<RHI::DescriptorSignature>		pDescriptorSignatures; // void* 
+		std::vector<PushConstantRanges> MW_NULLABLE PushConstantRanges;
+	};
+
 	class CShader
 	{
 	public:
 		CShader( const ShaderCreateInfo* pInfo )	NOEXCEPT;
 
 		void CompileShader() NOEXCEPT;
-		RHI::PipelineSignature ReflectOnShader() NOEXCEPT; 
+		ShaderReflectionData ReflectOnShader() NOEXCEPT; 
 
 	private:
 

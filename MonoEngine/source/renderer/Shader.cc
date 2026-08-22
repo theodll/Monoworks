@@ -297,156 +297,542 @@ namespace Monoworks
 		}
 	}
 
-	RHI::PipelineSignature CShader::ReflectOnShader() NOEXCEPT
+	ShaderReflectionData CShader::ReflectOnShader() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
-		RHI::PipelineSignature signature = nullptr;
+		ShaderReflectionData reflectionData{};
+
 #ifdef MW_VULKAN
-		auto getVkSig = [&]() -> VkPipelineLayout
-			{
 
-				slang::ProgramLayout* pLayout = m_pSlangProgram->getLayout();
-				if ( !pLayout )
-					return VK_NULL_HANDLE;
-
-				auto mapDescriptorType = []( slang::BindingType T ) -> VkDescriptorType
-					{
-						switch ( T )
-						{
-						case slang::BindingType::Sampler:                         return VK_DESCRIPTOR_TYPE_SAMPLER;
-						case slang::BindingType::CombinedTextureSampler:          return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-						case slang::BindingType::Texture:                         return VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-						case slang::BindingType::MutableTexture:                  return VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
-						case slang::BindingType::TypedBuffer:                     return VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
-						case slang::BindingType::MutableTypedBuffer:              return VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
-						case slang::BindingType::RawBuffer:                       return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-						case slang::BindingType::MutableRawBuffer:                return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-						case slang::BindingType::ConstantBuffer:                  return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-						case slang::BindingType::InlineUniformData:               return VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK;
-						case slang::BindingType::RayTracingAccelerationStructure: return VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
-						default: assert( false && "unhandled slang::BindingType" ); return VK_DESCRIPTOR_TYPE_MAX_ENUM;
-						}
-					};
-
-				auto mapStage = []( SlangStage S ) -> VkShaderStageFlags
-					{
-						switch ( S )
-						{
-						case SLANG_STAGE_VERTEX:         return VK_SHADER_STAGE_VERTEX_BIT;
-						case SLANG_STAGE_HULL:           return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-						case SLANG_STAGE_DOMAIN:         return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-						case SLANG_STAGE_GEOMETRY:       return VK_SHADER_STAGE_GEOMETRY_BIT;
-						case SLANG_STAGE_FRAGMENT:       return VK_SHADER_STAGE_FRAGMENT_BIT;
-						case SLANG_STAGE_COMPUTE:        return VK_SHADER_STAGE_COMPUTE_BIT;
-						case SLANG_STAGE_RAY_GENERATION: return VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-						case SLANG_STAGE_INTERSECTION:   return VK_SHADER_STAGE_INTERSECTION_BIT_KHR;
-						case SLANG_STAGE_ANY_HIT:        return VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
-						case SLANG_STAGE_CLOSEST_HIT:    return VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
-						case SLANG_STAGE_MISS:           return VK_SHADER_STAGE_MISS_BIT_KHR;
-						case SLANG_STAGE_CALLABLE:       return VK_SHADER_STAGE_CALLABLE_BIT_KHR;
-						case SLANG_STAGE_MESH:           return VK_SHADER_STAGE_MESH_BIT_EXT;
-						case SLANG_STAGE_AMPLIFICATION:  return VK_SHADER_STAGE_TASK_BIT_EXT;
-						default: assert( false && "unhandled SlangStage" ); return VkShaderStageFlags( 0 );
-						}
-					};
-
-				std::vector<VkDescriptorSetLayout> setLayouts;
-				std::vector<VkPushConstantRange>   pushConstantRanges;
-
-				std::function<void( std::vector<VkDescriptorSetLayoutBinding>& bindings, slang::TypeLayoutReflection* pElem, VkShaderStageFlags stage )> addElement =
-					[&]( std::vector<VkDescriptorSetLayoutBinding>& bindings, slang::TypeLayoutReflection* pElem, VkShaderStageFlags stage )
-					{
-						if ( pElem->getSize() > 0 )
-							bindings.push_back( { ( u32 )bindings.size(), VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, stage, nullptr } );
-
-						for ( auto i{ 0uz }; i < pElem->getDescriptorSetDescriptorRangeCount( 0 ); ++i )
-						{
-							const slang::BindingType bt = pElem->getDescriptorSetDescriptorRangeType( 0, i );
-							if ( bt == slang::BindingType::PushConstant )
-								continue;
-
-							const u32 count = ( u32 )pElem->getDescriptorSetDescriptorRangeDescriptorCount( 0, i );
-							bindings.push_back( { ( u32 )bindings.size(), mapDescriptorType( bt ), count, stage, nullptr } );
-						}
-
-						for ( auto i{ 0uz }; i < pElem->getSubObjectRangeCount(); ++i )
-						{
-							const int bindingRangeIndex = pElem->getSubObjectRangeBindingRangeIndex( i );
-							const slang::BindingType bt = pElem->getBindingRangeType( bindingRangeIndex );
-
-							if ( bt == slang::BindingType::ParameterBlock )
-							{
-								slang::TypeLayoutReflection* pNested = pElem->getBindingRangeLeafTypeLayout( bindingRangeIndex );
-
-								const size_t setIndex = setLayouts.size();
-								setLayouts.push_back( VK_NULL_HANDLE );
-
-								std::vector<VkDescriptorSetLayoutBinding> nestedBindings;
-								addElement( nestedBindings, pNested->getElementTypeLayout(), stage );
-
-								if ( !nestedBindings.empty() )
-								{
-									VkDescriptorSetLayoutCreateInfo info{ VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO };
-									info.bindingCount = ( u32 )nestedBindings.size();
-									info.pBindings = nestedBindings.data();
-									vkCreateDescriptorSetLayout( *RHI::CVulkanContext::GetDevice()->GetDevice(), &info, RHI::CVulkanContext::GetCallbacks(), &setLayouts[setIndex] );
-								}
-							}
-							else if ( bt == slang::BindingType::PushConstant )
-							{
-								slang::TypeLayoutReflection* pCB = pElem->getBindingRangeLeafTypeLayout( bindingRangeIndex )->getElementTypeLayout();
-								if ( const size_t Size = pCB->getSize() )
-									pushConstantRanges.push_back( { stage, 0, ( u32 )Size } );
-							}
-						}
-					};
-
-
-				setLayouts.push_back( nullptr );
-
-				std::vector<VkDescriptorSetLayoutBinding> defaultBindings;
-				addElement( defaultBindings, pLayout->getGlobalParamsTypeLayout(), VK_SHADER_STAGE_ALL );
-
-				for ( auto i{ 0uz }; i < ( size_t )pLayout->getEntryPointCount(); ++i )
-				{
-					slang::EntryPointLayout* pEntry = pLayout->getEntryPointByIndex( i );
-					addElement( defaultBindings, pEntry->getTypeLayout(), mapStage( pEntry->getStage() ) );
-				}
-
-				if ( !defaultBindings.empty() )
-				{
-					VkDescriptorSetLayoutCreateInfo info{ VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO };
-					info.bindingCount = ( u32 )defaultBindings.size();
-					info.pBindings = defaultBindings.data();
-					vkCreateDescriptorSetLayout( *RHI::CVulkanContext::GetDevice()->GetDevice(), &info, RHI::CVulkanContext::GetCallbacks(), &setLayouts[0] );
-				}
-
-				VkPipelineLayoutCreateInfo layoutInfo{ VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO };
-				layoutInfo.setLayoutCount = ( u32 )setLayouts.size();
-				layoutInfo.pSetLayouts = setLayouts.data();
-				layoutInfo.pushConstantRangeCount = ( u32 )pushConstantRanges.size();
-				layoutInfo.pPushConstantRanges = pushConstantRanges.data();
-
-				VkPipelineLayout pipelineLayout = nullptr;
-				vkCreatePipelineLayout( *RHI::CVulkanContext::GetDevice()->GetDevice(), &layoutInfo, RHI::CVulkanContext::GetCallbacks(), &pipelineLayout );
-				return pipelineLayout;
-		};	
-
-	#endif
-
-		
-		switch ( CApplication::GetGraphicsAPI() )
+		if ( !m_pSlangProgram )
 		{
-		case MW_GAPI_NONE:    return nullptr;
-#ifdef MW_VULKAN
-		case MW_GAPI_VULKAN:  return static_cast< RHI::PipelineSignature >( getVkSig() );
-#endif
-		default:
-			MW_ERROR( "Invalid Graphics API. ");
-			return nullptr;
+			MW_ERROR(
+				"Cannot reflect shader {}: Slang program is null",
+				m_Path.string()
+			);
+
+			return reflectionData;
 		}
+
+		slang::ProgramLayout* pLayout =
+			m_pSlangProgram->getLayout( 0 );
+
+		if ( !pLayout )
+		{
+			MW_ERROR(
+				"Cannot reflect shader {}: ProgramLayout is null",
+				m_Path.string()
+			);
+
+			return reflectionData;
+		}
+
+
+		const VkDevice device = *RHI::CVulkanContext::GetDevice()->GetDevice();
+
+		if ( device == VK_NULL_HANDLE )
+		{
+			MW_ERROR( "Cannot reflect shader {}: VkDevice is null", m_Path.string() );
+			return reflectionData;
+		}
+
+
+		auto getDescriptorType = []( slang::BindingType type ) -> VkDescriptorType
+			{
+				switch ( type )
+				{
+				case slang::BindingType::Sampler:
+					return VK_DESCRIPTOR_TYPE_SAMPLER;
+
+				case slang::BindingType::Texture:
+					return VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+
+				case slang::BindingType::MutableTexture:
+					return VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+
+				case slang::BindingType::ConstantBuffer:
+					return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+
+				case slang::BindingType::RawBuffer:
+				case slang::BindingType::MutableRawBuffer:
+					return VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+
+				case slang::BindingType::TypedBuffer:
+					return VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+
+				case slang::BindingType::MutableTypedBuffer:
+					return VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+
+				case slang::BindingType::CombinedTextureSampler:
+					return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+
+				default:
+					return VK_DESCRIPTOR_TYPE_MAX_ENUM;
+				}
+			};
+
+		auto getVkShaderStage = []( SlangStage stage ) -> VkShaderStageFlags
+			{
+				switch ( stage )
+				{
+				case SLANG_STAGE_VERTEX:
+					return VK_SHADER_STAGE_VERTEX_BIT;
+
+				case SLANG_STAGE_HULL:
+					return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+
+				case SLANG_STAGE_DOMAIN:
+					return VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+
+				case SLANG_STAGE_GEOMETRY:
+					return VK_SHADER_STAGE_GEOMETRY_BIT;
+
+				case SLANG_STAGE_FRAGMENT:
+					return VK_SHADER_STAGE_FRAGMENT_BIT;
+
+				case SLANG_STAGE_COMPUTE:
+					return VK_SHADER_STAGE_COMPUTE_BIT;
+
+				default:
+					return 0;
+				}
+			};
+
+
+
+		std::map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>> descriptorSetBindings;
+		std::vector<VkPushConstantRange> pushConstantRanges;
+
+		auto addDescriptor = [&]( uint32_t set, uint32_t binding, uint32_t descriptorCount, VkDescriptorType descriptorType, VkShaderStageFlags stageFlags )
+			{
+				if ( descriptorType == VK_DESCRIPTOR_TYPE_MAX_ENUM )
+					return;
+
+				auto& bindings = descriptorSetBindings[set];
+
+
+				for ( VkDescriptorSetLayoutBinding& existing : bindings )
+				{
+					if ( existing.binding == binding && existing.descriptorType == descriptorType )
+					{
+						existing.stageFlags |= stageFlags;
+
+						if ( existing.descriptorCount != descriptorCount && descriptorCount != VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT )
+						{
+							existing.descriptorCount = ( ( ( existing.descriptorCount ) > ( descriptorCount ) ) ? ( existing.descriptorCount ) : ( descriptorCount ) );
+						}
+
+						return;
+					}
+				}
+
+
+				VkDescriptorSetLayoutBinding layoutBinding{};
+				layoutBinding.binding = binding;
+				layoutBinding.descriptorType = descriptorType;
+				layoutBinding.descriptorCount = descriptorCount;
+				layoutBinding.stageFlags = stageFlags;
+
+				bindings.push_back( layoutBinding );
+			};
+
+		auto addPushConstant = [&]( uint32_t offset, uint32_t size, VkShaderStageFlags stageFlags )
+			{
+				if ( size == 0 || stageFlags == 0 )
+					return;
+
+
+				for ( VkPushConstantRange& existing : pushConstantRanges )
+				{
+					if ( existing.offset == offset && existing.size == size )
+					{
+						existing.stageFlags |= stageFlags;
+						return;
+					}
+				}
+
+				VkPushConstantRange range{};
+				range.offset = offset;
+				range.size = size;
+				range.stageFlags = stageFlags;
+
+				pushConstantRanges.push_back( range );
+			};
+
+
+		auto reflectType = [&]( slang::TypeLayoutReflection* pTypeLayout, VkShaderStageFlags stageFlags )
+			{
+				if ( !pTypeLayout )
+					return;
+
+				const SlangInt setCount = pTypeLayout->getDescriptorSetCount();
+
+
+				for ( auto relativeSet{ 0uz }; relativeSet < setCount; ++relativeSet ) // NOTE: Iterates over all sets
+				{
+					const SlangInt set = pTypeLayout->getDescriptorSetSpaceOffset( relativeSet ); // NOTE: this is the number of the actual set ( layout ( set = x )).
+
+					if ( set < 0 )
+						continue;
+
+					const SlangInt rangeCount = pTypeLayout->getDescriptorSetDescriptorRangeCount( relativeSet );
+
+					for ( auto rangeIndex{ 0uz }; rangeIndex < rangeCount; ++rangeIndex ) // these are the seperate bindings / VkDescriptorSetLayoutBinding 
+					{
+						const slang::BindingType bindingType = pTypeLayout->getDescriptorSetDescriptorRangeType( relativeSet, rangeIndex );
+						if ( bindingType == slang::BindingType::PushConstant )
+							continue;
+
+						const VkDescriptorType descriptorType = getDescriptorType( bindingType );
+						if ( descriptorType == VK_DESCRIPTOR_TYPE_MAX_ENUM )
+							continue;
+
+						const SlangInt binding = pTypeLayout->getDescriptorSetDescriptorRangeIndexOffset( relativeSet, rangeIndex );
+						if ( binding == SLANG_UNKNOWN_SIZE )
+						{
+							MW_ERROR( "Shader {} contains a descriptor binding whose Vulkan binding is unresolved", m_Path.string() );
+							continue;
+						}
+
+
+						const SlangInt descriptorCount = pTypeLayout->getDescriptorSetDescriptorRangeDescriptorCount( relativeSet, rangeIndex );
+
+
+						uint32_t vkDescriptorCount = 1;
+
+						if ( descriptorCount == SLANG_UNBOUNDED_SIZE )
+						{
+							vkDescriptorCount = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
+						}
+						else
+						{
+							if ( descriptorCount <= 0 )
+							{
+								vkDescriptorCount = 1;
+							}
+							else
+							{
+								vkDescriptorCount = static_cast< uint32_t >( descriptorCount );
+							}
+						}
+
+
+						addDescriptor(
+							static_cast< uint32_t >( set ),
+							static_cast< uint32_t >( binding ),
+							vkDescriptorCount,
+							descriptorType,
+							stageFlags
+						);
+					}
+				}
+			};
+	
+
+		{
+			slang::VariableLayoutReflection* pGlobalParams = pLayout->getGlobalParamsVarLayout();
+
+			if ( pGlobalParams )
+			{
+				reflectType( pGlobalParams->getTypeLayout(), VK_SHADER_STAGE_ALL );
+			}
+		}
+
+		const auto entryPointCount = pLayout->getEntryPointCount();
+
+		for ( auto entryPointIndex{ 0uz }; entryPointIndex < entryPointCount; ++entryPointIndex )
+		{
+			slang::EntryPointLayout* pEntryPoint = pLayout->getEntryPointByIndex( entryPointIndex );
+
+			if ( !pEntryPoint )
+				continue;
+
+			const SlangStage slangStage = pEntryPoint->getStage();
+
+			const VkShaderStageFlags stageFlags = getVkShaderStage( slangStage );
+
+			if ( !stageFlags )
+				continue;
+
+			slang::TypeLayoutReflection* pTypeLayout = pEntryPoint->getTypeLayout();
+
+			if ( pTypeLayout )
+				reflectType( pTypeLayout, stageFlags );
+			
+		}
+
+		auto reflectPushConstants = [&]( slang::TypeLayoutReflection* pTypeLayout, VkShaderStageFlags stageFlags )
+			{
+				if ( !pTypeLayout )
+					return;
+
+
+				const SlangInt bindingRangeCount = pTypeLayout->getBindingRangeCount();
+
+				for ( auto rangeIndex{ 0uz }; rangeIndex < bindingRangeCount; ++rangeIndex )
+				{
+					const slang::BindingType bindingType = pTypeLayout->getBindingRangeType( rangeIndex );
+
+					if ( bindingType != slang::BindingType::PushConstant )
+						continue;
+
+					slang::TypeLayoutReflection* pLeafType = pTypeLayout->getBindingRangeLeafTypeLayout( rangeIndex );
+
+					if ( !pLeafType )
+						continue;
+
+					const SlangInt size = pLeafType->getSize( slang::ParameterCategory::PushConstantBuffer );
+
+					if ( size == SLANG_UNKNOWN_SIZE || size <= 0 )
+						continue;
+
+					addPushConstant(
+						0,
+						static_cast< uint32_t >( size ),
+						stageFlags
+					);
+				}
+			};
+
+		{
+			slang::VariableLayoutReflection* pGlobalParams = pLayout->getGlobalParamsVarLayout();
+
+			if ( pGlobalParams )
+				reflectPushConstants( pGlobalParams->getTypeLayout(), VK_SHADER_STAGE_ALL );
+		}
+
+		for ( auto entryPointIndex{ 0uz }; entryPointIndex < entryPointCount; ++entryPointIndex )
+		{
+			slang::EntryPointLayout* pEntryPoint = pLayout->getEntryPointByIndex( entryPointIndex );
+
+			if ( !pEntryPoint )
+				continue;
+
+
+			const VkShaderStageFlags stageFlags = getVkShaderStage( pEntryPoint->getStage() );
+
+			if ( !stageFlags )
+				continue;
+
+
+			reflectPushConstants( pEntryPoint->getTypeLayout(), stageFlags );
+		}
+
+		for ( auto& [set, bindings] : descriptorSetBindings )
+		{
+			std::sort( bindings.begin(), bindings.end(),
+				[]( const VkDescriptorSetLayoutBinding& lhs,
+					const VkDescriptorSetLayoutBinding& rhs )
+				{
+					return lhs.binding < rhs.binding;
+				}
+			);
+		}
+
+
+		std::sort( pushConstantRanges.begin(), pushConstantRanges.end(),
+			[]( const VkPushConstantRange& lhs,
+				const VkPushConstantRange& rhs )
+			{
+				if ( lhs.offset != rhs.offset )
+					return lhs.offset < rhs.offset;
+
+				return lhs.size < rhs.size;
+			}
+		);
+
+
+		uint32_t highestSet = 0;
+
+		if ( !descriptorSetBindings.empty() )
+			highestSet = descriptorSetBindings.rbegin()->first;
 		
+		std::vector<VkDescriptorSetLayout> vkSetLayouts;
+		vkSetLayouts.resize(
+			static_cast< size_t >( highestSet ) + 1,
+			nullptr
+		);
+
+
+		for ( auto& [set, bindings] : descriptorSetBindings )
+		{
+			VkDescriptorSetLayoutCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			createInfo.bindingCount = static_cast< uint32_t >( bindings.size() );
+			createInfo.pBindings = bindings.data();
+
+			VkDescriptorSetLayoutBindingFlagsCreateInfo bindingFlagsInfo{};
+			bindingFlagsInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
+
+			std::vector<VkDescriptorBindingFlags> bindingFlags;
+
+			bool hasVariableBinding = false;
+
+			for ( const VkDescriptorSetLayoutBinding& binding : bindings )
+			{
+				if ( binding.descriptorCount == VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT )
+				{
+					hasVariableBinding = true;
+					break;
+				}
+			}
+
+
+			if ( hasVariableBinding )
+			{
+				bindingFlags.resize( bindings.size(), 0 );
+
+
+				for ( auto i{ 0uz }; i < bindings.size(); ++i )
+				{
+					if ( bindings[i].descriptorCount == VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT )
+						bindingFlags[i] = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
+				}
+
+
+				bindingFlagsInfo.bindingCount = static_cast< u32 >( bindingFlags.size() );
+				bindingFlagsInfo.pBindingFlags = bindingFlags.data();
+
+				createInfo.pNext = &bindingFlagsInfo;
+			}
+
+			for ( VkDescriptorSetLayoutBinding& binding : bindings )
+			{
+				if ( binding.descriptorCount == VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT )
+					binding.descriptorCount = 1;
+			}
+
+			VkDescriptorSetLayout layoutHandle = nullptr;
+
+			const VkResult result =
+				vkCreateDescriptorSetLayout(
+					device,
+					&createInfo,
+					nullptr,
+					&layoutHandle
+				);
+
+
+			if ( result != VK_SUCCESS )
+			{
+				MW_ERROR( "Failed to create VkDescriptorSetLayout for shader {} set {}. VkResult = {}", m_Path.string(), set, static_cast<int>( result ) );
+
+				for ( VkDescriptorSetLayout handle : vkSetLayouts )
+				{
+					if ( handle != VK_NULL_HANDLE )
+					{
+						vkDestroyDescriptorSetLayout(
+							device,
+							handle,
+							nullptr
+						);
+					}
+				}
+
+				return reflectionData;
+			}
+
+
+			vkSetLayouts[set] =
+				layoutHandle;
+		}
+
+		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+
+		pipelineLayoutInfo.sType =
+			VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+
+		pipelineLayoutInfo.setLayoutCount =
+			static_cast< uint32_t >(
+				vkSetLayouts.size()
+				);
+
+		pipelineLayoutInfo.pSetLayouts =
+			vkSetLayouts.empty()
+			? nullptr
+			: vkSetLayouts.data();
+
+		pipelineLayoutInfo.pushConstantRangeCount =
+			static_cast< uint32_t >(
+				pushConstantRanges.size()
+				);
+
+		pipelineLayoutInfo.pPushConstantRanges =
+			pushConstantRanges.empty()
+			? nullptr
+			: pushConstantRanges.data();
+
+
+		VkPipelineLayout pipelineLayout =
+			VK_NULL_HANDLE;
+
+
+		const VkResult pipelineResult =
+			vkCreatePipelineLayout(
+				device,
+				&pipelineLayoutInfo,
+				nullptr,
+				&pipelineLayout
+			);
+
+
+		if ( pipelineResult != VK_SUCCESS )
+		{
+			MW_ERROR(
+				"Failed to create VkPipelineLayout for shader {}. "
+				"VkResult = {}",
+				m_Path.string(),
+				static_cast< int >( pipelineResult )
+			);
+
+
+			for ( VkDescriptorSetLayout handle :
+			vkSetLayouts )
+			{
+				if ( handle != VK_NULL_HANDLE )
+				{
+					vkDestroyDescriptorSetLayout(
+						device,
+						handle,
+						nullptr
+					);
+				}
+			}
+
+			return reflectionData;
+		}
+
+
+		reflectionData.pPipelineSignature = reinterpret_cast< RHI::PipelineSignature >(	pipelineLayout );
+
+
+		reflectionData.pDescriptorSignatures.reserve( vkSetLayouts.size() );
+
+
+		for ( VkDescriptorSetLayout layout : vkSetLayouts )
+			reflectionData.pDescriptorSignatures.push_back( reinterpret_cast< RHI::DescriptorSignature >( layout ) );
+
+
+		reflectionData.PushConstantRanges.reserve( pushConstantRanges.size() );
+
+		for ( const VkPushConstantRange& range : pushConstantRanges )
+		{
+			PushConstantRanges pushConstant{};
+			pushConstant.Offset = range.offset;
+			pushConstant.Size = range.size;
+			reflectionData.PushConstantRanges.push_back( pushConstant );
+		}
+
+		return reflectionData;
+
+#else
+
+		MW_ERROR( "ReflectOnShader() called without Vulkan support for {}", m_Path.string() );
+
+		return reflectionData;
+
+#endif
 	}
 
 
