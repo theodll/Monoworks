@@ -72,11 +72,6 @@ namespace Monoworks
 			CompileShader();
 		}
 
-		if ( !( pInfo->Flags & MW_SHADER_FLAG_DEFFERED_REFLECTION_BIT) )
-		{
-			ReflectOnShader();
-		}
-
 	}
 
 	void CShader::CompileShader() NOEXCEPT
@@ -177,9 +172,12 @@ namespace Monoworks
 
 		components.push_back( slangModule );
 
-		for ( size_t i = 0; i < static_cast< size_t >( entryPointCount ); ++i )
+		for ( auto i{ 0uz }; i < static_cast< size_t >( entryPointCount ); ++i )
 		{
 			Slang::ComPtr<slang::IEntryPoint> entryPoint;
+
+
+
 
 			const SlangResult result =
 				slangModule->getDefinedEntryPoint(

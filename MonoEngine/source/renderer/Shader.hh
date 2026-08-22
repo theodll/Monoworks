@@ -56,10 +56,12 @@ namespace Monoworks
 		void CompileShader() NOEXCEPT;
 		ShaderReflectionData ReflectOnShader() NOEXCEPT; 
 
+		NODISCARD const boost::unordered_map<RHI::EShaderStage, std::string>& GetShaderEntrypoints() NOEXCEPT { return m_Entrypoints; };
+		NODISCARD Slang::ComPtr<slang::IComponentType> GetShaderProgram() NOEXCEPT { return m_pSlangProgram; }
 	private:
 
 		ShaderCreateInfo m_CreateInfo;
-		std::array<std::string, RHI::MW_SHADER_STAGE_COUNT> m_Entrypoints;
+		boost::unordered_map<RHI::EShaderStage, std::string> m_Entrypoints;
 		path_t m_Path;
 		Slang::ComPtr<slang::ISession> m_pSlangSession;
 		Slang::ComPtr<slang::IComponentType> m_pSlangProgram;

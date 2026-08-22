@@ -19,6 +19,10 @@ namespace Monoworks::RHI
 		virtual EResult Invalidate( const ComputePipelineCreationInfo* pInfo ) override;
 
 		NODISCARD virtual bool IsCompiled() NOEXCEPT override { return m_IsCompiled; };
+
+		NODISCARD VkPipeline*		GetVulkanPipeline()				NOEXCEPT { return &m_VulkanPipeline; };
+		NODISCARD VkPipelineLayout* GetVulkanPipelineSignature()	NOEXCEPT { return &m_VulkanPipelineLayout; };
+
 	private:
 		VkPipeline m_VulkanPipeline;
 		VkPipelineLayout m_VulkanPipelineLayout;

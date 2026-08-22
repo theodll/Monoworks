@@ -17,7 +17,7 @@ namespace Monoworks
 
 	class CDefferedResolutionPass 
 	{
-		CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo );
+		CDefferedResolutionPass( DefferedResolutionPassCreationInfo* pInfo );
 	
 		// 1. reflection -> descriptor layout creation
 		// 2. descriptor set allocation

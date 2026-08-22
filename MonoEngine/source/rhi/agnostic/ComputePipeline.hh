@@ -7,7 +7,7 @@ namespace Monoworks::RHI
 {
 	struct ComputePipelineCreationInfo
 	{
-		PipelineSignature* Signature; // VkPipelineLayout / D3D12RootSignature
+		PipelineSignature Signature; // VkPipelineLayout / D3D12RootSignature
 		EPipelineCreationFlags Flags; 
 
 		SShaderObject ComputeShader;
