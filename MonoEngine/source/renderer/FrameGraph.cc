@@ -2,9 +2,9 @@
 
 #include <rhi/agnostic/ComputePipeline.hh>
 #include <rhi/agnostic/GraphicsPipeline.hh>
-
 #include <rhi/agnostic/PipelineManager.hh>
 
+#include "StaticRenderer.hh"
 #include "FrameGraph.hh"
 
 namespace Monoworks 
@@ -17,6 +17,7 @@ namespace Monoworks
 		
 		if ( !pInfo->hShader )
 		{
+			MW_API_ERROR( "Invalid Shader Reference Passed" );
 			throw std::runtime_error( "Invalid Shader Reference Passed" );
 			return;
 		};
@@ -71,25 +72,98 @@ namespace Monoworks
 		if ( pipeline )
 			m_hComputePipeline = pipeline.value();
 		
+		// NOTE: 0 here is the global scope in the Slang Shader. So things that are not inside of any ParameterBlocks
 
+		for ( auto i{ 0uz }; i < CStaticRenderer::GetCurrentFrameIndex(); i++ )
+			m_pDescriptors[i] = CDescriptorManager::Allocate(reflectionData.pDescriptorSignatures[0]);
 
 
 	};
 
-	// 1. Pipeline Creation
-	// 2. reflection -> descriptor layout creation
-	// 3. descriptor set allocation
-	// 4. Buffer & texture upload
 
-	void CDefferedResolutionPass::BindTexture( std::string_view name, Ref<RHI::ITexture2D> hTexture )
+	NODISCARD static const std::expected<u32, EResult> FindBindingNumberByString( std::string_view name, slang::ProgramLayout* pLayout ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
+		slang::VariableLayoutReflection* globals = pLayout->getGlobalParamsVarLayout();
+		slang::TypeLayoutReflection* globalsType = globals->getTypeLayout();
+
+		const auto cstr = name.data();
+		const SlangInt fieldIndex = globalsType->findFieldIndexByName( cstr );
+
+		if ( fieldIndex < 0 )
+			return MW_ERROR_NON_EXISTANT;
+
+		slang::VariableLayoutReflection* field = globalsType->getFieldByIndex( fieldIndex );
+		const size_t binding = field->getOffset( slang::ParameterCategory::DescriptorTableSlot );
+
+		return binding;
+
+	}
+
+	void CDefferedResolutionPass::BindTexture( std::string_view name, Ref<RHI::ITexture2D> hTexture, bool forceRewrite )
+	{
+		MW_PROFILE_FUNC;
+		
+		auto binding = FindBindingNumberByString( name, m_hShader->GetShaderProgram()->getLayout() ); 
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", name.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", name.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < CStaticRenderer::GetCurrentFrameIndex(); i++)
+				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTexture);
 	};
 
-	void CDefferedResolutionPass::BindUBO( std::string_view name, Ref<RHI::IUniformBuffer> hUniformBuffer ) 
+
+	void CDefferedResolutionPass::BindSampler( std::string_view name, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		auto binding = FindBindingNumberByString( name, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", name.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", name.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < CStaticRenderer::GetCurrentFrameIndex(); i++ )
+				CDescriptorManager::WriteSampler( m_pDescriptors[i], binding.value(), hTexture );
+	}
+
+	void CDefferedResolutionPass::BindUBO( std::string_view name, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
+	{
+		MW_PROFILE_FUNC;
+
+
+		auto binding = FindBindingNumberByString( name, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", name.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", name.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < CStaticRenderer::GetCurrentFrameIndex(); i++ )
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
 
 	};
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <common/Base.hh>
 
+#include <rhi/agnostic/DescriptorManager.hh>
+
 namespace Monoworks::RHI 
 {
 	struct PoolSizes {
@@ -19,17 +21,23 @@ namespace Monoworks::RHI
 		};
 	};
 
-	class CVulkanDescriptorSetManager 
+	class CVulkanDescriptorSetManager : public CDescriptorManager
 	{
 	public:
-		void Init();
-		void Shutdown();
+		void InitImpl() NOEXCEPT override;
+		void ShutdownImpl() NOEXCEPT override;
 
-		void WriteBuffer( VkDescriptorSet hSet, u32 binding, VkBuffer hBuffer, size_t size );
-		void WriteImage( VkDescriptorSet hSet, u32 binding, const VkDescriptorImageInfo* pInfo );
-		void WriteSampler( VkDescriptorSet hSet, u32 binding, VkSampler hSampler );
-		
-		VkDescriptorSet Allocate( VkDescriptorSetLayout hSetLayout, u32 maxSetHints MW_NULLABLE = 128 );
+
+		void WriteBufferImpl(	DescriptorHandle pDescriptor, u32 binding, void* pBuffer, size_t size ) override;
+
+		// Only writes the Image!
+		void WriteImageImpl(	DescriptorHandle pDescriptor, u32 binding, Ref<ITexture2D> hTexture ) override;
+
+		// Only writes the Sampler! 
+		void WriteSamplerImpl(	DescriptorHandle pDescriptor, u32 binding, Ref<ITexture2D> hTexture ) override;
+
+		DescriptorHandle AllocateImpl( DescriptorSignature pSetLayout, u32 maxSetHints MW_NULLABLE = 128 ) override;
+
 
 		void ResetPools();
 		void SetPoolSize( const PoolSizes* pSizes ) { m_PoolSizes = *pSizes; };

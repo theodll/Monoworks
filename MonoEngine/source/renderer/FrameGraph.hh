@@ -2,6 +2,7 @@
 #include <common/Base.hh>
 #include <boost/unordered_map.hpp>
 
+#include <rhi/agnostic/DescriptorManager.hh>
 #include <rhi/agnostic/Texture.hh>
 #include <rhi/agnostic/UniformBuffer.hh>
 #include <rhi/agnostic/ComputePipeline.hh>
@@ -23,14 +24,15 @@ namespace Monoworks
 		// 2. descriptor set allocation
 		// 3. Buffer & texture upload
 
-		void BindTexture( std::string_view name, Ref<RHI::ITexture2D> hTexture );
-		void BindUBO( std::string_view name, Ref<RHI::IUniformBuffer> hUniformBuffer);
+		void BindTexture( std::string_view name, Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false );
+		void BindSampler( std::string_view name, Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false );
+		void BindUBO(std::string_view name, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
 
 	private:
+		boost::unordered_map<u32, bool> m_BindingsWritten;
+		RHI::DescriptorHandle m_pDescriptors[MFIF];
 		Ref<RHI::IComputePipeline> m_hComputePipeline;
 		Ref<CShader> m_hShader;
-
-		bool m_SamplerBound;
 
 		friend class CFrameGraph;
 	};

@@ -14,6 +14,7 @@
 
 namespace Monoworks 
 {
+	using namespace RHI;
 	CShader::CShader( const ShaderCreateInfo* pInfo ) NOEXCEPT : m_Path( pInfo->Path )
 	{
 		MW_PROFILE_FUNC;
@@ -298,6 +299,7 @@ namespace Monoworks
 	ShaderReflectionData CShader::ReflectOnShader() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		// TODO: Garantee that global data is in set 0.
 
 		ShaderReflectionData reflectionData{};
 
@@ -641,7 +643,7 @@ namespace Monoworks
 		);
 
 
-		uint32_t highestSet = 0;
+		u32 highestSet = 0;
 
 		if ( !descriptorSetBindings.empty() )
 			highestSet = descriptorSetBindings.rbegin()->first;
@@ -657,7 +659,7 @@ namespace Monoworks
 		{
 			VkDescriptorSetLayoutCreateInfo createInfo{};
 			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-			createInfo.bindingCount = static_cast< uint32_t >( bindings.size() );
+			createInfo.bindingCount = static_cast< u32 >( bindings.size() );
 			createInfo.pBindings = bindings.data();
 
 			VkDescriptorSetLayoutBindingFlagsCreateInfo bindingFlagsInfo{};
@@ -707,7 +709,7 @@ namespace Monoworks
 				vkCreateDescriptorSetLayout(
 					device,
 					&createInfo,
-					nullptr,
+					CVulkanContext::GetCallbacks(),
 					&layoutHandle
 				);
 
@@ -723,7 +725,7 @@ namespace Monoworks
 						vkDestroyDescriptorSetLayout(
 							device,
 							handle,
-							nullptr
+							CVulkanContext::GetCallbacks()
 						);
 					}
 				}
@@ -770,7 +772,7 @@ namespace Monoworks
 			vkCreatePipelineLayout(
 				device,
 				&pipelineLayoutInfo,
-				nullptr,
+				CVulkanContext::GetCallbacks(),
 				&pipelineLayout
 			);
 
@@ -793,7 +795,7 @@ namespace Monoworks
 					vkDestroyDescriptorSetLayout(
 						device,
 						handle,
-						nullptr
+						CVulkanContext::GetCallbacks()
 					);
 				}
 			}
