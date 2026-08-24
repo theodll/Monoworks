@@ -52,5 +52,8 @@ namespace Monoworks::RHI
 
 		PoolSizes m_PoolSizes{};
 
+	protected:
+		void WriteUniformBufferImpl( DescriptorHandle hDescriptor, u32 binding, Ref<IUniformBuffer> hUniformBuffer ) override;
+
 	};
 }

@@ -11,7 +11,7 @@ namespace Monoworks
 {
 	using namespace RHI;
 
-	CDefferedResolutionPass::CDefferedResolutionPass( DefferedResolutionPassCreationInfo* pInfo )
+	CPostProcessPass::CPostProcessPass( PostProcessPassCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
 		
@@ -101,19 +101,19 @@ namespace Monoworks
 
 	}
 
-	void CDefferedResolutionPass::BindTexture( std::string_view name, Ref<RHI::ITexture2D> hTexture, bool forceRewrite )
+	void CPostProcessPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite )
 	{
 		MW_PROFILE_FUNC;
 		
-		auto binding = FindBindingNumberByString( name, m_hShader->GetShaderProgram()->getLayout() ); 
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", name.data() );
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
 			return;
 		}
 		else if ( !binding )
 		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", name.data() );
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
 			return;
 		}
 
@@ -123,41 +123,41 @@ namespace Monoworks
 	};
 
 
-	void CDefferedResolutionPass::BindSampler( std::string_view name, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
+	void CPostProcessPass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
 
-		auto binding = FindBindingNumberByString( name, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", name.data() );
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
 			return;
 		}
 		else if ( !binding )
 		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", name.data() );
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
 			return;
 		}
 
 		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
 			for ( auto i{ 0uz }; i < CStaticRenderer::GetCurrentFrameIndex(); i++ )
-				CDescriptorManager::WriteSampler( m_pDescriptors[i], binding.value(), hTexture );
+				CDescriptorManager::WriteSampler( m_pDescriptors[i], binding.value(), hSampler );
 	}
 
-	void CDefferedResolutionPass::BindUBO( std::string_view name, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
+	void CPostProcessPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
 	{
 		MW_PROFILE_FUNC;
 
 
-		auto binding = FindBindingNumberByString( name, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", name.data() );
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
 			return;
 		}
 		else if ( !binding )
 		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", name.data() );
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
 			return;
 		}
 
@@ -167,5 +167,52 @@ namespace Monoworks
 
 	};
 
+
+	CDefferedResolutionPass::CDefferedResolutionPass( DefferedResolutionPassCreateionInfo* pInfo )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+
+	CDefferedResolutionPass::~CDefferedResolutionPass() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	}
+
+
+	void CDefferedResolutionPass::BindTexture( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::ITexture> hTexture, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+
+	void CDefferedResolutionPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+
+	void CDefferedResolutionPass::BindSampler( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::ITexture> hSampler, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+
+	void CDefferedResolutionPass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+
+	void CDefferedResolutionPass::BindUBO( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+
+	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+	}
 
 }
