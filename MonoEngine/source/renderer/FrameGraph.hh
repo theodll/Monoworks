@@ -84,7 +84,7 @@ namespace Monoworks
 		 * @param hTexture: Reference to the texture to bind.
 		 * @param forceRewrite: Toggle whether to rewrite the texture if it's already written. 
 		 */
-		void BindTexture( std::string_view parameterBlockName,	std::string_view bindingName,	Ref<RHI::ITexture> hTexture, bool forceRewrite = false );
+		void BindTexture( std::string_view parameterBlockName,	std::string_view bindingName,	Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false );
 
 		/**
 		* @brief Bind a texture located in global scope.
@@ -101,7 +101,7 @@ namespace Monoworks
 		* @param hSampler: Reference to the sampler to bind
 		* @param forceRewrite: Toggle whether to rewrite the sampler if it's already written.
 		*/
-		void BindSampler( std::string_view parameterBlockName,	std::string_view bindingName,	Ref<RHI::ITexture> hSampler, bool forceRewrite = false );
+		void BindSampler( std::string_view parameterBlockName,	std::string_view bindingName,	Ref<RHI::ITexture2D> hSampler, bool forceRewrite = false );
 
 		/**
 		* @brief Bind a sampler located in global scope.
