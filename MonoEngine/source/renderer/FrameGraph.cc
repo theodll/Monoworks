@@ -10,6 +10,7 @@
 namespace Monoworks 
 {
 	using namespace RHI;
+	constexpr u32 GlobalScopeSignature = 0;
 
 	CPostProcessPass::CPostProcessPass( PostProcessPassCreationInfo* pInfo )
 	{
@@ -43,7 +44,7 @@ namespace Monoworks
 		if ( SLANG_FAILED( result ) )
 		{
 			if ( diagnostics )
-				MW_ERROR( "Failed to get entry point code for deffered resolution pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+				MW_ERROR( "Failed to get entry point code for Post Processing pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
 			
 			return;
 		}
@@ -62,24 +63,29 @@ namespace Monoworks
 		std::expected<Ref<IComputePipeline>, EResult> pipeline;
 		try
 		{
-			pipeline = CPipelineManager::CreateComputePipeline( &pipelineInfo );
+			pipeline = CPipelineManager::CreateComputePipeline( &pipelineInfo, &m_PipelineHash );
 		}
 		catch ( ... )
 		{
-			MW_WARN( "Failed to create Compute Pipeline for Deffered Resolution Pass " );
+			MW_WARN( "Failed to create Compute Pipeline for Post Processing Pass " );
 		}
 
 		if ( pipeline )
 			m_hComputePipeline = pipeline.value();
 		
-		// NOTE: 0 here is the global scope in the Slang Shader. So things that are not inside of any ParameterBlocks
-
-		for ( auto i{ 0uz }; i < CStaticRenderer::GetCurrentFrameIndex(); i++ )
-			m_pDescriptors[i] = CDescriptorManager::Allocate(reflectionData.pDescriptorSignatures[0]);
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+			m_pDescriptors[i] = CDescriptorManager::Allocate(reflectionData.pDescriptorSignatures[GlobalScopeSignature]);
 
 
 	};
 
+	MW_NOTHROW CPostProcessPass::~CPostProcessPass() NOEXCEPT 
+	{
+		MW_PROFILE_FUNC;
+
+		CPipelineManager::DeleteComputePipeline( m_PipelineHash );
+
+	};
 
 	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
 	{
@@ -215,6 +221,74 @@ namespace Monoworks
 	CDefferedResolutionPass::CDefferedResolutionPass( DefferedResolutionPassCreateionInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
+		MW_PROFILE_FUNC;
+
+		if ( !pInfo->hShader )
+		{
+			MW_API_ERROR( "Invalid Shader Reference Passed" );
+			throw std::runtime_error( "Invalid Shader Reference Passed" );
+			return;
+		};
+
+		auto reflectionData = pInfo->hShader->ReflectOnShader();
+		auto entrypoints = pInfo->hShader->GetShaderEntrypoints();
+		const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
+
+		Slang::ComPtr<slang::IBlob> code;
+		Slang::ComPtr<slang::IBlob> diagnostics;
+
+		const SlangInt entrypointPointIndex = 0;
+		const SlangInt targetIndex = 0;
+
+		const SlangResult result =
+			pInfo->hShader->GetShaderProgram()->getEntryPointCode(
+				entrypointPointIndex,
+				targetIndex,
+				code.writeRef(),
+				diagnostics.writeRef() );
+
+
+		if ( SLANG_FAILED( result ) )
+		{
+			if ( diagnostics )
+				MW_ERROR( "Failed to get entry point code for deffered resolution pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+
+			return;
+		}
+
+		SShaderObject computeShader;
+		computeShader.pEntrypoint = entrypoint;
+		computeShader.ShaderStage = MW_SHADER_STAGE_COMPUTE;
+		computeShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+
+
+		RHI::ComputePipelineCreationInfo pipelineInfo{};
+		pipelineInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
+		pipelineInfo.Signature = reflectionData.pPipelineSignature;
+		pipelineInfo.ComputeShader = computeShader;
+
+		std::expected<Ref<IComputePipeline>, EResult> pipeline;
+		try
+		{
+			pipeline = CPipelineManager::CreateComputePipeline( &pipelineInfo, &m_PipelineHash );
+		}
+		catch ( ... )
+		{
+			MW_WARN( "Failed to create Compute Pipeline for Deffered Resolution Pass " );
+		}
+
+		if ( pipeline )
+			m_hComputePipeline = pipeline.value();
+
+		std::array<RHI::DescriptorHandle, MFIF> globalScopeDescriptorSets{};
+		
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+			globalScopeDescriptorSets[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+
+		if ( m_pDescriptors.size() < 1 )
+			m_pDescriptors.resize( 1 );
+
+		m_pDescriptors[GlobalScopeSignature] = globalScopeDescriptorSets;
 	}
 
 
@@ -227,12 +301,29 @@ namespace Monoworks
 	void CDefferedResolutionPass::BindTexture( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::ITexture> hTexture, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
 	}
 
 
 	void CDefferedResolutionPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+		// TODO: write written bindings into m_BindingsWritten
+		if ( forceRewrite || !m_BindingsWritten[{GlobalScopeSignature, binding.value()}] )
+			for ( auto i{ 0uz }; i < CStaticRenderer::GetCurrentFrameIndex(); i++ )
+				CDescriptorManager::WriteImage( m_pDescriptors[GlobalScopeSignature][i], binding.value(), hTexture );
 	}
 
 

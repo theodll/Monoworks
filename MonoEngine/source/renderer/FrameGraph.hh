@@ -59,6 +59,8 @@ namespace Monoworks
 		Ref<RHI::IComputePipeline> m_hComputePipeline;
 		Ref<CShader> m_hShader;
 
+		Hash::hash_t m_PipelineHash;
+
 		friend class CFrameGraph;
 	};
 
@@ -132,6 +134,8 @@ namespace Monoworks
 		std::vector<std::array<RHI::DescriptorHandle, MFIF>> m_pDescriptors;
 		Ref<RHI::IComputePipeline> m_hComputePipeline;
 		Ref<CShader> m_hShader;
+
+		Hash::hash_t m_PipelineHash;
 
 		friend class CFrameGraph;
 	};

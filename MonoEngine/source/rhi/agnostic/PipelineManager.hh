@@ -79,7 +79,19 @@ namespace Monoworks::RHI
 		 * @param pInfo Pointer to the struct of which a compute pipeline will be created or returned.
 		 * @param Optional Pointer to the hash variable which is to be filled with the hash the pipeline is refereed to by the hash map.
 		 */
-		static std::expected<Ref<IComputePipeline>, EResult>			CreateComputePipeline( const ComputePipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr, bool deffered = true ) NOEXCEPT;
+		static std::expected<Ref<IComputePipeline>, EResult>	CreateComputePipeline( const ComputePipelineCreationInfo* pInfo, Hash::hash_t* MW_NULLABLE pHash = nullptr, bool deffered = true ) NOEXCEPT;
+
+		/**
+		 * @brief Removes the graphics pipeline from the graphics pipeline cache and invalidates the hash & reference.
+		 * @param hash Hash of the graphics pipeline to delete.
+		 */
+		static void DeleteGraphicsPipeline( Hash::hash_t hash );
+
+		/**
+		 * @brief Removes the compute pipeline from the compute pipeline cache and invalidates the hash @ reference.
+		 * @param hash Hash of the compute pipeline to delete.
+		 */
+		static void DeleteComputePipeline( Hash::hash_t hash );
 
 		/// @brief Gets graphics pipeline by hash
 		NODISCARD static std::expected<Ref<IGraphicsPipeline>, EResult> GetGraphicsPipelineByHash( Hash::hash_t hash ) NOEXCEPT;
