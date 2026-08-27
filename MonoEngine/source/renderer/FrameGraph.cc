@@ -554,6 +554,10 @@ namespace Monoworks
 	CDefferedFrameGraph::~CDefferedFrameGraph()	 NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
+		m_hComputePrePasses.clear();
+		m_hGraphicsPrePasses.clear();
+		m_hDefferedResolutionPasses.clear();
+		m_hPostProcessPasses.clear();
 	};
 
 	void CDefferedFrameGraph::ExecutePrePasses() NOEXCEPT 
@@ -576,8 +580,6 @@ namespace Monoworks
 	void CDefferedFrameGraph::AddPrePass( Ref<CComputePrePass> hComputePrePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-
-
 		if ( !hComputePrePass )
 		{
 			MW_API_WARN( "Passed invalid hComputePrePass to CDefferedFrameGraph::AddPrePass. Discarding.");
@@ -587,30 +589,110 @@ namespace Monoworks
 		if ( executionPriority == UINT32_MAX )
 		{
 			m_hComputePrePasses.push_back( std::move( hComputePrePass ) );
-			MW_INFO( "Register Compute Pre-Pass {} at execution priority: {}", hComputePrePass.raw(), m_hComputePrePasses.size() );
+			MW_INFO( "Register Compute Pre-Pass {} at execution priority {}", hComputePrePass.raw(), m_hComputePrePasses.size() );
 		}
 		else 
 		{
 			if ( m_hComputePrePasses.size() <= executionPriority + 1 )
+			{
 				m_hComputePrePasses.push_back( std::move( hComputePrePass ) );
-			else 
+				MW_INFO( "Register Compute Pre-Pass {} at execution priority {}", hComputePrePass.raw(), m_hComputePrePasses.size() );
+			}
+			else
+			{
 				m_hComputePrePasses.insert( m_hComputePrePasses.begin() + executionPriority, std::move( hComputePrePass ) );
+				MW_INFO( "Register Compute Pre-Pass {} by inserting it at execution priority {}", hComputePrePass.raw(), executionPriority );
+			}
 		}
 	};
 
 	void CDefferedFrameGraph::AddPrePass( Ref<CGraphicsPrePass> hGraphicsPrePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		if ( !hGraphicsPrePass )
+		{
+			MW_API_WARN( "Passed invalid hGraphicsPrePass to CDefferedFrameGraph::AddPrePass. Discarding." );
+			return;
+		}
+
+		if ( executionPriority == UINT32_MAX )
+		{
+			m_hGraphicsPrePasses.push_back( std::move( hGraphicsPrePass ) );
+			MW_INFO( "Register Graphics Pre-Pass {} at execution priority {}", hGraphicsPrePass.raw(), m_hGraphicsPrePasses.size() );
+		}
+		else
+		{
+			if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 )
+			{
+				m_hGraphicsPrePasses.push_back( std::move( hGraphicsPrePass ) );
+				MW_INFO( "Register Graphics Pre-Pass {} at execution priority {}", hGraphicsPrePass.raw(), m_hGraphicsPrePasses.size() );
+			}
+			else
+			{
+				m_hGraphicsPrePasses.insert( m_hGraphicsPrePasses.begin() + executionPriority, std::move( hGraphicsPrePass ) );
+				MW_INFO( "Register Graphics Pre-Pass {} by inserting it at execution priority {}", hGraphicsPrePass.raw(), executionPriority );
+			}
+		}
 	};
 
 	void CDefferedFrameGraph::AddDefferedResolutionPass( Ref<CDefferedResolutionPass> hComputePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		if ( !hComputePass )
+		{
+			MW_API_WARN( "Passed invalid hComputePass to CDefferedFrameGraph::AddDefferedResolutionPass. Discarding." );
+			return;
+		}
+
+		if ( executionPriority == UINT32_MAX )
+		{
+			m_hDefferedResolutionPasses.push_back( std::move( hComputePass ) );
+			MW_INFO( "Register Deffered Resolotion {} at execution priority {}", hComputePass.raw(), m_hDefferedResolutionPasses.size() );
+		}
+		else
+		{
+			if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 )
+			{
+				m_hDefferedResolutionPasses.push_back( std::move( hComputePass ) );
+				MW_INFO( "Register Deffered Resolotion Pre-Pass {} at execution priority {}", hComputePass.raw(), m_hDefferedResolutionPasses.size() );
+			}
+			else
+			{
+				m_hDefferedResolutionPasses.insert( m_hDefferedResolutionPasses.begin() + executionPriority, std::move( hComputePass ) );
+				MW_INFO( "Register Deffered Resolotion Pre-Pass {} by inserting it at execution priority {}", hComputePass.raw(), executionPriority );
+			}
+		}
 	};
 
-	void CDefferedFrameGraph::AddPostProcessPass( Ref<CPostProcessPass> hPostProcessPass, u32 MW_NULLABLE executionPriorit ) NOEXCEPT
+	void CDefferedFrameGraph::AddPostProcessPass( Ref<CPostProcessPass> hPostProcessPass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		if ( !hPostProcessPass )
+		{
+			MW_API_WARN( "Passed invalid hPostProcessPass to CDefferedFrameGraph::AddDefferedResolutionPass. Discarding." );
+			return;
+		}
+
+		if ( executionPriority == UINT32_MAX )
+		{
+			m_hPostProcessPasses.push_back( std::move( hPostProcessPass ) );
+			MW_INFO( "Register Deffered Resolotion {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
+		}
+		else
+		{
+			if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 )
+			{
+				m_hPostProcessPasses.push_back( std::move( hPostProcessPass ) );
+				MW_INFO( "Register Deffered Resolotion Pre-Pass {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
+			}
+			else
+			{
+				m_hPostProcessPasses.insert( m_hPostProcessPasses.begin() + executionPriority, std::move( hPostProcessPass ) );
+				MW_INFO( "Register Deffered Resolotion Pre-Pass {} by inserting it at execution priority {}", hPostProcessPass.raw(), executionPriority );
+			}
+		}
 	};
 
 
