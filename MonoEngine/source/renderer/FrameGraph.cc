@@ -521,7 +521,6 @@ namespace Monoworks
 
 	}
 
-
 	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
@@ -546,5 +545,74 @@ namespace Monoworks
 		}
 			
 	}
+
+	CDefferedFrameGraph::CDefferedFrameGraph()	 NOEXCEPT 
+	{
+		MW_PROFILE_FUNC;
+	};
+
+	CDefferedFrameGraph::~CDefferedFrameGraph()	 NOEXCEPT 
+	{
+		MW_PROFILE_FUNC;
+	};
+
+	void CDefferedFrameGraph::ExecutePrePasses() NOEXCEPT 
+	{
+		MW_PROFILE_FUNC;
+	};
+	
+	void CDefferedFrameGraph::ExecuteCorePasses() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	};
+
+	void CDefferedFrameGraph::ExecutePostPasses() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	};
+
+
+
+	void CDefferedFrameGraph::AddPrePass( Ref<CComputePrePass> hComputePrePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+
+		if ( !hComputePrePass )
+		{
+			MW_API_WARN( "Passed invalid hComputePrePass to CDefferedFrameGraph::AddPrePass. Discarding.");
+			return;
+		}
+
+		if ( executionPriority == UINT32_MAX )
+		{
+			m_hComputePrePasses.push_back( std::move( hComputePrePass ) );
+			MW_INFO( "Register Compute Pre-Pass {} at execution priority: {}", hComputePrePass.raw(), m_hComputePrePasses.size() );
+		}
+		else 
+		{
+			if ( m_hComputePrePasses.size() <= executionPriority + 1 )
+				m_hComputePrePasses.push_back( std::move( hComputePrePass ) );
+			else 
+				m_hComputePrePasses.insert( m_hComputePrePasses.begin() + executionPriority, std::move( hComputePrePass ) );
+		}
+	};
+
+	void CDefferedFrameGraph::AddPrePass( Ref<CGraphicsPrePass> hGraphicsPrePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	};
+
+	void CDefferedFrameGraph::AddDefferedResolutionPass( Ref<CDefferedResolutionPass> hComputePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	};
+
+	void CDefferedFrameGraph::AddPostProcessPass( Ref<CPostProcessPass> hPostProcessPass, u32 MW_NULLABLE executionPriorit ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	};
+
+
 
 }

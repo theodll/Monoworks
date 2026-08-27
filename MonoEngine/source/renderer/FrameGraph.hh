@@ -11,6 +11,31 @@
 
 namespace Monoworks 
 {
+	
+	/// @brief Interface to derive from when creating any sort of Frame Graph.
+	class IFrameGraph 
+	{
+	public:
+		virtual	~IFrameGraph() = default;
+		
+		/// @brief Executes all Pre-Passes (Culling, Depth-Pre-Pass, ...)
+		virtual MW_NOTHROW void ExecutePrePasses() NOEXCEPT = 0;
+		/// @brief Executes all Core-Passes (GPass, Deffered Resolution, ...)
+		virtual MW_NOTHROW void ExecuteCorePasses() NOEXCEPT = 0;
+		/// @brief Executes all Post-Process-Passes (Bloom, Tone-Mapping, ...)
+		virtual MW_NOTHROW void ExecutePostPasses() NOEXCEPT = 0;
+	};
+
+	class CComputePrePass 
+	{
+		// TODO: Implement
+	};
+
+	class CGraphicsPrePass
+	{
+		// TODO: Implement
+	};
+
 	struct PostProcessPassCreationInfo 
 	{
 		Ref<CShader> hShader;
@@ -68,9 +93,6 @@ namespace Monoworks
 	{
 		Ref<CShader> hShader;
 	};
-	// set 0 -> global scope
-	// set 1 -> gbuffer ( always! even when not using the gbuffer but using a following parameter block, the gbuffer has to be there. )
-	// set 2... -> user defined
 
 	class CDefferedResolutionPass
 	{
@@ -140,22 +162,53 @@ namespace Monoworks
 		friend class CFrameGraph;
 	};
 
-	class CFrameGraph 
+	class CDefferedFrameGraph final : public IFrameGraph
 	{
 	public:
-		CFrameGraph() NOEXCEPT;
-		~CFrameGraph() NOEXCEPT;
+		CDefferedFrameGraph()	NOEXCEPT;
+		~CDefferedFrameGraph()	NOEXCEPT;
+
+		/// @brief Executes all pre-passes.
+		MW_NOTHROW void ExecutePrePasses()	NOEXCEPT override;
+		/// @brief Executes all core-passes.
+		MW_NOTHROW void ExecuteCorePasses() NOEXCEPT override;
+		/// @brief Executes all post & post-processing-passes.
+		MW_NOTHROW void ExecutePostPasses() NOEXCEPT override;
 
 		/**
-		 * @brief Hooks a user specified deffered resolution pass into the frame graph.
+		 * @brief Hooks a compute pre-pass into the frame graph.
+		 * @param hComputePrePass Compute-Pass to be hooked into the frame-graph.
+		 * @param executionPriority Priority of the Compute-Pre-Pass 
 		 */
-		void AddDefferedResolutionPass( Ref<CDefferedResolutionPass> hComputePass, u32 MW_NULLABLE executionPriority = UINT32_MAX );
-		void AddPostProcessPass( Ref<CPostProcessPass> hPostProcessPass, u32 MW_NULLABLE executionPriority = UINT32_MAX );
+		MW_NOTHROW void AddPrePass(					Ref<CComputePrePass>  hComputePrePass,		u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+		
+		/**
+		 * @brief Hooks a graphics pre-pass into the frame graph.
+		 * @param hGraphicsPrePass Compute-Pass to be hooked into the frame-graph.
+		 * @param executionPriority Priority of the Graphics-Pre-Pass
+		 */
+		MW_NOTHROW void AddPrePass( Ref<CGraphicsPrePass> hGraphicsPrePass, u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+
+		/**  
+		* @brief Hooks a deffered resolution pass into the frame graph.
+		* @param hComputePrePass Compute-Pass to be hooked into the frame-graph.
+		* @param executionPriority Priority of the deffered resolution pass
+		*/
+		MW_NOTHROW void AddDefferedResolutionPass(	Ref<CDefferedResolutionPass> hComputePass,	u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+
+		/**  
+		* @brief Hooks a post process pass into the frame graph. 
+		* @param hComputePrePass Compute - Pass to be hooked into the frame - graph.
+		* @param executionPriority Priority of the deffered resolution pass
+		*/
+		MW_NOTHROW void AddPostProcessPass(			Ref<CPostProcessPass> hPostProcessPass,		u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
 
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
+		std::vector<Ref<CComputePrePass>>			m_hComputePrePasses;
+		std::vector<Ref<CGraphicsPrePass>>			m_hGraphicsPrePasses;
 		std::vector<Ref<CDefferedResolutionPass>>	m_hDefferedResolutionPasses;
-		std::vector<Ref<CPostProcessPass>>		m_hPostProcessPasses;
+		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
 	};
 }
