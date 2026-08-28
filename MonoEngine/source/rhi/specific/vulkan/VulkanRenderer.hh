@@ -4,6 +4,8 @@
 #include <rhi/agnostic/IndexBuffer.hh>
 #include <rhi/agnostic/VertexBuffer.hh>
 #include <rhi/agnostic/GraphicsPipeline.hh>
+#include <rhi/agnostic/ComputePipeline.hh>
+#include <rhi/agnostic/DescriptorManager.hh>
 
 #include <rhi/GraphicsAPI.hh>
 
@@ -13,13 +15,23 @@
 
 namespace Monoworks::RHI
 {
-    class CVulkanRenderer : public IGraphicsAPI
+    struct BeginRenderingInfo 
     {
-        virtual void Init() NOEXCEPT override;
-        virtual void Shutdown() NOEXCEPT override;
 
-        virtual void BeginRendering() NOEXCEPT override;
-        virtual void EndRendering() NOEXCEPT override;
+    };
+
+    class CVulkanRenderer final : public IGraphicsAPI
+    {
+        MW_NOTHROW void Init() NOEXCEPT override;
+        MW_NOTHROW void Shutdown() NOEXCEPT override;
+        
+        // todo add push constants
+        MW_NOTHROW void DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, DescriptorHandle* pDesciptors, size_t pDescriptorCount ) NOEXCEPT override;
+        MW_NOTHROW void DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
+
+
+        void BeginRendering() NOEXCEPT override;
+        void EndRendering() NOEXCEPT override;
 
     private:
 

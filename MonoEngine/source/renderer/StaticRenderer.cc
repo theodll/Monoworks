@@ -49,6 +49,11 @@ namespace Monoworks
             MW_INFO( "Shutdown CStaticRenderer" );
         }; 
 
+        MW_NOTHROW void CStaticRenderer::DispatchCompute( Ref<RHI::IComputePipeline> hPipeline, u32 workgroupX, u32 workgroupY, u32 workgroupZ, u32 MW_NULLABLE threadID ) NOEXCEPT
+        {
+            MW_PROFILE_FUNC;
+            m_pInstance->DispatchCompute( hPipeline, workgroupX, workgroupY, workgroupZ, threadID );
+        }
 
         void CStaticRenderer::BeginRendering() NOEXCEPT
         {

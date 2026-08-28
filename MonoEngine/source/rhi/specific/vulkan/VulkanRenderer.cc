@@ -9,6 +9,7 @@
 #include <rhi/specific/vulkan/VulkanGraphicsPipeline.hh>
 #include <rhi/specific/vulkan/VulkanVertexBuffer.hh>
 #include <rhi/specific/vulkan/VulkanIndexBuffer.hh>
+#include <rhi/specific/vulkan/VulkanComputePipeline.hh>
 
 #include <rhi/agnostic/IndexBuffer.hh>
 
@@ -21,7 +22,7 @@ namespace Monoworks::RHI
 {
 	static std::vector<char> readFile( const std::string& filename, size_t* size ) {
 		std::ifstream file( filename, std::ios::ate | std::ios::binary );
-
+        // todo remove
 		if ( !file.is_open() ) {
             MW_ERROR( "LECK" );
 		}
@@ -215,15 +216,13 @@ namespace Monoworks::RHI
     void CVulkanRenderer::EndRendering() NOEXCEPT
     {
         MW_PROFILE_FUNC;
-        u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
-        auto presenter = CVulkanContext::GetPresenter();
 
-        auto cmd = *CVulkanRenderManager::GetCurrentRootCommandBuffer();
+        auto cmd = *CVulkanRenderManager::GetCurrentRootGraphicsCommandBuffer();
 
         vkCmdEndRendering( cmd );
-
+        /*
         CVulkanRenderManager::EndWorkerCommandBuffers( frameIndex );
-
+        
         if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
         {
             const auto imageIndex = CStaticRenderer::GetCurrentImageIndex();
@@ -256,9 +255,10 @@ namespace Monoworks::RHI
                 swapchainImage->PipelineFlags = MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
             }
         }
+        
 
-        CVulkanRenderManager::EndRootCommandBuffer( frameIndex );
-        CVulkanRenderManager::SubmitRootCommandBuffer( frameIndex );
+        CVulkanRenderManager::EndRootComputeCommandBuffer( frameIndex );
+        CVulkanRenderManager::SubmitRootComputeCommandBuffer( frameIndex );
 
         if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
         {
@@ -291,12 +291,36 @@ namespace Monoworks::RHI
             presentInfo.pVulkanDevice = CVulkanContext::GetDevice();
 
             presenter->Present( &presentInfo );
-
+            
 #ifdef MW_ENABLE_MANUAL_RENDERDOC
 			if ( m_RenderDocAPI ) m_RenderDocAPI->EndFrameCapture( nullptr, nullptr );
-#endif 
+#endif */
 
         }
         
+    };
+
+    void CVulkanRenderer::DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID ) NOEXCEPT
+    {
+        MW_PROFILE_FUNC;
+
+        VkCommandBuffer hCmd = nullptr;
+
+        if ( threadID < 0 )
+            hCmd = *CVulkanRenderManager::GetCurrentRootComputeCommandBuffer();
+        else
+            hCmd = *CVulkanRenderManager::GetCurrentWorkerComputeCommandBuffer( threadID );
+
+        if ( !hCmd )
+        {
+            MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch");
+            return;
+        }
+
+        auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
+        vkCmdBindPipeline( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipeline() );
+
+        vkCmdDispatch( hCmd, workgroup.x, workgroup.y, workgroup.z );
+
     };
 }

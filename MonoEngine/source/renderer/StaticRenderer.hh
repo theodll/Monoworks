@@ -14,11 +14,14 @@ namespace Monoworks
     class CStaticRenderer
     {
     public:
-        static void Init() NOEXCEPT;
-        static void Shutdown() NOEXCEPT;
+        static MW_NOTHROW void Init() NOEXCEPT;
+        static MW_NOTHROW void Shutdown() NOEXCEPT;
 
-        static void BeginRendering() NOEXCEPT;
-        static void EndRendering() NOEXCEPT;
+        // TODO: Rework
+        static MW_NOTHROW void BeginRendering() NOEXCEPT;
+        static MW_NOTHROW void EndRendering() NOEXCEPT;
+
+        static MW_NOTHROW void DispatchCompute( Ref<RHI::IComputePipeline> hPipeline, u32 workgroupX, u32 workgroupY, u32 workgroupZ, u32 MW_NULLABLE threadID = UINT32_MAX ) NOEXCEPT;
 
         NODISCARD static u32  GetCurrentFrameIndex() NOEXCEPT { return m_CurrentFrameIndex; };
         NODISCARD static u32* GetCurrentFrameIndexPtr() NOEXCEPT { return &m_CurrentFrameIndex; };
