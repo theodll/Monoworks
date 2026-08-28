@@ -18,6 +18,8 @@ namespace Monoworks
 	public:
 		virtual	~IFrameGraph() = default;
 		
+		// @brief  Executes all passes
+		virtual MW_NOTHROW void Execute() NOEXCEPT = 0;
 		/// @brief Executes all Pre-Passes (Culling, Depth-Pre-Pass, ...)
 		virtual MW_NOTHROW void ExecutePrePasses() NOEXCEPT = 0;
 		/// @brief Executes all Core-Passes (GPass, Deffered Resolution, ...)
@@ -168,6 +170,7 @@ namespace Monoworks
 		CDefferedFrameGraph()	NOEXCEPT;
 		~CDefferedFrameGraph()	NOEXCEPT;
 
+		MW_NOTHROW void Execute() NOEXCEPT override; 
 		/// @brief Executes all pre-passes.
 		MW_NOTHROW void ExecutePrePasses()	NOEXCEPT override;
 		/// @brief Executes all core-passes.
