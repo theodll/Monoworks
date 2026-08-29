@@ -164,6 +164,14 @@ namespace Monoworks
 		friend class CFrameGraph;
 	};
 
+	struct alignas(16) CameraConstants 
+	{
+		Matrix ViewProjection;
+		Matrix InverseViewProjection;
+		Vector CameraPosiiton;
+		int _pad0; 
+	};
+
 	class CDefferedFrameGraph final : public IFrameGraph
 	{
 	public:

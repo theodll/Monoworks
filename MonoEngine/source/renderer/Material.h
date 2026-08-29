@@ -10,35 +10,51 @@
 namespace Monoworks 
 {
 
-	struct alignas( 16 ) MaterialUBO
+	struct alignas( 16 ) MaterialData 
 	{
-		Vector4 BaseColorFactor{ 1.0f };
-		float Metallic{ 0.0f };
-		float Roughness{ 0.0f };
-		float AbientOcclusionFactor{ 1.0f };
-		float _padding0{ 0.0f };
-		Vector EmissiveColor{ 0.0f };
-		float _padding1{ 0.0f };
+		Vector	AlbedoFactor;
+		Vector	EmissiveColor;
+		float	Metallicness;
+		float	Roughness;
+		float	Emission;
+		float	EnviromentMapRotation; // TODO: Implement
+		float	AmbientOcclusionFactor;
+		bool	UseNormalMap; 
+		const char	_pad[3];
 	};
 
+	struct MaterialCreationInfo
+	{
+		Vector AlbedoFactor;
+		Vector EmissiveColor;
+		Ref<RHI::ITexture2D> hAlbedoMap;
+		Ref<RHI::ITexture2D> hNormalMap;
+		Ref<RHI::ITexture2D> hRoughnessMap;
+		Ref<RHI::ITexture2D> hMetallicMap;
+		Ref<RHI::ITexture2D> hOcclusionMap; 
+		float Metallicness;
+		float Roughness;
+		float AmbientOcclusion;
+	};
 
 	class CMaterial 
 	{
 	public:
 		CMaterial();
+		CMaterial( const MaterialCreationInfo* pInfo );
 		virtual ~CMaterial();
 
-		MW_NOTHROW void SetBaseColorFactor( const Vector4& rFactor )	NOEXCEPT;
-		MW_NOTHROW void SetMetallic( float metallic )					NOEXCEPT;
-		MW_NOTHROW void SetRoughness( float roughness )					NOEXCEPT;
-		MW_NOTHROW void SetAbientOcclusionFactor( float ao )			NOEXCEPT;
-		MW_NOTHROW void SetEmissiveColor( const Vector& emissiveColor ) NOEXCEPT;
+		MW_NOTHROW void SetAlbedoFactor( const Vector& rFactor )		 NOEXCEPT;
+		MW_NOTHROW void SetEmissiveColor( const Vector& rEmissiveColor ) NOEXCEPT;
+		MW_NOTHROW void SetMetallicness( float metallic )				 NOEXCEPT;
+		MW_NOTHROW void SetRoughness( float roughness )					 NOEXCEPT;
+		MW_NOTHROW void SetAbientOcclusionFactor( float factor )		 NOEXCEPT;
 
-		MW_NOTHROW void SetAlbedoTexture( Ref<RHI::ITexture2D> hTexture ) NOEXCEPT;
-		MW_NOTHROW void SetNormalTexture( Ref<RHI::ITexture2D> hTexture ) NOEXCEPT;
-		MW_NOTHROW void SetRoughnessTexture( Ref<RHI::ITexture2D> hTexture ) NOEXCEPT;
-		MW_NOTHROW void SetMetalllicTexture( Ref<RHI::ITexture2D> hTexture2D ) NOEXCEPT;
-
+		MW_NOTHROW void SetAlbedoMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		MW_NOTHROW void SetNormalMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		MW_NOTHROW void SetRoughnessMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		MW_NOTHROW void SetMetalllicMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		MW_NOTHROW void SetOcclusionMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
 
 		/**
 		* @brief Bind a texture located in a parameter block.
@@ -91,6 +107,8 @@ namespace Monoworks
 		*/
 		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
 
+		void SetVertexShader(	Ref<CShader> hVertexShader ) NOEXCEPT;
+		void SetPixelShader(	Ref<CShader> hPixelShader )	 NOEXCEPT;
 
 	private:
 		MW_NOTHROW void UpdateUBO() NOEXCEPT;
@@ -98,15 +116,17 @@ namespace Monoworks
 		boost::unordered_map<std::pair<u32, u32>, bool> m_BindingsWritten;
 		std::vector<std::array<RHI::DescriptorHandle, MFIF>> m_pDescriptors;
 
-		MaterialUBO m_Data;
+		MaterialData m_Data;
 		Ref<RHI::IUniformBuffer>	m_hUniformBuffer;
 
+		// NOTE: Either the standard GPass Pipeline specified by the Frame Graph or if any of the user-specified 
+		// shaders (m_hVertexShader/m_hPixelShader) are set a custom pipeline generated from those shaders.
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
 
 		// NOTE: Both shaders are independent from each other and can be null.
 		// If both are null, the default graphics pipeline provided by the selected frame graph.
 		Ref<CShader>	MW_NULLABLE	m_hVertexShader;
-		Ref<CShader>	MW_NULLABLE m_hFragmentShader;
+		Ref<CShader>	MW_NULLABLE m_hPixelShader;
 
 	};
 }

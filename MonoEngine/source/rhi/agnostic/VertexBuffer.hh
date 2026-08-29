@@ -6,7 +6,11 @@ namespace Monoworks::RHI
 {
 	struct SVertex
 	{
-		Vector Position;
+		Vector	Position;
+		Vector	Normal;
+		Vector	Tangent;
+		Vector	Binormal;
+		Vector2 TexCoord;
 	};
 
 	enum EShaderDataType : uint8_t
