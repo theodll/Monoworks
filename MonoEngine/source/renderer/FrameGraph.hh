@@ -198,7 +198,7 @@ namespace Monoworks
 		 * @param hGraphicsPrePass Compute-Pass to be hooked into the frame-graph.
 		 * @param executionPriority Priority of the Graphics-Pre-Pass
 		 */
-		MW_NOTHROW void AddPrePass( Ref<CGraphicsPrePass> hGraphicsPrePass, u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+		MW_NOTHROW void AddPrePass(					Ref<CGraphicsPrePass> hGraphicsPrePass,		u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
 
 		/**  
 		* @brief Hooks a deffered resolution pass into the frame graph.
@@ -220,6 +220,8 @@ namespace Monoworks
 		std::vector<Ref<CGraphicsPrePass>>			m_hGraphicsPrePasses;
 		std::vector<Ref<CDefferedResolutionPass>>	m_hDefferedResolutionPasses;
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
+
+		Ref<IGraphicsPipeline> m_hDefaultMaterialPipeline;
 
 	};
 }

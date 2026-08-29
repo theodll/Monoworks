@@ -1,4 +1,4 @@
-module Common;
+module Base;
 
 namespace Monoworks 
 {
@@ -11,4 +11,10 @@ namespace Monoworks
         public float2 TexCoord  : TEXCOORD0;
     }
 
+    public struct CameraConstants
+    {
+        float4x4    ViewProjection;
+        float4x4    InverseViewProjection;
+        float3      CameraPosition;
+    }
 }
