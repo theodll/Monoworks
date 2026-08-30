@@ -16,7 +16,7 @@ namespace Monoworks
 		Vector	EmissiveColor;
 		float	Metallicness;
 		float	Roughness;
-		float	Emission;
+		float	EmissionFactor;
 		float	EnviromentMapRotation; // TODO: Implement
 		float	AmbientOcclusionFactor;
 		bool	UseNormalMap; 
@@ -122,11 +122,7 @@ namespace Monoworks
 		// NOTE: Either the standard GPass Pipeline specified by the Frame Graph or if any of the user-specified 
 		// shaders (m_hVertexShader/m_hPixelShader) are set a custom pipeline generated from those shaders.
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
-
-		// NOTE: Both shaders are independent from each other and can be null.
-		// If both are null, the default graphics pipeline provided by the selected frame graph.
-		Ref<CShader>	MW_NULLABLE	m_hVertexShader;
-		Ref<CShader>	MW_NULLABLE m_hPixelShader;
+		Ref<CShader>	MW_NULLABLE m_hCustomShader;
 
 	};
 }
