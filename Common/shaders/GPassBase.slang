@@ -3,12 +3,20 @@ module GPassBase;
 
 namespace Monoworks
 {    
-    public struct CameraConstants
+
+    // Constants
+    public struct CameraConstants // It's a camera constant
     {
         float4x4           ViewProjection;
         float4x4           InverseViewProjection;
         float3             CameraPosition;
     }
+
+    public struct ModelConstants // It's a push constant, not a ConstantBuffer like CameraConstants. It's just for unified naming.
+    {
+        float4x4            Transform;
+        uint                EntityID;    
+    };
 
 	public struct MaterialInput
     {
@@ -17,9 +25,10 @@ namespace Monoworks
         public float        Metallicness;
         public float        Roughness;
         public float        EmissionFactor;
-        public float        EnviromentMapRotation;   // TODO: Implement
+        public float        EnviromentMapRotation;   // NOTE: Not yet implemented
         public float        AmbientOcclusionFactor;  
         public bool         UseNormalMap;
+        public uint         MaterialID;
 
         public Texture2D    AlbedoMap;
         public Texture2D    NormalMap;
@@ -62,31 +71,61 @@ namespace Monoworks
         public uint         MaterialID      : MATERIALID0;
     }
 
+    public struct GBufferOutput 
+    {
+        float4 AlbedoOcclusion : SV_Target0; // R8B8G8A8_UNORM // xyz = albedo, w = occlusion
+        float2 MotionVector : SV_Target1; // R16G16_SFLOAT // used for TAA/Motion Blur
+
+        uint    EntityID : SV_Target3;              // R32_UINT
+        uint    MaterialID : SV_Target4;            // R32_UINT
+    }
+
     public struct MaterialSurface
     {
-        public float3 AlbedoColor;
-        public float3 Normal;
-        public float Metallic = 0.0;
-        public float Roughness = 0.5;
-        public float3 Emissive = float3(0);
-        public float OcclusionFactor = 1.0f;
+        public float3       AlbedoColor;
+        public float3       Normal;
+        public float        Metallic = 0.0;
+        public float        Roughness = 0.5;
+        public float3       Emissive = float3(0);
+        public float        OcclusionFactor = 1.0f;
     }
 
     public interface IMaterial
     {
-        public float4 CalculateVertexOffset(VertexInput input)
+        public float4 CalculateVertexOffset( in VertexInput input )
         {
             return float4(0);
         };
 
-        public MaterialSurface ComputeSurface(MaterialInput materialInput, PixelInput pixelInput);
+        /**
+         *   @brief This function computes the Material Surface Properties.
+         *   This function (if not overwritten) computes the default material surface properties and returns it.
+         *   The individual elements can optionally be overwritten by the functions down below, if the user chooses not to
+         *   write a custom implementation to calculate all elements of the MaterialSurface struct.
+         *   @return MaterialSurface All material surface properties calculated by the implementation of the function
+         */
+        public MaterialSurface ComputeSurface( in MaterialInput materialInput, in PixelInput pixelInput) 
+        {
 
-        public float4 ComputeColor(MaterialInput materialInput, PixelInput pixelInput);
-        public float4 ComputeNormal(MaterialInput materialInput, PixelInput pixelInput);
-        public float ComputeMetallicness(MaterialInput materialInput, PixelInput pixelInput);
-        public float ComputeRoughness( MaterialInput materialInput, PixelInput pixelInput);
-        public float3 ComputeEmissiveColor(MaterialInput materialInput, PixelInput pixelInput);
-        public float ComputeOcclusionFactor(MaterialInput materialInput, PixelInput pixelInput);
+        };
+
+        public float4           ComputeColor(           in MaterialInput materialInput, in PixelInput pixelInput );
+        public float4           ComputeNormal(          in MaterialInput materialInput, in PixelInput pixelInput );
+        public float            ComputeMetallicness(    in MaterialInput materialInput, in PixelInput pixelInput );
+        public float            ComputeRoughness(       in MaterialInput materialInput, in PixelInput pixelInput );
+        public float3           ComputeEmissiveColor(   in MaterialInput materialInput, in PixelInput pixelInput );
+        public float            ComputeOcclusionFactor( in MaterialInput materialInput, in PixelInput pixelInput );
+
+    }
+
+    public struct GPass
+    {
+        public static VertexOutput CalculateVertexOutput<T>(in VertexInput vertexInput, inout T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) where T : IMaterial 
+        {
+
+        }
+
+        
 
     }
 
