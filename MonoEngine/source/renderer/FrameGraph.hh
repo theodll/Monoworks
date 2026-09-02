@@ -166,7 +166,8 @@ namespace Monoworks
 
 	struct alignas(16) CameraConstants 
 	{
-		Matrix ViewProjection;
+		Matrix CurrentViewProjection;
+		Matrix PreviousViewProjection;
 		Matrix InverseViewProjection;
 		Vector CameraPosiiton;
 		int _pad0; 

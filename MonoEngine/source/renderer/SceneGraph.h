@@ -10,9 +10,9 @@ namespace Monoworks
 {
 	struct ModelPushConstant 
 	{
-		Matrix Transform;
-		u32 EntityID = UINT32_MAX; // TODO: Implement
-		u32 MaterialMask = UINT32_MAX; // TODO: Implement
+		Matrix	CurrentModelMatrix;
+		Matrix	PreviousModelMatrix;
+		u32		EntityID = UINT32_MAX; // TODO: Implement
 	};
 
 	class ISceneGraph 

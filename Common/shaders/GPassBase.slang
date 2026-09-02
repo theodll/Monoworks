@@ -5,16 +5,18 @@ namespace Monoworks
 {    
 
     // Constants
-    public struct CameraConstants // It's a camera constant
+    public struct CameraConstants // It's a camera constant.
     {
-        float4x4           ViewProjection;
-        float4x4           InverseViewProjection;
-        float3             CameraPosition;
+        float4x4            CurrentViewProjection;
+        float4x4            PreviousViewProjection;
+        float4x4            InverseViewProjection; // Current too.
+        float3              CameraPosition;
     }
 
     public struct ModelConstants // It's a push constant, not a ConstantBuffer like CameraConstants. It's just for unified naming.
     {
-        float4x4            Transform;
+        float4x4            CurrentModelMatrix;
+        float4x4            PreviousModelMatrix;
         uint                EntityID;    
     };
 
@@ -28,7 +30,7 @@ namespace Monoworks
         public float        EnviromentMapRotation;   // NOTE: Not yet implemented
         public float        AmbientOcclusionFactor;  
         public bool         UseNormalMap;
-        public uint         MaterialID;
+        public uint         MaterialID; // NOTE: Not yet implemented.
 
         public Texture2D    AlbedoMap;
         public Texture2D    NormalMap;
@@ -74,6 +76,7 @@ namespace Monoworks
     public struct GBufferOutput 
     {
         float4 AlbedoOcclusion : SV_Target0; // R8B8G8A8_UNORM // xyz = albedo, w = occlusion
+        float4 
         float2 MotionVector : SV_Target1; // R16G16_SFLOAT // used for TAA/Motion Blur
 
         uint    EntityID : SV_Target3;              // R32_UINT
@@ -120,12 +123,10 @@ namespace Monoworks
 
     public struct GPass
     {
-        public static VertexOutput CalculateVertexOutput<T>(in VertexInput vertexInput, inout T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) where T : IMaterial 
+        public static VertexOutput CalculateVertexOutput<T>( in VertexInput vertexInput, inout T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) where T : IMaterial 
         {
 
         }
-
-        
 
     }
 

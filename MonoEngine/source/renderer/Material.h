@@ -19,8 +19,7 @@ namespace Monoworks
 		float	EmissionFactor;
 		float	EnviromentMapRotation; // TODO: Implement
 		float	AmbientOcclusionFactor;
-		bool	UseNormalMap; 
-		const char	_pad[3];
+		u32		MaterialID = UINT32_MAX; // TODO: Implement
 	};
 
 	struct MaterialCreationInfo
