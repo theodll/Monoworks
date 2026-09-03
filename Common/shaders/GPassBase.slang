@@ -1,3 +1,5 @@
+import Utils;
+
 module GPassBase;
 
 
@@ -59,7 +61,8 @@ namespace Monoworks
 
     public struct VertexOutput
     {
-        public float4       ClipPosition    : SV_Position;
+        public float4       CurrentClipPosition    : SV_Position;
+        public float4       PreviousClipPosition : PREV_Position;
         public float3       WorldPosition   : WORLD_POSITION;
         public float3       WorldNormal     : WORLD_NORMAL;
         public float3       WorldTangent    : WORLD_TANGENT;
@@ -70,7 +73,8 @@ namespace Monoworks
 
     public struct PixelInput
     {
-        public float4       ClipPosition    : SV_Position;
+        public float4       CurrentClipPosition : SV_Position;
+        public float4       PreviousClipPosition : PREV_Position;
         public float3       WorldPosition   : WORLD_POSITION;
         public float3       WorldNormal     : WORLD_NORMAL;
         public float3       WorldTangent    : WORLD_TANGENT;
@@ -85,7 +89,7 @@ namespace Monoworks
         // Maybe  
         float4 AlbedoOcclusion : SV_Target0;   // R8B8G8A8_UNORM      // RGB = albedo, A = occlusion
         float4 NormalRoughMetal : SV_Target1; // A2B10G10R10_UNORM   // A is metal. RG is normal. B is roughness.
-        float4 Emissive : SV_Target2;        // R8G8B8_UNORM  // RGB = emissive
+        float3 Emissive : SV_Target2;        // R8G8B8_UNORM  // RGB = emissive
         float2 MotionVector : SV_Target3;   // R16G16_SFLOAT  
 
         // NOTE: This uses some really freaky bit packing:
@@ -101,7 +105,8 @@ namespace Monoworks
         public float        Metallic = 0.0;
         public float        Roughness = 0.5;
         public float3       Emissive = float3(0);
-        public float        OcclusionFactor = 1.0f;
+        public float OcclusionFactor = 1.0f;
+        public uint MaterialID; 
     }
 
     public interface IMaterial
@@ -134,7 +139,7 @@ namespace Monoworks
             surface.Metallic = metallicMap.b * materialInput.UBO.Metallicness; // NOTE: its the Blue color chanel in the glTF standart
             surface.Roughness = roughnessMap.g * materialInput.UBO.Roughness; // NOTE: its the Green color chanel in the glTF standart
             surface.OcclusionFactor = occlusionMap.r * materialInput.UBO.AmbientOcclusionFactor; // NOTE: its the red chanel in the glTF standart
-
+            
             float3 T = pixelInput.WorldTangent;
             float3 B = pixelInput.WorldBinormal;
             float3 N = pixelInput.WorldNormal;
@@ -178,15 +183,50 @@ namespace Monoworks
 
     public struct GPass
     {
-        public static VertexOutput CalculateVertexOutput<T>( in VertexInput vertexInput, inout T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) 
-                where T : IMaterial 
+        public static VertexOutput CalculateVertexOutput<T>( in VertexInput vertexInput, in T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) 
+                where T : IMaterial
         {
+            VertexOutput output;
 
+            float4 offsetWorldPos = float4(vertexInput.Position, 1.0) + material.CalculateVertexOffset(vertexInput);
+
+            float4 currentWorldPos = mul(modelConstants.CurrentModelMatrix, offsetWorldPos);
+            output.WorldPosition = currentWorldPos.xyz;
+            output.CurrentClipPosition = mul(cameraConstants.CurrentViewProjection, currentWorldPos );
+
+            float4 previousWorldPos = mul(modelConstants.PreviousModelMatrix, offsetWorldPos);
+            output.PreviousClipPosition = mul(cameraConstants.PreviousViewProjection, previousWorldPos);
+
+            float3x3 normalMat = (float3x3)modelConstants.CurrentModelMatrix;
+            output.WorldNormal = mul(normalMat, vertexInput.Normal);
+            output.WorldBinormal = mul(normalMat, vertexInput.Binormal);
+            output.WorldTangent = mul(normalMat, vertexInput.Tangent);
+
+            output.TexCoord = vertexInput.TexCoord;
+            output.EntityID = modelConstants.EntityID;
+
+            return output;
         }
 
-        public static GBuffer CalculateGBuffer(in MaterialSurface materialSurface, in PixelInput pixelInput, in CameraConstants cameraConstants, in ModelConstants modelConstants) 
+        public static GBuffer CalculateGBuffer(in MaterialSurface materialSurface, in PixelInput pixelInput, in CameraConstants cameraConstants, in ModelConstants modelConstants)
         {
+            GBuffer gbuffer;
 
+            gbuffer.AlbedoOcclusion.rgb = materialSurface.AlbedoColor;
+            gbuffer.AlbedoOcclusion.a = materialSurface.OcclusionFactor;
+
+            gbuffer.NormalRoughMetal.rg = OctEncode(materialSurface.Normal);
+            gbuffer.NormalRoughMetal.b = materialSurface.Roughness;
+            gbuffer.NormalRoughMetal.a = materialSurface.Metallic;
+
+            gbuffer.Emissive = materialSurface.Emissive;
+
+            gbuffer.EntityMaterialID = (materialSurface.MaterialID & 0x1FFFu) | ((modelConstants.EntityID & 0x7FFFFu) << 13);
+
+            float2 currentNDC = pixelInput.CurrentClipPosition.xy / pixelInput.CurrentClipPosition.w * 0.5 + 0.5;
+            float2 previousNDC = pixelInput.PreviousClipPosition.xy / pixelInput.PreviousClipPosition.w * 0.5 + 0.5;
+
+            gbuffer.MotionVector = currentNDC - previousNDC;            
         }
 
     }

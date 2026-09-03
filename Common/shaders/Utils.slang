@@ -4,7 +4,7 @@ namespace Monoworks
 {
 
     /// @brief Encodes a three-component unit vector into a two-component packed vector.    
-	float2 OctEncode(in float3 inf)
+	public static float2 OctEncode(in float3 inf)
     {
         float3 n = inf;
         n /= (abs(n.x) + abs(n.y) + abs(n.z));
@@ -15,7 +15,7 @@ namespace Monoworks
     };
 
     /// @brief Encodes a three-component unit vector into a two-component packed vector.    
-    float3 OctDecode(in float2 inf)
+    public static float3 OctDecode(in float2 inf)
     {
         float2 f = inf;
         f = f * 2.0 - 1.0;
