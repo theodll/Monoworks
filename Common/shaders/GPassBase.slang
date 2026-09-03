@@ -20,24 +20,32 @@ namespace Monoworks
         uint                EntityID;    
     };
 
+    public struct MaterialInputUBO
+    {
+        public float3 AlbedoVector;
+        public float3 EmissiveColor;
+        public float Metallicness;
+        public float Roughness;
+        public float EmissionFactor;
+        public float EnviromentMapRotation; // NOTE: Not yet implemented.
+        public float AmbientOcclusionFactor;
+        public bool UseNormalMap;
+        public uint MaterialID; // NOTE: Not yet implemented.
+    }
+
+
 	public struct MaterialInput
     {
-        public float3       AlbedoVector;
-        public float3       EmissiveColor;
-        public float        Metallicness;
-        public float        Roughness;
-        public float        EmissionFactor;
-        public float        EnviromentMapRotation;   // NOTE: Not yet implemented
-        public float        AmbientOcclusionFactor;  
-        public bool         UseNormalMap;
-        public uint         MaterialID; // NOTE: Not yet implemented.
+
+        ConstantBuffer<MaterialInputUBO> UBO;
 
         public Texture2D    AlbedoMap;
         public Texture2D    NormalMap;
+        public Texture2D    EmissiveMap;
         public Texture2D    RoughnessMap;
         public Texture2D    MetallicMap;
         public Texture2D    OcclusionMap;
-        public Sampler2D    MapSampler;
+        public SamplerState MapSampler;
 	}
 
     public struct VertexInput
@@ -58,7 +66,6 @@ namespace Monoworks
         public float3       WorldBinormal   : WORLD_BINORMAL;
         public float2       TexCoord        : TEXCOORD0;
         public uint         EntityID        : ENTITYID0;
-        public uint         MaterialID      : MATERIALID0;
     }
 
     public struct PixelInput
@@ -70,17 +77,21 @@ namespace Monoworks
         public float3       WorldBinormal   : WORLD_BINORMAL;
         public float2       TexCoord        : TEXCOORD0;
         public uint         EntityID        : ENTITYID0;
-        public uint         MaterialID      : MATERIALID0;
     }
 
-    public struct GBufferOutput 
+    public struct GBuffer // 19 Bytes Color + 4 Bytes Depth
     {
-        float4 AlbedoOcclusion : SV_Target0; // R8B8G8A8_UNORM // xyz = albedo, w = occlusion
-        float4 
-        float2 MotionVector : SV_Target1; // R16G16_SFLOAT // used for TAA/Motion Blur
+        // NOTE: Vulkan 1.3 only garantees a maximum of 4 rendertargets bound at the same time but I don't care.
+        // Maybe  
+        float4 AlbedoOcclusion : SV_Target0;   // R8B8G8A8_UNORM      // RGB = albedo, A = occlusion
+        float4 NormalRoughMetal : SV_Target1; // A2B10G10R10_UNORM   // A is metal. RG is normal. B is roughness.
+        float4 Emissive : SV_Target2;        // R8G8B8_UNORM  // RGB = emissive
+        float2 MotionVector : SV_Target3;   // R16G16_SFLOAT  
 
-        uint    EntityID : SV_Target3;              // R32_UINT
-        uint    MaterialID : SV_Target4;            // R32_UINT
+        // NOTE: This uses some really freaky bit packing:
+        // Bits 0-18 are assigned to the entity id. 2^19 = ~525k different Entity IDs (if you use more than that you got a serious issue)
+        // Bits 19-31 are assigned to the material id. 2^13 = 8192 different Material IDs (this value might be a bit small but eight-thousand different IDs is enough at first)
+        uint EntityMaterialID : SV_Target4;  // R32_UINT 
     }
 
     public struct MaterialSurface
@@ -107,9 +118,53 @@ namespace Monoworks
          *   write a custom implementation to calculate all elements of the MaterialSurface struct.
          *   @return MaterialSurface All material surface properties calculated by the implementation of the function
          */
-        public MaterialSurface ComputeSurface( in MaterialInput materialInput, in PixelInput pixelInput) 
+        public MaterialSurface ComputeSurface( in MaterialInput materialInput, in PixelInput pixelInput)
         {
+            MaterialSurface surface;
 
+            var albedoMap    =  materialInput.AlbedoMap.Sample(materialInput.MapSampler, pixelInput.TexCoord);
+            var normalMap    =  materialInput.NormalMap.Sample(materialInput.MapSampler, pixelInput.TexCoord);
+            var roughnessMap =  materialInput.RoughnessMap.Sample(materialInput.MapSampler, pixelInput.TexCoord);
+            var metallicMap  =  materialInput.MetallicMap.Sample(materialInput.MapSampler, pixelInput.TexCoord);
+            var occlusionMap =  materialInput.OcclusionMap.Sample(materialInput.MapSampler, pixelInput.TexCoord);
+            var emissiveMap  =  materialInput.EmissiveMap.Sample(materialInput.MapSampler, pixelInput.TexCoord);
+
+            surface.AlbedoColor = albedoMap.rgb * materialInput.UBO.AlbedoVector.rgb;
+            surface.Emissive = emissiveMap.rgb * materialInput.UBO.EmissiveColor * materialInput.UBO.EmissionFactor;
+            surface.Metallic = metallicMap.b * materialInput.UBO.Metallicness; // NOTE: its the Blue color chanel in the glTF standart
+            surface.Roughness = roughnessMap.g * materialInput.UBO.Roughness; // NOTE: its the Green color chanel in the glTF standart
+            surface.OcclusionFactor = occlusionMap.r * materialInput.UBO.AmbientOcclusionFactor; // NOTE: its the red chanel in the glTF standart
+
+            float3 T = pixelInput.WorldTangent;
+            float3 B = pixelInput.WorldBinormal;
+            float3 N = pixelInput.WorldNormal;
+
+            if (length(T) < 0.0000001)
+            {
+                T = cross(N, float3(0.0, 1.0, 0.0));
+                if (length(T) < 0.00000001)
+                    T = cross(N, float3(1.0, 0.0, 0.0));
+            }
+
+            T = normalize(T - dot(T, N) * N);
+
+            if (length(B) < 0.00000001)
+                B = cross(N, T) * pixelInput.WorldTangent;
+            else
+                B = normalize(B - dot(B, N) * N);
+
+            if (dot(cross(N, T), pixelInput.WorldBinormal) < 0.0)
+            {
+                B = -B;
+            }
+
+            float3x3 TBN = float3x3(T, B, N);
+
+            float3 tangentNormal = normalMap.rgb * 2.0 - 1.0;
+
+            float3 worldNormal = normalize(mul(tangentNormal, TBN));
+
+            surface.Normal = worldNormal;
         };
 
         public float4           ComputeColor(           in MaterialInput materialInput, in PixelInput pixelInput );
@@ -123,7 +178,13 @@ namespace Monoworks
 
     public struct GPass
     {
-        public static VertexOutput CalculateVertexOutput<T>( in VertexInput vertexInput, inout T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) where T : IMaterial 
+        public static VertexOutput CalculateVertexOutput<T>( in VertexInput vertexInput, inout T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) 
+                where T : IMaterial 
+        {
+
+        }
+
+        public static GBuffer CalculateGBuffer(in MaterialSurface materialSurface, in PixelInput pixelInput, in CameraConstants cameraConstants, in ModelConstants modelConstants) 
         {
 
         }
