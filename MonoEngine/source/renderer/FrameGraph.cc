@@ -12,7 +12,291 @@ namespace Monoworks
 	using namespace RHI;
 	constexpr u32 GlobalScopeSignature = 0;
 
-	CPostProcessPass::CPostProcessPass( PostProcessPassCreationInfo* pInfo )
+	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
+	{
+		MW_PROFILE_FUNC;
+
+		slang::VariableLayoutReflection* pBlockVar = nullptr;
+
+		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
+		{
+			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
+			if ( parameterBlockName == pParam->getName() )
+			{
+				pBlockVar = pParam;
+				break;
+			}
+		}
+
+		if ( pBlockVar == nullptr )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
+
+		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
+
+		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
+		slang::TypeLayoutReflection* pElementTypeLayout = pElementVar->getTypeLayout();
+
+		const u32 containerBindingOffset = static_cast< u32 >( pElementVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
+
+		for ( u32 i = 0; i < pElementTypeLayout->getFieldCount(); ++i )
+		{
+			slang::VariableLayoutReflection* pField = pElementTypeLayout->getFieldByIndex( i );
+			if ( bindingName == pField->getName() )
+			{
+				const u32 bindingIndex = containerBindingOffset + static_cast< u32 >( pField->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
+				return std::make_pair( setIndex, bindingIndex );
+			}
+		}
+
+		return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+	}
+
+	NODISCARD static std::expected<u32, EResult> FindBindingNumberByString( std::string_view name, slang::ProgramLayout* pLayout ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		slang::VariableLayoutReflection* globals = pLayout->getGlobalParamsVarLayout();
+		slang::TypeLayoutReflection* globalsType = globals->getTypeLayout();
+
+		const auto cstr = name.data();
+		const SlangInt fieldIndex = globalsType->findFieldIndexByName( cstr );
+
+		if ( fieldIndex < 0 )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		slang::VariableLayoutReflection* field = globalsType->getFieldByIndex( fieldIndex );
+		const size_t binding = field->getOffset( slang::ParameterCategory::DescriptorTableSlot );
+
+		return binding;
+
+	}
+
+
+	CComputePrePass::CComputePrePass( const ComputePrePassCreationInfo* pInfo )
+	{
+		MW_PROFILE_FUNC;
+		MW_PROFILE_FUNC;
+
+		if ( !pInfo->hShader )
+		{
+			MW_API_ERROR( "Invalid Shader Reference Passed" );
+			throw std::runtime_error( "Invalid Shader Reference Passed" );
+			return;
+		};
+
+		m_hShader = pInfo->hShader;
+
+		const auto reflectionData = m_hShader->ReflectOnShader();
+		auto entrypoints = m_hShader->GetShaderEntrypoints();
+		const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
+
+		Slang::ComPtr<slang::IBlob> code;
+		Slang::ComPtr<slang::IBlob> diagnostics;
+
+		const SlangInt entrypointPointIndex = 0;
+		const SlangInt targetIndex = 0;
+
+		const SlangResult result =
+			m_hShader->GetShaderProgram()->getEntryPointCode(
+				entrypointPointIndex,
+				targetIndex,
+				code.writeRef(),
+				diagnostics.writeRef() );
+
+
+		if ( SLANG_FAILED( result ) )
+		{
+			if ( diagnostics )
+				MW_ERROR( "Failed to get entry point code for Compute Pre Pass pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+
+			return;
+		}
+
+		SShaderObject computeShader;
+		computeShader.pEntrypoint = entrypoint;
+		computeShader.ShaderStage = MW_SHADER_STAGE_COMPUTE;
+		computeShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+
+
+		RHI::ComputePipelineCreationInfo pipelineInfo{};
+		pipelineInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
+		pipelineInfo.Signature = reflectionData.pPipelineSignature;
+		pipelineInfo.ComputeShader = computeShader;
+
+		std::expected<Ref<IComputePipeline>, EResult> pipeline;
+		try
+		{
+			pipeline = CPipelineManager::CreateComputePipeline( &pipelineInfo, &m_PipelineHash );
+		}
+		catch ( ... )
+		{
+			MW_WARN( "Failed to create Compute Pipeline for Post Processing Pass " );
+		}
+
+		if ( pipeline )
+			m_hComputePipeline = pipeline.value();
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+			m_pDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+
+
+	}
+
+	MW_NOTHROW CComputePrePass::~CComputePrePass() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		CPipelineManager::DeleteComputePipeline( m_PipelineHash );
+		m_hComputePipeline = nullptr;
+	}
+
+	void CComputePrePass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTexture );
+				m_BindingsWritten[binding.value()] = true;
+			}
+	}
+
+	void CComputePrePass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteSampler( m_pDescriptors[i], binding.value(), hSampler );
+				m_BindingsWritten[binding.value()] = true;
+			}
+	}
+
+	void CComputePrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+	
+	CGraphicsPrePass::CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+	MW_NOTHROW CGraphicsPrePass::~CGraphicsPrePass() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		CPipelineManager::DeleteComputePipeline( m_PipelineHash );
+		m_hGraphicsPipeline = nullptr;
+	}
+
+	void CGraphicsPrePass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTexture );
+				m_BindingsWritten[binding.value()] = true;
+			}
+	}
+
+	void CGraphicsPrePass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteSampler( m_pDescriptors[i], binding.value(), hSampler );
+				m_BindingsWritten[binding.value()] = true;
+			}
+	}
+
+	void CGraphicsPrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
+				m_BindingsWritten[binding.value()] = true;
+			}
+	}
+
+	void CGraphicsPrePass::RegisterExecutionScopeCallback( const std::function<void>& rpExecutionScopeCallback )
+	{
+		MW_PROFILE_FUNC;
+	}
+
+	CPostProcessPass::CPostProcessPass( const PostProcessPassCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
 		
@@ -23,8 +307,10 @@ namespace Monoworks
 			return;
 		};
 		
-		auto reflectionData = pInfo->hShader->ReflectOnShader();
-		auto entrypoints = pInfo->hShader->GetShaderEntrypoints();
+		m_hShader = pInfo->hShader;
+
+		const auto reflectionData = m_hShader->ReflectOnShader();
+		auto entrypoints = m_hShader->GetShaderEntrypoints();
 		const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
 
 		Slang::ComPtr<slang::IBlob> code;
@@ -34,7 +320,7 @@ namespace Monoworks
 		const SlangInt targetIndex = 0;
 
 		const SlangResult result = 
-			pInfo->hShader->GetShaderProgram()->getEntryPointCode(
+			m_hShader->GetShaderProgram()->getEntryPointCode(
 			entrypointPointIndex,
 			targetIndex,
 			code.writeRef(),
@@ -79,77 +365,13 @@ namespace Monoworks
 
 	};
 
-	MW_NOTHROW CPostProcessPass::~CPostProcessPass() NOEXCEPT 
+	MW_NOTHROW CPostProcessPass::~CPostProcessPass() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
 		CPipelineManager::DeleteComputePipeline( m_PipelineHash );
 
 	};
-
-	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
-	{
-		MW_PROFILE_FUNC;
-		
-		slang::VariableLayoutReflection* pBlockVar = nullptr;
-
-		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
-		{
-			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
-			if ( parameterBlockName == pParam->getName() )
-			{
-				pBlockVar = pParam;
-				break;
-			}
-		}
-
-		if ( pBlockVar == nullptr )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
-
-		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
-
-		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
-		slang::TypeLayoutReflection* pElementTypeLayout = pElementVar->getTypeLayout();
-
-		const u32 containerBindingOffset = static_cast< u32 >( pElementVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
-
-		for ( u32 i = 0; i < pElementTypeLayout->getFieldCount(); ++i )
-		{
-			slang::VariableLayoutReflection* pField = pElementTypeLayout->getFieldByIndex( i );
-			if ( bindingName == pField->getName() )
-			{
-				const u32 bindingIndex = containerBindingOffset + static_cast< u32 >( pField->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
-				return std::make_pair( setIndex, bindingIndex );
-			}
-		}
-
-		return std::unexpected( MW_ERROR_NON_EXISTANT );
-		
-	}
-
-	NODISCARD static std::expected<u32, EResult> FindBindingNumberByString( std::string_view name, slang::ProgramLayout* pLayout ) NOEXCEPT
-	{
-		MW_PROFILE_FUNC;
-		slang::VariableLayoutReflection* globals = pLayout->getGlobalParamsVarLayout();
-		slang::TypeLayoutReflection* globalsType = globals->getTypeLayout();
-
-		const auto cstr = name.data();
-		const SlangInt fieldIndex = globalsType->findFieldIndexByName( cstr );
-
-		if ( fieldIndex < 0 )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::VariableLayoutReflection* field = globalsType->getFieldByIndex( fieldIndex );
-		const size_t binding = field->getOffset( slang::ParameterCategory::DescriptorTableSlot );
-
-		return binding;
-
-	}
 
 	void CPostProcessPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite )
 	{
@@ -174,7 +396,6 @@ namespace Monoworks
 				m_BindingsWritten[binding.value()] = true;
 			}
 	};
-
 
 	void CPostProcessPass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
 	{
@@ -227,7 +448,7 @@ namespace Monoworks
 	};
 
 
-	CDefferedResolutionPass::CDefferedResolutionPass( DefferedResolutionPassCreateionInfo* pInfo )
+	CDefferedResolutionPass::CDefferedResolutionPass( const DefferedResolutionPassCreateionInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
 		MW_PROFILE_FUNC;
@@ -239,8 +460,10 @@ namespace Monoworks
 			return;
 		};
 
-		auto reflectionData = pInfo->hShader->ReflectOnShader();
-		auto entrypoints = pInfo->hShader->GetShaderEntrypoints();
+		m_hShader = pInfo->hShader;
+
+		const auto reflectionData = m_hShader->ReflectOnShader();
+		auto entrypoints = m_hShader->GetShaderEntrypoints();
 		const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
 
 		Slang::ComPtr<slang::IBlob> code;
@@ -250,7 +473,7 @@ namespace Monoworks
 		const SlangInt targetIndex = 0;
 
 		const SlangResult result =
-			pInfo->hShader->GetShaderProgram()->getEntryPointCode(
+			m_hShader->GetShaderProgram()->getEntryPointCode(
 				entrypointPointIndex,
 				targetIndex,
 				code.writeRef(),
@@ -694,7 +917,5 @@ namespace Monoworks
 			}
 		}
 	};
-
-
 
 }

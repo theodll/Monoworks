@@ -28,19 +28,104 @@ namespace Monoworks
 		virtual MW_NOTHROW void ExecutePostPasses() NOEXCEPT = 0;
 	};
 
+	struct ComputePrePassCreationInfo
+	{
+		const Ref<CShader> hShader;
+	};
+
 	class CComputePrePass 
 	{
-		// TODO: Implement
+		CComputePrePass( const ComputePrePassCreationInfo* pInfo );
+		MW_NOTHROW ~CComputePrePass() NOEXCEPT;
+
+		/**
+		* @brief Bind a texture located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param hTexture: Reference to the texture to bind
+		* @param forceRewrite: Toggle whether to rewrite the texture if it's already written.
+		*/
+		void BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false );
+
+		/**
+		* @brief Bind a sampler located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param hSampler: Reference to the sampler to bind
+		* @param forceRewrite: Toggle whether to rewrite the sampler if it's already written.
+		*/
+		void BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite = false );
+
+		/**
+		* @brief Bind a uniform buffer located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param hUniformBuffer: Reference to the uniform buffer to bind
+		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
+		*/
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+
+	private:
+		boost::unordered_map<u32, bool> m_BindingsWritten;
+		RHI::DescriptorHandle m_pDescriptors[MFIF];
+		Ref<RHI::IComputePipeline> m_hComputePipeline;
+		Ref<CShader> m_hShader;
+
+		Hash::hash_t m_PipelineHash;
+
+		friend class CFrameGraph;
+	};
+
+	struct GraphicsPrePassCreationInfo
+	{
+		Ref<CShader> hShader;
+		std::function<void> MW_NULLABLE pExecutionScopeCallback = nullptr;
 	};
 
 	class CGraphicsPrePass
 	{
-		// TODO: Implement
+		CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo );
+		MW_NOTHROW ~CGraphicsPrePass() NOEXCEPT;
+
+		/**
+		* @brief Bind a texture located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param hTexture: Reference to the texture to bind
+		* @param forceRewrite: Toggle whether to rewrite the texture if it's already written.
+		*/
+		void BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false );
+
+		/**
+		* @brief Bind a sampler located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param hSampler: Reference to the sampler to bind
+		* @param forceRewrite: Toggle whether to rewrite the sampler if it's already written.
+		*/
+		void BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite = false );
+
+		/**
+		* @brief Bind a uniform buffer located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param hUniformBuffer: Reference to the uniform buffer to bind
+		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
+		*/
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+
+		void RegisterExecutionScopeCallback( const std::function<void>& rpExecutionScopeCallback );
+
+	private:
+		boost::unordered_map<u32, bool> m_BindingsWritten;
+		RHI::DescriptorHandle m_pDescriptors[MFIF];
+		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
+		// TODO: add the possibility to split this up. 
+		Ref<CShader> m_hShader; // Note: all graphics shader stages in one slang module. 
+		std::function<void> MW_NULLABLE pExecutionScopeCallback;
+
+		Hash::hash_t m_PipelineHash;
+
+		friend class CFrameGraph;
 	};
 
 	struct PostProcessPassCreationInfo 
 	{
-		Ref<CShader> hShader;
+		const Ref<CShader> hShader;
 	};
 
 	/**
@@ -53,7 +138,7 @@ namespace Monoworks
 	 */
 	class CPostProcessPass
 	{
-		CPostProcessPass( PostProcessPassCreationInfo* pInfo );
+		CPostProcessPass( const PostProcessPassCreationInfo* pInfo );
 		MW_NOTHROW ~CPostProcessPass() NOEXCEPT;
 
 		/**
@@ -93,12 +178,12 @@ namespace Monoworks
 
 	struct DefferedResolutionPassCreateionInfo
 	{
-		Ref<CShader> hShader;
+		const Ref<CShader> hShader;
 	};
 
 	class CDefferedResolutionPass
 	{
-		CDefferedResolutionPass( DefferedResolutionPassCreateionInfo* pInfo );
+		CDefferedResolutionPass( const DefferedResolutionPassCreateionInfo* pInfo );
 		~CDefferedResolutionPass() NOEXCEPT;
 
 		/**
