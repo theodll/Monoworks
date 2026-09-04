@@ -26,6 +26,8 @@ namespace Monoworks
 		virtual MW_NOTHROW void ExecuteCorePasses() NOEXCEPT = 0;
 		/// @brief Executes all Post-Process-Passes (Bloom, Tone-Mapping, ...)
 		virtual MW_NOTHROW void ExecutePostPasses() NOEXCEPT = 0;
+		/// @brief Returns a reference to the current default Base-Pass-Pipeline
+		virtual const MW_NOTHROW Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const = 0;
 	};
 
 	struct ComputePrePassCreationInfo
@@ -300,6 +302,8 @@ namespace Monoworks
 		*/
 		MW_NOTHROW void AddPostProcessPass(			Ref<CPostProcessPass> hPostProcessPass,		u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
 
+		MW_NOTHROW const Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
+
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
 		std::vector<Ref<CComputePrePass>>			m_hComputePrePasses;
@@ -307,7 +311,7 @@ namespace Monoworks
 		std::vector<Ref<CDefferedResolutionPass>>	m_hDefferedResolutionPasses;
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
-		Ref<IGraphicsPipeline> m_hDefaultMaterialPipeline;
+		Ref<IGraphicsPipeline> m_hDefaultBasePassPipeline;
 
 	};
 }

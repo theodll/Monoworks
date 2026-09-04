@@ -901,19 +901,19 @@ namespace Monoworks
 		if ( executionPriority == UINT32_MAX )
 		{
 			m_hPostProcessPasses.push_back( std::move( hPostProcessPass ) );
-			MW_INFO( "Register Deffered Resolotion {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
+			MW_INFO( "Register Deffered Resolution {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
 		}
 		else
 		{
 			if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 )
 			{
 				m_hPostProcessPasses.push_back( std::move( hPostProcessPass ) );
-				MW_INFO( "Register Deffered Resolotion Pre-Pass {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
+				MW_INFO( "Register Deffered Resolution Pre-Pass {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
 			}
 			else
 			{
 				m_hPostProcessPasses.insert( m_hPostProcessPasses.begin() + executionPriority, std::move( hPostProcessPass ) );
-				MW_INFO( "Register Deffered Resolotion Pre-Pass {} by inserting it at execution priority {}", hPostProcessPass.raw(), executionPriority );
+				MW_INFO( "Register Deffered Resolution Pre-Pass {} by inserting it at execution priority {}", hPostProcessPass.raw(), executionPriority );
 			}
 		}
 	};
