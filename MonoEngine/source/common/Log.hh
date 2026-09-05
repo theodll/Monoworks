@@ -39,7 +39,7 @@ constexpr std::string_view StripNamespace(std::string_view name) {
 #define MW_INFO(fmt, ...)  MW_LOG(info,     fmt, ##__VA_ARGS__)
 #define MW_WARN(fmt, ...)  MW_LOG(warn,     fmt, ##__VA_ARGS__)
 #define MW_ERROR(fmt, ...) MW_LOG(error,    fmt, ##__VA_ARGS__)
-#define MW_FATAL(fmt, ...) MW_LOG(critical, fmt, ##__VA_ARGS__)
+#define MW_FATAL(fmt, ...) do { MW_LOG(critical, fmt, ##__VA_ARGS__); std::exit(1); } while (0);
 
 
 #define MW_API_WARN(fmt, ...)  MW_WARN( "Invalid API usage: " fmt, ##__VA_ARGS__ )

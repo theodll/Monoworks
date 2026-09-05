@@ -20,7 +20,7 @@ namespace Monoworks
 
 	using EShaderFlags = flags_t;
 
-	// Shader entrypoint must be main. 
+	// TODO: Rename to ShaderCreationInfo
 	struct ShaderCreateInfo 
 	{
 		path_t Path; // NOTE: Module name + .slang relative to the binaries directory 

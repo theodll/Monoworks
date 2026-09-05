@@ -88,7 +88,7 @@ namespace Monoworks
         // NOTE: Vulkan 1.3 only garantees a maximum of 4 rendertargets bound at the same time but I don't care.
         // Maybe  
         float4 AlbedoOcclusion : SV_Target0;   // R8B8G8A8_UNORM      // RGB = albedo, A = occlusion
-        float4 NormalRoughMetal : SV_Target1; // A2B10G10R10_UNORM   // A is metal. RG is normal. B is roughness.
+        float4 NormalRoughMetal : SV_Target1; // A2B10G10R10_UNORM_PACK32   // A is metal. RG is normal. B is roughness.
         float3 Emissive : SV_Target2;        // R8G8B8_UNORM  // RGB = emissive
         float2 MotionVector : SV_Target3;   // R16G16_SFLOAT  
 

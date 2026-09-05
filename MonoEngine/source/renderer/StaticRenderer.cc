@@ -41,7 +41,12 @@ namespace Monoworks
 
         };
         
-        void CStaticRenderer::Shutdown() noexcept 
+		MW_NOTHROW void CStaticRenderer::Init() NOEXCEPT
+		{
+
+		}
+
+		void CStaticRenderer::Shutdown() noexcept
         {
             MW_PROFILE_FUNC;
             RHI::CPipelineManager::Shutdown();
@@ -49,13 +54,24 @@ namespace Monoworks
             MW_INFO( "Shutdown CStaticRenderer" );
         }; 
 
-        MW_NOTHROW void CStaticRenderer::DispatchCompute( Ref<RHI::IComputePipeline> hPipeline, u32 workgroupX, u32 workgroupY, u32 workgroupZ, u32 MW_NULLABLE threadID ) NOEXCEPT
-        {
-            MW_PROFILE_FUNC;
-            m_pInstance->DispatchCompute( hPipeline, workgroupX, workgroupY, workgroupZ, threadID );
-        }
+		MW_NOTHROW void CStaticRenderer::Shutdown() NOEXCEPT
+		{
 
-        void CStaticRenderer::BeginRendering() NOEXCEPT
+		}
+
+		MW_NOTHROW void CStaticRenderer::DispatchCompute( Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1*/, RHI::DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			m_pInstance->DispatchCompute( hPipeline, workgroup, threadID, pDesciptors, descriptorCount );
+		}
+
+		MW_NOTHROW void CStaticRenderer::DispatchCompute2( Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
+		{
+            MW_PROFILE_FUNC;
+            m_pInstance->DispatchCompute2( hPipeline, workgroup, threadID );
+		}
+
+		void CStaticRenderer::BeginRendering() NOEXCEPT
         {
             MW_PROFILE_FUNC;
             m_pInstance->BeginRendering();

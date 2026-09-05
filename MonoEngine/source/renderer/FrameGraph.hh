@@ -23,7 +23,7 @@ namespace Monoworks
 		/// @brief Executes all Pre-Passes (Culling, Depth-Pre-Pass, ...)
 		virtual MW_NOTHROW void ExecutePrePasses() NOEXCEPT = 0;
 		/// @brief Executes all Core-Passes (GPass, Deffered Resolution, ...)
-		virtual MW_NOTHROW void ExecuteCorePasses() NOEXCEPT = 0;
+		virtual MW_NOTHROW void ExecuteBasePasses() NOEXCEPT = 0;
 		/// @brief Executes all Post-Process-Passes (Bloom, Tone-Mapping, ...)
 		virtual MW_NOTHROW void ExecutePostPasses() NOEXCEPT = 0;
 		/// @brief Returns a reference to the current default Base-Pass-Pipeline
@@ -72,7 +72,7 @@ namespace Monoworks
 
 		Hash::hash_t m_PipelineHash;
 
-		friend class CFrameGraph;
+		friend class CDefferedFrameGraph;		friend class CDefferedFrameGraph;
 	};
 
 	struct GraphicsPrePassCreationInfo
@@ -81,6 +81,14 @@ namespace Monoworks
 		std::function<void> MW_NULLABLE pExecutionScopeCallback = nullptr;
 	};
 
+	/**
+	* @brief A Class to be inserted into the Frame Graph Pre-Pass section by either the Engine or a User.
+	* This Data Structure takes in a Reference to a Shader, then reflects based on it and generates all needed descriptors and
+	* creates a Graphics Pipeline.
+	*
+	* When writing a graphics-pre-pass Shader, all data the user wants to bind to must be in global scope, NOT in a ParameterBlock. This
+	* is to allow easy binding, since parameters in the global scope are always set 0 in vulkan. If you need better performance - implement it yourself.
+	*/
 	class CGraphicsPrePass
 	{
 		CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo );
@@ -110,6 +118,9 @@ namespace Monoworks
 		*/
 		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
 
+		/**
+		 * @brief Register a callback to be called within the rendering/renderpass encoding scope (vkCmdBeginRendering,  ).
+		 */
 		void RegisterExecutionScopeCallback( const std::function<void>& rpExecutionScopeCallback );
 
 	private:
@@ -122,7 +133,7 @@ namespace Monoworks
 
 		Hash::hash_t m_PipelineHash;
 
-		friend class CFrameGraph;
+		friend class CDefferedFrameGraph;
 	};
 
 	struct PostProcessPassCreationInfo 
@@ -131,7 +142,7 @@ namespace Monoworks
 	};
 
 	/**
-	 * @brief A Class to be inserted into the Frame Graph by either the Engine or a User.
+	 * @brief A Class to be inserted into the Frame Graph Post-Processing section by either the Engine or a User.
 	 * This Data Structure takes in a Reference to a Shader, then reflects based on it and generates all needed descriptors and
 	 * creates a Compute Pipeline. 
 	 * 
@@ -175,7 +186,7 @@ namespace Monoworks
 
 		Hash::hash_t m_PipelineHash;
 
-		friend class CFrameGraph;
+		friend class CDefferedFrameGraph;
 	};
 
 	struct DefferedResolutionPassCreateionInfo
@@ -248,10 +259,10 @@ namespace Monoworks
 
 		Hash::hash_t m_PipelineHash;
 
-		friend class CFrameGraph;
+		friend class CDefferedFrameGraph;
 	};
 
-	struct alignas(16) CameraConstants 
+	struct alignas(16) CameraConstantsUBO
 	{
 		Matrix CurrentViewProjection;
 		Matrix PreviousViewProjection;
@@ -270,7 +281,7 @@ namespace Monoworks
 		/// @brief Executes all pre-passes.
 		MW_NOTHROW void ExecutePrePasses()	NOEXCEPT override;
 		/// @brief Executes all core-passes.
-		MW_NOTHROW void ExecuteCorePasses() NOEXCEPT override;
+		MW_NOTHROW void ExecuteBasePasses() NOEXCEPT override;
 		/// @brief Executes all post & post-processing-passes.
 		MW_NOTHROW void ExecutePostPasses() NOEXCEPT override;
 
@@ -311,7 +322,9 @@ namespace Monoworks
 		std::vector<Ref<CDefferedResolutionPass>>	m_hDefferedResolutionPasses;
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
-		Ref<IGraphicsPipeline> m_hDefaultBasePassPipeline;
+		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
+		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;
+		Hash::hash_t			m_DefaultBasePassPipelineHash;
 
 	};
 }

@@ -21,7 +21,8 @@ namespace Monoworks
         static MW_NOTHROW void BeginRendering() NOEXCEPT;
         static MW_NOTHROW void EndRendering() NOEXCEPT;
 
-        static MW_NOTHROW void DispatchCompute( Ref<RHI::IComputePipeline> hPipeline, u32 workgroupX, u32 workgroupY, u32 workgroupZ, u32 MW_NULLABLE threadID = UINT32_MAX ) NOEXCEPT;
+        static MW_NOTHROW void DispatchCompute( Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, RHI::DescriptorHandle* pDesciptors, size_t pDescriptorCount ) NOEXCEPT;
+		static MW_NOTHROW void DispatchCompute2( Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT;
 
         NODISCARD static u32  GetCurrentFrameIndex() NOEXCEPT { return m_CurrentFrameIndex; };
         NODISCARD static u32* GetCurrentFrameIndexPtr() NOEXCEPT { return &m_CurrentFrameIndex; };
@@ -30,9 +31,14 @@ namespace Monoworks
 		NODISCARD static u32* GetCurrentImageIndexPtr() NOEXCEPT { return &m_CurrentImageIndex; };
 
         NODISCARD static Slang::ComPtr<slang::IGlobalSession> GetSlangGlobalSession() NOEXCEPT { return m_SlangGlobalSession; };
+
+        static MW_NOTHROW void SetRenderableExtend( const SExtent2D* renderableExtent ) { m_RenderableExtent = *renderableExtent; };
+        NODISCARD static MW_NOTHROW SExtent2D GetRenderableExtend() { return m_RenderableExtent; };
     private:
         static u32 m_CurrentFrameIndex;
         static u32 m_CurrentImageIndex;
+
+        static SExtent2D m_RenderableExtent;
 
         static Slang::ComPtr<slang::IGlobalSession> m_SlangGlobalSession;
 

@@ -297,30 +297,55 @@ namespace Monoworks::RHI
 #endif */
 
         }
-        
-    };
 
-    void CVulkanRenderer::DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID ) NOEXCEPT
-    {
-        MW_PROFILE_FUNC;
+	MW_NOTHROW void CVulkanRenderer::DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1*/, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
 
-        VkCommandBuffer hCmd = nullptr;
+		VkCommandBuffer hCmd = nullptr;
 
-        if ( threadID < 0 )
-            hCmd = *CVulkanRenderManager::GetCurrentRootComputeCommandBuffer();
-        else
-            hCmd = *CVulkanRenderManager::GetCurrentWorkerComputeCommandBuffer( threadID );
+		if ( threadID < 0 )
+			hCmd = *CVulkanRenderManager::GetCurrentRootComputeCommandBuffer();
+		else
+			hCmd = *CVulkanRenderManager::GetCurrentWorkerComputeCommandBuffer( threadID );
 
-        if ( !hCmd )
-        {
-            MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch");
-            return;
-        }
+		if ( !hCmd )
+		{
+			MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch" );
+			return;
+		}
 
-        auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
-        vkCmdBindPipeline( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipeline() );
 
-        vkCmdDispatch( hCmd, workgroup.x, workgroup.y, workgroup.z );
+		auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
+        vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), 0, descriptorCount, static_cast<VkDescriptorSet*>(*pDesciptors), 0, nullptr);
 
-    };
+		vkCmdBindPipeline( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipeline() );
+
+		vkCmdDispatch( hCmd, workgroup.x, workgroup.y, workgroup.z );
+	}
+
+	MW_NOTHROW void CVulkanRenderer::DispatchCompute2( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		VkCommandBuffer hCmd = nullptr;
+
+		if ( threadID < 0 )
+			hCmd = *CVulkanRenderManager::GetCurrentRootComputeCommandBuffer();
+		else
+			hCmd = *CVulkanRenderManager::GetCurrentWorkerComputeCommandBuffer( threadID );
+
+		if ( !hCmd )
+		{
+			MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch" );
+			return;
+		}
+
+		auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
+		vkCmdBindPipeline( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipeline() );
+
+		vkCmdDispatch( hCmd, workgroup.x, workgroup.y, workgroup.z );
+
+	}
+
 }

@@ -126,13 +126,14 @@ namespace Monoworks::RHI
 	struct GraphicsPipelineCreationInfo
 	{ 
 		CVertexLayout VertexLayout;
+		// TODO: Change this to C-Style arrays
 		std::vector<SShaderObject> ShaderObjects;
 		std::vector<EImageFormat> ColorFormats;
 		std::vector<SColorBlendAttachmentState> ColorBlendAttachments;
 		std::vector<EDynamicState> DynamicStates = { MW_DYNAMIC_STATE_VIEWPORT, MW_DYNAMIC_STATE_SCISSOR };
 
 		// TODO: Implement custom signature for Graphics Pipeline
-		PipelineSignature MW_NULLABLE Signature = nullptr; // VkPipelineLayout / D3D12RootSignature
+		PipelineSignature MW_NULLABLE pSignature = nullptr; // VkPipelineLayout / D3D12RootSignature
 
 		EPipelineCreationFlags Flags;
 		EImageFormat DepthAttachmentFormat;
