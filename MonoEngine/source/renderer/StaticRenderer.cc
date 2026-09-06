@@ -71,10 +71,10 @@ namespace Monoworks
             m_pInstance->DispatchCompute2( hPipeline, workgroup, threadID );
 		}
 
-		void CStaticRenderer::BeginRendering() NOEXCEPT
+		void CStaticRenderer::BeginRendering( const RHI::BeginRenderingInfo* pInfo ) NOEXCEPT
         {
             MW_PROFILE_FUNC;
-            m_pInstance->BeginRendering();
+            m_pInstance->BeginRendering( pInfo );
         };
 
         void CStaticRenderer::EndRendering() NOEXCEPT
@@ -84,4 +84,6 @@ namespace Monoworks
             m_pInstance->EndRendering();
             m_CurrentFrameIndex = ( m_CurrentFrameIndex + 1 ) % MFIF;
         };
+
+
 }

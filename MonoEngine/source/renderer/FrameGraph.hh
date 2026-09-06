@@ -288,30 +288,30 @@ namespace Monoworks
 		/**
 		 * @brief Hooks a compute pre-pass into the frame graph.
 		 * @param hComputePrePass Compute-Pass to be hooked into the frame-graph.
-		 * @param executionPriority Priority of the Compute-Pre-Pass 
+		 * @param executionPriority Priority of the Compute-Pre-Pass. Passing -1 as execution priority automatically inserts it in last place.
 		 */
-		MW_NOTHROW void AddPrePass(					Ref<CComputePrePass>  hComputePrePass,		u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+		MW_NOTHROW void AddPrePass(					Ref<CComputePrePass>  hComputePrePass,		s32 MW_NULLABLE executionPriority = -1 ) NOEXCEPT;
 		
 		/**
 		 * @brief Hooks a graphics pre-pass into the frame graph.
 		 * @param hGraphicsPrePass Compute-Pass to be hooked into the frame-graph.
-		 * @param executionPriority Priority of the Graphics-Pre-Pass
+		 * @param executionPriority Priority of the Graphics-Pre-Pass. Passing -1 as execution priority automatically inserts it in last place.
 		 */
-		MW_NOTHROW void AddPrePass(					Ref<CGraphicsPrePass> hGraphicsPrePass,		u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+		MW_NOTHROW void AddPrePass(					Ref<CGraphicsPrePass> hGraphicsPrePass,		s32 MW_NULLABLE executionPriority = -1 ) NOEXCEPT;
 
 		/**  
 		* @brief Hooks a deffered resolution pass into the frame graph.
 		* @param hComputePrePass Compute-Pass to be hooked into the frame-graph.
-		* @param executionPriority Priority of the deffered resolution pass
+		* @param executionPriority Priority of the deffered resolution pass. Passing -1 as execution priority automatically inserts it in last place.
 		*/
-		MW_NOTHROW void AddDefferedResolutionPass(	Ref<CDefferedResolutionPass> hComputePass,	u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+		MW_NOTHROW void AddDefferedResolutionPass(	Ref<CDefferedResolutionPass> hComputePass,	s32 MW_NULLABLE executionPriority = -1 ) NOEXCEPT;
 
 		/**  
 		* @brief Hooks a post process pass into the frame graph. 
 		* @param hComputePrePass Compute - Pass to be hooked into the frame - graph.
-		* @param executionPriority Priority of the deffered resolution pass
+		* @param executionPriority Priority of the deffered resolution pass. Passing -1 as execution priority automatically sets it in last place.
 		*/
-		MW_NOTHROW void AddPostProcessPass(			Ref<CPostProcessPass> hPostProcessPass,		u32 MW_NULLABLE executionPriority = UINT32_MAX ) NOEXCEPT;
+		MW_NOTHROW void AddPostProcessPass(			Ref<CPostProcessPass> hPostProcessPass,		s32 MW_NULLABLE executionPriority = -1 ) NOEXCEPT;
 
 		MW_NOTHROW const Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
 
@@ -323,6 +323,7 @@ namespace Monoworks
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
 		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
+
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;
 		Hash::hash_t			m_DefaultBasePassPipelineHash;
 

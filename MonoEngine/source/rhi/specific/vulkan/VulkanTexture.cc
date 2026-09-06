@@ -85,6 +85,7 @@ namespace Monoworks::RHI
 			imageInfo.extent = { pInfo->Extent.Width, pInfo->Extent.Height, pInfo->Extent.Depth };
 			imageInfo.mipLevels = 1;
 			imageInfo.arrayLayers = 1;
+			// TODO: creation parameter
 			imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 			imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 			imageInfo.usage = pInfo->Usage;

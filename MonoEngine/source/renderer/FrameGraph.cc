@@ -968,7 +968,7 @@ namespace Monoworks
 		m_hPostProcessPasses.clear();
 	};
 
-	void CDefferedFrameGraph::AddPrePass( Ref<CComputePrePass> hComputePrePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
+	void CDefferedFrameGraph::AddPrePass( Ref<CComputePrePass> hComputePrePass, s32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		if ( !hComputePrePass )
@@ -977,27 +977,20 @@ namespace Monoworks
 			return;
 		}
 
-		if ( executionPriority == UINT32_MAX )
+		 
+		if ( m_hComputePrePasses.size() <= executionPriority + 1 || executionPriority < 0 )
 		{
 			m_hComputePrePasses.push_back( std::move( hComputePrePass ) );
 			MW_INFO( "Register Compute Pre-Pass {} at execution priority {}", hComputePrePass.raw(), m_hComputePrePasses.size() );
 		}
-		else 
+		else
 		{
-			if ( m_hComputePrePasses.size() <= executionPriority + 1 )
-			{
-				m_hComputePrePasses.push_back( std::move( hComputePrePass ) );
-				MW_INFO( "Register Compute Pre-Pass {} at execution priority {}", hComputePrePass.raw(), m_hComputePrePasses.size() );
-			}
-			else
-			{
-				m_hComputePrePasses.insert( m_hComputePrePasses.begin() + executionPriority, std::move( hComputePrePass ) );
-				MW_INFO( "Register Compute Pre-Pass {} by inserting it at execution priority {}", hComputePrePass.raw(), executionPriority );
-			}
+			m_hComputePrePasses.insert( m_hComputePrePasses.begin() + executionPriority, std::move( hComputePrePass ) );
+			MW_INFO( "Register Compute Pre-Pass {} by inserting it at execution priority {}", hComputePrePass.raw(), executionPriority );
 		}
 	};
 
-	void CDefferedFrameGraph::AddPrePass( Ref<CGraphicsPrePass> hGraphicsPrePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
+	void CDefferedFrameGraph::AddPrePass( Ref<CGraphicsPrePass> hGraphicsPrePass, s32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		if ( !hGraphicsPrePass )
@@ -1006,27 +999,19 @@ namespace Monoworks
 			return;
 		}
 
-		if ( executionPriority == UINT32_MAX )
+		if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 || executionPriority < 0 )
 		{
 			m_hGraphicsPrePasses.push_back( std::move( hGraphicsPrePass ) );
 			MW_INFO( "Register Graphics Pre-Pass {} at execution priority {}", ( void* )hGraphicsPrePass.raw(), m_hGraphicsPrePasses.size() );
 		}
 		else
 		{
-			if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 )
-			{
-				m_hGraphicsPrePasses.push_back( std::move( hGraphicsPrePass ) );
-				MW_INFO( "Register Graphics Pre-Pass {} at execution priority {}", ( void* )hGraphicsPrePass.raw(), m_hGraphicsPrePasses.size() );
-			}
-			else
-			{
-				m_hGraphicsPrePasses.insert( m_hGraphicsPrePasses.begin() + executionPriority, std::move( hGraphicsPrePass ) );
-				MW_INFO( "Register Graphics Pre-Pass {} by inserting it at execution priority {}", ( void* )hGraphicsPrePass.raw(), executionPriority );
-			}
+			m_hGraphicsPrePasses.insert( m_hGraphicsPrePasses.begin() + executionPriority, std::move( hGraphicsPrePass ) );
+			MW_INFO( "Register Graphics Pre-Pass {} by inserting it at execution priority {}", ( void* )hGraphicsPrePass.raw(), executionPriority );
 		}
 	};
 
-	void CDefferedFrameGraph::AddDefferedResolutionPass( Ref<CDefferedResolutionPass> hComputePass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
+	void CDefferedFrameGraph::AddDefferedResolutionPass( Ref<CDefferedResolutionPass> hComputePass, s32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -1036,27 +1021,19 @@ namespace Monoworks
 			return;
 		}
 
-		if ( executionPriority == UINT32_MAX )
+		if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 || executionPriority < 0 )
 		{
 			m_hDefferedResolutionPasses.push_back( std::move( hComputePass ) );
-			MW_INFO( "Register Deffered Resolution {} at execution priority {}", hComputePass.raw(), m_hDefferedResolutionPasses.size() );
+			MW_INFO( "Register Deffered Resolution Pass {} at execution priority {}", ( void* )hComputePass.raw(), m_hDefferedResolutionPasses.size() );
 		}
 		else
 		{
-			if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 )
-			{
-				m_hDefferedResolutionPasses.push_back( std::move( hComputePass ) );
-				MW_INFO( "Register Deffered Resolution Pass {} at execution priority {}", hComputePass.raw(), m_hDefferedResolutionPasses.size() );
-			}
-			else
-			{
-				m_hDefferedResolutionPasses.insert( m_hDefferedResolutionPasses.begin() + executionPriority, std::move( hComputePass ) );
-				MW_INFO( "Register Deffered Resolution Pass {} by inserting it at execution priority {}", hComputePass.raw(), executionPriority );
-			}
+			m_hDefferedResolutionPasses.insert( m_hDefferedResolutionPasses.begin() + executionPriority, std::move( hComputePass ) );
+			MW_INFO( "Register Deffered Resolution Pass {} by inserting it at execution priority {}", ( void* )hComputePass.raw(), executionPriority );
 		}
 	};
 
-	void CDefferedFrameGraph::AddPostProcessPass( Ref<CPostProcessPass> hPostProcessPass, u32 MW_NULLABLE executionPriority ) NOEXCEPT
+	void CDefferedFrameGraph::AddPostProcessPass( Ref<CPostProcessPass> hPostProcessPass, s32 MW_NULLABLE executionPriority ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -1066,23 +1043,18 @@ namespace Monoworks
 			return;
 		}
 
-		if ( executionPriority == UINT32_MAX )
+		// Check if either the execution priority would be bi
+		if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 || executionPriority < 0 )
 		{
+			// Insert the post process pass last.
 			m_hPostProcessPasses.push_back( std::move( hPostProcessPass ) );
-			MW_INFO( "Register Post Processing Pass {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
+			MW_INFO( "Register Post Processing Pass {} at execution priority {}", ( void* )hPostProcessPass.raw(), m_hPostProcessPasses.size() );
 		}
 		else
 		{
-			if ( m_hGraphicsPrePasses.size() <= executionPriority + 1 )
-			{
-				m_hPostProcessPasses.push_back( std::move( hPostProcessPass ) );
-				MW_INFO( "Register Post Processing Pass {} at execution priority {}", hPostProcessPass.raw(), m_hPostProcessPasses.size() );
-			}
-			else
-			{
-				m_hPostProcessPasses.insert( m_hPostProcessPasses.begin() + executionPriority, std::move( hPostProcessPass ) );
-				MW_INFO( "Register Post Processing Pass {} by inserting it at execution priority {}", hPostProcessPass.raw(), executionPriority );
-			}
+			// Insert the post process pass at the execution priority and shifting all other passes back one unit.
+			m_hPostProcessPasses.insert( m_hPostProcessPasses.begin() + executionPriority, std::move( hPostProcessPass ) );
+			MW_INFO( "Register Post Processing Pass {} by inserting it at execution priority {}", ( void* )hPostProcessPass.raw(), executionPriority );
 		}
 	};
 
@@ -1096,7 +1068,15 @@ namespace Monoworks
 		for ( auto computePrePass : m_hComputePrePasses )
 		{
 			auto workgroup = ComputeWorkgroupSize( computePrePass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
+
 			CStaticRenderer::DispatchCompute( computePrePass->m_hComputePipeline, workgroup, -1, &computePrePass->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
+		}
+
+		for ( auto graphicsPrePass : m_hGraphicsPrePasses )
+		{
+
+
+			CStaticRenderer::BeginRendering()
 		}
 
 		
@@ -1112,6 +1092,7 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 		for ( auto postPasses : m_hPostProcessPasses )
 		{
+			// TODO: Jobs
 			auto workgroup = ComputeWorkgroupSize( postPasses->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
 			CStaticRenderer::DispatchCompute( postPasses->m_hComputePipeline, workgroup, -1, &postPasses->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
 		}

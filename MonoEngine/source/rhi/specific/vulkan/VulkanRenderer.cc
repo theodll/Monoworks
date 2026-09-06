@@ -115,7 +115,7 @@ namespace Monoworks::RHI
         MW_INFO( "Shutdown CVulkanRenderer" );
     }
 
-    void CVulkanRenderer::BeginRendering() NOEXCEPT
+    void CVulkanRenderer::BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT
     {
         MW_PROFILE_FUNC;
         u32* imageIndex = CStaticRenderer::GetCurrentImageIndexPtr();

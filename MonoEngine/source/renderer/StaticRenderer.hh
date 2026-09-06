@@ -17,9 +17,13 @@ namespace Monoworks
         static MW_NOTHROW void Init() NOEXCEPT;
         static MW_NOTHROW void Shutdown() NOEXCEPT;
 
-        // TODO: Rework
-        static MW_NOTHROW void BeginRendering() NOEXCEPT;
-        static MW_NOTHROW void EndRendering() NOEXCEPT;
+        // Binds the descriptors for the root and all worker command buffers
+        static MW_NOTHROW void BindStaticState( RHI::DescriptorHandle* pDescriptors, u32 descriptorCount ) NOEXCEPT;
+        static MW_NOTHROW void BeginWorkerCommandbuffers() NOEXCEPT;
+        static MW_NOTHROW void EndAndExecuteWorkerCommandbuffers() NOEXCEPT;
+
+        MW_NOTHROW void BeginRendering( const RHI::BeginRenderingInfo* pInfo ) NOEXCEPT;
+        MW_NOTHROW void EndRendering( ) NOEXCEPT;
 
         static MW_NOTHROW void DispatchCompute( Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, RHI::DescriptorHandle* pDesciptors, size_t pDescriptorCount ) NOEXCEPT;
 		static MW_NOTHROW void DispatchCompute2( Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT;

@@ -15,11 +15,6 @@
 
 namespace Monoworks::RHI
 {
-    struct BeginRenderingInfo 
-    {
-
-    };
-
     class CVulkanRenderer final : public IGraphicsAPI
     {
         MW_NOTHROW void Init() NOEXCEPT override;
@@ -29,9 +24,8 @@ namespace Monoworks::RHI
         MW_NOTHROW void DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT override;
         MW_NOTHROW void DispatchCompute2( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
 
-
-        void BeginRendering() NOEXCEPT override;
-        void EndRendering() NOEXCEPT override;
+        MW_NOTHROW void BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT override;
+        MW_NOTHROW void EndRendering() NOEXCEPT override;
 
     private:
 
