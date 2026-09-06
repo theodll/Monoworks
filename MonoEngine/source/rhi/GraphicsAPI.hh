@@ -74,12 +74,32 @@ namespace Monoworks::RHI
         virtual MW_NOTHROW void Init() NOEXCEPT = 0;
         virtual MW_NOTHROW void Shutdown() NOEXCEPT = 0;
 
-        // NOTE: Rendering state commands are primary commandbuffer commands. 
+        virtual MW_NOTHROW void ProfileVulkanData() NOEXCEPT = 0;
+
+        /**
+         * @brief Resets and Begins all secondary command buffers.
+         * This must not be submitted inside any job or any kind if asynchronous action 
+         */
+        virtual MW_NOTHROW void BeginSecondaryCommandbuffers() NOEXCEPT;
+        /**
+         * @brief Merges the commands of all secondary / worker command buffers into the root command buffer.
+         * This batches command buffer execution and must not be submitted inside any job or any kind of asynchronous action.
+         */
+        virtual MW_NOTHROW void MergeSecondaryCommandbuffers() NOEXCEPT;
+
+
+        // NOTE: Rendering state commands are primary command buffer commands. 
         // These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
-        // Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer vi 
+        // Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering. 
         virtual MW_NOTHROW void BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT = 0; 
         virtual MW_NOTHROW void EndRendering() NOEXCEPT = 0;
 
+        virtual MW_NOTHROW u32  AcquireNextImage() NOEXCEPT = 0;
+
+        virtual MW_NOTHROW void BindGraphicsPipeline( Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
+
+        virtual MW_NOTHROW void BindDescriptors( DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) = 0;
+             
         virtual MW_NOTHROW void DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT;
         virtual MW_NOTHROW void DispatchCompute2( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT;
 
