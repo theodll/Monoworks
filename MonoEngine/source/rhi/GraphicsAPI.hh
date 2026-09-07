@@ -65,7 +65,7 @@ namespace Monoworks::RHI
         /// @brief Optional stencil attachment
         const RenderingAttachmentInfo* MW_NULLABLE pStencilAttachment = nullptr;
     };
-
+ 
     class IGraphicsAPI 
     {
     public:
@@ -74,18 +74,34 @@ namespace Monoworks::RHI
         virtual MW_NOTHROW void Init() NOEXCEPT = 0;
         virtual MW_NOTHROW void Shutdown() NOEXCEPT = 0;
 
-        virtual MW_NOTHROW void ProfileVulkanData() NOEXCEPT = 0;
+        virtual MW_NOTHROW void ProfileFrameData() NOEXCEPT = 0;
+
+        /**
+         * @brief Begins the root command buffer.
+         * Does not begin the secondary command buffers.
+         * Unlike BeginSecondaryCommandbuffers, this command may only be called once in the entire render loop.
+         * This command must not be submitted inside any job or asynchronous action.
+         */
+        virtual MW_NOTHROW void BeginRootCommandbuffer( u32 frameIndex  ) NOEXCEPT = 0;
+
+        /**
+         * @brief Ends and submits the root command buffer.
+         * @throw Will throw CGPUFatalExeption if command buffer submission failed fatally (MW_ERROR_GPU_DEVICE_LOST). 
+         * All secondaries must be merged manually via IGraphicsAPI::MergeSecondaryCommandbuffers before ending and submitting the root commandbuffer.
+         * If this condition is not fulfilled this may lead to undefined behavior and will result in API errors.
+         */ 
+        virtual void SubmitRootCommandbuffer( u32 frameIndex  ) = 0;
 
         /**
          * @brief Resets and Begins all secondary command buffers.
          * This must not be submitted inside any job or any kind if asynchronous action 
          */
-        virtual MW_NOTHROW void BeginSecondaryCommandbuffers() NOEXCEPT;
+        virtual MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex  ) NOEXCEPT;
         /**
          * @brief Merges the commands of all secondary / worker command buffers into the root command buffer.
          * This batches command buffer execution and must not be submitted inside any job or any kind of asynchronous action.
          */
-        virtual MW_NOTHROW void MergeSecondaryCommandbuffers() NOEXCEPT;
+        virtual MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
 
 
         // NOTE: Rendering state commands are primary command buffer commands. 
@@ -97,9 +113,12 @@ namespace Monoworks::RHI
         virtual MW_NOTHROW u32  AcquireNextImage() NOEXCEPT = 0;
 
         virtual MW_NOTHROW void BindGraphicsPipeline( Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
-
         virtual MW_NOTHROW void BindDescriptors( DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) = 0;
-             
+		
+        virtual MW_NOTHROW void SetDynamicViewports( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT = 0;
+        virtual MW_NOTHROW void SetDynamicScissor(   u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT = 0; 
+        virtual MW_NOTHROW void SetDynamicCullMode(  u32 frameIndex, ECullMode cullMode ) NOEXCEPT = 0;
+
         virtual MW_NOTHROW void DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT;
         virtual MW_NOTHROW void DispatchCompute2( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT;
 

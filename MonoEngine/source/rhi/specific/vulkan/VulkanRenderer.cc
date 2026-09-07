@@ -117,8 +117,8 @@ namespace Monoworks::RHI
 
     void CVulkanRenderer::BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT
     {
-        MW_PROFILE_FUNC;
-        u32* imageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
+		MW_PROFILE_FUNC;
+		u32* imageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
         u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
         auto presenter = CVulkanContext::GetPresenter();
@@ -127,37 +127,6 @@ namespace Monoworks::RHI
 		if ( m_RenderDocAPI ) m_RenderDocAPI->StartFrameCapture( nullptr, nullptr );
 #endif 
 
-#ifdef MW_PROFILING
-        auto& total = CVulkanContext::GetTotalVulkanAllocations();
-        MW_PROFILE_PLOT( "Vulkan Command Allocations", ( s64 )total.CommandAllocs );
-        MW_PROFILE_PLOT( "Vulkan Object Allocations", ( s64 )total.ObjectAllocs );
-        MW_PROFILE_PLOT( "Vulkan Cache Allocations", ( s64 )total.ObjectAllocs );
-        MW_PROFILE_PLOT( "Vulkan Device Allocations", ( s64 )total.DeviceAllocs );
-        MW_PROFILE_PLOT( "Vulkan Instance Allocations", ( s64 )total.InstanceAllocs );
-#endif
-
-        if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
-        {
-            SVulkanSDLPresentationAcquisitionInfo acquisitionInfo{};
-            acquisitionInfo.pDevice = CVulkanContext::GetDevice()->GetDevice();
-            acquisitionInfo.pPhysDevice = CVulkanContext::GetDevice()->GetPhysicalDevice();
-            acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
-            acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
-            acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
-
-            *imageIndex = presenter->Acquire( &acquisitionInfo );
-        }
-        else if ( CApplication::GetCreateInfos()->UseQt )
-        {
-            SVulkanQtPresentationAcquisitionInfo acquisitionInfo{};
-            acquisitionInfo.pGraphicsQueue = CVulkanContext::GetDevice()->GetGraphicsQueue();
-            acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
-            acquisitionInfo.pQtReadFinishedSemaphore = CVulkanRenderManager::GetQtReadFinishedSemaphore( frameIndex );
-            acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
-            acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
-
-            *imageIndex = presenter->Acquire( &acquisitionInfo );
-        }
 
         CVulkanRenderManager::BeginRootCommandBuffer( frameIndex );
         CVulkanRenderManager::BeginWorkerCommandBuffers( frameIndex );
@@ -346,6 +315,185 @@ namespace Monoworks::RHI
 
 		vkCmdDispatch( hCmd, workgroup.x, workgroup.y, workgroup.z );
 
+	}
+
+	MW_NOTHROW void CVulkanRenderer::ProfileFrameData() NOEXCEPT
+	{
+        MW_PROFILE_FUNC;
+#ifdef MW_PROFILING
+		auto& total = CVulkanContext::GetTotalVulkanAllocations();
+		MW_PROFILE_PLOT( "Vulkan Command Allocations", ( s64 )total.CommandAllocs );
+		MW_PROFILE_PLOT( "Vulkan Object Allocations", ( s64 )total.ObjectAllocs );
+		MW_PROFILE_PLOT( "Vulkan Cache Allocations", ( s64 )total.ObjectAllocs );
+		MW_PROFILE_PLOT( "Vulkan Device Allocations", ( s64 )total.DeviceAllocs );
+		MW_PROFILE_PLOT( "Vulkan Instance Allocations", ( s64 )total.InstanceAllocs );
+#endif
+	}
+
+	MW_NOTHROW u32 CVulkanRenderer::AcquireNextImage() NOEXCEPT
+	{
+        MW_PROFILE_FUNC;
+		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
+
+        auto presenter = CVulkanContext::GetPresenter();
+
+		if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
+		{
+			SVulkanSDLPresentationAcquisitionInfo acquisitionInfo{};
+			acquisitionInfo.pDevice = CVulkanContext::GetDevice()->GetDevice();
+			acquisitionInfo.pPhysDevice = CVulkanContext::GetDevice()->GetPhysicalDevice();
+			acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
+			acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
+			acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
+
+			return presenter->Acquire( &acquisitionInfo );
+		}
+		else if ( CApplication::GetCreateInfos()->UseQt )
+		{
+			SVulkanQtPresentationAcquisitionInfo acquisitionInfo{};
+			acquisitionInfo.pGraphicsQueue = CVulkanContext::GetDevice()->GetGraphicsQueue();
+			acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
+			acquisitionInfo.pQtReadFinishedSemaphore = CVulkanRenderManager::GetQtReadFinishedSemaphore( frameIndex );
+			acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
+			acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
+
+			return presenter->Acquire( &acquisitionInfo );
+		}
+	}
+
+	MW_NOTHROW void CVulkanRenderer::BindGraphicsPipeline( Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+	}
+
+	MW_NOTHROW void CVulkanRenderer::BindDescriptors( DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID /*= -1 */ )
+	{
+		MW_PROFILE_FUNC;
+
+	}
+
+	MW_NOTHROW void CVulkanRenderer::SetDynamicViewports( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic viewport state bind.");
+
+		if ( !pViewports )
+			MW_API_ERROR( "pViewports is nullptr. Discarding dynamic viewport state bind.");
+
+		if ( !viewportCount )
+			MW_API_ERROR( "viewportCount must be greater than 0. Discarding dynamic viewport state bind." );
+
+
+		auto workerData = CVulkanRenderManager::GetWorkerFrameData();
+		VkCommandBuffer rootCmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+
+		// Binds the viewports for the root command buffer.
+		vkCmdSetViewport( rootCmd, ( u32 )firstViewport, ( u32 )viewportCount, ( VkViewport* )pViewports );
+	
+		// Binds the viewport for all worker command buffers since state isn't inherited from the primary command buffer. 
+		for ( auto& worker : workerData )
+			vkCmdSetViewport( worker.GraphicsCommandBuffers[frameIndex], ( u32 )firstViewport, ( u32 )viewportCount, ( VkViewport* )pViewports );
+	}
+
+	MW_NOTHROW void CVulkanRenderer::SetDynamicScissor( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind." );
+
+		if ( !pScissors )
+			MW_API_ERROR( "pScissors is nullptr. Discarding dynamic scissor state bind." );
+
+		if ( !scissorCount )
+			MW_API_ERROR( "scissorCount must be greater than 0. Discarding dynamic scissor state bind.");
+
+		std::vector<VkRect2D> scissors;
+		scissors.resize( scissorCount );
+
+		auto i{ 0uz };
+		for ( VkRect2D& scissor : scissors )
+		{
+			scissor.extent = { pScissors[i].Width, pScissors[i].Height };
+			scissor.offset = {};
+			i++;
+		}
+		auto workerData = CVulkanRenderManager::GetWorkerFrameData();
+		VkCommandBuffer rootCmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+
+		vkCmdSetScissor( rootCmd, firstScissor, scissorCount, scissors.data() );
+			
+		for ( auto& worker : workerData )
+			vkCmdSetScissor( worker.GraphicsCommandBuffers[frameIndex], firstScissor, scissorCount, scissors.data() );
+
+	}
+
+
+	NODISCARD static MW_NOTHROW VkCullModeFlagBits ToVulkanCullMode( ECullMode mode ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		switch ( mode )
+		{
+		case MW_CULL_MODE_NONE:
+			return VK_CULL_MODE_NONE;
+		case MW_CULL_MODE_FRONT:
+			return VK_CULL_MODE_FRONT_BIT;
+		case MW_CULL_MODE_BACK:
+			return VK_CULL_MODE_BACK_BIT;
+		case MW_CULL_MODE_FRONT_AND_BACK:
+			return VK_CULL_MODE_FRONT_AND_BACK;
+		default:
+			MW_API_ERROR( "Pass invalid ECullMode Enumeration." );
+			return VK_CULL_MODE_FLAG_BITS_MAX_ENUM;
+		}
+	};
+	
+
+	MW_NOTHROW void CVulkanRenderer::SetDynamicCullMode( u32 frameIndex, ECullMode cullMode ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind." );
+		
+		auto workerData = CVulkanRenderManager::GetWorkerFrameData();
+		VkCommandBuffer rootCmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+
+		const auto cum = ToVulkanCullMode( cullMode );
+
+		vkCmdSetCullMode( rootCmd, cum );
+
+		for ( auto& worker : workerData )
+			vkCmdSetCullMode( worker.GraphicsCommandBuffers[frameIndex], cum );
+
+	}
+
+	MW_NOTHROW void CVulkanRenderer::BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		CVulkanRenderManager::BeginRootGraphicsCommandBuffer( frameIndex );
+	}
+
+	void CVulkanRenderer::SubmitRootCommandbuffer( u32 frameIndex  )
+	{
+		MW_PROFILE_FUNC;
+		CVulkanRenderManager::EndWorkerGraphicsCommandBuffers( frameIndex );
+		CVulkanRenderManager::SubmitRootGraphicsCommandBuffer( frameIndex );
+	}
+
+	MW_NOTHROW void CVulkanRenderer::BeginSecondaryCommandbuffers( u32 frameIndex  ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		CVulkanRenderManager::BeginWorkerGraphicsCommandBuffers( frameIndex );
+	}
+
+	MW_NOTHROW void CVulkanRenderer::MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		CVulkanRenderManager::EndWorkerGraphicsCommandBuffers( frameIndex );
 	}
 
 }

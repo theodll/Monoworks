@@ -342,6 +342,7 @@ namespace Monoworks::RHI
 				break;
 			case MW_DYNAMIC_STATE_CULL_MODE:
 				m_DynamicStates.push_back( VK_DYNAMIC_STATE_CULL_MODE );
+				
 				break;
 			case MW_DYNAMIC_STATE_FRONT_FACE:
 				m_DynamicStates.push_back( VK_DYNAMIC_STATE_FRONT_FACE );
@@ -378,18 +379,48 @@ namespace Monoworks::RHI
 		pipelineViewportCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 		pipelineViewportCreateInfo.scissorCount = pInfo->ScissorCount;
 		pipelineViewportCreateInfo.viewportCount = pInfo->ViewportCount;
-		pipelineViewportCreateInfo.pScissors = nullptr; // dynamic in cmd buffer
-		pipelineViewportCreateInfo.pViewports = nullptr; // dynamic in cmd buffer too
 
-		// TODO: Add tesselation 
+		// This branch is executed if the user specified MW_DYNAMIC_STATE_SCISSOR (default) inside the
+		// GraphicsPipelineCreationInfo::DynamicStates vector. SExtent2D and VkRect2D are not byte compatible,
+		// therefore we have to do all this
+		if ( std::ranges::contains( m_DynamicStates, MW_DYNAMIC_STATE_SCISSOR ) )
+		{
+			std::vector<VkRect2D> scissors;
+			scissors.resize( pInfo->ScissorCount );
+
+			if ( !pInfo->pScissors )
+				goto scissorsInvalid;
+
+			auto i{ 0uz };
+			for ( VkRect2D& scissor : scissors )
+			{
+				scissor.extent = { pInfo->pScissors[i].Width, pInfo->pScissors[i].Height };
+				scissor.offset = {};
+				i++;
+			}
+
+			pipelineViewportCreateInfo.pScissors = scissors.data(); 
+		}
+		else
+		{
+		scissorsInvalid:
+			pipelineViewportCreateInfo.pScissors = nullptr;
+		}
+
+		pipelineViewportCreateInfo.pViewports = ( VkViewport* )pInfo->pViewports; 
+
+		// TODO: Add Tesselation 
 
 		VkPipelineRasterizationStateCreateInfo pipelineRasterizationCreateInfo{};
 		pipelineRasterizationCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		pipelineRasterizationCreateInfo.rasterizerDiscardEnable =	((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;;
 		pipelineRasterizationCreateInfo.depthClampEnable =			((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_CLAMP_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;
 		pipelineRasterizationCreateInfo.depthBiasEnable =			((pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT) == VK_FALSE) ? VK_FALSE : VK_TRUE;
+		
+		// Default values. These values will be ignored if the dynamic states MW_DYNAMIC_STATE_CULL_MODE (default) or MW_DYNAMIC_STATE_FRONT_FACE are set.
 		pipelineRasterizationCreateInfo.cullMode = ToVulkanCullMode( pInfo->CullMode );
-		pipelineRasterizationCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+		pipelineRasterizationCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // TODO: Implement as dynamic state.
+
 		pipelineRasterizationCreateInfo.polygonMode = ToVulkanPolygonMode( pInfo->PolygonMode );
 		pipelineRasterizationCreateInfo.lineWidth = 1.0f;
 		// TODO: add values for depth bias  

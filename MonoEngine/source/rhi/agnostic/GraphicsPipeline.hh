@@ -37,11 +37,11 @@ namespace Monoworks::RHI
 	{
 		MW_DYNAMIC_STATE_VIEWPORT,
 		MW_DYNAMIC_STATE_SCISSOR,
-		MW_DYNAMIC_STATE_VIEWPORT_COUNT,
-		MW_DYNAMIC_STATE_SCISSOR_COUNT,
-		MW_DYNAMIC_STATE_LINE_WIDTH,
-		MW_DYNAMIC_STATE_CULL_MODE,
-		MW_DYNAMIC_STATE_FRONT_FACE
+		MW_DYNAMIC_STATE_VIEWPORT_COUNT, // NOTE: Not yet implemented.
+		MW_DYNAMIC_STATE_SCISSOR_COUNT,  // NOTE: Not yet implemented.
+		MW_DYNAMIC_STATE_LINE_WIDTH,	 // NOTE: Not yet implemented.
+		MW_DYNAMIC_STATE_CULL_MODE, 
+		MW_DYNAMIC_STATE_FRONT_FACE		 // NOTE: Not yet implemented.
 	};
 
 	enum ECullMode : u8
@@ -123,6 +123,17 @@ namespace Monoworks::RHI
 	using PipelineSignature = void*; 
 	using DescriptorSignature = void*;
 
+	// NOTE: Byte Compatible with VkViewport, D3D12_VIEWPORT
+	struct Viewport
+	{
+		float X;
+		float Y;
+		float Width;
+		float Height;
+		float MinDepth;
+		float MaxDepth;
+	};
+
 	struct GraphicsPipelineCreationInfo
 	{ 
 		CVertexLayout VertexLayout;
@@ -130,7 +141,7 @@ namespace Monoworks::RHI
 		std::vector<SShaderObject> ShaderObjects;
 		std::vector<EImageFormat> ColorFormats;
 		std::vector<SColorBlendAttachmentState> ColorBlendAttachments;
-		std::vector<EDynamicState> DynamicStates = { MW_DYNAMIC_STATE_VIEWPORT, MW_DYNAMIC_STATE_SCISSOR };
+		std::vector<EDynamicState> DynamicStates = { MW_DYNAMIC_STATE_VIEWPORT, MW_DYNAMIC_STATE_SCISSOR, MW_DYNAMIC_STATE_CULL_MODE };
 
 		// TODO: Implement custom signature for Graphics Pipeline
 		PipelineSignature MW_NULLABLE pSignature = nullptr; // VkPipelineLayout / D3D12RootSignature
@@ -141,8 +152,14 @@ namespace Monoworks::RHI
 
 		u32 ViewportCount = 1;
 		u32 ScissorCount = 1;
+		Monoworks::RHI::Viewport* MW_NULLABLE pViewports = nullptr; 
+		SExtent2D* MW_NULLABLE pScissors = nullptr;
+
 		ECompareOp CompareOp = MW_COMPARE_OP_LESS;
-		ECullMode CullMode = MW_CULL_MODE_BACK;
+
+		// NOTE: This value gets ignored by default, since MW_DYNAMIC_STATE_CULL_MODE part of the 
+		// default dynamic states 
+		ECullMode CullMode = MW_CULL_MODE_BACK; 
 		EPrimitiveTopology Topology = MW_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		EPolygonMode PolygonMode = MW_POLYGON_MODE_FILL;
 	};

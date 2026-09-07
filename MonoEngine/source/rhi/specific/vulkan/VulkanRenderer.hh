@@ -15,6 +15,7 @@
 
 namespace Monoworks::RHI
 {
+    // For documentation refer to IGraphicsAPI
     class CVulkanRenderer final : public IGraphicsAPI
     {
         MW_NOTHROW void Init() NOEXCEPT override;
@@ -26,6 +27,23 @@ namespace Monoworks::RHI
 
         MW_NOTHROW void BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT override;
         MW_NOTHROW void EndRendering() NOEXCEPT override;
+
+        MW_NOTHROW void ProfileFrameData() NOEXCEPT override;
+
+        MW_NOTHROW u32 AcquireNextImage() NOEXCEPT override;
+
+        MW_NOTHROW void BindGraphicsPipeline( Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
+        MW_NOTHROW void BindDescriptors( DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) override;
+
+        MW_NOTHROW void SetDynamicViewports( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT override;
+        MW_NOTHROW void SetDynamicScissor(   u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT override;
+        MW_NOTHROW void SetDynamicCullMode(  u32 frameIndex, ECullMode cullMode ) NOEXCEPT override;
+
+        MW_NOTHROW void BeginRootCommandbuffer( u32 frameIndex  ) NOEXCEPT override;
+        void SubmitRootCommandbuffer( u32 frameIndex ) override;
+
+        MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT override;
+        MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT override;
 
     private:
 

@@ -15,9 +15,6 @@ namespace Monoworks::RHI
 		VkCommandPool	GraphicsCommandPool;
 		VkCommandBuffer GraphicsCommandBuffer;
 
-		VkCommandPool	ComputeCommandPool;
-		VkCommandBuffer ComputeCommandBuffer;
-
 		VkSemaphore		QtReadFinishedSemaphore;
 		VkSemaphore		ImageAvailableSemaphore;
 		VkSemaphore		GraphicsSubmitSemaphore; // NOTE: Signaled when the GPass/the last graphics pass finishes and gets submitted
@@ -29,10 +26,7 @@ namespace Monoworks::RHI
 	struct SVulkanWorkerData 
 	{
 		VkCommandPool	GraphicsCommandPools[MFIF];
-		VkCommandBuffer GraphicsCommandBuffers[MFIF];	
-
-		VkCommandPool	ComputeCommandPools[MFIF];
-		VkCommandBuffer ComputeCommandBuffers[MFIF];
+		VkCommandBuffer GraphicsCommandBuffers[MFIF];
 	};
 
 	class CVulkanRenderManager
@@ -49,13 +43,6 @@ namespace Monoworks::RHI
 		static void BeginWorkerGraphicsCommandBuffers( u32 frameIndex ) NOEXCEPT;
 		static void EndWorkerGraphicsCommandBuffers( u32 frameIndex )	NOEXCEPT;
 
-		// Compute
-		static void BeginRootComputeCommandBuffer( u32 frameIndex )		NOEXCEPT;
-		static void EndRootComputeCommandBuffer( u32 frameIndex )		NOEXCEPT;
-		static void SubmitRootComputeCommandBuffer( u32 frameIndex )	NOEXCEPT;
-
-		static void BeginWorkerComputeCommandBuffers( u32 frameIndex )	NOEXCEPT;
-		static void EndWorkerComputeCommandBuffers( u32 frameIndex )	NOEXCEPT;
 
 		NODISCARD static VkCommandBuffer* GetRootGraphicsCommandBuffer( u32 frameIndex )				NOEXCEPT { return &m_RootFrameData[frameIndex].GraphicsCommandBuffer; };
 		NODISCARD static VkCommandBuffer* GetWorkerCommandBuffer( u32 workerThreadID, u32 frameIndex )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].GraphicsCommandBuffers[frameIndex]; };
@@ -71,9 +58,7 @@ namespace Monoworks::RHI
 		NODISCARD static VkCommandBuffer* GetCurrentRootGraphicsCommandBuffer()							NOEXCEPT { return &m_RootFrameData[Monoworks::CStaticRenderer::GetCurrentFrameIndex()].GraphicsCommandBuffer; };
 		NODISCARD static VkCommandBuffer* GetCurrentWorkerGraphicsCommandBuffer( u32 workerThreadID )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].GraphicsCommandBuffers[Monoworks::CStaticRenderer::GetCurrentFrameIndex()]; }
 
-		NODISCARD static VkCommandBuffer* GetCurrentRootComputeCommandBuffer()							NOEXCEPT { return &m_RootFrameData[Monoworks::CStaticRenderer::GetCurrentFrameIndex()].ComputeCommandBuffer; };
-		NODISCARD static VkCommandBuffer* GetCurrentWorkerComputeCommandBuffer( u32 workerThreadID )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].ComputeCommandBuffers[Monoworks::CStaticRenderer::GetCurrentFrameIndex()]; }
-
+		NODISCARD static const std::vector<SVulkanWorkerData>& GetWorkerFrameData()						NOEXCEPT { return m_WorkerRenderData; }; 
 
 	private:
 

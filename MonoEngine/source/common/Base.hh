@@ -174,8 +174,6 @@ namespace Monoworks
 {
 	constexpr u32 MaxFramesInFlight = 3;
 
-	class CFatalException : public std::runtime_error { CFatalException( const std::string& rMsg ) : std::runtime_error( rMsg ) {} };
-
 	struct SVersion
 	{
 		u8 Major;
@@ -239,7 +237,31 @@ namespace Monoworks
 		MW_ERROR_INITIALIZATION_FAILED = -5,
 		MW_ERROR_FRAGMENTATION = -6,
 		MW_ERROR_GPU_PIPELINE_COMPILATION_REQUIRED = -7,
-		MW_ERROR_NON_EXISTANT = -8
+		MW_ERROR_NON_EXISTANT = -8,
+		MW_ERROR_GPU_DEVICE_LOST = -9
+	};
+
+	class CRuntimeException : public std::runtime_error 
+	{
+	public:
+		CRuntimeException( EResult code, std::string_view msg )
+			: std::runtime_error( msg.data() ), m_Code( code ) {};
+		
+		virtual EResult GetCode() { return m_Code; }
+
+	protected:
+		EResult m_Code;
+	};
+
+	class CFatalException : CRuntimeException { CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {} };
+
+	/**
+	 * @brief Used for fatal GPU exceptions of that the engine has no control over or abillity to fix. Examples for this invlude MW_ERROR_GPU_DEVICE_LOST.
+	 */
+	class CFatalGPUException : public CFatalException
+	{
+	public:
+		CFatalGPUException( EResult code, std::string_view msg ) : CFatalException( code, msg.data() );
 	};
 
 	/*
@@ -537,6 +559,7 @@ namespace Monoworks
 
 		constexpr inline hash_t FastHashBytes( const void* pData, size_t size, hash_t seed = 0 ) NOEXCEPT
 		{
+
 			MW_PROFILE_FUNC;
 			if ( !pData || size == 0 ) return seed;
 

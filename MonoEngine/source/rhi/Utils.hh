@@ -3,6 +3,7 @@
 
 namespace Monoworks::RHI 
 {
+
 	enum EShaderStageBits : u32
 	{
 		MW_SHADER_STAGE_UNKNOWN = 0x0,
