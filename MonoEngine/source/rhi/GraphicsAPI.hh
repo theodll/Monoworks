@@ -96,31 +96,81 @@ namespace Monoworks::RHI
          * @brief Resets and Begins all secondary command buffers.
          * This must not be submitted inside any job or any kind if asynchronous action 
          */
-        virtual MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex  ) NOEXCEPT;
+        virtual MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex  ) NOEXCEPT = 0;
         /**
          * @brief Merges the commands of all secondary / worker command buffers into the root command buffer.
          * This batches command buffer execution and must not be submitted inside any job or any kind of asynchronous action.
          */
-        virtual MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
+        virtual MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT = 0;
 
-
-        // NOTE: Rendering state commands are primary command buffer commands. 
-        // These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
-        // Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering. 
+        /**
+         * @brief Begins a rendering scope (vkCmdBeginRendering) based on the BeginRenderingInfo given.
+		 * Rendering state commands are primary command buffer commands.
+		 * These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
+		 * Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering.
+         */
         virtual MW_NOTHROW void BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT = 0; 
+
+        /**
+		* @brief Ends a rendering scope (vkCmdEndRendering).
+		* Rendering state commands are primary command buffer commands.
+		* These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
+		* Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering.
+		*/
         virtual MW_NOTHROW void EndRendering() NOEXCEPT = 0;
 
+        /**
+         * @brief Acquires the next image from the selected presenter.
+         */
         virtual MW_NOTHROW u32  AcquireNextImage() NOEXCEPT = 0;
 
-        virtual MW_NOTHROW void BindGraphicsPipeline( Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
-        virtual MW_NOTHROW void BindDescriptors( DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) = 0;
+        /**
+         * @brief Binds the graphics pipeline (hPipeline) to the selected command buffer based on threadID.
+         * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
+         */
+        virtual MW_NOTHROW void BindGraphicsPipeline(   u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
+        
+        /**
+         * @brief Binds all descriptors in the pDescriptors array to the selected command buffer based on threadID for all subsequent graphics and compute pipelines.
+         * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
+         */
+        virtual MW_NOTHROW void BindDescriptors(        u32 frameIndex, DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) = 0;
 		
-        virtual MW_NOTHROW void SetDynamicViewports( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT = 0;
-        virtual MW_NOTHROW void SetDynamicScissor(   u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT = 0; 
-        virtual MW_NOTHROW void SetDynamicCullMode(  u32 frameIndex, ECullMode cullMode ) NOEXCEPT = 0;
+        
+        /// @brief Binds all the viewports in the pViewports array as dynamic state to the root command buffer and all worker command buffers. 
+		virtual MW_NOTHROW void SetDynamicViewports( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT = 0;
+        /// @brief Binds all the scissors in the pScissors array as dynamic state to the root command buffer and all worker command buffers.
+        virtual MW_NOTHROW void SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT = 0;
+		/// @brief Binds the cull mode as dynamic state to the root command buffer and all worker command buffers.
+		virtual MW_NOTHROW void SetDynamicCullMode( u32 frameIndex, ECullMode cullMode ) NOEXCEPT = 0;
 
-        virtual MW_NOTHROW void DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT;
-        virtual MW_NOTHROW void DispatchCompute2( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT;
+        /**
+         * @brief Binds all the viewports in the pViewports array as dynamic state to the selected command buffer based on threadID.
+         * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
+         */
+        virtual MW_NOTHROW void SetDynamicViewportsST( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID ) NOEXCEPT = 0;
+        
+        /**
+        * @brief Binds all the scissors in the pScissors array as dynamic state to the selected command buffer based on threadID.
+        * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
+        */
+        virtual MW_NOTHROW void SetDynamicScissorsST( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID ) NOEXCEPT = 0;
+
+        /**
+        * @brief Binds the cullMode dynamic state to the selected command buffer based on threadID.
+        * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
+        */
+        virtual MW_NOTHROW void SetDynamicCullModeST( u32 frameIndex, ECullMode cullMode, s32 threadID ) NOEXCEPT = 0;
+
+        /**
+         * @brief Dispatches the compute pipeline (hPipeline) with descriptors.
+         */
+        virtual MW_NOTHROW void DispatchCompute( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT = 0;
+        
+         /**
+         * @brief Dispatches the compute pipeline (hPipeline).
+         */
+        virtual MW_NOTHROW void DispatchCompute2( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
 
     };
 

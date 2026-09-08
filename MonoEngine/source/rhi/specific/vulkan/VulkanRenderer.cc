@@ -18,17 +18,17 @@
 
 #include "VulkanRenderer.hh"
 
-namespace Monoworks::RHI 
+namespace Monoworks::RHI
 {
 	static std::vector<char> readFile( const std::string& filename, size_t* size ) {
 		std::ifstream file( filename, std::ios::ate | std::ios::binary );
-        // todo remove
+		// todo remove
 		if ( !file.is_open() ) {
-            MW_ERROR( "LECK" );
+			MW_ERROR( "LECK" );
 		}
 
 		size_t fileSize = ( size_t )file.tellg();
-        *size = fileSize;
+		*size = fileSize;
 		std::vector<char> buffer( fileSize );
 		file.seekg( 0 );
 		file.read( buffer.data(), fileSize );
@@ -37,27 +37,27 @@ namespace Monoworks::RHI
 		return buffer;
 	}
 
-    void CVulkanRenderer::Init() NOEXCEPT
-    {
-        MW_PROFILE_FUNC;
-        MW_INFO( "Initialize CVulkanRenderer" );
+	void CVulkanRenderer::Init() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		MW_INFO( "Initialize CVulkanRenderer" );
 
 		SShaderByteCode vertexCode{};
 		auto vertextSpirv = readFile( "shaders/vertex.spirv", &vertexCode.Size );
-        vertexCode.pCode = vertextSpirv.data();
+		vertexCode.pCode = vertextSpirv.data();
 
 		SShaderObject vertex{};
 		vertex.Code = vertexCode;
 		vertex.ShaderStage = MW_SHADER_STAGE_VERTEX;
 
-      
+
 		SShaderByteCode fragmentCode{};
-        auto fragmentSpirv = readFile( "shaders/fragment.spirv", &fragmentCode.Size );
-        fragmentCode.pCode = fragmentSpirv.data();
+		auto fragmentSpirv = readFile( "shaders/fragment.spirv", &fragmentCode.Size );
+		fragmentCode.pCode = fragmentSpirv.data();
 
 		SShaderObject fragment{};
-        fragment.Code = fragmentCode;
-        fragment.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
+		fragment.Code = fragmentCode;
+		fragment.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
 
 
 		CVertexLayout layout
@@ -70,10 +70,10 @@ namespace Monoworks::RHI
 		pipelineInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_TEST_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
 		pipelineInfo.ColorFormats = { MW_FORMAT_B8G8R8A8_SRGB };
 		pipelineInfo.ColorBlendAttachments = { { MW_BLEND_MODE_OPAQUE, true } };
-        std::vector<SShaderObject> objects;
-        objects.push_back( vertex );
-        objects.push_back( fragment );
-        pipelineInfo.ShaderObjects = objects;
+		std::vector<SShaderObject> objects;
+		objects.push_back( vertex );
+		objects.push_back( fragment );
+		pipelineInfo.ShaderObjects = objects;
 		pipelineInfo.VertexLayout = layout;
 
 		m_Pipeline = IGraphicsPipeline::Create( &pipelineInfo );
@@ -87,7 +87,7 @@ namespace Monoworks::RHI
 		m_Vertices = IVertexBuffer::Create( quadVertices.data(), ( u32 )quadVertices.size(), sizeof( SVertex ), true );
 
 		std::vector<Index> indices = { 0, 1, 2, 2, 3, 0 };
-        m_Indices = IIndexBuffer::Create( indices.data(), ( u32 )indices.size(), 0, true );
+		m_Indices = IIndexBuffer::Create( indices.data(), ( u32 )indices.size(), 0, true );
 
 #ifdef MW_ENABLE_MANUAL_RENDERDOC
 #ifdef MW_PLATFORM_WINDOWS
@@ -106,37 +106,38 @@ namespace Monoworks::RHI
 #endif
 
 
-    } 
+	}
 
-    void CVulkanRenderer::Shutdown() NOEXCEPT 
-    {
-        MW_PROFILE_FUNC;
-        CVulkanRenderManager::Shutdown();
-        MW_INFO( "Shutdown CVulkanRenderer" );
-    }
+	void CVulkanRenderer::Shutdown() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		CVulkanRenderManager::Shutdown();
+		MW_INFO( "Shutdown CVulkanRenderer" );
+	}
+
+	NODISCARD static VkAttachmentLoadOp ToVulkanLoadOp( EAttachmentLoadOp loadOp )
+	{
+
+	}
+
+	NODISCARD static VkAttachmentStoreOp ToVulkanStoreOp( EAttachmentStoreOp storeOp )
+	{
+
+	}
+
+	NODISCARD static VkResolveModeFlagBits ToVulkanResolveMode( EResolveMode resolveMode )
+	{
+
+	}
 
     void CVulkanRenderer::BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT
     {
 		MW_PROFILE_FUNC;
-		u32* imageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
         u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
-        auto presenter = CVulkanContext::GetPresenter();
-
-#ifdef MW_ENABLE_MANUAL_RENDERDOC
-		if ( m_RenderDocAPI ) m_RenderDocAPI->StartFrameCapture( nullptr, nullptr );
-#endif 
-
-
-        CVulkanRenderManager::BeginRootCommandBuffer( frameIndex );
-        CVulkanRenderManager::BeginWorkerCommandBuffers( frameIndex );
-
-
-        auto cmd = *CVulkanRenderManager::GetCurrentRootCommandBuffer();
+        auto cmd = *CVulkanRenderManager::GetCurrentRootGraphicsCommandBuffer();
         auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
         auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
-
-        MW_ASSERT( *imageIndex < presenter->GetSwapchainImages().size(), "Invalid swapchain image index" );
 
         VkRenderingAttachmentInfo colorAttachment{};
         colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
@@ -145,6 +146,30 @@ namespace Monoworks::RHI
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
         colorAttachment.clearValue = { {{ 0.0f, 1.0f, 1.0f, 1.0f }} };
+
+		std::vector<VkRenderingAttachmentInfo> colorAttachments( pInfo->ColorAttachmentCount );
+
+		auto i{ 0uz };
+		for ( auto& colorAttachment : colorAttachments )
+		{
+			auto colorAttInfo = pInfo->pColorAttachments[i];
+			auto image = colorAttInfo.AttachmentImage.As<CVulkanTexture2D>();
+			auto resolveImage = colorAttInfo.ResolveImage.As<CVulkanTexture2D>();
+
+			VkRenderingAttachmentInfo ra{};
+			ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+			ra.imageView = *image->GetImageView();
+			ra.imageLayout = ( VkImageLayout )image->Layout;
+			ra.loadOp = ToVulkanLoadOp( colorAttInfo.LoadOp );
+			ra.storeOp = ToVulkanStoreOp( colorAttInfo.StoreOp );
+			
+			ra.resolveImageView = *resolveImage->GetImageView();
+			ra.resolveImageLayout = ( VkImageLayout )resolveImage->Layout;
+			ra.resolveMode = ToVulkanResolveMode( colorAttInfo.ResolveMode );
+
+			ra.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
+			i++;
+		}
 
         VkRenderingInfo renderingInfo{};
         renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
@@ -267,23 +292,20 @@ namespace Monoworks::RHI
 
         }
 
-	MW_NOTHROW void CVulkanRenderer::DispatchCompute( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1*/, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT
+	MW_NOTHROW void CVulkanRenderer::DispatchCompute( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1*/, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
 		VkCommandBuffer hCmd = nullptr;
 
 		if ( threadID < 0 )
-			hCmd = *CVulkanRenderManager::GetCurrentRootComputeCommandBuffer();
+			hCmd = *CVulkanRenderManager::GetCurrentRootGraphicsCommandBuffer();
 		else
-			hCmd = *CVulkanRenderManager::GetCurrentWorkerComputeCommandBuffer( threadID );
+			hCmd = *CVulkanRenderManager::GetCurrentWorkerGraphicsCommandBuffer( threadID );
 
 		if ( !hCmd )
-		{
-			MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch" );
-			return;
-		}
-
+			MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch" );	return;
+		
 
 		auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
         vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), 0, descriptorCount, static_cast<VkDescriptorSet*>(*pDesciptors), 0, nullptr);
@@ -293,16 +315,16 @@ namespace Monoworks::RHI
 		vkCmdDispatch( hCmd, workgroup.x, workgroup.y, workgroup.z );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::DispatchCompute2( Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
+	MW_NOTHROW void CVulkanRenderer::DispatchCompute2( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
 		VkCommandBuffer hCmd = nullptr;
 
 		if ( threadID < 0 )
-			hCmd = *CVulkanRenderManager::GetCurrentRootComputeCommandBuffer();
+			hCmd = *CVulkanRenderManager::GetCurrentRootGraphicsCommandBuffer();
 		else
-			hCmd = *CVulkanRenderManager::GetCurrentWorkerComputeCommandBuffer( threadID );
+			hCmd = *CVulkanRenderManager::GetCurrentWorkerGraphicsCommandBuffer( threadID );
 
 		if ( !hCmd )
 		{
@@ -361,15 +383,56 @@ namespace Monoworks::RHI
 		}
 	}
 
-	MW_NOTHROW void CVulkanRenderer::BindGraphicsPipeline( Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
+	MW_NOTHROW void CVulkanRenderer::BindGraphicsPipeline( u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding graphics pipeline bind on threadID {}.", threadID ); return;
+
+		VkCommandBuffer cmd = nullptr;
+
+		if ( threadID < 0 )
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+		else
+			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+
+		if ( !cmd )
+			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding graphics pipeline bind on threadID {}.", threadID, threadID ); return;
+
+		auto vkPipeline = hPipeline.As<CVulkanGraphicsPipeline>();
+
+		vkCmdBindPipeline( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, *vkPipeline->GetVulkanPipeline() );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::BindDescriptors( DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID /*= -1 */ )
+	MW_NOTHROW void CVulkanRenderer::BindDescriptors( 
+		u32 frameIndex,
+		DescriptorSignature pSignature,
+		DescriptorHandle* pDescriptors,
+		size_t descriptorCount,
+		u32 firstSet,
+		s32 MW_NULLABLE threadID /*= -1 */ )
 	{
 		MW_PROFILE_FUNC;
+		
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding descriptor bind on threadID {}.", threadID ); return;
+
+		VkCommandBuffer cmd = nullptr;
+
+		if ( threadID < 0 )
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+		else
+			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+
+		if ( !cmd )
+			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding descriptor bind on threadID {}.", threadID, threadID ); return;
+
+		// Bind descriptors for graphics
+		vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+		
+		// Bind descriptors for compute
+		vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
 
 	}
 
@@ -378,13 +441,13 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 		
 		if ( frameIndex > MFIF )
-			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic viewport state bind.");
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic viewport state bind." ); return;
 
 		if ( !pViewports )
-			MW_API_ERROR( "pViewports is nullptr. Discarding dynamic viewport state bind.");
+			MW_API_ERROR( "pViewports is nullptr. Discarding dynamic viewport state bind." ); return;
 
 		if ( !viewportCount )
-			MW_API_ERROR( "viewportCount must be greater than 0. Discarding dynamic viewport state bind." );
+			MW_API_ERROR( "viewportCount must be greater than 0. Discarding dynamic viewport state bind." ); return; 
 
 
 		auto workerData = CVulkanRenderManager::GetWorkerFrameData();
@@ -398,21 +461,20 @@ namespace Monoworks::RHI
 			vkCmdSetViewport( worker.GraphicsCommandBuffers[frameIndex], ( u32 )firstViewport, ( u32 )viewportCount, ( VkViewport* )pViewports );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::SetDynamicScissor( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT
+	MW_NOTHROW void CVulkanRenderer::SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
 		if ( frameIndex > MFIF )
-			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind." );
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind." ); return;
 
 		if ( !pScissors )
-			MW_API_ERROR( "pScissors is nullptr. Discarding dynamic scissor state bind." );
+			MW_API_ERROR( "pScissors is nullptr. Discarding dynamic scissor state bind." ); return;
 
 		if ( !scissorCount )
-			MW_API_ERROR( "scissorCount must be greater than 0. Discarding dynamic scissor state bind.");
+			MW_API_ERROR( "scissorCount must be greater than 0. Discarding dynamic scissor state bind." ); return;
 
-		std::vector<VkRect2D> scissors;
-		scissors.resize( scissorCount );
+		std::vector<VkRect2D> scissors( scissorCount );
 
 		auto i{ 0uz };
 		for ( VkRect2D& scissor : scissors )
@@ -457,7 +519,7 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 
 		if ( frameIndex > MFIF )
-			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind." );
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind." ); return;
 		
 		auto workerData = CVulkanRenderManager::GetWorkerFrameData();
 		VkCommandBuffer rootCmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
@@ -469,6 +531,77 @@ namespace Monoworks::RHI
 		for ( auto& worker : workerData )
 			vkCmdSetCullMode( worker.GraphicsCommandBuffers[frameIndex], cum );
 
+	}
+
+
+	MW_NOTHROW void CVulkanRenderer::SetDynamicViewportsST( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic viewport state bind on threadID {}.", threadID ); return;
+
+		VkCommandBuffer cmd = nullptr;
+
+		if ( threadID < 0 )
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+		else
+			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+
+		if ( !cmd )
+			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding dynamic viewport state bind on threadID {}.", threadID, threadID ); return;
+		
+		vkCmdSetViewport( cmd, firstViewport, viewportCount, ( VkViewport* )pViewports );
+	}
+
+	MW_NOTHROW void CVulkanRenderer::SetDynamicScissorsST( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind on threadID {}.", threadID ); return;
+
+		VkCommandBuffer cmd = nullptr;
+
+		if ( threadID < 0 )
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+		else
+			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+
+		if ( !cmd )
+			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding dynamic scissor state bind on threadID {}.", threadID, threadID ); return;
+
+		std::vector<VkRect2D> scissors( scissorCount );
+		auto i{ 0uz };
+		for ( VkRect2D& scissor : scissors )
+		{
+			scissor.extent = { pScissors[i].Width, pScissors[i].Height };
+			scissor.offset = {};
+			i++;
+		}
+
+		vkCmdSetScissor( cmd, firstScissor, scissorCount, scissors.data() );
+
+	}
+
+	MW_NOTHROW void CVulkanRenderer::SetDynamicCullModeST( u32 frameIndex, ECullMode cullMode, s32 threadID ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic scissor state bind on threadID {}.", threadID ); return;
+
+		VkCommandBuffer cmd = nullptr;
+
+		if ( threadID < 0 )
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+		else
+			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+
+		if ( !cmd )
+			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding dynamic scissor state bind on threadID {}.", threadID, threadID ); return;
+
+		vkCmdSetCullMode( cmd, ToVulkanCullMode( cullMode ) );
 	}
 
 	MW_NOTHROW void CVulkanRenderer::BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT
@@ -495,5 +628,6 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 		CVulkanRenderManager::EndWorkerGraphicsCommandBuffers( frameIndex );
 	}
+
 
 }
