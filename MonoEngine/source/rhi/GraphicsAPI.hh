@@ -109,7 +109,7 @@ namespace Monoworks::RHI
 		 * These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
 		 * Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering.
          */
-        virtual MW_NOTHROW void BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT = 0; 
+        virtual MW_NOTHROW void BeginRendering( u32 frameIndex, const BeginRenderingInfo* pInfo ) NOEXCEPT = 0; 
 
         /**
 		* @brief Ends a rendering scope (vkCmdEndRendering).

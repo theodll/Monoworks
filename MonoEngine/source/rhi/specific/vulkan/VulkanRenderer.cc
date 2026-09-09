@@ -117,180 +117,150 @@ namespace Monoworks::RHI
 
 	NODISCARD static VkAttachmentLoadOp ToVulkanLoadOp( EAttachmentLoadOp loadOp )
 	{
+		MW_PROFILE_FUNC;
 
+		switch ( loadOp )
+		{
+		case MW_ATTACHMENT_LOAD_OP_CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
+		case MW_ATTACHMENT_LOAD_OP_DONT_CARE: return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		case MW_ATTACHMENT_LOAD_OP_LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
+		default:
+			MW_API_WARN( "Pass invalid EAttachmentLoadOp.");
+			return VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+		
+		}
 	}
 
 	NODISCARD static VkAttachmentStoreOp ToVulkanStoreOp( EAttachmentStoreOp storeOp )
 	{
-
+		MW_PROFILE_FUNC;
+		switch ( storeOp )
+		{
+		case MW_ATTACHMENT_STORE_OP_STORE: return VK_ATTACHMENT_STORE_OP_STORE;
+		case MW_ATTACHMENT_STORE_OP_DONT_CARE: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		default:
+			MW_API_WARN( "Pass invalid EAttachmentStoreOp." );
+			return VK_ATTACHMENT_STORE_OP_DONT_CARE;
+		}
 	}
 
 	NODISCARD static VkResolveModeFlagBits ToVulkanResolveMode( EResolveMode resolveMode )
 	{
-
+		MW_PROFILE_FUNC;
+		// TODO: redo
+		switch ( resolveMode )
+		{
+		case MW_RESOLVE_MODE_AVERAGE_BIT: return VK_RESOLVE_MODE_AVERAGE_BIT;
+		case MW_RESOLVE_MODE_MAXIMUM_BIT: return VK_RESOLVE_MODE_MAX_BIT;
+		case MW_RESOLVE_MODE_MINIMUM_BIT: return VK_RESOLVE_MODE_MIN_BIT;
+		case MW_RESOLVE_MODE_SAMPLE_ZERO_BIT: return VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
+		case MW_RESOLVE_MODE_NONE: return VK_RESOLVE_MODE_NONE;
+		default:
+			MW_API_WARN( "Pass invalid EResolveModeBits.");
+			return VK_RESOLVE_MODE_NONE;
+		}
 	}
 
-    void CVulkanRenderer::BeginRendering( const BeginRenderingInfo* pInfo ) NOEXCEPT
-    {
+	void CVulkanRenderer::BeginRendering( u32 frameIndex, const BeginRenderingInfo* pInfo ) NOEXCEPT
+	{
 		MW_PROFILE_FUNC;
-        u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
-        auto cmd = *CVulkanRenderManager::GetCurrentRootGraphicsCommandBuffer();
-        auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
-        auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
-
-        VkRenderingAttachmentInfo colorAttachment{};
-        colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-        colorAttachment.imageView = *presenter->GetSwapchainImages()[*imageIndex].As<CVulkanTexture2D>()->GetImageView();
-        colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        colorAttachment.clearValue = { {{ 0.0f, 1.0f, 1.0f, 1.0f }} };
+		auto cmd = *CVulkanRenderManager::GetCurrentRootGraphicsCommandBuffer();
+		auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
+		auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
 
 		std::vector<VkRenderingAttachmentInfo> colorAttachments( pInfo->ColorAttachmentCount );
-
-		auto i{ 0uz };
-		for ( auto& colorAttachment : colorAttachments )
 		{
-			auto colorAttInfo = pInfo->pColorAttachments[i];
-			auto image = colorAttInfo.AttachmentImage.As<CVulkanTexture2D>();
-			auto resolveImage = colorAttInfo.ResolveImage.As<CVulkanTexture2D>();
+			auto i{ 0uz };
+			for ( auto& ra : colorAttachments )
+			{
+				auto colorAttInfo = pInfo->pColorAttachments[i];
+				auto image = colorAttInfo.AttachmentImage.As<CVulkanTexture2D>();
+				auto resolveImage = colorAttInfo.ResolveImage.As<CVulkanTexture2D>();
 
-			VkRenderingAttachmentInfo ra{};
-			ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-			ra.imageView = *image->GetImageView();
-			ra.imageLayout = ( VkImageLayout )image->Layout;
-			ra.loadOp = ToVulkanLoadOp( colorAttInfo.LoadOp );
-			ra.storeOp = ToVulkanStoreOp( colorAttInfo.StoreOp );
-			
-			ra.resolveImageView = *resolveImage->GetImageView();
-			ra.resolveImageLayout = ( VkImageLayout )resolveImage->Layout;
-			ra.resolveMode = ToVulkanResolveMode( colorAttInfo.ResolveMode );
+				ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+				ra.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
+				ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+				ra.imageView = *image->GetImageView();
+				ra.imageLayout = ( VkImageLayout )image->Layout;
+				
+				ra.loadOp = ToVulkanLoadOp( colorAttInfo.LoadOp );
+				ra.storeOp = ToVulkanStoreOp( colorAttInfo.StoreOp );
 
-			ra.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
-			i++;
+				if ( colorAttInfo.ResolveImage )
+				{
+					ra.resolveImageView = *resolveImage->GetImageView();
+					ra.resolveImageLayout = ( VkImageLayout )resolveImage->Layout;
+					ra.resolveMode = ToVulkanResolveMode( colorAttInfo.ResolveMode );
+				}
+
+				i++;
+			}
 		}
 
-        VkRenderingInfo renderingInfo{};
+		VkRenderingAttachmentInfo depthAttachment{};
+
+		if ( pInfo->pDepthAttachment )
+		{
+			depthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+			depthAttachment.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
+			depthAttachment.imageLayout = ( VkImageLayout )pInfo->pDepthAttachment->AttachmentImage->Layout;
+			depthAttachment.imageView = *pInfo->pDepthAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
+			
+			depthAttachment.loadOp = ToVulkanLoadOp( pInfo->pDepthAttachment->LoadOp );
+			depthAttachment.storeOp = ToVulkanStoreOp( pInfo->pDepthAttachment->StoreOp );
+
+			if ( pInfo->pDepthAttachment->ResolveImage )
+			{
+				depthAttachment.resolveImageView = *pInfo->pDepthAttachment->ResolveImage.As<CVulkanTexture2D>()->GetImageView();
+				depthAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pDepthAttachment->ResolveImage->Layout;
+				depthAttachment.resolveMode = ToVulkanResolveMode( pInfo->pDepthAttachment->ResolveMode );
+			}
+		}
+
+		VkRenderingAttachmentInfo stencilAttachment{};
+
+		if ( pInfo->pStencilAttachment )
+		{
+			stencilAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+			stencilAttachment.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
+			stencilAttachment.imageLayout = ( VkImageLayout )pInfo->pStencilAttachment->AttachmentImage->Layout;
+			stencilAttachment.imageView = *pInfo->pStencilAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
+
+			stencilAttachment.loadOp = ToVulkanLoadOp( pInfo->pStencilAttachment->LoadOp );
+			stencilAttachment.storeOp = ToVulkanStoreOp( pInfo->pStencilAttachment->StoreOp );
+
+			if ( pInfo->pStencilAttachment->ResolveImage )
+			{
+				stencilAttachment.resolveImageView = *pInfo->pStencilAttachment->ResolveImage.As<CVulkanTexture2D>()->GetImageView();
+				stencilAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pStencilAttachment->ResolveImage->Layout;
+				stencilAttachment.resolveMode = ToVulkanResolveMode( pInfo->pStencilAttachment->ResolveMode );
+			}
+		}
+		
+		VkRenderingInfo renderingInfo{};
         renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
-        renderingInfo.renderArea.extent = { width, height };
+		renderingInfo.flags = VK_RENDERING_CONTENTS_SECONDARY_COMMAND_BUFFERS_BIT;
+		renderingInfo.renderArea.extent = { pInfo->RenderArea.Width, pInfo->RenderArea.Height };
         renderingInfo.renderArea.offset = { 0, 0 };
         renderingInfo.layerCount = 1;
-        renderingInfo.colorAttachmentCount = 1;
-        renderingInfo.pColorAttachments = &colorAttachment;
-        vkCmdBeginRendering( cmd, &renderingInfo );
-
-
-        // TODO: put this somewhere else
-        VkRect2D scissor{};
-        scissor.extent = { width, height };
-        scissor.offset = { 0, 0 };
-        vkCmdSetScissor( cmd, 0, 1, &scissor );
-
-        VkViewport vulkanViewport{};
-        vulkanViewport.height = ( float )height;
-        vulkanViewport.width = ( float )width;
-        vulkanViewport.x = 0;
-        vulkanViewport.y = 0;
-        vulkanViewport.maxDepth = 1.0f;
-        vulkanViewport.minDepth = 0.0f;
-        vkCmdSetViewport( cmd, 0, 1, &vulkanViewport );
-
-        vkCmdBindPipeline( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, *m_Pipeline.As<CVulkanGraphicsPipeline>()->GetVulkanPipeline() );
-
-        u64 offset[] = { 0 }; 
-        vkCmdBindVertexBuffers( cmd, 0, 1, m_Vertices.As<CVulkanVertexBuffer>()->GetVulkanBuffer(), offset );
-        vkCmdBindIndexBuffer( cmd, *m_Indices.As<CVulkanIndexBuffer>()->GetVulkanBuffer(), 0, VK_INDEX_TYPE_UINT32 );
-
         
-        vkCmdDrawIndexed( cmd, (u32)m_Indices->GetCount(), 1, 0, 0, 0 );
+		renderingInfo.colorAttachmentCount = colorAttachments.size();
+        renderingInfo.pColorAttachments = colorAttachments.data();
+
+        vkCmdBeginRendering( cmd, &renderingInfo );
 
     };
 
-    void CVulkanRenderer::EndRendering() NOEXCEPT
+    void CVulkanRenderer::EndRendering( u32 frameIndex ) NOEXCEPT
     {
         MW_PROFILE_FUNC;
 
-        auto cmd = *CVulkanRenderManager::GetCurrentRootGraphicsCommandBuffer();
+        auto cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
 
         vkCmdEndRendering( cmd );
-        /*
-        CVulkanRenderManager::EndWorkerCommandBuffers( frameIndex );
-        
-        if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
-        {
-            const auto imageIndex = CStaticRenderer::GetCurrentImageIndex();
-            auto& swapchainImages = presenter->GetSwapchainImages();
-            MW_ASSERT( imageIndex < swapchainImages.size(), "Invalid swapchain image index" );
 
-            auto& swapchainImage = swapchainImages[imageIndex];
-            if ( swapchainImage->Layout != MW_IMAGE_LAYOUT_PRESENT_SRC_KHR )
-            {
-                auto sourceStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-                if ( swapchainImage->Layout == MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
-                {
-                    sourceStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-                }
-                else if ( swapchainImage->Layout != MW_IMAGE_LAYOUT_UNDEFINED )
-                {
-                    sourceStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
-                }
-
-                auto vulkanTexture = swapchainImage.As<CVulkanTexture2D>();
-                TransitionImageLayout2(
-                    *CVulkanRenderManager::GetRootCommandBuffer( frameIndex ),
-                    *vulkanTexture->GetImage(),
-                    ( VkImageLayout )swapchainImage->Layout,
-                    VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                    sourceStageMask,
-                    VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT );
-
-                swapchainImage->Layout = MW_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                swapchainImage->PipelineFlags = MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-            }
-        }
-        
-
-        CVulkanRenderManager::EndRootComputeCommandBuffer( frameIndex );
-        CVulkanRenderManager::SubmitRootComputeCommandBuffer( frameIndex );
-
-        if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
-        {
-            CVulkanContext::GetUploader()->Begin();
-
-            if ( CApplication::GetCreateInfos()->UseSDL )
-            {
-                SVulkanSDLPresentationTransitionPresentInfo renderInfo {};
-                renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
-                renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
-
-                presenter->TransitionPresent( &renderInfo );
-            }
-            else if ( CApplication::GetCreateInfos()->UseQt )
-            {
-                SVulkanQtPresentationTransitionPresentInfo renderInfo {};
-                renderInfo.pCmdBuffer = CVulkanContext::GetUploader()->GetCommandBuffer();
-                renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
-
-                presenter->TransitionPresent( &renderInfo );
-            }
-            CVulkanContext::GetUploader()->End();
-
-            SVulkanSDLPresentationPresentInfo presentInfo{};
-            presentInfo.pDevice = CVulkanContext::GetDevice()->GetDevice();
-            presentInfo.pPhysDevice = CVulkanContext::GetDevice()->GetPhysicalDevice();
-            presentInfo.pImageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
-            presentInfo.pPresentQueue = CVulkanContext::GetDevice()->GetPresentQueue();
-            presentInfo.pRenderFinishedSemaphore = CVulkanRenderManager::GetRenderFinishedSemaphore( frameIndex );
-            presentInfo.pVulkanDevice = CVulkanContext::GetDevice();
-
-            presenter->Present( &presentInfo );
-            
-#ifdef MW_ENABLE_MANUAL_RENDERDOC
-			if ( m_RenderDocAPI ) m_RenderDocAPI->EndFrameCapture( nullptr, nullptr );
-#endif */
-
-        }
+    }
 
 	MW_NOTHROW void CVulkanRenderer::DispatchCompute( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1*/, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT
 	{

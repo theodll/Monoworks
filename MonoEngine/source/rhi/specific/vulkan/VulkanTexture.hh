@@ -23,9 +23,13 @@ namespace Monoworks::RHI
 		CVulkanTexture2D& operator=( const CVulkanTexture2D& ) = delete;
 
 		NODISCARD u32 ReadPixel( s32 x, s32 y ) NOEXCEPT override;
+		MW_NOTHROW void TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
 
-		NODISCARD u32 GetWidth() const NOEXCEPT override { return m_ImageExtent.Width; };
-		NODISCARD u32 GetHeight() const NOEXCEPT override { return m_ImageExtent.Height; };
+		// For use with external commandbuffer (backend part only).
+		MW_NOTHROW void TransitionLayoutEC( VkCommandBuffer* pCmd, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask ) NOEXCEPT;
+
+		NODISCARD MW_NOTHROW u32 GetWidth() const NOEXCEPT override { return m_ImageExtent.Width; };
+		NODISCARD MW_NOTHROW u32 GetHeight() const NOEXCEPT override { return m_ImageExtent.Height; };
 
 		NODISCARD VkSampler* GetSampler() NOEXCEPT { return &m_Sampler; }
 		NODISCARD VkImage* GetImage() NOEXCEPT { return &m_Image; }

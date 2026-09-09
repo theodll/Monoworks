@@ -1,7 +1,9 @@
 #include <mwpch.hh>
-#include "VulkanContext.hh"
 
-#include "VulkanTexture.hh"
+#include <rhi/specific/vulkan/VulkanContext.hh>
+#include <rhi/specific/vulkan/VulkanTexture.hh>
+#include <rhi/specific/vulkan/VulkanRenderManager.hh>
+
 #include <rhi/Utils.hh>
 
 namespace Monoworks::RHI
@@ -398,4 +400,133 @@ namespace Monoworks::RHI
 			vkCreateFence( *CVulkanContext::GetDevice()->GetDevice(), &fenceInfo, CVulkanContext::GetCallbacks(), &m_Fence );
 		}
 	}
+
+	MW_NOTHROW void CVulkanTexture2D::TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	
+		VkCommandBuffer cmd = nullptr;
+
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex. Discarding layout transition.");
+
+		if ( threadID < 0 )
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+		else
+			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+		
+		TransitionLayoutEC( &cmd, dstLayout, dstPipelineStage, aspectMask );
+
+	};
+
+	MW_NOTHROW void CVulkanTexture2D::TransitionLayoutEC( VkCommandBuffer* pCmd, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		VkImageMemoryBarrier2 barrier{};
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.oldLayout = ( VkImageLayout )this->Layout;
+		barrier.newLayout = ( VkImageLayout )dstLayout;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.image = m_Image;
+		barrier.subresourceRange.aspectMask = ( VkAccessFlags )aspectMask;
+		barrier.subresourceRange.baseMipLevel = 0;
+		barrier.subresourceRange.levelCount = 1;
+		barrier.subresourceRange.baseArrayLayer = 0;
+		barrier.subresourceRange.layerCount = 1;
+
+
+		switch ( ( VkImageLayout )this->Layout )
+		{
+		case VK_IMAGE_LAYOUT_UNDEFINED:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT;
+			barrier.srcAccessMask = 0;
+			break;
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
+			barrier.srcAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
+			barrier.srcAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+		case VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT;
+			barrier.srcAccessMask = VK_ACCESS_2_SHADER_READ_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
+			barrier.srcAccessMask = VK_ACCESS_2_TRANSFER_READ_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
+			barrier.srcAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT;
+			barrier.srcAccessMask = 0;
+			break;
+		case VK_IMAGE_LAYOUT_GENERAL:
+			barrier.srcStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
+			barrier.srcAccessMask = VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT;
+			break;
+		default:
+			MW_API_ERROR( "Unsupported image layout: {}", this->Layout );
+			return;
+		}
+
+		switch ( ( VkImageLayout )dstLayout )
+		{
+		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT;
+			barrier.dstAccessMask = VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT;
+			barrier.dstAccessMask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+		case VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT;
+			barrier.dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
+			barrier.dstAccessMask = VK_ACCESS_2_TRANSFER_READ_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_TRANSFER_BIT;
+			barrier.dstAccessMask = VK_ACCESS_2_TRANSFER_WRITE_BIT;
+			break;
+		case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT;
+			barrier.dstAccessMask = 0;
+			break;
+		case VK_IMAGE_LAYOUT_UNDEFINED:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT;
+			barrier.dstAccessMask = 0;
+			break;
+		case VK_IMAGE_LAYOUT_GENERAL:
+			barrier.dstStageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
+			barrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT;
+			break;
+		default:
+			MW_API_ERROR( "Unsupported dst image layout: {}", dstLayout );
+			return;
+		}
+
+		VkDependencyInfo dInfo{};
+		dInfo.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO;
+		dInfo.imageMemoryBarrierCount = 1;
+		dInfo.pImageMemoryBarriers = &barrier;
+
+		vkCmdPipelineBarrier2( *pCmd, &dInfo );
+
+	};
+
+
 }

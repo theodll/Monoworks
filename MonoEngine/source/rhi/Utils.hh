@@ -118,7 +118,6 @@ namespace Monoworks::RHI
 		MW_FORMAT_D32_SFLOAT_S8_UINT = 130,
 	};
 
-	using EImageUsageFlags = flags_t; // Bitmask, use EImageUsageFlagsBits
 
 	enum EImageUsageFlagsBits
 	{
@@ -152,6 +151,7 @@ namespace Monoworks::RHI
 
 		MW_IMAGE_USAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	using EImageUsageFlags = flags_t; // Bitmask, use EImageUsageFlagsBits
 
 	enum EImageLayout
 	{
@@ -208,7 +208,6 @@ namespace Monoworks::RHI
 		MW_IMAGE_LAYOUT_MAX_ENUM = 0x7FFFFFFF
 	};
 
-	using EImageAspectFlags = flags_t; // Bitmask, use EImageAspectFlagBits
 
 	enum EImageAspectFlagBits
 	{
@@ -230,9 +229,9 @@ namespace Monoworks::RHI
 
 		MW_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	using EImageAspectFlags = flags_t; // Bitmask, use EImageAspectFlagBits
 
-	using EPipelineFlags = flags_t; // Bitmask, use EPipelineFlagBits
-
+	// NOTE: Byte compatible with VkPipelineStageFlagBits
 	enum EPipelineFlagBits
 	{
 		MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001,
@@ -264,8 +263,10 @@ namespace Monoworks::RHI
 		MW_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT = 0x00020000,
 		MW_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	using EPipelineFlags = flags_t; // Bitmask, use EPipelineFlagBits
 
-	MAYBE_UNUSED static void TransitionImageLayout2(
+
+	DEPRECATED MAYBE_UNUSED static void TransitionImageLayout2(
 		VkCommandBuffer commandBuffer,
 		VkImage image,
 		VkImageLayout oldLayout,
@@ -407,7 +408,7 @@ namespace Monoworks::RHI
 		);
 	}
 
-	MAYBE_UNUSED static void TransitionImageLayout(
+	DEPRECATED MAYBE_UNUSED static void TransitionImageLayout(
 		VkCommandBuffer* pCmdBuffer, 
 		VkImage* pImage,
 		EImageLayout oldLayoutMW,

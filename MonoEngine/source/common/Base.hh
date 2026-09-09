@@ -32,6 +32,7 @@
 #define NODISCARD [[nodiscard]]
 #define MAYBE_UNUSED [[maybe_unused]]
 #define UNLIKELY [[unlikely]]
+#define DEPRECATED [[deprecated]]
 
 #define MW_NULLABLE
 
