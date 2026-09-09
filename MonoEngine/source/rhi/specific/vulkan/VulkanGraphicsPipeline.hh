@@ -22,6 +22,8 @@ namespace Monoworks::RHI
 	
 		NODISCARD bool IsCompiled() NOEXCEPT override { return m_IsCompiled; };
 
+		NODISCARD virtual PipelineSignature* GetSignature() NOEXCEPT { ( PipelineSignature* )&m_VulkanPipelineLayout; };
+
 		NODISCARD VkPipeline* GetVulkanPipeline()				NOEXCEPT { return &m_VulkanPipeline; };
 		NODISCARD VkPipelineLayout* GetVulkanPipelineSignature()	NOEXCEPT { return &m_VulkanPipelineLayout; };
 

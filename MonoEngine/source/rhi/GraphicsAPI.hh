@@ -117,12 +117,12 @@ namespace Monoworks::RHI
 		* These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
 		* Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering.
 		*/
-        virtual MW_NOTHROW void EndRendering() NOEXCEPT = 0;
+        virtual MW_NOTHROW void EndRendering( u32 frameIndex ) NOEXCEPT = 0;
 
         /**
          * @brief Acquires the next image from the selected presenter.
          */
-        virtual MW_NOTHROW u32  AcquireNextImage() NOEXCEPT = 0;
+        virtual MW_NOTHROW u32  AcquireNextImage( u32 frameIndex ) NOEXCEPT = 0;
 
         /**
          * @brief Binds the graphics pipeline (hPipeline) to the selected command buffer based on threadID.
@@ -134,7 +134,7 @@ namespace Monoworks::RHI
          * @brief Binds all descriptors in the pDescriptors array to the selected command buffer based on threadID for all subsequent graphics and compute pipelines.
          * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
          */
-        virtual MW_NOTHROW void BindDescriptors(        u32 frameIndex, DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) = 0;
+        virtual MW_NOTHROW void BindDescriptors(        u32 frameIndex, PipelineSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) = 0;
 		
         
         /// @brief Binds all the viewports in the pViewports array as dynamic state to the root command buffer and all worker command buffers. 

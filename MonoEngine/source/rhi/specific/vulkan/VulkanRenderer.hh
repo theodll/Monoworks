@@ -30,10 +30,10 @@ namespace Monoworks::RHI
 
         MW_NOTHROW void ProfileFrameData() NOEXCEPT override;
 
-        MW_NOTHROW u32 AcquireNextImage() NOEXCEPT override;
+        MW_NOTHROW u32 AcquireNextImage( u32 frameIndex ) NOEXCEPT override;
 
         MW_NOTHROW void BindGraphicsPipeline(   u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
-        MW_NOTHROW void BindDescriptors(        u32 frameIndex, DescriptorSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) override;
+        MW_NOTHROW void BindDescriptors(        u32 frameIndex, PipelineSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) override;
 
         MW_NOTHROW void SetDynamicViewports(    u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT override;
         MW_NOTHROW void SetDynamicScissors(     u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT override;

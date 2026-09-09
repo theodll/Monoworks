@@ -22,6 +22,8 @@
 #include <tuple>
 #include <queue>
 #include <stack>
+#include <utility>
+#include <functional>
 
 #include <algorithm>
 #include <numeric>

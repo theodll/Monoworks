@@ -78,7 +78,7 @@ namespace Monoworks
 	struct GraphicsPrePassCreationInfo
 	{
 		Ref<CShader> hShader;
-		std::function<void> MW_NULLABLE pExecutionScopeCallback = nullptr;
+		std::function<void()> MW_NULLABLE pExecutionScopeCallback = nullptr;
 	};
 
 	/**
@@ -129,7 +129,7 @@ namespace Monoworks
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
 		// TODO: add the possibility to split this up. 
 		Ref<CShader> m_hShader; // Note: all graphics shader stages in one slang module. 
-		std::function<void> MW_NULLABLE pExecutionScopeCallback;
+		std::function<void()> MW_NULLABLE m_pExecutionScopeCallback;
 
 		Hash::hash_t m_PipelineHash;
 

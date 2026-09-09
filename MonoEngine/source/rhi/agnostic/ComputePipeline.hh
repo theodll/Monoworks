@@ -25,6 +25,8 @@ namespace Monoworks::RHI
 
 		virtual bool IsCompiled() = 0;
 
+		NODISCARD virtual PipelineSignature* GetSignature() NOEXCEPT = 0;
+
 		static Ref<IComputePipeline> Create( const ComputePipelineCreationInfo* pInfo );
 	
 	};

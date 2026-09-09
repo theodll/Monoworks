@@ -176,7 +176,8 @@ namespace Monoworks::RHI
 		
 		NODISCARD virtual bool IsCompiled() NOEXCEPT = 0;
 		
-
+		NODISCARD virtual PipelineSignature* GetSignature() NOEXCEPT = 0;
+		 
 		static Ref<IGraphicsPipeline> Create( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
 	};
 }

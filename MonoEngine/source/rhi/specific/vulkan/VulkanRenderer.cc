@@ -322,11 +322,9 @@ namespace Monoworks::RHI
 #endif
 	}
 
-	MW_NOTHROW u32 CVulkanRenderer::AcquireNextImage() NOEXCEPT
+	MW_NOTHROW u32 CVulkanRenderer::AcquireNextImage( u32 frameIndex ) NOEXCEPT
 	{
         MW_PROFILE_FUNC;
-		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
-
         auto presenter = CVulkanContext::GetPresenter();
 
 		if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
@@ -377,7 +375,7 @@ namespace Monoworks::RHI
 
 	MW_NOTHROW void CVulkanRenderer::BindDescriptors( 
 		u32 frameIndex,
-		DescriptorSignature pSignature,
+		PipelineSignature pSignature,
 		DescriptorHandle* pDescriptors,
 		size_t descriptorCount,
 		u32 firstSet,

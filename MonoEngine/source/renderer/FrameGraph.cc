@@ -1,4 +1,7 @@
-#include <common/Base.hh>
+#include <mwpch.hh>
+
+#include <utility>
+#include <functional>
 
 #include <rhi/agnostic/ComputePipeline.hh>
 #include <rhi/agnostic/GraphicsPipeline.hh>
@@ -100,7 +103,6 @@ namespace Monoworks
 
 	CComputePrePass::CComputePrePass( const ComputePrePassCreationInfo* pInfo )
 	{
-		MW_PROFILE_FUNC;
 		MW_PROFILE_FUNC;
 
 		if ( !pInfo->hShader )
@@ -231,6 +233,157 @@ namespace Monoworks
 	CGraphicsPrePass::CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
+
+		// TODO: expand GraphicsPrePassCreationInfo because it needs a ton of more things
+		// to even create a graphics pipeline.
+
+		m_hShader = pInfo->hShader;
+		m_pExecutionScopeCallback = pInfo->pExecutionScopeCallback;
+
+		/*
+		  NOTE: From GPassBase.slang
+				public struct VertexInput
+				{
+					public float3       Position         : POSITION;
+					public float3       Normal           : NORMAL;
+					public float3       Tangent          : TANGENT;
+					public float3       Binormal         : BINORMAL;
+					public float2       TexCoord         : TEXCOORD0;
+				}
+		*/
+
+		CVertexLayout defaultVertexLayout =
+		{
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Position" },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Normal"   },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Tangent"  },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Binormal" },
+			{ MW_SHADER_DATA_TYPE_FLOAT_2, "TexCoord" }
+		};
+
+		auto entrypoints = m_hShader->GetShaderEntrypoints();
+		const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
+
+		SShaderObject vertexShader;
+		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
+		vertexShader.pEntrypoint = vertexEntrypoint;
+
+		auto program = m_hShader->GetShaderProgram();
+		slang::ProgramLayout* layout = program->getLayout();
+
+		{
+
+			SlangInt vertexEntryPointIndex = -1;
+			SlangInt entryPointCount = layout->getEntryPointCount();
+
+			for ( SlangInt i = 0; i < entryPointCount; ++i )
+			{
+				slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
+
+				if ( entryPointLayout->getStage() == SLANG_STAGE_VERTEX )
+				{
+					vertexEntryPointIndex = i;
+					break;
+				}
+			}
+
+			if ( vertexEntryPointIndex != -1 )
+			{
+				Slang::ComPtr<slang::IBlob> code;
+				Slang::ComPtr<slang::IBlob> diagnostics;
+				const SlangInt targetIndex = 0;
+				SlangResult result = program->getEntryPointCode(
+					vertexEntryPointIndex,
+					targetIndex,
+					code.writeRef(),
+					diagnostics.writeRef()
+				);
+
+				if ( SLANG_FAILED( result ) )
+				{
+					if ( diagnostics )
+						MW_ERROR( "Failed to get vertex shader entry point code for graphics pre-pass pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+
+					return;
+				}
+
+				vertexShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+
+			}
+		}
+
+		const char* fragmentEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
+
+		SShaderObject pixelShader;
+		pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
+		pixelShader.pEntrypoint = fragmentEntrypoint;
+
+		{
+
+			SlangInt vertexEntryPointIndex = -1;
+			SlangInt entryPointCount = layout->getEntryPointCount();
+
+			for ( SlangInt i = 0; i < entryPointCount; ++i )
+			{
+				slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
+
+				if ( entryPointLayout->getStage() == SLANG_STAGE_FRAGMENT )
+				{
+					vertexEntryPointIndex = i;
+					break;
+				}
+			}
+
+			if ( vertexEntryPointIndex != -1 )
+			{
+				Slang::ComPtr<slang::IBlob> code;
+				Slang::ComPtr<slang::IBlob> diagnostics;
+				const SlangInt targetIndex = 0;
+				SlangResult result = program->getEntryPointCode(
+					vertexEntryPointIndex,
+					targetIndex,
+					code.writeRef(),
+					diagnostics.writeRef()
+				);
+
+				if ( SLANG_FAILED( result ) )
+				{
+					if ( diagnostics )
+						MW_ERROR( "Failed to get pixel shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+
+					return;
+				}
+
+				vertexShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+
+			}
+		}
+
+		std::vector<SShaderObject> shaderObjects;
+		shaderObjects.push_back( vertexShader );
+		shaderObjects.push_back( pixelShader );
+
+		std::vector<SColorBlendAttachmentState> colorBlendAttachments;
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+
+
+		auto pipelineReflectData = m_hShader->ReflectOnShader();
+
+		RHI::GraphicsPipelineCreationInfo createInfo{};
+		createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
+		createInfo.VertexLayout = defaultVertexLayout;
+		createInfo.ShaderObjects = shaderObjects;
+		createInfo.pSignature = pipelineReflectData.pPipelineSignature;
+		createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
+
+		auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_PipelineHash );
+
+		if ( basePassPipeline )
+			m_hGraphicsPipeline = basePassPipeline.value();
+		else
+			MW_ERROR( "Failed to create graphics pre pass pipeline." );
+		// TODO: Implement error handling here.
+	
 	}
 
 	MW_NOTHROW CGraphicsPrePass::~CGraphicsPrePass() NOEXCEPT
@@ -1063,20 +1216,43 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
+
+		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
+
 		// TODO: Convert this to a Job
 		// TODO: cvars
 		for ( auto computePrePass : m_hComputePrePasses )
 		{
 			auto workgroup = ComputeWorkgroupSize( computePrePass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-
-			CStaticRenderer::DispatchCompute( computePrePass->m_hComputePipeline, workgroup, -1, &computePrePass->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
+			CStaticRenderer::DispatchCompute( frameIndex, computePrePass->m_hComputePipeline, workgroup, -1, &computePrePass->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
 		}
+
+		// Merge secondaries because every graphics prepass must have their own secondaries. That's just the way it is I'm just the messenger
+		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex ); 
 
 		for ( auto graphicsPrePass : m_hGraphicsPrePasses )
 		{
+			RHI::BeginRenderingInfo info;
+			info.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
+			// TODO: Fill this with data specified by the graphicsPrePass. All Rendering data like
+			// attachments must be externally provided for maximum flexibillity (eg. Depth Pre-Pass is entirely different from a color pre pass.).
 
 
-			CStaticRenderer::BeginRendering()
+			// Begin the 
+			CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
+
+			CStaticRenderer::BeginRendering( frameIndex, &info );
+
+			CStaticRenderer::BindGraphicsPipeline( frameIndex, graphicsPrePass->m_hGraphicsPipeline );
+			CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), &graphicsPrePass->m_pDescriptors[frameIndex], 1, 0, -1);
+
+			std::invoke( graphicsPrePass->m_pExecutionScopeCallback );
+
+
+			CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex ); // Merge before ending rendering, as specified by the Vulkan Specification. 
+
+			CStaticRenderer::EndRendering( frameIndex );
 		}
 
 		
@@ -1090,11 +1266,14 @@ namespace Monoworks
 	void CDefferedFrameGraph::ExecutePostPasses() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
+
+		
 		for ( auto postPasses : m_hPostProcessPasses )
 		{
 			// TODO: Jobs
 			auto workgroup = ComputeWorkgroupSize( postPasses->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-			CStaticRenderer::DispatchCompute( postPasses->m_hComputePipeline, workgroup, -1, &postPasses->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
+			CStaticRenderer::DispatchCompute( frameIndex, postPasses->m_hComputePipeline, workgroup, -1, &postPasses->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
 		}
 	};
 
