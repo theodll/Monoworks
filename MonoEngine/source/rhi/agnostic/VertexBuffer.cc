@@ -18,6 +18,22 @@ namespace Monoworks::RHI
 		}
 	};
 
+	Hash::hash_t CBufferLayout::GetHash() const NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		Hash::hash_t seed = m_Elements.size();
+		Hash::HashCombine( seed, m_Stride );
+
+		for ( const auto& element : m_Elements )
+		{
+			Hash::HashCombine( seed, element.Type );
+			Hash::HashCombine( seed, element.Size );
+			Hash::HashCombine( seed, element.Offset );
+			Hash::HashCombine( seed, element.Count );
+		}
+
+		return seed;
+	}
 
 	Ref<IVertexBuffer> IVertexBuffer::Create(void* vertexData, u32 vertexCount, u32 vertexStride, bool autoupload) NOEXCEPT
 	{

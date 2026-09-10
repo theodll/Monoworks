@@ -37,11 +37,11 @@ namespace Monoworks::RHI
 	{
 		MW_DYNAMIC_STATE_VIEWPORT,
 		MW_DYNAMIC_STATE_SCISSOR,
-		MW_DYNAMIC_STATE_VIEWPORT_COUNT,
-		MW_DYNAMIC_STATE_SCISSOR_COUNT,
-		MW_DYNAMIC_STATE_LINE_WIDTH,
-		MW_DYNAMIC_STATE_CULL_MODE,
-		MW_DYNAMIC_STATE_FRONT_FACE
+		MW_DYNAMIC_STATE_VIEWPORT_COUNT, // NOTE: Not yet implemented.
+		MW_DYNAMIC_STATE_SCISSOR_COUNT,  // NOTE: Not yet implemented.
+		MW_DYNAMIC_STATE_LINE_WIDTH,	 // NOTE: Not yet implemented.
+		MW_DYNAMIC_STATE_CULL_MODE, 
+		MW_DYNAMIC_STATE_FRONT_FACE		 // NOTE: Not yet implemented.
 	};
 
 	enum ECullMode : u8
@@ -64,20 +64,6 @@ namespace Monoworks::RHI
 		MW_POLYGON_MODE_COUNT
 	};
 
-	enum EShaderStage : u8
-	{
-		MW_SHADER_STAGE_UNKNOWN,
-		
-		MW_SHADER_STAGE_VERTEX, 
-		MW_SHADER_STAGE_TESSELATION_CONTROL, 
-		MW_SHADER_STAGE_TESSELATION_EVALUATION, 
-		MW_SHADER_STAGE_GEOMETRY,
-		MW_SHADER_STAGE_FRAGMENT,
-		MW_SHADER_STAGE_COMPUTE, 
-
-		MW_SHADER_STAGE_COUNT
-	};
-
 	enum EBlendMode : u8
 	{
 		MW_BLEND_MODE_NONE,
@@ -90,14 +76,20 @@ namespace Monoworks::RHI
 		MW_BLEND_MODE_COUNT
 	};
 
-	enum EPipelineCreationFlagBits 
+	enum EPipelineCreationFlagBits
 	{
 		MW_PIPELINE_CREATION_FLAGS_NONE_BIT = 0,
 
+		// Shared 
+		MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT = 0x08,
+		MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT = 0x400, 
+		// TODO: Implement
+		MW_PIPELINE_CREATION_FLAGS_EXTERNAL_CREATE_CALL = 0x200,
+		
+		// Graphics only
 		MW_PIPELINE_CREATION_FLAGS_TESSELATION_CONTROL_SHADER_BIT = 0x01,
 		MW_PIPELINE_CREATION_FLAGS_TESSELATION_EVALULATION_SHADER_BIT = 0x02,
 		MW_PIPELINE_CREATION_FLAGS_GEOMETRY_SHADER_BIT = 0x04,
-		MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT = 0x08, 
 		MW_PIPELINE_CREATION_FLAGS_DEPTH_CLAMP_BIT = 0x10,
 		MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT = 0x20,
 		MW_PIPELINE_CREATION_FLAGS_DEPTH_BIAS_BIT = 0x40,
@@ -128,21 +120,46 @@ namespace Monoworks::RHI
 		bool BlendEnable;
 	};
 
-	struct SPipelineCreationInfo
+	using PipelineSignature = void*; 
+	using DescriptorSignature = void*;
+
+	// NOTE: Byte Compatible with VkViewport, D3D12_VIEWPORT
+	struct Viewport
+	{
+		float X;
+		float Y;
+		float Width;
+		float Height;
+		float MinDepth;
+		float MaxDepth;
+	};
+
+	struct GraphicsPipelineCreationInfo
 	{ 
 		CVertexLayout VertexLayout;
+		// TODO: Change this to C-Style arrays
 		std::vector<SShaderObject> ShaderObjects;
 		std::vector<EImageFormat> ColorFormats;
 		std::vector<SColorBlendAttachmentState> ColorBlendAttachments;
-		std::vector<EDynamicState> DynamicStates = { MW_DYNAMIC_STATE_VIEWPORT, MW_DYNAMIC_STATE_SCISSOR };
+		std::vector<EDynamicState> DynamicStates = { MW_DYNAMIC_STATE_VIEWPORT, MW_DYNAMIC_STATE_SCISSOR, MW_DYNAMIC_STATE_CULL_MODE };
+
+		// TODO: Implement custom signature for Graphics Pipeline
+		PipelineSignature MW_NULLABLE pSignature = nullptr; // VkPipelineLayout / D3D12RootSignature
+
 		EPipelineCreationFlags Flags;
 		EImageFormat DepthAttachmentFormat;
 		EImageFormat StencilAttachmentFormat;
 
 		u32 ViewportCount = 1;
 		u32 ScissorCount = 1;
+		Monoworks::RHI::Viewport* MW_NULLABLE pViewports = nullptr; 
+		SExtent2D* MW_NULLABLE pScissors = nullptr;
+
 		ECompareOp CompareOp = MW_COMPARE_OP_LESS;
-		ECullMode CullMode = MW_CULL_MODE_BACK;
+
+		// NOTE: This value gets ignored by default, since MW_DYNAMIC_STATE_CULL_MODE part of the 
+		// default dynamic states 
+		ECullMode CullMode = MW_CULL_MODE_BACK; 
 		EPrimitiveTopology Topology = MW_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		EPolygonMode PolygonMode = MW_POLYGON_MODE_FILL;
 	};
@@ -152,11 +169,15 @@ namespace Monoworks::RHI
 	public:
 		virtual ~IGraphicsPipeline() NOEXCEPT = default;
 		
-		virtual void Init( const SPipelineCreationInfo* pInfo ) = 0;
+		virtual void Init( const GraphicsPipelineCreationInfo* pInfo ) = 0;
 		virtual void Shutdown() = 0;
 		
-		virtual void Invalidate( const SPipelineCreationInfo* pInfo ) = 0;
-
-		static Ref<IGraphicsPipeline> Create( const SPipelineCreationInfo* pInfo ) NOEXCEPT;
+		virtual EResult Invalidate( const GraphicsPipelineCreationInfo* pInfo ) = 0;
+		
+		NODISCARD virtual bool IsCompiled() NOEXCEPT = 0;
+		
+		NODISCARD virtual PipelineSignature* GetSignature() NOEXCEPT = 0;
+		 
+		static Ref<IGraphicsPipeline> Create( const GraphicsPipelineCreationInfo* pInfo ) NOEXCEPT;
 	};
 }

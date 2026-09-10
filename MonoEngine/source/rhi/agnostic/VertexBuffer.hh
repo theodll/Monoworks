@@ -6,7 +6,11 @@ namespace Monoworks::RHI
 {
 	struct SVertex
 	{
-		Vector Position;
+		Vector	Position;
+		Vector	Normal;
+		Vector	Tangent;
+		Vector	Binormal;
+		Vector2 TexCoord;
 	};
 
 	enum EShaderDataType : uint8_t
@@ -97,6 +101,8 @@ namespace Monoworks::RHI
 		{
 			CalculateOffsetAndStride();
 		};
+
+		Hash::hash_t GetHash() const NOEXCEPT;
 
 		inline const std::vector<SBufferElement>& GetElements() const { return m_Elements; }
 		u32 GetElementCount() const { return (u32)m_Elements.size(); }
