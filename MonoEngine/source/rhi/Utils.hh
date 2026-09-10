@@ -4,6 +4,7 @@
 namespace Monoworks::RHI 
 {
 
+
 	enum EShaderStageBits : u32
 	{
 		MW_SHADER_STAGE_UNKNOWN = 0x0,
@@ -110,7 +111,8 @@ namespace Monoworks::RHI
 		MW_FORMAT_R32_UINT = 98,
 		MW_FORMAT_R32_SINT = 99,
 		MW_FORMAT_R32_SFLOAT = 100,
-		// Depth
+		// Depth & Stencil
+		MW_FORMAT_S8_UINT = 127,
 		MW_FORMAT_D16_UNORM = 124,
 		MW_FORMAT_D32_SFLOAT = 126,
 		MW_FORMAT_D16_UNORM_S8_UINT = 128,

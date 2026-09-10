@@ -240,6 +240,31 @@ namespace Monoworks
 		m_hShader = pInfo->hShader;
 		m_pExecutionScopeCallback = pInfo->pExecutionScopeCallback;
 
+		m_ColorAttachmentCount = pInfo->ColorAttachmentCount;
+	
+		m_ColorAttachments.clear();
+
+		for ( auto i{ 0uz }; i < pInfo->ColorAttachmentCount; i++ )
+			m_ColorAttachments.push_back( pInfo->pColorAttachments[i] );
+	
+		if ( pInfo->pDepthAttachment )
+		{
+			m_DepthAttachment = *pInfo->pDepthAttachment;
+			m_Flags |= MW_GRAPHICS_PRE_PASS_USE_DEPTH_ATTACHMENT;
+		}
+		else
+			m_DepthAttachment = {};
+
+		if ( pInfo->pStencilAttachment )
+		{
+			m_StencilAttachment = *pInfo->pDepthAttachment;
+			m_Flags |= MW_GRAPHICS_PRE_PASS_USE_STENCIL_ATTACHMENT;
+
+		}
+		else
+			m_DepthAttachment = {};
+
+
 		/*
 		  NOTE: From GPassBase.slang
 				public struct VertexInput
@@ -349,7 +374,7 @@ namespace Monoworks
 				if ( SLANG_FAILED( result ) )
 				{
 					if ( diagnostics )
-						MW_ERROR( "Failed to get pixel shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+						MW_ERROR( "Failed to get pixel shader entry point code for graphics pre-pass pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
 
 					return;
 				}
@@ -374,14 +399,15 @@ namespace Monoworks
 		createInfo.VertexLayout = defaultVertexLayout;
 		createInfo.ShaderObjects = shaderObjects;
 		createInfo.pSignature = pipelineReflectData.pPipelineSignature;
-		createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
+		createInfo.DepthAttachmentFormat = pInfo->DepthFormat;
+		createInfo.StencilAttachmentFormat = pInfo->StencilFormat;
 
 		auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_PipelineHash );
 
 		if ( basePassPipeline )
 			m_hGraphicsPipeline = basePassPipeline.value();
 		else
-			MW_ERROR( "Failed to create graphics pre pass pipeline." );
+			MW_ERROR( "Failed to create graphics pre-pass pipeline." );
 		// TODO: Implement error handling here.
 	
 	}
@@ -463,11 +489,6 @@ namespace Monoworks
 				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
 				m_BindingsWritten[binding.value()] = true;
 			}
-	}
-
-	void CGraphicsPrePass::RegisterExecutionScopeCallback( const std::function<void>& rpExecutionScopeCallback )
-	{
-		MW_PROFILE_FUNC;
 	}
 
 	CPostProcessPass::CPostProcessPass( const PostProcessPassCreationInfo* pInfo )
@@ -1212,6 +1233,54 @@ namespace Monoworks
 	};
 
 
+	static void MW_NOTHROW BindCommandBufferStateBothBegun( u32 frameIndex ) 
+	{
+		MW_PROFILE_FUNC;
+
+		CStaticRenderer::SetDynamicCullMode( frameIndex, MW_CULL_MODE_BACK );
+		CStaticRenderer::SetDynamicScissors( frameIndex, &CStaticRenderer::GetRenderableExtend(), 1, 0 );
+
+		Viewport viewport{};
+		viewport.Width =  ( float )CStaticRenderer::GetRenderableExtend().Width;
+		viewport.Height = ( float )CStaticRenderer::GetRenderableExtend().Height;
+		viewport.X = 0;
+		viewport.Y = 0;
+		viewport.MaxDepth = 1.0f;
+		viewport.MinDepth = 0.0f; 
+
+		CStaticRenderer::SetDynamicViewports( frameIndex, &viewport, 1, 0 );
+
+	}
+
+	// Binds static state only to the root command buffer. Use this if the worker commandbuffers have not started yet.
+	static void MW_NOTHROW BindCommandBufferStateOnlyRoot( u32 frameIndex )
+	{
+		MW_PROFILE_FUNC;
+
+		CStaticRenderer::SetDynamicCullModeST( frameIndex, MW_CULL_MODE_BACK, -1 );
+		CStaticRenderer::SetDynamicScissorsST( frameIndex, &CStaticRenderer::GetRenderableExtend(), 1, 0, -1 );
+
+		Viewport viewport{};
+		viewport.Width = ( float )CStaticRenderer::GetRenderableExtend().Width;
+		viewport.Height = ( float )CStaticRenderer::GetRenderableExtend().Height;
+		viewport.X = 0;
+		viewport.Y = 0;
+		viewport.MaxDepth = 1.0f;
+		viewport.MinDepth = 0.0f;
+
+		CStaticRenderer::SetDynamicViewportsST( frameIndex, &viewport, 1, 0, -1 );
+
+	}
+
+	MW_NOTHROW void CDefferedFrameGraph::ExecutePreRenderingSetup() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
+
+		CStaticRenderer::BeginRootCommandbuffer( frameIndex );
+		BindCommandBufferStateOnlyRoot( frameIndex );
+	}
+
 	void CDefferedFrameGraph::ExecutePrePasses() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -1219,61 +1288,91 @@ namespace Monoworks
 		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
 		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
+		BindCommandBufferStateBothBegun( frameIndex );
 
 		// TODO: Convert this to a Job
 		// TODO: cvars
-		for ( auto computePrePass : m_hComputePrePasses )
+		for ( auto& computePrePass : m_hComputePrePasses )
 		{
 			auto workgroup = ComputeWorkgroupSize( computePrePass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-			CStaticRenderer::DispatchCompute( frameIndex, computePrePass->m_hComputePipeline, workgroup, -1, &computePrePass->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
+			CStaticRenderer::DispatchCompute( frameIndex, computePrePass->m_hComputePipeline, workgroup, -1, &computePrePass->m_pDescriptors[frameIndex], 1 );
 		}
 
-		// Merge secondaries because every graphics prepass must have their own secondaries. That's just the way it is I'm just the messenger
+		// Merge secondaries because every graphics pre-pass must have their own secondaries. That's just the way it is I'm just the messenger
 		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex ); 
 
-		for ( auto graphicsPrePass : m_hGraphicsPrePasses )
+		// TODO: Job
+		for ( auto& graphicsPrePass : m_hGraphicsPrePasses )
 		{
 			RHI::BeginRenderingInfo info;
 			info.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
-			// TODO: Fill this with data specified by the graphicsPrePass. All Rendering data like
-			// attachments must be externally provided for maximum flexibillity (eg. Depth Pre-Pass is entirely different from a color pre pass.).
-
-
+			info.ColorAttachmentCount = graphicsPrePass->m_ColorAttachments.size();
+			info.pColorAttachments = graphicsPrePass->m_ColorAttachments.data();
+			info.pDepthAttachment = &graphicsPrePass->m_DepthAttachment;
+			info.pStencilAttachment = &graphicsPrePass->m_StencilAttachment;
+			info.RenderArea = graphicsPrePass->m_RenderingArea;
 			// Begin the 
 			CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
+			BindCommandBufferStateBothBegun( frameIndex );
 
-			CStaticRenderer::BeginRendering( frameIndex, &info );
+			CStaticRenderer::BeginRendering( frameIndex, &info ); 
 
+			// Bind the pre pass pipeline generated from graphicsPrePass::m_hShader and the descriptor for the shader globals.
 			CStaticRenderer::BindGraphicsPipeline( frameIndex, graphicsPrePass->m_hGraphicsPipeline );
 			CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), &graphicsPrePass->m_pDescriptors[frameIndex], 1, 0, -1);
 
-			std::invoke( graphicsPrePass->m_pExecutionScopeCallback );
+			// Invoke the execution callback specified by the pre-pass. The pre-pass manager can submit draw calls, bind state etc. here.
+			if ( graphicsPrePass->m_pExecutionScopeCallback )
+				std::invoke( graphicsPrePass->m_pExecutionScopeCallback, frameIndex );
 
-
-			CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex ); // Merge before ending rendering, as specified by the Vulkan Specification. 
+			// Merge before ending rendering, as specified by the Vulkan Specification. 
+			CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );
 
 			CStaticRenderer::EndRendering( frameIndex );
 		}
-
-		
 	};
 
 	void CDefferedFrameGraph::ExecuteBasePasses() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
+		// Base Pass
+
+
+		// Deffered Resolution Pass
+		for ( auto& resolutionPass : m_hDefferedResolutionPasses )
+		{
+			auto workgroup = ComputeWorkgroupSize( resolutionPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
+
+			// TODO: Do this batching automatically by reordering the descriptors array.
+			// Batch descriptors.
+			std::vector<DescriptorHandle> descriptors;
+
+			// Globals/set 0 must be first in the descriptors array.
+			descriptors.push_back( resolutionPass->m_pDescriptors[0][frameIndex] );
+
+			// Only run this loop if necessary.
+			if ( resolutionPass->m_pDescriptors.size() > 1 )
+				for ( auto i{ 1uz }; i < resolutionPass->m_pDescriptors.size(); i++ )
+				{
+					descriptors.push_back( resolutionPass->m_pDescriptors[i][frameIndex] );
+				}
+
+			CStaticRenderer::DispatchCompute( frameIndex, resolutionPass->m_hComputePipeline, workgroup, -1, descriptors.data(), descriptors.size() );
+		}
+		
 	};
 
 	void CDefferedFrameGraph::ExecutePostPasses() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
-
 		
-		for ( auto postPasses : m_hPostProcessPasses )
+		for ( auto& postPass : m_hPostProcessPasses )
 		{
 			// TODO: Jobs
-			auto workgroup = ComputeWorkgroupSize( postPasses->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-			CStaticRenderer::DispatchCompute( frameIndex, postPasses->m_hComputePipeline, workgroup, -1, &postPasses->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
+			auto workgroup = ComputeWorkgroupSize( postPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
+			CStaticRenderer::DispatchCompute( frameIndex, postPass->m_hComputePipeline, workgroup, -1, &postPass->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
 		}
 	};
 

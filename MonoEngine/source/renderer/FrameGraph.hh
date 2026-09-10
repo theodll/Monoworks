@@ -17,15 +17,18 @@ namespace Monoworks
 	{
 	public:
 		virtual	~IFrameGraph() = default;
-		
-		// @brief  Executes all passes
-		virtual MW_NOTHROW void Execute() NOEXCEPT = 0;
+
+		/// @brief Pre rendering setup like binding global state, etc.
+		virtual MW_NOTHROW void ExecutePreRenderingSetup() NOEXCEPT = 0;
 		/// @brief Executes all Pre-Passes (Culling, Depth-Pre-Pass, ...)
 		virtual MW_NOTHROW void ExecutePrePasses() NOEXCEPT = 0;
 		/// @brief Executes all Core-Passes (GPass, Deffered Resolution, ...)
 		virtual MW_NOTHROW void ExecuteBasePasses() NOEXCEPT = 0;
 		/// @brief Executes all Post-Process-Passes (Bloom, Tone-Mapping, ...)
 		virtual MW_NOTHROW void ExecutePostPasses() NOEXCEPT = 0;
+
+		virtual MW_NOTHROW void ExecutePostRenderingSteps() NOEXCEPT = 0;
+
 		/// @brief Returns a reference to the current default Base-Pass-Pipeline
 		virtual const MW_NOTHROW Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const = 0;
 	};
@@ -78,7 +81,17 @@ namespace Monoworks
 	struct GraphicsPrePassCreationInfo
 	{
 		Ref<CShader> hShader;
-		std::function<void()> MW_NULLABLE pExecutionScopeCallback = nullptr;
+		SExtent2D RenderingArea;
+
+		size_t ColorAttachmentCount;
+		RenderingAttachmentInfo* MW_NULLABLE pColorAttachments = nullptr;
+		RenderingAttachmentInfo* MW_NULLABLE pDepthAttachment = nullptr;
+		RenderingAttachmentInfo* MW_NULLABLE pStencilAttachment = nullptr;
+
+		EImageFormat DepthFormat = RHI::MW_FORMAT_D32_SFLOAT; 
+		EImageFormat StencilFormat = RHI::MW_FORMAT_S8_UINT;
+
+		std::function<void( u32 frameIndex )> MW_NULLABLE pExecutionScopeCallback = nullptr;
 	};
 
 	/**
@@ -118,18 +131,29 @@ namespace Monoworks
 		*/
 		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
 
-		/**
-		 * @brief Register a callback to be called within the rendering/renderpass encoding scope (vkCmdBeginRendering,  ).
-		 */
-		void RegisterExecutionScopeCallback( const std::function<void>& rpExecutionScopeCallback );
-
 	private:
 		boost::unordered_map<u32, bool> m_BindingsWritten;
 		RHI::DescriptorHandle m_pDescriptors[MFIF];
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
 		// TODO: add the possibility to split this up. 
+		
 		Ref<CShader> m_hShader; // Note: all graphics shader stages in one slang module. 
-		std::function<void()> MW_NULLABLE m_pExecutionScopeCallback;
+		std::function<void(u32 frameIndex)> MW_NULLABLE m_pExecutionScopeCallback;
+
+		enum FlagBits
+		{
+			MW_GRAPHICS_PRE_PASS_USE_DEPTH_ATTACHMENT,
+			MW_GRAPHICS_PRE_PASS_USE_STENCIL_ATTACHMENT,
+		};
+		flags_t m_Flags;
+		
+		SExtent2D m_RenderingArea;
+		std::vector<RenderingAttachmentInfo> m_ColorAttachments;
+		
+		
+		RenderingAttachmentInfo m_DepthAttachment;
+		RenderingAttachmentInfo m_StencilAttachment;
+
 
 		Hash::hash_t m_PipelineHash;
 
@@ -277,13 +301,15 @@ namespace Monoworks
 		CDefferedFrameGraph()	NOEXCEPT;
 		~CDefferedFrameGraph()	NOEXCEPT;
 
-		MW_NOTHROW void Execute() NOEXCEPT override; 
+		MW_NOTHROW void ExecutePreRenderingSetup() NOEXCEPT override;
 		/// @brief Executes all pre-passes.
 		MW_NOTHROW void ExecutePrePasses()	NOEXCEPT override;
 		/// @brief Executes all core-passes.
 		MW_NOTHROW void ExecuteBasePasses() NOEXCEPT override;
 		/// @brief Executes all post & post-processing-passes.
 		MW_NOTHROW void ExecutePostPasses() NOEXCEPT override;
+		
+		MW_NOTHROW void ExecutePostRenderingSteps() NOEXCEPT override; 
 
 		/**
 		 * @brief Hooks a compute pre-pass into the frame graph.
@@ -314,6 +340,8 @@ namespace Monoworks
 		MW_NOTHROW void AddPostProcessPass(			Ref<CPostProcessPass> hPostProcessPass,		s32 MW_NULLABLE executionPriority = -1 ) NOEXCEPT;
 
 		MW_NOTHROW const Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
+
+		
 
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
