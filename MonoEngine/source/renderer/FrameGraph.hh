@@ -310,6 +310,7 @@ namespace Monoworks
     }
 	*/
 
+	// 26 Bytes per Pixel
 	struct GBuffer
 	{
 		// For packing info, refer to the GPassBase Shader.
@@ -376,7 +377,10 @@ namespace Monoworks
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
 		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
+
 		Ref<GBuffer> m_hGBuffer;
+		Ref<RHI::ITexture2D> m_hCompositeImage;
+		RHI::DescriptorHandle m_hGBufferDescriptor = nullptr; // Bound after base pass at set number 1.
 
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;
 		Hash::hash_t			m_DefaultBasePassPipelineHash;

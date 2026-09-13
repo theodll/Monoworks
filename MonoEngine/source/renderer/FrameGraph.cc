@@ -1135,8 +1135,32 @@ namespace Monoworks
 		gbufImgInfo.Extent = re;
 		gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
 		gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
+		
 		gbufImgInfo.Format = MW_FORMAT_B8G8R8A8_UNORM;
+		gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		gbufImgInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		m_hGBuffer->AlbedoOcclusion = ITexture2D::Create( &gbufImgInfo );
 
+		gbufImgInfo.Format = MW_FORMAT_A2R10G10B10_UNORM_PACK32;
+		m_hGBuffer->NormalRoughMetal = ITexture2D::Create( &gbufImgInfo );
+
+		gbufImgInfo.Format = MW_FORMAT_R16G16B16_UNORM;
+		m_hGBuffer->Emissive = ITexture2D::Create( &gbufImgInfo );
+
+		gbufImgInfo.Format = MW_FORMAT_R16G16_SFLOAT;
+		m_hGBuffer->MotionVector = ITexture2D::Create( &gbufImgInfo );
+
+		gbufImgInfo.Format = MW_FORMAT_R32_UINT;
+		m_hGBuffer->EntityMaterialID = ITexture2D::Create( &gbufImgInfo );
+
+		gbufImgInfo.Format = MW_FORMAT_D32_SFLOAT;
+		gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
+		gbufImgInfo.Usage = MW_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+		m_hGBuffer->Depth = ITexture2D::Create( &gbufImgInfo );
+
+		RHI::STextureCreateInfo gbufSamplerInfo{};
+		gbufSamplerInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT | MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT;
+		m_hGBuffer->Sampler = ITexture2D::Create( &gbufSamplerInfo );
 
 
 	};
@@ -1351,7 +1375,26 @@ namespace Monoworks
 		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
 		BindCommandBufferStateBothBegun( frameIndex );
 
+		std::vector<RHI::RenderingAttachmentInfo> gbufferAttachments;
+		constexpr int gbufferAttachmentCount = (sizeof(GBuffer) / sizeof(Ref<RHI::ITexture2D>)) - sizeof( Ref<RHI::ITexture2D> );
+		gbufferAttachments.resize( gbufferAttachmentCount );
+
+		gbufferAttachments[0] = { m_hGBuffer->AlbedoOcclusion };
+		gbufferAttachments[1] = { m_hGBuffer->NormalRoughMetal };
+		gbufferAttachments[2] = { m_hGBuffer->Emissive };
+		gbufferAttachments[3] = { m_hGBuffer->MotionVector };
+		gbufferAttachments[4] = { m_hGBuffer->EntityMaterialID };
+	
+		RHI::RenderingAttachmentInfo depthAttachment;
+		depthAttachment.AttachmentImage = m_hGBuffer->Depth;
+
 		RHI::BeginRenderingInfo renderingInfo;
+		renderingInfo.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
+		renderingInfo.pColorAttachments = gbufferAttachments.data();
+		renderingInfo.ColorAttachmentCount = gbufferAttachments.size();
+		renderingInfo.pDepthAttachment = &depthAttachment;
+		renderingInfo.RenderArea = CStaticRenderer::GetRenderableExtend();
+
 		CStaticRenderer::BeginRendering( frameIndex, &renderingInfo );
 
 
