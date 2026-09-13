@@ -239,8 +239,6 @@ namespace Monoworks
 
 		m_hShader = pInfo->hShader;
 		m_pExecutionScopeCallback = pInfo->pExecutionScopeCallback;
-
-		m_ColorAttachmentCount = pInfo->ColorAttachmentCount;
 	
 		m_ColorAttachments.clear();
 
@@ -1128,6 +1126,16 @@ namespace Monoworks
 			// TODO: Implement error handling here.
 		}
 
+		m_hGBuffer = Ref<GBuffer>::Create();
+		
+		auto re2d = CStaticRenderer::GetRenderableExtend();
+		SExtent3D re = { re2d.Width, re2d.Height, 1 };
+
+		RHI::STextureCreateInfo gbufImgInfo{};
+		gbufImgInfo.Extent = re;
+		gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+		gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
+		gbufImgInfo.Format = MW_FORMAT_B8G8R8A8_UNORM;
 
 
 
@@ -1252,7 +1260,7 @@ namespace Monoworks
 
 	}
 
-	// Binds static state only to the root command buffer. Use this if the worker commandbuffers have not started yet.
+	// Binds static dynamic state only to the root command buffer. Use this if the worker commandbuffers have not started yet.
 	static void MW_NOTHROW BindCommandBufferStateOnlyRoot( u32 frameIndex )
 	{
 		MW_PROFILE_FUNC;
@@ -1272,12 +1280,15 @@ namespace Monoworks
 
 	}
 
-	MW_NOTHROW void CDefferedFrameGraph::ExecutePreRenderingSetup() NOEXCEPT
+	MW_NOTHROW void CDefferedFrameGraph::ExecutePreRenderingSteps() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
+		
 
-		CStaticRenderer::BeginRootCommandbuffer( frameIndex );
+		// Root commandbuffer recording has already begun at this point. The
+		// frame manager has already called CStaticRenderer::BeginRootCommandbuffer. 
+		// That's because it should not be implementation specific 
 		BindCommandBufferStateOnlyRoot( frameIndex );
 	}
 
@@ -1311,7 +1322,7 @@ namespace Monoworks
 			info.pDepthAttachment = &graphicsPrePass->m_DepthAttachment;
 			info.pStencilAttachment = &graphicsPrePass->m_StencilAttachment;
 			info.RenderArea = graphicsPrePass->m_RenderingArea;
-			// Begin the 
+			
 			CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
 			BindCommandBufferStateBothBegun( frameIndex );
 
@@ -1336,10 +1347,27 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
-		// Base Pass
+		
+		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
+		BindCommandBufferStateBothBegun( frameIndex );
 
+		RHI::BeginRenderingInfo renderingInfo;
+		CStaticRenderer::BeginRendering( frameIndex, &renderingInfo );
+
+
+
+		CStaticRenderer::EndRendering( frameIndex );
+		
+		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );
+		
 
 		// Deffered Resolution Pass
+
+		// Begin Secondary commandbuffers for the rest of the frame.
+		// Merging happens at the end of the frame.
+		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
+		BindCommandBufferStateBothBegun( frameIndex );
+
 		for ( auto& resolutionPass : m_hDefferedResolutionPasses )
 		{
 			auto workgroup = ComputeWorkgroupSize( resolutionPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
@@ -1374,6 +1402,18 @@ namespace Monoworks
 			auto workgroup = ComputeWorkgroupSize( postPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
 			CStaticRenderer::DispatchCompute( frameIndex, postPass->m_hComputePipeline, workgroup, -1, &postPass->m_pDescriptors[CStaticRenderer::GetCurrentFrameIndex()], 1 );
 		}
+		
+
+	};
+
+	void CDefferedFrameGraph::ExecutePostRenderingSteps() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
+
+		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );
+		// root commandbuffer submission happens in the frame manager, as it's not 
+		// implementation specific. 
 	};
 
 

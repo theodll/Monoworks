@@ -18,8 +18,8 @@ namespace Monoworks
 	public:
 		virtual	~IFrameGraph() = default;
 
-		/// @brief Pre rendering setup like binding global state, etc.
-		virtual MW_NOTHROW void ExecutePreRenderingSetup() NOEXCEPT = 0;
+		/// @brief Pre rendering steps like binding global state, etc.
+		virtual MW_NOTHROW void ExecutePreRenderingSteps() NOEXCEPT = 0;
 		/// @brief Executes all Pre-Passes (Culling, Depth-Pre-Pass, ...)
 		virtual MW_NOTHROW void ExecutePrePasses() NOEXCEPT = 0;
 		/// @brief Executes all Core-Passes (GPass, Deffered Resolution, ...)
@@ -291,9 +291,36 @@ namespace Monoworks
 		Matrix CurrentViewProjection;
 		Matrix PreviousViewProjection;
 		Matrix InverseViewProjection;
-		Vector CameraPosiiton;
+		Vector CameraPosition;
 		int _pad0; 
 	};
+
+	/*
+	
+    public struct GBuffer // 19 Bytes Color + 4 Bytes Depth
+    {
+        float4 AlbedoOcclusion : SV_Target0;   // R8B8G8A8_UNORM      // RGB = albedo, A = occlusion
+        float4 NormalRoughMetal : SV_Target1; // A2B10G10R10_UNORM_PACK32   // A is metal. RG is normal. B is roughness.
+        float3 Emissive : SV_Target2;        // R16G16B16_UNORM  // RGB = emissive
+        float2 MotionVector : SV_Target3;   // R16G16_SFLOAT  
+
+        // Bits 0-18 are assigned to the entity id. 2^19 = ~525k different Entity IDs (if you use more than that you got a serious issue)
+        // Bits 19-31 are assigned to the material id. 2^13 = 8192 different Material IDs (this value might be a bit small but eight-thousand different IDs is enough at first)
+        uint EntityMaterialID : SV_Target4;  // R32_UINT 
+    }
+	*/
+
+	struct GBuffer
+	{
+		// For packing info, refer to the GPassBase Shader.
+		Ref<RHI::ITexture2D> AlbedoOcclusion; // RGBA8UNORM
+		Ref<RHI::ITexture2D> NormalRoughMetal; // A2BGR10UNORM 
+		Ref<RHI::ITexture2D> Emissive; // RGB16UNORM
+		Ref<RHI::ITexture2D> MotionVector; // RG16SFLOAT
+		Ref<RHI::ITexture2D> EntityMaterialID; // R32UINT
+		Ref<RHI::ITexture2D> Depth; // D32
+		Ref<RHI::ITexture2D> Sampler;
+ 	};
 
 	class CDefferedFrameGraph final : public IFrameGraph
 	{
@@ -301,7 +328,7 @@ namespace Monoworks
 		CDefferedFrameGraph()	NOEXCEPT;
 		~CDefferedFrameGraph()	NOEXCEPT;
 
-		MW_NOTHROW void ExecutePreRenderingSetup() NOEXCEPT override;
+		MW_NOTHROW void ExecutePreRenderingSteps() NOEXCEPT override;
 		/// @brief Executes all pre-passes.
 		MW_NOTHROW void ExecutePrePasses()	NOEXCEPT override;
 		/// @brief Executes all core-passes.
@@ -341,8 +368,6 @@ namespace Monoworks
 
 		MW_NOTHROW const Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
 
-		
-
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
 		std::vector<Ref<CComputePrePass>>			m_hComputePrePasses;
@@ -351,6 +376,7 @@ namespace Monoworks
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
 		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
+		Ref<GBuffer> m_hGBuffer;
 
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;
 		Hash::hash_t			m_DefaultBasePassPipelineHash;
