@@ -83,10 +83,10 @@ namespace Monoworks
 		Ref<CShader> hShader;
 		SExtent2D RenderingArea;
 
-		size_t ColorAttachmentCount;
-		RenderingAttachmentInfo* MW_NULLABLE pColorAttachments = nullptr;
-		RenderingAttachmentInfo* MW_NULLABLE pDepthAttachment = nullptr;
-		RenderingAttachmentInfo* MW_NULLABLE pStencilAttachment = nullptr;
+		size_t ColorAttachmentCount = 0;
+		std::array<RenderingAttachmentInfo, MFIF>* MW_NULLABLE	ppColorAttachments = { nullptr };
+		std::array<RenderingAttachmentInfo, MFIF> MW_NULLABLE	pDepthAttachment =  { nullptr };
+		std::array<RenderingAttachmentInfo, MFIF> MW_NULLABLE	pStencilAttachment = { nullptr };
 
 		EImageFormat DepthFormat = RHI::MW_FORMAT_D32_SFLOAT; 
 		EImageFormat StencilFormat = RHI::MW_FORMAT_S8_UINT;
@@ -213,14 +213,14 @@ namespace Monoworks
 		friend class CDefferedFrameGraph;
 	};
 
-	struct DefferedResolutionPassCreateionInfo
+	struct DefferedResolutionPassCreationInfo
 	{
 		const Ref<CShader> hShader;
 	};
 
 	class CDefferedResolutionPass
 	{
-		CDefferedResolutionPass( const DefferedResolutionPassCreateionInfo* pInfo );
+		CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo );
 		~CDefferedResolutionPass() NOEXCEPT;
 
 		/**
@@ -378,8 +378,10 @@ namespace Monoworks
 
 		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
 
-		Ref<GBuffer> m_hGBuffer;
+		std::array<Ref<GBuffer>, MFIF> m_hGBuffers;
 		Ref<RHI::ITexture2D> m_hCompositeImage;
+		
+		
 		RHI::DescriptorHandle m_hGBufferDescriptor = nullptr; // Bound after base pass at set number 1.
 
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;

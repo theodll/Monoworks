@@ -962,6 +962,13 @@ namespace Monoworks
 
 	}
 
+	static MW_NOTHROW void SubmitSceneGeometry( u32 frameIndex ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+
+	}
+
 	CDefferedFrameGraph::CDefferedFrameGraph()	 NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -1109,12 +1116,13 @@ namespace Monoworks
 			auto pipelineReflectData = m_hDefaultBasePassShader->ReflectOnShader();
 
 			RHI::GraphicsPipelineCreationInfo createInfo{};
-			createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
+			createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
 			createInfo.VertexLayout = basePassVertexLayout;
 			createInfo.ShaderObjects = shaderObjects;
 			createInfo.ColorFormats = colorFormats;
 			createInfo.ColorBlendAttachments = colorBlendAttachments;
 			createInfo.pSignature = pipelineReflectData.pPipelineSignature;
+			createInfo.CompareOp = RHI::MW_COMPARE_OP_EQUAL;
 			createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
 
 			auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_DefaultBasePassPipelineHash );
@@ -1126,41 +1134,62 @@ namespace Monoworks
 			// TODO: Implement error handling here.
 		}
 
-		m_hGBuffer = Ref<GBuffer>::Create();
-		
 		auto re2d = CStaticRenderer::GetRenderableExtend();
 		SExtent3D re = { re2d.Width, re2d.Height, 1 };
 
-		RHI::STextureCreateInfo gbufImgInfo{};
-		gbufImgInfo.Extent = re;
-		gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
-		gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
+		for ( auto& gbuf : m_hGBuffers )
+		{
+			gbuf = Ref<GBuffer>::Create();
+
+			RHI::STextureCreateInfo gbufImgInfo{};
+			gbufImgInfo.Extent = re;
+			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
+
+			gbufImgInfo.Format = MW_FORMAT_B8G8R8A8_UNORM;
+			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			gbufImgInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			gbuf->AlbedoOcclusion = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_A2R10G10B10_UNORM_PACK32;
+			gbuf->NormalRoughMetal = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_R16G16B16_UNORM;
+			gbuf->Emissive = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_R16G16_SFLOAT;
+			gbuf->MotionVector = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_R32_UINT;
+			gbuf->EntityMaterialID = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_D32_SFLOAT;
+			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
+			gbufImgInfo.Usage = MW_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+			gbuf->Depth = ITexture2D::Create( &gbufImgInfo );
+
+			RHI::STextureCreateInfo gbufSamplerInfo{};
+			gbufSamplerInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT | MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT;
+			gbuf->Sampler = ITexture2D::Create( &gbufSamplerInfo );	
+		}
+
+		GraphicsPrePassCreationInfo depthPrePassInfo{};
 		
-		gbufImgInfo.Format = MW_FORMAT_B8G8R8A8_UNORM;
-		gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		gbufImgInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-		m_hGBuffer->AlbedoOcclusion = ITexture2D::Create( &gbufImgInfo );
+		ShaderCreateInfo shaderInfo{};
+		shaderInfo.Path = "shaders/DepthPrePass.slang";
 
-		gbufImgInfo.Format = MW_FORMAT_A2R10G10B10_UNORM_PACK32;
-		m_hGBuffer->NormalRoughMetal = ITexture2D::Create( &gbufImgInfo );
+		depthPrePassInfo.hShader = Ref<CShader>::Create( &shaderInfo );
+		
+		std::array<RenderingAttachmentInfo, MFIF> depthAttachments;
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+			depthAttachments[i] = { m_hGBuffers[i]->Depth };
 
-		gbufImgInfo.Format = MW_FORMAT_R16G16B16_UNORM;
-		m_hGBuffer->Emissive = ITexture2D::Create( &gbufImgInfo );
+		depthPrePassInfo.pDepthAttachment = depthAttachments;
+		depthPrePassInfo.RenderingArea = re2d;
+		depthPrePassInfo.pExecutionScopeCallback = &SubmitSceneGeometry;
 
-		gbufImgInfo.Format = MW_FORMAT_R16G16_SFLOAT;
-		m_hGBuffer->MotionVector = ITexture2D::Create( &gbufImgInfo );
-
-		gbufImgInfo.Format = MW_FORMAT_R32_UINT;
-		m_hGBuffer->EntityMaterialID = ITexture2D::Create( &gbufImgInfo );
-
-		gbufImgInfo.Format = MW_FORMAT_D32_SFLOAT;
-		gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
-		gbufImgInfo.Usage = MW_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-		m_hGBuffer->Depth = ITexture2D::Create( &gbufImgInfo );
-
-		RHI::STextureCreateInfo gbufSamplerInfo{};
-		gbufSamplerInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT | MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT;
-		m_hGBuffer->Sampler = ITexture2D::Create( &gbufSamplerInfo );
+		Ref<CGraphicsPrePass> depthPrePass = Ref<CGraphicsPrePass>::Create( &depthPrePassInfo );
+		this->AddPrePass( depthPrePass );
 
 
 	};
@@ -1265,7 +1294,7 @@ namespace Monoworks
 	};
 
 
-	static void MW_NOTHROW BindCommandBufferStateBothBegun( u32 frameIndex ) 
+	static void MW_NOTHROW BindCommandBufferStateBothBegun( u32 frameIndex )
 	{
 		MW_PROFILE_FUNC;
 
@@ -1308,7 +1337,16 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
-		
+
+		auto& gbuf = m_hGBuffers[frameIndex];
+
+		gbuf->AlbedoOcclusion->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->NormalRoughMetal->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->Emissive->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->MotionVector->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->EntityMaterialID->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->Depth->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT );
+
 
 		// Root commandbuffer recording has already begun at this point. The
 		// frame manager has already called CStaticRenderer::BeginRootCommandbuffer. 
@@ -1379,14 +1417,14 @@ namespace Monoworks
 		constexpr int gbufferAttachmentCount = (sizeof(GBuffer) / sizeof(Ref<RHI::ITexture2D>)) - sizeof( Ref<RHI::ITexture2D> );
 		gbufferAttachments.resize( gbufferAttachmentCount );
 
-		gbufferAttachments[0] = { m_hGBuffer->AlbedoOcclusion };
-		gbufferAttachments[1] = { m_hGBuffer->NormalRoughMetal };
-		gbufferAttachments[2] = { m_hGBuffer->Emissive };
-		gbufferAttachments[3] = { m_hGBuffer->MotionVector };
-		gbufferAttachments[4] = { m_hGBuffer->EntityMaterialID };
+		gbufferAttachments[0] = { m_hGBuffers[frameIndex]->AlbedoOcclusion };
+		gbufferAttachments[1] = { m_hGBuffers[frameIndex]->NormalRoughMetal };
+		gbufferAttachments[2] = { m_hGBuffers[frameIndex]->Emissive };
+		gbufferAttachments[3] = { m_hGBuffers[frameIndex]->MotionVector };
+		gbufferAttachments[4] = { m_hGBuffers[frameIndex]->EntityMaterialID };
 	
 		RHI::RenderingAttachmentInfo depthAttachment;
-		depthAttachment.AttachmentImage = m_hGBuffer->Depth;
+		depthAttachment.AttachmentImage = m_hGBuffers[frameIndex]->Depth;
 
 		RHI::BeginRenderingInfo renderingInfo;
 		renderingInfo.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
@@ -1397,6 +1435,9 @@ namespace Monoworks
 
 		CStaticRenderer::BeginRendering( frameIndex, &renderingInfo );
 
+		
+
+		SubmitSceneGeometry( frameIndex );
 
 
 		CStaticRenderer::EndRendering( frameIndex );
@@ -1458,6 +1499,12 @@ namespace Monoworks
 		// root commandbuffer submission happens in the frame manager, as it's not 
 		// implementation specific. 
 	};
+
+	MW_NOTHROW void CDefferedFrameGraph::SubmitSceneGeometry() NOEXCEPT
+	{
+
+	}
+
 
 
 }

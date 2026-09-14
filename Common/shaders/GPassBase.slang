@@ -9,17 +9,17 @@ namespace Monoworks
     // Constants
     public struct CameraConstants // It's a camera constant.
     {
-        float4x4            CurrentViewProjection;
-        float4x4            PreviousViewProjection;
-        float4x4            InverseViewProjection; // Current too.
-        float3              CameraPosition;
+        public float4x4            CurrentViewProjection;
+        public float4x4            PreviousViewProjection;
+        public float4x4            InverseViewProjection; // Current too.
+        public float3              CameraPosition;
     }
 
     public struct ModelConstants // It's a push constant, not a ConstantBuffer like CameraConstants. It's just for unified naming.
     {
-        float4x4            CurrentModelMatrix;
-        float4x4            PreviousModelMatrix;
-        uint                EntityID;    
+        public float4x4            CurrentModelMatrix;
+        public float4x4            PreviousModelMatrix;
+        public uint                EntityID;    
     };
 
     public struct MaterialInputUBO

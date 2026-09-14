@@ -401,7 +401,7 @@ namespace Monoworks::RHI
 		}
 	}
 
-	MW_NOTHROW void CVulkanTexture2D::TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT
+	MW_NOTHROW void CVulkanTexture2D::TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID, bool outsideFrameScope  ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 	
@@ -412,10 +412,18 @@ namespace Monoworks::RHI
 
 		if ( threadID < 0 )
 			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+		else if ( outsideFrameScope )
+			cmd = *CVulkanContext::GetUploader()->GetCommandBuffer();
 		else
 			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 		
+		if ( outsideFrameScope )
+			CVulkanContext::GetUploader()->Begin();
+
 		TransitionLayoutEC( &cmd, dstLayout, dstPipelineStage, aspectMask );
+
+		if ( outsideFrameScope )
+			CVulkanContext::GetUploader()->End();
 
 	};
 
