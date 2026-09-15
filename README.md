@@ -13,3 +13,16 @@ Powered by modern APIs like Direct3D12 and Vulkan, and with modern multi threadi
 - Localisation & Localisation Tooling
 
 # Roadmap to MVP
+
+# Build Dependancies
+
+
+To build Monoworks you will need following things
+
+
+  - A `C++23` compatible **Compiler**
+  - **CMake** `Version 3.24` and newer
+  - **Git** (obviously)
+  - **LunarG Vulkan SDK** supporting Vulkan `Version 1.3`
+  - **Boost** `Version 1.92.0`
+  - **Qt** `Version 6.11.1` (needed for compiling the Editor)
