@@ -2,12 +2,16 @@
 #include <common/Base.hh>
 #include <boost/unordered_map.hpp>
 
+#include <rhi/GraphicsAPI.hh>
+#include <rhi/Utils.hh>
+
 #include <rhi/agnostic/DescriptorManager.hh>
 #include <rhi/agnostic/Texture.hh>
 #include <rhi/agnostic/UniformBuffer.hh>
 #include <rhi/agnostic/ComputePipeline.hh>
 
-#include "Shader.hh"
+#include <renderer/Camera.hh>
+#include <renderer/Shader.hh>
 
 namespace Monoworks 
 {
@@ -84,12 +88,12 @@ namespace Monoworks
 		SExtent2D RenderingArea;
 
 		size_t ColorAttachmentCount = 0;
-		std::array<RenderingAttachmentInfo, MFIF>* MW_NULLABLE	ppColorAttachments = { nullptr };
-		std::array<RenderingAttachmentInfo, MFIF> MW_NULLABLE	pDepthAttachment =  { nullptr };
-		std::array<RenderingAttachmentInfo, MFIF> MW_NULLABLE	pStencilAttachment = { nullptr };
+		std::array<RHI::RenderingAttachmentInfo, MFIF>* MW_NULLABLE	ppColorAttachments = { nullptr };
+		std::array<RHI::RenderingAttachmentInfo, MFIF> MW_NULLABLE	pDepthAttachment = { nullptr };
+		std::array<RHI::RenderingAttachmentInfo, MFIF> MW_NULLABLE	pStencilAttachment = { nullptr };
 
-		EImageFormat DepthFormat = RHI::MW_FORMAT_D32_SFLOAT; 
-		EImageFormat StencilFormat = RHI::MW_FORMAT_S8_UINT;
+		RHI::EImageFormat DepthFormat = RHI::MW_FORMAT_D32_SFLOAT; 
+		RHI::EImageFormat StencilFormat = RHI::MW_FORMAT_S8_UINT;
 
 		std::function<void( u32 frameIndex )> MW_NULLABLE pExecutionScopeCallback = nullptr;
 	};
@@ -150,10 +154,8 @@ namespace Monoworks
 		SExtent2D m_RenderingArea;
 		std::vector<RenderingAttachmentInfo> m_ColorAttachments;
 		
-		
 		RenderingAttachmentInfo m_DepthAttachment;
 		RenderingAttachmentInfo m_StencilAttachment;
-
 
 		Hash::hash_t m_PipelineHash;
 
@@ -295,21 +297,6 @@ namespace Monoworks
 		int _pad0; 
 	};
 
-	/*
-	
-    public struct GBuffer // 19 Bytes Color + 4 Bytes Depth
-    {
-        float4 AlbedoOcclusion : SV_Target0;   // R8B8G8A8_UNORM      // RGB = albedo, A = occlusion
-        float4 NormalRoughMetal : SV_Target1; // A2B10G10R10_UNORM_PACK32   // A is metal. RG is normal. B is roughness.
-        float3 Emissive : SV_Target2;        // R16G16B16_UNORM  // RGB = emissive
-        float2 MotionVector : SV_Target3;   // R16G16_SFLOAT  
-
-        // Bits 0-18 are assigned to the entity id. 2^19 = ~525k different Entity IDs (if you use more than that you got a serious issue)
-        // Bits 19-31 are assigned to the material id. 2^13 = 8192 different Material IDs (this value might be a bit small but eight-thousand different IDs is enough at first)
-        uint EntityMaterialID : SV_Target4;  // R32_UINT 
-    }
-	*/
-
 	// 26 Bytes per Pixel
 	struct GBuffer
 	{
@@ -376,17 +363,19 @@ namespace Monoworks
 		std::vector<Ref<CDefferedResolutionPass>>	m_hDefferedResolutionPasses;
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
-		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
-
 		std::array<Ref<GBuffer>, MFIF> m_hGBuffers;
-		Ref<RHI::ITexture2D> m_hCompositeImage;
-		
-		
-		RHI::DescriptorHandle m_hGBufferDescriptor = nullptr; // Bound after base pass at set number 1.
+		std::array<RHI::DescriptorHandle, MFIF> m_hGBufferDescriptor = { nullptr }; // Bound after base pass at set number 1.
 
+		std::array<Ref<RHI::ITexture2D>, MFIF> m_hCompositeImage;
+
+		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;
 		Hash::hash_t			m_DefaultBasePassPipelineHash;
 
+
+		std::array<Ref<RHI::IUniformBuffer>, MFIF> m_CameraUBOs;
+		std::array<RHI::DescriptorHandle, MFIF> m_CameraUBOSets;
+		Ref<CCamera> m_hCamera;
 	};
 }
 

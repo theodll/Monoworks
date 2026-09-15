@@ -59,12 +59,20 @@ namespace Monoworks
 	MW_NOTHROW void CCamera::UpdateViewQuaternion( Vector position, Quaternion quaternion ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
+		m_PreviousViewMatrix = m_CurrentViewMatrix;
+		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
 
+		m_CurrentViewMatrix = glm::mat4_cast( glm::conjugate( quaternion ) ) * glm::translate( Matrix( 1.f ), -position );
+
+		m_CurrentViewProjectionMatrix = m_CurrentViewMatrix * m_CurrentViewProjectionMatrix;
 	};
 	
 	MW_NOTHROW void CCamera::UpdateViewEuler( Vector position, Angle euler ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
+
+		auto quat = Quaternion( euler );
+		UpdateViewQuaternion( position, quat );
 
 	};
 }
