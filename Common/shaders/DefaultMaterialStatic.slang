@@ -4,7 +4,7 @@ import GPassBase;
 namespace Monoworks
 {
 
-    ParameterBlock<CameraConstants> u_CameraConstants; // NOTE: set 1
+    ParameterBlock<ConstantBuffer<CameraConstants>> u_CameraConstants; // NOTE: set 1
     ParameterBlock<MaterialInput> u_MaterialInput; // NOTE: set 2
     
     static IMaterial g_Material;
@@ -26,8 +26,5 @@ namespace Monoworks
         gbuffer = GPass::CalculateGBuffer(surface, input, u_CameraConstants, pushModelConstants);
         return gbuffer;
     }
-
-
-
 
 }

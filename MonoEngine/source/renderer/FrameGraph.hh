@@ -152,10 +152,10 @@ namespace Monoworks
 		flags_t m_Flags;
 		
 		SExtent2D m_RenderingArea;
-		std::vector<RenderingAttachmentInfo> m_ColorAttachments;
+		std::vector<RHI::RenderingAttachmentInfo> m_ColorAttachments;
 		
-		RenderingAttachmentInfo m_DepthAttachment;
-		RenderingAttachmentInfo m_StencilAttachment;
+		RHI::RenderingAttachmentInfo m_DepthAttachment;
+		RHI::RenderingAttachmentInfo m_StencilAttachment;
 
 		Hash::hash_t m_PipelineHash;
 
@@ -288,15 +288,6 @@ namespace Monoworks
 		friend class CDefferedFrameGraph;
 	};
 
-	struct alignas(16) CameraConstantsUBO
-	{
-		Matrix CurrentViewProjection;
-		Matrix PreviousViewProjection;
-		Matrix InverseViewProjection;
-		Vector CameraPosition;
-		int _pad0; 
-	};
-
 	// 26 Bytes per Pixel
 	struct GBuffer
 	{
@@ -372,6 +363,15 @@ namespace Monoworks
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;
 		Hash::hash_t			m_DefaultBasePassPipelineHash;
 
+		struct alignas( 16 ) CameraConstantsUBO
+		{
+			Matrix CurrentViewProjection;
+			Matrix PreviousViewProjection;
+			Matrix CurrentInverseViewProjection;
+			Matrix PreviousInverseViewProjection;
+			Vector CameraPosition;
+			int _pad0;
+		};
 
 		std::array<Ref<RHI::IUniformBuffer>, MFIF> m_CameraUBOs;
 		std::array<RHI::DescriptorHandle, MFIF> m_CameraUBOSets;

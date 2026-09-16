@@ -641,9 +641,8 @@ namespace Monoworks
 	};
 
 
-	CDefferedResolutionPass::CDefferedResolutionPass( const DefferedResolutionPassCreateionInfo* pInfo )
+	CDefferedResolutionPass::CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo )
 	{
-		MW_PROFILE_FUNC;
 		MW_PROFILE_FUNC;
 
 		if ( !pInfo->hShader )
@@ -1173,6 +1172,7 @@ namespace Monoworks
 			gbuf->Sampler = ITexture2D::Create( &gbufSamplerInfo );	
 		}
 
+
 		GraphicsPrePassCreationInfo depthPrePassInfo{};
 		
 		ShaderCreateInfo shaderInfo{};
@@ -1186,11 +1186,24 @@ namespace Monoworks
 
 		depthPrePassInfo.pDepthAttachment = depthAttachments;
 		depthPrePassInfo.RenderingArea = re2d;
-		depthPrePassInfo.pExecutionScopeCallback = &SubmitSceneGeometry;
+		// TODO: add thread ID
+		depthPrePassInfo.pExecutionScopeCallback = [&]( u32 frameIndex )
+			{
+				CStaticRenderer::BindDescriptors( frameIndex, depthPrePassInfo.hShader->ReflectOnShader().pPipelineSignature, m_CameraUBOSets.data(), m_CameraUBOSets.size(), -1 );
+				SubmitSceneGeometry( frameIndex );
+			};
 
 		Ref<CGraphicsPrePass> depthPrePass = Ref<CGraphicsPrePass>::Create( &depthPrePassInfo );
 		this->AddPrePass( depthPrePass );
 
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+
+			m_CameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
+			m_CameraUBOSets[i] = CDescriptorManager::Allocate( depthPrePassInfo.hShader->ReflectOnShader().pDescriptorSignatures[1] );
+			CDescriptorManager::WriteUniformBuffer( m_CameraUBOSets[i], 0, m_CameraUBOs[i] );
+			
+		}
 
 	};
 
@@ -1347,11 +1360,22 @@ namespace Monoworks
 		gbuf->EntityMaterialID->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 		gbuf->Depth->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT );
 
+		// TODO: add check if m_CameraUBOs[ frameIndex ] is valid
+		CameraConstantsUBO ubo{};
+		ubo.CameraPosition = m_hCamera->GetPosition();
+		ubo.CurrentViewProjection = m_hCamera->GetCurrentViewProjectionMatrix();
+		ubo.PreviousViewProjection = m_hCamera->GetPreviousProjectionMatrix();
+		ubo.CurrentInverseViewProjection = glm::inverse( m_hCamera->GetCurrentViewProjectionMatrix() );
+		ubo.PreviousInverseViewProjection = glm::inverse( m_hCamera->GetPreviousViewProjectionMatrix() );
+
+		m_CameraUBOs[frameIndex]->SetData( &ubo, sizeof( ubo ) );
 
 		// Root commandbuffer recording has already begun at this point. The
 		// frame manager has already called CStaticRenderer::BeginRootCommandbuffer. 
 		// That's because it should not be implementation specific 
 		BindCommandBufferStateOnlyRoot( frameIndex );
+
+
 	}
 
 	void CDefferedFrameGraph::ExecutePrePasses() NOEXCEPT
