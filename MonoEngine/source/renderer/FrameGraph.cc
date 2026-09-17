@@ -181,6 +181,12 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		if ( !hTexture )
+		{
+			MW_API_ERROR( "Passed invalid Texture reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -204,6 +210,13 @@ namespace Monoworks
 	void CComputePrePass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		if ( !hSampler )
+		{
+			MW_API_ERROR( "Passed invalid Sampler reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -224,9 +237,17 @@ namespace Monoworks
 			}
 	}
 
-	void CComputePrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	void CComputePrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffer, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+
+		if ( !phUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
 	}
 
 
@@ -243,19 +264,30 @@ namespace Monoworks
 		m_ColorAttachments.clear();
 
 		for ( auto i{ 0uz }; i < pInfo->ColorAttachmentCount; i++ )
-			m_ColorAttachments.push_back( pInfo->pColorAttachments[i] );
-	
-		if ( pInfo->pDepthAttachment )
 		{
-			m_DepthAttachment = *pInfo->pDepthAttachment;
+			std::array<RenderingAttachmentInfo, MFIF> colorAttachment;
+			for ( auto j{ 0uz }; j < MFIF; j++ )
+			{
+				colorAttachment[j] = *pInfo->ppColorAttachments[i][j];
+			}
+
+			m_ColorAttachments.push_back( colorAttachment );
+		}
+
+		if ( pInfo->pDepthAttachment[0] )
+		{
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				m_DepthAttachment[i] = *pInfo->pDepthAttachment[i];
 			m_Flags |= MW_GRAPHICS_PRE_PASS_USE_DEPTH_ATTACHMENT;
 		}
 		else
 			m_DepthAttachment = {};
 
-		if ( pInfo->pStencilAttachment )
+		if ( pInfo->pStencilAttachment[0] )
 		{
-			m_StencilAttachment = *pInfo->pDepthAttachment;
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				m_StencilAttachment[i] = *pInfo->pDepthAttachment[i ];
+
 			m_Flags |= MW_GRAPHICS_PRE_PASS_USE_STENCIL_ATTACHMENT;
 
 		}
@@ -421,6 +453,13 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+
+		if ( !hTexture )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -464,7 +503,7 @@ namespace Monoworks
 			}
 	}
 
-	void CGraphicsPrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	void CGraphicsPrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffer, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
 
@@ -484,7 +523,7 @@ namespace Monoworks
 		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), phUniformBuffer[i] );
 				m_BindingsWritten[binding.value()] = true;
 			}
 	}
@@ -570,6 +609,12 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		if ( !hTexture )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -594,6 +639,12 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		if ( !hSampler )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -614,10 +665,15 @@ namespace Monoworks
 			}
 	}
 
-	void CPostProcessPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
+	void CPostProcessPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite )
 	{
 		MW_PROFILE_FUNC;
 
+		if ( !phUniformBuffers )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
 
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
@@ -634,7 +690,7 @@ namespace Monoworks
 		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), phUniformBuffer[i]);
 				m_BindingsWritten[binding.value()] = true;
 			}
 
@@ -780,6 +836,12 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		if ( !hTexture )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -860,6 +922,12 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		if ( !hSampler )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -883,13 +951,13 @@ namespace Monoworks
 	}
 
 
-	void CDefferedResolutionPass::BindUBO( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	void CDefferedResolutionPass::BindUBO( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
 
 		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 
-		if ( !hUniformBuffer )
+		if ( !phUniformBuffer )
 		{
 			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
 			return;
@@ -928,7 +996,7 @@ namespace Monoworks
 		if ( forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}] )
 		{
 			for ( auto i{ 0uz }; i < MFIF; i++ )
-				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[parameterBlock][i], descriptorSlot, hUniformBuffer );
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[parameterBlock][i], descriptorSlot, phUniformBuffer[i] );
 
 			m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
 		}
@@ -936,9 +1004,15 @@ namespace Monoworks
 
 	}
 
-	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+		if ( !phUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
 		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
@@ -954,7 +1028,7 @@ namespace Monoworks
 		if ( forceRewrite || !m_BindingsWritten[{GlobalScopeSignature, binding.value()}] )
 		{
 			for ( auto i{ 0uz }; i < MFIF; i++ )
-				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[GlobalScopeSignature][i], binding.value(), hUniformBuffer );
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[GlobalScopeSignature][i], binding.value(), phUniformBuffer[i] );
 
 			m_BindingsWritten[{GlobalScopeSignature, binding.value()}] = true;
 		}
@@ -1180,21 +1254,28 @@ namespace Monoworks
 
 		depthPrePassInfo.hShader = Ref<CShader>::Create( &shaderInfo );
 		
-		std::array<RenderingAttachmentInfo, MFIF> depthAttachments;
+		std::array<RenderingAttachmentInfo, MFIF> depthAttachment;
 		for ( auto i{ 0uz }; i < MFIF; i++ )
-			depthAttachments[i] = { m_hGBuffers[i]->Depth };
+			depthAttachment[i] = { m_hGBuffers[i]->Depth };
 
-		depthPrePassInfo.pDepthAttachment = depthAttachments;
+		std::array<RenderingAttachmentInfo*, MFIF> depthAttachmentPtr;
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+			depthAttachmentPtr[i] = &depthAttachment[i];
+
+		depthPrePassInfo.pDepthAttachment = depthAttachmentPtr;
 		depthPrePassInfo.RenderingArea = re2d;
 		// TODO: add thread ID
 		depthPrePassInfo.pExecutionScopeCallback = [&]( u32 frameIndex )
 			{
-				CStaticRenderer::BindDescriptors( frameIndex, depthPrePassInfo.hShader->ReflectOnShader().pPipelineSignature, m_CameraUBOSets.data(), m_CameraUBOSets.size(), -1 );
 				SubmitSceneGeometry( frameIndex );
 			};
 
 		Ref<CGraphicsPrePass> depthPrePass = Ref<CGraphicsPrePass>::Create( &depthPrePassInfo );
+		depthPrePass->BindUBO( "u_CameraConstants", m_CameraUBOs.data(), true );
+		
 		this->AddPrePass( depthPrePass );
+
+
 
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
@@ -1404,9 +1485,9 @@ namespace Monoworks
 			RHI::BeginRenderingInfo info;
 			info.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
 			info.ColorAttachmentCount = graphicsPrePass->m_ColorAttachments.size();
-			info.pColorAttachments = graphicsPrePass->m_ColorAttachments.data();
-			info.pDepthAttachment = &graphicsPrePass->m_DepthAttachment;
-			info.pStencilAttachment = &graphicsPrePass->m_StencilAttachment;
+			info.pColorAttachments = graphicsPrePass->m_ColorAttachments[frameIndex].data();
+			info.pDepthAttachment = &graphicsPrePass->m_DepthAttachment[frameIndex];
+			info.pStencilAttachment = &graphicsPrePass->m_StencilAttachment[frameIndex];
 			info.RenderArea = graphicsPrePass->m_RenderingArea;
 			
 			CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
@@ -1459,10 +1540,9 @@ namespace Monoworks
 
 		CStaticRenderer::BeginRendering( frameIndex, &renderingInfo );
 
-		
-
+		// Jobs
+		CStaticRenderer::BindDescriptors( frameIndex, m_hDefaultBasePassPipeline->GetSignature(), &m_CameraUBOSets[frameIndex], 1, 1, -1);
 		SubmitSceneGeometry( frameIndex );
-
 
 		CStaticRenderer::EndRendering( frameIndex );
 		
@@ -1523,11 +1603,6 @@ namespace Monoworks
 		// root commandbuffer submission happens in the frame manager, as it's not 
 		// implementation specific. 
 	};
-
-	MW_NOTHROW void CDefferedFrameGraph::SubmitSceneGeometry() NOEXCEPT
-	{
-
-	}
 
 
 

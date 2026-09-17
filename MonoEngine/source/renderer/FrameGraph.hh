@@ -66,10 +66,10 @@ namespace Monoworks
 		/**
 		* @brief Bind a uniform buffer located in global scope.
 		* @param bindingName: Name of the element to bind inside global scope.
-		* @param hUniformBuffer: Reference to the uniform buffer to bind
+		* @param phUniformBuffer: Array of References to the uniform buffers to bind for every frame in flight.
 		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
 		*/
-		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite = false );
 
 	private:
 		boost::unordered_map<u32, bool> m_BindingsWritten;
@@ -88,9 +88,9 @@ namespace Monoworks
 		SExtent2D RenderingArea;
 
 		size_t ColorAttachmentCount = 0;
-		std::array<RHI::RenderingAttachmentInfo, MFIF>* MW_NULLABLE	ppColorAttachments = { nullptr };
-		std::array<RHI::RenderingAttachmentInfo, MFIF> MW_NULLABLE	pDepthAttachment = { nullptr };
-		std::array<RHI::RenderingAttachmentInfo, MFIF> MW_NULLABLE	pStencilAttachment = { nullptr };
+		std::array<RHI::RenderingAttachmentInfo*, MFIF>* MW_NULLABLE	ppColorAttachments = { nullptr };
+		std::array<RHI::RenderingAttachmentInfo*, MFIF>  MW_NULLABLE	pDepthAttachment = { nullptr };
+		std::array<RHI::RenderingAttachmentInfo*, MFIF>  MW_NULLABLE	pStencilAttachment = { nullptr };
 
 		RHI::EImageFormat DepthFormat = RHI::MW_FORMAT_D32_SFLOAT; 
 		RHI::EImageFormat StencilFormat = RHI::MW_FORMAT_S8_UINT;
@@ -130,10 +130,10 @@ namespace Monoworks
 		/**
 		* @brief Bind a uniform buffer located in global scope.
 		* @param bindingName: Name of the element to bind inside global scope.
-		* @param hUniformBuffer: Reference to the uniform buffer to bind
+		* @param phUniformBuffer:Array of References to the uniform buffers to bind for every frame in flight.
 		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
 		*/
-		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite = false );
 
 	private:
 		boost::unordered_map<u32, bool> m_BindingsWritten;
@@ -152,10 +152,10 @@ namespace Monoworks
 		flags_t m_Flags;
 		
 		SExtent2D m_RenderingArea;
-		std::vector<RHI::RenderingAttachmentInfo> m_ColorAttachments;
+		std::vector<std::array<RHI::RenderingAttachmentInfo, MFIF>> m_ColorAttachments;
 		
-		RHI::RenderingAttachmentInfo m_DepthAttachment;
-		RHI::RenderingAttachmentInfo m_StencilAttachment;
+		std::array<RHI::RenderingAttachmentInfo, MFIF> m_DepthAttachment;
+		std::array<RHI::RenderingAttachmentInfo, MFIF> m_StencilAttachment;
 
 		Hash::hash_t m_PipelineHash;
 
@@ -199,10 +199,10 @@ namespace Monoworks
 		/**
 		* @brief Bind a uniform buffer located in global scope.
 		* @param bindingName: Name of the element to bind inside global scope.
-		* @param hUniformBuffer: Reference to the uniform buffer to bind
+		* @param phUniformBuffer: Array of References to the uniform buffers to bind for every frame in flight.
 		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
 		*/
-		void BindUBO(	   std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+		void BindUBO(	   std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite = false );
 
 	private:
 		boost::unordered_map<u32, bool> m_BindingsWritten;
@@ -263,18 +263,18 @@ namespace Monoworks
 		* @brief Bind a uniform buffer located in a parameter block.
 		* @param parameterBlockName: Name of the parameter block in the shader code.
 		* @param bindingName: Name of the element to bind inside the Parameter Block.
-		* @param hUniformBuffer: Reference to the uniform buffer to bind.
+		* @param hUniformBuffer: Array of References to the uniform buffers to bind for every frame in flight.
 		* @param forceRewrite: Toggle whether to rewrite the sampler uniform buffer if it's already written.
 		*/
-		void BindUBO(	  std::string_view parameterBlockName,	std::string_view bindingName,	Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+		void BindUBO(	  std::string_view parameterBlockName,	std::string_view bindingName,	Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite = false );
 
 		/**
 		* @brief Bind a uniform buffer located in global scope.
 		* @param bindingName: Name of the element to bind inside global scope.
-		* @param hUniformBuffer: Reference to the uniform buffer to bind
+		* @param phUniformBuffer: Array of References to the uniform buffers to bind for every frame in flight.
 		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
 		*/
-		void BindUBO(	  std::string_view bindingName,			Ref<RHI::IUniformBuffer> hUniformBuffer,	bool forceRewrite = false );
+		void BindUBO(	  std::string_view bindingName,			Ref<RHI::IUniformBuffer>* phUniformBuffers,	bool forceRewrite = false );
 	
 	private:
 		// NOTE: 1. element in the pair is the set binding and 2. is the in-set binding

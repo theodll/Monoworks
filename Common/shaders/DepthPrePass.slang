@@ -4,7 +4,7 @@ import GPassBase;
 namespace Monoworks 
 {
 
-	ParameterBlock<CameraConstants> u_CameraConstants; // set 1
+	ConstantBuffer<CameraConstants> u_CameraConstants; // set 1
 
     [shader("vertex")]
     float4 vertexMain(VertexInput input, uniform ModelConstants pushModelConstants)
