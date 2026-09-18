@@ -298,6 +298,7 @@ namespace Monoworks
 		Ref<RHI::ITexture2D> MotionVector; // RG16SFLOAT
 		Ref<RHI::ITexture2D> EntityMaterialID; // R32UINT
 		Ref<RHI::ITexture2D> Depth; // D32
+
 		Ref<RHI::ITexture2D> Sampler;
  	};
 

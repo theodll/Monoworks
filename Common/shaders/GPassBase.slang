@@ -99,6 +99,35 @@ namespace Monoworks
         uint EntityMaterialID : SV_Target4;  // R32_UINT 
     }
 
+    /*
+        struct GBuffer
+    {
+        // For packing info, refer to the GPassBase Shader.
+        Ref<RHI::ITexture2D> AlbedoOcclusion; // RGBA8UNORM
+        Ref<RHI::ITexture2D> NormalRoughMetal; // A2BGR10UNORM
+        Ref<RHI::ITexture2D> Emissive; // RGB16UNORM
+        Ref<RHI::ITexture2D> MotionVector; // RG16SFLOAT
+        Ref<RHI::ITexture2D> EntityMaterialID; // R32UINT
+        Ref<RHI::ITexture2D> Depth; // D32
+        Ref<RHI::ITexture2D> Sampler;
+    };
+    */
+
+    // Parameter Block struct of GBuffer;
+    public struct GBufferPB 
+    {
+        public Texture2D AlbedoOcclusion;   // RGBA8UNORM
+        public Texture2D NormalRoughMetal;  // A2GBR10UNORM
+        public Texture2D Emissive;          // RGB16UNORM
+        public Texture2D MotionVector;      // RG16SFLOAT
+        public Texture2D EntityMaterialID;  // R32UINT
+        public Texture2D Depth;             // D32
+        
+        public Texture2D Composite;
+
+        public Sampler2D Sampler;
+    }
+
     public struct MaterialSurface
     {
         public float3       AlbedoColor;
@@ -222,7 +251,7 @@ namespace Monoworks
 
             gbuffer.Emissive = materialSurface.Emissive;
 
-            gbuffer.EntityMaterialID = (materialSurface.MaterialID & 0x1FFFu) | ((modelConstants.EntityID & 0x7FFFFu) << 13);
+            gbuffer.EntityMaterialID = EncodeMaterialEntityIDPack( { modelConstants.EntityID, materialSurface.MaterialID } );
 
             float2 currentNDC = pixelInput.CurrentClipPosition.xy / pixelInput.CurrentClipPosition.w * 0.5 + 0.5;
             float2 previousNDC = pixelInput.PreviousClipPosition.xy / pixelInput.PreviousClipPosition.w * 0.5 + 0.5;

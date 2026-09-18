@@ -1246,6 +1246,20 @@ namespace Monoworks
 			gbuf->Sampler = ITexture2D::Create( &gbufSamplerInfo );	
 		}
 
+		for ( auto& composite : m_hCompositeImage )
+		{
+			RHI::STextureCreateInfo compositeImgInfo{};
+			compositeImgInfo.Extent = re;
+			compositeImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			compositeImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
+
+			compositeImgInfo.Format = MW_FORMAT_B8G8R8A8_UNORM;
+			compositeImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			compositeImgInfo.Usage = MW_IMAGE_USAGE_STORAGE_BIT | MW_IMAGE_USAGE_SAMPLED_BIT;
+
+
+			composite = ITexture2D::Create( &compositeImgInfo );
+		}
 
 		GraphicsPrePassCreationInfo depthPrePassInfo{};
 		
@@ -1441,6 +1455,8 @@ namespace Monoworks
 		gbuf->EntityMaterialID->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 		gbuf->Depth->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT );
 
+		m_hCompositeImage[frameIndex]->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+
 		// TODO: add check if m_CameraUBOs[ frameIndex ] is valid
 		CameraConstantsUBO ubo{};
 		ubo.CameraPosition = m_hCamera->GetPosition();
@@ -1553,8 +1569,20 @@ namespace Monoworks
 
 		// Begin Secondary commandbuffers for the rest of the frame.
 		// Merging happens at the end of the frame.
+
+		auto gbuf = m_hGBuffers[frameIndex];
+
+		gbuf->AlbedoOcclusion->TransitionLayout( frameIndex,	MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,	MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT,	MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->NormalRoughMetal->TransitionLayout( frameIndex,	MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,	MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT,	MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->Emissive->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->MotionVector->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->EntityMaterialID->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		gbuf->Depth->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_DEPTH_BIT );
+
+
 		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
 		BindCommandBufferStateBothBegun( frameIndex );
+
 
 		for ( auto& resolutionPass : m_hDefferedResolutionPasses )
 		{

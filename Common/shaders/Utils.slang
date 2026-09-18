@@ -25,5 +25,30 @@ namespace Monoworks
         return normalize(n);
     }
 
+    public struct MaterialEntityID
+    {
+        public uint EntityID;
+        public uint MaterialID;
+    }
+
+    public static uint EncodeMaterialEntityIDPack(in MaterialEntityID materialEntityIDPack)
+    {
+        // Move materialEntityPack.EntityID into the first 19 bits of pack. Then populate the remainder of bits with materialEntityIDPack.MaterialID.
+        return (materialEntityIDPack.EntityID & 0x7FFFFu) | ((materialEntityIDPack.MaterialID & 0x1FFFu) << 19);
+    }
+
+    public static MaterialEntityID DecodeMaterialEntityIDPack(in uint materialEntityIDPack) 
+    {
+        MaterialEntityID pack;
+
+        // Access the first 19 bits of materialEntityIDPack aka the entity id.
+        pack.EntityID = materialEntityIDPack & 0x7FFFFu;
+        
+        // Access the last 13 bits of materialEntityPack aka the material id.
+        pack.MaterialID = (materialEntityIDPack >> 19) & 0x1FFFu;
+
+        return pack;
+    }
+
 
 }
