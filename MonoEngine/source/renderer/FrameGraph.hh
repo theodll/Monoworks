@@ -374,8 +374,8 @@ namespace Monoworks
 			int _pad0;
 		};
 
-		std::array<Ref<RHI::IUniformBuffer>, MFIF> m_CameraUBOs;
-		std::array<RHI::DescriptorHandle, MFIF> m_CameraUBOSets;
+		std::array<Ref<RHI::IUniformBuffer>, MFIF> m_hCameraUBOs;
+		std::array<RHI::DescriptorHandle, MFIF> m_hCameraUBOSets;
 		Ref<CCamera> m_hCamera;
 	};
 }
