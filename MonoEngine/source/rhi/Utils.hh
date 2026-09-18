@@ -3,10 +3,30 @@
 
 namespace Monoworks::RHI 
 {
+
+
+	enum EShaderStageBits : u32
+	{
+		MW_SHADER_STAGE_UNKNOWN = 0x0,
+
+		MW_SHADER_STAGE_VERTEX					= 0b00000001,
+		MW_SHADER_STAGE_TESSELATION_CONTROL		= 0b00000010,
+		MW_SHADER_STAGE_TESSELATION_EVALUATION	= 0b00000100,
+		MW_SHADER_STAGE_GEOMETRY				= 0b00001000,
+		MW_SHADER_STAGE_FRAGMENT				= 0b00010000,
+		MW_SHADER_STAGE_COMPUTE					= 0b00100000,
+
+		MW_SHADER_STAGE_COUNT,
+		MW_SHADER_STAGE_MAX_ENUM				= 0x7FFFFFFF,
+	};
+
+	using EShaderStage = flags_t;
+
 	/** 
 	* @brief Vulkan Compatible Texture Format Enumeration based on VkFormat. Philosophy: put the DirectX in the Vulkan, not the Vulkan in the DirectX.
 	* When using DirectX, Setup a translate function to translate it into the DirectX equivalent.
 	*/
+	// TODO: Rename all of the members to MW_IMAGE_FORMAT_***
 	enum EImageFormat
 	{
 		MW_FORMAT_UNDEFINED = 0,
@@ -42,13 +62,64 @@ namespace Monoworks::RHI
 		MW_FORMAT_B8G8R8A8_UINT = 48,
 		MW_FORMAT_B8G8R8A8_SINT = 49,
 		MW_FORMAT_B8G8R8A8_SRGB = 50,
+		// A2RGB10
+		MW_FORMAT_A2R10G10B10_UNORM_PACK32 = 58,
+		MW_FORMAT_A2R10G10B10_SNORM_PACK32 = 59,
+		MW_FORMAT_A2R10G10B10_USCALED_PACK32 = 60,
+		MW_FORMAT_A2R10G10B10_SSCALED_PACK32 = 61,
+		MW_FORMAT_A2R10G10B10_UINT_PACK32 = 62,
+		MW_FORMAT_A2R10G10B10_SINT_PACK32 = 63,
+		MW_FORMAT_A2B10G10R10_UNORM_PACK32 = 64,
+		MW_FORMAT_A2B10G10R10_SNORM_PACK32 = 65,
+		MW_FORMAT_A2B10G10R10_USCALED_PACK32 = 66,
+		MW_FORMAT_A2B10G10R10_SSCALED_PACK32 = 67,
+		MW_FORMAT_A2B10G10R10_UINT_PACK32 = 68,
+		MW_FORMAT_A2B10G10R10_SINT_PACK32 = 69,
+		// R16
+		MW_FORMAT_R16_UNORM = 70,
+		MW_FORMAT_R16_SNORM = 71,
+		MW_FORMAT_R16_USCALED = 72,
+		MW_FORMAT_R16_SSCALED = 73,
+		MW_FORMAT_R16_UINT = 74,
+		MW_FORMAT_R16_SINT = 75,
+		MW_FORMAT_R16_SFLOAT = 76,
+		// RG16
+		MW_FORMAT_R16G16_UNORM = 77,
+		MW_FORMAT_R16G16_SNORM = 78,
+		MW_FORMAT_R16G16_USCALED = 79,
+		MW_FORMAT_R16G16_SSCALED = 80,
+		MW_FORMAT_R16G16_UINT = 81,
+		MW_FORMAT_R16G16_SINT = 82,
+		MW_FORMAT_R16G16_SFLOAT = 83,
+		// RGB16
+		MW_FORMAT_R16G16B16_UNORM = 84,
+		MW_FORMAT_R16G16B16_SNORM = 85,
+		MW_FORMAT_R16G16B16_USCALED = 86,
+		MW_FORMAT_R16G16B16_SSCALED = 87,
+		MW_FORMAT_R16G16B16_UINT = 88,
+		MW_FORMAT_R16G16B16_SINT = 89,
+		MW_FORMAT_R16G16B16_SFLOAT = 90,
+		// RGBA16
+		MW_FORMAT_R16G16B16A16_UNORM = 91,
+		MW_FORMAT_R16G16B16A16_SNORM = 92,
+		MW_FORMAT_R16G16B16A16_USCALED = 93,
+		MW_FORMAT_R16G16B16A16_SSCALED = 94,
+		MW_FORMAT_R16G16B16A16_UINT = 95,
+		MW_FORMAT_R16G16B16A16_SINT = 96,
+		MW_FORMAT_R16G16B16A16_SFLOAT = 97,
 		// R32
 		MW_FORMAT_R32_UINT = 98,
 		MW_FORMAT_R32_SINT = 99,
 		MW_FORMAT_R32_SFLOAT = 100,
+		// Depth & Stencil
+		MW_FORMAT_S8_UINT = 127,
+		MW_FORMAT_D16_UNORM = 124,
+		MW_FORMAT_D32_SFLOAT = 126,
+		MW_FORMAT_D16_UNORM_S8_UINT = 128,
+		MW_FORMAT_D24_UNORM_S8_UINT = 129,
+		MW_FORMAT_D32_SFLOAT_S8_UINT = 130,
 	};
 
-	using EImageUsageFlags = flags_t; // Bitmask, use EImageUsageFlagsBits
 
 	enum EImageUsageFlagsBits
 	{
@@ -82,6 +153,7 @@ namespace Monoworks::RHI
 
 		MW_IMAGE_USAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	using EImageUsageFlags = flags_t; // Bitmask, use EImageUsageFlagsBits
 
 	enum EImageLayout
 	{
@@ -138,7 +210,6 @@ namespace Monoworks::RHI
 		MW_IMAGE_LAYOUT_MAX_ENUM = 0x7FFFFFFF
 	};
 
-	using EImageAspectFlags = flags_t; // Bitmask, use EImageAspectFlagBits
 
 	enum EImageAspectFlagBits
 	{
@@ -160,9 +231,9 @@ namespace Monoworks::RHI
 
 		MW_IMAGE_ASPECT_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	using EImageAspectFlags = flags_t; // Bitmask, use EImageAspectFlagBits
 
-	using EPipelineFlags = flags_t; // Bitmask, use EPipelineFlagBits
-
+	// NOTE: Byte compatible with VkPipelineStageFlagBits
 	enum EPipelineFlagBits
 	{
 		MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT = 0x00000001,
@@ -194,8 +265,10 @@ namespace Monoworks::RHI
 		MW_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT = 0x00020000,
 		MW_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM = 0x7FFFFFFF
 	};
+	using EPipelineFlags = flags_t; // Bitmask, use EPipelineFlagBits
 
-	MAYBE_UNUSED static void TransitionImageLayout2(
+
+	DEPRECATED MAYBE_UNUSED static void TransitionImageLayout2(
 		VkCommandBuffer commandBuffer,
 		VkImage image,
 		VkImageLayout oldLayout,
@@ -337,7 +410,7 @@ namespace Monoworks::RHI
 		);
 	}
 
-	MAYBE_UNUSED static void TransitionImageLayout(
+	DEPRECATED MAYBE_UNUSED static void TransitionImageLayout(
 		VkCommandBuffer* pCmdBuffer, 
 		VkImage* pImage,
 		EImageLayout oldLayoutMW,
