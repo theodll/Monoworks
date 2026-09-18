@@ -445,7 +445,7 @@ namespace Monoworks
 	MW_NOTHROW CGraphicsPrePass::~CGraphicsPrePass() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		CPipelineManager::DeleteComputePipeline( m_PipelineHash );
+		CPipelineManager::DeleteGraphicsPipeline( m_PipelineHash );
 		m_hGraphicsPipeline = nullptr;
 	}
 
@@ -602,7 +602,7 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 		CPipelineManager::DeleteComputePipeline( m_PipelineHash );
-
+		m_hComputePipeline = nullptr;
 	};
 
 	void CPostProcessPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite )
@@ -690,7 +690,7 @@ namespace Monoworks
 		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), phUniformBuffer[i]);
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), phUniformBuffers[i]);
 				m_BindingsWritten[binding.value()] = true;
 			}
 
@@ -957,7 +957,7 @@ namespace Monoworks
 
 		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 
-		if ( !phUniformBuffer )
+		if ( !phUniformBuffers )
 		{
 			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
 			return;
@@ -1007,7 +1007,7 @@ namespace Monoworks
 	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
-		if ( !phUniformBuffer )
+		if ( !phUniformBuffers )
 		{
 			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
 			return;
@@ -1064,6 +1064,7 @@ namespace Monoworks
 					}
 			*/
 
+			// Set default vertex buffer layout to be used by every Vertex Shader.
 			CVertexLayout basePassVertexLayout =
 			{
 				{ MW_SHADER_DATA_TYPE_FLOAT_3, "Position" },
@@ -1083,6 +1084,7 @@ namespace Monoworks
 			auto program = m_hDefaultBasePassShader->GetShaderProgram();
 			slang::ProgramLayout* layout = program->getLayout();
 
+			// Get byte code for the Vertex Shader
 			{
 
 				SlangInt vertexEntryPointIndex = -1;
@@ -1130,9 +1132,10 @@ namespace Monoworks
 			pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
 			pixelShader.pEntrypoint = fragmentEntrypoint;
 
+			// Get byte code for the Pixel Shader
 			{
 
-				SlangInt vertexEntryPointIndex = -1;
+				SlangInt pixelEntryPointIndex = -1;
 				SlangInt entryPointCount = layout->getEntryPointCount();
 
 				for ( SlangInt i = 0; i < entryPointCount; ++i )
@@ -1141,18 +1144,18 @@ namespace Monoworks
 
 					if ( entryPointLayout->getStage() == SLANG_STAGE_FRAGMENT )
 					{
-						vertexEntryPointIndex = i;
+						pixelEntryPointIndex = i;
 						break;
 					}
 				}
 
-				if ( vertexEntryPointIndex != -1 )
+				if ( pixelEntryPointIndex != -1 )
 				{
 					Slang::ComPtr<slang::IBlob> code;
 					Slang::ComPtr<slang::IBlob> diagnostics;
 					const SlangInt targetIndex = 0;
 					SlangResult result = program->getEntryPointCode(
-						vertexEntryPointIndex,
+						pixelEntryPointIndex,
 						targetIndex,
 						code.writeRef(),
 						diagnostics.writeRef()
@@ -1171,10 +1174,12 @@ namespace Monoworks
 				}
 			}
 
+			// Add all shaders used by the base pass to an array to create the base pipeline.
 			std::vector<SShaderObject> shaderObjects;
 			shaderObjects.push_back( vertexShader );
 			shaderObjects.push_back( pixelShader );
 
+			// Add all color formats used in the gbuffer to an array also to create the base pipeline.
 			std::vector<EImageFormat> colorFormats;
 			colorFormats.emplace_back( MW_FORMAT_R8G8B8A8_UNORM ); // Albedo + Occlusion 
 			colorFormats.emplace_back( MW_FORMAT_A2R10G10B10_UNORM_PACK32 ); // Normals, Roughness + Metallicness 
@@ -1182,6 +1187,7 @@ namespace Monoworks
 			colorFormats.emplace_back( MW_FORMAT_R16G16_SFLOAT ); // Motion vectors
 			colorFormats.emplace_back( MW_FORMAT_R32_UINT ); // Entity ID (bits 0-18) + Material ID (bits 19-31)
 
+			// Color blending things also for creating the base pipeline.
 			std::vector<SColorBlendAttachmentState> colorBlendAttachments;
 			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
 
@@ -1197,7 +1203,8 @@ namespace Monoworks
 			createInfo.pSignature = pipelineReflectData.pPipelineSignature;
 			createInfo.CompareOp = RHI::MW_COMPARE_OP_EQUAL;
 			createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
-
+			
+			// Create the base pass pipeline.
 			auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_DefaultBasePassPipelineHash );
 
 			if ( basePassPipeline )
@@ -1210,6 +1217,8 @@ namespace Monoworks
 		auto re2d = CStaticRenderer::GetRenderableExtend();
 		SExtent3D re = { re2d.Width, re2d.Height, 1 };
 
+		// Fill the gbuffer for each frame in flight;
+		// NOTE: There is a single gbuffer per frame in flight, not multiple like some might assume here
 		for ( auto& gbuf : m_hGBuffers )
 		{
 			gbuf = Ref<GBuffer>::Create();
@@ -1246,7 +1255,7 @@ namespace Monoworks
 			gbuf->Sampler = ITexture2D::Create( &gbufSamplerInfo );	
 		}
 
-
+		
 		GraphicsPrePassCreationInfo depthPrePassInfo{};
 		
 		ShaderCreateInfo shaderInfo{};
@@ -1271,20 +1280,23 @@ namespace Monoworks
 			};
 
 		Ref<CGraphicsPrePass> depthPrePass = Ref<CGraphicsPrePass>::Create( &depthPrePassInfo );
-		depthPrePass->BindUBO( "u_CameraConstants", m_CameraUBOs.data(), true );
+		depthPrePass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
 		
 		this->AddPrePass( depthPrePass );
 
 
-
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
+			m_hCameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
+			m_hCameraUBOSets[i] = CDescriptorManager::Allocate( depthPrePassInfo.hShader->ReflectOnShader().pDescriptorSignatures[1] );
+			CDescriptorManager::WriteUniformBuffer( m_hCameraUBOSets[i], 0, m_hCameraUBOs[i] );
 
-			m_CameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
-			m_CameraUBOSets[i] = CDescriptorManager::Allocate( depthPrePassInfo.hShader->ReflectOnShader().pDescriptorSignatures[1] );
-			CDescriptorManager::WriteUniformBuffer( m_CameraUBOSets[i], 0, m_CameraUBOs[i] );
-			
+			m_hGBufferDescriptor
+
+
 		}
+
+
 
 	};
 
@@ -1295,6 +1307,8 @@ namespace Monoworks
 		m_hGraphicsPrePasses.clear();
 		m_hDefferedResolutionPasses.clear();
 		m_hPostProcessPasses.clear();
+
+		CPipelineManager::DeleteGraphicsPipeline( m_DefaultBasePassPipelineHash );
 	};
 
 	void CDefferedFrameGraph::AddPrePass( Ref<CComputePrePass> hComputePrePass, s32 MW_NULLABLE executionPriority ) NOEXCEPT
