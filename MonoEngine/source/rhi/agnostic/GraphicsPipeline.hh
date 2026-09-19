@@ -147,8 +147,8 @@ namespace Monoworks::RHI
 		PipelineSignature MW_NULLABLE pSignature = nullptr; // VkPipelineLayout / D3D12RootSignature
 
 		EPipelineCreationFlags Flags;
-		EImageFormat DepthAttachmentFormat;
-		EImageFormat StencilAttachmentFormat;
+		EImageFormat DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
+		EImageFormat StencilAttachmentFormat = MW_FORMAT_UNDEFINED;
 
 		u32 ViewportCount = 1;
 		u32 ScissorCount = 1;

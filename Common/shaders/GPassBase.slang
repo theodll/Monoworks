@@ -90,7 +90,7 @@ namespace Monoworks
         // Maybe  
         float4 AlbedoOcclusion : SV_Target0;   // R8B8G8A8_UNORM      // RGB = albedo, A = occlusion
         float4 NormalRoughMetal : SV_Target1; // A2B10G10R10_UNORM_PACK32   // A is metal. RG is normal. B is roughness.
-        float3 Emissive : SV_Target2;        // R16G16B16_UNORM  // RGB = emissive
+        float3 Emissive : SV_Target2;         // B10GR11UFLOAT  // RGB = emissive
         float2 MotionVector : SV_Target3;   // R16G16_SFLOAT  
 
         // NOTE: This uses some really freaky bit packing:
@@ -116,14 +116,14 @@ namespace Monoworks
     // Parameter Block struct of GBuffer;
     public struct GBufferPB 
     {
-        public Texture2D AlbedoOcclusion;   // RGBA8UNORM
-        public Texture2D NormalRoughMetal;  // A2GBR10UNORM
-        public Texture2D Emissive;          // RGB16UNORM
-        public Texture2D MotionVector;      // RG16SFLOAT
-        public Texture2D EntityMaterialID;  // R32UINT
-        public Texture2D Depth;             // D32
+        public Texture2D<float4> AlbedoOcclusion;   // RGBA8UNORM
+        public Texture2D<float4> NormalRoughMetal;  // A2GBR10UNORM
+        public Texture2D<float3> Emissive;          // B10GR11UFLOAT
+        public Texture2D<float2> MotionVector;      // RG16SFLOAT
+        public Texture2D<uint> EntityMaterialID;  // R32UINT
+        public Texture2D<float> Depth;             // D32
         
-        public Texture2D Composite;
+        public RWTexture2D<float4> Composite; // RGBA16
 
         public Sampler2D Sampler;
     }

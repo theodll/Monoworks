@@ -35,15 +35,19 @@ namespace Monoworks
 
 		/// @brief Returns a reference to the current default Base-Pass-Pipeline
 		virtual const MW_NOTHROW Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const = 0;
+		
+		virtual MW_NOTHROW void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT = 0;
+	
 	};
 
 	struct ComputePrePassCreationInfo
 	{
-		const Ref<CShader> hShader;
+		Ref<CShader> hShader;
 	};
 
 	class CComputePrePass 
 	{
+	public:
 		CComputePrePass( const ComputePrePassCreationInfo* pInfo );
 		MW_NOTHROW ~CComputePrePass() NOEXCEPT;
 
@@ -82,10 +86,18 @@ namespace Monoworks
 		friend class CDefferedFrameGraph;		friend class CDefferedFrameGraph;
 	};
 
+	enum EGraphicsPrePassCreationFlagBits
+	{
+		MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_NONE_BIT = 0x0,
+		MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_DISABLE_PIXEL_SHADER_BIT = 0x0
+	};
+	using EGraphicsPrePassCreationFlags = flags_t;
+
 	struct GraphicsPrePassCreationInfo
 	{
 		Ref<CShader> hShader;
 		SExtent2D RenderingArea;
+		EGraphicsPrePassCreationFlags Flags;
 
 		size_t ColorAttachmentCount = 0;
 		std::array<RHI::RenderingAttachmentInfo*, MFIF>* MW_NULLABLE	ppColorAttachments = { nullptr };
@@ -93,7 +105,7 @@ namespace Monoworks
 		std::array<RHI::RenderingAttachmentInfo*, MFIF>  MW_NULLABLE	pStencilAttachment = { nullptr };
 
 		RHI::EImageFormat DepthFormat = RHI::MW_FORMAT_D32_SFLOAT; 
-		RHI::EImageFormat StencilFormat = RHI::MW_FORMAT_S8_UINT;
+		RHI::EImageFormat StencilFormat = RHI::MW_FORMAT_UNDEFINED;
 
 		std::function<void( u32 frameIndex )> MW_NULLABLE pExecutionScopeCallback = nullptr;
 	};
@@ -108,6 +120,7 @@ namespace Monoworks
 	*/
 	class CGraphicsPrePass
 	{
+	public:
 		CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo );
 		MW_NOTHROW ~CGraphicsPrePass() NOEXCEPT;
 
@@ -146,10 +159,10 @@ namespace Monoworks
 
 		enum FlagBits
 		{
-			MW_GRAPHICS_PRE_PASS_USE_DEPTH_ATTACHMENT,
-			MW_GRAPHICS_PRE_PASS_USE_STENCIL_ATTACHMENT,
+			MW_GRAPHICS_PRE_PASS_USE_DEPTH_ATTACHMENT = 0b1,
+			MW_GRAPHICS_PRE_PASS_USE_STENCIL_ATTACHMENT = 0b10,
 		};
-		flags_t m_Flags;
+		flags_t m_InternalFlags;
 		
 		SExtent2D m_RenderingArea;
 		std::vector<std::array<RHI::RenderingAttachmentInfo, MFIF>> m_ColorAttachments;
@@ -164,7 +177,7 @@ namespace Monoworks
 
 	struct PostProcessPassCreationInfo 
 	{
-		const Ref<CShader> hShader;
+		Ref<CShader> hShader;
 	};
 
 	/**
@@ -177,6 +190,7 @@ namespace Monoworks
 	 */
 	class CPostProcessPass
 	{
+	public:
 		CPostProcessPass( const PostProcessPassCreationInfo* pInfo );
 		MW_NOTHROW ~CPostProcessPass() NOEXCEPT;
 
@@ -187,6 +201,14 @@ namespace Monoworks
 		* @param forceRewrite: Toggle whether to rewrite the texture if it's already written.
 		*/
 		void BindTexture(  std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false );
+
+		/**
+		* @brief Bind a texture located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param hTexture: Array of References to the texture to bind for every frame in flight.
+		* @param forceRewrite: Toggle whether to rewrite the texture if it's already written.
+		*/
+		void BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D>* hTextures, bool forceRewrite = false );
 
 		/**
 		* @brief Bind a sampler located in global scope.
@@ -217,11 +239,12 @@ namespace Monoworks
 
 	struct DefferedResolutionPassCreationInfo
 	{
-		const Ref<CShader> hShader;
+		Ref<CShader> hShader;
 	};
 
 	class CDefferedResolutionPass
 	{
+	public:
 		CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo );
 		~CDefferedResolutionPass() NOEXCEPT;
 
@@ -305,7 +328,7 @@ namespace Monoworks
 	class CDefferedFrameGraph final : public IFrameGraph
 	{
 	public:
-		CDefferedFrameGraph()	NOEXCEPT;
+		CDefferedFrameGraph( Ref<CCamera> hCamera )	NOEXCEPT;
 		~CDefferedFrameGraph()	NOEXCEPT;
 
 		MW_NOTHROW void ExecutePreRenderingSteps() NOEXCEPT override;
@@ -347,6 +370,8 @@ namespace Monoworks
 		MW_NOTHROW void AddPostProcessPass(			Ref<CPostProcessPass> hPostProcessPass,		s32 MW_NULLABLE executionPriority = -1 ) NOEXCEPT;
 
 		MW_NOTHROW const Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
+		MW_NOTHROW void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT override { m_hCamera = hCamera; };
+
 
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
@@ -356,9 +381,10 @@ namespace Monoworks
 		std::vector<Ref<CPostProcessPass>>			m_hPostProcessPasses;
 
 		std::array<Ref<GBuffer>, MFIF> m_hGBuffers;
-		std::array<RHI::DescriptorHandle, MFIF> m_hGBufferDescriptor = { nullptr }; // Bound after base pass at set number 1.
+		std::array<RHI::DescriptorHandle, MFIF> m_hGBufferDescriptors = { nullptr }; // Bound after base pass at set number 1.
 
-		std::array<Ref<RHI::ITexture2D>, MFIF> m_hCompositeImage;
+		// The composite image houses the gbuffer sampler.
+		std::array<Ref<RHI::ITexture2D>, MFIF> m_hCompositeImages;
 
 		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;
@@ -377,6 +403,9 @@ namespace Monoworks
 		std::array<Ref<RHI::IUniformBuffer>, MFIF> m_hCameraUBOs;
 		std::array<RHI::DescriptorHandle, MFIF> m_hCameraUBOSets;
 		Ref<CCamera> m_hCamera;
+
+		Ref<CPostProcessPass> m_hTonemappingPass;
+
 	};
 }
 

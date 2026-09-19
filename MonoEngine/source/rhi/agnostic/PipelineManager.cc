@@ -67,13 +67,16 @@ namespace Monoworks::RHI
 			{
 				if ( r == MW_ERROR_UNKNOWN || r == MW_ERROR_CACHE_INVALID )
 					defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT;
-
-				try { p->Invalidate( &defInfo ); }
+				EResult r2;
+				try { r2 = p->Invalidate( &defInfo ); }
 				catch ( ... )
 				{
 					MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
 					m_TotalCompiledPipelineCount--;
 					m_CompiledGraphicsPipelineCount--;
+
+					return std::unexpected( r2 );
+
 				};
 			}
 		}
@@ -119,12 +122,15 @@ namespace Monoworks::RHI
 				if ( r == MW_ERROR_UNKNOWN || r == MW_ERROR_CACHE_INVALID )
 					defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT;
 
-				try { p->Invalidate( &defInfo ); }
+				EResult r2;
+				try { r2 = p->Invalidate( &defInfo ); }
 				catch ( ... )
 				{
 					MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
 					m_TotalCompiledPipelineCount--;
 					m_CompiledComputePipelineCount--;
+
+					return std::unexpected( r2 );
 				};
 			}
 		}

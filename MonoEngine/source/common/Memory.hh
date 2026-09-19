@@ -191,6 +191,20 @@ namespace Monoworks
 			return *this;
 		}
 
+		const CRef& operator=( const CRef<T>&& other ) NOEXCEPT
+		{
+			if ( this != &other )
+			{
+				DecRef();
+				m_Handle = other.m_Handle;
+				m_pPtr = other.m_pPtr;
+				other.m_Handle = MW_NULL_MEMORY;
+				other.m_pPtr = nullptr;
+			}
+			return *this;
+		}
+
+
 		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
 		CRef& operator=(const CRef<U>& other) NOEXCEPT
 		{

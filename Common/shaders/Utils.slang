@@ -50,5 +50,11 @@ namespace Monoworks
         return pack;
     }
 
+    public static float2 ComputeUV(in uint3 threadID, in uint2 dimensions)
+    {
+        return (float2(threadID.xy) + 0.5f) / dimensions;
+    }
+
+
 
 }
