@@ -125,7 +125,7 @@ namespace Monoworks
         
         public RWTexture2D<float4> Composite; // RGBA16
 
-        public Sampler2D Sampler;
+        public SamplerState Sampler;
     }
 
     public struct MaterialSurface
