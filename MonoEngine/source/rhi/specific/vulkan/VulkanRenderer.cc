@@ -351,6 +351,32 @@ namespace Monoworks::RHI
 		}
 	}
 
+	MW_NOTHROW void CVulkanRenderer::Present( MAYBE_UNUSED u32 frameIndex ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		auto presenter = CVulkanContext::GetPresenter();
+
+		if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
+		{
+			SVulkanSDLPresentationPresentInfo presentInfo{};
+			presentInfo.pDevice = CVulkanContext::GetDevice()->GetDevice();
+			presentInfo.pPhysDevice = CVulkanContext::GetDevice()->GetPhysicalDevice();
+			presentInfo.pVulkanDevice = CVulkanContext::GetDevice();
+			presentInfo.pRenderFinishedSemaphore = CVulkanRenderManager::GetRenderFinishedSemaphore( frameIndex );
+			presentInfo.pPresentQueue = CVulkanContext::GetDevice()->GetPresentQueue();
+			presentInfo.pImageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
+
+			return presenter->Present( &presentInfo );
+		}
+		else if ( CApplication::GetCreateInfos()->UseQt )
+		{
+			SVulkanQtPresentationPresentInfo presentInfo{};
+			presentInfo.pImageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
+
+			return presenter->Present( &presentInfo );
+		}
+	}
+
 	MW_NOTHROW void CVulkanRenderer::BindGraphicsPipeline( u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;

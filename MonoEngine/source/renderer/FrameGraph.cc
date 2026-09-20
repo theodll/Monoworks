@@ -1777,10 +1777,9 @@ namespace Monoworks
 
 	}
 
-	MW_NOTHROW void CDefferedFrameGraph::ExecutePreRenderingSteps() NOEXCEPT
+	MW_NOTHROW void CDefferedFrameGraph::ExecutePreRenderingSteps( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
 		auto& gbuf = m_hGBuffers[frameIndex];
 
@@ -1809,10 +1808,9 @@ namespace Monoworks
 		BindCommandBufferStateOnlyRoot( frameIndex );
 	}
 
-	void CDefferedFrameGraph::ExecutePrePasses() NOEXCEPT
+	void CDefferedFrameGraph::ExecutePrePasses( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
 		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
 		BindCommandBufferStateBothBegun( frameIndex );
@@ -1869,11 +1867,10 @@ namespace Monoworks
 		}
 	};
 
-	void CDefferedFrameGraph::ExecuteBasePasses() NOEXCEPT
+	void CDefferedFrameGraph::ExecuteBasePasses( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
-		
+ 		
 		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
 		BindCommandBufferStateBothBegun( frameIndex );
 
@@ -1956,10 +1953,9 @@ namespace Monoworks
 	};
 
 
-	void CDefferedFrameGraph::ExecutePostPasses() NOEXCEPT
+	void CDefferedFrameGraph::ExecutePostPasses( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 		
 		for ( auto& postPass : m_hPostProcessPasses )
 		{
@@ -1976,10 +1972,9 @@ namespace Monoworks
 
 	};
 
-	void CDefferedFrameGraph::ExecutePostRenderingSteps() NOEXCEPT
+	void CDefferedFrameGraph::ExecutePostRenderingSteps( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		u32 frameIndex = CStaticRenderer::GetCurrentFrameIndex();
 
 		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );
 		// root commandbuffer submission happens in the frame manager, as it's not 

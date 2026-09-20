@@ -49,15 +49,15 @@ namespace Monoworks
 		virtual	~IFrameGraph() = default;
 
 		/// @brief Pre rendering steps like binding global state, etc.
-		virtual MW_NOTHROW void ExecutePreRenderingSteps() NOEXCEPT = 0;
+		virtual MW_NOTHROW void ExecutePreRenderingSteps( u32 frameIndex ) NOEXCEPT = 0;
 		/// @brief Executes all Pre-Passes (Culling, Depth-Pre-Pass, ...)
-		virtual MW_NOTHROW void ExecutePrePasses() NOEXCEPT = 0;
+		virtual MW_NOTHROW void ExecutePrePasses( u32 frameIndex  ) NOEXCEPT = 0;
 		/// @brief Executes all Core-Passes (GPass, Deffered Resolution, ...)
-		virtual MW_NOTHROW void ExecuteBasePasses() NOEXCEPT = 0;
+		virtual MW_NOTHROW void ExecuteBasePasses( u32 frameIndex  ) NOEXCEPT = 0;
 		/// @brief Executes all Post-Process-Passes (Bloom, Tone-Mapping, ...)
-		virtual MW_NOTHROW void ExecutePostPasses() NOEXCEPT = 0;
+		virtual MW_NOTHROW void ExecutePostPasses( u32 frameIndex  ) NOEXCEPT = 0;
 
-		virtual MW_NOTHROW void ExecutePostRenderingSteps() NOEXCEPT = 0;
+		virtual MW_NOTHROW void ExecutePostRenderingSteps( u32 frameIndex ) NOEXCEPT = 0;
 
 		/// @brief Returns a reference to the current default Base-Pass-Pipeline
 		virtual const MW_NOTHROW Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const = 0;
@@ -404,15 +404,15 @@ namespace Monoworks
 		CDefferedFrameGraph( Ref<CCamera> hCamera )	NOEXCEPT;
 		~CDefferedFrameGraph()	NOEXCEPT;
 
-		MW_NOTHROW void ExecutePreRenderingSteps() NOEXCEPT override;
+		MW_NOTHROW void ExecutePreRenderingSteps( u32 frameIndex ) NOEXCEPT override;
 		/// @brief Executes all pre-passes.
-		MW_NOTHROW void ExecutePrePasses()	NOEXCEPT override;
+		MW_NOTHROW void ExecutePrePasses( u32 frameIndex )	NOEXCEPT override;
 		/// @brief Executes all core-passes.
-		MW_NOTHROW void ExecuteBasePasses() NOEXCEPT override;
+		MW_NOTHROW void ExecuteBasePasses( u32 frameIndex ) NOEXCEPT override;
 		/// @brief Executes all post & post-processing-passes.
-		MW_NOTHROW void ExecutePostPasses() NOEXCEPT override;
+		MW_NOTHROW void ExecutePostPasses( u32 frameIndex ) NOEXCEPT override;
 		
-		MW_NOTHROW void ExecutePostRenderingSteps() NOEXCEPT override; 
+		MW_NOTHROW void ExecutePostRenderingSteps( u32 frameIndex ) NOEXCEPT override;
 
 		/**
 		 * @brief Hooks a compute pre-pass into the frame graph.

@@ -113,6 +113,12 @@ namespace Monoworks
 			return m_pInstance->AcquireNextImage( frameIndex );
 		}
 
+		MW_NOTHROW void CStaticRenderer::Present( u32 frameIndex ) NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			return m_pInstance->Present( frameIndex );
+		}
+
 		MW_NOTHROW void CStaticRenderer::BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;

@@ -124,6 +124,9 @@ namespace Monoworks::RHI
          */
         virtual MW_NOTHROW u32  AcquireNextImage( u32 frameIndex ) NOEXCEPT = 0;
 
+        virtual MW_NOTHROW void Present( u32 frameIndex ) NOEXCEPT = 0;
+
+
         /**
          * @brief Binds the graphics pipeline (hPipeline) to the selected command buffer based on threadID.
          * The default value for threadID (-1) is the root command buffer corresponding to the main thread.

@@ -31,6 +31,7 @@ namespace Monoworks
 		static MW_NOTHROW void EndRendering( u32 frameIndex ) NOEXCEPT;
 
         static MW_NOTHROW u32  AcquireNextImage( u32 frameIndex ) NOEXCEPT;
+        static MW_NOTHROW void Present( u32 frameIndex ) NOEXCEPT;
 
         static MW_NOTHROW void BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT;
 
