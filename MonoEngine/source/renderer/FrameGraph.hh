@@ -126,7 +126,7 @@ namespace Monoworks
 	enum EGraphicsPrePassCreationFlagBits
 	{
 		MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_NONE_BIT = 0x0,
-		MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_DISABLE_PIXEL_SHADER_BIT = 0x0
+		MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_DISABLE_PIXEL_SHADER_BIT = 0b01
 	};
 	using EGraphicsPrePassCreationFlags = flags_t;
 

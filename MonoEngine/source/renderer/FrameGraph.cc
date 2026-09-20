@@ -964,9 +964,9 @@ namespace Monoworks
 				return;
 			}
 
-			for ( auto& frameDescriptors : m_pDescriptors )
-				for ( auto i{ 0uz }; i < MFIF; i++ )
-					frameDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
+			auto frameDescriptor = m_pDescriptors[parameterBlock];
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 		}
 
 		if ( forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}] )
@@ -1049,9 +1049,9 @@ namespace Monoworks
 				return;
 			}
 
-			for ( auto& frameDescriptors : m_pDescriptors )
-				for ( auto i{ 0uz }; i < MFIF; i++ )
-					frameDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
+			auto frameDescriptor = m_pDescriptors[parameterBlock];
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 		}
 
 		if ( forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}] )
@@ -1183,9 +1183,9 @@ namespace Monoworks
 				return;
 			}
 
-			for ( auto& frameDescriptors : m_pDescriptors )
-				for ( auto i{ 0uz }; i < MFIF; i++ )
-					frameDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
+			auto frameDescriptor = m_pDescriptors[parameterBlock];
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 		}
 
 		if ( forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}] )
@@ -1228,7 +1228,6 @@ namespace Monoworks
 				m_BindingsWritten[{ GlobalScopeSignature, binding.value() }] = true;
 			};
 	}
-
 
 	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite /*= false */ )
 	{
@@ -1879,7 +1878,7 @@ namespace Monoworks
 		BindCommandBufferStateBothBegun( frameIndex );
 
 		std::vector<RHI::RenderingAttachmentInfo> gbufferAttachments;
-		constexpr int gbufferColorAttachmentCount = 6;
+		constexpr int gbufferColorAttachmentCount = 5;
 		gbufferAttachments.resize( gbufferColorAttachmentCount );
 
 		gbufferAttachments[0] = { m_hGBuffers[frameIndex]->AlbedoOcclusion };

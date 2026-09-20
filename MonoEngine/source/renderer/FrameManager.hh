@@ -1,11 +1,22 @@
 #pragma once
 #include <common/Base.hh>
 
+#include <renderer/FrameGraph.hh>
+
 namespace Monoworks 
 {
 	class CFrameManager 
 	{
-		static void Init() NOEXCEPT;
-		static void Shutdown() NOEXCEPT; 
+	public:
+		static MW_NOTHROW void Init() NOEXCEPT;
+		static MW_NOTHROW void Shutdown() NOEXCEPT; 
+
+		static MW_NOTHROW void Render() NOEXCEPT;
+		
+		static MW_NOTHROW void SetFrameGraph( Ref<IFrameGraph> hFrameGraph ) NOEXCEPT { m_hCurrentFrameGraph = hFrameGraph; };
+		NODISCARD static MW_NOTHROW Ref<IFrameGraph> GetCurrentFrameGraph() NOEXCEPT { return m_hCurrentFrameGraph; };
+	private:
+		static Ref<IFrameGraph> m_hCurrentFrameGraph;
+		
 	};
 }
