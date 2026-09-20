@@ -98,7 +98,6 @@ namespace Monoworks
 
 	}
 
-
 	CComputePrePass::CComputePrePass( const ComputePrePassCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
@@ -235,6 +234,37 @@ namespace Monoworks
 			}
 	}
 
+	void CComputePrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite ) 
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !hUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i { 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
+				m_BindingsWritten[binding.value()] = true;
+			}
+
+	};
+
 	void CComputePrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
@@ -266,7 +296,6 @@ namespace Monoworks
 			}
 
 	}
-
 
 	CGraphicsPrePass::CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo )
 	{
@@ -533,6 +562,37 @@ namespace Monoworks
 			}
 	}
 
+	void CGraphicsPrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !hUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i { 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
+				m_BindingsWritten[binding.value()] = true;
+			}
+
+	};
+
 	void CGraphicsPrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffer, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
@@ -725,6 +785,37 @@ namespace Monoworks
 			}
 	}
 
+	void CPostProcessPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !hUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
+			for ( auto i { 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
+				m_BindingsWritten[binding.value()] = true;
+			}
+
+	};
+
 	void CPostProcessPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite )
 	{
 		MW_PROFILE_FUNC;
@@ -755,7 +846,6 @@ namespace Monoworks
 			}
 
 	};
-
 
 	CDefferedResolutionPass::CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo )
 	{
@@ -1005,6 +1095,57 @@ namespace Monoworks
 		}
 	}
 
+	void CDefferedResolutionPass::BindUBO( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
+	{
+		MW_PROFILE_FUNC;
+
+		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+
+		if ( !hUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		if ( !bindings && bindings.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Non existant.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+		else if ( !bindings )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Unkown error.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+
+		auto [parameterBlock, descriptorSlot] = bindings.value();
+
+		if ( m_pDescriptors.size() <= parameterBlock )
+			m_pDescriptors.resize( parameterBlock + 1 );
+
+		if ( m_pDescriptors[parameterBlock][CStaticRenderer::GetCurrentFrameIndex()] == nullptr )
+		{
+			auto reflectionData = m_hShader->ReflectOnShader();
+			if ( !reflectionData.pDescriptorSignatures[parameterBlock] )
+			{
+				MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
+				return;
+			}
+
+			for ( auto& frameDescriptors : m_pDescriptors )
+				for ( auto i { 0uz }; i < MFIF; i++ )
+					frameDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}] )
+		{
+			for ( auto i { 0uz }; i < MFIF; i++ )
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[parameterBlock][i], descriptorSlot, hUniformBuffer );
+
+			m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
+		}
+	}
+
 	void CDefferedResolutionPass::BindUBO( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
@@ -1057,6 +1198,37 @@ namespace Monoworks
 
 
 	}
+
+	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !hUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[{ GlobalScopeSignature, binding.value() }] )
+			for ( auto i { 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[GlobalScopeSignature][i], binding.value(), hUniformBuffer );
+				m_BindingsWritten[{ GlobalScopeSignature, binding.value() }] = true;
+			};
+	}
+
 
 	void CDefferedResolutionPass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffers, bool forceRewrite /*= false */ )
 	{
@@ -1330,7 +1502,6 @@ namespace Monoworks
 		// Create depth pre pass
 		Ref<CGraphicsPrePass> depthPrePass;
 		{
-
 			ShaderCreateInfo shaderInfo{};
 			shaderInfo.Path = "shaders/DepthPrePass.slang";
 
@@ -1396,7 +1567,25 @@ namespace Monoworks
 			PostProcessPassCreationInfo tonemapPassInfo;
 			tonemapPassInfo.hShader = Ref<CShader>::Create( &tonemapShader );
 
-			m_hTonemappingPass = Ref<CPostProcessPass>::Create( &tonemapPassInfo );
+			try
+			{
+				m_hTonemapPass = Ref<CPostProcessPass>::Create( &tonemapPassInfo );
+			} 
+			catch ( const std::runtime_error& e )
+			{
+				MW_ERROR( "Failed to create tonemapping pass: {}", e.what() );
+				MW_DEBUG_BREAK;
+			}
+			// Read from cvars / config
+			TonemapParams defaultParams{};
+			defaultParams.Mode = MW_TONEMAP_MODE_KHRONOS_PBR_NEUTRAL;
+			defaultParams.Exposure = 1.0f;
+			defaultParams.EnableGamma = true;
+
+			m_hTonemapParamsUBO = IUniformBuffer::Create( sizeof( TonemapParams ) );
+			m_hTonemapParamsUBO->SetData( &defaultParams, sizeof( TonemapParams ) );
+
+			m_hTonemapPass->BindUBO( "u_Params", m_hTonemapParamsUBO, true );
 		}
 		
 		for ( auto i{ 0uz }; i < MFIF; i++ )
@@ -1443,7 +1632,7 @@ namespace Monoworks
 
 		
 
-		m_hTonemappingPass->BindTexture( "u_SwapchainImage", CApplication::GetCreateInfos()->pPresenter->GetSwapchainImages().data(), true );
+		m_hTonemapPass->BindTexture( "u_SwapchainImage", CApplication::GetCreateInfos()->pPresenter->GetSwapchainImages().data(), true );
 
 		depthPrePass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
 		lightPass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
@@ -1782,7 +1971,9 @@ namespace Monoworks
 		// TODO: Add support for post and pre tone mapping passes
 
 		// Execute Special Fixed Passes (Tone mapping)
-		
+		auto workgroup = ComputeWorkgroupSize( m_hTonemapPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
+		CStaticRenderer::DispatchCompute( frameIndex, m_hTonemapPass->m_hComputePipeline, workgroup, -1, &m_hTonemapPass->m_pDescriptors[frameIndex], 1 );
+
 
 	};
 

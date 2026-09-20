@@ -15,7 +15,33 @@
 
 namespace Monoworks 
 {
-	
+	enum ETonemapMode
+	{
+		MW_TONEMAP_MODE_NONE, // Pass through
+		MW_TONEMAP_MODE_REINHARD,
+		MW_TONEMAP_MODE_REINHARD_EXTENDED,
+		MW_TONEMAP_MODE_REINHARD_JODIE,
+		MW_TONEMAP_MODE_HABLE_FILMIC,
+		MW_TONEMAP_MODE_ACES_FILMIC_APROX,
+		MW_TONEMAP_MODE_AGX_APROX,
+		MW_TONEMAP_MODE_KHRONOS_PBR_NEUTRAL
+	};
+
+	enum EAGXMode
+	{
+		MW_TONEMAP_AGX_MODE_DEFAULT,
+		MW_TONEMAP_AGX_MODE_GOLDEN,
+		MW_TONEMAP_AGX_MODE_PUNCHY
+	};
+
+	struct alignas(16) TonemapParams
+	{
+		ETonemapMode Mode;
+		EAGXMode AGXMode; // only needed if using AGX
+		float Exposure;
+		bool EnableGamma;
+	};
+
 	/// @brief Interface to derive from when creating any sort of Frame Graph.
 	class IFrameGraph 
 	{
@@ -36,6 +62,7 @@ namespace Monoworks
 		/// @brief Returns a reference to the current default Base-Pass-Pipeline
 		virtual const MW_NOTHROW Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const = 0;
 		
+		virtual MW_NOTHROW void SetTonemapParams( TonemapParams* pParams ) NOEXCEPT = 0;
 		virtual MW_NOTHROW void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT = 0;
 	
 	};
@@ -66,6 +93,16 @@ namespace Monoworks
 		* @param forceRewrite: Toggle whether to rewrite the sampler if it's already written.
 		*/
 		void BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite = false );
+
+
+		/**
+		* @brief Bind a uniform buffer located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param phUniformBuffer: Reference to the uniform buffer to bind for every frame in flight.
+		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
+		*/
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+
 
 		/**
 		* @brief Bind a uniform buffer located in global scope.
@@ -139,6 +176,16 @@ namespace Monoworks
 		* @param forceRewrite: Toggle whether to rewrite the sampler if it's already written.
 		*/
 		void BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite = false );
+
+
+		/**
+		* @brief Bind a uniform buffer located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param phUniformBuffer: Reference to the uniform buffer to bind for every frame in flight.
+		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
+		*/
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+
 
 		/**
 		* @brief Bind a uniform buffer located in global scope.
@@ -221,6 +268,15 @@ namespace Monoworks
 		/**
 		* @brief Bind a uniform buffer located in global scope.
 		* @param bindingName: Name of the element to bind inside global scope.
+		* @param phUniformBuffer: Reference to the uniform buffer to bind for every frame in flight.
+		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
+		*/
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+
+
+		/**
+		* @brief Bind a uniform buffer located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
 		* @param phUniformBuffer: Array of References to the uniform buffers to bind for every frame in flight.
 		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
 		*/
@@ -281,6 +337,23 @@ namespace Monoworks
 		* @param forceRewrite: Toggle whether to rewrite the sampler if it's already written.
 		*/
 		void BindSampler( std::string_view bindingName,			Ref<RHI::ITexture2D> hSampler,	bool forceRewrite = false );
+
+		/**
+		* @brief Bind a uniform buffer located in a parameter block.
+		* @param parameterBlockName: Name of the parameter block in the shader code.
+		* @param bindingName: Name of the element to bind inside the Parameter Block.
+		* @param hUniformBuffer: Array of References to the uniform buffers to bind for every frame in flight.
+		* @param forceRewrite: Toggle whether to rewrite the sampler uniform buffer if it's already written.
+		*/
+		void BindUBO( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
+
+		/**
+		* @brief Bind a uniform buffer located in global scope.
+		* @param bindingName: Name of the element to bind inside global scope.
+		* @param phUniformBuffer: Array of References to the uniform buffers to bind for every frame in flight.
+		* @param forceRewrite: Toggle whether to rewrite the uniform buffer if it's already written.
+		*/
+		void BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite = false );
 
 		/**
 		* @brief Bind a uniform buffer located in a parameter block.
@@ -371,7 +444,11 @@ namespace Monoworks
 
 		MW_NOTHROW const Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
 		MW_NOTHROW void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT override { m_hCamera = hCamera; };
-
+		MW_NOTHROW void SetTonemapParams( TonemapParams* pParams ) NOEXCEPT 
+		{
+			MW_PROFILE_FUNC;
+			m_hTonemapParamsUBO->SetData( pParams, sizeof( TonemapParams ) );
+		}
 
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
@@ -404,7 +481,8 @@ namespace Monoworks
 		std::array<RHI::DescriptorHandle, MFIF> m_hCameraUBOSets;
 		Ref<CCamera> m_hCamera;
 
-		Ref<CPostProcessPass> m_hTonemappingPass;
+		Ref<RHI::IUniformBuffer> m_hTonemapParamsUBO;
+		Ref<CPostProcessPass> m_hTonemapPass;
 
 	};
 }

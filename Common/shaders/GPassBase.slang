@@ -200,6 +200,8 @@ namespace Monoworks
             float3 worldNormal = normalize(mul(tangentNormal, TBN));
 
             surface.Normal = worldNormal;
+
+            return surface;
         };
 
         public float4           ComputeColor(           in MaterialInput materialInput, in PixelInput pixelInput );
@@ -256,7 +258,9 @@ namespace Monoworks
             float2 currentNDC = pixelInput.CurrentClipPosition.xy / pixelInput.CurrentClipPosition.w * 0.5 + 0.5;
             float2 previousNDC = pixelInput.PreviousClipPosition.xy / pixelInput.PreviousClipPosition.w * 0.5 + 0.5;
 
-            gbuffer.MotionVector = currentNDC - previousNDC;            
+            gbuffer.MotionVector = currentNDC - previousNDC;  
+            
+            return gbuffer;
         }
 
     }
