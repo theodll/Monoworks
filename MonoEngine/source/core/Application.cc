@@ -109,7 +109,8 @@ namespace Monoworks
 
 		CStaticRenderer::Init();
 
-		Ref<CCamera> camera = Ref<CCamera>::Create();
+		// TODO: Move this somewhere else
+		Ref<CCamera> camera = Ref<CCamera>::Create( 90.0f, static_cast<float>(CStaticRenderer::GetRenderableExtend().Width / CStaticRenderer::GetRenderableExtend().Height), 0.0f, 1.0f );
 
 		Ref<CDefferedFrameGraph> defferedFrameGraph = Ref<CDefferedFrameGraph>::Create( camera );
 

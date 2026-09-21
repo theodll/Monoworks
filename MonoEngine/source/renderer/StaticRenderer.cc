@@ -33,6 +33,26 @@ namespace Monoworks
 
 			RHI::CPipelineManager::Init();
 
+			cvar_t missingTexturePath;
+			missingTexturePath.Name = "r_missing_texture_path";
+			missingTexturePath.String = "resources/MissingTexture.png";
+			MW_REG_CVAR( &missingTexturePath );
+			
+			auto mtstr = CCvarManager::GetString( "r_missing_texture_path" );
+			path_t mtpt = mtstr;
+
+			m_hMissingTexture = RHI::ITexture2D::Create( &mtpt );
+
+			cvar_t missingMapPath;
+			missingMapPath.Name = "r_missing_map_path";
+			missingMapPath.String = "resources/MissingMap.png";
+			MW_REG_CVAR( &missingMapPath );
+
+			auto mmstr = CCvarManager::GetString( "r_missing_map_path" );
+			path_t mmpt = mmstr;
+
+			m_hMissingMap = RHI::ITexture2D::Create( &mmpt );
+
 			CEventManager::Subscribe( MW_EVENT_APP_FRAME, +[]( SEvent& e )
 				{
 					MW_PROFILE_FUNC;

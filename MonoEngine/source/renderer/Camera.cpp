@@ -1,6 +1,6 @@
 #include <mwpch.hh>
 
-#include <renderer/Camera.h>
+#include <renderer/Camera.hh>
 
 namespace Monoworks
 {
@@ -12,10 +12,10 @@ namespace Monoworks
 	};
 
 	// Constructor for Perspective Projections
-	MW_NOTHROW CCamera::CCamera( float fovY, float aspect, Vector clippingPlanesNF ) NOEXCEPT 
+	MW_NOTHROW CCamera::CCamera( float fovY, float aspect, float clipPlaneNear, float clipPlaneFar ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		m_CurrentProjectionMatrix = glm::perspective( glm::radians( fovY ), aspect, clippingPlanesNF.x, clippingPlanesNF.y );
+		m_CurrentProjectionMatrix = glm::perspective( glm::radians( fovY ), aspect, clipPlaneNear, clipPlaneFar );
 	};
 
 	MW_NOTHROW void CCamera::UpdateOrthographicProjection( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT 

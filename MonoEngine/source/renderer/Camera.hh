@@ -12,7 +12,7 @@ namespace Monoworks
 		MW_NOTHROW CCamera( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT;
 		// Constructor for Perspective Projections
 		// fovY in radiants
-		MW_NOTHROW CCamera( float fovY, float aspect, Vector clippingPlanesNF ) NOEXCEPT;
+		MW_NOTHROW CCamera( float fovY, float aspect, float clipPlaneNear, float clipPlaneFar ) NOEXCEPT;
 
 
 		MW_NOTHROW void UpdateOrthographicProjection( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT;

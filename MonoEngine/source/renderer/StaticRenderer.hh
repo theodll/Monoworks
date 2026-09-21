@@ -48,13 +48,14 @@ namespace Monoworks
 		static MW_NOTHROW void DispatchCompute( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, RHI::DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT;
 		static MW_NOTHROW void DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT;
 
-
-
         NODISCARD static u32  GetCurrentFrameIndex() NOEXCEPT { return m_CurrentFrameIndex; };
         NODISCARD static u32* GetCurrentFrameIndexPtr() NOEXCEPT { return &m_CurrentFrameIndex; };
 
 		NODISCARD static u32  GetCurrentImageIndex() NOEXCEPT { return m_CurrentImageIndex; };
 		NODISCARD static u32* GetCurrentImageIndexPtr() NOEXCEPT { return &m_CurrentImageIndex; };
+
+        NODISCARD static Ref<RHI::ITexture2D> GetDefaultMissingTexture() { return m_hMissingTexture; };
+        NODISCARD static Ref<RHI::ITexture2D> GetDefaultMissingMap() { return m_hMissingMap; };
 
         NODISCARD static Slang::ComPtr<slang::IGlobalSession> GetSlangGlobalSession() NOEXCEPT { return m_SlangGlobalSession; };
 
@@ -63,6 +64,12 @@ namespace Monoworks
     private:
         static u32 m_CurrentFrameIndex;
         static u32 m_CurrentImageIndex;
+
+        // Used for albedo textures 
+        static Ref<RHI::ITexture2D> m_hMissingTexture;
+        // Used for missing maps like missing normal maps, emissive maps etc.
+        static Ref<RHI::ITexture2D> m_hMissingMap;
+
 
         static SExtent2D m_RenderableExtent;
 
