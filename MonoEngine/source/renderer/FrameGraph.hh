@@ -61,7 +61,9 @@ namespace Monoworks
 
 		/// @brief Returns a reference to the current default Base-Pass-Pipeline
 		virtual const MW_NOTHROW Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const = 0;
-		
+		/// @brief Returns a reference to the current default Base-Pass-Shader
+		virtual const MW_NOTHROW Ref<CShader> GetDefaultBasePassShader() const = 0;
+
 		virtual MW_NOTHROW void SetTonemapParams( TonemapParams* pParams ) NOEXCEPT = 0;
 		virtual MW_NOTHROW void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT = 0;
 	
@@ -442,7 +444,9 @@ namespace Monoworks
 		*/
 		MW_NOTHROW void AddPostProcessPass(			Ref<CPostProcessPass> hPostProcessPass,		s32 MW_NULLABLE executionPriority = -1 ) NOEXCEPT;
 
-		MW_NOTHROW const Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
+		MW_NOTHROW const Ref<RHI::IGraphicsPipeline>	GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
+		MW_NOTHROW const Ref<CShader>					GetDefaultBasePassShader() const override { return m_hDefaultBasePassShader; };
+
 		MW_NOTHROW void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT override { m_hCamera = hCamera; };
 		MW_NOTHROW void SetTonemapParams( TonemapParams* pParams ) NOEXCEPT 
 		{

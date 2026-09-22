@@ -10,6 +10,8 @@
 namespace Monoworks 
 {
 
+	constexpr char c_MaterialInputPB[16] = "u_MaterialInput";
+
 	struct alignas( 16 ) MaterialData 
 	{
 		Vector	AlbedoFactor;
@@ -51,6 +53,7 @@ namespace Monoworks
 
 		MW_NOTHROW void SetAlbedoMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
 		MW_NOTHROW void SetNormalMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		MW_NOTHROW void SetEmissiveMap(  Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
 		MW_NOTHROW void SetRoughnessMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
 		MW_NOTHROW void SetMetalllicMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
 		MW_NOTHROW void SetOcclusionMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
@@ -127,18 +130,21 @@ namespace Monoworks
 
 	private:
 		MW_NOTHROW void UpdateUBO() NOEXCEPT;
-		MW_NOTHROW void SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture ) NOEXCEPT;
+		MW_NOTHROW EResult SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT;
+
+		u32 m_MaterialParameterBlock;
+		u32 m_MaterialID; // 19 bits only 
 
 		boost::unordered_map<std::pair<u32, u32>, bool> m_BindingsWritten;
 		std::array<std::vector<RHI::DescriptorHandle>, MFIF> m_hDescriptors;
 
-		MaterialData m_Data;
+		MaterialData m_MaterialData;
 		std::array<Ref<RHI::IUniformBuffer>, MFIF>	m_hMaterialUniformBuffer;
 
 		// NOTE: Either the standard GPass Pipeline specified by the Frame Graph or if any of the user-specified 
 		// shaders (m_hVertexShader/m_hPixelShader) are set a custom pipeline generated from those shaders.
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
-		Ref<CShader>	MW_NULLABLE m_hCustomShader;
+		Ref<CShader>	MW_NULLABLE m_hShader;
 
 	};
 }

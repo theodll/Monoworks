@@ -14,6 +14,7 @@
 
 namespace Monoworks
 {
+	// TODO: Refactor
 	using namespace RHI;
 	constexpr u32 GlobalScopeSignature = 0;
 
@@ -955,26 +956,32 @@ namespace Monoworks
 		if ( m_pDescriptors.size() <= parameterBlock )
 			m_pDescriptors.resize( parameterBlock + 1 );
 
-		if ( m_pDescriptors[parameterBlock][CStaticRenderer::GetCurrentFrameIndex()] == nullptr )
+		// TODO: Don't base it on current frame index. iterate over array instead.
+
+		bool rewrite = forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}];
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
-			auto reflectionData = m_hShader->ReflectOnShader();
-			if ( !reflectionData.pDescriptorSignatures[parameterBlock] )
+			if ( m_pDescriptors[parameterBlock][i] == nullptr )
 			{
-				MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
-				return;
+				auto reflectionData = m_hShader->ReflectOnShader();
+				if ( !reflectionData.pDescriptorSignatures[parameterBlock] )
+				{
+					MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
+					return;
+				}
+
+				auto frameDescriptor = m_pDescriptors[parameterBlock];
+				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 			}
 
-			auto frameDescriptor = m_pDescriptors[parameterBlock];
-			for ( auto i{ 0uz }; i < MFIF; i++ )
-				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
-		}
 
-		if ( forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}] )
-		{
-			for ( auto i{ 0uz }; i < MFIF; i++ )
+			if ( rewrite )
+			{
 				CDescriptorManager::WriteImage( m_pDescriptors[parameterBlock][i], descriptorSlot, hTexture );
 
-			m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
+				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
+			}
 		}
 
 	}

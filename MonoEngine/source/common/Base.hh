@@ -229,17 +229,32 @@ namespace Monoworks
 
 	enum EResult
 	{
+		/// @brief Routine executed successfully with unknown success code.
 		MW_SUCCESS_UNKOWN = 1,
+		/// @brief Routine executed successfully.
 		MW_SUCCESS = 0,
+		/// @brief Routine failed with unknown error.
 		MW_ERROR_UNKNOWN = -1,
+		/// @brief Routine failed due to missing host Memory resources.
 		MW_ERROR_HOST_OUT_OF_MEMORY = -2,
+		/// @brief  Routine failed due to missing graphics unit Memory resources.
 		MW_ERROR_GPU_OUT_OF_MEMORY = -3,
+		/// @brief Routine failed due to an invalid cache access, write or read.
 		MW_ERROR_CACHE_INVALID = -4,
+		/// @brief Routine failed due to invalid initialization of thirdparty software.
 		MW_ERROR_INITIALIZATION_FAILED = -5,
+		/// @brief Routine failed due to fragmented host or graphics unit memory resources.
 		MW_ERROR_FRAGMENTATION = -6,
-		MW_ERROR_GPU_PIPELINE_COMPILATION_REQUIRED = -7,
+		/// @brief Routine failed due to failed compilation. Compilation of resource is required.
+		MW_ERROR_COMPILATION_REQUIRED = -7,
+		/// @brief Routine failed due to non existent resource.
 		MW_ERROR_NON_EXISTANT = -8,
-		MW_ERROR_GPU_DEVICE_LOST = -9
+		/// @brief Routine failed due to a graphics unit driver crash.
+		MW_ERROR_GPU_DEVICE_LOST = -9,
+		/// @brief Routine failed due to a parameter being invalid.
+		MW_ERROR_INVALID_PARAMETER = -10, 
+		/// @brief Routine failed due to invalid or missing setup before routine execution
+		MW_ERROR_INVALID_SETUP = -11
 	};
 
 	class CRuntimeException : public std::runtime_error 

@@ -39,7 +39,7 @@ namespace Monoworks
 
 	public struct MaterialInput
     {
-
+        // Change CMaterial when you change this !
         ConstantBuffer<MaterialInputUBO> UBO;
 
         public Texture2D    AlbedoMap;

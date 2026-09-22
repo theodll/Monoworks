@@ -5,7 +5,7 @@ namespace Monoworks
 {
 
     ParameterBlock<ConstantBuffer<CameraConstants>> u_CameraConstants; // NOTE: set 1
-    ParameterBlock<MaterialInput> u_MaterialInput; // NOTE: set 2
+    ParameterBlock<MaterialInput> u_MaterialInput; // NOTE: set 2 // Must be named like this. 
     
     static IMaterial g_Material;
     
