@@ -10,7 +10,7 @@
 namespace Monoworks 
 {
 
-	constexpr char c_MaterialInputPB[16] = "u_MaterialInput";
+	constexpr char c_MaterialInputPB[] = "u_MaterialInput";
 
 	struct alignas( 16 ) MaterialData 
 	{
@@ -143,6 +143,7 @@ namespace Monoworks
 
 		// NOTE: Either the standard GPass Pipeline specified by the Frame Graph or if any of the user-specified 
 		// shaders (m_hVertexShader/m_hPixelShader) are set a custom pipeline generated from those shaders.
+		ShaderReflectionData m_ShaderReflectionData;
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
 		Ref<CShader>	MW_NULLABLE m_hShader;
 

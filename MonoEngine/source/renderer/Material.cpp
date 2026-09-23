@@ -8,6 +8,8 @@
 namespace Monoworks 
 {
 	using namespace RHI;
+	static constexpr u32 GlobalScopeSignature = 0;
+	
 
 	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
 	{
@@ -121,12 +123,11 @@ namespace Monoworks
 		if ( !hTexture )
 			return MW_ERROR_INVALID_PARAMETER;
 
-		if ( !m_hCustomShader )
+		if ( !m_hShader )
 			return MW_ERROR_INVALID_SETUP;
 
 		// TODO: 
-		auto reflectionData = m_hCustomShader->ReflectOnShader();
-		if ( !reflectionData.pDescriptorSignatures[set] )
+		if ( !m_ShaderReflectionData.pDescriptorSignatures[set] )
 		{
 			MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", set );
 			return MW_ERROR_NON_EXISTANT;
@@ -140,7 +141,7 @@ namespace Monoworks
 				m_hDescriptors[i].resize( set + 1 );
 
 			if ( !m_hDescriptors[i][set] )
-				m_hDescriptors[i][set] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[set] );
+				m_hDescriptors[i][set] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[set] );
 
 			if ( rewrite )
 				CDescriptorManager::WriteImage( m_hDescriptors[i][set], set, hTexture );
@@ -330,18 +331,143 @@ namespace Monoworks
 	void CMaterial::BindTexture( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+
+		if ( !hTexture )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		if ( !bindings && bindings.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Non existant.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+		else if ( !bindings )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Unkown error.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+
+		auto [parameterBlock, descriptorSlot] = bindings.value();
+
+		// TODO: Don't base it on current frame index. iterate over array instead.
+
+		bool rewrite = forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}];
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			if ( m_hDescriptors[i].size() <= parameterBlock )
+				m_hDescriptors[i].resize(parameterBlock + 1);
+
+			if ( m_hDescriptors[i][parameterBlock] == nullptr )
+			{
+				if ( !m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] )
+				{
+					MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
+					return;
+				}
+
+				auto frameDescriptor = m_hDescriptors[parameterBlock];
+				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+			}
+
+			if ( rewrite )
+			{
+				CDescriptorManager::WriteImage( m_hDescriptors[i][parameterBlock], descriptorSlot, hTexture );
+				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
+			}
+		}
 	}
 
 
 	void CMaterial::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		if ( !hTexture )
+		{
+			MW_API_ERROR( "Passed invalid Texture reference." );
+			return;
+		}
+
+		auto binding = FindBindingNumberByString( 0, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[{GlobalScopeSignature, binding.value()}] )
+		{
+
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				CDescriptorManager::WriteImage( m_hDescriptors[i][GlobalScopeSignature], binding.value(), hTexture );
+
+			m_BindingsWritten[{GlobalScopeSignature, binding.value()}] = true;
+
+		}
 	}
 
 
 	void CMaterial::BindSampler( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+
+		if ( !hSampler )
+		{
+			MW_API_ERROR( "Passed invalid Sampler reference." );
+			return;
+		}
+
+		if ( !bindings && bindings.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Non existant.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+		else if ( !bindings )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Unkown error.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+
+		auto [parameterBlock, descriptorSlot] = bindings.value();
+
+
+		bool rewrite = forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}];
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			if ( m_hDescriptors[i].size() <= parameterBlock )
+				m_hDescriptors[i].resize( parameterBlock + 1 );
+
+			if ( m_hDescriptors[i][parameterBlock] == nullptr )
+			{
+				if ( !m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] )
+				{
+					MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
+					return;
+				}
+
+				auto frameDescriptor = m_hDescriptors[parameterBlock];
+				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+			}
+
+			if ( rewrite )
+			{
+				CDescriptorManager::WriteSampler( m_hDescriptors[i][parameterBlock], descriptorSlot, hSampler );
+				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
+			}
+		}
 	}
 
 
@@ -354,18 +480,140 @@ namespace Monoworks
 	void CMaterial::BindUBO( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+
+		if ( !hUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Sampler reference." );
+			return;
+		}
+
+		if ( !bindings && bindings.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Non existant.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+		else if ( !bindings )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Unkown error.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+
+		auto [parameterBlock, descriptorSlot] = bindings.value();
+
+
+		bool rewrite = forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}];
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			if ( m_hDescriptors[i].size() <= parameterBlock )
+				m_hDescriptors[i].resize( parameterBlock + 1 );
+
+			if ( m_hDescriptors[i][parameterBlock] == nullptr )
+			{
+				if ( !m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] )
+				{
+					MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
+					return;
+				}
+
+				auto frameDescriptor = m_hDescriptors[parameterBlock];
+				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+			}
+
+			if ( rewrite )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_hDescriptors[i][parameterBlock], descriptorSlot, hUniformBuffer );
+				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
+			}
+		}
 	}
 
 
 	void CMaterial::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
+
+		if ( !hUniformBuffer )
+		{
+			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		auto binding = FindBindingNumberByString( 0, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[{ GlobalScopeSignature, binding.value() }] )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_hDescriptors[i][GlobalScopeSignature], binding.value(), hUniformBuffer );
+				m_BindingsWritten[{ GlobalScopeSignature, binding.value() }] = true;
+			};
 	}
 
 
 	void CMaterial::BindUBO( std::string_view parameterBlockName, std::string_view bindingName, std::span<Ref<RHI::IUniformBuffer>> hUniformBuffer, bool forceRewrite /*= false */ )
 	{
+		
 		MW_PROFILE_FUNC;
+
+		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+
+
+		if ( !bindings && bindings.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Non existant.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+		else if ( !bindings )
+		{
+			MW_API_WARN( "Failed to find binding for Parameter Block {} or Descriptor Slot {}: Unkown error.", parameterBlockName.data(), bindingName.data() );
+			return;
+		}
+
+		auto [parameterBlock, descriptorSlot] = bindings.value();
+
+		bool rewrite = forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}];
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			if ( !hUniformBuffer[i] )
+			{
+				MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+				return;
+			}
+
+			if ( m_hDescriptors[i].size() <= parameterBlock )
+				m_hDescriptors[i].resize( parameterBlock + 1 );
+
+			if ( m_hDescriptors[i][parameterBlock] == nullptr )
+			{
+				if ( !m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] )
+				{
+					MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
+					return;
+				}
+
+				auto frameDescriptor = m_hDescriptors[parameterBlock];
+				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+			}
+
+			if ( rewrite )
+			{
+				CDescriptorManager::WriteUniformBuffer( m_hDescriptors[i][parameterBlock], descriptorSlot, hUniformBuffer[i] );
+				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
+			}
+		}
 
 	}
 
@@ -373,6 +621,30 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		auto binding = FindBindingNumberByString( 0, bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
+			return;
+		}
+		else if ( !binding )
+		{
+			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
+			return;
+		}
+
+		if ( forceRewrite || !m_BindingsWritten[{ GlobalScopeSignature, binding.value() }] )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				if ( !hUniformBuffer[i] )
+				{
+					MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+					return;
+				}
+
+				CDescriptorManager::WriteUniformBuffer( m_hDescriptors[i][GlobalScopeSignature], binding.value(), hUniformBuffer[i] );
+				m_BindingsWritten[{ GlobalScopeSignature, binding.value() }] = true;
+			};
 	}
 
 	void CMaterial::SetShader( Ref<CShader> hShader ) NOEXCEPT
@@ -383,6 +655,8 @@ namespace Monoworks
 	MW_NOTHROW void CMaterial::UpdateUBO() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+			m_hMaterialUniformBuffer[i]->SetData( &m_MaterialData, sizeof(MaterialData ) );
 	}
 
 
