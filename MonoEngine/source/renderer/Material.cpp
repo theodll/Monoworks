@@ -893,4 +893,46 @@ namespace Monoworks
 	}
 
 
+	CMaterialTable::CMaterialTable( u32 materialCount /*= 1 */ )
+	{
+		MW_PROFILE_FUNC;
+		m_MaterialCount = m_hMaterials.size();
+	}
+
+	CMaterialTable::CMaterialTable( Ref<CMaterialTable> hOther )
+	{
+		MW_PROFILE_FUNC;
+		const auto& meshMaterials = *hOther->GetMaterials();
+		for ( auto [index, materialAsset] : meshMaterials )
+			SetMaterial( index, materialAsset );
+	}
+
+	CMaterialTable::~CMaterialTable()
+	{
+		m_hMaterials.clear();
+		m_MaterialCount = 0;
+	}
+
+	Monoworks::EResult CMaterialTable::SetMaterial( u32 materialIndex, Ref<CMaterial> hMaterial )
+	{
+		m_hMaterials[materialIndex] = hMaterial;
+		if ( materialIndex >= m_MaterialCount )
+			m_MaterialCount = materialIndex + 1;
+	}
+
+	Monoworks::EResult CMaterialTable::ClearMaterial( u32 materialIndex )
+	{
+		MW_PROFILE_FUNC;
+
+		m_hMaterials.erase( materialIndex );
+		if ( materialIndex >= m_MaterialCount )
+			m_MaterialCount = materialIndex + 1;
+	}
+
+	void CMaterialTable::Clear()
+	{
+		MW_PROFILE_FUNC;
+		m_hMaterials.clear();
+	}
+
 }
