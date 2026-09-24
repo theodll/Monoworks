@@ -3,6 +3,7 @@
 
 #include <rhi/agnostic/ComputePipeline.hh>
 #include <rhi/agnostic/DescriptorManager.hh>
+#include <renderer/Mesh.h>
 
 namespace Monoworks::RHI 
 {
@@ -174,6 +175,8 @@ namespace Monoworks::RHI
          * @brief Dispatches the compute pipeline (hPipeline).
          */
         virtual MW_NOTHROW void DispatchCompute2( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
+
+        virtual MW_NOTHROW void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform ) NOEXCEPT = 0;
 
     };
 

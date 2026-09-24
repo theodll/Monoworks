@@ -139,6 +139,8 @@ namespace Monoworks
 
 		void SetShader(	Ref<CShader> hShader ) NOEXCEPT;
 
+		std::span<const std::vector<RHI::DescriptorHandle>, MFIF> GetDescriptors() const { return m_hDescriptors; }
+
 	private:
 		MW_NOTHROW void UpdateUBO() NOEXCEPT;
 		MW_NOTHROW EResult SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT;

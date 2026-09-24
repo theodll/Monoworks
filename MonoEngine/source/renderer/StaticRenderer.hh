@@ -37,6 +37,8 @@ namespace Monoworks
 
         static MW_NOTHROW void BindDescriptors( u32 frameIndex, RHI::PipelineSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 );
 
+        static MW_NOTHROW void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform ) NOEXCEPT;
+
 		static MW_NOTHROW void SetDynamicViewports( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT;
 		static MW_NOTHROW void SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT;
 		static MW_NOTHROW void SetDynamicCullMode( u32 frameIndex, RHI::ECullMode cullMode ) NOEXCEPT;

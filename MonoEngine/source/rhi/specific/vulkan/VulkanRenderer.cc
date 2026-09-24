@@ -623,5 +623,9 @@ namespace Monoworks::RHI
 		CVulkanRenderManager::EndWorkerGraphicsCommandBuffers( frameIndex );
 	}
 
+	MW_NOTHROW void CVulkanRenderer::DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+	}
 
 }
