@@ -1,6 +1,7 @@
 #include <mwpch.hh>
 
 #include <renderer/Material.h>
+#include <renderer/StaticRenderer.hh>
 #include <renderer/FrameManager.hh>
 #include <renderer/FrameGraph.hh>
 
@@ -161,7 +162,11 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		m_hShader = CFrameManager::GetCurrentFrameGraph()->GetDefaultBasePassShader();
-		auto pb = FindParameterBlockNumberByString( c_MaterialInputPB, m_hShader->GetShaderProgram()->getLayout() );
+		m_hGraphicsPipeline = CFrameManager::GetCurrentFrameGraph()->GetDefaultBasePassPipeline();
+		m_ShaderReflectionData = m_hShader->ReflectOnShader();
+		auto shaderLayout = m_hShader->GetShaderProgram()->getLayout();
+
+		auto pb = FindParameterBlockNumberByString( c_MaterialInputPB, shaderLayout );
 		
 		if ( pb )
 			m_MaterialParameterBlock = pb.value();
@@ -170,8 +175,76 @@ namespace Monoworks
 		else
 			MW_API_ERROR( "Failed to find material input parameter block: Unkown error." );
 
+		m_MaterialData.AlbedoFactor = pInfo->AlbedoFactor;
+		m_MaterialData.Metallicness = pInfo->Metallicness;
+		m_MaterialData.EmissionFactor = pInfo->EmissionFactor;
+		m_MaterialData.AmbientOcclusionFactor = pInfo->AmbientOcclusion;
+		// TODO: Implement
+		m_MaterialData.EnviromentMapRotation = 0;
+		m_MaterialData.EmissiveColor = pInfo->EmissiveColor;
 		
+		auto albedo = FindBindingNumberByString( m_MaterialParameterBlock, c_AlbedoMapBinding, shaderLayout );
+		auto normal = FindBindingNumberByString( m_MaterialParameterBlock, c_NormalMapBinding, shaderLayout );
+		auto emissive = FindBindingNumberByString( m_MaterialParameterBlock, c_EmissiveMapBinding, shaderLayout );
+		auto occlusion = FindBindingNumberByString( m_MaterialParameterBlock, c_OcclusionMapBinding, shaderLayout );
+		auto metallic = FindBindingNumberByString( m_MaterialParameterBlock, c_MetallicMapBinding, shaderLayout );
+		auto roughness = FindBindingNumberByString( m_MaterialParameterBlock, c_RoughnessMapBinding, shaderLayout );
+		auto ubo = FindBindingNumberByString( m_MaterialParameterBlock, c_MaterialUBOBinding, shaderLayout );
 
+		auto missingMap = CStaticRenderer::GetDefaultMissingMap();
+
+		
+		for ( auto i { 0uz }; i < MFIF; i++ )
+		{
+			if ( !m_hDescriptors[i][GlobalScopeSignature] )
+				CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+
+			if ( !m_hMaterialUniformBuffer[i] )
+				m_hMaterialUniformBuffer[i] = IUniformBuffer::Create( sizeof( MaterialData ) );
+
+			if ( ubo )
+				CDescriptorManager::WriteUniformBuffer( m_hDescriptors[i][GlobalScopeSignature], ubo.value(), m_hMaterialUniformBuffer[i] );
+
+			m_hMaterialUniformBuffer[i]->SetData( &m_MaterialData, sizeof( MaterialData ) );
+		}
+
+		if ( albedo)
+			if ( pInfo->hAlbedoMap )
+				SetTexture( m_MaterialParameterBlock, albedo.value(), pInfo->hAlbedoMap, true );
+			else
+				SetTexture( m_MaterialParameterBlock, albedo.value(), CStaticRenderer::GetDefaultMissingTexture(), false );
+		
+		if ( normal )
+			if ( pInfo->hNormalMap )
+				SetTexture( m_MaterialParameterBlock, normal.value(), pInfo->hNormalMap, true );
+			else
+				SetTexture( m_MaterialParameterBlock, normal.value(), missingMap, false );
+
+		if ( emissive )
+			if ( pInfo->hEmissiveMap )
+				SetTexture( m_MaterialParameterBlock, emissive.value(), pInfo->hEmissiveMap, true );
+			else
+				SetTexture( m_MaterialParameterBlock, emissive.value(), missingMap, false );
+
+		if ( occlusion )
+			if ( pInfo->hEmissiveMap )
+				SetTexture( m_MaterialParameterBlock, occlusion.value(), pInfo->hEmissiveMap, true );
+			else
+				SetTexture( m_MaterialParameterBlock, occlusion.value(), missingMap, false );
+
+		if ( metallic )
+			if ( pInfo->hEmissiveMap )
+				SetTexture( m_MaterialParameterBlock, metallic.value(), pInfo->hMetallicMap, true );
+			else
+				SetTexture( m_MaterialParameterBlock, metallic.value(), missingMap, false );
+
+
+		if ( roughness )
+			if ( pInfo->hEmissiveMap )
+				SetTexture( m_MaterialParameterBlock, roughness.value(), pInfo->hRoughnessMap, true );
+			else
+				SetTexture( m_MaterialParameterBlock, roughness.value(), missingMap, false );
+		
 	}
 
 
@@ -231,12 +304,12 @@ namespace Monoworks
 		if ( !hMap )
 			MW_API_ERROR( "Invalid Reference to Albedo Map passed." ); return;
 
-		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, "AlbedoMap", m_hShader->GetShaderProgram()->getLayout() );
+		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_AlbedoMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
 		if ( mapBind )
 			SetTexture( m_MaterialParameterBlock, mapBind.value(), hMap, true );
 		else
-			MW_ERROR( "Failed to set Albedo Map for Material {}", m_MaterialID );
+			MW_WARN( "Failed to set Albedo Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
 
@@ -249,12 +322,12 @@ namespace Monoworks
 		if ( !hMap )
 			MW_API_ERROR( "Invalid Reference to Normal Map passed." ); return;
 
-		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, "NormalMap", m_hShader->GetShaderProgram()->getLayout() );
+		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_NormalMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
 		if ( mapBind )
 			SetTexture( m_MaterialParameterBlock, mapBind.value(), hMap, true );
 		else
-			MW_ERROR( "Failed to set Normal Map for Material {}", m_MaterialID );
+			MW_ERROR( "Failed to set Normal Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
 	MW_NOTHROW void CMaterial::SetEmissiveMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
@@ -266,12 +339,12 @@ namespace Monoworks
 		if ( !hMap )
 			MW_API_ERROR( "Invalid Reference to Emissive Map passed." ); return;
 
-		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, "EmissiveMap", m_hShader->GetShaderProgram()->getLayout() );
+		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_EmissiveMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
 		if ( mapBind )
 			SetTexture( m_MaterialParameterBlock, mapBind.value(), hMap, true );
 		else
-			MW_ERROR( "Failed to set Emissive Map for Material {}", m_MaterialID );
+			MW_ERROR( "Failed to set Emissive Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
 	MW_NOTHROW void CMaterial::SetRoughnessMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
@@ -283,12 +356,12 @@ namespace Monoworks
 		if ( !hMap )
 			MW_API_ERROR( "Invalid Reference to Roughness Map passed." ); return;
 
-		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, "RoughnessMap", m_hShader->GetShaderProgram()->getLayout() );
+		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_RoughnessMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
 		if ( mapBind )
 			SetTexture( m_MaterialParameterBlock, mapBind.value(), hMap, true );
 		else
-			MW_ERROR( "Failed to set Roughness Map for Material {}", m_MaterialID );
+			MW_ERROR( "Failed to set Roughness Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
 
@@ -301,12 +374,12 @@ namespace Monoworks
 		if ( !hMap )
 			MW_API_ERROR( "Invalid Reference to Metallic Map passed." ); return;
 
-		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, "MetallicMap", m_hShader->GetShaderProgram()->getLayout() );
+		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_MetallicMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
 		if ( mapBind )
 			SetTexture( m_MaterialParameterBlock, mapBind.value(), hMap, true );
 		else
-			MW_ERROR( "Failed to set Metallic Map for Material {}", m_MaterialID );
+			MW_ERROR( "Failed to set Metallic Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
 
@@ -319,12 +392,12 @@ namespace Monoworks
 		if ( !hMap )
 			MW_API_ERROR( "Invalid Reference to Occlusion Map passed." ); return;
 
-		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, "OcclusionMap", m_hShader->GetShaderProgram()->getLayout() );
+		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_OcclusionMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
 		if ( mapBind )
 			SetTexture( m_MaterialParameterBlock, mapBind.value(), hMap, true );
 		else
-			MW_ERROR( "Failed to set Occlusion Map for Material {}", m_MaterialID );
+			MW_ERROR( "Failed to set Occlusion Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
 
@@ -650,6 +723,166 @@ namespace Monoworks
 	void CMaterial::SetShader( Ref<CShader> hShader ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		
+		if ( !hShader )
+		{
+			MW_API_ERROR( "Passed invalid Shader reference." );
+			return;
+		}
+
+
+		CVertexLayout basePassVertexLayout =
+		{
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Position" },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Normal"   },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Tangent"  },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Binormal" },
+			{ MW_SHADER_DATA_TYPE_FLOAT_2, "TexCoord" }
+		};
+
+		auto entrypoints = m_hShader->GetShaderEntrypoints();
+		const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
+
+		SShaderObject vertexShader;
+		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
+		vertexShader.pEntrypoint = vertexEntrypoint;
+
+		auto program = m_hShader->GetShaderProgram();
+		slang::ProgramLayout* layout = program->getLayout();
+
+		// Get byte code for the Vertex Shader
+		{
+
+			SlangInt vertexEntryPointIndex = -1;
+			SlangInt entryPointCount = layout->getEntryPointCount();
+
+			for ( SlangInt i = 0; i < entryPointCount; ++i )
+			{
+				slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
+
+				if ( entryPointLayout->getStage() == SLANG_STAGE_VERTEX )
+				{
+					vertexEntryPointIndex = i;
+					break;
+				}
+			}
+
+			if ( vertexEntryPointIndex != -1 )
+			{
+				Slang::ComPtr<slang::IBlob> code;
+				Slang::ComPtr<slang::IBlob> diagnostics;
+				const SlangInt targetIndex = 0;
+				SlangResult result = program->getEntryPointCode(
+					vertexEntryPointIndex,
+					targetIndex,
+					code.writeRef(),
+					diagnostics.writeRef()
+				);
+
+				if ( SLANG_FAILED( result ) )
+				{
+					if ( diagnostics )
+						MW_ERROR( "Failed to get vertex shader entry point code for custom material shader: {}", static_cast< const char* >(diagnostics->getBufferPointer()) );
+
+					return;
+				}
+
+				vertexShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+			}
+		}
+
+		const char* fragmentEntrypoint = entrypoints[MW_SHADER_STAGE_FRAGMENT].c_str();
+
+		SShaderObject pixelShader;
+		pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
+		pixelShader.pEntrypoint = fragmentEntrypoint;
+
+		// Get byte code for the Pixel Shader
+		{
+
+			SlangInt pixelEntryPointIndex = -1;
+			SlangInt entryPointCount = layout->getEntryPointCount();
+
+			for ( SlangInt i = 0; i < entryPointCount; ++i )
+			{
+				slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
+
+				if ( entryPointLayout->getStage() == SLANG_STAGE_FRAGMENT )
+				{
+					pixelEntryPointIndex = i;
+					break;
+				}
+			}
+
+			if ( pixelEntryPointIndex != -1 )
+			{
+				Slang::ComPtr<slang::IBlob> code;
+				Slang::ComPtr<slang::IBlob> diagnostics;
+				const SlangInt targetIndex = 0;
+				SlangResult result = program->getEntryPointCode(
+					pixelEntryPointIndex,
+					targetIndex,
+					code.writeRef(),
+					diagnostics.writeRef()
+				);
+
+				if ( SLANG_FAILED( result ) )
+				{
+					if ( diagnostics )
+						MW_ERROR( "Failed to get pixel shader entry point code for custom material shader: {}", static_cast< const char* >(diagnostics->getBufferPointer()) );
+
+					return;
+				}
+
+				pixelShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+
+			}
+		}
+
+		// Add all shaders used by the base pass to an array to create the base pipeline.
+		std::vector<SShaderObject> shaderObjects;
+		shaderObjects.push_back( vertexShader );
+		shaderObjects.push_back( pixelShader );
+
+		// Add all color formats used in the gbuffer to an array also to create the base pipeline.
+		std::vector<EImageFormat> colorFormats;
+		colorFormats.emplace_back( MW_FORMAT_R8G8B8A8_UNORM ); // Albedo + Occlusion 
+		colorFormats.emplace_back( MW_FORMAT_A2R10G10B10_UNORM_PACK32 ); // Normals, Roughness + Metallicness 
+		colorFormats.emplace_back( MW_FORMAT_B10G11R11_UFLOAT_PACK32 ); // Emissive
+		colorFormats.emplace_back( MW_FORMAT_R16G16_SFLOAT ); // Motion vectors
+		colorFormats.emplace_back( MW_FORMAT_R32_UINT ); // Entity ID (bits 0-18) + Material ID (bits 19-31)
+
+		// Color blending things also for creating the base pipeline.
+		std::vector<SColorBlendAttachmentState> colorBlendAttachments;
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+
+		RHI::GraphicsPipelineCreationInfo createInfo {};
+		createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
+		createInfo.VertexLayout = basePassVertexLayout;
+		createInfo.ShaderObjects = shaderObjects;
+		createInfo.ColorFormats = colorFormats;
+		createInfo.ColorBlendAttachments = colorBlendAttachments;
+		createInfo.pSignature = m_ShaderReflectionData.pPipelineSignature;
+		createInfo.CompareOp = RHI::MW_COMPARE_OP_EQUAL;
+		createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
+
+		// Create the material pipeline.
+		auto materialPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_CustomGraphicsPipelineHash );
+
+
+		if ( materialPipeline )
+		{
+			m_hGraphicsPipeline = materialPipeline.value();
+			m_bUseCustomShader = true;
+			m_hShader = hShader;
+		}
+		else
+			MW_FATAL( "Failed to create base pass pipeline." );
+
 	}
 
 	MW_NOTHROW void CMaterial::UpdateUBO() NOEXCEPT

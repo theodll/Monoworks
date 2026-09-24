@@ -9,8 +9,16 @@
 
 namespace Monoworks 
 {
-
 	constexpr char c_MaterialInputPB[] = "u_MaterialInput";
+	constexpr char c_AlbedoMapBinding[] = "AlbedoMap";
+	constexpr char c_NormalMapBinding[] = "NormalMap";
+	constexpr char c_RoughnessMapBinding[] = "RoughnessMap";
+	constexpr char c_EmissiveMapBinding[] = "EmissiveMap";
+	constexpr char c_MetallicMapBinding[] = "MetallicMap";
+	constexpr char c_OcclusionMapBinding[] = "OcclusionMap";
+	constexpr char c_MaterialUBOBinding[] = "UBO";
+
+	constexpr u32  c_InvalidMaterialID = 0b1111111111111111111;
 
 	struct alignas( 16 ) MaterialData 
 	{
@@ -21,7 +29,7 @@ namespace Monoworks
 		float	EmissionFactor;
 		float	EnviromentMapRotation; // TODO: Implement
 		float	AmbientOcclusionFactor;
-		u32		MaterialID = UINT32_MAX; // TODO: Implement
+		u32		MaterialID = c_InvalidMaterialID; // TODO: Implement
 	};
 
 	struct MaterialCreationInfo
@@ -33,6 +41,8 @@ namespace Monoworks
 		Ref<RHI::ITexture2D> MW_NULLABLE hRoughnessMap = nullptr;
 		Ref<RHI::ITexture2D> MW_NULLABLE hMetallicMap = nullptr;
 		Ref<RHI::ITexture2D> MW_NULLABLE hOcclusionMap = nullptr;
+		Ref<RHI::ITexture2D> MW_NULLABLE hEmissiveMap = nullptr; 
+		float EmissionFactor;
 		float Metallicness;
 		float Roughness;
 		float AmbientOcclusion;
@@ -132,8 +142,9 @@ namespace Monoworks
 		MW_NOTHROW void UpdateUBO() NOEXCEPT;
 		MW_NOTHROW EResult SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT;
 
+
 		u32 m_MaterialParameterBlock;
-		u32 m_MaterialID; // 19 bits only 
+		u32 m_MaterialID; // 19 bits only // TODO: Implement
 
 		boost::unordered_map<std::pair<u32, u32>, bool> m_BindingsWritten;
 		std::array<std::vector<RHI::DescriptorHandle>, MFIF> m_hDescriptors;
@@ -144,8 +155,10 @@ namespace Monoworks
 		// NOTE: Either the standard GPass Pipeline specified by the Frame Graph or if any of the user-specified 
 		// shaders (m_hVertexShader/m_hPixelShader) are set a custom pipeline generated from those shaders.
 		ShaderReflectionData m_ShaderReflectionData;
+		bool m_bUseCustomShader = false;
+		Hash::hash_t m_CustomGraphicsPipelineHash;
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
-		Ref<CShader>	MW_NULLABLE m_hShader;
+		Ref<CShader>				m_hShader;
 
 	};
 }

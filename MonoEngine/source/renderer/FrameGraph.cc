@@ -1277,6 +1277,8 @@ namespace Monoworks
 	CDefferedFrameGraph::CDefferedFrameGraph( Ref<CCamera> hCamera )	 NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		// When changing anything in this scope, check CMaterial::SetShader if that change also applies there.
 		{
 			m_hCamera = hCamera;
 

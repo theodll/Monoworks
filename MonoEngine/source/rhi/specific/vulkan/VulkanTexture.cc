@@ -269,12 +269,12 @@ namespace Monoworks::RHI
 		imageInfo.arrayLayers = 1;
 		imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
 		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+		imageInfo.initialLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		imageInfo.flags = 0;
-		Layout = MW_IMAGE_LAYOUT_UNDEFINED;
+		Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 
 		auto uploader = CVulkanContext::GetUploader();
