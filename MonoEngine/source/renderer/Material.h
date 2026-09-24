@@ -1,6 +1,7 @@
 #pragma once
 #include <common/Base.hh>
 #include <boost/unordered_map.hpp>
+#include <boost/container/flat_map.hpp>
 
 #include <renderer/Shader.hh>
 
@@ -160,5 +161,46 @@ namespace Monoworks
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
 		Ref<CShader>				m_hShader;
 
+	};
+
+	class CMaterialTable 
+	{
+	public:
+		CMaterialTable( u32 materialCount = 1 );
+		CMaterialTable( Ref<CMaterialTable> other );
+		virtual ~CMaterialTable();
+
+		bool HasMaterial( u32 materialIndex ) const { return m_hMaterials.find( materialIndex ) != m_hMaterials.end() }
+	private:
+		boost::container::flat_map<u32, Ref<CMaterial>> m_hMaterials;
+		u32 m_MaterialCount
+	};
+
+	class MaterialTable
+	{
+	public:
+		MaterialTable( uint32_t materialCount = 1 );
+		MaterialTable( Ref<MaterialTable> other );
+		~MaterialTable() = default;
+
+		bool HasMaterial( uint32_t materialIndex ) const { return m_Materials.find( materialIndex ) != m_Materials.end(); }
+		void SetMaterial( uint32_t index, Ref<Material> material );
+		void ClearMaterial( uint32_t index );
+
+		Ref<Material> GetMaterial( uint32_t materialIndex ) const
+		{
+			VT_CORE_ASSERT( HasMaterial( materialIndex ), "" );
+			return m_Materials.at( materialIndex );
+		}
+		std::map<uint32_t, Ref<Material>>& GetMaterials() { return m_Materials; }
+		const std::map<uint32_t, Ref<Material>>& GetMaterials() const { return m_Materials; }
+
+		uint32_t GetMaterialCount() const { return m_MaterialCount; }
+		void SetMaterialCount( uint32_t materialCount ) { m_MaterialCount = materialCount; }
+
+		void Clear();
+	private:
+		std::map<uint32_t, Ref<Material>> m_Materials;
+		uint32_t m_MaterialCount;
 	};
 }
