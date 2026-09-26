@@ -11,6 +11,10 @@
 
 namespace Monoworks 
 {
+    struct FrameGraphicsProfilingData
+    {
+        u32 DrawCallCount;
+    };
 	
     // For Documentation of undocumented parts, refer to IGraphicsAPI.
     class CStaticRenderer
@@ -63,6 +67,9 @@ namespace Monoworks
 
         static MW_NOTHROW void SetRenderableExtend( const SExtent2D* renderableExtent ) { m_RenderableExtent = *renderableExtent; };
         NODISCARD static MW_NOTHROW SExtent2D GetRenderableExtend() { return m_RenderableExtent; };
+
+        NODISCARD static MW_NOTHROW FrameGraphicsProfilingData* GetFrameGraphicsProfilingData() { return &m_GraphicsProfilingData; };
+
     private:
         static u32 m_CurrentFrameIndex;
         static u32 m_CurrentImageIndex;
@@ -72,6 +79,7 @@ namespace Monoworks
         // Used for missing maps like missing normal maps, emissive maps etc.
         static Ref<RHI::ITexture2D> m_hMissingMap;
 
+        static FrameGraphicsProfilingData m_GraphicsProfilingData;
 
         static SExtent2D m_RenderableExtent;
 

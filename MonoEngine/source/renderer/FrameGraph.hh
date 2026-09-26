@@ -454,6 +454,13 @@ namespace Monoworks
 			m_hTonemapParamsUBO->SetData( pParams, sizeof( TonemapParams ) );
 		}
 
+		struct ModelPushConstant
+		{
+			Matrix	CurrentModelMatrix;
+			Matrix	PreviousModelMatrix;
+			u32		EntityID = UINT32_MAX; // TODO: Implement
+		};
+
 	private:
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
 		std::vector<Ref<CComputePrePass>>			m_hComputePrePasses;

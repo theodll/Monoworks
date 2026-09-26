@@ -139,7 +139,9 @@ namespace Monoworks
 
 		void SetShader(	Ref<CShader> hShader ) NOEXCEPT;
 
-		std::span<const std::vector<RHI::DescriptorHandle>, MFIF> GetDescriptors() const { return m_hDescriptors; }
+		std::span<const std::vector<RHI::DescriptorHandle>, MFIF> GetDescriptors() const { return m_hDescriptors; };
+		Ref<RHI::IGraphicsPipeline> GetPipeline() const { return m_hGraphicsPipeline; };
+		Ref<CShader> GetShader() const { return m_hShader; };
 
 	private:
 		MW_NOTHROW void UpdateUBO() NOEXCEPT;
@@ -163,6 +165,7 @@ namespace Monoworks
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
 		Ref<CShader>				m_hShader;
 
+		friend class CVulkanRenderer; 
 	};
 
 	class CMaterialTable 

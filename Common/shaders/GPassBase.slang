@@ -36,7 +36,6 @@ namespace Monoworks
         public uint MaterialID; // NOTE: Not yet implemented.
     }
 
-
 	public struct MaterialInput
     {
         // Change CMaterial when you change this !

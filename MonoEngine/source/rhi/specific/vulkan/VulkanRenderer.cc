@@ -13,7 +13,9 @@
 
 #include <rhi/agnostic/IndexBuffer.hh>
 
+#include <renderer/FrameGraph.hh>
 #include <renderer/StaticRenderer.hh>
+
 #include <core/Application.hh>
 
 #include "VulkanRenderer.hh"
@@ -680,13 +682,40 @@ namespace Monoworks::RHI
 		auto vkVBuf = hMesh->VertexBuffer.As<CVulkanVertexBuffer>()->GetVulkanBuffer();
 		auto vkIBuf = hMesh->IndexBuffer.As<CVulkanIndexBuffer>()->GetVulkanBuffer();
 		
-		VkCommandBuffer* cmd = nullptr;
+		VkCommandBuffer cmd = nullptr;
 		if ( threadID < 0 )
-			cmd = CVulkanRenderManager::GetRootGraphicsCommandBuffer( threadID );
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( threadID );
 		else
-			cmd = CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 
+		auto mat = hMesh->Material;
 
+		auto vkGPipe = mat->GetPipeline().As<CVulkanGraphicsPipeline>();
+
+		vkCmdBindPipeline( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, *vkGPipe->GetVulkanPipeline() );
+
+		vkCmdBindVertexBuffers( cmd, 0, 1, vkVBuf, { 0 } );
+		vkCmdBindIndexBuffer( cmd, *vkIBuf, 0, VK_INDEX_TYPE_UINT32	);
+
+		CDefferedFrameGraph::ModelPushConstant modelConstants;
+		modelConstants.CurrentModelMatrix = transform;
+		modelConstants.PreviousModelMatrix = transform;
+		modelConstants.EntityID = 1;
+
+		vkCmdPushConstants( cmd, *vkGPipe->GetVulkanPipelineSignature(), VK_SHADER_STAGE_ALL_GRAPHICS, 0, sizeof( CDefferedFrameGraph::ModelPushConstant ), &modelConstants );
+
+		auto descriptors = mat->GetDescriptors();
+
+		vkCmdBindDescriptorSets(
+			cmd,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			*vkGPipe->GetVulkanPipelineSignature(),
+			0,
+			descriptors[frameIndex].size(),
+			( const VkDescriptorSet* )descriptors[frameIndex].data(), 0, nullptr );
+
+		vkCmdDrawIndexed( cmd, hMesh->IndexBuffer->GetCount(), 1, 0, 0, 0);
+		CStaticRenderer::GetFrameGraphicsProfilingData()->DrawCallCount++;
 	}
 
 }
