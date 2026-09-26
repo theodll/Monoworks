@@ -56,44 +56,51 @@ namespace Monoworks::RHI
 			
 			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.QtReadFinishedSemaphore ), "Failed to create QtReadFinishedSemaphore." );
 			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.ImageAvailableSemaphore ), "Failed to create ImageAvailableSemaphore." );
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.GraphicsSubmitSemaphore ), "Failed to create GraphicsSubmitSemaphore." );
 			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &frameData.RenderFinishedSemaphore ), "Failed to create RenderFinishedSemaphore." );
 			MW_VK_CHECK( vkCreateFence( *device->GetDevice(), &fenceCreateInfo, CVulkanContext::GetCallbacks(), &frameData.InFlightFence), "Failed to create InFlightFence.");
 
-			VkCommandPoolCreateInfo poolCreateInfo{};
-			poolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-			poolCreateInfo.queueFamilyIndex = device->GetGraphicsQueueFamilyIndex();
-			poolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+			{
+				VkCommandPoolCreateInfo poolCreateInfo{};
+				poolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+				poolCreateInfo.queueFamilyIndex = device->GetGraphicsQueueFamilyIndex();
+				poolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-			MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolCreateInfo, CVulkanContext::GetCallbacks(), &frameData.CommandPool ), "Failed to create CommandPool." );
+				MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolCreateInfo, CVulkanContext::GetCallbacks(), &frameData.GraphicsCommandPool ), "Failed to create graphics CommandPool." );
 
-			VkCommandBufferAllocateInfo allocCreateInfo{};
-			allocCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-			allocCreateInfo.commandPool = frameData.CommandPool;
-			allocCreateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-			allocCreateInfo.commandBufferCount = 1;
+				VkCommandBufferAllocateInfo allocCreateInfo{};
+				allocCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+				allocCreateInfo.commandPool = frameData.GraphicsCommandPool;
+				allocCreateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+				allocCreateInfo.commandBufferCount = 1;
 
-			MW_VK_CHECK( vkAllocateCommandBuffers( *device->GetDevice(), &allocCreateInfo, &frameData.CommandBuffer ), "Failed to allocate CommandBuffer." );
+				MW_VK_CHECK( vkAllocateCommandBuffers( *device->GetDevice(), &allocCreateInfo, &frameData.GraphicsCommandBuffer ), "Failed to allocate graphics CommandBuffer." );
+			}
+
 		}
 
 		for ( auto& workerData : m_WorkerRenderData )
 		{
-			VkCommandPoolCreateInfo poolInfo{};
-			poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-			poolInfo.queueFamilyIndex = device->GetGraphicsQueueFamilyIndex();
-			poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-
+			// Graphics command buffer creation
 			for ( u32 i{0}; i < MFIF; i++ )
 			{
-				MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolInfo, CVulkanContext::GetCallbacks(), &workerData.CommandPools[i] ), "Failed to create CommandPool.");
+				VkCommandPoolCreateInfo poolInfo{};
+				poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+				poolInfo.queueFamilyIndex = device->GetGraphicsQueueFamilyIndex();
+				poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+				MW_VK_CHECK( vkCreateCommandPool( *device->GetDevice(), &poolInfo, CVulkanContext::GetCallbacks(), &workerData.GraphicsCommandPools[i] ), "Failed to create graphics CommandPool.");
 			
 				VkCommandBufferAllocateInfo allocInfo{};
 				allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-				allocInfo.commandPool = workerData.CommandPools[i];
+				allocInfo.commandPool = workerData.GraphicsCommandPools[i];
 				allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
 				allocInfo.commandBufferCount = 1;
 
-				MW_VK_CHECK( vkAllocateCommandBuffers( *device->GetDevice(), &allocInfo, &workerData.CommandBuffers[i] ), "Failed to allocate CommandBuffer.");
+				MW_VK_CHECK( vkAllocateCommandBuffers( *device->GetDevice(), &allocInfo, &workerData.GraphicsCommandBuffers[i] ), "Failed to allocate graphics CommandBuffer.");
 			}
+			// Compute command buffer creation
+			
 		}
 
 	};
@@ -107,11 +114,12 @@ namespace Monoworks::RHI
 		
 		for ( auto& workerData : m_WorkerRenderData )
 		{
-			for ( auto& commandPool : workerData.CommandPools )
+			for ( auto& commandPool : workerData.GraphicsCommandPools )
 			{
 				if ( commandPool )
 					vkDestroyCommandPool( device, commandPool, CVulkanContext::GetCallbacks() );
 			}
+
 		}
 
 		m_WorkerRenderData.clear();
@@ -119,24 +127,29 @@ namespace Monoworks::RHI
 		for ( auto& frameData : m_RootFrameData )
 		{
 			if ( frameData.ImageAvailableSemaphore )
-				vkDestroySemaphore( device, frameData.ImageAvailableSemaphore, nullptr );
+				vkDestroySemaphore( device, frameData.ImageAvailableSemaphore, CVulkanContext::GetCallbacks() );
 			
 			if ( frameData.RenderFinishedSemaphore )
-				vkDestroySemaphore( device, frameData.RenderFinishedSemaphore, nullptr );
+				vkDestroySemaphore( device, frameData.RenderFinishedSemaphore, CVulkanContext::GetCallbacks() );
 
 			if ( frameData.QtReadFinishedSemaphore )
-				vkDestroySemaphore( device, frameData.QtReadFinishedSemaphore, nullptr );
+				vkDestroySemaphore( device, frameData.QtReadFinishedSemaphore, CVulkanContext::GetCallbacks() );
+
+
+			if ( frameData.RenderFinishedSemaphore )
+				vkDestroySemaphore( device, frameData.RenderFinishedSemaphore, CVulkanContext::GetCallbacks() );
 
 			if ( frameData.InFlightFence )
-				vkDestroyFence( device, frameData.InFlightFence, nullptr );
+				vkDestroyFence( device, frameData.InFlightFence, CVulkanContext::GetCallbacks() );
 
-			if ( frameData.CommandPool )
-				vkDestroyCommandPool( device, frameData.CommandPool, nullptr );
+			if ( frameData.GraphicsCommandPool )
+				vkDestroyCommandPool( device, frameData.GraphicsCommandPool, CVulkanContext::GetCallbacks() );
+
 		}
 		MW_INFO( "Shutdown CVulkanRenderManager" );
 	};
 
-	void CVulkanRenderManager::BeginRootCommandBuffer( u32 frameIndex ) NOEXCEPT
+	void CVulkanRenderManager::BeginRootGraphicsCommandBuffer( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -144,14 +157,14 @@ namespace Monoworks::RHI
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-		vkBeginCommandBuffer( m_RootFrameData[frameIndex].CommandBuffer, &beginInfo );
+		vkBeginCommandBuffer( m_RootFrameData[frameIndex].GraphicsCommandBuffer, &beginInfo );
 
 
 		auto presenter = CVulkanContext::GetPresenter();
 		if ( CApplication::GetCreateInfos()->UseSDL )
 		{
 			SVulkanSDLPresentationTransitionRenderInfo renderInfo{};
-			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootCommandBuffer( frameIndex );
+			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
 			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 
 			presenter->TransitionRender( &renderInfo );
@@ -159,33 +172,30 @@ namespace Monoworks::RHI
 		else if ( CApplication::GetCreateInfos()->UseQt )
 		{
 			SVulkanQtPresentationTransitionRenderInfo renderInfo {};
-			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootCommandBuffer( frameIndex );
+			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
 			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 
 			presenter->TransitionRender( &renderInfo );
 		}
 	};
 
-	void CVulkanRenderManager::EndRootCommandBuffer( u32 frameIndex ) NOEXCEPT
+	void CVulkanRenderManager::EndRootGraphicsCommandBuffer( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
-		vkEndCommandBuffer( m_RootFrameData[frameIndex].CommandBuffer );
+		vkEndCommandBuffer( m_RootFrameData[frameIndex].GraphicsCommandBuffer );
 
 	};
 
-	void CVulkanRenderManager::SubmitRootCommandBuffer( u32 frameIndex ) NOEXCEPT
+	void CVulkanRenderManager::SubmitRootGraphicsCommandBuffer( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		auto device = CVulkanContext::GetDevice();
-		if ( m_RootFrameData[frameIndex].InFlightFence )
-			vkWaitForFences( *device->GetDevice(), 1, &m_RootFrameData[frameIndex].InFlightFence, VK_TRUE, UINT64_MAX );
 
 		VkCommandBufferSubmitInfo commandBufferInfo{};
 		commandBufferInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO;
-		commandBufferInfo.commandBuffer = m_RootFrameData[frameIndex].CommandBuffer;
+		commandBufferInfo.commandBuffer = m_RootFrameData[frameIndex].GraphicsCommandBuffer;
 		
-
 		VkSemaphoreSubmitInfo waitSemaphoreInfo{};
 		waitSemaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO;
 		waitSemaphoreInfo.stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
@@ -194,7 +204,7 @@ namespace Monoworks::RHI
 		VkSemaphoreSubmitInfo signalSemaphoreInfo{};
 		signalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO;
 		signalSemaphoreInfo.stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
-		signalSemaphoreInfo.semaphore = m_RootFrameData[frameIndex].RenderFinishedSemaphore;
+		signalSemaphoreInfo.semaphore = m_RootFrameData[frameIndex].GraphicsSubmitSemaphore;
 
 
 		VkSubmitInfo2 submitInfo{};
@@ -206,12 +216,18 @@ namespace Monoworks::RHI
 		submitInfo.signalSemaphoreInfoCount = 1;
 		submitInfo.pSignalSemaphoreInfos = &signalSemaphoreInfo;
 
-		vkResetFences( *device->GetDevice(), 1, &m_RootFrameData[frameIndex].InFlightFence );
-		MW_VK_CHECK( vkQueueSubmit2( *device->GetGraphicsQueue(), 1, &submitInfo, m_RootFrameData[frameIndex].InFlightFence ), "Failed to submit Draw Commandbuffers" );
+		auto result = vkQueueSubmit2( *device->GetGraphicsQueue(), 1, &submitInfo, nullptr );
+		MW_VK_CHECK( result, "Failed to submit Root Graphics commandbuffer" );
+
+		if ( result == VK_ERROR_DEVICE_LOST )
+			throw CFatalGPUException( MW_ERROR_GPU_DEVICE_LOST, "Failed to submit Root graphics command buffer: Device Lost." );
+		else if ( result < 0 )
+			throw CFatalGPUException( MW_ERROR_UNKNOWN, "Failed to submit Root graphics command buffer." );
+
 
 	}
 
-	void CVulkanRenderManager::BeginWorkerCommandBuffers( u32 frameIndex ) NOEXCEPT
+	void CVulkanRenderManager::BeginWorkerGraphicsCommandBuffers( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		VkCommandBufferBeginInfo beginInfo{};
@@ -220,29 +236,33 @@ namespace Monoworks::RHI
 
 		for ( auto& workerData : m_WorkerRenderData )
 		{
-			vkBeginCommandBuffer( workerData.CommandBuffers[frameIndex], &beginInfo );
+			vkBeginCommandBuffer( workerData.GraphicsCommandBuffers[frameIndex], &beginInfo );
 		}
 	};
 
-	void CVulkanRenderManager::EndWorkerCommandBuffers( u32 frameIndex ) NOEXCEPT
+	void CVulkanRenderManager::EndWorkerGraphicsCommandBuffers( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		// batching worker command buffers for optimal submission
 		static std::vector<VkCommandBuffer> workerCommandBuffers;
+		workerCommandBuffers.clear();
 		workerCommandBuffers.reserve( m_WorkerRenderData.size() );
 
 		for ( auto& workerData : m_WorkerRenderData )
 		{
-			workerCommandBuffers.push_back( workerData.CommandBuffers[frameIndex] );
-		}
+			VkCommandBuffer cmd = workerData.GraphicsCommandBuffers[frameIndex];
 
-		if ( !workerCommandBuffers.empty() )
-			vkCmdExecuteCommands( m_RootFrameData[frameIndex].CommandBuffer, (u32)workerCommandBuffers.size(), workerCommandBuffers.data() );
+			if ( std::find( workerCommandBuffers.begin(), workerCommandBuffers.end(), cmd ) == workerCommandBuffers.end() )
+				workerCommandBuffers.push_back( cmd );
+			
+		}
 
 		for ( auto& workerData : m_WorkerRenderData )
-		{
-			vkEndCommandBuffer( workerData.CommandBuffers[frameIndex] );
-		}
-	};
+			vkEndCommandBuffer( workerData.GraphicsCommandBuffers[frameIndex] );
+		
 
+		if ( !workerCommandBuffers.empty() )
+			vkCmdExecuteCommands( m_RootFrameData[frameIndex].GraphicsCommandBuffer, ( u32 )workerCommandBuffers.size(), workerCommandBuffers.data() );
+
+	};
 }

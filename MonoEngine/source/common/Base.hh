@@ -21,6 +21,8 @@
 #include <common/Memory.hh>
 #include <core/CVarManager.hh>
 
+#include <type_traits>
+
 #include <volk/volk.h>
 
 // #define MW_PROFILING 1
@@ -30,16 +32,23 @@
 #define NODISCARD [[nodiscard]]
 #define MAYBE_UNUSED [[maybe_unused]]
 #define UNLIKELY [[unlikely]]
+#define DEPRECATED [[deprecated]]
+
+#define MW_NULLABLE
 
 #ifdef	MW_PLATFORM_WINDOWS
 #define MW_DEBUG_BREAK __debugbreak()
+#define MW_NOTHROW __declspec(nothrow)
 #elif defined(__clang__)
 #define MW_DEBUG_BREAK __builtin_debugtrap()
+#define MW_NOTHROW
 #elif defined(__GNUC__)
 #include <csignal>
 #define MW_DEBUG_BREAK std::raise(SIGTRAP);
+#define MW_NOTHROW
 #else
 #define MW_DEBUG_BREAK
+#define MW_NOTHROW
 #endif
 
 #ifdef MW_DEBUG
@@ -128,13 +137,10 @@ extern TracyVkCtx TracyTransferContext;
 
 
 #ifdef MW_VULKAN
-#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ASSERT(false, __VA_ARGS__); };
+#define MW_VK_CHECK(x, err, ...) if (x != VK_SUCCESS) { MW_ASSERT(false, err, __VA_ARGS__); };
 #define MW_VK_VERSION VK_API_VERSION_1_3
-#endif
-
-#ifdef MW_VULKAN
-#define MW_VK_CHECK( x, ... ) do { const VkResult mwVkRes__ = ( x ); if ( mwVkRes__ != VK_SUCCESS ) { MW_ASSERT( false, __VA_ARGS__ ); } } while ( 0 )
-#define MW_VK_VERSION VK_API_VERSION_1_3
+#else
+#define MW_VK_CHECK(x, err, ...)
 #endif
 
 #define MW_REG_CVAR(var) Monoworks::CCvarManager::RegisterVariable(var);
@@ -168,7 +174,6 @@ using flags_t = u32;
 namespace Monoworks
 {
 	constexpr u32 MaxFramesInFlight = 3;
-
 
 	struct SVersion
 	{
@@ -220,6 +225,59 @@ namespace Monoworks
 		 * @brief Depth component of the Three-Dimensional Extent.
 		 */
 		u32 Depth = 0;
+	};
+
+	enum EResult
+	{
+		/// @brief Routine executed successfully with unknown success code.
+		MW_SUCCESS_UNKOWN = 1,
+		/// @brief Routine executed successfully.
+		MW_SUCCESS = 0,
+		/// @brief Routine failed with unknown error.
+		MW_ERROR_UNKNOWN = -1,
+		/// @brief Routine failed due to missing host Memory resources.
+		MW_ERROR_HOST_OUT_OF_MEMORY = -2,
+		/// @brief  Routine failed due to missing graphics unit Memory resources.
+		MW_ERROR_GPU_OUT_OF_MEMORY = -3,
+		/// @brief Routine failed due to an invalid cache access, write or read.
+		MW_ERROR_CACHE_INVALID = -4,
+		/// @brief Routine failed due to invalid initialization of thirdparty software.
+		MW_ERROR_INITIALIZATION_FAILED = -5,
+		/// @brief Routine failed due to fragmented host or graphics unit memory resources.
+		MW_ERROR_FRAGMENTATION = -6,
+		/// @brief Routine failed due to failed compilation. Compilation of resource is required.
+		MW_ERROR_COMPILATION_REQUIRED = -7,
+		/// @brief Routine failed due to non existent resource.
+		MW_ERROR_NON_EXISTANT = -8,
+		/// @brief Routine failed due to a graphics unit driver crash.
+		MW_ERROR_GPU_DEVICE_LOST = -9,
+		/// @brief Routine failed due to a parameter being invalid.
+		MW_ERROR_INVALID_PARAMETER = -10, 
+		/// @brief Routine failed due to invalid or missing setup before routine execution
+		MW_ERROR_INVALID_SETUP = -11
+	};
+
+	class CRuntimeException : public std::runtime_error 
+	{
+	public:
+		CRuntimeException( EResult code, std::string_view msg )
+			: std::runtime_error( msg.data() ), m_Code( code ) {};
+		
+		virtual EResult GetCode() { return m_Code; }
+
+	protected:
+		EResult m_Code;
+	};
+
+	class CFatalException : CRuntimeException { CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {} };
+
+	/**
+	 * @brief Used for fatal GPU exceptions of that the engine has no control over or abillity to fix. Examples for this invlude MW_ERROR_GPU_DEVICE_LOST.
+	 */
+	class CFatalGPUException : public CFatalException
+	{
+	public:
+		CFatalGPUException( EResult code, std::string_view msg ) : CFatalException( code, msg.data() );
 	};
 
 	/*
@@ -506,7 +564,110 @@ namespace Monoworks
 
 	constexpr SAppVersion MonoworksVersion = { .Major = 1, .Minor = 0, .Patch = 0 };
 	constexpr const char* EngineName = "MonoEngine";
+	constexpr u32 MFIF = MaxFramesInFlight;
 
-	// max frames in flight 
-	constexpr u32 MFIF = 3;
+
+	namespace Hash 
+	{
+
+		using hash_t = u64;
+		using Hash = hash_t;
+
+		constexpr inline hash_t FastHashBytes( const void* pData, size_t size, hash_t seed = 0 ) NOEXCEPT
+		{
+
+			MW_PROFILE_FUNC;
+			if ( !pData || size == 0 ) return seed;
+
+			const byte_t* pBytes = static_cast< const byte_t* >( pData );
+			hash_t hash = seed ^ ( size * 0xc6a4a7935bd1e995ULL );
+
+			while ( size >= 8 )
+			{
+				u64 k;
+				std::memcpy( &k, pBytes, sizeof u64 );
+
+				k *= 0xc6a4a7935bd1e995ULL;
+				k ^= k >> 47;
+				k *= 0xc6a4a7935bd1e995ULL;
+
+				hash ^= k;
+				hash *= 0xc6a4a7935bd1e995ULL;
+
+				pBytes += 8;
+				size -= 8;
+			}
+
+			if ( size > 0 )
+			{
+				u64 k = 0;
+				std::memcpy( &k, pBytes, size );
+				hash ^= k;
+				hash *= 0xc6a4a7935bd1e995ULL;
+			}
+
+			hash ^= hash >> 47;
+			hash *= 0xc6a4a7935bd1e995ULL;
+			hash ^= hash >> 47;
+
+			return hash;
+		}
+
+		constexpr inline void HashCombine( hash_t& rSeed, u64 hash ) NOEXCEPT
+		{
+			rSeed ^= hash + 0x9e3779b97f4a7c15ULL + ( rSeed << 6 ) + ( rSeed >> 2 );
+		}
+
+		template <typename T> requires std::is_enum_v<T> || std::is_integral_v<T>
+		constexpr inline void HashCombine( hash_t & rSeed, T value ) NOEXCEPT
+		{
+			HashCombine( rSeed, static_cast< hash_t >( value ) );
+		};
+
+		template <typename T> requires std::is_trivially_copyable_v<T>
+		inline hash_t HashVector( const std::vector<T>& rVec ) NOEXCEPT
+		{
+			hash_t hash = FastHashBytes( rVec.data(), rVec.size() * sizeof( T ) );
+
+			return hash;
+		}
+	}
+
+	consteval auto operator""uz( unsigned long long value ) { return static_cast< size_t >( value ); };
+	constexpr auto operator""uzr( unsigned long long value ) { return static_cast< size_t >( value ); };
+
+#ifdef MW_VULKAN
+	static EResult VkResultToEResult( const VkResult r )
+	{
+		switch( r )
+		{
+		case VK_SUCCESS:
+			return MW_SUCCESS;
+			break;
+		case VK_ERROR_OUT_OF_HOST_MEMORY:
+			return MW_ERROR_HOST_OUT_OF_MEMORY;
+			break;
+		case VK_ERROR_OUT_OF_DEVICE_MEMORY:
+			return MW_ERROR_GPU_OUT_OF_MEMORY;
+			break;
+		case VK_ERROR_UNKNOWN:
+			return MW_ERROR_UNKNOWN;
+			break;
+		case VK_ERROR_FRAGMENTATION || VK_ERROR_FRAGMENTED_POOL:
+			return MW_ERROR_FRAGMENTATION;
+			break;
+		case VK_PIPELINE_COMPILE_REQUIRED:
+			return MW_ERROR_GPU_PIPELINE_COMPILATION_REQUIRED;
+			break;
+		default:
+			if ( r > 0 )
+				return MW_SUCCESS_UNKOWN;
+			else
+				return MW_ERROR_UNKNOWN;
+			break;
+		}
+	}
+
+#endif 
+
 }

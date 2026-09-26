@@ -99,7 +99,9 @@ namespace Monoworks::RHI
 
 		NODISCARD VkQueue* GetPresentQueue() NOEXCEPT;
 
-		NODISCARD u32 GetGraphicsQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
+		NODISCARD u32 GetGraphicsQueueFamilyIndex() NOEXCEPT { return FindQueueFamilies( &m_PhysicalDevice ).GraphicsFamily; }
+		NODISCARD u32 GetComputeQueueFamilyIndex()	NOEXCEPT { return FindQueueFamilies( &m_PhysicalDevice ).ComputeFamily; }
+		NODISCARD u32 GetTransferQueueFamilyIndex() NOEXCEPT { return FindQueueFamilies( &m_PhysicalDevice ).TransferFamily; }
 
 		NODISCARD u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
 
