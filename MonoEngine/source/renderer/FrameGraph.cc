@@ -1267,16 +1267,77 @@ namespace Monoworks
 
 	}
 
-	static MW_NOTHROW void SubmitSceneGeometry( u32 frameIndex ) NOEXCEPT
+	MW_NOTHROW void CDefferedFrameGraph::SubmitSceneGeometry( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-
+		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+			
+		CStaticRenderer::DrawStaticMeshIndexed( frameIndex, mesh, transform );
 
 	}
 
 	CDefferedFrameGraph::CDefferedFrameGraph( Ref<CCamera> hCamera )	 NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		static std::array<SVertex, 24> s_CubeVertices =
+		{ {
+				// +X
+				{ { 1, -1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0 } },
+				{ { 1,  1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0 } },
+				{ { 1,  1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 1 } },
+				{ { 1, -1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 1 } },
+
+				// -X
+				{ { -1, -1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 0 } },
+				{ { -1, -1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0 } },
+				{ { -1,  1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 1 } },
+				{ { -1,  1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 1 } },
+
+				// +Y
+				{ { -1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 0 } },
+				{ { -1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 0 } },
+				{ {  1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 1 } },
+				{ {  1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1 } },
+
+				// -Y
+				{ { -1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 0 } },
+				{ {  1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 0 } },
+				{ {  1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 1 } },
+				{ { -1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 1 } },
+
+				// +Z
+				{ { -1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0 } },
+				{ {  1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 0 } },
+				{ {  1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 1 } },
+				{ { -1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 1 } },
+
+				// -Z
+				{ { -1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0 } },
+				{ { -1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 0 } },
+				{ {  1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 1 } },
+				{ {  1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 1 } },
+			} };
+
+		static std::array<uint32_t, 36> s_CubeIndices =
+		{
+			 0,  1,  2,   0,  2,  3,  // +X
+			 4,  5,  6,   4,  6,  7,  // -X
+			 8,  9, 10,   8, 10, 11,  // +Y
+			12, 13, 14,  12, 14, 15,  // -Y
+			16, 17, 18,  16, 18, 19,  // +Z
+			20, 21, 22,  20, 22, 23,  // -Z
+		};
+
+		mesh->VertexBuffer = RHI::IVertexBuffer::Create( static_cast<void*>(s_CubeVertices.data()), s_CubeVertices.size(), sizeof( SVertex ), true );
+		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), true );
+
+		MaterialCreationInfo matCreateInfo{};
+		matCreateInfo.AlbedoFactor = { 1.0f, 1.0f, 0.0f };
+
+		Ref<CMaterial> mat = Ref<CMaterial>::Create( &matCreateInfo );
+
+		mesh->Material = std::move( mat );
 
 		// When changing anything in this scope, check CMaterial::SetShader if that change also applies there.
 		{
