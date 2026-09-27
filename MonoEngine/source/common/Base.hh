@@ -269,7 +269,7 @@ namespace Monoworks
 		EResult m_Code;
 	};
 
-	class CFatalException : CRuntimeException { CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {} };
+	class CFatalException : CRuntimeException { public: CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {} };
 
 	/**
 	 * @brief Used for fatal GPU exceptions of that the engine has no control over or abillity to fix. Examples for this invlude MW_ERROR_GPU_DEVICE_LOST.
@@ -277,7 +277,7 @@ namespace Monoworks
 	class CFatalGPUException : public CFatalException
 	{
 	public:
-		CFatalGPUException( EResult code, std::string_view msg ) : CFatalException( code, msg.data() );
+		CFatalGPUException( EResult code, std::string_view msg ) : CFatalException( code, msg.data() ) {};
 	};
 
 	/*
@@ -657,7 +657,7 @@ namespace Monoworks
 			return MW_ERROR_FRAGMENTATION;
 			break;
 		case VK_PIPELINE_COMPILE_REQUIRED:
-			return MW_ERROR_GPU_PIPELINE_COMPILATION_REQUIRED;
+			return MW_ERROR_COMPILATION_REQUIRED;
 			break;
 		default:
 			if ( r > 0 )
