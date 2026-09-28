@@ -8,12 +8,12 @@
 
 namespace Monoworks::RHI 
 {
-	void CVulkanDescriptorSetManager::InitImpl()
+	MW_NOTHROW void CVulkanDescriptorSetManager::InitImpl() NOEXCEPT
 	{
 
 	};
 
-	void CVulkanDescriptorSetManager::ShutdownImpl()
+	MW_NOTHROW void CVulkanDescriptorSetManager::ShutdownImpl() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		MW_INFO( "Shutdown CVulkanDescriptorSetManager" );
@@ -104,7 +104,7 @@ namespace Monoworks::RHI
 		if ( !pSetLayout )
 		{
 			MW_API_ERROR( "Passed invalid Descriptor Signature." );
-			return;
+			return nullptr;
 		}
 
 
@@ -133,7 +133,9 @@ namespace Monoworks::RHI
 		}
 
 		if ( res != VK_SUCCESS )
-			MW_ASSERT( false, "Failed to allocate Descripor Sets {}.", res );
+		{
+			MW_ASSERT( false, "Failed to allocate Descripor Sets {}.", static_cast< int >( res ) );
+		}
 
 		return nullptr;
 	};

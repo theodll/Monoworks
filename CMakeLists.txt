@@ -14,6 +14,10 @@ set(COMPILE_WARNING_AS_ERROR ON)
 
 add_compile_definitions(MW_PROFILING MW_VULKAN)
 
+if (MSVC)
+    add_compile_options(/Zc:preprocessor)
+endif()
+
 if(WIN32)
     set(CMAKE_PREFIX_PATH "C:/Qt/6.11.1/msvc2022_64")
     set(BOOST_ROOT "C:/local/boost_1_92_0")

@@ -102,10 +102,10 @@ namespace Monoworks
 			return m_pInstance->MergeSecondaryCommandbuffers( frameIndex );
 		}
 
-		MW_NOTHROW void CStaticRenderer::DispatchCompute( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1*/, RHI::DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT
+		MW_NOTHROW void CStaticRenderer::DispatchCompute( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, RHI::DescriptorHandle* pDesciptors, size_t descriptorCount, s32 MW_NULLABLE threadID /*= -1*/ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->DispatchCompute( frameIndex, hPipeline, workgroup, threadID, pDesciptors, descriptorCount );
+			return m_pInstance->DispatchCompute( frameIndex, hPipeline, workgroup, pDesciptors, descriptorCount, threadID );
 		}
 
 		MW_NOTHROW void CStaticRenderer::DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT

@@ -169,7 +169,7 @@ namespace Monoworks::RHI
         /**
          * @brief Dispatches the compute pipeline (hPipeline) with descriptors.
          */
-        virtual MW_NOTHROW void DispatchCompute( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1, DescriptorHandle* pDesciptors, size_t descriptorCount ) NOEXCEPT = 0;
+        virtual MW_NOTHROW void DispatchCompute( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, DescriptorHandle* pDesciptors, size_t descriptorCount, s32 threadID = -1 ) NOEXCEPT = 0;
         
          /**
          * @brief Dispatches the compute pipeline (hPipeline).

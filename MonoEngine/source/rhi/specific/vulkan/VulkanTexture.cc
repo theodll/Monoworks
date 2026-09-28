@@ -38,9 +38,7 @@ namespace Monoworks::RHI
 
 		auto uploader = CVulkanContext::GetUploader();
 		uploader->Begin();
-		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
-		Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		PipelineFlags = MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 		uploader->End();
 	}
 
@@ -130,9 +128,7 @@ namespace Monoworks::RHI
 			
 			auto&& uploader = CVulkanContext::GetUploader();
 			uploader->Begin();
-			TransitionImageLayout2( *uploader->GetCommandBuffer(), m_Image, (VkImageLayout)MW_IMAGE_LAYOUT_UNDEFINED, (VkImageLayout)MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT );
-			Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			PipelineFlags = MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 			uploader->End();
 
 		}
@@ -197,27 +193,14 @@ namespace Monoworks::RHI
 		}
 
 		uploader->Begin();
+		auto tempL = Layout;
+		auto tempP = PipelineFlags;
 
-		TransitionImageLayout2(
-			*uploader->GetCommandBuffer(),
-			m_Image,
-			( VkImageLayout )Layout,
-			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-			PipelineFlags,
-			VK_PIPELINE_STAGE_TRANSFER_BIT
-		);
-
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, MW_PIPELINE_STAGE_TRANSFER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 		
 		device->CopyImageToBuffer( uploader->GetCommandBuffer(), &m_Image, &m_StagingBuffer, m_ImageExtent.Width, m_ImageExtent.Height, 1 );
 		
-		TransitionImageLayout2(
-			*uploader->GetCommandBuffer(),
-			m_Image,
-			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-			( VkImageLayout )Layout,
-			VK_PIPELINE_STAGE_TRANSFER_BIT,
-			PipelineFlags
-		);
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), tempL, tempP, MW_IMAGE_ASPECT_COLOR_BIT );
 
 		uploader->End();
 
@@ -282,12 +265,12 @@ namespace Monoworks::RHI
 
 		CVulkanContext::GetDevice()->CreateImage(allocator, &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_IMAGE_LAYOUT_UNDEFINED, MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL );
-		Layout = MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, PipelineFlags, MW_IMAGE_ASPECT_COLOR_BIT );
+
 		CVulkanContext::GetDevice()->CopyBufferToImage(uploader->GetCommandBuffer(), &m_StagingBuffer, &m_Image, m_ImageExtent.Width, m_ImageExtent.Height, 1);
 
-		TransitionImageLayout( uploader->GetCommandBuffer(), &m_Image, MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL );
-		Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, PipelineFlags, MW_IMAGE_ASPECT_COLOR_BIT );
+
 		uploader->End();
 
 		vmaDestroyBuffer( *allocator, m_StagingBuffer, m_StagingBufferAllocation );
@@ -482,7 +465,7 @@ namespace Monoworks::RHI
 			barrier.srcAccessMask = VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT;
 			break;
 		default:
-			MW_API_ERROR( "Unsupported image layout: {}", this->Layout );
+			MW_API_ERROR( "Unsupported image layout: {}", static_cast<int>(this->Layout) );
 			return;
 		}
 
@@ -523,7 +506,7 @@ namespace Monoworks::RHI
 			barrier.dstAccessMask = VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT;
 			break;
 		default:
-			MW_API_ERROR( "Unsupported dst image layout: {}", dstLayout );
+			MW_API_ERROR( "Unsupported dst image layout: {}", static_cast<int>(dstLayout) );
 			return;
 		}
 

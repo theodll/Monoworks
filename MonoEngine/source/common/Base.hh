@@ -59,7 +59,7 @@
 #ifdef	MW_ENABLE_ASSERTS
   // Note [21.02.26, Theo]: Do not use MW_CORE_ASSERT / MW_ASSERT when a function/check also needs to be run in a dist
   // build. e.g. vkCreatePipeline. For Vulkan Functions use VT_VK_CHECK (Core.h)
-#define MW_ASSERT(condition, ...) { if(!(condition)) { MW_ERROR(__VA_ARGS__); MW_DEBUG_BREAK; } }
+#define MW_ASSERT(condition, fmt_str, ...) { if(!(condition)) { MW_ERROR( fmt_str, ##__VA_ARGS__); MW_DEBUG_BREAK; } }
 #else
 #define MW_ASSERT(condition, ...)
 #endif
@@ -269,7 +269,7 @@ namespace Monoworks
 		EResult m_Code;
 	};
 
-	class CFatalException : CRuntimeException { public: CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {} };
+	class CFatalException : public CRuntimeException { public: CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {} };
 
 	/**
 	 * @brief Used for fatal GPU exceptions of that the engine has no control over or abillity to fix. Examples for this invlude MW_ERROR_GPU_DEVICE_LOST.

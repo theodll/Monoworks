@@ -2,7 +2,7 @@
 #include <common/Base.hh>
 #include <rhi/agnostic/GraphicsPipeline.hh>
 
-#include <unordered_map>
+#include <boost/unordered_map.hpp>
 
 #include <slang.h>
 #include <slang-com-ptr.h>

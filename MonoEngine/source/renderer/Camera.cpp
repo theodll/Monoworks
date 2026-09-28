@@ -38,7 +38,7 @@ namespace Monoworks
 		
 	};
 
-	MW_NOTHROW void CCamera::UpdateViewDirection( Vector position, Vector direction, Vector up = Vector( .0f, -1.f, .0f ) ) NOEXCEPT 
+	MW_NOTHROW void CCamera::UpdateViewDirection( Vector position, Vector direction, Vector up ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
 		m_PreviousViewMatrix = m_CurrentViewMatrix;
@@ -48,7 +48,7 @@ namespace Monoworks
 		m_CurrentViewProjectionMatrix = m_CurrentViewMatrix * m_CurrentProjectionMatrix;
 	};
 
-	MW_NOTHROW void CCamera::UpdateViewTarget( Vector position, Vector target, Vector up = Vector( .0f, -1.f, .0f ) ) NOEXCEPT 
+	MW_NOTHROW void CCamera::UpdateViewTarget( Vector position, Vector target, Vector up ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
 		

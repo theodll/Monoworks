@@ -1729,12 +1729,12 @@ namespace Monoworks
 		 
 		if ( executionPriority < 0 || executionPriority >=  m_hComputePrePasses.size() )
 		{
-			MW_INFO( "Register Compute Pre-Pass {} at execution priority {}", hComputePrePass.raw(), m_hComputePrePasses.size() );
+			MW_INFO( "Register Compute Pre-Pass {} at execution priority {}", static_cast<void*>(hComputePrePass.raw()), m_hComputePrePasses.size() );
 			m_hComputePrePasses.push_back( std::move( hComputePrePass ) );
 		}
 		else
 		{
-			MW_INFO( "Register Compute Pre-Pass {} by inserting it at execution priority {}", hComputePrePass.raw(), executionPriority );
+			MW_INFO( "Register Compute Pre-Pass {} by inserting it at execution priority {}", static_cast< void* >( hComputePrePass.raw()), executionPriority );
 			m_hComputePrePasses.insert( m_hComputePrePasses.begin() + executionPriority, std::move( hComputePrePass ) );
 		}
 	};
@@ -1750,12 +1750,12 @@ namespace Monoworks
 
 		if ( executionPriority < 0 || executionPriority >= m_hGraphicsPrePasses.size() )
 		{
-			MW_INFO( "Register Graphics Pre-Pass {} at execution priority {}", ( void* )hGraphicsPrePass.raw(), m_hGraphicsPrePasses.size() );
+			MW_INFO( "Register Graphics Pre-Pass {} at execution priority {}", static_cast< void* >( hGraphicsPrePass.raw() ), m_hGraphicsPrePasses.size() );
 			m_hGraphicsPrePasses.push_back( std::move( hGraphicsPrePass ) );
 		}
 		else
 		{
-			MW_INFO( "Register Graphics Pre-Pass {} by inserting it at execution priority {}", ( void* )hGraphicsPrePass.raw(), executionPriority );
+			MW_INFO( "Register Graphics Pre-Pass {} by inserting it at execution priority {}", static_cast< void* >( hGraphicsPrePass.raw() ), executionPriority );
 			m_hGraphicsPrePasses.insert( m_hGraphicsPrePasses.begin() + executionPriority, std::move( hGraphicsPrePass ) );
 		}
 	};
@@ -1772,12 +1772,12 @@ namespace Monoworks
 
 		if ( executionPriority < 0 || executionPriority >=  m_hDefferedResolutionPasses.size() )
 		{
-			MW_INFO( "Register Deffered Resolution Pass {} at execution priority {}", ( void* )hComputePass.raw(), m_hDefferedResolutionPasses.size() );
+			MW_INFO( "Register Deffered Resolution Pass {} at execution priority {}", static_cast< void* >( hComputePass.raw() ), m_hDefferedResolutionPasses.size() );
 			m_hDefferedResolutionPasses.push_back( std::move( hComputePass ) );
 		}
 		else
 		{
-			MW_INFO( "Register Deffered Resolution Pass {} by inserting it at execution priority {}", ( void* )hComputePass.raw(), executionPriority );
+			MW_INFO( "Register Deffered Resolution Pass {} by inserting it at execution priority {}", static_cast< void* >( hComputePass.raw() ), executionPriority );
 			m_hDefferedResolutionPasses.insert( m_hDefferedResolutionPasses.begin() + executionPriority, std::move( hComputePass ) );
 		}
 	};
@@ -1796,13 +1796,13 @@ namespace Monoworks
 		if ( executionPriority < 0 || executionPriority >= m_hPostProcessPasses.size() )
 		{
 			// Insert the post process pass last.
-			MW_INFO( "Register Post Processing Pass {} at execution priority {}", ( void* )hPostProcessPass.raw(), m_hPostProcessPasses.size() );
+			MW_INFO( "Register Post Processing Pass {} at execution priority {}", static_cast< void* >( hPostProcessPass.raw()), m_hPostProcessPasses.size() );
 			m_hPostProcessPasses.push_back( std::move( hPostProcessPass ) );
 		}
 		else
 		{
 			// Insert the post process pass at the execution priority and shifting all other passes back one unit.
-			MW_INFO( "Register Post Processing Pass {} by inserting it at execution priority {}", ( void* )hPostProcessPass.raw(), executionPriority );
+			MW_INFO( "Register Post Processing Pass {} by inserting it at execution priority {}", static_cast< void* >( hPostProcessPass.raw() ), executionPriority );
 			m_hPostProcessPasses.insert( m_hPostProcessPasses.begin() + executionPriority, std::move( hPostProcessPass ) );
 		}
 	};
@@ -1812,12 +1812,14 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		auto ex = CStaticRenderer::GetRenderableExtend();
+
 		CStaticRenderer::SetDynamicCullMode( frameIndex, MW_CULL_MODE_BACK );
-		CStaticRenderer::SetDynamicScissors( frameIndex, &CStaticRenderer::GetRenderableExtend(), 1, 0 );
+		CStaticRenderer::SetDynamicScissors( frameIndex, &ex, 1, 0 );
 
 		Viewport viewport{};
-		viewport.Width =  ( float )CStaticRenderer::GetRenderableExtend().Width;
-		viewport.Height = ( float )CStaticRenderer::GetRenderableExtend().Height;
+		viewport.Width =  ( float )ex.Width;
+		viewport.Height = ( float )ex.Height;
 		viewport.X = 0;
 		viewport.Y = 0;
 		viewport.MaxDepth = 1.0f;
@@ -1832,12 +1834,14 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		auto ex = CStaticRenderer::GetRenderableExtend();
+
 		CStaticRenderer::SetDynamicCullModeST( frameIndex, MW_CULL_MODE_BACK, -1 );
-		CStaticRenderer::SetDynamicScissorsST( frameIndex, &CStaticRenderer::GetRenderableExtend(), 1, 0, -1 );
+		CStaticRenderer::SetDynamicScissorsST( frameIndex, &ex, 1, 0, -1 );
 
 		Viewport viewport{};
-		viewport.Width = ( float )CStaticRenderer::GetRenderableExtend().Width;
-		viewport.Height = ( float )CStaticRenderer::GetRenderableExtend().Height;
+		viewport.Width = ( float )ex.Width;
+		viewport.Height = ( float )ex.Height;
 		viewport.X = 0;
 		viewport.Y = 0;
 		viewport.MaxDepth = 1.0f;
@@ -1890,7 +1894,7 @@ namespace Monoworks
 		for ( auto& computePrePass : m_hComputePrePasses )
 		{
 			auto workgroup = ComputeWorkgroupSize( computePrePass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-			CStaticRenderer::DispatchCompute( frameIndex, computePrePass->m_hComputePipeline, workgroup, -1, &computePrePass->m_pDescriptors[frameIndex], 1 );
+			CStaticRenderer::DispatchCompute( frameIndex, computePrePass->m_hComputePipeline, workgroup, &computePrePass->m_pDescriptors[frameIndex], 1 );
 		}
 
 		// Merge secondaries because every graphics pre-pass must have their own secondaries. That's just the way it is I'm just the messenger
@@ -2017,7 +2021,7 @@ namespace Monoworks
 					descriptors.push_back( resolutionPass->m_pDescriptors[i][frameIndex] );
 				}
 
-			CStaticRenderer::DispatchCompute( frameIndex, resolutionPass->m_hComputePipeline, workgroup, -1, descriptors.data(), descriptors.size() );
+			CStaticRenderer::DispatchCompute( frameIndex, resolutionPass->m_hComputePipeline, workgroup, descriptors.data(), descriptors.size() );
 		}
 		
 	};
@@ -2031,13 +2035,13 @@ namespace Monoworks
 		{
 			// TODO: Jobs
 			auto workgroup = ComputeWorkgroupSize( postPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-			CStaticRenderer::DispatchCompute( frameIndex, postPass->m_hComputePipeline, workgroup, -1, &postPass->m_pDescriptors[frameIndex], 1 );
+			CStaticRenderer::DispatchCompute( frameIndex, postPass->m_hComputePipeline, workgroup, &postPass->m_pDescriptors[frameIndex], 1 );
 		}
 		// TODO: Add support for post and pre tone mapping passes
 
 		// Execute Special Fixed Passes (Tone mapping)
 		auto workgroup = ComputeWorkgroupSize( m_hTonemapPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-		CStaticRenderer::DispatchCompute( frameIndex, m_hTonemapPass->m_hComputePipeline, workgroup, -1, &m_hTonemapPass->m_pDescriptors[frameIndex], 1 );
+		CStaticRenderer::DispatchCompute( frameIndex, m_hTonemapPass->m_hComputePipeline, workgroup, &m_hTonemapPass->m_pDescriptors[frameIndex], 1 );
 
 
 	};

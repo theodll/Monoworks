@@ -20,14 +20,14 @@ namespace Monoworks::RHI
 		}
 		MW_ASSERT( false, "Unknown Graphics API" );
 		
-		m_hInstance->Init();
+		m_hInstance->InitImpl();
 
 	};
 
 	void CDescriptorManager::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		m_hInstance->Shutdown();
+		m_hInstance->ShutdownImpl();
 
 	};
 
@@ -50,7 +50,7 @@ namespace Monoworks::RHI
 		m_hInstance->WriteSamplerImpl( hDescriptor, binding, hTexture );
 	};
 
-	DescriptorHandle CDescriptorManager::Allocate( DescriptorSignature hSetLayout, u32 maxSetHints MW_NULLABLE = 128 ) 
+	DescriptorHandle CDescriptorManager::Allocate( DescriptorSignature hSetLayout, u32 maxSetHints MW_NULLABLE ) 
 	{
 		MW_PROFILE_FUNC;
 		return m_hInstance->AllocateImpl( hSetLayout, maxSetHints );

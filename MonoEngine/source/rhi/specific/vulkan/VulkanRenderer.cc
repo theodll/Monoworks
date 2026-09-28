@@ -274,9 +274,9 @@ namespace Monoworks::RHI
 		u32 frameIndex,
 		Ref<IComputePipeline> hPipeline,
 		Vector workgroup,
-		s32 MW_NULLABLE threadID /*= -1*/,
 		DescriptorHandle* pDesciptors,
-		size_t descriptorCount ) NOEXCEPT
+		size_t descriptorCount,
+		s32 MW_NULLABLE threadID /*= -1*/) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 

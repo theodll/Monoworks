@@ -28,18 +28,18 @@ constexpr std::string_view StripNamespace(std::string_view name) {
 #define MW_LOG(fn, fmt_str, ...) \
     do { \
         if (auto logger = ::Monoworks::CLogManager::GetCoreLogger()) { \
-            logger->fn("[{}] " fmt_str, StripNamespace(__FUNCTION__), ##__VA_ARGS__); \
+            logger->fn("[{}] " fmt_str, StripNamespace(__FUNCTION__) __VA_OPT__(,) __VA_ARGS__); \
         } \
         else { \
-            fmt::print("[{}] " fmt_str "\n", StripNamespace(__FUNCTION__), ##__VA_ARGS__); \
+            fmt::print("[{}] " fmt_str "\n", StripNamespace(__FUNCTION__) __VA_OPT__(,) __VA_ARGS__); \
         } \
     } while (0)
 
-#define MW_TRACE(fmt, ...) MW_LOG(trace,    fmt, ##__VA_ARGS__)
-#define MW_INFO(fmt, ...)  MW_LOG(info,     fmt, ##__VA_ARGS__)
-#define MW_WARN(fmt, ...)  MW_LOG(warn,     fmt, ##__VA_ARGS__)
-#define MW_ERROR(fmt, ...) MW_LOG(error,    fmt, ##__VA_ARGS__)
-#define MW_FATAL(fmt, ...) do { MW_LOG(critical, fmt, ##__VA_ARGS__); std::exit(1); } while (0);
+#define MW_TRACE(fmt_str, ...) MW_LOG(trace,    fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_INFO(fmt_str, ...)  MW_LOG(info,     fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_WARN(fmt_str, ...)  MW_LOG(warn,     fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_ERROR(fmt_str, ...) MW_LOG(error,    fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_FATAL(fmt_str, ...) do { MW_LOG(critical, fmt_str __VA_OPT__(,) __VA_ARGS__); std::exit(1); } while (0)
 
 
 #define MW_API_WARN(fmt, ...)  MW_WARN( "Invalid API usage: " fmt, ##__VA_ARGS__ )
