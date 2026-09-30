@@ -11,8 +11,10 @@ namespace Monoworks::RHI
 	u32 CPipelineManager::m_TotalCompiledPipelineCount;
 	u32 CPipelineManager::m_TotalPipelineCount;
 
-	boost::unordered::unordered_map<Hash::hash_t, Ref<IComputePipeline>> CPipelineManager::m_ComputePipelineCache;
-	boost::unordered::unordered_map<Hash::hash_t, Ref<IGraphicsPipeline>> CPipelineManager::m_GraphicPipelineCache;
+	boost::unordered::unordered_map<Hash::hash_t, Ref<IComputePipeline>> CPipelineManager::m_hComputePipelineCache;
+	boost::unordered::unordered_map<Hash::hash_t, Ref<IGraphicsPipeline>> CPipelineManager::m_hGraphicPipelineCache;
+	Monoworks::CSafeQueue<std::tuple<std::variant<Monoworks::RHI::GraphicsPipelineCreationInfo, Monoworks::RHI::ComputePipelineCreationInfo>, Hash::hash_t, u8>> CPipelineManager::m_hPipelineCompilationScheduled;
+
 
 	void CPipelineManager::Init()
 	{
@@ -23,16 +25,16 @@ namespace Monoworks::RHI
 	void CPipelineManager::Shutdown()
 	{
 		MW_PROFILE_FUNC;
-		for ( auto& p : m_GraphicPipelineCache )
+		for ( auto& p : m_hGraphicPipelineCache )
 		{
 			p.second->Shutdown();
 		}
-		for ( auto& p : m_ComputePipelineCache )
+		for ( auto& p : m_hComputePipelineCache )
 		{
 			p.second->Shutdown();
 		}
-		m_GraphicPipelineCache.clear();
-		m_ComputePipelineCache.clear();
+		m_hGraphicPipelineCache.clear();
+		m_hComputePipelineCache.clear();
 
 		MW_INFO( "Shutdown CPipelineManager" );
 	}
@@ -43,8 +45,8 @@ namespace Monoworks::RHI
 		// TODO: thread safe
 		const Hash::hash_t hash = GetGraphicsPipelineInfoHash( pInfo );
 
-		if ( m_GraphicPipelineCache.contains( hash ) )
-			return m_GraphicPipelineCache[hash];
+		if ( m_hGraphicPipelineCache.contains( hash ) )
+			return m_hGraphicPipelineCache[hash];
 
 		Ref<IGraphicsPipeline> p;
 		auto defInfo = *pInfo;
@@ -53,7 +55,7 @@ namespace Monoworks::RHI
 			MW_API_WARN( "Instructed CPipelineManager to deffer pipeline compilation without MW_PIPELINE_CREATION_FLAGS_DEFFERED_ININTALIZATION_BIT. Setting bit automatically" );
 			defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
 			p = IGraphicsPipeline::Create( &defInfo );
-			m_PipelinesToCompile.Push( std::make_tuple( *pInfo, hash, 0 ) );
+			m_hPipelineCompilationScheduled.Push( std::make_tuple( *pInfo, hash, 0 ) );
 		}
 		else 
 		{
@@ -81,7 +83,7 @@ namespace Monoworks::RHI
 			}
 		}
 		
-		m_GraphicPipelineCache[hash] = p;
+		m_hGraphicPipelineCache[hash] = p;
 		m_TotalPipelineCount++;
 		m_GraphicsPipelineCount++;
 		
@@ -97,8 +99,8 @@ namespace Monoworks::RHI
 		// TODO: thread safe
 		const Hash::hash_t hash = GetComputePipelineInfoHash( pInfo );
 
-		if ( m_ComputePipelineCache.contains( hash ) )
-			return m_ComputePipelineCache[hash];
+		if ( m_hComputePipelineCache.contains( hash ) )
+			return m_hComputePipelineCache[hash];
 
 		Ref<IComputePipeline> p;
 		auto defInfo = *pInfo;
@@ -107,7 +109,7 @@ namespace Monoworks::RHI
 			MW_API_WARN( "Instructed CPipelineManager to deffer pipeline compilation without MW_PIPELINE_CREATION_FLAGS_DEFFERED_ININTALIZATION_BIT. Setting bit automatically" );
 			defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
 			p = IComputePipeline::Create( &defInfo );
-			m_PipelinesToCompile.Push( std::make_tuple( *pInfo, hash, 1));
+			m_hPipelineCompilationScheduled.Push( std::make_tuple( *pInfo, hash, 1));
 		}
 		else
 		{
@@ -135,7 +137,7 @@ namespace Monoworks::RHI
 			}
 		}
 
-		m_ComputePipelineCache[hash] = p;
+		m_hComputePipelineCache[hash] = p;
 		m_TotalPipelineCount++;
 		m_ComputePipelineCount++;
 
@@ -148,9 +150,9 @@ namespace Monoworks::RHI
 	NODISCARD std::expected<Ref<IGraphicsPipeline>, EResult> CPipelineManager::GetGraphicsPipelineByHash(Hash::hash_t hash) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		if ( m_GraphicPipelineCache.contains(hash) )
+		if ( m_hGraphicPipelineCache.contains(hash) )
 		{
-			return m_GraphicPipelineCache[hash];
+			return m_hGraphicPipelineCache[hash];
 		} 
 		else 
 		{
@@ -161,9 +163,9 @@ namespace Monoworks::RHI
 	NODISCARD std::expected<Ref<IComputePipeline>, EResult> CPipelineManager::GetComputePipelineByHash( Hash::hash_t hash ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		if ( m_ComputePipelineCache.contains( hash ) )
+		if ( m_hComputePipelineCache.contains( hash ) )
 		{
-			return m_ComputePipelineCache[hash];
+			return m_hComputePipelineCache[hash];
 		}
 		else
 		{
@@ -176,9 +178,9 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		const Hash::hash_t hash = GetGraphicsPipelineInfoHash( pInfo );
-		if ( m_GraphicPipelineCache.contains( hash ) )
+		if ( m_hGraphicPipelineCache.contains( hash ) )
 		{
-			return m_GraphicPipelineCache[hash];
+			return m_hGraphicPipelineCache[hash];
 		}
 		else 
 		{
@@ -190,9 +192,9 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;		
 		const Hash::hash_t hash = GetComputePipelineInfoHash( pInfo );
-		if ( m_ComputePipelineCache.contains( hash ) )
+		if ( m_hComputePipelineCache.contains( hash ) )
 		{
-			return m_ComputePipelineCache[hash];
+			return m_hComputePipelineCache[hash];
 		}
 		else
 		{
@@ -206,9 +208,9 @@ namespace Monoworks::RHI
 
 		// TODO: real batch compilation with actual use the batch compilation property of vkCreateGraphicsPipelines / vkCreateComputePipelines.
 
-		while ( !m_PipelinesToCompile.IsEmpty() )
+		while ( !m_hPipelineCompilationScheduled.IsEmpty() )
 		{
-			auto tuple = m_PipelinesToCompile.Front();
+			auto tuple = m_hPipelineCompilationScheduled.Front();
 
 			auto hash = std::get<Hash::hash_t>( tuple );
 			auto infoUnion = std::get<std::variant<GraphicsPipelineCreationInfo, ComputePipelineCreationInfo>>( tuple );
@@ -283,6 +285,22 @@ namespace Monoworks::RHI
 
 		}
 
+	}
+
+	void CPipelineManager::DeleteGraphicsPipeline( Hash::hash_t hash )
+	{
+		MW_PROFILE_FUNC;
+
+		m_hGraphicPipelineCache.erase( hash );
+		MW_INFO( "Deleted Graphics Pipeline with hash {} from runtime cache", hash );
+
+	}
+
+	void CPipelineManager::DeleteComputePipeline( Hash::hash_t hash )
+	{
+		MW_PROFILE_FUNC;
+		m_hComputePipelineCache.erase( hash );
+		MW_INFO( "Deleted Compute Pipeline with hash {} from runtime cache", hash );
 	}
 
 }

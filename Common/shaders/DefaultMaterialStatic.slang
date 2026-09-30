@@ -5,9 +5,11 @@ namespace Monoworks
 {
 
     ParameterBlock<ConstantBuffer<CameraConstants>> u_CameraConstants; // NOTE: set 1
-    ParameterBlock<MaterialInput> u_MaterialInput; // NOTE: set 2 // Must be named like this. 
-    
-    static IMaterial g_Material;
+    ParameterBlock<MaterialInput> u_MaterialInput; // NOTE: set 2 // Must be named like this.
+
+    struct DefaultMaterial : IMaterial {};
+
+    static DefaultMaterial g_Material;
     
     [shader("vertex")]
     VertexOutput vertexMain( VertexInput input, uniform ModelConstants pushModelConstants )

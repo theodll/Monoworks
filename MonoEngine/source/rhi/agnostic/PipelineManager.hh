@@ -115,11 +115,11 @@ namespace Monoworks::RHI
 
 
 	private:
-		static boost::unordered::unordered_map<Hash::hash_t, Ref<IGraphicsPipeline>> m_GraphicPipelineCache;
-		static boost::unordered::unordered_map<Hash::hash_t, Ref<IComputePipeline>> m_ComputePipelineCache;
+		static boost::unordered::unordered_map<Hash::hash_t, Ref<IGraphicsPipeline>> m_hGraphicPipelineCache;
+		static boost::unordered::unordered_map<Hash::hash_t, Ref<IComputePipeline>> m_hComputePipelineCache;
 
 		// u8 component is 0 if graphics and 1 if compute
-		static CSafeQueue<std::tuple<std::variant<GraphicsPipelineCreationInfo, ComputePipelineCreationInfo>, Hash::hash_t, u8>> m_PipelinesToCompile;
+		static CSafeQueue<std::tuple<std::variant<GraphicsPipelineCreationInfo, ComputePipelineCreationInfo>, Hash::hash_t, u8>> m_hPipelineCompilationScheduled;
 
 		static u32 m_TotalPipelineCount;
 		static u32 m_TotalCompiledPipelineCount;

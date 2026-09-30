@@ -24,7 +24,7 @@ namespace Monoworks
 	struct ShaderCreateInfo 
 	{
 		path_t Path; // NOTE: Module name + .slang relative to the binaries directory 
-		EShaderFlags Flags;
+		EShaderFlags Flags = MW_SHADER_FLAG_INTERNAL_SLANG_SESSION;
 		
 		Slang::ComPtr<slang::ISession> MW_NULLABLE SlangSession; // NOTE: null when MW_SHADER_FLAG_INTERNAL_SLAG_SESSION is disabled.
 		

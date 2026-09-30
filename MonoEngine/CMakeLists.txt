@@ -79,10 +79,10 @@ elseif (APPLE)
 endif()
 
 if (MSVC)
-    target_compile_options(MonoEngine PRIVATE
-        /W4
-        /WX
-    )
+   # target_compile_options(MonoEngine PRIVATE
+    #    /W4
+    #   /WX
+    #)
 
     target_compile_options(MonoEngine PUBLIC /EHsc)
 else()
@@ -99,5 +99,12 @@ if ("MW_ENABLE_MANUAL_RENDERDOC" IN_LIST current_defs)
      target_include_directories(MonoEngine PUBLIC "C:/Program Files/RenderDoc")
     endif()
 endif()
+
+add_custom_command(TARGET MonoEngine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        "${CMAKE_CURRENT_SOURCE_DIR}/../common/resources"
+        "${CMAKE_BINARY_DIR}/resources"
+    COMMENT "Copying common resources"
+)
 
 target_compile_definitions(MonoEngine PRIVATE MW_ENGINE TRACY_ENABLE)

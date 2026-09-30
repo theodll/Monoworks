@@ -29,10 +29,10 @@ namespace Monoworks::RHI
 		virtual void InitImpl() NOEXCEPT = 0;
 		virtual void ShutdownImpl() NOEXCEPT = 0;
 		virtual void WriteUniformBufferImpl( DescriptorHandle hDescriptor, u32 binding, Ref<IUniformBuffer> hUniformBuffer ) = 0;
-		virtual void WriteBufferImpl( DescriptorHandle hDescriptor, u32 binding, void* pBuffer, size_t size );
-		virtual void WriteImageImpl( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture );
-		virtual void WriteSamplerImpl( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture );
-		virtual DescriptorHandle AllocateImpl( DescriptorSignature hSetLayout, u32 maxSetHints MW_NULLABLE = 128 );
+		virtual void WriteBufferImpl( DescriptorHandle hDescriptor, u32 binding, void* pBuffer, size_t size ) = 0;
+		virtual void WriteImageImpl( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture ) = 0;
+		virtual void WriteSamplerImpl( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture ) = 0;
+		virtual DescriptorHandle AllocateImpl( DescriptorSignature hSetLayout, u32 maxSetHints MW_NULLABLE = 128 ) = 0;
 
 	private:
 		static Ref<CDescriptorManager> m_hInstance;

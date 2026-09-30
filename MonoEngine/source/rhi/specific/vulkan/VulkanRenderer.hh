@@ -58,8 +58,5 @@ namespace Monoworks::RHI
 		RENDERDOC_API_1_1_2* m_RenderDocAPI = nullptr;
 #endif 
 
-        Ref<IVertexBuffer> m_Vertices;
-        Ref<IIndexBuffer> m_Indices;
-        Ref<IGraphicsPipeline> m_Pipeline;
     };
 }

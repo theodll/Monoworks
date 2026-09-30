@@ -44,53 +44,6 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 		MW_INFO( "Initialize CVulkanRenderer" );
 
-		SShaderByteCode vertexCode{};
-		auto vertextSpirv = readFile( "shaders/vertex.spirv", &vertexCode.Size );
-		vertexCode.pCode = vertextSpirv.data();
-
-		SShaderObject vertex{};
-		vertex.Code = vertexCode;
-		vertex.ShaderStage = MW_SHADER_STAGE_VERTEX;
-
-
-		SShaderByteCode fragmentCode{};
-		auto fragmentSpirv = readFile( "shaders/fragment.spirv", &fragmentCode.Size );
-		fragmentCode.pCode = fragmentSpirv.data();
-
-		SShaderObject fragment{};
-		fragment.Code = fragmentCode;
-		fragment.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
-
-
-		CVertexLayout layout
-		{
-			{ MW_SHADER_DATA_TYPE_FLOAT_3, "position" }
-		};
-
-		GraphicsPipelineCreationInfo pipelineInfo{};
-
-		pipelineInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_TEST_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
-		pipelineInfo.ColorFormats = { MW_FORMAT_B8G8R8A8_SRGB };
-		pipelineInfo.ColorBlendAttachments = { { MW_BLEND_MODE_OPAQUE, true } };
-		std::vector<SShaderObject> objects;
-		objects.push_back( vertex );
-		objects.push_back( fragment );
-		pipelineInfo.ShaderObjects = objects;
-		pipelineInfo.VertexLayout = layout;
-
-		m_Pipeline = IGraphicsPipeline::Create( &pipelineInfo );
-
-		std::vector<SVertex> quadVertices = {
-			{ Vector( -0.5f, -0.5f, 0.5f ), },
-			{ Vector( 0.5f, -0.5f, 0.5f ),  },
-			{ Vector( 0.5f,  0.5f, 0.5f ),  },
-			{ Vector( -0.5f,  0.5f, 0.5f ), }
-		};
-		m_Vertices = IVertexBuffer::Create( quadVertices.data(), ( u32 )quadVertices.size(), sizeof( SVertex ), true );
-
-		std::vector<Index> indices = { 0, 1, 2, 2, 3, 0 };
-		m_Indices = IIndexBuffer::Create( indices.data(), ( u32 )indices.size(), 0, true );
-
 #ifdef MW_ENABLE_MANUAL_RENDERDOC
 #ifdef MW_PLATFORM_WINDOWS
 		if ( HMODULE mod = GetModuleHandleA( "renderdoc.dll" ) )

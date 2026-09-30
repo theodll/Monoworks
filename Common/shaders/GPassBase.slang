@@ -143,7 +143,7 @@ namespace Monoworks
         public float4 CalculateVertexOffset( in VertexInput input )
         {
             return float4(0);
-        };
+        }
 
         /**
          *   @brief This function computes the Material Surface Properties.
@@ -201,14 +201,14 @@ namespace Monoworks
             surface.Normal = worldNormal;
 
             return surface;
-        };
+        }
 
-        public float4           ComputeColor(           in MaterialInput materialInput, in PixelInput pixelInput );
-        public float4           ComputeNormal(          in MaterialInput materialInput, in PixelInput pixelInput );
-        public float            ComputeMetallicness(    in MaterialInput materialInput, in PixelInput pixelInput );
-        public float            ComputeRoughness(       in MaterialInput materialInput, in PixelInput pixelInput );
-        public float3           ComputeEmissiveColor(   in MaterialInput materialInput, in PixelInput pixelInput );
-        public float            ComputeOcclusionFactor( in MaterialInput materialInput, in PixelInput pixelInput );
+        public float4 ComputeColor(in MaterialInput materialInput, in PixelInput pixelInput) { return float4(1.0f); }
+        public float4 ComputeNormal(in MaterialInput materialInput, in PixelInput pixelInput) { return float4(1.0f); }
+        public float ComputeMetallicness(in MaterialInput materialInput, in PixelInput pixelInput) { return 1.0f; }
+        public float ComputeRoughness(in MaterialInput materialInput, in PixelInput pixelInput) { return 1.0f; }
+        public float3 ComputeEmissiveColor(in MaterialInput materialInput, in PixelInput pixelInput) { return float3(1.0f); }
+        public float ComputeOcclusionFactor(in MaterialInput materialInput, in PixelInput pixelInput) { return 1.0f; }
 
     }
 

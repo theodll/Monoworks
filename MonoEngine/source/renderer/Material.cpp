@@ -918,6 +918,8 @@ namespace Monoworks
 		m_hMaterials[materialIndex] = hMaterial;
 		if ( materialIndex >= m_MaterialCount )
 			m_MaterialCount = materialIndex + 1;
+
+		return MW_SUCCESS; 
 	}
 
 	Monoworks::EResult CMaterialTable::ClearMaterial( u32 materialIndex )
@@ -927,6 +929,7 @@ namespace Monoworks
 		m_hMaterials.erase( materialIndex );
 		if ( materialIndex >= m_MaterialCount )
 			m_MaterialCount = materialIndex + 1;
+		return MW_SUCCESS;
 	}
 
 	void CMaterialTable::Clear()

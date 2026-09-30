@@ -12,6 +12,12 @@ namespace Monoworks
         u32                    CStaticRenderer::m_CurrentFrameIndex;
 		u32                    CStaticRenderer::m_CurrentImageIndex;
 
+		Ref<RHI::ITexture2D> CStaticRenderer::m_hMissingTexture;
+
+		Ref<RHI::ITexture2D> CStaticRenderer::m_hMissingMap;
+
+		Monoworks::FrameGraphicsProfilingData CStaticRenderer::m_GraphicsProfilingData;
+
 		Monoworks::SExtent2D CStaticRenderer::m_RenderableExtent;
 
 		Slang::ComPtr<slang::IGlobalSession>    CStaticRenderer::m_SlangGlobalSession;
@@ -28,6 +34,7 @@ namespace Monoworks
 			}
 
 			m_pInstance->Init();
+			MW_INFO( "Initialized Rendering Hardware Interface");
 
 			slang::createGlobalSession( m_SlangGlobalSession.writeRef() );
 
@@ -39,7 +46,7 @@ namespace Monoworks
 			MW_REG_CVAR( &missingTexturePath );
 			
 			auto mtstr = CCvarManager::GetString( "r_missing_texture_path" );
-			path_t mtpt = mtstr;
+			path_t mtpt = "resources/MissingTexture.png";
 
 			m_hMissingTexture = RHI::ITexture2D::Create( &mtpt );
 
@@ -49,7 +56,7 @@ namespace Monoworks
 			MW_REG_CVAR( &missingMapPath );
 
 			auto mmstr = CCvarManager::GetString( "r_missing_map_path" );
-			path_t mmpt = mmstr;
+			path_t mmpt = "resources/MissingMap.png";
 
 			m_hMissingMap = RHI::ITexture2D::Create( &mmpt );
 
@@ -108,7 +115,7 @@ namespace Monoworks
 			return m_pInstance->DispatchCompute( frameIndex, hPipeline, workgroup, pDesciptors, descriptorCount, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
+		MW_NOTHROW void CStaticRenderer::DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 threadID /*= -1 */ ) NOEXCEPT
 		{
             MW_PROFILE_FUNC;
             return m_pInstance->DispatchCompute2( frameIndex, hPipeline, workgroup, threadID );
@@ -139,16 +146,22 @@ namespace Monoworks
 			return m_pInstance->Present( frameIndex );
 		}
 
-		MW_NOTHROW void CStaticRenderer::BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
+		MW_NOTHROW void CStaticRenderer::BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 threadID /*= -1 */ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->BindGraphicsPipeline( frameIndex, hPipeline, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::BindDescriptors( u32 frameIndex, RHI::DescriptorSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID /*= -1 */ )
+		MW_NOTHROW void CStaticRenderer::BindDescriptors( u32 frameIndex, RHI::DescriptorSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID /*= -1 */ )
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->BindDescriptors( frameIndex, pSignature, pDescriptors, descriptorCount, firstSet, threadID );
+		}
+
+		MW_NOTHROW void CStaticRenderer::DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform ) NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			return m_pInstance->DrawStaticMeshIndexed( frameIndex, hMesh, transform );
 		}
 
 		MW_NOTHROW void CStaticRenderer::SetDynamicViewports( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT

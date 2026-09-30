@@ -224,7 +224,7 @@ namespace Monoworks
 		/**
 		 * @brief Depth component of the Three-Dimensional Extent.
 		 */
-		u32 Depth = 0;
+		u32 Depth = 1;
 	};
 
 	enum EResult

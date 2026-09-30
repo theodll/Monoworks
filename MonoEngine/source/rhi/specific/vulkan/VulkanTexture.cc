@@ -17,7 +17,7 @@ namespace Monoworks::RHI
 		int width{}, height{}, channels{};
 		stbi_uc* pixels = stbi_load( path.string().c_str(), &width, &height, &channels, STBI_rgb_alpha );
 		MW_ASSERT( pixels, "Failed to load image" );
-
+		// TODO: error handling
 		m_ImageExtent.Width = width;
 		m_ImageExtent.Height = height;
 
@@ -42,6 +42,60 @@ namespace Monoworks::RHI
 		uploader->End();
 	}
 
+	constexpr EPipelineFlags ToPipelineStageFromLayout( EImageLayout layout )
+	{
+		constexpr auto Mask = []( auto... bits ) constexpr -> EPipelineFlags
+			{
+				return static_cast< EPipelineFlags >( ( static_cast< EPipelineFlags >( bits ) | ... ) );
+			};
+
+		constexpr EPipelineFlags shaderStages = Mask(
+			MW_PIPELINE_STAGE_VERTEX_SHADER_BIT,
+			MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+			MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT );
+
+		constexpr EPipelineFlags depthStages = Mask(
+			MW_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+			MW_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT );
+
+		switch ( layout )
+		{
+		case MW_IMAGE_LAYOUT_UNDEFINED:
+		case MW_IMAGE_LAYOUT_PREINITIALIZED:
+
+		case MW_IMAGE_LAYOUT_GENERAL:
+			return MW_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+
+		case MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+			return MW_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+
+		case MW_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+		case MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL:
+		case MW_IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL:
+			return depthStages;
+
+		case MW_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL:
+		case MW_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL:
+		case MW_IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL:
+			return Mask( depthStages, shaderStages );
+
+		case MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+			return shaderStages;
+
+		case MW_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+		case MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+			return MW_PIPELINE_STAGE_TRANSFER_BIT;
+
+		case MW_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL:
+			return Mask( MW_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, depthStages );
+
+		case MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL:
+			return Mask( shaderStages, depthStages );
+
+		default:
+			return MW_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+		}
+	}
 	CVulkanTexture2D::CVulkanTexture2D( const STextureCreateInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -90,7 +144,7 @@ namespace Monoworks::RHI
 			imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 			imageInfo.usage = pInfo->Usage;
 			imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			imageInfo.initialLayout = ( VkImageLayout )pInfo->ImageLayout;
+			imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
 			VmaAllocationCreateInfo allocInfo{};
 			allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
@@ -128,7 +182,7 @@ namespace Monoworks::RHI
 			
 			auto&& uploader = CVulkanContext::GetUploader();
 			uploader->Begin();
-			this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+			this->TransitionLayoutEC( uploader->GetCommandBuffer(), pInfo->ImageLayout, ToPipelineStageFromLayout(pInfo->ImageLayout), pInfo->AspectMask);
 			uploader->End();
 
 		}
@@ -252,12 +306,12 @@ namespace Monoworks::RHI
 		imageInfo.arrayLayers = 1;
 		imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
 		imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-		imageInfo.initialLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		imageInfo.flags = 0;
-		Layout = MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		Layout = MW_IMAGE_LAYOUT_UNDEFINED;
 		PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 
 		auto uploader = CVulkanContext::GetUploader();
@@ -415,7 +469,7 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 
 		VkImageMemoryBarrier2 barrier{};
-		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
 		barrier.oldLayout = ( VkImageLayout )this->Layout;
 		barrier.newLayout = ( VkImageLayout )dstLayout;
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;

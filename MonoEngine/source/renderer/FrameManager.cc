@@ -15,6 +15,8 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		MW_INFO("Initialize CFrameManager");
+
 		SCVar executePrepasses{};
 		executePrepasses.Name = "r_execute_pre_passes";
 		executePrepasses.Value = 1.0f;
@@ -24,14 +26,13 @@ namespace Monoworks
 		executePostPasses.Name = "r_execute_post_passes";
 		executePostPasses.Value = 1.0f;
 		MW_REG_CVAR( &executePostPasses );
-
-
 	}
 
 
 	MW_NOTHROW void CFrameManager::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		MW_INFO( "Shutdown CFrameManager" );
 	}
 
 

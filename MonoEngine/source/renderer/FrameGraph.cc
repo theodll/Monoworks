@@ -103,6 +103,8 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		MW_INFO( "Instatiate CComputePrePass");
+
 		if ( !pInfo->hShader )
 		{
 			MW_API_ERROR( "Invalid Shader Reference Passed" );
@@ -301,7 +303,7 @@ namespace Monoworks
 	CGraphicsPrePass::CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
-
+		MW_INFO( "Instatiate CGraphicsPrePass" );
 		// TODO: expand GraphicsPrePassCreationInfo because it needs a ton of more things
 		// to even create a graphics pipeline.
 
@@ -622,6 +624,7 @@ namespace Monoworks
 	CPostProcessPass::CPostProcessPass( const PostProcessPassCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
+		MW_INFO( "Instatiate CPostProcessPass" );
 
 		if ( !pInfo->hShader )
 		{
@@ -851,6 +854,9 @@ namespace Monoworks
 	CDefferedResolutionPass::CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo )
 	{
 		MW_PROFILE_FUNC;
+
+		MW_INFO( "Instatiate CDefferedResolutionPass" );
+
 
 		if ( !pInfo->hShader )
 		{
@@ -1280,64 +1286,7 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
-		static std::array<SVertex, 24> s_CubeVertices =
-		{ {
-				// +X
-				{ { 1, -1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0 } },
-				{ { 1,  1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0 } },
-				{ { 1,  1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 1 } },
-				{ { 1, -1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 1 } },
-
-				// -X
-				{ { -1, -1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 0 } },
-				{ { -1, -1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0 } },
-				{ { -1,  1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 1 } },
-				{ { -1,  1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 1 } },
-
-				// +Y
-				{ { -1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 0 } },
-				{ { -1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 0 } },
-				{ {  1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 1 } },
-				{ {  1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1 } },
-
-				// -Y
-				{ { -1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 0 } },
-				{ {  1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 0 } },
-				{ {  1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 1 } },
-				{ { -1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 1 } },
-
-				// +Z
-				{ { -1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0 } },
-				{ {  1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 0 } },
-				{ {  1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 1 } },
-				{ { -1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 1 } },
-
-				// -Z
-				{ { -1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0 } },
-				{ { -1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 0 } },
-				{ {  1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 1 } },
-				{ {  1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 1 } },
-			} };
-
-		static std::array<uint32_t, 36> s_CubeIndices =
-		{
-			 0,  1,  2,   0,  2,  3,  // +X
-			 4,  5,  6,   4,  6,  7,  // -X
-			 8,  9, 10,   8, 10, 11,  // +Y
-			12, 13, 14,  12, 14, 15,  // -Y
-			16, 17, 18,  16, 18, 19,  // +Z
-			20, 21, 22,  20, 22, 23,  // -Z
-		};
-
-		mesh->VertexBuffer = RHI::IVertexBuffer::Create( static_cast<void*>(s_CubeVertices.data()), s_CubeVertices.size(), sizeof( SVertex ), true );
-		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), true );
-
-		MaterialCreationInfo matCreateInfo{};
-		matCreateInfo.AlbedoFactor = { 1.0f, 1.0f, 0.0f };
-
-		Ref<CMaterial> mat = Ref<CMaterial>::Create( &matCreateInfo );
-
-		mesh->Material = std::move( mat );
+		MW_INFO( "Instantiate CDefferedFrameGraph" );
 
 		// When changing anything in this scope, check CMaterial::SetShader if that change also applies there.
 		{
@@ -1413,7 +1362,7 @@ namespace Monoworks
 					if ( SLANG_FAILED( result ) )
 					{
 						if ( diagnostics )
-							MW_ERROR( "Failed to get vertex shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+							MW_ASSERT( false, "Failed to get vertex shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
 
 						return;
 					}
@@ -1518,8 +1467,9 @@ namespace Monoworks
 
 		// Fill the gbuffer for each frame in flight;
 		// NOTE: There is a single gbuffer per frame in flight, not multiple like some might assume here
-		for ( auto& gbuf : m_hGBuffers )
+		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
+			auto& gbuf = m_hGBuffers[i];
 			gbuf = Ref<GBuffer>::Create();
 
 			RHI::STextureCreateInfo gbufImgInfo{};
@@ -1579,7 +1529,12 @@ namespace Monoworks
 
 			std::array<RenderingAttachmentInfo, MFIF> depthAttachment;
 			for ( auto i{ 0uz }; i < MFIF; i++ )
-				depthAttachment[i] = { m_hGBuffers[i]->Depth };
+			{
+				RenderingAttachmentInfo info{};
+				info.AttachmentImage = m_hGBuffers[i]->Depth;
+
+				depthAttachment[i] = info;
+			}
 
 			std::array<RenderingAttachmentInfo*, MFIF> depthAttachmentPtr;
 			for ( auto i{ 0uz }; i < MFIF; i++ )
@@ -1699,7 +1654,66 @@ namespace Monoworks
 			CDescriptorManager::WriteSampler( m_hGBufferDescriptors[i],   7, m_hGBuffers[i]->Sampler );
 		}
 
-		
+		static std::array<SVertex, 24> s_CubeVertices =
+		{ {
+				// +X
+				{ { 1, -1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0 } },
+				{ { 1,  1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0 } },
+				{ { 1,  1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 1 } },
+				{ { 1, -1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 1 } },
+
+				// -X
+				{ { -1, -1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 0 } },
+				{ { -1, -1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0 } },
+				{ { -1,  1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 1 } },
+				{ { -1,  1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 1 } },
+
+				// +Y
+				{ { -1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 0 } },
+				{ { -1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 0 } },
+				{ {  1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 1 } },
+				{ {  1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1 } },
+
+				// -Y
+				{ { -1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 0 } },
+				{ {  1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 0 } },
+				{ {  1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 1 } },
+				{ { -1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 1 } },
+
+				// +Z
+				{ { -1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0 } },
+				{ {  1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 0 } },
+				{ {  1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 1 } },
+				{ { -1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 1 } },
+
+				// -Z
+				{ { -1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0 } },
+				{ { -1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 0 } },
+				{ {  1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 1 } },
+				{ {  1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 1 } },
+			} };
+
+		static std::array<uint32_t, 36> s_CubeIndices =
+		{
+			 0,  1,  2,   0,  2,  3,  // +X
+			 4,  5,  6,   4,  6,  7,  // -X
+			 8,  9, 10,   8, 10, 11,  // +Y
+			12, 13, 14,  12, 14, 15,  // -Y
+			16, 17, 18,  16, 18, 19,  // +Z
+			20, 21, 22,  20, 22, 23,  // -Z
+		};
+
+		mesh = Ref<CMesh>::Create();
+
+		mesh->VertexBuffer = RHI::IVertexBuffer::Create( static_cast< void* >( s_CubeVertices.data() ), s_CubeVertices.size(), sizeof( SVertex ), true );
+		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), true );
+
+		MaterialCreationInfo matCreateInfo{};
+		matCreateInfo.AlbedoFactor = { 1.0f, 1.0f, 0.0f };
+
+		Ref<CMaterial> mat = Ref<CMaterial>::Create( &matCreateInfo );
+
+		mesh->Material = std::move( mat );
 
 		m_hTonemapPass->BindTexture( "u_SwapchainImage", CApplication::GetCreateInfos()->pPresenter->GetSwapchainImages().data(), true );
 
@@ -1716,6 +1730,8 @@ namespace Monoworks
 		m_hPostProcessPasses.clear();
 
 		CPipelineManager::DeleteGraphicsPipeline( m_DefaultBasePassPipelineHash );
+
+		MW_INFO( "Destroy CDefferedFrameGraph " );
 	};
 
 	void CDefferedFrameGraph::AddPrePass( Ref<CComputePrePass> hComputePrePass, s32 MW_NULLABLE executionPriority ) NOEXCEPT

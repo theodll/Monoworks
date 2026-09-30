@@ -102,6 +102,8 @@ namespace Monoworks
 
 		m_pApplicationCreationInfos = *pInfos;
 
+		CStaticRenderer::SetRenderableExtend(&m_pApplicationCreationInfos.RenderableExtent);
+
 		m_GraphicsAPI = pInfos->GraphicsAPI;
 
 		m_GraphicsContext = Ref<RHI::CVulkanContext>::Create();
