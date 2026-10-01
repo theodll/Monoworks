@@ -3,7 +3,6 @@ import GPassBase;
 
 namespace Monoworks 
 {
-    ConstantBuffer<int> arbitraryBuffer;
 	ParameterBlock<ConstantBuffer<CameraConstants>> u_CameraConstants; // set 1
 
     [shader("vertex")]

@@ -36,7 +36,7 @@ namespace Monoworks
 		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
 			return std::unexpected( MW_ERROR_NON_EXISTANT );
 
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
+		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
 
 		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
 		slang::TypeLayoutReflection* pElementTypeLayout = pElementVar->getTypeLayout();
@@ -82,7 +82,7 @@ namespace Monoworks
 		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
 			return std::unexpected( MW_ERROR_NON_EXISTANT );
 
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
+		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
 
 		return setIndex;
 	}

@@ -35,6 +35,36 @@ namespace Monoworks
 		return out;
 	}
 
+	NODISCARD static std::expected<u32, EResult> FindParameterBlockNumberByString( std::string_view parameterBlockName, slang::ProgramLayout* pLayout )
+	{
+		MW_PROFILE_FUNC;
+
+
+		slang::VariableLayoutReflection* pBlockVar = nullptr;
+
+		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
+		{
+			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
+			if ( parameterBlockName == pParam->getName() )
+			{
+				pBlockVar = pParam;
+				break;
+			}
+		}
+
+		if ( pBlockVar == nullptr )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
+
+		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
+
+		return setIndex;
+	}
+
 	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
 	{
 		MW_PROFILE_FUNC;
@@ -59,7 +89,7 @@ namespace Monoworks
 		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
 			return std::unexpected( MW_ERROR_NON_EXISTANT );
 
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
+		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
 
 		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
 		slang::TypeLayoutReflection* pElementTypeLayout = pElementVar->getTypeLayout();
@@ -1619,9 +1649,21 @@ namespace Monoworks
 			m_hCameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
 
 			auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
-			MW_ERROR( "{}", depthReflectionData.pDescriptorSignatures.size() );
+			MW_ERROR( "SIZE: {}", depthReflectionData.pDescriptorSignatures.size() );
 
-			m_hCameraUBOSets[i] = CDescriptorManager::Allocate( depthReflectionData.pDescriptorSignatures[1] );
+			auto cameraUBO = FindParameterBlockNumberByString( "u_NIGGGER", depthPrePass->m_hShader->GetShaderProgram()->getLayout() );
+
+			if ( cameraUBO )
+			{
+				m_hCameraUBOSets[i] = CDescriptorManager::Allocate( depthReflectionData.pDescriptorSignatures[cameraUBO.value()] ); 
+				MW_ERROR( "{}", ( int )cameraUBO.value() );
+			}
+			else if ( cameraUBO.error() == MW_ERROR_NON_EXISTANT )
+				MW_FATAL( "Failed to allocate CameraUBO sets: Binding non existant" );
+			else
+				MW_FATAL( "Failed to allocate CameraUBO sets: Unkown" );
+
+
 			CDescriptorManager::WriteUniformBuffer( m_hCameraUBOSets[i], 0, m_hCameraUBOs[i] );
 
 			/**
