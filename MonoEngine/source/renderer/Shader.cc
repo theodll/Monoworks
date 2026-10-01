@@ -12,22 +12,26 @@
 #include <slang.h>
 #include <slang-com-ptr.h>
 
-namespace Monoworks 
+#include <algorithm>
+#include <functional>
+#include <set>
+
+namespace Monoworks
 {
 	using namespace RHI;
 	CShader::CShader( const ShaderCreateInfo* pInfo ) NOEXCEPT : m_Path( pInfo->Path )
 	{
 		MW_PROFILE_FUNC;
-		m_Ready = false; 
+		m_Ready = false;
 
 		m_CreateInfo = *pInfo;
 
 		if ( ( pInfo->Flags & MW_SHADER_FLAG_INTERNAL_SLANG_SESSION ) )
 		{
 			auto globalSession = CStaticRenderer::GetSlangGlobalSession();
-			
+
 			slang::SessionDesc sessionDesc{};
-			
+
 			slang::TargetDesc targetDesc{};
 			// TODO: change if using metal or direct3d
 			targetDesc.format = SLANG_SPIRV;
@@ -59,10 +63,10 @@ namespace Monoworks
 				sessionDesc.searchPaths = pInfo->SlangSessionSearchPaths;
 				sessionDesc.searchPathCount = pInfo->SlangSessionSearchPathCount;
 			}
-			
+
 			globalSession->createSession( sessionDesc, m_pSlangSession.writeRef() );
-		} 
-		else 
+		}
+		else
 		{
 			if ( pInfo->SlangSession )
 				m_pSlangSession = pInfo->SlangSession;
@@ -133,8 +137,8 @@ namespace Monoworks
 
 			if ( diagnostics )
 			{
-				MW_ERROR(
-					"Failed to compile or load Slang Module {}: {}",
+				MW_WARN(
+					"Might have failed to compile or load Slang Module {}: {}",
 					moduleName,
 					static_cast< const char* >( diagnostics->getBufferPointer() )
 				);
@@ -182,7 +186,7 @@ namespace Monoworks
 
 			const SlangResult result =
 				slangModule->getDefinedEntryPoint(
-					static_cast<SlangInt32>( i ),
+					static_cast< SlangInt32 >( i ),
 					entryPoint.writeRef()
 				);
 
@@ -287,11 +291,11 @@ namespace Monoworks
 			"Successfully compiled and linked Slang shader {}",
 			m_Path.string()
 		);
-		
+
 		slang::ProgramLayout* layout = m_pSlangProgram->getLayout();
 		for ( int i = 0; i < layout->getEntryPointCount(); ++i ) {
 			slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
-			SlangStage stage = entryPointLayout->getStage(); 
+			SlangStage stage = entryPointLayout->getStage();
 			writeEntrypointIntoMap( stage, entryPointLayout->getName() );
 		}
 	}
@@ -299,7 +303,6 @@ namespace Monoworks
 	ShaderReflectionData CShader::ReflectOnShader() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		// TODO: Garantee that global data is in set 0.
 
 		ShaderReflectionData reflectionData{};
 
@@ -491,7 +494,7 @@ namespace Monoworks
 						const SlangInt binding = pTypeLayout->getDescriptorSetDescriptorRangeIndexOffset( relativeSet, rangeIndex );
 						if ( binding == SLANG_UNKNOWN_SIZE )
 						{
-							MW_ERROR( "Shader {} contains a descriptor binding whose Vulkan binding is unresolved", m_Path.string() );
+							MW_ERROR( "Shader {}: Contains a descriptor binding whose Vulkan binding is unresolved", m_Path.string() );
 							continue;
 						}
 
@@ -528,7 +531,7 @@ namespace Monoworks
 					}
 				}
 			};
-	
+
 
 		{
 			slang::VariableLayoutReflection* pGlobalParams = pLayout->getGlobalParamsVarLayout();
@@ -559,7 +562,66 @@ namespace Monoworks
 
 			if ( pTypeLayout )
 				reflectType( pTypeLayout, stageFlags );
-			
+
+		}
+
+
+		std::set<uint32_t> blockSpaces;
+
+		auto collectParameterBlockSpaces = [&]( slang::TypeLayoutReflection* pType )
+		{
+			if ( !pType )
+				return;
+
+			const SlangInt bindingRangeCount = pType->getBindingRangeCount();
+
+			for ( SlangInt i = 0; i < bindingRangeCount; ++i )
+			{
+				const slang::BindingType bindingType = pType->getBindingRangeType( i );
+
+				if ( bindingType != slang::BindingType::ParameterBlock )
+					continue;
+
+				if ( pType->getBindingRangeDescriptorRangeCount( i ) <= 0 )
+					continue;
+
+				const SlangInt relativeSet = pType->getBindingRangeDescriptorSetIndex( i );
+				const SlangInt space = pType->getDescriptorSetSpaceOffset( relativeSet );
+
+				if ( space >= 0 )
+					blockSpaces.insert( static_cast< uint32_t >( space ) );
+			}
+		};
+
+
+		if ( slang::VariableLayoutReflection* pGlobalParams = pLayout->getGlobalParamsVarLayout() )
+		{
+			slang::TypeLayoutReflection* pGlobalType = pGlobalParams->getTypeLayout();
+
+			collectParameterBlockSpaces( pGlobalType );
+
+			if ( pGlobalType && pGlobalType->getKind() == slang::TypeReflection::Kind::ConstantBuffer )
+				collectParameterBlockSpaces( pGlobalType->getElementTypeLayout() );
+		}
+
+
+		for ( auto entryPointIndex{ 0uz }; entryPointIndex < entryPointCount; ++entryPointIndex )
+		{
+			slang::EntryPointLayout* pEntryPoint = pLayout->getEntryPointByIndex( entryPointIndex );
+
+			if ( !pEntryPoint )
+				continue;
+
+			slang::TypeLayoutReflection* pType = pEntryPoint->getTypeLayout();
+			collectParameterBlockSpaces( pType );
+		}
+
+
+		std::set<uint32_t> globalSpaces;
+		for ( const auto& entry : descriptorSetBindings )
+		{
+			if ( !blockSpaces.contains( entry.first ) )
+				globalSpaces.insert( entry.first );
 		}
 
 		auto reflectPushConstants = [&]( slang::TypeLayoutReflection* pTypeLayout, VkShaderStageFlags stageFlags )
@@ -619,17 +681,6 @@ namespace Monoworks
 			reflectPushConstants( pEntryPoint->getTypeLayout(), stageFlags );
 		}
 
-		for ( auto& [set, bindings] : descriptorSetBindings )
-		{
-			std::sort( bindings.begin(), bindings.end(),
-				[]( const VkDescriptorSetLayoutBinding& lhs,
-					const VkDescriptorSetLayoutBinding& rhs )
-				{
-					return lhs.binding < rhs.binding;
-				}
-			);
-		}
-
 
 		std::sort( pushConstantRanges.begin(), pushConstantRanges.end(),
 			[]( const VkPushConstantRange& lhs,
@@ -642,21 +693,72 @@ namespace Monoworks
 			}
 		);
 
-
-		u32 highestSet = 0;
-
-		if ( !descriptorSetBindings.empty() )
-			highestSet = descriptorSetBindings.rbegin()->first;
-		
-		std::vector<VkDescriptorSetLayout> vkSetLayouts;
-		vkSetLayouts.resize(
-			static_cast< size_t >( highestSet ) + 1,
-			nullptr
-		);
-
-
-		for ( auto& [set, bindings] : descriptorSetBindings )
+		for ( auto& range : pushConstantRanges )
 		{
+			if ( range.size % 4 != 0 )
+			{
+				range.size = ( range.size + 3 ) & ~3u;
+			}
+		}
+
+
+		std::vector<std::vector<VkDescriptorSetLayoutBinding>> finalSets;
+		finalSets.emplace_back();
+
+		for ( auto& [space, bindings] : descriptorSetBindings )
+		{
+			if ( blockSpaces.contains( static_cast< uint32_t >( space ) ) )
+				continue;
+
+			for ( const VkDescriptorSetLayoutBinding& binding : bindings )
+			{
+				const bool duplicate = std::any_of( finalSets[0].begin(), finalSets[0].end(),
+					[&]( const VkDescriptorSetLayoutBinding& e ) { return e.binding == binding.binding; } );
+
+				if ( duplicate )
+				{
+					MW_ERROR( "Shader {}: Globals in multiple Spaces share binding {}", m_Path.string(), binding.binding );
+					continue;
+				}
+
+				finalSets[0].push_back( binding );
+			}
+		}
+
+		for ( const uint32_t space : blockSpaces )
+		{
+			const u32 expectedIndex = static_cast< u32 >( finalSets.size() );
+
+			if ( space != expectedIndex )
+			{
+				MW_WARN( "Shader {}: ParameterBlock at SPIRV Space {}, Descriptor-Signature-Index {}",
+					m_Path.string(), space, expectedIndex );
+			}
+
+			auto it = descriptorSetBindings.find( space );
+
+			if ( it != descriptorSetBindings.end() )
+				finalSets.push_back( std::move( it->second ) );
+			else
+				finalSets.emplace_back();
+		}
+
+		for ( auto& bindings : finalSets )
+		{
+			std::sort( bindings.begin(), bindings.end(),
+				[]( const VkDescriptorSetLayoutBinding& lhs, const VkDescriptorSetLayoutBinding& rhs )
+				{
+					return lhs.binding < rhs.binding;
+				} );
+		}
+
+		std::vector<VkDescriptorSetLayout> vkSetLayouts( finalSets.size(), nullptr );
+
+
+		for ( size_t set = 0; set < finalSets.size(); ++set )
+		{
+			auto& bindings = finalSets[set];
+
 			VkDescriptorSetLayoutCreateInfo createInfo{};
 			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 			createInfo.bindingCount = static_cast< u32 >( bindings.size() );
@@ -716,7 +818,7 @@ namespace Monoworks
 
 			if ( result != VK_SUCCESS )
 			{
-				MW_ERROR( "Failed to create VkDescriptorSetLayout for shader {} set {}. VkResult = {}", m_Path.string(), set, static_cast<int>( result ) );
+				MW_ERROR( "Failed to create VkDescriptorSetLayout for shader {} set {}. VkResult = {}", m_Path.string(), static_cast< u32 >( set ), static_cast< int >( result ) );
 
 				for ( VkDescriptorSetLayout handle : vkSetLayouts )
 				{
@@ -804,7 +906,7 @@ namespace Monoworks
 		}
 
 
-		reflectionData.pPipelineSignature = reinterpret_cast< RHI::PipelineSignature >(	pipelineLayout );
+		reflectionData.pPipelineSignature = reinterpret_cast< RHI::PipelineSignature >( pipelineLayout );
 
 
 		reflectionData.pDescriptorSignatures.reserve( vkSetLayouts.size() );
@@ -837,4 +939,3 @@ namespace Monoworks
 
 
 }
-

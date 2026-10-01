@@ -39,7 +39,7 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		VkDescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = ( VkBuffer )pBuffer;
+		bufferInfo.buffer = *(( VkBuffer* )pBuffer);
 		bufferInfo.offset = 0;
 		bufferInfo.range = size;
 

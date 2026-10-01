@@ -13,12 +13,14 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 
-		switch ( CApplication::GetGraphicsAPI() )
+		// TODO: replace with getter to CStaticRenderer
+		switch ( CApplication::GetCreateInfos()->GraphicsAPI )
 		{
-		case MW_GAPI_NONE:    m_hInstance = nullptr;
-		case MW_GAPI_VULKAN:  m_hInstance = Ref<CVulkanDescriptorSetManager>::Create();
+		case MW_GAPI_NONE:    m_hInstance = nullptr; break;
+		case MW_GAPI_VULKAN:  m_hInstance = Ref<CVulkanDescriptorSetManager>::Create(); break;
+		default: MW_ASSERT( false, "Unknown Graphics API" );
 		}
-		MW_ASSERT( false, "Unknown Graphics API" );
+		
 		
 		m_hInstance->InitImpl();
 

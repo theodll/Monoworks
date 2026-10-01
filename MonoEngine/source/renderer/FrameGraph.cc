@@ -1543,6 +1543,8 @@ namespace Monoworks
 			depthPrePassInfo.pDepthAttachment = depthAttachmentPtr;
 			depthPrePassInfo.RenderingArea = re2d;
 			// TODO: add thread ID
+			depthPrePassInfo.Flags |= MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_DISABLE_PIXEL_SHADER_BIT;
+
 			depthPrePassInfo.pExecutionScopeCallback = [&]( u32 frameIndex )
 				{
 					SubmitSceneGeometry( frameIndex );
@@ -1615,7 +1617,11 @@ namespace Monoworks
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
 			m_hCameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
-			m_hCameraUBOSets[i] = CDescriptorManager::Allocate( depthPrePass->m_hShader->ReflectOnShader().pDescriptorSignatures[1] );
+
+			auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
+			MW_ERROR( "{}", depthReflectionData.pDescriptorSignatures.size() );
+
+			m_hCameraUBOSets[i] = CDescriptorManager::Allocate( depthReflectionData.pDescriptorSignatures[1] );
 			CDescriptorManager::WriteUniformBuffer( m_hCameraUBOSets[i], 0, m_hCameraUBOs[i] );
 
 			/**

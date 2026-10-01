@@ -449,6 +449,7 @@ namespace Monoworks::RHI
 		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), *m_ResourceUploader.GetCommandBuffer() );
 
 #endif
+		CDescriptorManager::Init();
 	}
 
 	static inline bool CheckValidationLayerSupport( const std::vector<const char*>& validationLayers ) NOEXCEPT
@@ -488,10 +489,12 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		
+		CDescriptorManager::Shutdown();
 
 		MW_PROFILE_VK_DESTROY_CTX( TracyGraphicsContext );
 		MW_PROFILE_VK_DESTROY_CTX( TracyComputeContext );
 		MW_PROFILE_VK_DESTROY_CTX( TracyTransferContext );
+
 
 		if ( m_PipelineCache )
 		{

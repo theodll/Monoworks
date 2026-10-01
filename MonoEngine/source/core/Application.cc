@@ -101,10 +101,11 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 		m_pApplicationCreationInfos = *pInfos;
+		m_GraphicsAPI = pInfos->GraphicsAPI;
+
 
 		CStaticRenderer::SetRenderableExtend(&m_pApplicationCreationInfos.RenderableExtent);
 
-		m_GraphicsAPI = pInfos->GraphicsAPI;
 
 		m_GraphicsContext = Ref<RHI::CVulkanContext>::Create();
 		m_GraphicsContext->Init();
