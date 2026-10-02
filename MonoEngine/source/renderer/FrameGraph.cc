@@ -194,9 +194,11 @@ namespace Monoworks
 		if ( pipeline )
 			m_hComputePipeline = pipeline.value();
 
-		for ( auto i{ 0uz }; i < MFIF; i++ )
-			m_pDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
-
+		if ( m_hShader->HasGlobalBindings() )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				m_pDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+		else
+			MW_WARN( "Reflection did not yield global bindings. Discarded allocation of global scope descriptors.");
 
 	}
 
@@ -525,11 +527,12 @@ namespace Monoworks
 		else
 			MW_ERROR( "Failed to create graphics pre-pass pipeline." );
 
-		for ( auto i{ 0uz }; i < MFIF; i++ )
-		{
-			m_pDescriptors[i] = CDescriptorManager::Allocate( m_hShader->ReflectOnShader().pDescriptorSignatures[0] );
-				
-		}
+		if ( m_hShader->HasGlobalBindings() )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				m_pDescriptors[i] = CDescriptorManager::Allocate( pipelineReflectData.pDescriptorSignatures[GlobalScopeSignature] );
+		else
+			MW_WARN( "Reflection did not yield global bindings. Discarded allocation of global scope descriptors." );
+		
 		// TODO: Implement error handling here.
 	
 	}
@@ -715,8 +718,11 @@ namespace Monoworks
 		if ( pipeline )
 			m_hComputePipeline = pipeline.value();
 
-		for ( auto i{ 0uz }; i < MFIF; i++ )
-			m_pDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+		if ( m_hShader->HasGlobalBindings() )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				m_pDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+		else
+			MW_WARN( "Reflection did not yield global bindings. Discarded allocation of global scope descriptors." );
 
 
 	};
@@ -947,15 +953,21 @@ namespace Monoworks
 		if ( pipeline )
 			m_hComputePipeline = pipeline.value();
 
-		std::array<RHI::DescriptorHandle, MFIF> globalScopeDescriptorSets{};
 
-		for ( auto i{ 0uz }; i < MFIF; i++ )
-			globalScopeDescriptorSets[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+		if ( m_hShader->HasGlobalBindings() )
+		{
+			std::array<RHI::DescriptorHandle, MFIF> globalScopeDescriptorSets{};
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+				globalScopeDescriptorSets[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[GlobalScopeSignature] );
 
-		if ( m_pDescriptors.size() < 1 )
-			m_pDescriptors.resize( 1 );
+			if ( m_pDescriptors.size() < 1 )
+				m_pDescriptors.resize( 1 );
 
-		m_pDescriptors[GlobalScopeSignature] = globalScopeDescriptorSets;
+			m_pDescriptors[GlobalScopeSignature] = globalScopeDescriptorSets;
+		}
+		else
+			MW_WARN( "Reflection did not yield global bindings. Discarded allocation of global scope descriptors." );
+
 	}
 
 	CDefferedResolutionPass::~CDefferedResolutionPass() NOEXCEPT
@@ -1502,14 +1514,18 @@ namespace Monoworks
 			auto& gbuf = m_hGBuffers[i];
 			gbuf = Ref<GBuffer>::Create();
 
+			constexpr auto commonFlags = MW_IMAGE_USAGE_SAMPLED_BIT | MW_IMAGE_USAGE_STORAGE_BIT;
+
 			RHI::STextureCreateInfo gbufImgInfo{};
 			gbufImgInfo.Extent = re;
 			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
-			gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT | MW_IMAGE_USAGE_SAMPLED_BIT; // Not needed because we have a extra sampler.
+			gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
+			gbufImgInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | commonFlags;
+
 
 			gbufImgInfo.Format = MW_FORMAT_R8G8B8A8_UNORM;
 			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-			gbufImgInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			gbufImgInfo.Usage |= MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 			gbuf->AlbedoOcclusion = ITexture2D::Create( &gbufImgInfo );
 
 			gbufImgInfo.Format = MW_FORMAT_A2R10G10B10_UNORM_PACK32;
@@ -1526,7 +1542,7 @@ namespace Monoworks
 
 			gbufImgInfo.Format = MW_FORMAT_D32_SFLOAT;
 			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
-			gbufImgInfo.Usage = MW_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | MW_IMAGE_USAGE_SAMPLED_BIT;
+			gbufImgInfo.Usage = MW_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | commonFlags;
 			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_DEPTH_BIT;
 			gbuf->Depth = ITexture2D::Create( &gbufImgInfo );
 
@@ -1651,7 +1667,7 @@ namespace Monoworks
 			auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
 			MW_ERROR( "SIZE: {}", depthReflectionData.pDescriptorSignatures.size() );
 
-			auto cameraUBO = FindParameterBlockNumberByString( "u_NIGGGER", depthPrePass->m_hShader->GetShaderProgram()->getLayout() );
+			auto cameraUBO = FindParameterBlockNumberByString( "u_CameraConstants", depthPrePass->m_hShader->GetShaderProgram()->getLayout() );
 
 			if ( cameraUBO )
 			{

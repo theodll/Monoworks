@@ -70,7 +70,7 @@ namespace Monoworks::RHI
 		write.dstSet = ( VkDescriptorSet )pDescriptor;
 		write.dstBinding = binding;
 		write.descriptorCount = 1;
-		write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
 		write.pImageInfo = &info;
 
 		vkUpdateDescriptorSets( *CVulkanContext::GetDevice()->GetDevice(), 1, &write, 0, nullptr );
