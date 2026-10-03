@@ -142,7 +142,7 @@ namespace Monoworks::RHI
 				ra.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
 				ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
 				ra.imageView = *image->GetImageView();
-				ra.imageLayout = ( VkImageLayout )image->Layout;
+				ra.imageLayout = ( VkImageLayout )image->m_Layout;
 				
 				ra.loadOp = ToVulkanLoadOp( colorAttInfo.LoadOp );
 				ra.storeOp = ToVulkanStoreOp( colorAttInfo.StoreOp );
@@ -150,7 +150,7 @@ namespace Monoworks::RHI
 				if ( colorAttInfo.ResolveImage )
 				{
 					ra.resolveImageView = *resolveImage->GetImageView();
-					ra.resolveImageLayout = ( VkImageLayout )resolveImage->Layout;
+					ra.resolveImageLayout = ( VkImageLayout )resolveImage->m_Layout;
 					ra.resolveMode = ToVulkanResolveMode( colorAttInfo.ResolveMode );
 				}
 
@@ -164,7 +164,7 @@ namespace Monoworks::RHI
 		{
 			depthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
 			depthAttachment.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
-			depthAttachment.imageLayout = ( VkImageLayout )pInfo->pDepthAttachment->AttachmentImage->Layout;
+			depthAttachment.imageLayout = ( VkImageLayout )pInfo->pDepthAttachment->AttachmentImage->m_Layout;
 			depthAttachment.imageView = *pInfo->pDepthAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
 			
 			depthAttachment.loadOp = ToVulkanLoadOp( pInfo->pDepthAttachment->LoadOp );
@@ -173,7 +173,7 @@ namespace Monoworks::RHI
 			if ( pInfo->pDepthAttachment->ResolveImage )
 			{
 				depthAttachment.resolveImageView = *pInfo->pDepthAttachment->ResolveImage.As<CVulkanTexture2D>()->GetImageView();
-				depthAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pDepthAttachment->ResolveImage->Layout;
+				depthAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pDepthAttachment->ResolveImage->m_Layout;
 				depthAttachment.resolveMode = ToVulkanResolveMode( pInfo->pDepthAttachment->ResolveMode );
 			}
 		}
@@ -184,7 +184,7 @@ namespace Monoworks::RHI
 		{
 			stencilAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
 			stencilAttachment.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
-			stencilAttachment.imageLayout = ( VkImageLayout )pInfo->pStencilAttachment->AttachmentImage->Layout;
+			stencilAttachment.imageLayout = ( VkImageLayout )pInfo->pStencilAttachment->AttachmentImage->m_Layout;
 			stencilAttachment.imageView = *pInfo->pStencilAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
 
 			stencilAttachment.loadOp = ToVulkanLoadOp( pInfo->pStencilAttachment->LoadOp );
@@ -193,7 +193,7 @@ namespace Monoworks::RHI
 			if ( pInfo->pStencilAttachment->ResolveImage )
 			{
 				stencilAttachment.resolveImageView = *pInfo->pStencilAttachment->ResolveImage.As<CVulkanTexture2D>()->GetImageView();
-				stencilAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pStencilAttachment->ResolveImage->Layout;
+				stencilAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pStencilAttachment->ResolveImage->m_Layout;
 				stencilAttachment.resolveMode = ToVulkanResolveMode( pInfo->pStencilAttachment->ResolveMode );
 			}
 		}

@@ -185,6 +185,8 @@ namespace Monoworks::RHI
 			this->TransitionLayoutEC( uploader->GetCommandBuffer(), pInfo->ImageLayout, ToPipelineStageFromLayout(pInfo->ImageLayout), pInfo->AspectMask);
 			uploader->End();
 
+			m_AspectFlags = pInfo->AspectMask;
+
 		}
 
 		if ( m_GenerateImageView )
@@ -247,14 +249,14 @@ namespace Monoworks::RHI
 		}
 
 		uploader->Begin();
-		auto tempL = Layout;
-		auto tempP = PipelineFlags;
+		auto tempL = m_Layout;
+		auto tempP = m_PipelineFlags;
 
-		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, MW_PIPELINE_STAGE_TRANSFER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, MW_PIPELINE_STAGE_TRANSFER_BIT, m_AspectFlags );
 		
 		device->CopyImageToBuffer( uploader->GetCommandBuffer(), &m_Image, &m_StagingBuffer, m_ImageExtent.Width, m_ImageExtent.Height, 1 );
 		
-		this->TransitionLayoutEC( uploader->GetCommandBuffer(), tempL, tempP, MW_IMAGE_ASPECT_COLOR_BIT );
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), tempL, tempP, m_AspectFlags );
 
 		uploader->End();
 
@@ -311,19 +313,20 @@ namespace Monoworks::RHI
 		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		imageInfo.flags = 0;
-		Layout = MW_IMAGE_LAYOUT_UNDEFINED;
-		PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+		m_Layout = MW_IMAGE_LAYOUT_UNDEFINED;
+		m_PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+		m_AspectFlags = MW_IMAGE_ASPECT_COLOR_BIT;
 
 		auto uploader = CVulkanContext::GetUploader();
 		uploader->Begin();
 
 		CVulkanContext::GetDevice()->CreateImage(allocator, &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, PipelineFlags, MW_IMAGE_ASPECT_COLOR_BIT );
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, m_PipelineFlags, MW_IMAGE_ASPECT_COLOR_BIT );
 
 		CVulkanContext::GetDevice()->CopyBufferToImage(uploader->GetCommandBuffer(), &m_StagingBuffer, &m_Image, m_ImageExtent.Width, m_ImageExtent.Height, 1);
 
-		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, PipelineFlags, MW_IMAGE_ASPECT_COLOR_BIT );
+		this->TransitionLayoutEC( uploader->GetCommandBuffer(), MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, m_PipelineFlags, MW_IMAGE_ASPECT_COLOR_BIT );
 
 		uploader->End();
 
@@ -345,8 +348,8 @@ namespace Monoworks::RHI
 		imageInfo.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 		imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-		Layout = MW_IMAGE_LAYOUT_UNDEFINED;
-		PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+		m_Layout = MW_IMAGE_LAYOUT_UNDEFINED;
+		m_PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 
 		CVulkanContext::GetDevice()->CreateImage( CVulkanContext::GetAllocator(), &m_Image, &imageInfo, &m_ImageAllocation, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT );
 	}
@@ -361,7 +364,7 @@ namespace Monoworks::RHI
 		viewInfo.image = m_Image;
 		viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 		viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
-		viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		viewInfo.subresourceRange.aspectMask = static_cast<VkImageAspectFlags>(m_AspectFlags);
 		viewInfo.subresourceRange.baseMipLevel = 0;
 		viewInfo.subresourceRange.levelCount = 1;
 		viewInfo.subresourceRange.baseArrayLayer = 0;
@@ -473,7 +476,7 @@ namespace Monoworks::RHI
 
 		VkImageMemoryBarrier2 barrier{};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
-		barrier.oldLayout = ( VkImageLayout )this->Layout;
+		barrier.oldLayout = ( VkImageLayout )this->m_Layout;
 		barrier.newLayout = ( VkImageLayout )dstLayout;
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
@@ -485,7 +488,7 @@ namespace Monoworks::RHI
 		barrier.subresourceRange.layerCount = 1;
 
 
-		switch ( ( VkImageLayout )this->Layout )
+		switch ( ( VkImageLayout )this->m_Layout )
 		{
 		case VK_IMAGE_LAYOUT_UNDEFINED:
 			barrier.srcStageMask = VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT;
@@ -522,7 +525,7 @@ namespace Monoworks::RHI
 			barrier.srcAccessMask = VK_ACCESS_2_MEMORY_READ_BIT | VK_ACCESS_2_MEMORY_WRITE_BIT;
 			break;
 		default:
-			MW_API_ERROR( "Unsupported image layout: {}", static_cast<int>(this->Layout) );
+			MW_API_ERROR( "Unsupported image layout: {}", static_cast<int>(this->m_Layout) );
 			return;
 		}
 
@@ -574,10 +577,92 @@ namespace Monoworks::RHI
 
 		vkCmdPipelineBarrier2( *pCmd, &dInfo );
 
-		this->PipelineFlags = dstPipelineStage;
-		this->Layout = dstLayout;
+		this->m_PipelineFlags = dstPipelineStage;
+		this->m_Layout = dstLayout;
 
 	};
 
+	MW_NOTHROW void CVulkanTexture2D::CopyImage( 
+		u32 frameIndex,
+		Ref<ITexture> dstImage,
+		s32 threadID /*= -1*/,
+		bool outsideFrameScope /*= false */ )
+	{
+		MW_PROFILE_FUNC; 
+
+		VkCommandBuffer cmd = nullptr;
+
+		if ( frameIndex > MFIF )
+			MW_API_ERROR( "Pass invalid frameIndex. Discarding image copy." );
+
+		if ( outsideFrameScope )
+			cmd = *CVulkanContext::GetUploader()->GetCommandBuffer();
+		else
+		{
+			if ( threadID < 0 )
+				cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+			else
+				cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+		}
+
+		if ( outsideFrameScope )
+			CVulkanContext::GetUploader()->Begin();
+
+		CopyImageEC( &cmd, dstImage );
+
+		if ( outsideFrameScope )
+			CVulkanContext::GetUploader()->End();
+
+	}
+
+	MW_NOTHROW void CVulkanTexture2D::CopyImageEC( VkCommandBuffer* pCmd, Ref<ITexture> dstImage )
+	{
+		MW_PROFILE_FUNC;
+
+		auto vkImage = dstImage.As<CVulkanTexture2D>();
+
+		auto tempLS = m_Layout;
+		auto tempPS = m_PipelineFlags;
+
+		auto tempLD = vkImage->m_Layout;
+		auto tempPD = vkImage->m_PipelineFlags;
+
+		TransitionLayoutEC( pCmd, MW_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, m_AspectFlags );
+		vkImage->TransitionLayoutEC( pCmd, MW_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, vkImage->m_AspectFlags );
+
+		VkImageCopy copyRegion{};
+
+		copyRegion.srcSubresource.aspectMask = m_AspectFlags;
+		copyRegion.srcSubresource.mipLevel = 0;
+		copyRegion.srcSubresource.baseArrayLayer = 0;
+		copyRegion.srcSubresource.layerCount = 1;
+		copyRegion.srcOffset = { 0, 0, 0 };
+
+		copyRegion.dstSubresource.aspectMask = vkImage->m_AspectFlags;
+		copyRegion.dstSubresource.mipLevel = 0;
+		copyRegion.dstSubresource.baseArrayLayer = 0;
+		copyRegion.dstSubresource.layerCount = 1;
+		copyRegion.dstOffset = { 0, 0, 0 };
+
+		copyRegion.extent.width = m_ImageExtent.Width;
+		copyRegion.extent.height = m_ImageExtent.Height;
+		copyRegion.extent.depth = m_ImageExtent.Depth;
+
+		copyRegion.dstSubresource.aspectMask = vkImage->m_AspectFlags;
+
+
+		vkCmdCopyImage(
+			*pCmd,
+			m_Image,
+			static_cast< VkImageLayout >( m_Layout ),
+			vkImage->m_Image,
+			static_cast< VkImageLayout >( vkImage->m_Layout ),
+			1,
+			&copyRegion
+			);
+
+		TransitionLayoutEC( pCmd, tempLS, tempPS, m_AspectFlags );
+		vkImage->TransitionLayoutEC( pCmd, tempLD, tempPD, vkImage->m_AspectFlags );
+	}
 
 }

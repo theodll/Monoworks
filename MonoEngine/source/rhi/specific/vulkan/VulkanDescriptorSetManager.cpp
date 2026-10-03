@@ -63,7 +63,7 @@ namespace Monoworks::RHI
 
 		VkDescriptorImageInfo info{};
 		info.imageView = *vkTex->GetImageView();
-		info.imageLayout =  static_cast<VkImageLayout>(vkTex->Layout);
+		info.imageLayout =  static_cast<VkImageLayout>(vkTex->m_Layout);
 
 		VkWriteDescriptorSet write{};
 		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

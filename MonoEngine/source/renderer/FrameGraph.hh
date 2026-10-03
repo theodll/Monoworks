@@ -486,6 +486,7 @@ namespace Monoworks
 
 		// The composite image houses the gbuffer sampler.
 		std::array<Ref<RHI::ITexture2D>, MFIF> m_hCompositeImages;
+		std::array<Ref<RHI::ITexture2D>, MFIF> m_hPresentationProxyImages;
 
 		Ref<CShader> m_hDefaultBasePassShader; // NOTE: Fragment and Vertex Shader
 		Ref<RHI::IGraphicsPipeline>	m_hDefaultBasePassPipeline;

@@ -1586,33 +1586,35 @@ namespace Monoworks
 			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_DEPTH_BIT;
 			gbuf->Depth = ITexture2D::Create( &gbufImgInfo );
 
-		}
+			auto& composite = m_hCompositeImages[i];
 
-		for ( auto i{ 0uz }; i < MFIF; i++ )
-		{
-			auto& gbuf = m_hGBuffers[i];
+			RHI::STextureCreateInfo compositeImgInfo{};
+			compositeImgInfo.Extent = re;
+			compositeImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			compositeImgInfo.Format = MW_FORMAT_R16G16B16A16_SFLOAT;
+			compositeImgInfo.ImageLayout = MW_IMAGE_LAYOUT_GENERAL;
+			compositeImgInfo.Usage = MW_IMAGE_USAGE_STORAGE_BIT | MW_IMAGE_USAGE_SAMPLED_BIT;
+			composite = ITexture2D::Create( &compositeImgInfo );
+
+			RHI::STextureCreateInfo presentationProxyImgInfo{};
+			presentationProxyImgInfo.Extent = re;
+			presentationProxyImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			presentationProxyImgInfo.Format = MW_FORMAT_B8G8R8A8_SRGB;
+			presentationProxyImgInfo.ImageLayout = MW_IMAGE_LAYOUT_GENERAL;
+			presentationProxyImgInfo.Usage = MW_IMAGE_USAGE_STORAGE_BIT | MW_IMAGE_USAGE_SAMPLED_BIT | MW_IMAGE_USAGE_TRANSFER_SRC_BIT;
+
+			m_hPresentationProxyImages[i] = ITexture2D::Create(&compositeImgInfo);
+
+			auto& presentationProxy = m_hPresentationProxyImages[i];
+			m_hPresentationProxyImages[i]->TransitionLayout( i, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, false );
+
 
 			gbuf->AlbedoOcclusion->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->NormalRoughMetal->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->Emissive->TransitionLayout(			i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->MotionVector->TransitionLayout(		i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->EntityMaterialID->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
-
-			gbuf->Depth->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT, -1, true );
-
-		}
-
-		for ( auto& composite : m_hCompositeImages )
-		{
-			// The composite image houses the gbuffer sampler.
-			RHI::STextureCreateInfo compositeImgInfo{};
-			compositeImgInfo.Extent = re;
-			compositeImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
-
-			compositeImgInfo.Format = MW_FORMAT_R16G16B16A16_SFLOAT;
-			compositeImgInfo.ImageLayout = MW_IMAGE_LAYOUT_GENERAL;
-			compositeImgInfo.Usage = MW_IMAGE_USAGE_STORAGE_BIT | MW_IMAGE_USAGE_SAMPLED_BIT;
-			composite = ITexture2D::Create( &compositeImgInfo );
+			gbuf->Depth->TransitionLayout(				i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT, -1, true );
 		}
 
 		// Create depth pre pass
@@ -1719,7 +1721,7 @@ namespace Monoworks
 		{
 			m_hCameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
 
-			auto cameraUBO = FindParameterBlockNumberByString( "u_CameraConstants", depthPrePass->m_hShader->GetShaderProgram()->getLayout() );
+			auto cameraUBO = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
 
 			if ( cameraUBO )
 			{
@@ -1888,7 +1890,7 @@ namespace Monoworks
 		mesh->VertexBuffer = RHI::IVertexBuffer::Create( static_cast< void* >( s_CubeVertices.data() ), s_CubeVertices.size(), sizeof( SVertex ), true );
 		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), true );
 
-		m_hTonemapPass->BindTexture( "u_SwapchainImage", CApplication::GetCreateInfos()->pPresenter->GetSwapchainImages().data(), true );
+		m_hTonemapPass->BindTexture( "u_ProxyImage", m_hPresentationProxyImages.data(), true);
 
 		depthPrePass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
 		lightPass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
@@ -2252,6 +2254,9 @@ namespace Monoworks
 		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );
 		// root commandbuffer submission happens in the frame manager, as it's not 
 		// implementation specific. 
+
+		auto presenter = CApplication::GetCreateInfos()->pPresenter;
+		m_hPresentationProxyImages[frameIndex]->CopyImage( frameIndex, presenter->GetSwapchainImages()[frameIndex] );
 	};
 
 

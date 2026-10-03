@@ -41,6 +41,9 @@ namespace Monoworks::RHI
 		void SetImage( VkImage* pImage ) { MW_WARN( "Manually overwriting the Image is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_Image = *pImage; }
 		void SetImageView( VkImageView* pImageView ) { MW_WARN( "Manually overwriting the Image View is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_ImageView = *pImageView; }
 
+		MW_NOTHROW void CopyImage( u32 frameIndex, Ref<ITexture> dstImage, s32 threadID = -1, bool outsideFrameScope = false ) override;
+		MW_NOTHROW void CopyImageEC( VkCommandBuffer* pCmd, Ref<ITexture> dstImage ); 
+
 	private:
 		void CreateImage( stbi_uc* pPixelData ) NOEXCEPT;
 		void CreateImageWithoutData() NOEXCEPT;

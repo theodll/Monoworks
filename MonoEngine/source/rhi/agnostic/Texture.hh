@@ -45,9 +45,15 @@ namespace Monoworks::RHI
 		 */
 		virtual MW_NOTHROW void TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID = -1, bool outsideFrameScope = false ) NOEXCEPT = 0;
 
-		EImageLayout Layout = MW_IMAGE_LAYOUT_UNDEFINED;
-		EPipelineFlags PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-		
+		virtual MW_NOTHROW void CopyImage( u32 frameIndex, Ref<ITexture> dstImage, s32 threadID = -1, bool outsideFrameScope = false ) = 0;
+
+	protected:
+		EImageLayout m_Layout = MW_IMAGE_LAYOUT_UNDEFINED;
+		EPipelineFlags m_PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+		EImageAspectFlags m_AspectFlags;
+
+		friend class CVulkanRenderer;
+		friend class CVulkanDescriptorSetManager;
 	};
 
 	class ITexture2D : public ITexture

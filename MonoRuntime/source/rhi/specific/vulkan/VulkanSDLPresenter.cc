@@ -10,7 +10,7 @@
 
 namespace Monoworks::RHI 
 {
-	static void TransitionImageLayout3(
+	MAYBE_UNUSED static void TransitionImageLayout3(
 		VkCommandBuffer commandBuffer,
 		VkImage image,
 		VkImageLayout oldLayout,
@@ -350,7 +350,7 @@ namespace Monoworks::RHI
 		createInfoVk.imageColorSpace = surfaceFormat.colorSpace;
 		createInfoVk.imageExtent = extent;
 		createInfoVk.imageArrayLayers = 1;
-		createInfoVk.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_STORAGE_BIT;
+		createInfoVk.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
 		QueueFamilyIndices indices = info->pVulkanDevice->FindPhysicalQueueFamilies();
 		u32 queueFamilyIndices[] = { indices.GraphicsFamily, indices.PresentFamily, indices.ComputeFamily, indices.TransferFamily };
@@ -431,19 +431,8 @@ namespace Monoworks::RHI
 		auto info = ( SVulkanSDLPresentationTransitionPresentInfo* )pInfo;
 		auto texture = m_SwapchainImages[info->ImageIndex].As<CVulkanTexture2D>();
 	
-		if ( texture->Layout == MW_IMAGE_LAYOUT_PRESENT_SRC_KHR )
-			return;
+		texture->TransitionLayout( 0, MW_IMAGE_LAYOUT_PRESENT_SRC_KHR, MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 
-		TransitionImageLayout3(
-			*info->pCmdBuffer,
-			*texture->GetImage(),
-			( VkImageLayout )texture->Layout,
-			VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
-		);
-
-		texture->Layout = MW_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 	}
 
 	void CVulkanSDLPresenter::TransitionRender( const IPresentationTransitionRenderInfo* pInfo ) NOEXCEPT
@@ -456,19 +445,7 @@ namespace Monoworks::RHI
 
 		auto texture = m_SwapchainImages[info->ImageIndex].As<CVulkanTexture2D>();
 
-		if ( texture->Layout == MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
-			return;
-
-		TransitionImageLayout3(
-			*info->pCmdBuffer,
-			*texture->GetImage(),
-			( VkImageLayout )texture->Layout,
-			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-		);
-
-		texture->Layout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+		texture->TransitionLayout(0, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 	}
 
 	void CVulkanSDLPresenter::Shutdown() NOEXCEPT
