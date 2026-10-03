@@ -117,8 +117,6 @@ namespace Monoworks
 
 		Ref<CDefferedFrameGraph> defferedFrameGraph = Ref<CDefferedFrameGraph>::Create( camera );
 
-		CFrameManager::Init();
-		CFrameManager::SetFrameGraph( defferedFrameGraph );
 	}
 
 	void CApplication::Shutdown() NOEXCEPT
@@ -135,6 +133,8 @@ namespace Monoworks
 	void CApplication::Frame()
 	{
 		MW_PROFILE_FUNC;
+
+		MW_INFO( "frame" );
 
 		// called once per frame
 		Events::SAppFrame frame{};

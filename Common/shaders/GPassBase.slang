@@ -115,7 +115,7 @@ namespace Monoworks
     // Parameter Block struct of GBuffer;
     public struct GBufferPB 
     {
-        public Texture2D<float4> AlbedoOcclusion;   // RGBA8UNORM
+        public Texture2D<float4> AlbedoOcclusion;   // RGBA8UNORM / <- DAS HIER SOLLEN VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE SEIN aber es ist aus irgendeinem grund 
         public Texture2D<float4> NormalRoughMetal;  // A2GBR10UNORM
         public Texture2D<float3> Emissive;          // B10GR11UFLOAT
         public Texture2D<float2> MotionVector;      // RG16SFLOAT

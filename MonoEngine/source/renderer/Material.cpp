@@ -12,110 +12,134 @@ namespace Monoworks
 	static constexpr u32 GlobalScopeSignature = 0;
 	
 
-	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
+	NODISCARD static u32 GetParameterBlockSet( slang::VariableLayoutReflection* pBlockVar )
 	{
-		MW_PROFILE_FUNC;
+		return static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
+	}
 
-		slang::VariableLayoutReflection* pBlockVar = nullptr;
+	NODISCARD static bool IsParameterBlock( slang::VariableLayoutReflection* pVar )
+	{
+		if ( pVar == nullptr || pVar->getTypeLayout() == nullptr )
+			return false;
 
+		return pVar->getTypeLayout()->getKind() == slang::TypeReflection::Kind::ParameterBlock;
+	}
+
+	NODISCARD static slang::VariableLayoutReflection* FindParameterByName( std::string_view name, slang::ProgramLayout* pLayout )
+	{
 		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
 		{
 			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
-			if ( parameterBlockName == pParam->getName() )
-			{
-				pBlockVar = pParam;
-				break;
-			}
+			const char* pParamName = pParam ? pParam->getName() : nullptr;
+
+			if ( pParamName && name == pParamName )
+				return pParam;
 		}
 
-		if ( pBlockVar == nullptr )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
+		return nullptr;
+	}
 
+	NODISCARD static std::expected<u32, EResult> FindFieldBindingInParameterBlock( slang::VariableLayoutReflection* pBlockVar, std::string_view fieldName )
+	{
 		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
+		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
 
-		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
+		if ( pElementVar == nullptr )
 			return std::unexpected( MW_ERROR_NON_EXISTANT );
 
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
-
-		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
 		slang::TypeLayoutReflection* pElementTypeLayout = pElementVar->getTypeLayout();
-
-		const u32 containerBindingOffset = static_cast< u32 >( pElementVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
+		const u32 elementBindingOffset = static_cast< u32 >( pElementVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
 
 		for ( u32 i = 0; i < pElementTypeLayout->getFieldCount(); ++i )
 		{
 			slang::VariableLayoutReflection* pField = pElementTypeLayout->getFieldByIndex( i );
-			if ( bindingName == pField->getName() )
-			{
-				const u32 bindingIndex = containerBindingOffset + static_cast< u32 >( pField->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
-				return std::make_pair( setIndex, bindingIndex );
-			}
+			const char* pFieldName = pField->getName();
+
+			if ( pFieldName && fieldName == pFieldName )
+				return elementBindingOffset + static_cast< u32 >( pField->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
 		}
 
 		return std::unexpected( MW_ERROR_NON_EXISTANT );
-
 	}
 
 	NODISCARD static std::expected<u32, EResult> FindParameterBlockNumberByString( std::string_view parameterBlockName, slang::ProgramLayout* pLayout )
 	{
 		MW_PROFILE_FUNC;
 
+		slang::VariableLayoutReflection* pBlockVar = FindParameterByName( parameterBlockName, pLayout );
 
-		slang::VariableLayoutReflection* pBlockVar = nullptr;
+		if ( !IsParameterBlock( pBlockVar ) )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		return GetParameterBlockSet( pBlockVar );
+	}
+
+	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
+	{
+		MW_PROFILE_FUNC;
+
+		slang::VariableLayoutReflection* pBlockVar = FindParameterByName( parameterBlockName, pLayout );
+
+		if ( !IsParameterBlock( pBlockVar ) )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		auto bindingIndex = FindFieldBindingInParameterBlock( pBlockVar, bindingName );
+
+		if ( !bindingIndex )
+			return std::unexpected( bindingIndex.error() );
+
+		return std::make_pair( GetParameterBlockSet( pBlockVar ), bindingIndex.value() );
+	}
+
+	NODISCARD static std::expected<u32, EResult> FindBindingNumberByString( u32 parameterBlock, std::string_view name, slang::ProgramLayout* pLayout ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
 
 		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
 		{
 			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
-			if ( parameterBlockName == pParam->getName() )
+
+			if ( pParam == nullptr )
+				continue;
+
+			const char* pParamName = pParam->getName();
+
+			if ( IsParameterBlock( pParam ) )
 			{
-				pBlockVar = pParam;
-				break;
+				if ( GetParameterBlockSet( pParam ) != parameterBlock )
+					continue;
+
+				if ( pParamName && name == pParamName )
+				{
+					slang::VariableLayoutReflection* pContainerVar = pParam->getTypeLayout()->getContainerVarLayout();
+
+					if ( pContainerVar == nullptr )
+						return 0u;
+
+					return static_cast< u32 >( pContainerVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
+				}
+
+				auto fieldBinding = FindFieldBindingInParameterBlock( pParam, name );
+
+				if ( fieldBinding )
+					return fieldBinding.value();
+			}
+			else
+			{
+				if ( pParamName == nullptr || name != pParamName )
+					continue;
+
+				if ( pParam->getBindingSpace( slang::ParameterCategory::DescriptorTableSlot ) != parameterBlock )
+					continue;
+
+				return static_cast< u32 >( pParam->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
 			}
 		}
 
-		if ( pBlockVar == nullptr )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
-
-		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
-
-		return setIndex;
+		return std::unexpected( MW_ERROR_NON_EXISTANT );
 	}
 
-	NODISCARD static std::expected<u32, EResult> FindBindingNumberByString( u32 paramterBlock, std::string_view name, slang::ProgramLayout* pLayout ) NOEXCEPT
-	{
-		MW_PROFILE_FUNC;
 
-		slang::VariableLayoutReflection* pBlockVar = pLayout->getParameterByIndex( paramterBlock );
-
-		if ( pBlockVar == nullptr )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
-
-		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::VariableLayoutReflection* globals = pLayout->getGlobalParamsVarLayout();
-		slang::TypeLayoutReflection* globalsType = globals->getTypeLayout();
-
-		const auto cstr = name.data();
-		const SlangInt fieldIndex = globalsType->findFieldIndexByName( cstr );
-
-		if ( fieldIndex < 0 )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::VariableLayoutReflection* field = globalsType->getFieldByIndex( fieldIndex );
-		const size_t binding = field->getOffset( slang::ParameterCategory::DescriptorTableSlot );
-
-		return binding;
-
-	}
 
 	MW_NOTHROW EResult CMaterial::SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT
 	{
@@ -165,6 +189,7 @@ namespace Monoworks
 		m_hGraphicsPipeline = CFrameManager::GetCurrentFrameGraph()->GetDefaultBasePassPipeline();
 		m_ShaderReflectionData = m_hShader->ReflectOnShader();
 		auto shaderLayout = m_hShader->GetShaderProgram()->getLayout();
+		
 
 		auto pb = FindParameterBlockNumberByString( c_MaterialInputPB, shaderLayout );
 		

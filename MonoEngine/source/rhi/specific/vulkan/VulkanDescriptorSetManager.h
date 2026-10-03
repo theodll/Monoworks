@@ -31,7 +31,7 @@ namespace Monoworks::RHI
 		void WriteBufferImpl(	DescriptorHandle pDescriptor, u32 binding, void* pBuffer, size_t size ) override;
 
 		// Only writes the Image!
-		void WriteImageImpl(	DescriptorHandle pDescriptor, u32 binding, Ref<ITexture2D> hTexture ) override;
+		void WriteImageImpl(	DescriptorHandle pDescriptor, u32 binding, Ref<ITexture2D> hTexture, EDescriptorType imageType = MW_DESCRIPTOR_TYPE_SAMPLED_IMAGE ) override;
 
 		// Only writes the Sampler! 
 		void WriteSamplerImpl(	DescriptorHandle pDescriptor, u32 binding, Ref<ITexture2D> hTexture ) override;

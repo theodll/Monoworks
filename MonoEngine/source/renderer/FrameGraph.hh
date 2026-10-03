@@ -15,6 +15,17 @@
 
 namespace Monoworks 
 {
+
+	constexpr char c_GbufBindingName[] = "u_GBuffer";
+	constexpr char c_GbufAOBindingName[] = "AlbedoOcclusion";
+	constexpr char c_GbufNRMBindingName[] = "NormalRoughMetal";
+	constexpr char c_GbufEBindingName[] = "Emissive";
+	constexpr char c_GbufMVBindingName[] = "MotionVector";
+	constexpr char c_GbufEMIDBindingName[] = "EntityMaterialID";
+	constexpr char c_GbufDBindingName[] = "Depth";
+	constexpr char c_GbufCBindingName[] = "Composite";
+	constexpr char c_GbufSBindingName[] = "Sampler";
+
 	enum ETonemapMode
 	{
 		MW_TONEMAP_MODE_NONE, // Pass through
@@ -497,6 +508,7 @@ namespace Monoworks
 		Ref<RHI::IUniformBuffer> m_hTonemapParamsUBO;
 		Ref<CPostProcessPass> m_hTonemapPass;
 
+		
 
 
 		// TEMP:

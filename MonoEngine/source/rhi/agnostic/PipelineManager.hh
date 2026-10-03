@@ -52,7 +52,7 @@ namespace Monoworks::RHI
 
 		Hash::HashCombine( hash, pInfo->ComputeShader.ShaderStage );
 		Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.Code.pCode, pInfo->ComputeShader.Code.Size ) );
-		Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.pEntrypoint, pInfo->ComputeShader.Code.Size ) );
+        Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.pEntrypoint, pInfo->ComputeShader.pEntrypoint ? std::strlen( pInfo->ComputeShader.pEntrypoint ) : 0 ) );
 		return hash;
 	}
 

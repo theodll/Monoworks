@@ -35,99 +35,133 @@ namespace Monoworks
 		return out;
 	}
 
+	NODISCARD static u32 GetParameterBlockSet( slang::VariableLayoutReflection* pBlockVar )
+	{
+		return static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
+	}
+
+	NODISCARD static bool IsParameterBlock( slang::VariableLayoutReflection* pVar )
+	{
+		if ( pVar == nullptr || pVar->getTypeLayout() == nullptr )
+			return false;
+
+		return pVar->getTypeLayout()->getKind() == slang::TypeReflection::Kind::ParameterBlock;
+	}
+
+	NODISCARD static slang::VariableLayoutReflection* FindParameterByName( std::string_view name, slang::ProgramLayout* pLayout )
+	{
+		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
+		{
+			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
+			const char* pParamName = pParam ? pParam->getName() : nullptr;
+
+			if ( pParamName && name == pParamName )
+				return pParam;
+		}
+
+		return nullptr;
+	}
+
+	NODISCARD static std::expected<u32, EResult> FindFieldBindingInParameterBlock( slang::VariableLayoutReflection* pBlockVar, std::string_view fieldName )
+	{
+		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
+		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
+
+		if ( pElementVar == nullptr )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		slang::TypeLayoutReflection* pElementTypeLayout = pElementVar->getTypeLayout();
+		const u32 elementBindingOffset = static_cast< u32 >( pElementVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
+
+		for ( u32 i = 0; i < pElementTypeLayout->getFieldCount(); ++i )
+		{
+			slang::VariableLayoutReflection* pField = pElementTypeLayout->getFieldByIndex( i );
+			const char* pFieldName = pField->getName();
+
+			if ( pFieldName && fieldName == pFieldName )
+				return elementBindingOffset + static_cast< u32 >( pField->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
+		}
+
+		return std::unexpected( MW_ERROR_NON_EXISTANT );
+	}
+
 	NODISCARD static std::expected<u32, EResult> FindParameterBlockNumberByString( std::string_view parameterBlockName, slang::ProgramLayout* pLayout )
 	{
 		MW_PROFILE_FUNC;
 
+		slang::VariableLayoutReflection* pBlockVar = FindParameterByName( parameterBlockName, pLayout );
 
-		slang::VariableLayoutReflection* pBlockVar = nullptr;
-
-		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
-		{
-			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
-			if ( parameterBlockName == pParam->getName() )
-			{
-				pBlockVar = pParam;
-				break;
-			}
-		}
-
-		if ( pBlockVar == nullptr )
+		if ( !IsParameterBlock( pBlockVar ) )
 			return std::unexpected( MW_ERROR_NON_EXISTANT );
 
-		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
-
-		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
-
-		return setIndex;
+		return GetParameterBlockSet( pBlockVar );
 	}
 
 	NODISCARD static std::expected<std::pair<u32, u32>, EResult> FindParameterBlockAndBindingNumberByString( std::string_view parameterBlockName, std::string_view bindingName, slang::ProgramLayout* pLayout )
 	{
 		MW_PROFILE_FUNC;
 
-		slang::VariableLayoutReflection* pBlockVar = nullptr;
+		slang::VariableLayoutReflection* pBlockVar = FindParameterByName( parameterBlockName, pLayout );
+
+		if ( !IsParameterBlock( pBlockVar ) )
+			return std::unexpected( MW_ERROR_NON_EXISTANT );
+
+		auto bindingIndex = FindFieldBindingInParameterBlock( pBlockVar, bindingName );
+
+		if ( !bindingIndex )
+			return std::unexpected( bindingIndex.error() );
+
+		return std::make_pair( GetParameterBlockSet( pBlockVar ), bindingIndex.value() );
+	}
+
+	NODISCARD static std::expected<u32, EResult> FindBindingNumberByString( u32 parameterBlock, std::string_view name, slang::ProgramLayout* pLayout ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
 
 		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
 		{
 			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
-			if ( parameterBlockName == pParam->getName() )
+
+			if ( pParam == nullptr )
+				continue;
+
+			const char* pParamName = pParam->getName();
+
+			if ( IsParameterBlock( pParam ) )
 			{
-				pBlockVar = pParam;
-				break;
+				if ( GetParameterBlockSet( pParam ) != parameterBlock )
+					continue;
+
+				if ( pParamName && name == pParamName )
+				{
+					slang::VariableLayoutReflection* pContainerVar = pParam->getTypeLayout()->getContainerVarLayout();
+
+					if ( pContainerVar == nullptr )
+						return 0u;
+
+					return static_cast< u32 >( pContainerVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
+				}
+
+				auto fieldBinding = FindFieldBindingInParameterBlock( pParam, name );
+
+				if ( fieldBinding )
+					return fieldBinding.value();
 			}
-		}
-
-		if ( pBlockVar == nullptr )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::TypeLayoutReflection* pBlockTypeLayout = pBlockVar->getTypeLayout();
-
-		if ( pBlockTypeLayout->getKind() != slang::TypeReflection::Kind::ParameterBlock )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		const u32 setIndex = static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::RegisterSpace ) );
-
-		slang::VariableLayoutReflection* pElementVar = pBlockTypeLayout->getElementVarLayout();
-		slang::TypeLayoutReflection* pElementTypeLayout = pElementVar->getTypeLayout();
-
-		const u32 containerBindingOffset = static_cast< u32 >( pElementVar->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
-
-		for ( u32 i = 0; i < pElementTypeLayout->getFieldCount(); ++i )
-		{
-			slang::VariableLayoutReflection* pField = pElementTypeLayout->getFieldByIndex( i );
-			if ( bindingName == pField->getName() )
+			else
 			{
-				const u32 bindingIndex = containerBindingOffset + static_cast< u32 >( pField->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
-				return std::make_pair( setIndex, bindingIndex );
+				if ( pParamName == nullptr || name != pParamName )
+					continue;
+
+				if ( pParam->getBindingSpace( slang::ParameterCategory::DescriptorTableSlot ) != parameterBlock )
+					continue;
+
+				return static_cast< u32 >( pParam->getOffset( slang::ParameterCategory::DescriptorTableSlot ) );
 			}
 		}
 
 		return std::unexpected( MW_ERROR_NON_EXISTANT );
-
 	}
-
-	NODISCARD static std::expected<u32, EResult> FindBindingNumberByString( std::string_view name, slang::ProgramLayout* pLayout ) NOEXCEPT
-	{
-		MW_PROFILE_FUNC;
-		slang::VariableLayoutReflection* globals = pLayout->getGlobalParamsVarLayout();
-		slang::TypeLayoutReflection* globalsType = globals->getTypeLayout();
-
-		const auto cstr = name.data();
-		const SlangInt fieldIndex = globalsType->findFieldIndexByName( cstr );
-
-		if ( fieldIndex < 0 )
-			return std::unexpected( MW_ERROR_NON_EXISTANT );
-
-		slang::VariableLayoutReflection* field = globalsType->getFieldByIndex( fieldIndex );
-		const size_t binding = field->getOffset( slang::ParameterCategory::DescriptorTableSlot );
-
-		return binding;
-
-	}
+	
 
 	CComputePrePass::CComputePrePass( const ComputePrePassCreationInfo* pInfo )
 	{
@@ -219,7 +253,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -249,7 +283,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -279,7 +313,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -311,7 +345,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -555,7 +589,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -578,7 +612,7 @@ namespace Monoworks
 	void CGraphicsPrePass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -608,7 +642,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -634,7 +668,7 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -745,7 +779,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -775,7 +809,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -805,7 +839,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -835,7 +869,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -866,7 +900,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -1044,7 +1078,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -1128,7 +1162,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -1264,7 +1298,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -1293,7 +1327,7 @@ namespace Monoworks
 			return;
 		}
 
-		auto binding = FindBindingNumberByString( bindingName, m_hShader->GetShaderProgram()->getLayout() );
+		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
 		{
 			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
@@ -1331,178 +1365,178 @@ namespace Monoworks
 		MW_INFO( "Instantiate CDefferedFrameGraph" );
 
 		// When changing anything in this scope, check CMaterial::SetShader if that change also applies there.
+	
+		m_hCamera = hCamera;
+
+		ShaderCreateInfo shaderInfo{};
+		shaderInfo.Flags = MW_SHADER_FLAG_INTERNAL_SLANG_SESSION;
+		shaderInfo.Path = "shaders/DefaultMaterialStatic.slang"; // TODO: not hard code this
+
+		m_hDefaultBasePassShader = Ref<CShader>::Create( &shaderInfo );
+
+		/*
+		  NOTE: From GPassBase.slang
+				public struct VertexInput
+				{
+					public float3       Position         : POSITION;
+					public float3       Normal           : NORMAL;
+					public float3       Tangent          : TANGENT;
+					public float3       Binormal         : BINORMAL;
+					public float2       TexCoord         : TEXCOORD0;
+				}
+		*/
+
+		// Set default vertex buffer layout to be used by every Vertex Shader.
+		CVertexLayout basePassVertexLayout =
 		{
-			m_hCamera = hCamera;
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Position" },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Normal"   },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Tangent"  },
+			{ MW_SHADER_DATA_TYPE_FLOAT_3, "Binormal" },
+			{ MW_SHADER_DATA_TYPE_FLOAT_2, "TexCoord" }
+		};
 
-			ShaderCreateInfo shaderInfo{};
-			shaderInfo.Flags = MW_SHADER_FLAG_INTERNAL_SLANG_SESSION;
-			shaderInfo.Path = "shaders/DefaultMaterialStatic.slang"; // TODO: not hard code this
+		auto entrypoints = m_hDefaultBasePassShader->GetShaderEntrypoints();
+		const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
 
-			m_hDefaultBasePassShader = Ref<CShader>::Create( &shaderInfo );
+		SShaderObject vertexShader;
+		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
+		vertexShader.pEntrypoint = vertexEntrypoint;
 
-			/*
-			  NOTE: From GPassBase.slang
-					public struct VertexInput
-					{
-						public float3       Position         : POSITION;
-						public float3       Normal           : NORMAL;
-						public float3       Tangent          : TANGENT;
-						public float3       Binormal         : BINORMAL;
-						public float2       TexCoord         : TEXCOORD0;
-					}
-			*/
+		auto program = m_hDefaultBasePassShader->GetShaderProgram();
+		slang::ProgramLayout* layout = program->getLayout();
 
-			// Set default vertex buffer layout to be used by every Vertex Shader.
-			CVertexLayout basePassVertexLayout =
+		// Get byte code for the Vertex Shader
+		{
+
+			SlangInt vertexEntryPointIndex = -1;
+			SlangInt entryPointCount = layout->getEntryPointCount();
+
+			for ( SlangInt i = 0; i < entryPointCount; ++i )
 			{
-				{ MW_SHADER_DATA_TYPE_FLOAT_3, "Position" },
-				{ MW_SHADER_DATA_TYPE_FLOAT_3, "Normal"   },
-				{ MW_SHADER_DATA_TYPE_FLOAT_3, "Tangent"  },
-				{ MW_SHADER_DATA_TYPE_FLOAT_3, "Binormal" },
-				{ MW_SHADER_DATA_TYPE_FLOAT_2, "TexCoord" }
-			};
+				slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
 
-			auto entrypoints = m_hDefaultBasePassShader->GetShaderEntrypoints();
-			const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
-
-			SShaderObject vertexShader;
-			vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
-			vertexShader.pEntrypoint = vertexEntrypoint;
-
-			auto program = m_hDefaultBasePassShader->GetShaderProgram();
-			slang::ProgramLayout* layout = program->getLayout();
-
-			// Get byte code for the Vertex Shader
-			{
-
-				SlangInt vertexEntryPointIndex = -1;
-				SlangInt entryPointCount = layout->getEntryPointCount();
-
-				for ( SlangInt i = 0; i < entryPointCount; ++i )
+				if ( entryPointLayout->getStage() == SLANG_STAGE_VERTEX )
 				{
-					slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
-
-					if ( entryPointLayout->getStage() == SLANG_STAGE_VERTEX )
-					{
-						vertexEntryPointIndex = i;
-						break;
-					}
-				}
-
-				if ( vertexEntryPointIndex != -1 )
-				{
-					Slang::ComPtr<slang::IBlob> code;
-					Slang::ComPtr<slang::IBlob> diagnostics;
-					const SlangInt targetIndex = 0;
-					SlangResult result = program->getEntryPointCode(
-						vertexEntryPointIndex,
-						targetIndex,
-						code.writeRef(),
-						diagnostics.writeRef()
-					);
-
-					if ( SLANG_FAILED( result ) )
-					{
-						if ( diagnostics )
-							MW_ASSERT( false, "Failed to get vertex shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
-
-						return;
-					}
-
-					vertexShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+					vertexEntryPointIndex = i;
+					break;
 				}
 			}
 
-			const char* fragmentEntrypoint = entrypoints[MW_SHADER_STAGE_FRAGMENT].c_str();
-
-			SShaderObject pixelShader;
-			pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
-			pixelShader.pEntrypoint = fragmentEntrypoint;
-
-			// Get byte code for the Pixel Shader
+			if ( vertexEntryPointIndex != -1 )
 			{
+				Slang::ComPtr<slang::IBlob> code;
+				Slang::ComPtr<slang::IBlob> diagnostics;
+				const SlangInt targetIndex = 0;
+				SlangResult result = program->getEntryPointCode(
+					vertexEntryPointIndex,
+					targetIndex,
+					code.writeRef(),
+					diagnostics.writeRef()
+				);
 
-				SlangInt pixelEntryPointIndex = -1;
-				SlangInt entryPointCount = layout->getEntryPointCount();
-
-				for ( SlangInt i = 0; i < entryPointCount; ++i )
+				if ( SLANG_FAILED( result ) )
 				{
-					slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
+					if ( diagnostics )
+						MW_ASSERT( false, "Failed to get vertex shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
 
-					if ( entryPointLayout->getStage() == SLANG_STAGE_FRAGMENT )
-					{
-						pixelEntryPointIndex = i;
-						break;
-					}
+					return;
 				}
 
-				if ( pixelEntryPointIndex != -1 )
-				{
-					Slang::ComPtr<slang::IBlob> code;
-					Slang::ComPtr<slang::IBlob> diagnostics;
-					const SlangInt targetIndex = 0;
-					SlangResult result = program->getEntryPointCode(
-						pixelEntryPointIndex,
-						targetIndex,
-						code.writeRef(),
-						diagnostics.writeRef()
-					);
-
-					if ( SLANG_FAILED( result ) )
-					{
-						if ( diagnostics )
-							MW_ERROR( "Failed to get pixel shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
-
-						return;
-					}
-
-					pixelShader.Code = { code->getBufferPointer(), code->getBufferSize() };
-
-				}
+				vertexShader.Code = { code->getBufferPointer(), code->getBufferSize() };
 			}
-
-			// Add all shaders used by the base pass to an array to create the base pipeline.
-			std::vector<SShaderObject> shaderObjects;
-			shaderObjects.push_back( vertexShader );
-			shaderObjects.push_back( pixelShader );
-
-			// Add all color formats used in the gbuffer to an array also to create the base pipeline.
-			std::vector<EImageFormat> colorFormats;
-			colorFormats.emplace_back( MW_FORMAT_R8G8B8A8_UNORM ); // Albedo + Occlusion 
-			colorFormats.emplace_back( MW_FORMAT_A2R10G10B10_UNORM_PACK32 ); // Normals, Roughness + Metallicness 
-			colorFormats.emplace_back( MW_FORMAT_B10G11R11_UFLOAT_PACK32 ); // Emissive
-			colorFormats.emplace_back( MW_FORMAT_R16G16_SFLOAT ); // Motion vectors
-			colorFormats.emplace_back( MW_FORMAT_R32_UINT ); // Entity ID (bits 0-18) + Material ID (bits 19-31)
-
-			// Color blending things also for creating the base pipeline.
-			std::vector<SColorBlendAttachmentState> colorBlendAttachments;
-			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
-			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
-			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
-			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
-			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
-
-			auto pipelineReflectData = m_hDefaultBasePassShader->ReflectOnShader();
-
-			RHI::GraphicsPipelineCreationInfo createInfo{};
-			createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
-			createInfo.VertexLayout = basePassVertexLayout;
-			createInfo.ShaderObjects = shaderObjects;
-			createInfo.ColorFormats = colorFormats;
-			createInfo.ColorBlendAttachments = colorBlendAttachments;
-			createInfo.pSignature = pipelineReflectData.pPipelineSignature;
-			createInfo.CompareOp = RHI::MW_COMPARE_OP_EQUAL;
-			createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
-
-			// Create the base pass pipeline.
-			auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_DefaultBasePassPipelineHash );
-
-			if ( basePassPipeline )
-				m_hDefaultBasePassPipeline = basePassPipeline.value();
-			else
-				MW_FATAL( "Failed to create base pass pipeline." );
-			// TODO: Implement error handling here.
 		}
+
+		const char* fragmentEntrypoint = entrypoints[MW_SHADER_STAGE_FRAGMENT].c_str();
+
+		SShaderObject pixelShader;
+		pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
+		pixelShader.pEntrypoint = fragmentEntrypoint;
+
+		// Get byte code for the Pixel Shader
+		{
+
+			SlangInt pixelEntryPointIndex = -1;
+			SlangInt entryPointCount = layout->getEntryPointCount();
+
+			for ( SlangInt i = 0; i < entryPointCount; ++i )
+			{
+				slang::EntryPointLayout* entryPointLayout = layout->getEntryPointByIndex( i );
+
+				if ( entryPointLayout->getStage() == SLANG_STAGE_FRAGMENT )
+				{
+					pixelEntryPointIndex = i;
+					break;
+				}
+			}
+
+			if ( pixelEntryPointIndex != -1 )
+			{
+				Slang::ComPtr<slang::IBlob> code;
+				Slang::ComPtr<slang::IBlob> diagnostics;
+				const SlangInt targetIndex = 0;
+				SlangResult result = program->getEntryPointCode(
+					pixelEntryPointIndex,
+					targetIndex,
+					code.writeRef(),
+					diagnostics.writeRef()
+				);
+
+				if ( SLANG_FAILED( result ) )
+				{
+					if ( diagnostics )
+						MW_ERROR( "Failed to get pixel shader entry point code for default base pass: {}", static_cast< const char* >( diagnostics->getBufferPointer() ) );
+
+					return;
+				}
+
+				pixelShader.Code = { code->getBufferPointer(), code->getBufferSize() };
+
+			}
+		}
+
+		// Add all shaders used by the base pass to an array to create the base pipeline.
+		std::vector<SShaderObject> shaderObjects;
+		shaderObjects.push_back( vertexShader );
+		shaderObjects.push_back( pixelShader );
+
+		// Add all color formats used in the gbuffer to an array also to create the base pipeline.
+		std::vector<EImageFormat> colorFormats;
+		colorFormats.emplace_back( MW_FORMAT_R8G8B8A8_UNORM ); // Albedo + Occlusion 
+		colorFormats.emplace_back( MW_FORMAT_A2R10G10B10_UNORM_PACK32 ); // Normals, Roughness + Metallicness 
+		colorFormats.emplace_back( MW_FORMAT_B10G11R11_UFLOAT_PACK32 ); // Emissive
+		colorFormats.emplace_back( MW_FORMAT_R16G16_SFLOAT ); // Motion vectors
+		colorFormats.emplace_back( MW_FORMAT_R32_UINT ); // Entity ID (bits 0-18) + Material ID (bits 19-31)
+
+		// Color blending things also for creating the base pipeline.
+		std::vector<SColorBlendAttachmentState> colorBlendAttachments;
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+
+		auto pipelineReflectData = m_hDefaultBasePassShader->ReflectOnShader();
+
+		RHI::GraphicsPipelineCreationInfo createInfo{};
+		createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
+		createInfo.VertexLayout = basePassVertexLayout;
+		createInfo.ShaderObjects = shaderObjects;
+		createInfo.ColorFormats = colorFormats;
+		createInfo.ColorBlendAttachments = colorBlendAttachments;
+		createInfo.pSignature = pipelineReflectData.pPipelineSignature;
+		createInfo.CompareOp = RHI::MW_COMPARE_OP_EQUAL;
+		createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
+
+		// Create the base pass pipeline.
+		auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_DefaultBasePassPipelineHash );
+
+		if ( basePassPipeline )
+			m_hDefaultBasePassPipeline = basePassPipeline.value();
+		else
+			MW_FATAL( "Failed to create base pass pipeline." );
+		// TODO: Implement error handling here.
+		
 
 		auto re2d = CStaticRenderer::GetRenderableExtend();
 		SExtent3D re = { re2d.Width, re2d.Height, 1 };
@@ -1514,19 +1548,20 @@ namespace Monoworks
 			auto& gbuf = m_hGBuffers[i];
 			gbuf = Ref<GBuffer>::Create();
 
-			constexpr auto commonFlags = MW_IMAGE_USAGE_SAMPLED_BIT | MW_IMAGE_USAGE_STORAGE_BIT;
+			constexpr auto commonFlags = MW_IMAGE_USAGE_SAMPLED_BIT;
+
+			RHI::STextureCreateInfo gbufSamplerInfo{};
+			gbufSamplerInfo.Extent = re;
+			gbufSamplerInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			gbufSamplerInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			gbufSamplerInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT | MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT;
+			gbuf->Sampler = ITexture2D::Create( &gbufSamplerInfo );
 
 			RHI::STextureCreateInfo gbufImgInfo{};
 			gbufImgInfo.Extent = re;
 			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
 			gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
 			gbufImgInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | commonFlags;
-
-
-			gbufImgInfo.Format = MW_FORMAT_R8G8B8A8_UNORM;
-			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-			gbufImgInfo.Usage |= MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-			gbuf->AlbedoOcclusion = ITexture2D::Create( &gbufImgInfo );
 
 			gbufImgInfo.Format = MW_FORMAT_A2R10G10B10_UNORM_PACK32;
 			gbuf->NormalRoughMetal = ITexture2D::Create( &gbufImgInfo );
@@ -1540,15 +1575,31 @@ namespace Monoworks
 			gbufImgInfo.Format = MW_FORMAT_R32_UINT;
 			gbuf->EntityMaterialID = ITexture2D::Create( &gbufImgInfo );
 
+			gbufImgInfo.Format = MW_FORMAT_R8G8B8A8_UNORM;
+			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			gbufImgInfo.Usage |= MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | MW_IMAGE_USAGE_STORAGE_BIT;
+			gbuf->AlbedoOcclusion = ITexture2D::Create( &gbufImgInfo );
+
 			gbufImgInfo.Format = MW_FORMAT_D32_SFLOAT;
 			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
 			gbufImgInfo.Usage = MW_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | commonFlags;
 			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_DEPTH_BIT;
 			gbuf->Depth = ITexture2D::Create( &gbufImgInfo );
 
-			RHI::STextureCreateInfo gbufSamplerInfo{};
-			gbufSamplerInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT | MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT;
-			gbuf->Sampler = ITexture2D::Create( &gbufSamplerInfo );
+		}
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			auto& gbuf = m_hGBuffers[i];
+
+			gbuf->AlbedoOcclusion->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->NormalRoughMetal->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->Emissive->TransitionLayout(			i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->MotionVector->TransitionLayout(		i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->EntityMaterialID->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+
+			gbuf->Depth->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT, -1, true );
+
 		}
 
 		for ( auto& composite : m_hCompositeImages )
@@ -1660,19 +1711,19 @@ namespace Monoworks
 			m_hTonemapPass->BindUBO( "u_Params", m_hTonemapParamsUBO, true );
 		}
 		
+		auto lightShader = lightPass->m_hShader;
+		auto lightReflectionData = lightShader->ReflectOnShader();
+
+		auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
 			m_hCameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
-
-			auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
-			MW_ERROR( "SIZE: {}", depthReflectionData.pDescriptorSignatures.size() );
 
 			auto cameraUBO = FindParameterBlockNumberByString( "u_CameraConstants", depthPrePass->m_hShader->GetShaderProgram()->getLayout() );
 
 			if ( cameraUBO )
 			{
 				m_hCameraUBOSets[i] = CDescriptorManager::Allocate( depthReflectionData.pDescriptorSignatures[cameraUBO.value()] ); 
-				MW_ERROR( "{}", ( int )cameraUBO.value() );
 			}
 			else if ( cameraUBO.error() == MW_ERROR_NON_EXISTANT )
 				MW_FATAL( "Failed to allocate CameraUBO sets: Binding non existant" );
@@ -1701,21 +1752,86 @@ namespace Monoworks
 
 
 			// Use the light shader to allocate the GBuffer set, because its the first mandatory shader that has to include the GBuffer set.
-			m_hGBufferDescriptors[i] = CDescriptorManager::Allocate(lightPass->m_hShader->ReflectOnShader().pDescriptorSignatures[1]);
+			auto layout = lightShader->GetShaderProgram()->getLayout();
+
+			auto gbufPb = FindParameterBlockNumberByString( c_GbufBindingName, layout );
+			u32 pb = 0;
+			if ( gbufPb )
+				pb = gbufPb.value();
+			else
+				MW_FATAL( "Failed to find GBuffer Parameter Block binding inside light shader.");
+
+			// TODO: Dont do this
+			pb = 1; 
+
+			m_hGBufferDescriptors[i] = CDescriptorManager::Allocate(lightReflectionData.pDescriptorSignatures[pb]);
 			
-			// GBuffer Resources
-			CDescriptorManager::WriteImage(   m_hGBufferDescriptors[i],   0, m_hGBuffers[i]->AlbedoOcclusion );
-			CDescriptorManager::WriteImage(   m_hGBufferDescriptors[i],   1, m_hGBuffers[i]->NormalRoughMetal );
-			CDescriptorManager::WriteImage(   m_hGBufferDescriptors[i],   2, m_hGBuffers[i]->Emissive );
-			CDescriptorManager::WriteImage(   m_hGBufferDescriptors[i],   3, m_hGBuffers[i]->MotionVector );
-			CDescriptorManager::WriteImage(   m_hGBufferDescriptors[i],   4, m_hGBuffers[i]->EntityMaterialID );
-			CDescriptorManager::WriteImage(   m_hGBufferDescriptors[i],   5, m_hGBuffers[i]->Depth );
-																  
-			// Composite Image									  
-			CDescriptorManager::WriteImage(   m_hGBufferDescriptors[i],   6, m_hCompositeImages[i] );
-																  
-			// Sampler (the sampler is contained in the composite image)
-			CDescriptorManager::WriteSampler( m_hGBufferDescriptors[i],   7, m_hGBuffers[i]->Sampler );
+			auto aoBinding = FindBindingNumberByString(	pb, c_GbufAOBindingName, layout ); // albedo occlusion
+			auto nrmBinding = FindBindingNumberByString(pb, c_GbufNRMBindingName,layout ); // normal rough metal
+			auto eBinding = FindBindingNumberByString(	pb, c_GbufEBindingName,  layout ); // emissive
+			auto mvBinding = FindBindingNumberByString(	pb, c_GbufMVBindingName, layout ); // motion vectors
+			auto emidBinding = FindBindingNumberByString( pb, c_GbufEMIDBindingName, layout ); // entity material id
+			auto dBinding = FindBindingNumberByString(	pb, c_GbufDBindingName, layout ); // depth
+			auto cBinding = FindBindingNumberByString( pb, c_GbufCBindingName, layout ); // composite
+			auto sBinding = FindBindingNumberByString( pb, c_GbufSBindingName, layout ); // sampler
+
+
+			if ( aoBinding )
+				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], aoBinding.value(), m_hGBuffers[i]->AlbedoOcclusion );
+			else if ( aoBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for ambient occlusion gbuffer target: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for ambient occlusion gbuffer target: Unkown error" );
+
+
+			if ( nrmBinding )
+				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], nrmBinding.value(), m_hGBuffers[i]->NormalRoughMetal );
+			else if ( nrmBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for normal rough metal gbuffer target: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for normal rough metal gbuffer target: Unkown error" );
+
+			if ( eBinding )
+				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], eBinding.value(), m_hGBuffers[i]->Emissive );
+			else if ( eBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for emissive gbuffer target: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for emissive gbuffer target: Unkown error" );
+
+			if ( mvBinding )
+				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], mvBinding.value(), m_hGBuffers[i]->MotionVector );
+			else if ( mvBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for motion vectors gbuffer target: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for motion vectors gbuffer target: Unkown error" );
+
+			if ( emidBinding )
+				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], emidBinding.value(), m_hGBuffers[i]->EntityMaterialID );
+			else if ( emidBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for entity material ID gbuffer target: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for entity material ID gbuffer target: Unkown error" );
+
+			if ( dBinding )
+				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], dBinding.value(), m_hGBuffers[i]->Depth );
+			else if ( dBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for depth gbuffer target: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for depth gbuffer target: Unkown error" );
+
+			if ( cBinding )
+				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], cBinding.value(), m_hCompositeImages[i], MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+			else if ( cBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for composite gbuffer target: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for composite gbuffer target: Unkown error" );
+
+			if ( sBinding )
+				CDescriptorManager::WriteSampler( m_hGBufferDescriptors[i], sBinding.value(), m_hGBuffers[i]->Sampler );
+			else if ( sBinding.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for gbuffer sampler: Non existant" );
+			else
+				MW_ERROR( "Failed to find binding for gbuffer sampler: Unkown error" );
 		}
 
 		static std::array<SVertex, 24> s_CubeVertices =
@@ -1771,13 +1887,6 @@ namespace Monoworks
 
 		mesh->VertexBuffer = RHI::IVertexBuffer::Create( static_cast< void* >( s_CubeVertices.data() ), s_CubeVertices.size(), sizeof( SVertex ), true );
 		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), true );
-
-		MaterialCreationInfo matCreateInfo{};
-		matCreateInfo.AlbedoFactor = { 1.0f, 1.0f, 0.0f };
-
-		Ref<CMaterial> mat = Ref<CMaterial>::Create( &matCreateInfo );
-
-		mesh->Material = std::move( mat );
 
 		m_hTonemapPass->BindTexture( "u_SwapchainImage", CApplication::GetCreateInfos()->pPresenter->GetSwapchainImages().data(), true );
 
@@ -1934,6 +2043,16 @@ namespace Monoworks
 	MW_NOTHROW void CDefferedFrameGraph::ExecutePreRenderingSteps( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		if ( !mesh->Material )
+		{
+			MaterialCreationInfo matCreateInfo{};
+			matCreateInfo.AlbedoFactor = { 1.0f, 1.0f, 0.0f };
+
+			Ref<CMaterial> mat = Ref<CMaterial>::Create( &matCreateInfo );
+
+			mesh->Material = std::move( mat );
+		}
 
 		auto& gbuf = m_hGBuffers[frameIndex];
 

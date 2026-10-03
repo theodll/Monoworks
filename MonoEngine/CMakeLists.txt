@@ -100,11 +100,13 @@ if ("MW_ENABLE_MANUAL_RENDERDOC" IN_LIST current_defs)
     endif()
 endif()
 
-add_custom_command(TARGET MonoEngine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-        "${CMAKE_CURRENT_SOURCE_DIR}/../common/resources"
-        "${CMAKE_BINARY_DIR}/resources"
-    COMMENT "Copying common resources"
+add_custom_target(MonoEngineCopyCommon ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/../common"
+        "$<TARGET_FILE_DIR:MonoEngine>"
+    VERBATIM
 )
+
+add_dependencies(MonoEngine MonoEngineCopyCommon)
 
 target_compile_definitions(MonoEngine PRIVATE MW_ENGINE TRACY_ENABLE)

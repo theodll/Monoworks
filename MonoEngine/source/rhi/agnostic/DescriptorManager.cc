@@ -40,10 +40,10 @@ namespace Monoworks::RHI
 
 	};
 
-	void CDescriptorManager::WriteImage( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture )
+	void CDescriptorManager::WriteImage( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture, EDescriptorType imageType )
 	{
 		MW_PROFILE_FUNC;
-		m_hInstance->WriteImageImpl( hDescriptor, binding, hTexture );
+		m_hInstance->WriteImageImpl( hDescriptor, binding, hTexture, imageType );
 	};
 
 	void CDescriptorManager::WriteSampler( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture )

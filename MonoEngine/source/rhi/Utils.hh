@@ -122,6 +122,12 @@ namespace Monoworks::RHI
 		MW_FORMAT_D32_SFLOAT_S8_UINT = 130,
 	};
 
+	enum EDescriptorType 
+	{
+		MW_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = 1,
+		MW_DESCRIPTOR_TYPE_SAMPLED_IMAGE = 2,
+		MW_DESCRIPTOR_TYPE_STORAGE_IMAGE = 3
+	};
 
 	enum EImageUsageFlagsBits
 	{

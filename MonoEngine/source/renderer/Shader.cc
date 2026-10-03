@@ -2043,6 +2043,9 @@ namespace Monoworks
 			}
 		);
 
+		for ( auto& push : pushConstantRanges )
+			if ( push.size % 4 != 0 )
+				push.size = ( push.size + 3 ) & ~3u;
 
 		/*
 		 * -------------------------------------------------------------------------

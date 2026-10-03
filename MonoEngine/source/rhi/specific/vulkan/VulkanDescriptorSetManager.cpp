@@ -55,7 +55,7 @@ namespace Monoworks::RHI
 	};
 
 	// Only writes the Image!
-	void CVulkanDescriptorSetManager::WriteImageImpl( DescriptorHandle pDescriptor, u32 binding, Ref<ITexture2D> hTexture )
+	void CVulkanDescriptorSetManager::WriteImageImpl( DescriptorHandle pDescriptor, u32 binding, Ref<ITexture2D> hTexture, EDescriptorType imageType )
 	{
 		MW_PROFILE_FUNC;
 
@@ -70,7 +70,7 @@ namespace Monoworks::RHI
 		write.dstSet = ( VkDescriptorSet )pDescriptor;
 		write.dstBinding = binding;
 		write.descriptorCount = 1;
-		write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+		write.descriptorType = static_cast<VkDescriptorType>( imageType );
 		write.pImageInfo = &info;
 
 		vkUpdateDescriptorSets( *CVulkanContext::GetDevice()->GetDevice(), 1, &write, 0, nullptr );

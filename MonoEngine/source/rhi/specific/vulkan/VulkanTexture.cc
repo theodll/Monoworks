@@ -104,12 +104,12 @@ namespace Monoworks::RHI
 
 		m_GenerateImage = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT );
 		m_GenerateImageView = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT );
-		m_GenerateSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT );
+		m_GenerateSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT );
 
 
 		m_ManageImage = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT );
 		m_ManageImageView = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_MANAGEMENT_BIT );
-		m_ManageSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_MANAGEMENT_BIT );
+		m_ManageSampler = !( pInfo->Flags & MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_MANAGEMENT_BIT );
 
 		m_EnableMemoryExporting = pInfo->Flags & MW_TEXTURE_CREATION_FLAG_ENABLE_MEMORY_EXPORTING;
 
@@ -447,12 +447,15 @@ namespace Monoworks::RHI
 		if ( frameIndex > MFIF )
 			MW_API_ERROR( "Pass invalid frameIndex. Discarding layout transition.");
 
-		if ( threadID < 0 )
-			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
-		else if ( outsideFrameScope )
+		if ( outsideFrameScope )
 			cmd = *CVulkanContext::GetUploader()->GetCommandBuffer();
-		else
-			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+		else 
+		{
+			if ( threadID < 0 )
+				cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+			else
+				cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+		}
 		
 		if ( outsideFrameScope )
 			CVulkanContext::GetUploader()->Begin();
@@ -570,6 +573,9 @@ namespace Monoworks::RHI
 		dInfo.pImageMemoryBarriers = &barrier;
 
 		vkCmdPipelineBarrier2( *pCmd, &dInfo );
+
+		this->PipelineFlags = dstPipelineStage;
+		this->Layout = dstLayout;
 
 	};
 

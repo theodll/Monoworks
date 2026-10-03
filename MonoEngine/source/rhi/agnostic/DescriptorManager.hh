@@ -20,7 +20,7 @@ namespace Monoworks::RHI
 
 		static void WriteBuffer(	DescriptorHandle hDescriptor, u32 binding, void* pBuffer, size_t size );
 		// Only writes the Image!
-		static void WriteImage(	DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture );
+		static void WriteImage(	DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture, EDescriptorType imageType = MW_DESCRIPTOR_TYPE_SAMPLED_IMAGE );
 		// Only writes the Sampler! 
 		static void WriteSampler(	DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture );
 		NODISCARD static DescriptorHandle Allocate( DescriptorSignature hSetLayout, u32 maxSetHints MW_NULLABLE = 128 );
@@ -30,7 +30,7 @@ namespace Monoworks::RHI
 		virtual void ShutdownImpl() NOEXCEPT = 0;
 		virtual void WriteUniformBufferImpl( DescriptorHandle hDescriptor, u32 binding, Ref<IUniformBuffer> hUniformBuffer ) = 0;
 		virtual void WriteBufferImpl( DescriptorHandle hDescriptor, u32 binding, void* pBuffer, size_t size ) = 0;
-		virtual void WriteImageImpl( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture ) = 0;
+		virtual void WriteImageImpl( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture, EDescriptorType imageType = MW_DESCRIPTOR_TYPE_SAMPLED_IMAGE ) = 0;
 		virtual void WriteSamplerImpl( DescriptorHandle hDescriptor, u32 binding, Ref<ITexture2D> hTexture ) = 0;
 		virtual DescriptorHandle AllocateImpl( DescriptorSignature hSetLayout, u32 maxSetHints MW_NULLABLE = 128 ) = 0;
 

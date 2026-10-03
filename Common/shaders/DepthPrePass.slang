@@ -1,8 +1,9 @@
 import Utils;
 import GPassBase;
 
-namespace Monoworks 
+namespace Monoworks
 {
+
 	ParameterBlock<ConstantBuffer<CameraConstants>> u_CameraConstants; // set 1
 
     [shader("vertex")]
