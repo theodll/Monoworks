@@ -191,6 +191,7 @@ namespace Monoworks
 			return *this;
 		}
 
+
 		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
 		CRef& operator=(const CRef<U>& other) NOEXCEPT
 		{

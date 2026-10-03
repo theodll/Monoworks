@@ -71,7 +71,11 @@ namespace Monoworks::RHI
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 		vkBeginCommandBuffer(m_Commandbuffer, &beginInfo);
-		MW_PROFILE_VK_TRANSFER_ZONE(m_Commandbuffer, "Vulkan resource transfer begin")
+		MW_PROFILE_VK_TRANSFER_ZONE( m_Commandbuffer, "Vulkan resource transfer begin" );
+
+		MW_TRACE( "Begin Resource Uploading Commandbuffer" );
+
+
 	}
 
 	void CVulkanResourceUploader::End() NOEXCEPT
@@ -81,6 +85,8 @@ namespace Monoworks::RHI
 		MW_PROFILE_VK_TRANSFER_COLLECT( m_Commandbuffer );
 
 		vkEndCommandBuffer( m_Commandbuffer );
+
+		MW_TRACE( "Submit Resource Uploading Commandbuffer" );
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;

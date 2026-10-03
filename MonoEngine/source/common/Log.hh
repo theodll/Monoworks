@@ -8,40 +8,42 @@
  * @copyright Copyright (c) 2026
  * 
  */
+
 #pragma once
 #include <core/LogManager.hh>
 #include <source_location>
+#include <string_view>
 
-// #define MW_TRACE(...)    if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->trace(__VA_ARGS__)
-// #define MW_INFO(...)     if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->info(__VA_ARGS__)
-// #define MW_WARN(...)     if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->warn(__VA_ARGS__)
-// #define MW_ERROR(...)    if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->error(__VA_ARGS__)
-// #define MW_FATAL(...)    if(::Monoworks::CLogManager::GetCoreLogger()) ::Monoworks::CLogManager::GetCoreLogger()->critical(__VA_ARGS_)
+constexpr std::string_view StripFunctionName( std::string_view name )
+{
+    // Compilergenerierte Suffixe entfernen: "::<lambda_7>::operator ()" etc.
+    if ( const auto pos = name.find( "::<" ); pos != std::string_view::npos )
+        name = name.substr( 0, pos );
 
-constexpr std::string_view StripNamespace(std::string_view name) {
+    // Namespace-Präfix entfernen
     constexpr std::string_view prefix = "Monoworks::";
-    if (name.substr(0, prefix.size()) == prefix)
-        return name.substr(prefix.size());
+    if ( name.starts_with( prefix ) )
+        name.remove_prefix( prefix.size() );
+
     return name;
 }
 
 #define MW_LOG(fn, fmt_str, ...) \
     do { \
         if (auto logger = ::Monoworks::CLogManager::GetCoreLogger()) { \
-            logger->fn("[{}] " fmt_str, StripNamespace(__FUNCTION__), ##__VA_ARGS__); \
+            logger->fn("[{}] " fmt_str, StripFunctionName(__FUNCTION__) __VA_OPT__(,) __VA_ARGS__); \
         } \
         else { \
-            fmt::print("[{}] " fmt_str "\n", StripNamespace(__FUNCTION__), ##__VA_ARGS__); \
+            fmt::print("[{}] " fmt_str "\n", StripFunctionName(__FUNCTION__) __VA_OPT__(,) __VA_ARGS__); \
         } \
     } while (0)
 
-#define MW_TRACE(fmt, ...) MW_LOG(trace,    fmt, ##__VA_ARGS__)
-#define MW_INFO(fmt, ...)  MW_LOG(info,     fmt, ##__VA_ARGS__)
-#define MW_WARN(fmt, ...)  MW_LOG(warn,     fmt, ##__VA_ARGS__)
-#define MW_ERROR(fmt, ...) MW_LOG(error,    fmt, ##__VA_ARGS__)
-#define MW_FATAL(fmt, ...) MW_LOG(critical, fmt, ##__VA_ARGS__)
+#define MW_TRACE(fmt_str, ...) MW_LOG(trace,    fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_INFO(fmt_str, ...)  MW_LOG(info,     fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_WARN(fmt_str, ...)  MW_LOG(warn,     fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_ERROR(fmt_str, ...) MW_LOG(error,    fmt_str __VA_OPT__(,) __VA_ARGS__)
+#define MW_FATAL(fmt_str, ...) do { MW_LOG(critical, fmt_str __VA_OPT__(,) __VA_ARGS__); std::exit(1); } while (0)
 
-
-#define MW_API_WARN(fmt, ...)  MW_WARN( "Invalid API usage: " fmt, ##__VA_ARGS__ )
-#define MW_API_ERROR(fmt, ...) MW_ERROR( "Invalid API usage: " fmt, ##__VA_ARGS__ )
-#define MW_API_FATAL(fmt, ...) MW_FATAL( "Invalid API usage: " fmt, ##__VA_ARGS__ )
+#define MW_API_WARN(fmt, ...)  MW_WARN ("Invalid API usage: " fmt __VA_OPT__(,) __VA_ARGS__)
+#define MW_API_ERROR(fmt, ...) MW_ERROR("Invalid API usage: " fmt __VA_OPT__(,) __VA_ARGS__)
+#define MW_API_FATAL(fmt, ...) MW_FATAL("Invalid API usage: " fmt __VA_OPT__(,) __VA_ARGS__)

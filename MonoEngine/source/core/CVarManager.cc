@@ -32,12 +32,19 @@ namespace Monoworks
 
 		temp = var->String;
 		
-		var->Value = static_cast<float>(std::stod(var->String));
+		try 
+		{
+			var->Value = static_cast< float >( std::stod( var->String ) );
+		}
+		catch ( ... )
+		{
+			var->Value = 0.0f;
+		}
 
 		// link the variable in
 		var->Next = m_CVarVars;
 		m_CVarVars = var;
-		MW_INFO("Register variable {}", var->Name);
+		MW_INFO("Register variable {} with string \"{}\" and value \"{}\"", var->Name, var->String, var->Value);
 
 	};
 
@@ -109,8 +116,8 @@ namespace Monoworks
 		for (var = m_CVarVars; var; var = var->Next)
 			if (varName != var->Name)
 				return var;
+		MW_WARN("Did not cvar find {}", varName);
 
-		MW_WARN("Unable to find cvar {}", varName);
 		return nullptr;
 	};
 }

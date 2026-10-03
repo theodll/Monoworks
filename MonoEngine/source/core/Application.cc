@@ -3,6 +3,8 @@
 #include "ConfigManager.hh"
 
 #include <renderer/StaticRenderer.hh>
+#include <renderer/FrameGraph.hh>
+#include <renderer/FrameManager.hh>
 
 #include <events/EventManager.hh>
 #include <events/Event.hh>
@@ -99,19 +101,30 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 		m_pApplicationCreationInfos = *pInfos;
-
 		m_GraphicsAPI = pInfos->GraphicsAPI;
+
+
+		CStaticRenderer::SetRenderableExtend(&m_pApplicationCreationInfos.RenderableExtent);
+
 
 		m_GraphicsContext = Ref<RHI::CVulkanContext>::Create();
 		m_GraphicsContext->Init();
 
 		CStaticRenderer::Init();
+
+		// TODO: Move this somewhere else
+		Ref<CCamera> camera = Ref<CCamera>::Create( 90.0f, static_cast<float>(CStaticRenderer::GetRenderableExtend().Width / CStaticRenderer::GetRenderableExtend().Height), 0.0f, 1.0f );
+
+		Ref<CDefferedFrameGraph> defferedFrameGraph = Ref<CDefferedFrameGraph>::Create( camera );
+
 	}
 
 	void CApplication::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		
+		CFrameManager::Shutdown();
+
 		CStaticRenderer::Shutdown();
 
 		m_GraphicsContext->Shutdown();
@@ -120,6 +133,8 @@ namespace Monoworks
 	void CApplication::Frame()
 	{
 		MW_PROFILE_FUNC;
+
+		MW_INFO( "frame" );
 
 		// called once per frame
 		Events::SAppFrame frame{};
@@ -131,13 +146,10 @@ namespace Monoworks
 		CEventManager::EmitEventNonDeffered(tick, MW_EVENT_APP_TICK);
 		// simulate here
 
-		CStaticRenderer::BeginRendering();
-
+		// TODO: Move to frame graph
 		Events::SAppRender render{};
 		CEventManager::EmitEventNonDeffered(render, MW_EVENT_APP_RENDER);
-
-		CStaticRenderer::EndRendering();
-
+		CFrameManager::Render( CStaticRenderer::GetCurrentFrameIndex() );
 		
 
 

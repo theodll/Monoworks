@@ -23,9 +23,13 @@ namespace Monoworks::RHI
 		CVulkanTexture2D& operator=( const CVulkanTexture2D& ) = delete;
 
 		NODISCARD u32 ReadPixel( s32 x, s32 y ) NOEXCEPT override;
+		MW_NOTHROW void TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID = -1, bool outsideFrameScope = false ) NOEXCEPT override;
 
-		NODISCARD u32 GetWidth() const NOEXCEPT override { return m_ImageExtent.Width; };
-		NODISCARD u32 GetHeight() const NOEXCEPT override { return m_ImageExtent.Height; };
+		// For use with external commandbuffer (backend part only).
+		MW_NOTHROW void TransitionLayoutEC( VkCommandBuffer* pCmd, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask ) NOEXCEPT;
+
+		NODISCARD MW_NOTHROW u32 GetWidth() const NOEXCEPT override { return m_ImageExtent.Width; };
+		NODISCARD MW_NOTHROW u32 GetHeight() const NOEXCEPT override { return m_ImageExtent.Height; };
 
 		NODISCARD VkSampler* GetSampler() NOEXCEPT { return &m_Sampler; }
 		NODISCARD VkImage* GetImage() NOEXCEPT { return &m_Image; }
@@ -36,6 +40,9 @@ namespace Monoworks::RHI
 		void SetSampler( VkSampler* pSampler ) { MW_WARN( "Manually overwriting the Sampler is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_Sampler = *pSampler; }
 		void SetImage( VkImage* pImage ) { MW_WARN( "Manually overwriting the Image is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_Image = *pImage; }
 		void SetImageView( VkImageView* pImageView ) { MW_WARN( "Manually overwriting the Image View is dangerous and may lead to undefined behaviour. Only use in certain situations" ); m_ImageView = *pImageView; }
+
+		MW_NOTHROW void CopyImage( u32 frameIndex, Ref<ITexture> dstImage, s32 threadID = -1, bool outsideFrameScope = false ) override;
+		MW_NOTHROW void CopyImageEC( VkCommandBuffer* pCmd, Ref<ITexture> dstImage ); 
 
 	private:
 		void CreateImage( stbi_uc* pPixelData ) NOEXCEPT;
