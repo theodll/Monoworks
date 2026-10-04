@@ -117,6 +117,8 @@ namespace Monoworks
 
 		Ref<CDefferedFrameGraph> defferedFrameGraph = Ref<CDefferedFrameGraph>::Create( camera );
 
+		CFrameManager::SetFrameGraph( std::move( defferedFrameGraph ) );
+
 	}
 
 	void CApplication::Shutdown() NOEXCEPT

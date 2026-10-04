@@ -87,7 +87,7 @@ namespace Monoworks
 		if (!var)
 			return 0;
 
-		return static_cast<float>(std::stod(var->String));
+		return var->Value;
 	};
 
 	std::string  CCvarManager::GetString(std::string_view varName) noexcept

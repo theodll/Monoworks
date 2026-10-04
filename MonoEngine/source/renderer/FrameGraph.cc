@@ -1354,7 +1354,7 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
 			
-		CStaticRenderer::DrawStaticMeshIndexed( frameIndex, mesh, transform );
+		CStaticRenderer::DrawStaticMeshIndexed( frameIndex, mesh, transform, -1 );
 
 	}
 
@@ -1532,7 +1532,7 @@ namespace Monoworks
 		auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_DefaultBasePassPipelineHash );
 
 		if ( basePassPipeline )
-			m_hDefaultBasePassPipeline = basePassPipeline.value();
+			m_hDefaultBasePassPipeline = std::move(basePassPipeline.value());
 		else
 			MW_FATAL( "Failed to create base pass pipeline." );
 		// TODO: Implement error handling here.
@@ -1660,7 +1660,6 @@ namespace Monoworks
 			}
 
 
-			this->AddPrePass( depthPrePass );
 		}
 
 		// Create light pass 
@@ -1674,15 +1673,6 @@ namespace Monoworks
 
 			lightPass = Ref<CDefferedResolutionPass>::Create( &lightPassInfo );
 
-			try
-			{
-				this->AddDefferedResolutionPass( lightPass, 0 );
-			}
-			catch ( const std::runtime_error& e )
-			{ 
-				MW_ERROR( "Failed to create lighting pass: {}", e.what() );
-				MW_DEBUG_BREAK;
-			}
 		}
 
 		{
@@ -1713,7 +1703,7 @@ namespace Monoworks
 			m_hTonemapPass->BindUBO( "u_Params", m_hTonemapParamsUBO, true );
 		}
 		
-		auto lightShader = lightPass->m_hShader;
+		auto& lightShader = lightPass->m_hShader;
 		auto lightReflectionData = lightShader->ReflectOnShader();
 
 		auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
@@ -1894,6 +1884,10 @@ namespace Monoworks
 
 		depthPrePass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
 		lightPass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
+
+		this->AddPrePass( std::move(depthPrePass) );
+		this->AddDefferedResolutionPass( std::move( lightPass ), 0 );
+
 	};
 
 	CDefferedFrameGraph::~CDefferedFrameGraph()	 NOEXCEPT 

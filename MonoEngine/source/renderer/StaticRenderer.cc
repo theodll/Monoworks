@@ -158,10 +158,10 @@ namespace Monoworks
 			return m_pInstance->BindDescriptors( frameIndex, pSignature, pDescriptors, descriptorCount, firstSet, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform ) NOEXCEPT
+		MW_NOTHROW void CStaticRenderer::DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->DrawStaticMeshIndexed( frameIndex, hMesh, transform );
+			return m_pInstance->DrawStaticMeshIndexed( frameIndex, hMesh, transform, threadID );
 		}
 
 		MW_NOTHROW void CStaticRenderer::SetDynamicViewports( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT

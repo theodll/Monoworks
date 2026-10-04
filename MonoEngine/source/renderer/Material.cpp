@@ -218,21 +218,33 @@ namespace Monoworks
 
 		auto missingMap = CStaticRenderer::GetDefaultMissingMap();
 
+		auto materialInputSet = FindParameterBlockNumberByString( "u_MaterialInput", shaderLayout );
+
+		if ( materialInputSet )
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				if ( m_hDescriptors[i].size() < materialInputSet.value() )
+					m_hDescriptors[i].resize( materialInputSet.value() + 1 );
+
+
+				if ( !m_hDescriptors[i][materialInputSet.value()] )
+					m_hDescriptors[i][materialInputSet.value()] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[materialInputSet.value()] );
+
+				if ( !m_hMaterialUniformBuffer[i] )
+					m_hMaterialUniformBuffer[i] = IUniformBuffer::Create( sizeof( MaterialData ) );
+
+				if ( ubo )
+					CDescriptorManager::WriteUniformBuffer( m_hDescriptors[i][materialInputSet.value()], ubo.value(), m_hMaterialUniformBuffer[i] );
+
+				m_hMaterialUniformBuffer[i]->SetData( &m_MaterialData, sizeof( MaterialData ) );
+			}
+		else if ( materialInputSet.error() == MW_ERROR_NON_EXISTANT )
+			MW_ERROR("Failed to find material input parameter block: Non existant. Discarding Material Creation");
+		else  
+			MW_ERROR( "Failed to find material input parameter block: Unkown. Discarding Material Creation" );
+
+
 		
-		for ( auto i { 0uz }; i < MFIF; i++ )
-		{
-			if ( !m_hDescriptors[i][GlobalScopeSignature] )
-				CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[GlobalScopeSignature] );
-
-			if ( !m_hMaterialUniformBuffer[i] )
-				m_hMaterialUniformBuffer[i] = IUniformBuffer::Create( sizeof( MaterialData ) );
-
-			if ( ubo )
-				CDescriptorManager::WriteUniformBuffer( m_hDescriptors[i][GlobalScopeSignature], ubo.value(), m_hMaterialUniformBuffer[i] );
-
-			m_hMaterialUniformBuffer[i]->SetData( &m_MaterialData, sizeof( MaterialData ) );
-		}
-
 		if ( albedo)
 			if ( pInfo->hAlbedoMap )
 				SetTexture( m_MaterialParameterBlock, albedo.value(), pInfo->hAlbedoMap, true );
