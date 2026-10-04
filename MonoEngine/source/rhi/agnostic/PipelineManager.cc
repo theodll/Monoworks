@@ -48,52 +48,61 @@ namespace Monoworks::RHI
 		if ( m_hGraphicPipelineCache.contains( hash ) )
 			return m_hGraphicPipelineCache[hash];
 
+		const bool bFlagDeferred = ( pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT ) != 0;
+		if ( deffered && !bFlagDeferred )
+			MW_API_WARN( "Instructed CPipelineManager to deffer pipeline compilation without MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT. Setting bit automatically" );
+
+		const bool bDefer = deffered || bFlagDeferred;
+
 		Ref<IGraphicsPipeline> p;
-		auto defInfo = *pInfo;
-		if ( deffered && !( pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT ) )
+		if ( bDefer )
 		{
-			MW_API_WARN( "Instructed CPipelineManager to deffer pipeline compilation without MW_PIPELINE_CREATION_FLAGS_DEFFERED_ININTALIZATION_BIT. Setting bit automatically" );
+			auto defInfo = *pInfo;
 			defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
 			p = IGraphicsPipeline::Create( &defInfo );
-			m_hPipelineCompilationScheduled.Push( std::make_tuple( *pInfo, hash, 0 ) );
+
+			auto scheduledInfo = *pInfo;
+			scheduledInfo.Flags &= ~MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
+			m_hPipelineCompilationScheduled.Push( std::make_tuple( scheduledInfo, hash, 0 ) );
 		}
-		else 
+		else
 		{
-			m_TotalCompiledPipelineCount++;
-			m_CompiledGraphicsPipelineCount++;
 			try
 			{
 				p = IGraphicsPipeline::Create( pInfo );
 			}
 			catch ( EResult r )
 			{
-				if ( r == MW_ERROR_UNKNOWN || r == MW_ERROR_CACHE_INVALID )
-					defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT;
-				EResult r2;
-				try { r2 = p->Invalidate( &defInfo ); }
-				catch ( ... )
+				if ( r != MW_ERROR_UNKNOWN && r != MW_ERROR_CACHE_INVALID )
+					return std::unexpected( r );
+
+				auto retryInfo = *pInfo;
+				retryInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT;
+				try
+				{
+					p = IGraphicsPipeline::Create( &retryInfo );
+				}
+				catch ( EResult r2 )
 				{
 					MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
-					m_TotalCompiledPipelineCount--;
-					m_CompiledGraphicsPipelineCount--;
-
 					return std::unexpected( r2 );
-
-				};
+				}
 			}
+			m_TotalCompiledPipelineCount++;
+			m_CompiledGraphicsPipelineCount++;
 		}
-		
+
 		m_hGraphicPipelineCache[hash] = p;
 		m_TotalPipelineCount++;
 		m_GraphicsPipelineCount++;
-		
+
 		if ( pHash )
 			*pHash = hash;
 
 		return p;
 	}
 
-	std::expected<Ref<IComputePipeline>, EResult> CPipelineManager::CreateComputePipeline( const ComputePipelineCreationInfo * pInfo, Hash::hash_t* MW_NULLABLE pHash /*= nullptr */, bool deffered ) NOEXCEPT
+	std::expected<Ref<IComputePipeline>, EResult> CPipelineManager::CreateComputePipeline( const ComputePipelineCreationInfo * pInfo, Hash::hash_t * MW_NULLABLE pHash /*= nullptr */, bool deffered ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		// TODO: thread safe
@@ -102,39 +111,48 @@ namespace Monoworks::RHI
 		if ( m_hComputePipelineCache.contains( hash ) )
 			return m_hComputePipelineCache[hash];
 
+		const bool bFlagDeferred = ( pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT ) != 0;
+		if ( deffered && !bFlagDeferred )
+			MW_API_WARN( "Instructed CPipelineManager to deffer pipeline compilation without MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT. Setting bit automatically" );
+
+		const bool bDefer = deffered || bFlagDeferred;
+
 		Ref<IComputePipeline> p;
-		auto defInfo = *pInfo;
-		if ( deffered && !( pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT ) )
+		if ( bDefer )
 		{
-			MW_API_WARN( "Instructed CPipelineManager to deffer pipeline compilation without MW_PIPELINE_CREATION_FLAGS_DEFFERED_ININTALIZATION_BIT. Setting bit automatically" );
+			auto defInfo = *pInfo;
 			defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
 			p = IComputePipeline::Create( &defInfo );
-			m_hPipelineCompilationScheduled.Push( std::make_tuple( *pInfo, hash, 1));
+
+			auto scheduledInfo = *pInfo;
+			scheduledInfo.Flags &= ~MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
+			m_hPipelineCompilationScheduled.Push( std::make_tuple( scheduledInfo, hash, 1 ) );
 		}
 		else
 		{
-			m_TotalCompiledPipelineCount++;
-			m_CompiledComputePipelineCount++;
 			try
 			{
 				p = IComputePipeline::Create( pInfo );
 			}
 			catch ( EResult r )
 			{
-				if ( r == MW_ERROR_UNKNOWN || r == MW_ERROR_CACHE_INVALID )
-					defInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT;
+				if ( r != MW_ERROR_UNKNOWN && r != MW_ERROR_CACHE_INVALID )
+					return std::unexpected( r );
 
-				EResult r2;
-				try { r2 = p->Invalidate( &defInfo ); }
-				catch ( ... )
+				auto retryInfo = *pInfo;
+				retryInfo.Flags |= MW_PIPELINE_CREATION_FLAGS_COMPILE_WIHTOUT_CACHE_BIT;
+				try
+				{
+					p = IComputePipeline::Create( &retryInfo );
+				}
+				catch ( EResult r2 )
 				{
 					MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
-					m_TotalCompiledPipelineCount--;
-					m_CompiledComputePipelineCount--;
-
 					return std::unexpected( r2 );
-				};
+				}
 			}
+			m_TotalCompiledPipelineCount++;
+			m_CompiledComputePipelineCount++;
 		}
 
 		m_hComputePipelineCache[hash] = p;

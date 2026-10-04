@@ -39,6 +39,9 @@ namespace Monoworks
 	MW_NOTHROW void CFrameManager::Render( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		RHI::CPipelineManager::BatchCompile();
+
 		// Pre rendering setup
 		CStaticRenderer::AcquireNextImage( frameIndex );
 		

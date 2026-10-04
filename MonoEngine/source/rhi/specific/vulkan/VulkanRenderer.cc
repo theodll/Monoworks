@@ -628,7 +628,10 @@ namespace Monoworks::RHI
 	}
 
 	MW_NOTHROW void CVulkanRenderer::DrawStaticMeshIndexed( 
-		u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID /* = -1 */) NOEXCEPT
+		u32 frameIndex,
+		Ref<CMesh> hMesh,
+		const Matrix& transform, 
+		s32 threadID /* = -1 */) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -637,7 +640,7 @@ namespace Monoworks::RHI
 		
 		VkCommandBuffer cmd = nullptr;
 		if ( threadID < 0 )
-			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( threadID );
+			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
 		else
 			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 

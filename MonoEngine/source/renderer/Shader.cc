@@ -35,7 +35,7 @@ namespace Monoworks
 			slang::TargetDesc targetDesc{};
 			// TODO: change if using metal or direct3d
 			targetDesc.format = SLANG_SPIRV;
-			targetDesc.profile = globalSession->findProfile( "spirv_1_5" );
+			targetDesc.profile = globalSession->findProfile( "spirv_2" );
 
 			sessionDesc.targets = &targetDesc;
 			sessionDesc.targetCount = 1;

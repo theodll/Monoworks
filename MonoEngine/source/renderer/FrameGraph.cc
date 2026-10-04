@@ -209,7 +209,6 @@ namespace Monoworks
 		computeShader.ShaderStage = MW_SHADER_STAGE_COMPUTE;
 		computeShader.Code = { code->getBufferPointer(), code->getBufferSize() };
 
-
 		RHI::ComputePipelineCreationInfo pipelineInfo{};
 		pipelineInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
 		pipelineInfo.Signature = reflectionData.pPipelineSignature;
@@ -441,7 +440,7 @@ namespace Monoworks
 
 		SShaderObject vertexShader;
 		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
-		vertexShader.pEntrypoint = vertexEntrypoint;
+		vertexShader.pEntrypoint = "vertexMain"; // TODO: Dont do this
 
 		auto program = m_hShader->GetShaderProgram();
 		slang::ProgramLayout* layout = program->getLayout();

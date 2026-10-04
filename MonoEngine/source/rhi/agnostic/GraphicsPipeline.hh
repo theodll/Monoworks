@@ -110,7 +110,7 @@ namespace Monoworks::RHI
 	struct SShaderObject 
 	{
 		SShaderByteCode Code;
-		const char* pEntrypoint = "main";
+		const char* pEntrypoint = nullptr;
 		EShaderStage ShaderStage;
 	};
 
