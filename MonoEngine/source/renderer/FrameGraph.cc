@@ -440,7 +440,7 @@ namespace Monoworks
 
 		SShaderObject vertexShader;
 		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
-		vertexShader.pEntrypoint = "vertexMain"; // TODO: Dont do this
+		vertexShader.pEntrypoint = "main"; // TODO: Dont do this
 
 		auto program = m_hShader->GetShaderProgram();
 		slang::ProgramLayout* layout = program->getLayout();
@@ -546,14 +546,14 @@ namespace Monoworks
 		auto pipelineReflectData = m_hShader->ReflectOnShader();
 
 		RHI::GraphicsPipelineCreationInfo createInfo{};
-		createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT;
+		createInfo.Flags = 0;
 		createInfo.VertexLayout = defaultVertexLayout;
 		createInfo.ShaderObjects = shaderObjects;
 		createInfo.pSignature = pipelineReflectData.pPipelineSignature;
 		createInfo.DepthAttachmentFormat = pInfo->DepthFormat;
 		createInfo.StencilAttachmentFormat = pInfo->StencilFormat;
 
-		auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_PipelineHash );
+		auto basePassPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_PipelineHash, false );
 
 		if ( basePassPipeline )
 			m_hGraphicsPipeline = basePassPipeline.value();
