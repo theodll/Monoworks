@@ -1520,87 +1520,138 @@ namespace Monoworks
 		 * program-level range, which is what the existing Monoworks reflection
 		 * structure expects.
 		 */
-		auto reflectPushConstants =
-			[&](
-				slang::TypeLayoutReflection* pTypeLayout,
-				VkShaderStageFlags stageFlags
-				)
-			{
-				if ( !pTypeLayout || stageFlags == 0 )
-					return;
-
-
-				const SlangInt bindingRangeCount =
-					pTypeLayout->getBindingRangeCount();
-
-
-				for (
-					SlangInt rangeIndex = 0;
-					rangeIndex < bindingRangeCount;
-					++rangeIndex
+			auto reflectPushConstants =
+				[&](
+					slang::TypeLayoutReflection* pTypeLayout,
+					VkShaderStageFlags stageFlags
 					)
 				{
-					const slang::BindingType bindingType =
-						pTypeLayout->getBindingRangeType(
-							rangeIndex
-						);
+					if ( !pTypeLayout || stageFlags == 0 )
+						return;
 
 
-					if (
-						bindingType !=
-						slang::BindingType::PushConstant
+					const SlangInt bindingRangeCount =
+						pTypeLayout->getBindingRangeCount();
+
+
+					for (
+						SlangInt rangeIndex = 0;
+						rangeIndex < bindingRangeCount;
+						++rangeIndex
 						)
 					{
-						continue;
-					}
-
-
-					slang::TypeLayoutReflection* pLeafType =
-						pTypeLayout->getBindingRangeLeafTypeLayout(
-							rangeIndex
-						);
-
-
-					if ( !pLeafType )
-					{
-						MW_ERROR(
-							"Shader {} contains a push-constant range without "
-							"a valid leaf type layout",
-							m_Path.string()
-						);
-
-						continue;
-					}
-
-
-					const SlangInt size =
-						static_cast< SlangInt >(
-							pLeafType->getSize(
-								slang::ParameterCategory::PushConstantBuffer
-							)
+						const slang::BindingType bindingType =
+							pTypeLayout->getBindingRangeType(
+								rangeIndex
 							);
 
 
-					if ( size <= 0 || size == SLANG_UNKNOWN_SIZE )
-					{
-						MW_TRACE(
-							"Shader {} push-constant range {} has no resolvable "
-							"size",
-							m_Path.string(),
-							rangeIndex
+						if (
+							bindingType !=
+							slang::BindingType::PushConstant
+							)
+						{
+							continue;
+						}
+
+
+						/*
+						 * A PushConstant binding range points at the
+						 * ConstantBuffer<T> layout.
+						 *
+						 * The ConstantBuffer itself is only the container.
+						 * The actual byte size required by Vulkan is the size
+						 * of its element type T.
+						 */
+						slang::TypeLayoutReflection* pConstantBufferTypeLayout =
+							pTypeLayout->getBindingRangeLeafTypeLayout(
+								rangeIndex
+							);
+
+
+						if ( !pConstantBufferTypeLayout )
+						{
+							MW_ERROR(
+								"Shader {} contains a push-constant range without "
+								"a valid ConstantBuffer type layout",
+								m_Path.string()
+							);
+
+							continue;
+						}
+
+
+						slang::TypeLayoutReflection* pElementTypeLayout =
+							pConstantBufferTypeLayout->getElementTypeLayout();
+
+
+						if ( !pElementTypeLayout )
+						{
+							MW_ERROR(
+								"Shader {} contains a push-constant ConstantBuffer "
+								"without a valid element type layout",
+								m_Path.string()
+							);
+
+							continue;
+						}
+
+
+						const size_t elementSize =
+							pElementTypeLayout->getSize();
+
+
+						if (
+							elementSize == 0 ||
+							elementSize == SLANG_UNKNOWN_SIZE
+							)
+						{
+							MW_TRACE(
+								"Shader {} push-constant range {} has no resolvable "
+								"element size",
+								m_Path.string(),
+								rangeIndex
+							);
+
+							continue;
+						}
+
+
+						if (
+							elementSize >
+							static_cast< size_t >(
+								UINT32_MAX
+								)
+							)
+						{
+							MW_ERROR(
+								"Shader {} push-constant range {} has an element "
+								"size of {} bytes, which exceeds uint32_t",
+								m_Path.string(),
+								rangeIndex,
+								elementSize
+							);
+
+							continue;
+						}
+
+
+						addPushConstant(
+							0,
+							static_cast< uint32_t >( elementSize ),
+							stageFlags
 						);
 
-						continue;
+
+						MW_TRACE(
+							"Reflected push constant in shader {}: "
+							"elementSize = {} bytes, offset = 0, stageFlags = 0x{:X}",
+							m_Path.string(),
+							elementSize,
+							stageFlags
+						);
 					}
-
-
-					addPushConstant(
-						0,
-						static_cast< uint32_t >( size ),
-						stageFlags
-					);
-				}
-			};
+				};
 
 
 		/*
