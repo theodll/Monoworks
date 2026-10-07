@@ -898,6 +898,9 @@ namespace Monoworks
 				VkShaderStageFlags stageFlags
 				)
 			{
+
+				// STAGE FLAGS IS NOT BEING SET! 
+				// TODO: set shader stage !
 				if ( !pTypeLayout || stageFlags == 0 )
 					return;
 
@@ -1553,7 +1556,6 @@ namespace Monoworks
 						{
 							continue;
 						}
-
 
 						/*
 						 * A PushConstant binding range points at the
