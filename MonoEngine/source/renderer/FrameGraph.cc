@@ -379,6 +379,7 @@ namespace Monoworks
 		m_PipelineHash = 0;
 
 		m_ColorAttachments.clear();
+		auto pipelineReflectData = m_hShader->ReflectOnShader();
 
 		for ( auto i{ 0uz }; i < pInfo->ColorAttachmentCount; i++ )
 		{
@@ -436,7 +437,7 @@ namespace Monoworks
 		};
 
 		auto entrypoints = m_hShader->GetShaderEntrypoints();
-		const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
+		const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].data();
 
 		SShaderObject vertexShader;
 		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
@@ -490,7 +491,7 @@ namespace Monoworks
 
 		if ( !pInfo->Flags & MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_DISABLE_PIXEL_SHADER_BIT )
 		{
-			const char* fragmentEntrypoint = entrypoints[MW_SHADER_STAGE_FRAGMENT].c_str();
+			const char* fragmentEntrypoint = entrypoints[MW_SHADER_STAGE_FRAGMENT].data();
 
 			SShaderObject pixelShader;
 			pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
@@ -543,7 +544,6 @@ namespace Monoworks
 		std::vector<SColorBlendAttachmentState> colorBlendAttachments;
 		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
 
-		auto pipelineReflectData = m_hShader->ReflectOnShader();
 
 		RHI::GraphicsPipelineCreationInfo createInfo{};
 		createInfo.Flags = 0;
@@ -703,7 +703,8 @@ namespace Monoworks
 
 		const auto reflectionData = m_hShader->ReflectOnShader();
 		auto entrypoints = m_hShader->GetShaderEntrypoints();
-		const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
+		constexpr char temp[] = "main"; // TODO: Remove
+		// const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str(); 
 
 		Slang::ComPtr<slang::IBlob> code;
 		Slang::ComPtr<slang::IBlob> diagnostics;
@@ -728,7 +729,7 @@ namespace Monoworks
 		}
 
 		SShaderObject computeShader;
-		computeShader.pEntrypoint = entrypoint;
+		computeShader.pEntrypoint = temp;
 		computeShader.ShaderStage = MW_SHADER_STAGE_COMPUTE;
 		computeShader.Code = { code->getBufferPointer(), code->getBufferSize() };
 
@@ -938,7 +939,8 @@ namespace Monoworks
 
 		const auto reflectionData = m_hShader->ReflectOnShader();
 		auto entrypoints = m_hShader->GetShaderEntrypoints();
-		const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
+		constexpr char temp[] = "main"; // TODO: Remove
+		// const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
 
 		Slang::ComPtr<slang::IBlob> code;
 		Slang::ComPtr<slang::IBlob> diagnostics;
@@ -963,7 +965,7 @@ namespace Monoworks
 		}
 
 		SShaderObject computeShader;
-		computeShader.pEntrypoint = entrypoint;
+		computeShader.pEntrypoint = temp;
 		computeShader.ShaderStage = MW_SHADER_STAGE_COMPUTE;
 		computeShader.Code = { code->getBufferPointer(), code->getBufferSize() };
 
@@ -1398,9 +1400,11 @@ namespace Monoworks
 		auto entrypoints = m_hDefaultBasePassShader->GetShaderEntrypoints();
 		const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
 
+		constexpr char tempEntry[] = "main"; // TODO: Remove
+
 		SShaderObject vertexShader;
 		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
-		vertexShader.pEntrypoint = vertexEntrypoint;
+		vertexShader.pEntrypoint = tempEntry;
 
 		auto program = m_hDefaultBasePassShader->GetShaderProgram();
 		slang::ProgramLayout* layout = program->getLayout();
@@ -1450,7 +1454,7 @@ namespace Monoworks
 
 		SShaderObject pixelShader;
 		pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
-		pixelShader.pEntrypoint = fragmentEntrypoint;
+		pixelShader.pEntrypoint = tempEntry;
 
 		// Get byte code for the Pixel Shader
 		{

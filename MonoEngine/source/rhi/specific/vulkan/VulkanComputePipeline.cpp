@@ -59,7 +59,7 @@ namespace Monoworks::RHI
 			|| pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_TESSELATION_EVALULATION_SHADER_BIT
 			|| pInfo->Flags & MW_PIPELINE_CREATION_FLAGS_RASTERIZER_DISCARD_BIT )
 		{
-			MW_API_WARN( "Passes Graphics-Pipeline only creation flags to Compute-Pipeline creation" );
+			MW_API_WARN( "Passed Graphics-Pipeline only creation flags to Compute-Pipeline creation" );
 		}
 
 		if ( !pInfo->Signature )
@@ -94,7 +94,7 @@ namespace Monoworks::RHI
 		VkPipelineShaderStageCreateInfo info{};
 		info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		info.module = computeModule;
-		info.pName = pInfo->ComputeShader.pEntrypoint;
+		info.pName = pInfo->ComputeShader.pEntrypoint.c_str();
 
 		VkComputePipelineCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;

@@ -192,27 +192,24 @@ namespace Monoworks::RHI
 		auto device = CVulkanContext::GetDevice()->GetDevice();
 		MW_TRACE( "Create Vulkan Pipeline" );
 
-		struct alignas( 16 ) PushConstantData
+		if ( !pInfo->pSignature ) 
 		{
-			Vector4 Color;
-		};
 
-		// TODO: Do descriptor sets & shader reflection 
+			VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+			pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 
-		VkPushConstantRange range{};
-		range.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-		range.offset = 0;
-		range.size = sizeof( PushConstantData );
+			vkCreatePipelineLayout( *device, &pipelineLayoutInfo, CVulkanContext::GetCallbacks(), &m_VulkanPipelineLayout );
 
-		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.pushConstantRangeCount = 1;
-		pipelineLayoutInfo.pPushConstantRanges = &range;
+		}
+		else
+		{
+			m_VulkanPipelineLayout = static_cast< VkPipelineLayout >( pInfo->pSignature );
+		}
 
-		vkCreatePipelineLayout( *device, &pipelineLayoutInfo, CVulkanContext::GetCallbacks(), &m_VulkanPipelineLayout );
 
 		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 		std::vector<VkShaderModule> modules;
+		std::vector<std::string_view> entrypoints;
 
 		for ( const auto& object : pInfo->ShaderObjects )
 		{
@@ -230,7 +227,7 @@ namespace Monoworks::RHI
 			VkPipelineShaderStageCreateInfo info{};
 			info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 			info.module = module;
-			info.pName = object.pEntrypoint;
+			info.pName = object.pEntrypoint.data();
 			
 
 			info.stage = ToVulkanShaderStage(object.ShaderStage, pInfo->Flags);

@@ -31,7 +31,7 @@ namespace Monoworks::RHI
 
 		for ( const auto& shaderObjects  : pInfo->ShaderObjects )
 		{
-			Hash::HashCombine( hash, Hash::FastHashBytes( shaderObjects.pEntrypoint, std::strlen( shaderObjects.pEntrypoint ) ) );
+			Hash::HashCombine( hash, Hash::FastHashBytes( shaderObjects.pEntrypoint.c_str(), std::strlen(shaderObjects.pEntrypoint.c_str())));
 			Hash::HashCombine( hash, shaderObjects.ShaderStage );
 			
 			Hash::HashCombine( hash, Hash::FastHashBytes( shaderObjects.Code.pCode, shaderObjects.Code.Size ) );
@@ -52,7 +52,7 @@ namespace Monoworks::RHI
 
 		Hash::HashCombine( hash, pInfo->ComputeShader.ShaderStage );
 		Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.Code.pCode, pInfo->ComputeShader.Code.Size ) );
-        Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.pEntrypoint, pInfo->ComputeShader.pEntrypoint ? std::strlen( pInfo->ComputeShader.pEntrypoint ) : 0 ) );
+        Hash::HashCombine( hash, Hash::FastHashBytes( pInfo->ComputeShader.pEntrypoint.c_str(), pInfo->ComputeShader.pEntrypoint.c_str() ? std::strlen(pInfo->ComputeShader.pEntrypoint.c_str()) : 0));
 		return hash;
 	}
 
