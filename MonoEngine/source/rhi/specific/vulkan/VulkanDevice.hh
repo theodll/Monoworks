@@ -99,7 +99,9 @@ namespace Monoworks::RHI
 
 		NODISCARD VkQueue* GetPresentQueue() NOEXCEPT;
 
-		NODISCARD u32 GetGraphicsQueueFamilyIndex() noexcept { return FindQueueFamilies(&m_PhysicalDevice).GraphicsFamily; }
+		NODISCARD u32 GetGraphicsQueueFamilyIndex() NOEXCEPT { return FindQueueFamilies( &m_PhysicalDevice ).GraphicsFamily; }
+		NODISCARD u32 GetComputeQueueFamilyIndex()	NOEXCEPT { return FindQueueFamilies( &m_PhysicalDevice ).ComputeFamily; }
+		NODISCARD u32 GetTransferQueueFamilyIndex() NOEXCEPT { return FindQueueFamilies( &m_PhysicalDevice ).TransferFamily; }
 
 		NODISCARD u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
 
@@ -137,10 +139,12 @@ namespace Monoworks::RHI
 
 		VkInstance* m_Instance = nullptr;
 
+		// TODO: Move this to a config file
 		std::vector<const char*> m_DeviceExtensions =
 		{
 			VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME, 
 			VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
+			VK_KHR_MAINTENANCE_7_EXTENSION_NAME,
 #ifdef MW_PLATFORM_OSX
 			"VK_KHR_portabillity_subset"
 #endif

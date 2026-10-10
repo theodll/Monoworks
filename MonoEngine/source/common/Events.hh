@@ -28,9 +28,11 @@ namespace Monoworks
 		/// @brief Triggered when the application starts an entire frame cycle (before deffered event-processing).
 		MW_DEFINE_DISPATCHABLE_EVENT( AppFrame );
 
+		MW_DEFINE_DISPATCHABLE_EVENT( PipelineCompilationStage );
 
 		namespace Events
 		{
+
 		// data events 
 
 		// window
