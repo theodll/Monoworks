@@ -192,6 +192,8 @@ namespace Monoworks::RHI
 		auto device = CVulkanContext::GetDevice()->GetDevice();
 		MW_TRACE( "Create Vulkan Pipeline" );
 
+		m_VertexLayout = pInfo->VertexLayout;
+
 		if ( !pInfo->pSignature ) 
 		{
 

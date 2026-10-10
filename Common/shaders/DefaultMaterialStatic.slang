@@ -4,9 +4,9 @@ import GPassBase;
 namespace Monoworks
 {
 
-    ParameterBlock<ConstantBuffer<CameraConstants>> u_CameraConstants; // NOTE: set 1
     ParameterBlock<MaterialInput> u_MaterialInput; // NOTE: set 2 // Must be named like this.
-	[vk::push_constant] ConstantBuffer<ModelConstants> pc_ModelConstants;
+    ParameterBlock<ConstantBuffer<CameraConstants>> u_CameraConstants; // NOTE: set 1
+    [vk::push_constant] ConstantBuffer<ModelConstants> pc_ModelConstants;
 
 
     struct DefaultMaterial : IMaterial {};

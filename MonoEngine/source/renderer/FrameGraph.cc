@@ -1718,7 +1718,7 @@ namespace Monoworks
 
 			if ( cameraUBO )
 			{
-				m_hCameraUBOSets[i] = CDescriptorManager::Allocate( depthReflectionData.pDescriptorSignatures[cameraUBO.value()] ); 
+				m_hCameraUBOSets[i] = CDescriptorManager::Allocate( pipelineReflectData.pDescriptorSignatures[cameraUBO.value()] );
 			}
 			else if ( cameraUBO.error() == MW_ERROR_NON_EXISTANT )
 				MW_FATAL( "Failed to allocate CameraUBO sets: Binding non existant" );
@@ -2169,7 +2169,13 @@ namespace Monoworks
 		CStaticRenderer::BeginRendering( frameIndex, &renderingInfo );
 
 		// Jobs
-		CStaticRenderer::BindDescriptors( frameIndex, m_hDefaultBasePassPipeline->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, 1, -1);
+		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
+
+		if ( camBinding )
+			CStaticRenderer::BindDescriptors( frameIndex, m_hDefaultBasePassPipeline->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1 );
+		else
+			MW_DEBUG_BREAK;
+
 		SubmitSceneGeometry( frameIndex );
 
 		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );

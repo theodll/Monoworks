@@ -183,16 +183,23 @@ namespace Monoworks::RHI
 			priorityIndex++;
 		}
 
+
+		// TODO: Move this to a config file
+		VkPhysicalDeviceMaintenance7FeaturesKHR maintenance7Features{};
+		maintenance7Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;
+		maintenance7Features.maintenance7 = VK_TRUE;
+
 		VkPhysicalDeviceVulkan13Features vulkan13Features{};
 		vulkan13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
 		vulkan13Features.dynamicRendering = VK_TRUE;
 		vulkan13Features.synchronization2 = VK_TRUE;
-		vulkan13Features.maintenance4 = VK_TRUE;
-		vulkan13Features.pNext = nullptr;
+		vulkan13Features.pipelineCreationCacheControl = VK_TRUE;
+		vulkan13Features.pNext = &maintenance7Features;
 
+
+		// TODO: This too
 		VkPhysicalDeviceFeatures2 deviceFeatures2{};
 		deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-
 		deviceFeatures2.features.samplerAnisotropy = VK_TRUE;
 		deviceFeatures2.features.geometryShader = VK_TRUE;
 		deviceFeatures2.features.tessellationShader = VK_TRUE;

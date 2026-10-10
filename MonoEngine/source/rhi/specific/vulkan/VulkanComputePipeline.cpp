@@ -79,7 +79,6 @@ namespace Monoworks::RHI
 			m_VulkanPipelineLayout = static_cast< VkPipelineLayout >( pInfo->Signature );
 		}
 
-		VkPipelineShaderStageCreateInfo computeShaderStage{};
 		VkShaderModule computeModule{};
 
 		{
@@ -91,16 +90,16 @@ namespace Monoworks::RHI
 			MW_VK_CHECK( vkCreateShaderModule( *CVulkanContext::GetDevice()->GetDevice(), &createInfo, CVulkanContext::GetCallbacks(), &computeModule ), "Failed to create Shader Module" );
 		}
 
-		VkPipelineShaderStageCreateInfo info{};
-		info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		info.module = computeModule;
-		info.pName = pInfo->ComputeShader.pEntrypoint.c_str();
+		VkPipelineShaderStageCreateInfo stageInfo{};
+		stageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		stageInfo.stage = VK_SHADER_STAGE_COMPUTE_BIT;
+		stageInfo.module = computeModule;
+		stageInfo.pName = pInfo->ComputeShader.pEntrypoint.c_str();
 
 		VkComputePipelineCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-		createInfo.stage = computeShaderStage;
+		createInfo.stage = stageInfo;
 		createInfo.flags =
-			VK_PIPELINE_CREATE_DERIVATIVE_BIT |
 			VK_PIPELINE_CREATE_DISPATCH_BASE_BIT |
 			VK_PIPELINE_CREATE_EARLY_RETURN_ON_FAILURE_BIT;
 		createInfo.layout = m_VulkanPipelineLayout;

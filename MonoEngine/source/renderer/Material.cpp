@@ -223,7 +223,7 @@ namespace Monoworks
 		if ( materialInputSet )
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				if ( m_hDescriptors[i].size() < materialInputSet.value() )
+				if ( m_hDescriptors[i].size() < materialInputSet.value() || m_hDescriptors[i].size() == 0 )
 					m_hDescriptors[i].resize( materialInputSet.value() + 1 );
 
 

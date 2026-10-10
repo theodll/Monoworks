@@ -465,7 +465,7 @@ namespace Monoworks
 			m_hTonemapParamsUBO->SetData( pParams, sizeof( TonemapParams ) );
 		}
 
-		struct ModelPushConstant
+		struct alignas(16) ModelPushConstant
 		{
 			Matrix	CurrentModelMatrix;
 			Matrix	PreviousModelMatrix;

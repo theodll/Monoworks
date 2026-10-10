@@ -58,7 +58,7 @@ namespace Monoworks
 			m_hCurrentFrameGraph->ExecutePreRenderingSteps( frameIndex );
 
 			if ( CCvarManager::GetValue( "r_execute_pre_passes" ) != 0.0f )
-				m_hCurrentFrameGraph->ExecutePrePasses( frameIndex );
+		//		m_hCurrentFrameGraph->ExecutePrePasses( frameIndex );
 
 			m_hCurrentFrameGraph->ExecuteBasePasses( frameIndex );
 
