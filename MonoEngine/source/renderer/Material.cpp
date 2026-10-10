@@ -169,7 +169,7 @@ namespace Monoworks
 				m_hDescriptors[i][set] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[set] );
 
 			if ( rewrite )
-				CDescriptorManager::WriteImage( m_hDescriptors[i][set], set, hTexture );
+				CDescriptorManager::WriteImage( m_hDescriptors[i][set], binding, hTexture );
 		}
 
 		if ( rewrite )

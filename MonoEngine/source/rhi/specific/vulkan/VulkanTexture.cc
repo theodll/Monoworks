@@ -113,6 +113,7 @@ namespace Monoworks::RHI
 
 		m_EnableMemoryExporting = pInfo->Flags & MW_TEXTURE_CREATION_FLAG_ENABLE_MEMORY_EXPORTING;
 
+		m_AspectFlags = pInfo->AspectMask;
 
 		auto allocator = CVulkanContext::GetAllocator();
 

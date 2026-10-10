@@ -260,7 +260,7 @@ namespace Monoworks
 		* @param hTexture: Reference to the texture to bind
 		* @param forceRewrite: Toggle whether to rewrite the texture if it's already written.
 		*/
-		void BindTexture(  std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false );
+		void BindTexture(  std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite = false, RHI::EDescriptorType imageType = RHI::MW_DESCRIPTOR_TYPE_SAMPLED_IMAGE );
 
 		/**
 		* @brief Bind a texture located in global scope.
@@ -268,7 +268,7 @@ namespace Monoworks
 		* @param hTexture: Array of References to the texture to bind for every frame in flight.
 		* @param forceRewrite: Toggle whether to rewrite the texture if it's already written.
 		*/
-		void BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D>* hTextures, bool forceRewrite = false );
+		void BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D>* hTextures, bool forceRewrite = false, RHI::EDescriptorType imageType = RHI::MW_DESCRIPTOR_TYPE_SAMPLED_IMAGE );
 
 		/**
 		* @brief Bind a sampler located in global scope.

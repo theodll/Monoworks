@@ -31,7 +31,7 @@ namespace Monoworks
         bool EnableGamma;
 	}
 
-    RWTexture2D U_ProxyImage;
+    RWTexture2D u_ProxyImage;
     ConstantBuffer<TonemapParams> u_Params;
 
 	ParameterBlock<GBufferPB> u_GBuffer;
@@ -268,7 +268,7 @@ namespace Monoworks
             color = pow( color, float3(1.0f / 2.2f));
         }
 
-        U_ProxyImage[dispatchThreadID.xy] = float4(color, hdrSample.a);
+        u_ProxyImage[dispatchThreadID.xy] = float4(color, hdrSample.a);
 
 	}
 

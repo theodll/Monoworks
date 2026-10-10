@@ -67,5 +67,8 @@ namespace Monoworks
 		Slang::ComPtr<slang::ISession> m_pSlangSession;
 		Slang::ComPtr<slang::IComponentType> m_pSlangProgram;
 		bool m_Ready;
+
+		ShaderReflectionData m_ReflectionData;
+		bool m_bReflected = false;
 	};
 }

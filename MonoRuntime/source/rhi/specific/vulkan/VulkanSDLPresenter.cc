@@ -350,7 +350,7 @@ namespace Monoworks::RHI
 		createInfoVk.imageColorSpace = surfaceFormat.colorSpace;
 		createInfoVk.imageExtent = extent;
 		createInfoVk.imageArrayLayers = 1;
-		createInfoVk.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+		createInfoVk.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
 		QueueFamilyIndices indices = info->pVulkanDevice->FindPhysicalQueueFamilies();
 		u32 queueFamilyIndices[] = { indices.GraphicsFamily, indices.PresentFamily, indices.ComputeFamily, indices.TransferFamily };

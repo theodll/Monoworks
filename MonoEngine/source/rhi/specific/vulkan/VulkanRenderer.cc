@@ -640,7 +640,7 @@ namespace Monoworks::RHI
 		u32 frameIndex  )
 	{
 		MW_PROFILE_FUNC;
-		CVulkanRenderManager::EndWorkerGraphicsCommandBuffers( frameIndex );
+		CVulkanRenderManager::EndRootGraphicsCommandBuffer( frameIndex );
 		CVulkanRenderManager::SubmitRootGraphicsCommandBuffer( frameIndex );
 	}
 

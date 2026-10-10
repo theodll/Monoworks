@@ -769,7 +769,7 @@ namespace Monoworks
 		m_hComputePipeline = nullptr;
 	};
 
-	void CPostProcessPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite )
+	void CPostProcessPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite, RHI::EDescriptorType imageType )
 	{
 		MW_PROFILE_FUNC;
 
@@ -794,12 +794,12 @@ namespace Monoworks
 		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTexture );
+				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTexture, imageType );
 				m_BindingsWritten[binding.value()] = true;
 			}
 	};
 
-	void CPostProcessPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D>* hTextures, bool forceRewrite )
+	void CPostProcessPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D>* hTextures, bool forceRewrite, RHI::EDescriptorType imageType )
 	{
 		MW_PROFILE_FUNC;
 
@@ -824,7 +824,7 @@ namespace Monoworks
 		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTextures[i] );
+				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTextures[i], imageType );
 				m_BindingsWritten[binding.value()] = true;
 			}
 	};
@@ -1602,11 +1602,11 @@ namespace Monoworks
 			RHI::STextureCreateInfo presentationProxyImgInfo{};
 			presentationProxyImgInfo.Extent = re;
 			presentationProxyImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
-			presentationProxyImgInfo.Format = MW_FORMAT_B8G8R8A8_SRGB;
+			presentationProxyImgInfo.Format = MW_FORMAT_B8G8R8A8_UNORM;
 			presentationProxyImgInfo.ImageLayout = MW_IMAGE_LAYOUT_GENERAL;
 			presentationProxyImgInfo.Usage = MW_IMAGE_USAGE_STORAGE_BIT | MW_IMAGE_USAGE_SAMPLED_BIT | MW_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
-			m_hPresentationProxyImages[i] = ITexture2D::Create(&compositeImgInfo);
+			m_hPresentationProxyImages[i] = ITexture2D::Create(&presentationProxyImgInfo );
 
 			auto& presentationProxy = m_hPresentationProxyImages[i];
 			m_hPresentationProxyImages[i]->TransitionLayout( i, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, false );
@@ -1883,7 +1883,7 @@ namespace Monoworks
 		mesh->VertexBuffer = RHI::IVertexBuffer::Create( static_cast< void* >( s_CubeVertices.data() ), s_CubeVertices.size(), sizeof( SVertex ), true );
 		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), true );
 
-		m_hTonemapPass->BindTexture( "u_ProxyImage", m_hPresentationProxyImages.data(), true);
+		m_hTonemapPass->BindTexture( "u_ProxyImage", m_hPresentationProxyImages.data(), true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
 
 		depthPrePass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );
 		lightPass->BindUBO( "u_CameraConstants", m_hCameraUBOs.data(), true );

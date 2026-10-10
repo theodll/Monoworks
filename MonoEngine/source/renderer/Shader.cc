@@ -359,6 +359,11 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		if ( m_bReflected )
+			return m_ReflectionData;
+
+		m_bReflected = true;
+
 		ShaderReflectionData reflectionData{};
 
 #ifdef MW_VULKAN
@@ -2250,7 +2255,9 @@ namespace Monoworks
 		);
 
 
-		return reflectionData;
+		m_ReflectionData = reflectionData;
+
+		return m_ReflectionData;
 
 #else
 
