@@ -36,6 +36,10 @@ namespace Monoworks::RHI
 		static void Init() NOEXCEPT;
 		static void Shutdown() NOEXCEPT;
 
+		// One binary present-wait semaphore per swapchain image (SDL/WSI).
+		// Indexed by acquired image index — not frame-in-flight index.
+		static void InitSwapchainPresentSync( u32 swapchainImageCount ) NOEXCEPT;
+
 		// Graphics
 		static void BeginRootGraphicsCommandBuffer( u32 frameIndex )	NOEXCEPT;
 		static void EndRootGraphicsCommandBuffer( u32 frameIndex )		NOEXCEPT;
@@ -50,6 +54,7 @@ namespace Monoworks::RHI
 
 		NODISCARD static VkSemaphore* GetImageAvailableSemaphore( u32 frameIndex )						NOEXCEPT { return &m_RootFrameData[frameIndex].ImageAvailableSemaphore; };
 		NODISCARD static VkSemaphore* GetRenderFinishedSemaphore( u32 frameIndex )						NOEXCEPT { return &m_RootFrameData[frameIndex].RenderFinishedSemaphore; };
+		NODISCARD static VkSemaphore* GetPresentWaitSemaphore( u32 imageIndex )							NOEXCEPT;
 		NODISCARD static VkSemaphore* GetGraphicsSubmitSemaphore( u32 frameIndex )						NOEXCEPT { return &m_RootFrameData[frameIndex].GraphicsSubmitSemaphore; };
 
 		NODISCARD static VkSemaphore* GetQtReadFinishedSemaphore( u32 frameIndex )						NOEXCEPT { if ( !CApplication::GetCreateInfos()->UseQt ) { MW_API_ERROR( "Illegal function call: Accessing Qt specific render elements without UseQt flag specified. " ); return nullptr; } return &m_RootFrameData[frameIndex].QtReadFinishedSemaphore; }
@@ -66,6 +71,7 @@ namespace Monoworks::RHI
 		
 		static SVulkanFrameData m_RootFrameData[MFIF];
 		static std::vector<SVulkanWorkerData> m_WorkerRenderData;
+		static std::vector<VkSemaphore> m_PresentWaitSemaphores;
 
 	};
 }

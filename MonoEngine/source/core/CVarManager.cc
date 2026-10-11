@@ -82,7 +82,7 @@ namespace Monoworks
 		SCVar* var = Find( varName );
 		if ( !var )
 		{
-			MW_WARN( "Did not find cvar {}", varName );
+			//MW_WARN( "Did not find cvar {}", varName );
 			return;
 		}
 
@@ -106,7 +106,7 @@ namespace Monoworks
 		const SCVar* var = Find( varName );
 		if ( !var )
 		{
-			MW_WARN( "Did not find cvar {}", varName );
+			//MW_WARN( "Did not find cvar {}", varName );
 			return 0.0f;
 		}
 		return var->Value;
@@ -119,7 +119,7 @@ namespace Monoworks
 		const SCVar* var = Find( varName );
 		if ( !var )
 		{
-			MW_WARN( "Did not find cvar {}", varName );
+			//MW_WARN( "Did not find cvar {}", varName );
 			return {};
 		}
 		return var->String;

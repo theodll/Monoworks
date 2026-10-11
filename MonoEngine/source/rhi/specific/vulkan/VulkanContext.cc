@@ -413,6 +413,9 @@ namespace Monoworks::RHI
 			presentationInfo2.pDevice = m_Device.GetDevice();
 			presentationInfo2.pPhysDevice = *m_Device.GetPhysicalDevice();
 			m_Presenter->Init2( &presentationInfo2 );
+
+			if ( CApplication::GetCreateInfos()->UseSwapchain )
+				CVulkanRenderManager::InitSwapchainPresentSync( ( u32 )m_Presenter->GetSwapchainImages().size() );
 		}
 		else if ( CApplication::GetCreateInfos()->UseQt )
 		{

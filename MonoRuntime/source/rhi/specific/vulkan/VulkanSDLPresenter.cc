@@ -22,8 +22,6 @@ namespace Monoworks::RHI
 
 		m_SwapchainExtent = swapchainExtent;
 
-		m_ImagePresentedOnce.resize(MFIF);
-
 		m_VSync = vsync;
 
 		SDL_SetWindowSize( window, m_SwapchainExtent.Width, m_SwapchainExtent.Height );
@@ -257,6 +255,7 @@ namespace Monoworks::RHI
 
 		vkGetSwapchainImagesKHR( *info->pVulkanDevice->GetDevice(), m_Swapchain, &imageCount, nullptr );
 		m_SwapchainImages.resize( imageCount );
+		m_ImagePresentedOnce.assign( imageCount, false );
 		std::vector<VkImage> images( imageCount );
 		vkGetSwapchainImagesKHR( *info->pVulkanDevice->GetDevice(), m_Swapchain, &imageCount, images.data() );
 
@@ -389,7 +388,7 @@ namespace Monoworks::RHI
 		VkPresentInfoKHR presentInfo = {};
 		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 		presentInfo.waitSemaphoreCount = 1;
-		presentInfo.pWaitSemaphores = { info->pRenderFinishedSemaphore };
+		presentInfo.pWaitSemaphores = info->pRenderFinishedSemaphore;
 
 		VkSwapchainKHR swapChains[] = { m_Swapchain };
 		presentInfo.swapchainCount = 1;
@@ -402,6 +401,7 @@ namespace Monoworks::RHI
 		MW_VK_CHECK( result, "Failed to submit present queue via vkQueuePresentKHR" );
 
 		// Mark this image as having been presented at least once
+		MW_ASSERT( *info->pImageIndex < m_ImagePresentedOnce.size(), "Present image index out of range" );
 		m_ImagePresentedOnce[*info->pImageIndex] = true;
 	}
 

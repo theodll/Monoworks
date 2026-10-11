@@ -21,6 +21,7 @@ namespace Monoworks::RHI
 {
 	SVulkanFrameData			   CVulkanRenderManager::m_RootFrameData[MFIF];
 	std::vector<SVulkanWorkerData> CVulkanRenderManager::m_WorkerRenderData;
+	std::vector<VkSemaphore>	   CVulkanRenderManager::m_PresentWaitSemaphores;
 
 	void CVulkanRenderManager::Init() NOEXCEPT
 	{
@@ -124,6 +125,13 @@ namespace Monoworks::RHI
 
 		m_WorkerRenderData.clear();
 
+		for ( auto semaphore : m_PresentWaitSemaphores )
+		{
+			if ( semaphore )
+				vkDestroySemaphore( device, semaphore, CVulkanContext::GetCallbacks() );
+		}
+		m_PresentWaitSemaphores.clear();
+
 		for ( auto& frameData : m_RootFrameData )
 		{
 			if ( frameData.ImageAvailableSemaphore )
@@ -135,9 +143,8 @@ namespace Monoworks::RHI
 			if ( frameData.QtReadFinishedSemaphore )
 				vkDestroySemaphore( device, frameData.QtReadFinishedSemaphore, CVulkanContext::GetCallbacks() );
 
-
-			if ( frameData.RenderFinishedSemaphore )
-				vkDestroySemaphore( device, frameData.RenderFinishedSemaphore, CVulkanContext::GetCallbacks() );
+			if ( frameData.GraphicsSubmitSemaphore )
+				vkDestroySemaphore( device, frameData.GraphicsSubmitSemaphore, CVulkanContext::GetCallbacks() );
 
 			if ( frameData.InFlightFence )
 				vkDestroyFence( device, frameData.InFlightFence, CVulkanContext::GetCallbacks() );
@@ -148,6 +155,36 @@ namespace Monoworks::RHI
 		}
 		MW_INFO( "Shutdown CVulkanRenderManager" );
 	};
+
+	void CVulkanRenderManager::InitSwapchainPresentSync( u32 swapchainImageCount ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		auto device = CVulkanContext::GetDevice();
+
+		for ( auto semaphore : m_PresentWaitSemaphores )
+		{
+			if ( semaphore )
+				vkDestroySemaphore( *device->GetDevice(), semaphore, CVulkanContext::GetCallbacks() );
+		}
+		m_PresentWaitSemaphores.clear();
+		m_PresentWaitSemaphores.resize( swapchainImageCount, VK_NULL_HANDLE );
+
+		VkSemaphoreCreateInfo semaphoreCreateInfo{};
+		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+		for ( u32 i{}; i < swapchainImageCount; i++ )
+		{
+			MW_VK_CHECK( vkCreateSemaphore( *device->GetDevice(), &semaphoreCreateInfo, CVulkanContext::GetCallbacks(), &m_PresentWaitSemaphores[i] ),
+				"Failed to create PresentWaitSemaphore for swapchain image {}.", i );
+		}
+	}
+
+	VkSemaphore* CVulkanRenderManager::GetPresentWaitSemaphore( u32 imageIndex ) NOEXCEPT
+	{
+		MW_ASSERT( imageIndex < m_PresentWaitSemaphores.size(), "PresentWaitSemaphore imageIndex {} out of range (count {})", imageIndex, m_PresentWaitSemaphores.size() );
+		return &m_PresentWaitSemaphores[imageIndex];
+	}
 
 	void CVulkanRenderManager::BeginRootGraphicsCommandBuffer( u32 frameIndex ) NOEXCEPT
 	{
@@ -224,10 +261,16 @@ namespace Monoworks::RHI
 		waitSemaphoreInfo.stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
 		waitSemaphoreInfo.semaphore = m_RootFrameData[frameIndex].ImageAvailableSemaphore;
 
+		// SDL/WSI: present-wait semaphores are per swapchain image.
+		// Qt / non-swapchain: keep the existing per-frame RenderFinished semaphore.
+		VkSemaphore signalSemaphore = m_RootFrameData[frameIndex].RenderFinishedSemaphore;
+		if ( CApplication::GetCreateInfos()->UseSDL && CApplication::GetCreateInfos()->UseSwapchain )
+			signalSemaphore = *GetPresentWaitSemaphore( CFrameManager::GetCurrentImageIndex() );
+
 		VkSemaphoreSubmitInfo signalSemaphoreInfo{};
 		signalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO;
 		signalSemaphoreInfo.stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
-		signalSemaphoreInfo.semaphore = m_RootFrameData[frameIndex].RenderFinishedSemaphore;
+		signalSemaphoreInfo.semaphore = signalSemaphore;
 
 
 		VkSubmitInfo2 submitInfo{};

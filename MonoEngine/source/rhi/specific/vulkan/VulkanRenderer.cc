@@ -335,7 +335,7 @@ namespace Monoworks::RHI
 			presentInfo.pDevice = CVulkanContext::GetDevice()->GetDevice();
 			presentInfo.pPhysDevice = CVulkanContext::GetDevice()->GetPhysicalDevice();
 			presentInfo.pVulkanDevice = CVulkanContext::GetDevice();
-			presentInfo.pRenderFinishedSemaphore = CVulkanRenderManager::GetRenderFinishedSemaphore( frameIndex );
+			presentInfo.pRenderFinishedSemaphore = CVulkanRenderManager::GetPresentWaitSemaphore( CFrameManager::GetCurrentImageIndex() );
 			presentInfo.pPresentQueue = CVulkanContext::GetDevice()->GetPresentQueue();
 			presentInfo.pImageIndex = &CFrameManager::GetCurrentImageIndex();
 

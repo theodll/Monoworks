@@ -13,7 +13,7 @@ namespace Monoworks
 
 		static MW_NOTHROW void Render() NOEXCEPT;
 		
-		static MW_NOTHROW void SetFrameGraph( Ref<IFrameGraph> hFrameGraph ) NOEXCEPT { m_hCurrentFrameGraph = hFrameGraph; };
+		static MW_NOTHROW void SetFrameGraph( Ref<IFrameGraph>&& hFrameGraph ) NOEXCEPT { m_hCurrentFrameGraph = hFrameGraph; };
 
 		NODISCARD static MW_NOTHROW Ref<IFrameGraph> GetCurrentFrameGraph() NOEXCEPT { return m_hCurrentFrameGraph; };
 		NODISCARD static MW_NOTHROW u32& GetCurrentFrameIndex() NOEXCEPT { return m_CurrentFrameIndex; };

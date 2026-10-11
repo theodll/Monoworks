@@ -2266,7 +2266,7 @@ namespace Monoworks
 		// implementation specific. 
 
 		auto presenter = CApplication::GetCreateInfos()->pPresenter;
-		m_hPresentationProxyImages[frameIndex]->CopyImage( frameIndex, presenter->GetSwapchainImages()[frameIndex] );
+		m_hPresentationProxyImages[frameIndex]->CopyImage( frameIndex, presenter->GetSwapchainImages()[CFrameManager::GetCurrentImageIndex()] );
 	};
 
 
