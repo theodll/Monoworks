@@ -491,7 +491,7 @@ namespace Monoworks
 			shaderObjects.push_back( vertexShader );
 		}
 
-		if ( !pInfo->Flags & MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_DISABLE_PIXEL_SHADER_BIT )
+		if ( !( pInfo->Flags & MW_GRAPHICS_PRE_PASS_CREATION_FLAGS_DISABLE_PIXEL_SHADER_BIT ) )
 		{
 			const char* fragmentEntrypoint = entrypoints[MW_SHADER_STAGE_FRAGMENT].data();
 
@@ -544,7 +544,8 @@ namespace Monoworks
 		
 		
 		std::vector<SColorBlendAttachmentState> colorBlendAttachments;
-		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		for ( auto i{ 0uz }; i < pInfo->ColorAttachmentCount; i++ )
+			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
 
 
 		RHI::GraphicsPipelineCreationInfo createInfo{};
@@ -552,6 +553,8 @@ namespace Monoworks
 		createInfo.VertexLayout = defaultVertexLayout;
 		createInfo.ShaderObjects = shaderObjects;
 		createInfo.pSignature = pipelineReflectData.pPipelineSignature;
+		createInfo.ColorFormats.clear();
+		createInfo.ColorBlendAttachments = colorBlendAttachments;
 		createInfo.DepthAttachmentFormat = pInfo->DepthFormat;
 		createInfo.StencilAttachmentFormat = pInfo->StencilFormat;
 
@@ -1357,13 +1360,31 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
-		// Material draws need u_CameraConstants (set 1) even when invoked from the depth pre-pass callback.
+		// Material / GBuffer draws need u_CameraConstants (set 1).
 		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
 		if ( camBinding && mesh && mesh->Material && mesh->Material->GetPipeline() )
 			CStaticRenderer::BindDescriptors( frameIndex, *mesh->Material->GetPipeline()->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1 );
 			
 		CStaticRenderer::DrawStaticMeshIndexed( frameIndex, mesh, transform, -1 );
 
+	}
+
+	MW_NOTHROW void CDefferedFrameGraph::SubmitDepthPrePassGeometry( u32 frameIndex ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !mesh || m_hGraphicsPrePasses.empty() || !m_hGraphicsPrePasses[0]->m_hGraphicsPipeline )
+			return;
+
+		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+
+		// Depth pre-pass has 0 color attachments — must not bind the GBuffer material pipeline.
+		CStaticRenderer::DrawStaticMeshIndexed(
+			frameIndex,
+			mesh,
+			transform,
+			-1,
+			m_hGraphicsPrePasses[0]->m_hGraphicsPipeline );
 	}
 
 	CDefferedFrameGraph::CDefferedFrameGraph( Ref<CCamera> hCamera )	 NOEXCEPT
@@ -1656,7 +1677,7 @@ namespace Monoworks
 
 			depthPrePassInfo.pExecutionScopeCallback = [&]( u32 frameIndex )
 				{
-					SubmitSceneGeometry( frameIndex );
+					SubmitDepthPrePassGeometry( frameIndex );
 				};
 
 			try 
@@ -1717,9 +1738,17 @@ namespace Monoworks
 		auto lightReflectionData = lightShader->ReflectOnShader();
 
 		auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
+		CameraConstantsUBO cameraUBO;
+		cameraUBO.CameraPosition = hCamera->GetPosition();
+		cameraUBO.CurrentInverseViewProjection = glm::inverse( hCamera->GetCurrentViewProjectionMatrix() );
+		cameraUBO.CurrentViewProjection = hCamera->GetCurrentViewProjectionMatrix();
+		cameraUBO.PreviousInverseViewProjection = glm::inverse( hCamera->GetPreviousViewProjectionMatrix() );
+		cameraUBO.PreviousViewProjection = hCamera->GetPreviousProjectionMatrix();
+
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
 			m_hCameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
+			m_hCameraUBOs[i]->SetData( &cameraUBO, sizeof cameraUBO );
 
 			auto cameraUBO = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
 
@@ -1888,7 +1917,7 @@ namespace Monoworks
 		mesh = Ref<CMesh>::Create();
 
 		mesh->VertexBuffer = RHI::IVertexBuffer::Create( static_cast< void* >( s_CubeVertices.data() ), s_CubeVertices.size(), sizeof( SVertex ), true );
-		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), true );
+		mesh->IndexBuffer = RHI::IIndexBuffer::Create( s_CubeIndices.data(), s_CubeIndices.size(), 0, true );
 
 		m_hTonemapPass->BindTexture( "u_ProxyImage", m_hPresentationProxyImages.data(), true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
 
@@ -2165,11 +2194,13 @@ namespace Monoworks
 	
 		RHI::RenderingAttachmentInfo depthAttachment;
 		depthAttachment.AttachmentImage = m_hGBuffers[frameIndex]->Depth;
+		// Preserve depth written by the depth pre-pass for EQUAL depth testing in the base pass.
+		depthAttachment.LoadOp = MW_ATTACHMENT_LOAD_OP_LOAD;
 
 		RHI::BeginRenderingInfo renderingInfo;
 		renderingInfo.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
 		renderingInfo.pColorAttachments = gbufferAttachments.data();
-		renderingInfo.ColorAttachmentCount = gbufferAttachments.size();
+		renderingInfo.ColorAttachmentCount = static_cast< u32 >( gbufferAttachments.size() );
 		renderingInfo.pDepthAttachment = &depthAttachment;
 		renderingInfo.RenderArea = CStaticRenderer::GetRenderableExtend();
 

@@ -4,7 +4,8 @@ import GPassBase;
 namespace Monoworks
 {
 
-    ConstantBuffer<CameraConstants> u_CameraConstants; // set 1
+    // Global-scope UBO so CGraphicsPrePass::BindUBO (set 0) can write it.
+    ConstantBuffer<CameraConstants> u_CameraConstants;
     [vk::push_constant] ConstantBuffer<ModelConstants> pc_ModelConstants;
 
     [shader("vertex")]

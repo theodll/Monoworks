@@ -214,6 +214,7 @@ namespace Monoworks
 		auto occlusion = FindBindingNumberByString( m_MaterialParameterBlock, c_OcclusionMapBinding, shaderLayout );
 		auto metallic = FindBindingNumberByString( m_MaterialParameterBlock, c_MetallicMapBinding, shaderLayout );
 		auto roughness = FindBindingNumberByString( m_MaterialParameterBlock, c_RoughnessMapBinding, shaderLayout );
+		auto mapSampler = FindBindingNumberByString( m_MaterialParameterBlock, c_MapSamplerBinding, shaderLayout );
 		auto ubo = FindBindingNumberByString( m_MaterialParameterBlock, c_MaterialUBOBinding, shaderLayout );
 
 		auto missingMap = CStaticRenderer::GetDefaultMissingMap();
@@ -281,6 +282,25 @@ namespace Monoworks
 				SetTexture( m_MaterialParameterBlock, roughness.value(), pInfo->hRoughnessMap, true );
 			else
 				SetTexture( m_MaterialParameterBlock, roughness.value(), missingMap, false );
+
+		if ( mapSampler && materialInputSet )
+		{
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				if ( m_hDescriptors[i].size() <= materialInputSet.value() )
+					m_hDescriptors[i].resize( materialInputSet.value() + 1 );
+
+				if ( !m_hDescriptors[i][materialInputSet.value()] )
+					m_hDescriptors[i][materialInputSet.value()] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[materialInputSet.value()] );
+
+				CDescriptorManager::WriteSampler( m_hDescriptors[i][materialInputSet.value()], mapSampler.value(), missingMap );
+			}
+			m_BindingsWritten[{ materialInputSet.value(), mapSampler.value() }] = true;
+		}
+		else if ( !mapSampler && mapSampler.error() == MW_ERROR_NON_EXISTANT )
+			MW_ERROR( "Failed to find binding for material MapSampler: Non existant" );
+		else if ( !mapSampler )
+			MW_ERROR( "Failed to find binding for material MapSampler: Unkown error" );
 		
 	}
 

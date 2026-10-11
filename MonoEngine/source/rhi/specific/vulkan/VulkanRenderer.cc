@@ -163,7 +163,7 @@ namespace Monoworks::RHI
 		if ( pInfo->pDepthAttachment )
 		{
 			depthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-			depthAttachment.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
+			depthAttachment.clearValue = { .depthStencil = { 1.0f, 0 } };
 			depthAttachment.imageLayout = ( VkImageLayout )pInfo->pDepthAttachment->AttachmentImage->m_Layout;
 			depthAttachment.imageView = *pInfo->pDepthAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
 			
@@ -183,7 +183,7 @@ namespace Monoworks::RHI
 		if ( pInfo->pStencilAttachment )
 		{
 			stencilAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-			stencilAttachment.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
+			stencilAttachment.clearValue = { .depthStencil = { 1.0f, 0 } };
 			stencilAttachment.imageLayout = ( VkImageLayout )pInfo->pStencilAttachment->AttachmentImage->m_Layout;
 			stencilAttachment.imageView = *pInfo->pStencilAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
 
@@ -206,7 +206,11 @@ namespace Monoworks::RHI
         renderingInfo.layerCount = 1;
         
 		renderingInfo.colorAttachmentCount = colorAttachments.size();
-        renderingInfo.pColorAttachments = colorAttachments.data();
+        renderingInfo.pColorAttachments = colorAttachments.empty() ? nullptr : colorAttachments.data();
+		if ( pInfo->pDepthAttachment )
+			renderingInfo.pDepthAttachment = &depthAttachment;
+		if ( pInfo->pStencilAttachment )
+			renderingInfo.pStencilAttachment = &stencilAttachment;
 
         vkCmdBeginRendering( cmd, &renderingInfo );
 
@@ -683,7 +687,8 @@ namespace Monoworks::RHI
 		u32 frameIndex,
 		Ref<CMesh> hMesh,
 		const Matrix& transform, 
-		s32 threadID /* = -1 */) NOEXCEPT
+		s32 threadID /* = -1 */,
+		Ref<IGraphicsPipeline> hPipelineOverride /* = nullptr */) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -696,9 +701,11 @@ namespace Monoworks::RHI
 		else
 			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 
+		const bool useMaterialPipeline = !hPipelineOverride;
 		auto mat = hMesh->Material;
 
-		auto vkGPipe = mat->GetPipeline().As<CVulkanGraphicsPipeline>();
+		Ref<IGraphicsPipeline> hPipeline = useMaterialPipeline ? mat->GetPipeline() : hPipelineOverride;
+		auto vkGPipe = hPipeline.As<CVulkanGraphicsPipeline>();
 
 		vkCmdBindPipeline( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, *vkGPipe->GetVulkanPipeline() );
 
@@ -716,28 +723,31 @@ namespace Monoworks::RHI
 		// Make multiple of 4
 		vkCmdPushConstants( cmd, *vkGPipe->GetVulkanPipelineSignature(), VK_SHADER_STAGE_ALL, 0, modelPCSize, &modelConstants );
 
-		auto descriptors = mat->GetDescriptors();
-
-		const auto& frameDescriptors = descriptors[frameIndex];
-
-		bool isFirstInvalid = !frameDescriptors.empty() && frameDescriptors[0] == nullptr;
-		const u32 firstSet = isFirstInvalid ? 1u : 0u;
-
-		auto descView = frameDescriptors | std::views::drop( isFirstInvalid ? 1 : 0 );
-
-		auto setCount = static_cast< uint32_t >( std::ranges::size( descView ) );
-
-		if ( setCount > 0 )
+		if ( useMaterialPipeline )
 		{
-			vkCmdBindDescriptorSets(
-				cmd,
-				VK_PIPELINE_BIND_POINT_GRAPHICS,
-				*vkGPipe->GetVulkanPipelineSignature(),
-				firstSet,
-				setCount,
-				reinterpret_cast< const VkDescriptorSet* >( std::ranges::data( descView ) ),
-				0, nullptr
-			);
+			auto descriptors = mat->GetDescriptors();
+
+			const auto& frameDescriptors = descriptors[frameIndex];
+
+			bool isFirstInvalid = !frameDescriptors.empty() && frameDescriptors[0] == nullptr;
+			const u32 firstSet = isFirstInvalid ? 1u : 0u;
+
+			auto descView = frameDescriptors | std::views::drop( isFirstInvalid ? 1 : 0 );
+
+			auto setCount = static_cast< uint32_t >( std::ranges::size( descView ) );
+
+			if ( setCount > 0 )
+			{
+				vkCmdBindDescriptorSets(
+					cmd,
+					VK_PIPELINE_BIND_POINT_GRAPHICS,
+					*vkGPipe->GetVulkanPipelineSignature(),
+					firstSet,
+					setCount,
+					reinterpret_cast< const VkDescriptorSet* >( std::ranges::data( descView ) ),
+					0, nullptr
+				);
+			}
 		}
 
 		vkCmdDrawIndexed( cmd, hMesh->IndexBuffer->GetCount(), 1, 0, 0, 0);

@@ -17,6 +17,7 @@ namespace Monoworks
 	constexpr char c_EmissiveMapBinding[] = "EmissiveMap";
 	constexpr char c_MetallicMapBinding[] = "MetallicMap";
 	constexpr char c_OcclusionMapBinding[] = "OcclusionMap";
+	constexpr char c_MapSamplerBinding[] = "MapSampler";
 	constexpr char c_MaterialUBOBinding[] = "UBO";
 
 	constexpr u32  c_InvalidMaterialID = 0b1111111111111111111;

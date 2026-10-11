@@ -5,74 +5,79 @@
 namespace Monoworks
 {
 
-	MW_NOTHROW CCamera::CCamera( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT 
+	MW_NOTHROW CCamera::CCamera( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_CurrentProjectionMatrix = glm::ortho( clippingPlanesLRTB.x, clippingPlanesLRTB.y, clippingPlanesLRTB.z, clippingPlanesLRTB.w, clippingPlanesNF.x, clippingPlanesNF.y );
-	};
+		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
 
-	// Constructor for Perspective Projections
+		m_PreviousProjectionMatrix = m_CurrentProjectionMatrix;
+		m_PreviousViewMatrix = m_CurrentViewMatrix;
+		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
+	}
+
 	MW_NOTHROW CCamera::CCamera( float fovY, float aspect, float clipPlaneNear, float clipPlaneFar ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_CurrentProjectionMatrix = glm::perspective( glm::radians( fovY ), aspect, clipPlaneNear, clipPlaneFar );
-	};
+		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
 
-	MW_NOTHROW void CCamera::UpdateOrthographicProjection( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT 
+		m_PreviousProjectionMatrix = m_CurrentProjectionMatrix;
+		m_PreviousViewMatrix = m_CurrentViewMatrix;
+		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
+	}
+
+	MW_NOTHROW void CCamera::UpdateOrthographicProjection( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_PreviousProjectionMatrix = m_CurrentProjectionMatrix;
 		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
-
 
 		m_CurrentProjectionMatrix = glm::ortho( clippingPlanesLRTB.x, clippingPlanesLRTB.y, clippingPlanesLRTB.z, clippingPlanesLRTB.w, clippingPlanesNF.x, clippingPlanesNF.y );
-	};
+		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
+	}
 
-	MW_NOTHROW void CCamera::UpdatePerspectiveProjection( float fovY, float aspect, Vector clippingPlanesNF ) NOEXCEPT 
+	MW_NOTHROW void CCamera::UpdatePerspectiveProjection( float fovY, float aspect, Vector clippingPlanesNF ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_PreviousProjectionMatrix = m_CurrentProjectionMatrix;
 		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
-			
+
 		m_CurrentProjectionMatrix = glm::perspective( glm::radians( fovY ), aspect, clippingPlanesNF.x, clippingPlanesNF.y );
-		
-	};
+		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
+	}
 
-	MW_NOTHROW void CCamera::UpdateViewDirection( Vector position, Vector direction, Vector up ) NOEXCEPT 
+	MW_NOTHROW void CCamera::UpdateViewDirection( Vector position, Vector direction, Vector up ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_PreviousViewMatrix = m_CurrentViewMatrix;
 		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
 
-		m_CurrentViewMatrix = glm::lookAt( position, direction, up );
-		m_CurrentViewProjectionMatrix = m_CurrentViewMatrix * m_CurrentProjectionMatrix;
-	};
+		m_Position = position;
+		m_CurrentViewMatrix = glm::lookAt( position, position + direction, up );
+		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
+	}
 
-	MW_NOTHROW void CCamera::UpdateViewTarget( Vector position, Vector target, Vector up ) NOEXCEPT 
+	MW_NOTHROW void CCamera::UpdateViewTarget( Vector position, Vector target, Vector up ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		
 		UpdateViewDirection( position, target - position, up );
+	}
 
-	};
-
-	MW_NOTHROW void CCamera::UpdateViewQuaternion( Vector position, Quaternion quaternion ) NOEXCEPT 
+	MW_NOTHROW void CCamera::UpdateViewQuaternion( Vector position, Quaternion quaternion ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_PreviousViewMatrix = m_CurrentViewMatrix;
 		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
 
+		m_Position = position;
 		m_CurrentViewMatrix = glm::mat4_cast( glm::conjugate( quaternion ) ) * glm::translate( Matrix( 1.f ), -position );
+		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
+	}
 
-		m_CurrentViewProjectionMatrix = m_CurrentViewMatrix * m_CurrentViewProjectionMatrix;
-	};
-	
-	MW_NOTHROW void CCamera::UpdateViewEuler( Vector position, Angle euler ) NOEXCEPT 
+	MW_NOTHROW void CCamera::UpdateViewEuler( Vector position, Angle euler ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-
-		auto quat = Quaternion( euler );
-		UpdateViewQuaternion( position, quat );
-
-	};
+		UpdateViewQuaternion( position, Quaternion( euler ) );
+	}
 }

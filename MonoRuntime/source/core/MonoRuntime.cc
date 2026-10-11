@@ -94,7 +94,7 @@ namespace Monoworks
 		cfg.RegisterSection("Runtime");
 		cfg.RegisterSection("Rendering");
 
-		cfg.RegisterValue("Runtime", "Title", "MonoEditor");
+		cfg.RegisterValue("Runtime", "Title", "Mono Runtime");
 		cfg.RegisterValue("Runtime", "Window W", "1920");
 		cfg.RegisterValue("Runtime", "Window H", "1080");
 

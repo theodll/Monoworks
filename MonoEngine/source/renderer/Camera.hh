@@ -1,17 +1,14 @@
 #pragma once
 #include <common/Base.hh>
 
-namespace Monoworks 
+namespace Monoworks
 {
-	class CCamera 
+	class CCamera
 	{
 	public:
 		MW_NOTHROW CCamera() NOEXCEPT = default;
 
-		// Constructor for Orthographic Projections
 		MW_NOTHROW CCamera( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT;
-		// Constructor for Perspective Projections
-		// fovY in radiants
 		MW_NOTHROW CCamera( float fovY, float aspect, float clipPlaneNear, float clipPlaneFar ) NOEXCEPT;
 
 
@@ -24,25 +21,25 @@ namespace Monoworks
 		MW_NOTHROW void UpdateViewQuaternion( Vector position, Quaternion quaternion ) NOEXCEPT;
 		MW_NOTHROW void UpdateViewEuler( Vector position, Angle euler ) NOEXCEPT;
 
-		MW_NOTHROW const Matrix& GetCurrentProjectionMatrix() NOEXCEPT		{ return m_CurrentProjectionMatrix; };
-		MW_NOTHROW const Matrix& GetCurrentViewMatrix() NOEXCEPT			{ return m_CurrentViewMatrix; }
-		MW_NOTHROW const Matrix& GetCurrentViewProjectionMatrix() NOEXCEPT	{ return m_CurrentViewProjectionMatrix; }
+		MW_NOTHROW const Matrix& GetCurrentProjectionMatrix() NOEXCEPT { return m_CurrentProjectionMatrix; };
+		MW_NOTHROW const Matrix& GetCurrentViewMatrix() NOEXCEPT { return m_CurrentViewMatrix; }
+		MW_NOTHROW const Matrix& GetCurrentViewProjectionMatrix() NOEXCEPT { return m_CurrentViewProjectionMatrix; }
 
-		MW_NOTHROW const Matrix& GetPreviousProjectionMatrix() NOEXCEPT		{ return m_PreviousProjectionMatrix; };
-		MW_NOTHROW const Matrix& GetPreviousViewMatrix() NOEXCEPT			{ return m_PreviousViewMatrix; }
+		MW_NOTHROW const Matrix& GetPreviousProjectionMatrix() NOEXCEPT { return m_PreviousProjectionMatrix; };
+		MW_NOTHROW const Matrix& GetPreviousViewMatrix() NOEXCEPT { return m_PreviousViewMatrix; }
 		MW_NOTHROW const Matrix& GetPreviousViewProjectionMatrix() NOEXCEPT { return m_PreviousViewProjectionMatrix; }
 
-		MW_NOTHROW const Vector& GetPosition() NOEXCEPT						{ return m_Position; }
+		MW_NOTHROW const Vector& GetPosition() NOEXCEPT { return m_Position; }
 
 	private:
-		Matrix m_CurrentProjectionMatrix;
-		Matrix m_CurrentViewMatrix;
-		Matrix m_CurrentViewProjectionMatrix;
+		Matrix m_CurrentProjectionMatrix = Matrix( 1.f );
+		Matrix m_CurrentViewMatrix = Matrix( 1.f );
+		Matrix m_CurrentViewProjectionMatrix = Matrix( 1.f );
 
-		Matrix m_PreviousProjectionMatrix;
-		Matrix m_PreviousViewMatrix;
-		Matrix m_PreviousViewProjectionMatrix;
+		Matrix m_PreviousProjectionMatrix = Matrix( 1.f );
+		Matrix m_PreviousViewMatrix = Matrix( 1.f );
+		Matrix m_PreviousViewProjectionMatrix = Matrix( 1.f );
 
-		Vector m_Position; // TODO: replace with transform component
+		Vector m_Position = Vector( 0.f );
 	};
 }

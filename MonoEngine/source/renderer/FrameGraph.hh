@@ -474,6 +474,7 @@ namespace Monoworks
 
 	private:
 		MW_NOTHROW void SubmitSceneGeometry( u32 frameIndex ) NOEXCEPT;
+		MW_NOTHROW void SubmitDepthPrePassGeometry( u32 frameIndex ) NOEXCEPT;
 
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
 		std::vector<Ref<CComputePrePass>>			m_hComputePrePasses;

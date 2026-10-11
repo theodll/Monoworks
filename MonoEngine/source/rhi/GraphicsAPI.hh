@@ -176,7 +176,9 @@ namespace Monoworks::RHI
          */
         virtual MW_NOTHROW void DispatchCompute2( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
 
-        virtual MW_NOTHROW void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1 ) NOEXCEPT = 0;
+        /// @brief Draws an indexed static mesh. When hPipelineOverride is null, the mesh material pipeline and descriptors are used.
+        ///        When non-null, that pipeline is bound instead and material descriptors are skipped (for depth pre-pass etc.).
+        virtual MW_NOTHROW void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT = 0;
 
     };
 
