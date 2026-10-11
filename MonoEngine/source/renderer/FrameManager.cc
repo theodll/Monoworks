@@ -47,8 +47,8 @@ namespace Monoworks
 		
 		CStaticRenderer::BeginRootCommandbuffer( frameIndex );
 
-		auto presenter = CApplication::GetCreateInfos()->pPresenter;
-		auto currentSwapchainImage = presenter->GetSwapchainImages()[frameIndex];
+		auto& presenter = CApplication::GetCreateInfos()->pPresenter;
+		auto& currentSwapchainImage = presenter->GetSwapchainImages()[frameIndex];
 
 		currentSwapchainImage->TransitionLayout( frameIndex, RHI::MW_IMAGE_LAYOUT_GENERAL, RHI::MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, RHI::MW_IMAGE_ASPECT_COLOR_BIT );
 

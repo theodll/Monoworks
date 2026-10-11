@@ -445,7 +445,7 @@ namespace Monoworks::RHI
 
 		auto texture = m_SwapchainImages[info->ImageIndex].As<CVulkanTexture2D>();
 
-		texture->TransitionLayout(0, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		texture.As<CVulkanTexture2D>()->TransitionLayoutEC(info->pCmdBuffer, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT);
 	}
 
 	void CVulkanSDLPresenter::Shutdown() NOEXCEPT

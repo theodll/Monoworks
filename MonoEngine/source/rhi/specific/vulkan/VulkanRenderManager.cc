@@ -153,26 +153,30 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 
+		auto& cmdbuf = m_RootFrameData[frameIndex].GraphicsCommandBuffer;
+
+		vkWaitForFences( *CVulkanContext::GetDevice()->GetDevice(), 1, &m_RootFrameData[frameIndex].InFlightFence, VK_TRUE, UINT64_MAX);
+		vkResetFences( *CVulkanContext::GetDevice()->GetDevice(), 1, &m_RootFrameData[frameIndex].InFlightFence );
 
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-		vkBeginCommandBuffer( m_RootFrameData[frameIndex].GraphicsCommandBuffer, &beginInfo );
+		vkBeginCommandBuffer( cmdbuf, &beginInfo );
+		
 
 
-		auto presenter = CVulkanContext::GetPresenter();
+		auto presenter = CVulkanContext::GetPresenter(); 
 		if ( CApplication::GetCreateInfos()->UseSDL )
 		{
 			SVulkanSDLPresentationTransitionRenderInfo renderInfo{};
-			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+			renderInfo.pCmdBuffer = &cmdbuf;
 			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 
-			presenter->TransitionRender( &renderInfo );
+			presenter->TransitionRender( &renderInfo ); 
 		} 
 		else if ( CApplication::GetCreateInfos()->UseQt )
 		{
 			SVulkanQtPresentationTransitionRenderInfo renderInfo {};
-			renderInfo.pCmdBuffer = CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
+			renderInfo.pCmdBuffer = &cmdbuf;
 			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
 
 			presenter->TransitionRender( &renderInfo );
@@ -204,7 +208,7 @@ namespace Monoworks::RHI
 		VkSemaphoreSubmitInfo signalSemaphoreInfo{};
 		signalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO;
 		signalSemaphoreInfo.stageMask = VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT;
-		signalSemaphoreInfo.semaphore = m_RootFrameData[frameIndex].GraphicsSubmitSemaphore;
+		signalSemaphoreInfo.semaphore = m_RootFrameData[frameIndex].RenderFinishedSemaphore;
 
 
 		VkSubmitInfo2 submitInfo{};
@@ -216,7 +220,7 @@ namespace Monoworks::RHI
 		submitInfo.signalSemaphoreInfoCount = 1;
 		submitInfo.pSignalSemaphoreInfos = &signalSemaphoreInfo;
 
-		auto result = vkQueueSubmit2( *device->GetGraphicsQueue(), 1, &submitInfo, nullptr );
+		auto result = vkQueueSubmit2( *device->GetGraphicsQueue(), 1, &submitInfo, m_RootFrameData[frameIndex].InFlightFence );
 		MW_VK_CHECK( result, "Failed to submit Root Graphics commandbuffer" );
 
 		if ( result == VK_ERROR_DEVICE_LOST )
