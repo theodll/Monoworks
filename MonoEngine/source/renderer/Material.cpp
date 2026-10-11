@@ -339,7 +339,10 @@ namespace Monoworks
 		MW_TRACE( "Write Albedo Map for Material {}", m_MaterialID );
 
 		if ( !hMap )
-			MW_API_ERROR( "Invalid Reference to Albedo Map passed." ); return;
+		{
+			MW_API_ERROR( "Invalid Reference to Albedo Map passed." );
+			return;
+		}
 
 		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_AlbedoMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
@@ -357,7 +360,10 @@ namespace Monoworks
 		MW_TRACE( "Write Normal Map for Material {}", m_MaterialID );
 
 		if ( !hMap )
-			MW_API_ERROR( "Invalid Reference to Normal Map passed." ); return;
+		{
+			MW_API_ERROR( "Invalid Reference to Normal Map passed." );
+			return;
+		}
 
 		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_NormalMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
@@ -374,7 +380,10 @@ namespace Monoworks
 		MW_TRACE( "Write Emissive Map for Material {}", m_MaterialID );
 
 		if ( !hMap )
-			MW_API_ERROR( "Invalid Reference to Emissive Map passed." ); return;
+		{
+			MW_API_ERROR( "Invalid Reference to Emissive Map passed." );
+			return;
+		}
 
 		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_EmissiveMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
@@ -391,7 +400,10 @@ namespace Monoworks
 		MW_TRACE( "Write Roughness Map for Material {}", m_MaterialID );
 
 		if ( !hMap )
-			MW_API_ERROR( "Invalid Reference to Roughness Map passed." ); return;
+		{
+			MW_API_ERROR( "Invalid Reference to Roughness Map passed." );
+			return;
+		}
 
 		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_RoughnessMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
@@ -409,7 +421,10 @@ namespace Monoworks
 		MW_TRACE( "Write Metallic Map for Material {}", m_MaterialID );
 
 		if ( !hMap )
-			MW_API_ERROR( "Invalid Reference to Metallic Map passed." ); return;
+		{
+			MW_API_ERROR( "Invalid Reference to Metallic Map passed." );
+			return;
+		}
 
 		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_MetallicMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 
@@ -427,7 +442,10 @@ namespace Monoworks
 		MW_TRACE( "Write Occlusion Map for Material {}", m_MaterialID );
 
 		if ( !hMap )
-			MW_API_ERROR( "Invalid Reference to Occlusion Map passed." ); return;
+		{
+			MW_API_ERROR( "Invalid Reference to Occlusion Map passed." );
+			return;
+		}
 
 		auto mapBind = FindBindingNumberByString( m_MaterialParameterBlock, c_OcclusionMapBinding, m_hShader->GetShaderProgram()->getLayout() );
 

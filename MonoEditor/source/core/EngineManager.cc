@@ -2,7 +2,10 @@
 
 // TODO: make agnostic
 #include <rhi/specific/vulkan/VulkanQtPresenter.hh>
+
 #include <renderer/StaticRenderer.hh>
+#include <renderer/FrameManager.hh>
+
 
 #include "EngineManager.hh"
 
@@ -56,7 +59,7 @@ namespace Monoworks
 
 		for ( auto& viewport : m_Viewports )
 		{
-			viewport->Update( CStaticRenderer::GetCurrentImageIndex() );
+			viewport->Update( CFrameManager::GetCurrentImageIndex() );
 		}
 		
 

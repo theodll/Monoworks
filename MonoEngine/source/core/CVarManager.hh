@@ -1,21 +1,29 @@
 #pragma once
+
+#include <filesystem>
 #include <string>
 #include <string_view>
-#include <filesystem>
 
-namespace Monoworks 
+namespace Monoworks
 {
-	struct SCVar 
+	struct SCVar
 	{
-		std::string		Name;
-		std::string		String;
-		bool			Archive;		
-		bool			Server;		
-		float			Value;
-		SCVar*			Next;
+		SCVar() = default;
+		~SCVar();
+
+		SCVar( const SCVar& ) = delete;
+		SCVar& operator=( const SCVar& ) = delete;
+		SCVar( SCVar&& ) = delete;
+		SCVar& operator=( SCVar&& ) = delete;
+
+		std::string	Name;
+		std::string	String;
+		bool		Archive = false;
+		bool		Server  = false;
+		float		Value   = 0.0f;
 	};
 
-	class CCvarManager 
+	class CCvarManager
 	{
 	public:
 		static void Init() noexcept;
@@ -26,10 +34,12 @@ namespace Monoworks
 		static void SetValue(std::string_view varName, float value) noexcept;
 		[[nodiscard]] static float GetValue(std::string_view varName) noexcept;
 		[[nodiscard]] static std::string GetString(std::string_view varName) noexcept;
-	private:
-		[[nodiscard]] static SCVar* Find(std::string_view varName);
-		static void Serialize(const std::filesystem::path& filePath); 
 
-		static SCVar* m_CVarVars;
+	private:
+		friend struct SCVar;
+
+		static void Unregister(SCVar* var) noexcept;
+		[[nodiscard]] static SCVar* Find(std::string_view varName);
+		static void Serialize(const std::filesystem::path& filePath);
 	};
 }

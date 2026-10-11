@@ -332,6 +332,9 @@ namespace Monoworks::RHI
 		uploader->End();
 
 		vmaDestroyBuffer( *allocator, m_StagingBuffer, m_StagingBufferAllocation );
+		m_StagingBuffer = VK_NULL_HANDLE;
+		m_StagingBufferAllocation = VK_NULL_HANDLE;
+		m_StagingBufferSize = 0;
 	}
 
 	void CVulkanTexture2D::CreateImageWithoutData() NOEXCEPT
@@ -452,7 +455,10 @@ namespace Monoworks::RHI
 			MW_API_ERROR( "Pass invalid frameIndex. Discarding layout transition.");
 
 		if ( outsideFrameScope )
+		{
+			CVulkanContext::GetUploader()->Begin();
 			cmd = *CVulkanContext::GetUploader()->GetCommandBuffer();
+		}
 		else 
 		{
 			if ( threadID < 0 )
@@ -460,9 +466,6 @@ namespace Monoworks::RHI
 			else
 				cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 		}
-		
-		if ( outsideFrameScope )
-			CVulkanContext::GetUploader()->Begin();
 
 		TransitionLayoutEC( &cmd, dstLayout, dstPipelineStage, aspectMask );
 
@@ -597,7 +600,10 @@ namespace Monoworks::RHI
 			MW_API_ERROR( "Pass invalid frameIndex. Discarding image copy." );
 
 		if ( outsideFrameScope )
+		{
+			CVulkanContext::GetUploader()->Begin();
 			cmd = *CVulkanContext::GetUploader()->GetCommandBuffer();
+		}
 		else
 		{
 			if ( threadID < 0 )
@@ -605,9 +611,6 @@ namespace Monoworks::RHI
 			else
 				cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 		}
-
-		if ( outsideFrameScope )
-			CVulkanContext::GetUploader()->Begin();
 
 		CopyImageEC( &cmd, dstImage );
 

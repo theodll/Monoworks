@@ -2,6 +2,7 @@
 #include <common/Base.hh>
 
 #include <renderer/StaticRenderer.hh>
+#include <renderer/FrameManager.hh>
 #include <core/Application.hh>
 
 #include <volk/volk.h>
@@ -55,8 +56,8 @@ namespace Monoworks::RHI
 
 		NODISCARD static VkFence* GetInFlightFence( u32 frameIndex )									NOEXCEPT { return &m_RootFrameData[frameIndex].InFlightFence; };
 
-		NODISCARD static VkCommandBuffer* GetCurrentRootGraphicsCommandBuffer()							NOEXCEPT { return &m_RootFrameData[Monoworks::CStaticRenderer::GetCurrentFrameIndex()].GraphicsCommandBuffer; };
-		NODISCARD static VkCommandBuffer* GetCurrentWorkerGraphicsCommandBuffer( u32 workerThreadID )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].GraphicsCommandBuffers[Monoworks::CStaticRenderer::GetCurrentFrameIndex()]; }
+		NODISCARD static VkCommandBuffer* GetCurrentRootGraphicsCommandBuffer()							NOEXCEPT { return &m_RootFrameData[Monoworks::CFrameManager::GetCurrentFrameIndex()].GraphicsCommandBuffer; };
+		NODISCARD static VkCommandBuffer* GetCurrentWorkerGraphicsCommandBuffer( u32 workerThreadID )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].GraphicsCommandBuffers[Monoworks::CFrameManager::GetCurrentFrameIndex()]; }
 
 		NODISCARD static const std::vector<SVulkanWorkerData>& GetWorkerFrameData()						NOEXCEPT { return m_WorkerRenderData; }; 
 

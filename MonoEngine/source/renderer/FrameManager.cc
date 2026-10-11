@@ -9,6 +9,9 @@ namespace Monoworks
 {
 
 
+	u32 CFrameManager::m_CurrentFrameIndex;
+	u32 CFrameManager::m_CurrentImageIndex;
+
 	Ref<IFrameGraph> CFrameManager::m_hCurrentFrameGraph;
 
 	MW_NOTHROW void CFrameManager::Init() NOEXCEPT
@@ -17,15 +20,15 @@ namespace Monoworks
 
 		MW_INFO("Initialize CFrameManager");
 
-		SCVar executePrepasses{};
-		executePrepasses.Name = "r_execute_pre_passes";
-		executePrepasses.Value = 1.0f;
-		MW_REG_CVAR( &executePrepasses );
-
-		SCVar executePostPasses{};
-		executePostPasses.Name = "r_execute_post_passes";
-		executePostPasses.Value = 1.0f;
-		MW_REG_CVAR( &executePostPasses );
+		SCVar* executePrepasses = new SCVar;
+		executePrepasses->Name = "r_execute_pre_passes";
+		executePrepasses->Value = 1.0f;
+		CCvarManager::RegisterVariable( executePrepasses );
+		
+		SCVar* executePostPasses = new SCVar;
+		executePostPasses->Name = "r_execute_post_passes";
+		executePostPasses->Value = 1.0f;
+		CCvarManager::RegisterVariable( executePostPasses );
 	}
 
 
@@ -36,45 +39,50 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CFrameManager::Render( u32 frameIndex ) NOEXCEPT
+	MW_NOTHROW void CFrameManager::Render() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
 		RHI::CPipelineManager::BatchCompile();
 
 		// Pre rendering setup
-		CStaticRenderer::AcquireNextImage( frameIndex );
+		m_CurrentImageIndex = CStaticRenderer::AcquireNextImage( m_CurrentFrameIndex );
 		
-		CStaticRenderer::BeginRootCommandbuffer( frameIndex );
+
+		MW_TRACE( "FrameIndex: {}", m_CurrentFrameIndex );
+		MW_TRACE( "ImageIndex: {}", m_CurrentImageIndex );
+
+
+		CStaticRenderer::BeginRootCommandbuffer( m_CurrentFrameIndex );
 
 		auto& presenter = CApplication::GetCreateInfos()->pPresenter;
-		auto& currentSwapchainImage = presenter->GetSwapchainImages()[frameIndex];
+		auto& currentSwapchainImage = presenter->GetSwapchainImages()[m_CurrentFrameIndex];
 
-		currentSwapchainImage->TransitionLayout( frameIndex, RHI::MW_IMAGE_LAYOUT_GENERAL, RHI::MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, RHI::MW_IMAGE_ASPECT_COLOR_BIT );
+		currentSwapchainImage->TransitionLayout( m_CurrentFrameIndex, RHI::MW_IMAGE_LAYOUT_GENERAL, RHI::MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, RHI::MW_IMAGE_ASPECT_COLOR_BIT );
 
 		if ( m_hCurrentFrameGraph )
 		{
 
-			m_hCurrentFrameGraph->ExecutePreRenderingSteps( frameIndex );
+			m_hCurrentFrameGraph->ExecutePreRenderingSteps( m_CurrentFrameIndex );
 
 			if ( CCvarManager::GetValue( "r_execute_pre_passes" ) != 0.0f )
 		//		m_hCurrentFrameGraph->ExecutePrePasses( frameIndex );
 
-			m_hCurrentFrameGraph->ExecuteBasePasses( frameIndex );
+			m_hCurrentFrameGraph->ExecuteBasePasses( m_CurrentFrameIndex );
 
 			if ( CCvarManager::GetValue( "r_execute_post_passes" ) != 0.0f )
-				m_hCurrentFrameGraph->ExecutePostPasses( frameIndex );
+				m_hCurrentFrameGraph->ExecutePostPasses( m_CurrentFrameIndex );
 
-			m_hCurrentFrameGraph->ExecutePostRenderingSteps( frameIndex );
+			m_hCurrentFrameGraph->ExecutePostRenderingSteps( m_CurrentFrameIndex );
 
 		}
 
-		currentSwapchainImage->TransitionLayout( frameIndex, RHI::MW_IMAGE_LAYOUT_PRESENT_SRC_KHR, RHI::MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, RHI::MW_IMAGE_ASPECT_COLOR_BIT );
+		CStaticRenderer::SubmitRootCommandbuffer( m_CurrentFrameIndex );
 
-		CStaticRenderer::SubmitRootCommandbuffer( frameIndex );
+		CStaticRenderer::Present( m_CurrentImageIndex );
 
-		CStaticRenderer::Present( frameIndex );
-
+		m_CurrentFrameIndex = ( m_CurrentFrameIndex + 1 ) % MFIF;
+		 
 	}
 
 

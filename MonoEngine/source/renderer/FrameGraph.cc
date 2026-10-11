@@ -9,6 +9,8 @@
 #include <rhi/agnostic/GraphicsPipeline.hh>
 #include <rhi/agnostic/PipelineManager.hh>
 
+#include <renderer/FrameManager.hh>
+
 #include "StaticRenderer.hh"
 #include "FrameGraph.hh"
 
@@ -1130,7 +1132,7 @@ namespace Monoworks
 		if ( m_pDescriptors.size() <= parameterBlock )
 			m_pDescriptors.resize( parameterBlock + 1 );
 
-		if ( m_pDescriptors[parameterBlock][CStaticRenderer::GetCurrentFrameIndex()] == nullptr )
+		if ( m_pDescriptors[parameterBlock][CFrameManager::GetCurrentFrameIndex()] == nullptr )
 		{
 			auto reflectionData = m_hShader->ReflectOnShader();
 			if ( !reflectionData.pDescriptorSignatures[parameterBlock] )
@@ -1213,7 +1215,7 @@ namespace Monoworks
 		if ( m_pDescriptors.size() <= parameterBlock )
 			m_pDescriptors.resize( parameterBlock + 1 );
 
-		if ( m_pDescriptors[parameterBlock][CStaticRenderer::GetCurrentFrameIndex()] == nullptr )
+		if ( m_pDescriptors[parameterBlock][CFrameManager::GetCurrentFrameIndex()] == nullptr )
 		{
 			auto reflectionData = m_hShader->ReflectOnShader();
 			if ( !reflectionData.pDescriptorSignatures[parameterBlock] )
@@ -1264,7 +1266,7 @@ namespace Monoworks
 		if ( m_pDescriptors.size() <= parameterBlock )
 			m_pDescriptors.resize( parameterBlock + 1 );
 
-		if ( m_pDescriptors[parameterBlock][CStaticRenderer::GetCurrentFrameIndex()] == nullptr )
+		if ( m_pDescriptors[parameterBlock][CFrameManager::GetCurrentFrameIndex()] == nullptr )
 		{
 			auto reflectionData = m_hShader->ReflectOnShader();
 			if ( !reflectionData.pDescriptorSignatures[parameterBlock] )
@@ -1354,6 +1356,11 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+
+		// Material draws need u_CameraConstants (set 1) even when invoked from the depth pre-pass callback.
+		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
+		if ( camBinding && mesh && mesh->Material && mesh->Material->GetPipeline() )
+			CStaticRenderer::BindDescriptors( frameIndex, *mesh->Material->GetPipeline()->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1 );
 			
 		CStaticRenderer::DrawStaticMeshIndexed( frameIndex, mesh, transform, -1 );
 
@@ -1608,8 +1615,8 @@ namespace Monoworks
 
 			m_hPresentationProxyImages[i] = ITexture2D::Create(&presentationProxyImgInfo );
 
-			auto& presentationProxy = m_hPresentationProxyImages[i];
-			m_hPresentationProxyImages[i]->TransitionLayout( i, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, false );
+			// Root graphics CBs are not recording during frame-graph construction; use the uploader.
+			m_hPresentationProxyImages[i]->TransitionLayout( i, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 
 
 			gbuf->AlbedoOcclusion->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
@@ -2172,7 +2179,7 @@ namespace Monoworks
 		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
 
 		if ( camBinding )
-			CStaticRenderer::BindDescriptors( frameIndex, m_hDefaultBasePassPipeline->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1 );
+			CStaticRenderer::BindDescriptors( frameIndex, *m_hDefaultBasePassPipeline->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1 );
 		else
 			MW_DEBUG_BREAK;
 

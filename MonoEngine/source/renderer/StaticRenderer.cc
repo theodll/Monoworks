@@ -9,8 +9,6 @@
 namespace Monoworks 
 {
         Ref<RHI::IGraphicsAPI> CStaticRenderer::m_pInstance;
-        u32                    CStaticRenderer::m_CurrentFrameIndex;
-		u32                    CStaticRenderer::m_CurrentImageIndex;
 
 		Ref<RHI::ITexture2D> CStaticRenderer::m_hMissingTexture;
 
@@ -94,7 +92,6 @@ namespace Monoworks
 		{
 			MW_PROFILE_FUNC;
 			m_pInstance->SubmitRootCommandbuffer( frameIndex );
-			m_CurrentFrameIndex = ( m_CurrentFrameIndex + 1 ) % MFIF;
 		}
 
 		MW_NOTHROW void CStaticRenderer::BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT

@@ -163,13 +163,12 @@ namespace Monoworks::RHI
 		vkBeginCommandBuffer( cmdbuf, &beginInfo );
 		
 
-
 		auto presenter = CVulkanContext::GetPresenter(); 
 		if ( CApplication::GetCreateInfos()->UseSDL )
 		{
 			SVulkanSDLPresentationTransitionRenderInfo renderInfo{};
 			renderInfo.pCmdBuffer = &cmdbuf;
-			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+			renderInfo.ImageIndex = CFrameManager::GetCurrentImageIndex();
 
 			presenter->TransitionRender( &renderInfo ); 
 		} 
@@ -177,7 +176,7 @@ namespace Monoworks::RHI
 		{
 			SVulkanQtPresentationTransitionRenderInfo renderInfo {};
 			renderInfo.pCmdBuffer = &cmdbuf;
-			renderInfo.ImageIndex = CStaticRenderer::GetCurrentImageIndex();
+			renderInfo.ImageIndex = CFrameManager::GetCurrentImageIndex();
 
 			presenter->TransitionRender( &renderInfo );
 		}
@@ -186,6 +185,26 @@ namespace Monoworks::RHI
 	void CVulkanRenderManager::EndRootGraphicsCommandBuffer( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		auto& cmdbuf = m_RootFrameData[frameIndex].GraphicsCommandBuffer;
+		auto presenter = CVulkanContext::GetPresenter();
+
+		if ( CApplication::GetCreateInfos()->UseSDL )
+		{
+			SVulkanSDLPresentationTransitionPresentInfo presentInfo{};
+			presentInfo.pCmdBuffer = &cmdbuf;
+			presentInfo.ImageIndex = CFrameManager::GetCurrentImageIndex();
+
+			presenter->TransitionPresent( &presentInfo );
+		}
+		else if ( CApplication::GetCreateInfos()->UseQt )
+		{
+			SVulkanQtPresentationTransitionPresentInfo presentInfo{};
+			presentInfo.pCmdBuffer = &cmdbuf;
+			presentInfo.ImageIndex = CFrameManager::GetCurrentImageIndex();
+
+			presenter->TransitionPresent( &presentInfo );
+		}
 
 		vkEndCommandBuffer( m_RootFrameData[frameIndex].GraphicsCommandBuffer );
 

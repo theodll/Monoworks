@@ -255,6 +255,17 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 
+		// External injector layers (e.g. Overwolf) are outside our control; don't treat as engine errors.
+		if ( pCallbackData && pCallbackData->pMessage )
+		{
+			const char* message = pCallbackData->pMessage;
+			if ( strstr( message, "Overwolf" ) || strstr( message, "ow-graphics-vulkan" ) )
+			{
+				MW_WARN( "Vulkan (external layer): {}", message );
+				return VK_FALSE;
+			}
+		}
+
 		auto messageTypeFunc = [&]()
 			{
 				switch ( messageType ) 
@@ -431,9 +442,6 @@ namespace Monoworks::RHI
 
 #ifdef MW_PROFILING
 
-		m_ResourceUploader.Begin();
-		m_ResourceUploader.End();
-		
 		CEventManager::Subscribe(MW_EVENT_APP_FRAME, +[] ( MAYBE_UNUSED SEvent& event )
 			{
 				VmaTotalStatistics stats;
@@ -444,9 +452,32 @@ namespace Monoworks::RHI
 				return false;
 			});
 
-		TracyGraphicsContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetGraphicsQueue(), *m_ResourceUploader.GetCommandBuffer() );
-		TracyComputeContext	 = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetComputeQueue(), *m_ResourceUploader.GetCommandBuffer() );
-		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), *m_ResourceUploader.GetCommandBuffer() );
+		// TracyVkContext records into the provided command buffer. Never share the resource-uploader CB.
+		auto allocateTracySetupCommandBuffer = []( VkCommandPool pool ) -> VkCommandBuffer
+			{
+				VkCommandBufferAllocateInfo allocInfo{};
+				allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+				allocInfo.commandPool = pool;
+				allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+				allocInfo.commandBufferCount = 1;
+
+				VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
+				MW_VK_CHECK( vkAllocateCommandBuffers( *m_Device.GetDevice(), &allocInfo, &commandBuffer ),
+					"Failed to allocate Tracy setup command buffer" );
+				return commandBuffer;
+			};
+
+		VkCommandBuffer tracyGraphicsCB = allocateTracySetupCommandBuffer( *m_Device.GetGraphicsCommandPool() );
+		VkCommandBuffer tracyComputeCB  = allocateTracySetupCommandBuffer( *m_Device.GetComputeCommandPool() );
+		VkCommandBuffer tracyTransferCB = allocateTracySetupCommandBuffer( *m_Device.GetTransferCommandPool() );
+
+		TracyGraphicsContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetGraphicsQueue(), tracyGraphicsCB );
+		TracyComputeContext	 = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetComputeQueue(), tracyComputeCB );
+		TracyTransferContext = MW_PROFILE_VK_CREATE_CTX( *m_Device.GetPhysicalDevice(), *m_Device.GetDevice(), *m_Device.GetTransferQueue(), tracyTransferCB );
+
+		vkFreeCommandBuffers( *m_Device.GetDevice(), *m_Device.GetGraphicsCommandPool(), 1, &tracyGraphicsCB );
+		vkFreeCommandBuffers( *m_Device.GetDevice(), *m_Device.GetComputeCommandPool(), 1, &tracyComputeCB );
+		vkFreeCommandBuffers( *m_Device.GetDevice(), *m_Device.GetTransferCommandPool(), 1, &tracyTransferCB );
 
 #endif
 		CDescriptorManager::Init();

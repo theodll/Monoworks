@@ -337,14 +337,14 @@ namespace Monoworks::RHI
 			presentInfo.pVulkanDevice = CVulkanContext::GetDevice();
 			presentInfo.pRenderFinishedSemaphore = CVulkanRenderManager::GetRenderFinishedSemaphore( frameIndex );
 			presentInfo.pPresentQueue = CVulkanContext::GetDevice()->GetPresentQueue();
-			presentInfo.pImageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
+			presentInfo.pImageIndex = &CFrameManager::GetCurrentImageIndex();
 
 			return presenter->Present( &presentInfo );
 		}
 		else if ( CApplication::GetCreateInfos()->UseQt )
 		{
 			SVulkanQtPresentationPresentInfo presentInfo{};
-			presentInfo.pImageIndex = CStaticRenderer::GetCurrentImageIndexPtr();
+			presentInfo.pImageIndex = &CFrameManager::GetCurrentImageIndex();
 
 			return presenter->Present( &presentInfo );
 		}
@@ -357,8 +357,11 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 
-		if ( frameIndex > MFIF )
-			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding graphics pipeline bind on threadID {}.", threadID ); return;
+		if ( frameIndex >= MFIF )
+		{
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding graphics pipeline bind on threadID {}.", threadID );
+			return;
+		}
 
 		VkCommandBuffer cmd = nullptr;
 
@@ -368,7 +371,10 @@ namespace Monoworks::RHI
 			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 
 		if ( !cmd )
-			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding graphics pipeline bind on threadID {}.", threadID, threadID ); return;
+		{
+			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding graphics pipeline bind on threadID {}.", threadID, threadID );
+			return;
+		}
 
 		auto vkPipeline = hPipeline.As<CVulkanGraphicsPipeline>();
 
@@ -385,8 +391,11 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		
-		if ( frameIndex > MFIF )
-			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding descriptor bind on threadID {}.", threadID ); return;
+		if ( frameIndex >= MFIF )
+		{
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding descriptor bind on threadID {}.", threadID );
+			return;
+		}
 
 		VkCommandBuffer cmd = nullptr;
 
@@ -396,7 +405,10 @@ namespace Monoworks::RHI
 			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 
 		if ( !cmd )
-			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding descriptor bind on threadID {}.", threadID, threadID ); return;
+		{
+			MW_ERROR( "Failed to assign commandbuffer for thread id {}. Discarding descriptor bind on threadID {}.", threadID, threadID );
+			return;
+		}
 
 		// Bind descriptors for graphics
 		vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
@@ -414,14 +426,23 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		
-		if ( frameIndex > MFIF )
-			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic viewport state bind." ); return;
+		if ( frameIndex >= MFIF )
+		{
+			MW_API_ERROR( "Pass invalid frameIndex: Greater than MaxFramesInFlight. Discarding dynamic viewport state bind." );
+			return;
+		}
 
 		if ( !pViewports )
-			MW_API_ERROR( "pViewports is nullptr. Discarding dynamic viewport state bind." ); return;
+		{
+			MW_API_ERROR( "pViewports is nullptr. Discarding dynamic viewport state bind." );
+			return;
+		}
 
 		if ( !viewportCount )
-			MW_API_ERROR( "viewportCount must be greater than 0. Discarding dynamic viewport state bind." ); return; 
+		{
+			MW_API_ERROR( "viewportCount must be greater than 0. Discarding dynamic viewport state bind." );
+			return;
+		}
 
 
 		const auto& workerData = CVulkanRenderManager::GetWorkerFrameData();
@@ -699,19 +720,20 @@ namespace Monoworks::RHI
 
 		const auto& frameDescriptors = descriptors[frameIndex];
 
-        bool isFirstInvalid = !frameDescriptors.empty() && frameDescriptors[0] == nullptr;
+		bool isFirstInvalid = !frameDescriptors.empty() && frameDescriptors[0] == nullptr;
+		const u32 firstSet = isFirstInvalid ? 1u : 0u;
 
 		auto descView = frameDescriptors | std::views::drop( isFirstInvalid ? 1 : 0 );
 
 		auto setCount = static_cast< uint32_t >( std::ranges::size( descView ) );
 
-		if ( setCount > 0 ) {
-
+		if ( setCount > 0 )
+		{
 			vkCmdBindDescriptorSets(
 				cmd,
 				VK_PIPELINE_BIND_POINT_GRAPHICS,
 				*vkGPipe->GetVulkanPipelineSignature(),
-				0,
+				firstSet,
 				setCount,
 				reinterpret_cast< const VkDescriptorSet* >( std::ranges::data( descView ) ),
 				0, nullptr

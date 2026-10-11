@@ -10,129 +10,6 @@
 
 namespace Monoworks::RHI 
 {
-	MAYBE_UNUSED static void TransitionImageLayout3(
-		VkCommandBuffer commandBuffer,
-		VkImage image,
-		VkImageLayout oldLayout,
-		VkImageLayout newLayout,
-		VkPipelineStageFlags srcStageMask,
-		VkPipelineStageFlags dstStageMask )
-	{
-		VkImageMemoryBarrier barrier{};
-		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		barrier.oldLayout = oldLayout;
-		barrier.newLayout = newLayout;
-		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		barrier.image = image;
-		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		barrier.subresourceRange.baseMipLevel = 0;
-		barrier.subresourceRange.levelCount = 1;
-		barrier.subresourceRange.baseArrayLayer = 0;
-		barrier.subresourceRange.layerCount = 1;
-
-		if ( oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR )
-		{
-			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-			barrier.dstAccessMask = 0;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
-			newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
-		{
-			barrier.srcAccessMask = 0;
-			barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR &&
-			newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
-		{
-			barrier.srcAccessMask = 0;
-			barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
-			newLayout == VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL )
-		{
-			barrier.srcAccessMask = 0;
-			barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
-			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
-			newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL )
-		{
-			barrier.srcAccessMask = 0;
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_UNDEFINED )
-		{
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			barrier.dstAccessMask = 0;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
-			barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-		}
-		else if ( oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL &&
-			newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL )
-		{
-			barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-		}
-		else
-		{
-			MW_ASSERT( false, "Unsupported layout transition" );
-		}
-
-		vkCmdPipelineBarrier(
-			commandBuffer,
-			srcStageMask,
-			dstStageMask,
-			0,
-			0, nullptr,
-			0, nullptr,
-			1, &barrier
-		);
-	}
 
 	CVulkanSDLPresenter::CVulkanSDLPresenter( SExtent2D swapchainExtent, bool vsync, SDL_Window* window ) NOEXCEPT
 	{
@@ -431,7 +308,7 @@ namespace Monoworks::RHI
 		auto info = ( SVulkanSDLPresentationTransitionPresentInfo* )pInfo;
 		auto texture = m_SwapchainImages[info->ImageIndex].As<CVulkanTexture2D>();
 	
-		texture->TransitionLayout( 0, MW_IMAGE_LAYOUT_PRESENT_SRC_KHR, MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
+		texture->TransitionLayoutEC( info->pCmdBuffer, MW_IMAGE_LAYOUT_PRESENT_SRC_KHR, MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 
 	}
 
@@ -445,7 +322,7 @@ namespace Monoworks::RHI
 
 		auto texture = m_SwapchainImages[info->ImageIndex].As<CVulkanTexture2D>();
 
-		texture.As<CVulkanTexture2D>()->TransitionLayoutEC(info->pCmdBuffer, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT);
+		texture->TransitionLayoutEC(info->pCmdBuffer, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT);
 	}
 
 	void CVulkanSDLPresenter::Shutdown() NOEXCEPT
@@ -526,8 +403,6 @@ namespace Monoworks::RHI
 
 		// Mark this image as having been presented at least once
 		m_ImagePresentedOnce[*info->pImageIndex] = true;
-
-		vkQueueWaitIdle( *info->pPresentQueue );
 	}
 
 }

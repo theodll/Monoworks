@@ -1,123 +1,150 @@
 #include "CVarManager.hh"
+
+#include <charconv>
+#include <format>
+#include <fstream>
+#include <map>
 #include <string>
 
-namespace Monoworks 
+namespace Monoworks
 {
-	SCVar* CCvarManager::m_CVarVars;
-
-	void  CCvarManager::Init() noexcept
+	namespace
 	{
-		MW_PROFILE_FUNC;
-		MW_INFO("Initialize CCvarManager");
-	};
+		using Registry = std::map<std::string, SCVar*, std::less<>>;
 
-	void  CCvarManager::Shutdown() noexcept
-	{
-		MW_PROFILE_FUNC;
-		Serialize("cvar_config.cfg");
-		MW_INFO("Shutdown CCvarManager");
-	};
-
-
-	void  CCvarManager::RegisterVariable(SCVar* var) noexcept
-	{
-		MW_PROFILE_FUNC;
-		if (Find(var->Name))
+		Registry& GetRegistry() noexcept
 		{
-			MW_WARN("Unable to define cvar: {}: Already defined", var->Name);
+			static Registry* registry = new Registry;
+			return *registry;
+		}
+
+		float ParseFloat( std::string_view text ) noexcept
+		{
+			float value = 0.0f;
+			const auto [ptr, ec] = std::from_chars( text.data(), text.data() + text.size(), value );
+			return ec == std::errc{} ? value : 0.0f;
+		}
+	}
+
+	SCVar::~SCVar()
+	{
+		CCvarManager::Unregister( this );
+	}
+
+	void CCvarManager::Init() noexcept
+	{
+		MW_PROFILE_FUNC;
+		MW_INFO( "Initialize CCvarManager" );
+	}
+
+	void CCvarManager::Shutdown() noexcept
+	{
+		MW_PROFILE_FUNC;
+		Serialize( "cvar_config.cfg" );
+		MW_INFO( "Shutdown CCvarManager" );
+	}
+
+	void CCvarManager::RegisterVariable( SCVar* var ) noexcept
+	{
+		MW_PROFILE_FUNC;
+
+		if ( !var || var->Name.empty() )
+		{
+			MW_WARN( "Unable to define cvar: null pointer or empty name" );
 			return;
 		}
 
-		std::string temp;
-
-		temp = var->String;
-		
-		try 
+		const auto [it, inserted] = GetRegistry().try_emplace( var->Name, var );
+		if ( !inserted )
 		{
-			var->Value = static_cast< float >( std::stod( var->String ) );
-		}
-		catch ( ... )
-		{
-			var->Value = 0.0f;
+			MW_WARN( "Unable to define cvar: {}: Already defined", var->Name );
+			return;
 		}
 
-		// link the variable in
-		var->Next = m_CVarVars;
-		m_CVarVars = var;
-		MW_INFO("Register variable {} with string \"{}\" and value \"{}\"", var->Name, var->String, var->Value);
+		var->Value = ParseFloat( var->String );
 
-	};
+		MW_INFO( "Register variable {} with string \"{}\" and value \"{}\"", var->Name, var->String, var->Value );
+	}
 
-	void  CCvarManager::Set(std::string_view varName, const std::string& value) noexcept
+	void CCvarManager::Unregister( SCVar* var ) noexcept
+	{
+		Registry& registry = GetRegistry();
+		const auto it = registry.find( var->Name );
+
+		if ( it != registry.end() && it->second == var )
+			registry.erase( it );
+	}
+
+	void CCvarManager::Set( std::string_view varName, const std::string& value ) noexcept
 	{
 		MW_PROFILE_FUNC;
-		SCVar* var;
+
+		SCVar* var = Find( varName );
+		if ( !var )
+		{
+			MW_WARN( "Did not find cvar {}", varName );
+			return;
+		}
+
 		// Note [14.08.26, Theo]: Used by the Quake Engine to broadcast cvar changes to the server (https://github.com/id-Software/Quake/blob/master/WinQuake/cvar.c, line 123)
-		MAYBE_UNUSED bool changed;
-
-		var = Find(varName);
-		
-		if (!var)
-			return;
-
-		changed = (var->String == value);
+		MAYBE_UNUSED const bool changed = ( var->String != value );
 
 		var->String = value;
-		var->Value = static_cast<float>(std::stod(value));
+		var->Value = ParseFloat( value );
+	}
 
-
-
-	};
-
-	void  CCvarManager::SetValue(std::string_view varName, float value) noexcept
+	void CCvarManager::SetValue( std::string_view varName, float value ) noexcept
 	{
 		MW_PROFILE_FUNC;
-		std::string temp;
+		Set( varName, std::format( "{}", value ) );
+	}
 
-		temp = std::format("{}", value);
-		Set(varName, temp);
-	};
-
-	float CCvarManager::GetValue(std::string_view varName) noexcept
+	float CCvarManager::GetValue( std::string_view varName ) noexcept
 	{
 		MW_PROFILE_FUNC;
-		SCVar* var;
 
-		var = Find(varName);
-		if (!var)
-			return 0;
-
+		const SCVar* var = Find( varName );
+		if ( !var )
+		{
+			MW_WARN( "Did not find cvar {}", varName );
+			return 0.0f;
+		}
 		return var->Value;
-	};
+	}
 
-	std::string  CCvarManager::GetString(std::string_view varName) noexcept
+	std::string CCvarManager::GetString( std::string_view varName ) noexcept
 	{
 		MW_PROFILE_FUNC;
-		SCVar* var;
 
-		var = Find(varName);
-
-		if (!var)
-			return "";
+		const SCVar* var = Find( varName );
+		if ( !var )
+		{
+			MW_WARN( "Did not find cvar {}", varName );
+			return {};
+		}
 		return var->String;
-	};
+	}
 
-	void  CCvarManager::Serialize(MAYBE_UNUSED const std::filesystem::path& filePath)
+	void CCvarManager::Serialize( const std::filesystem::path& filePath )
 	{
 		MW_PROFILE_FUNC;
-		MW_ERROR( "CCvarManager::Serialize not yet implemented" );
-	};
 
-	SCVar* CCvarManager::Find(std::string_view varName) 
+		std::ofstream file( filePath );
+		if ( !file )
+		{
+			MW_ERROR( "CCvarManager::Serialize: unable to open {}", filePath.string() );
+			return;
+		}
+
+		for ( const auto& [name, var] : GetRegistry() )
+			if ( var->Archive )
+				file << name << " \"" << var->String << "\"\n";
+	}
+
+	SCVar* CCvarManager::Find( std::string_view varName )
 	{
-		MW_PROFILE_FUNC;
-		SCVar* var;
-
-		for (var = m_CVarVars; var; var = var->Next)
-			if (varName != var->Name)
-				return var;
-		MW_WARN("Did not cvar find {}", varName);
-
-		return nullptr;
-	};
+		const Registry& registry = GetRegistry();
+		const auto it = registry.find( varName );
+		return it != registry.end() ? it->second : nullptr;
+	}
 }

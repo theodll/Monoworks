@@ -109,14 +109,14 @@ namespace Monoworks::RHI
 	struct SVulkanQtPresentationTransitionPresentInfo : public IPresentationTransitionPresentInfo
 	{
 		SVulkanQtPresentationTransitionPresentInfo() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_QT; }
-		const VkCommandBuffer*	pCmdBuffer;
+		VkCommandBuffer*	pCmdBuffer;
 		u32						ImageIndex;
 	};
 
 	struct SVulkanQtPresentationTransitionRenderInfo : public IPresentationTransitionRenderInfo
 	{
 		SVulkanQtPresentationTransitionRenderInfo() { *const_cast< EPresentationMedium* >(&Medium) = MW_PRESENTATION_MEDIUM_VULKAN_QT; }
-		const VkCommandBuffer*	pCmdBuffer;
+		VkCommandBuffer*	pCmdBuffer;
 		u32						ImageIndex;
 	};
 }

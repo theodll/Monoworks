@@ -151,7 +151,7 @@ namespace Monoworks
 		// TODO: Move to frame graph
 		Events::SAppRender render{};
 		CEventManager::EmitEventNonDeffered(render, MW_EVENT_APP_RENDER);
-		CFrameManager::Render( CStaticRenderer::GetCurrentFrameIndex() );
+		CFrameManager::Render();
 		
 
 

@@ -93,12 +93,22 @@ namespace Monoworks::RHI
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &m_Commandbuffer;
 
-		vkQueueSubmit(
+		MW_VK_CHECK( vkQueueSubmit(
 			*CVulkanContext::GetDevice()->GetTransferQueue(),
 			1,
 			&submitInfo,
 			m_Fence
-		);
+		), "Failed to submit transfer command buffer" );
+
+		// Wait here so callers can safely destroy staging resources referenced by this submit.
+		MW_VK_CHECK( vkWaitForFences(
+			*CVulkanContext::GetDevice()->GetDevice(),
+			1,
+			&m_Fence,
+			VK_TRUE,
+			UINT64_MAX
+		), "Failed to wait for transfer fence after submit" );
+
 		m_Mutex.unlock();
 	}
 }
