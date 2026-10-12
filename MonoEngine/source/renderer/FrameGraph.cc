@@ -1376,13 +1376,15 @@ namespace Monoworks
 		if ( !mesh || m_hGraphicsPrePasses.empty() || !m_hGraphicsPrePasses[0]->m_hGraphicsPipeline )
 			return;
 
+		static float counter = 0.0f;
+
 		glm::mat4 transform = glm::scale(
 			glm::rotate(
 				glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.0f, 0.0f, -2.0f ) ),
-				glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) ),
+				glm::radians( 15.0f + counter ), glm::vec3( 0.0f, 1.0f, 0.0f ) ),
 			glm::vec3( 0.05f ) );
 
-
+		counter += 0.1;
 		// Depth pre-pass has 0 color attachments — must not bind the GBuffer material pipeline.
 		CStaticRenderer::DrawStaticMeshIndexed(
 			frameIndex,

@@ -245,11 +245,13 @@ namespace Monoworks::RHI
 			hCmd = *CVulkanRenderManager::GetCurrentWorkerGraphicsCommandBuffer( threadID );
 
 		if ( !hCmd )
-			MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch" );	return;
-		
+		{
+			MW_ERROR( "Failed to get current worker or root command buffer. Discarding Dispatch" );
+			return;
+		}
 
 		auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
-        vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), 0, descriptorCount, static_cast<VkDescriptorSet*>(*pDesciptors), 0, nullptr);
+        vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), 0, descriptorCount, (VkDescriptorSet*)(pDesciptors), 0, nullptr);
 
 		vkCmdBindPipeline( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipeline() );
 
