@@ -64,6 +64,7 @@ namespace Monoworks
 				sessionDesc.searchPathCount = pInfo->SlangSessionSearchPathCount;
 			}
 
+			sessionDesc.defaultMatrixLayoutMode = SLANG_MATRIX_LAYOUT_COLUMN_MAJOR;
 			globalSession->createSession( sessionDesc, m_pSlangSession.writeRef() );
 		}
 		else

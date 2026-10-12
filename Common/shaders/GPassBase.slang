@@ -223,7 +223,7 @@ namespace Monoworks
 
             float4 currentWorldPos = mul(modelConstants.CurrentModelMatrix, offsetWorldPos);
             output.WorldPosition = currentWorldPos.xyz;
-            output.CurrentClipPosition = mul(cameraConstants.CurrentViewProjection, currentWorldPos );
+            output.CurrentClipPosition = mul(cameraConstants.CurrentViewProjection, currentWorldPos);
 
             float4 previousWorldPos = mul(modelConstants.PreviousModelMatrix, offsetWorldPos);
             output.PreviousClipPosition = mul(cameraConstants.PreviousViewProjection, previousWorldPos);

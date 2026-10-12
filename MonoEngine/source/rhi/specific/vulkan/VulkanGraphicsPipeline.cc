@@ -420,7 +420,7 @@ namespace Monoworks::RHI
 		
 		// Default values. These values will be ignored if the dynamic states MW_DYNAMIC_STATE_CULL_MODE (default) or MW_DYNAMIC_STATE_FRONT_FACE are set.
 		pipelineRasterizationCreateInfo.cullMode = ToVulkanCullMode( pInfo->CullMode );
-		pipelineRasterizationCreateInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // TODO: Implement as dynamic state.
+		pipelineRasterizationCreateInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; // TODO: Implement as dynamic state.
 
 		pipelineRasterizationCreateInfo.polygonMode = ToVulkanPolygonMode( pInfo->PolygonMode );
 		pipelineRasterizationCreateInfo.lineWidth = 1.0f;

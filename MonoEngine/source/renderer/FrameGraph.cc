@@ -1376,7 +1376,12 @@ namespace Monoworks
 		if ( !mesh || m_hGraphicsPrePasses.empty() || !m_hGraphicsPrePasses[0]->m_hGraphicsPipeline )
 			return;
 
-		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+		glm::mat4 transform = glm::scale(
+			glm::rotate(
+				glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.0f, 0.0f, -2.0f ) ),
+				glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) ),
+			glm::vec3( 0.05f ) );
+
 
 		// Depth pre-pass has 0 color attachments — must not bind the GBuffer material pipeline.
 		CStaticRenderer::DrawStaticMeshIndexed(
@@ -1868,40 +1873,40 @@ namespace Monoworks
 		static std::array<SVertex, 24> s_CubeVertices =
 		{ {
 				// +X
-				{ { 1, -1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0 } },
-				{ { 1,  1, -1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0 } },
-				{ { 1,  1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 1 } },
-				{ { 1, -1,  1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 1 } },
+				{ { 0.5f, -0.5f, -0.5f }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0 } },
+				{ { 0.5f,  0.5f, -0.5f }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0 } },
+				{ { 0.5f,  0.5f,  0.5f }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 1 } },
+				{ { 0.5f, -0.5f,  0.5f }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 1 } },
 
 				// -X
-				{ { -1, -1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 0 } },
-				{ { -1, -1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0 } },
-				{ { -1,  1,  1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 1 } },
-				{ { -1,  1, -1 }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 1 } },
+				{ { -0.5f, -0.5f, -0.5f }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 0 } },
+				{ { -0.5f, -0.5f,  0.5f }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 0 } },
+				{ { -0.5f,  0.5f,  0.5f }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 1, 1 } },
+				{ { -0.5f,  0.5f, -0.5f }, { -1, 0, 0 }, { 0, 0, 1 }, { 0, 1, 0 }, { 0, 1 } },
 
 				// +Y
-				{ { -1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 0 } },
-				{ { -1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 0 } },
-				{ {  1, 1,  1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 1 } },
-				{ {  1, 1, -1 }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1 } },
+				{ { -0.5f, 0.5f, -0.5f }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 0 } },
+				{ { -0.5f, 0.5f,  0.5f }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 0 } },
+				{ {  0.5f, 0.5f,  0.5f }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 1, 1 } },
+				{ {  0.5f, 0.5f, -0.5f }, { 0, 1, 0 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1 } },
 
 				// -Y
-				{ { -1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 0 } },
-				{ {  1, -1, -1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 0 } },
-				{ {  1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 1 } },
-				{ { -1, -1,  1 }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 1 } },
+				{ { -0.5f, -0.5f, -0.5f }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 0 } },
+				{ {  0.5f, -0.5f, -0.5f }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 0 } },
+				{ {  0.5f, -0.5f,  0.5f }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 1, 1 } },
+				{ { -0.5f, -0.5f,  0.5f }, { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, 1 }, { 0, 1 } },
 
 				// +Z
-				{ { -1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0 } },
-				{ {  1, -1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 0 } },
-				{ {  1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 1 } },
-				{ { -1,  1, 1 }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 1 } },
+				{ { -0.5f, -0.5f, 0.5f }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0 } },
+				{ {  0.5f, -0.5f, 0.5f }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 0 } },
+				{ {  0.5f,  0.5f, 0.5f }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 1, 1 } },
+				{ { -0.5f,  0.5f, 0.5f }, { 0, 0, 1 }, { 1, 0, 0 }, { 0, 1, 0 }, { 0, 1 } },
 
 				// -Z
-				{ { -1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0 } },
-				{ { -1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 0 } },
-				{ {  1,  1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 1 } },
-				{ {  1, -1, -1 }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 1 } },
+				{ { -0.5f, -0.5f, -0.5f }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0 } },
+				{ { -0.5f,  0.5f, -0.5f }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 0 } },
+				{ {  0.5f,  0.5f, -0.5f }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 1, 1 } },
+				{ {  0.5f, -0.5f, -0.5f }, { 0, 0, -1 }, { 0, 1, 0 }, { 1, 0, 0 }, { 0, 1 } },
 			} };
 
 		static std::array<uint32_t, 36> s_CubeIndices =
@@ -2082,7 +2087,8 @@ namespace Monoworks
 		if ( !mesh->Material )
 		{
 			MaterialCreationInfo matCreateInfo{};
-			matCreateInfo.AlbedoFactor = { 1.0f, 1.0f, 0.0f };
+			matCreateInfo.AlbedoFactor = { 1.0f, 0.0f, 0.0f };
+			matCreateInfo.hAlbedoMap = CStaticRenderer::GetDefaultMissingMap();
 
 			Ref<CMaterial> mat = Ref<CMaterial>::Create( &matCreateInfo );
 
@@ -2100,9 +2106,12 @@ namespace Monoworks
 
 		m_hCompositeImages[frameIndex]->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 
+		static float counter;
+		
+
 		// TODO: add check if m_CameraUBOs[ frameIndex ] is valid
 		CameraConstantsUBO ubo{};
-		ubo.CameraPosition = m_hCamera->GetPosition();
+		ubo.CameraPosition = Vector( 1.0f, 1.0f, 0.f - counter);
 		ubo.CurrentViewProjection = m_hCamera->GetCurrentViewProjectionMatrix();
 		ubo.PreviousViewProjection = m_hCamera->GetPreviousViewProjectionMatrix();
 		ubo.CurrentInverseViewProjection = glm::inverse( m_hCamera->GetCurrentViewProjectionMatrix() );
@@ -2114,6 +2123,7 @@ namespace Monoworks
 		// frame manager has already called CStaticRenderer::BeginRootCommandbuffer. 
 		// That's because it should not be implementation specific 
 		BindCommandBufferStateOnlyRoot( frameIndex );
+		counter += 0.1;
 	}
 
 	void CDefferedFrameGraph::ExecutePrePasses( u32 frameIndex ) NOEXCEPT

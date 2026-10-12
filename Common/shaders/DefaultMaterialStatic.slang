@@ -12,6 +12,34 @@ namespace Monoworks
     struct DefaultMaterial : IMaterial {};
 
     static DefaultMaterial g_Material;
+
+    /*
+    [shader("vertex")]
+    VertexOutput vertexMain(VertexInput input)
+    {
+        VertexOutput output;
+
+        float4 position = float4(input.Position, 1.0);
+
+        float4 currentWorldPos = mul( pc_ModelConstants.CurrentModelMatrix, position );
+
+        output.CurrentClipPosition = mul( u_CameraConstants.CurrentViewProjection, currentWorldPos );
+
+        float4 previousWorldPos = mul( pc_ModelConstants.PreviousModelMatrix, position );
+
+        output.PreviousClipPosition = mul( u_CameraConstants.PreviousViewProjection, previousWorldPos );
+
+        output.WorldPosition = currentWorldPos.xyz;
+        output.WorldNormal = mul( (float3x3)pc_ModelConstants.CurrentModelMatrix, input.Normal);
+        output.WorldTangent = mul( (float3x3)pc_ModelConstants.CurrentModelMatrix, input.Tangent);
+        output.WorldBinormal = mul( (float3x3)pc_ModelConstants.CurrentModelMatrix, input.Binormal);
+
+        output.TexCoord = input.TexCoord;
+        output.EntityID = pc_ModelConstants.EntityID;
+
+        return output;
+    }*/
+
     
     [shader("vertex")]
     VertexOutput vertexMain( VertexInput input )
