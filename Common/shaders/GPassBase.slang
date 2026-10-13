@@ -218,15 +218,16 @@ namespace Monoworks
             where T : IMaterial
         {
             VertexOutput output;
-
+            
             float4 offsetWorldPos = float4(vertexInput.Position, 1.0) + material.CalculateVertexOffset(vertexInput);
             float4 currentWorldPos = mul(modelConstants.CurrentModelMatrix, offsetWorldPos);
 
-            output.WorldPosition = currentWorldPos.xyz;
-            output.CurrentClipPosition = mul(cameraConstants.CurrentViewProjection, currentWorldPos);
+            float3 currentRelativePos = mul(modelConstants.CurrentModelMatrix, offsetWorldPos).xyz - cameraConstants.CameraPosition;
+            float3 previousRelativePos = mul(modelConstants.PreviousModelMatrix, offsetWorldPos).xyz - cameraConstants.CameraPosition;
 
-            float4 previousWorldPos = mul(modelConstants.PreviousModelMatrix, offsetWorldPos);
-            output.PreviousClipPosition = mul(cameraConstants.PreviousViewProjection, previousWorldPos);
+            output.WorldPosition = currentRelativePos;
+            output.CurrentClipPosition = mul(cameraConstants.CurrentViewProjection, float4(currentRelativePos, 1.0));
+            output.PreviousClipPosition = mul(cameraConstants.PreviousViewProjection, float4(previousRelativePos, 1.0));
 
             float3x3 normalMat = (float3x3)modelConstants.CurrentModelMatrix;
             output.WorldNormal = mul(normalMat, vertexInput.Normal);

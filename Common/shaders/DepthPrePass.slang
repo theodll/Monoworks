@@ -17,7 +17,7 @@ namespace Monoworks
 
         float3 viewDirection = normalize( u_CameraConstants.CameraPosition - currentWorldPos.xyz );
 
-        return mul( u_CameraConstants.CurrentViewProjection, currentWorldPos );
+        return mul(u_CameraConstants.CurrentViewProjection, float4(viewDirection, 1.0f ));
 
     }
 

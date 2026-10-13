@@ -1380,16 +1380,10 @@ namespace Monoworks
 		if ( !mesh || m_hGraphicsPrePasses.empty() || !m_hGraphicsPrePasses[0]->m_hGraphicsPipeline )
 			return;
 
-		static float counter = 0.0f;
+		static float s_Angle = 0.0f;
+		s_Angle = std::fmod( s_Angle + 20.0f, glm::two_pi<float>() );
+		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), s_Angle, glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
-		glm::mat4 transform = glm::scale(
-			glm::rotate(
-				glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.0f, 0.0f, -2.0f ) ),
-				glm::radians( 15.0f + counter ), glm::vec3( 0.0f, 1.0f, 0.0f ) ),
-			glm::vec3( 0.05f ) );
-
-		counter += 0.1;
-		// Depth pre-pass has 0 color attachments — must not bind the GBuffer material pipeline.
 		CStaticRenderer::DrawStaticMeshIndexed(
 			frameIndex,
 			mesh,
@@ -1403,8 +1397,6 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 		MW_INFO( "Instantiate CDefferedFrameGraph" );
-
-		// When changing anything in this scope, check CMaterial::SetShader if that change also applies there.
 	
 		m_hCamera = hCamera;
 
@@ -2112,12 +2104,9 @@ namespace Monoworks
 
 		m_hCompositeImages[frameIndex]->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 
-		static float counter = 0;
-		
-
 		// TODO: add check if m_CameraUBOs[ frameIndex ] is valid
 		CameraConstantsUBO ubo{};
-		ubo.CameraPosition = { counter, counter, counter };
+		ubo.CameraPosition = { 0, 0, 4.2 };
 		ubo.CurrentViewProjection = m_hCamera->GetCurrentViewProjectionMatrix();
 		ubo.PreviousViewProjection = m_hCamera->GetPreviousViewProjectionMatrix();
 		ubo.CurrentInverseViewProjection = glm::inverse( m_hCamera->GetCurrentViewProjectionMatrix() );
@@ -2129,7 +2118,6 @@ namespace Monoworks
 		// frame manager has already called CStaticRenderer::BeginRootCommandbuffer. 
 		// That's because it should not be implementation specific 
 		BindCommandBufferStateOnlyRoot( frameIndex );
-		counter += 0.1;
 	}
 
 	void CDefferedFrameGraph::ExecutePrePasses( u32 frameIndex ) NOEXCEPT
