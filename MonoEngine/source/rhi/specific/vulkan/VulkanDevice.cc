@@ -230,7 +230,7 @@ namespace Monoworks::RHI
 		createInfo.enabledExtensionCount = static_cast<u32>(m_DeviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();
 
-		std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+	/*	std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 
 		if (!validationLayers.empty())
 		{
@@ -241,7 +241,7 @@ namespace Monoworks::RHI
 		{
 			createInfo.enabledLayerCount = 0;
 		}
-
+		*/
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, CVulkanContext::GetCallbacks(), &m_Device) != VK_SUCCESS)
 		{
 			MW_ASSERT(false, "Failed to create logical device");

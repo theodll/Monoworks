@@ -214,14 +214,14 @@ namespace Monoworks
 
     public struct GPass
     {
-        public static VertexOutput CalculateVertexOutput<T>( in VertexInput vertexInput, in T material, in CameraConstants cameraConstants, in ModelConstants modelConstants ) 
-                where T : IMaterial
+        public static VertexOutput CalculateVertexOutput<T>(in VertexInput vertexInput, in T material, in CameraConstants cameraConstants, in ModelConstants modelConstants)
+            where T : IMaterial
         {
             VertexOutput output;
 
             float4 offsetWorldPos = float4(vertexInput.Position, 1.0) + material.CalculateVertexOffset(vertexInput);
-
             float4 currentWorldPos = mul(modelConstants.CurrentModelMatrix, offsetWorldPos);
+
             output.WorldPosition = currentWorldPos.xyz;
             output.CurrentClipPosition = mul(cameraConstants.CurrentViewProjection, currentWorldPos);
 

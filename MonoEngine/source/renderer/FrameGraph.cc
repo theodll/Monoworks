@@ -14,6 +14,10 @@
 #include "StaticRenderer.hh"
 #include "FrameGraph.hh"
 
+#include "../rhi/specific/vulkan/VulkanRenderManager.hh"
+#include "../rhi/specific/vulkan/VulkanTexture.hh"
+
+
 namespace Monoworks
 {
 	// TODO: Refactor
@@ -1731,9 +1735,9 @@ namespace Monoworks
 			}
 			// Read from cvars / config
 			TonemapParams defaultParams{};
-			defaultParams.Mode = MW_TONEMAP_MODE_KHRONOS_PBR_NEUTRAL;
+			defaultParams.Mode = MW_TONEMAP_MODE_NONE;
 			defaultParams.Exposure = 1.0f;
-			defaultParams.EnableGamma = true;
+			defaultParams.EnableGamma = false;
 
 			m_hTonemapParamsUBO = IUniformBuffer::Create( sizeof( TonemapParams ) );
 			m_hTonemapParamsUBO->SetData( &defaultParams, sizeof( TonemapParams ) );
@@ -1746,7 +1750,7 @@ namespace Monoworks
 
 		auto depthReflectionData = depthPrePass->m_hShader->ReflectOnShader();
 		CameraConstantsUBO cameraUBO;
-		cameraUBO.CameraPosition = hCamera->GetPosition();
+		cameraUBO.CameraPosition = { 12.0f, 1.0f, 11.0f};
 		cameraUBO.CurrentInverseViewProjection = glm::inverse( hCamera->GetCurrentViewProjectionMatrix() );
 		cameraUBO.CurrentViewProjection = hCamera->GetCurrentViewProjectionMatrix();
 		cameraUBO.PreviousInverseViewProjection = glm::inverse( hCamera->GetPreviousViewProjectionMatrix() );
@@ -2089,7 +2093,7 @@ namespace Monoworks
 		if ( !mesh->Material )
 		{
 			MaterialCreationInfo matCreateInfo{};
-			matCreateInfo.AlbedoFactor = { 1.0f, 0.0f, 0.0f };
+			matCreateInfo.AlbedoFactor = { 1.0f, 1.0f, 0.0f };
 			matCreateInfo.hAlbedoMap = CStaticRenderer::GetDefaultMissingMap();
 
 			Ref<CMaterial> mat = Ref<CMaterial>::Create( &matCreateInfo );
@@ -2108,12 +2112,12 @@ namespace Monoworks
 
 		m_hCompositeImages[frameIndex]->TransitionLayout( frameIndex, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_COMPUTE_SHADER_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 
-		static float counter;
+		static float counter = 0;
 		
 
 		// TODO: add check if m_CameraUBOs[ frameIndex ] is valid
 		CameraConstantsUBO ubo{};
-		ubo.CameraPosition = Vector( 1.0f, 1.0f, 0.f - counter);
+		ubo.CameraPosition = { counter, counter, counter };
 		ubo.CurrentViewProjection = m_hCamera->GetCurrentViewProjectionMatrix();
 		ubo.PreviousViewProjection = m_hCamera->GetPreviousViewProjectionMatrix();
 		ubo.CurrentInverseViewProjection = glm::inverse( m_hCamera->GetCurrentViewProjectionMatrix() );
@@ -2250,30 +2254,18 @@ namespace Monoworks
 		CStaticRenderer::BeginSecondaryCommandbuffers( frameIndex );
 		BindCommandBufferStateBothBegun( frameIndex );
 
-		CStaticRenderer::BindDescriptors(
-			frameIndex,
-			m_hDefferedResolutionPasses[0]->m_hShader->ReflectOnShader().pPipelineSignature, 
-			&m_hGBufferDescriptors[frameIndex],
-			1,
-			1 );
-
 		for ( auto& resolutionPass : m_hDefferedResolutionPasses )
 		{
 			auto workgroup = ComputeWorkgroupSize( resolutionPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
 
-			// TODO: Do this batching automatically by reordering the descriptors array.
-			// Batch descriptors.
+			// set 0 = pass globals, set 1 = shared GBuffer ParameterBlock, then any extra pass sets.
 			std::vector<DescriptorHandle> descriptors;
-
-			// Globals/set 0 must be first in the descriptors array.
 			descriptors.push_back( resolutionPass->m_pDescriptors[0][frameIndex] );
+			descriptors.push_back( m_hGBufferDescriptors[frameIndex] );
 
-			// Only run this loop if necessary.
-			if ( resolutionPass->m_pDescriptors.size() > 1 )
-				for ( auto i{ 1uz }; i < resolutionPass->m_pDescriptors.size(); i++ )
-				{
+			if ( resolutionPass->m_pDescriptors.size() > 2 )
+				for ( auto i{ 2uz }; i < resolutionPass->m_pDescriptors.size(); i++ )
 					descriptors.push_back( resolutionPass->m_pDescriptors[i][frameIndex] );
-				}
 
 			CStaticRenderer::DispatchCompute( frameIndex, resolutionPass->m_hComputePipeline, workgroup, descriptors.data(), descriptors.size() );
 		}
@@ -2284,18 +2276,35 @@ namespace Monoworks
 	void CDefferedFrameGraph::ExecutePostPasses( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		auto dispatchPostCompute = [this]( u32 frameIndex, Ref<CPostProcessPass>& pass )
+			{
+				auto workgroup = ComputeWorkgroupSize( pass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
+
+				const size_t setCount = pass->m_hShader->ReflectOnShader().pDescriptorSignatures.size();
+				if ( setCount > 1 )
+				{
+					DescriptorHandle descriptors[2] = {
+						pass->m_pDescriptors[frameIndex],
+						m_hGBufferDescriptors[frameIndex]
+					};
+					CStaticRenderer::DispatchCompute( frameIndex, pass->m_hComputePipeline, workgroup, descriptors, 2 );
+				}
+				else
+				{
+					CStaticRenderer::DispatchCompute( frameIndex, pass->m_hComputePipeline, workgroup, &pass->m_pDescriptors[frameIndex], 1 );
+				}
+			};
 		
 		for ( auto& postPass : m_hPostProcessPasses )
 		{
 			// TODO: Jobs
-			auto workgroup = ComputeWorkgroupSize( postPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-			CStaticRenderer::DispatchCompute( frameIndex, postPass->m_hComputePipeline, workgroup, &postPass->m_pDescriptors[frameIndex], 1 );
+			dispatchPostCompute( frameIndex, postPass );
 		}
 		// TODO: Add support for post and pre tone mapping passes
 
 		// Execute Special Fixed Passes (Tone mapping)
-		auto workgroup = ComputeWorkgroupSize( m_hTonemapPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-		CStaticRenderer::DispatchCompute( frameIndex, m_hTonemapPass->m_hComputePipeline, workgroup, &m_hTonemapPass->m_pDescriptors[frameIndex], 1 );
+		dispatchPostCompute( frameIndex, m_hTonemapPass );
 
 
 	};
