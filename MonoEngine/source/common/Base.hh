@@ -35,6 +35,8 @@
 #define DEPRECATED [[deprecated]]
 
 #define MW_NULLABLE
+#define IN
+#define OUT
 
 #ifdef	MW_PLATFORM_WINDOWS
 #define MW_DEBUG_BREAK __debugbreak()

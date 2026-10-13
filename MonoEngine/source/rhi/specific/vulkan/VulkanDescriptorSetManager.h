@@ -55,5 +55,11 @@ namespace Monoworks::RHI
 	protected:
 		void WriteUniformBufferImpl( DescriptorHandle hDescriptor, u32 binding, Ref<IUniformBuffer> hUniformBuffer ) override;
 
+
+		void DestroyDescriptorSignatureImpl( IN DescriptorSignature MW_NULLABLE hSignature ) NOEXCEPT override;
+
+
+		void DestroyPipelineSignatureImpl( IN PipelineSignature MW_NULLABLE hSignature ) NOEXCEPT override;
+
 	};
 }

@@ -64,4 +64,17 @@ namespace Monoworks::RHI
 		return m_hInstance->WriteUniformBufferImpl( hDescriptor, binding, hUniformBuffer );
 	}
 
+	void CDescriptorManager::DestroyDescriptorSignature( IN DescriptorSignature MW_NULLABLE hSignature ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		return m_hInstance->DestroyDescriptorSignatureImpl( hSignature );
+	}
+
+	void CDescriptorManager::DestroyPipelineSignature( IN PipelineSignature MW_NULLABLE hSignature ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		return m_hInstance->DestroyPipelineSignatureImpl( hSignature );
+
+	}
+
 }

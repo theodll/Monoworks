@@ -15,6 +15,7 @@ namespace Monoworks
 		MW_SHADER_FLAG_DEFFERED_COMPILATION_BIT = 0b1,
 		MW_SHADER_FLAG_DEFFERED_REFLECTION_BIT = 0b10,
 		MW_SHADER_FLAG_INTERNAL_SLANG_SESSION = 0b100,
+		MW_SHADER_FLAG_DISABLE_SHADER_SERIALIZATION = 0b1000,
 		MW_SHADER_FLAG_MAX_ENUM = 0x7FFFFFFF
 	};
 
@@ -52,6 +53,7 @@ namespace Monoworks
 	{
 	public:
 		CShader( const ShaderCreateInfo* pInfo )	NOEXCEPT;
+		virtual ~CShader() NOEXCEPT;
 
 		void CompileShader() NOEXCEPT;
 		ShaderReflectionData ReflectOnShader() NOEXCEPT; 

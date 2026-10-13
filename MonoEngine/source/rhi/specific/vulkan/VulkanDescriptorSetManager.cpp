@@ -201,5 +201,18 @@ namespace Monoworks::RHI
 
 	}
 
+	void CVulkanDescriptorSetManager::DestroyDescriptorSignatureImpl( IN DescriptorSignature MW_NULLABLE hSignature ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		if ( hSignature )
+			vkDestroyDescriptorSetLayout( *CVulkanContext::GetDevice()->GetDevice(), static_cast< VkDescriptorSetLayout >( hSignature ), CVulkanContext::GetCallbacks() );
+	}
+
+	void CVulkanDescriptorSetManager::DestroyPipelineSignatureImpl( IN PipelineSignature MW_NULLABLE hSignature ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		if ( hSignature )
+			vkDestroyPipelineLayout( *CVulkanContext::GetDevice()->GetDevice(), static_cast< VkPipelineLayout >( hSignature ), CVulkanContext::GetCallbacks() );
+	}
 
 }

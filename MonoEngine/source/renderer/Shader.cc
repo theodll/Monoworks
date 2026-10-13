@@ -80,6 +80,19 @@ namespace Monoworks
 
 	}
 
+	CShader::~CShader() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+
+		if ( m_bReflected )
+		{
+			for ( auto& descriptorSignature : m_ReflectionData.pDescriptorSignatures )
+				CDescriptorManager::DestroyDescriptorSignature( descriptorSignature );
+
+			CDescriptorManager::DestroyPipelineSignature( m_ReflectionData.pPipelineSignature );
+		}
+	}
+
 	void CShader::CompileShader() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -112,7 +125,7 @@ namespace Monoworks
 				}
 			};
 
-		constexpr static auto stripSlangExtension = []( const std::string& path )
+		constexpr static auto stripSlangExtension = []( const std::string& path ) NOEXCEPT
 			{
 				constexpr std::string_view suffix = ".slang";
 
@@ -122,17 +135,29 @@ namespace Monoworks
 				return path;
 			};
 
+
+		constexpr static auto getSlangModuleFilename = []( std::string_view inputName ) NOEXCEPT
+		{
+			constexpr std::string_view extension = ".slang-module";
+
+			if ( std::ranges::ends_with( inputName, extension ) ) {
+				return std::string( inputName );
+			}
+
+			return std::string( inputName ) + std::string( extension );
+		};
+
 		Slang::ComPtr<slang::IModule> slangModule;
+
+		const std::string moduleNonIRName =
+			stripSlangExtension( m_Path.string() );
 
 		{
 			Slang::ComPtr<slang::IBlob> diagnostics;
 
-			const std::string moduleName =
-				stripSlangExtension( m_Path.string() );
-
 			slangModule =
 				m_pSlangSession->loadModule(
-					moduleName.c_str(),
+					moduleNonIRName.c_str(),
 					diagnostics.writeRef()
 				);
 
@@ -140,7 +165,7 @@ namespace Monoworks
 			{
 				MW_WARN(
 					"Might have failed to compile or load Slang Module {}: {}",
-					moduleName,
+					moduleNonIRName,
 					static_cast< const char* >( diagnostics->getBufferPointer() )
 				);
 			}
@@ -149,13 +174,40 @@ namespace Monoworks
 			{
 				MW_ERROR(
 					"Failed to load Slang Module {}",
-					moduleName
+					moduleNonIRName
 				);
 
 				return;
 			}
 		}
 
+		if ( !(m_CreateInfo.Flags & MW_SHADER_FLAG_DISABLE_SHADER_SERIALIZATION) )
+		{
+			auto modp = getSlangModuleFilename( moduleNonIRName );
+			if ( std::filesystem::exists( modp ) ) {
+				goto no_module_serialization_needed;
+			}
+
+			if ( slangModule )
+			{
+				Slang::ComPtr<slang::IBlob> irblob;
+				slangModule->serialize( irblob.writeRef() );
+
+				if ( irblob )
+				{
+					FILE* file = fopen( modp.data(), "wb");
+					if ( file )
+					{
+						fwrite( irblob->getBufferPointer(), sizeof( decltype( irblob->getBufferPointer() ) ), irblob->getBufferSize(), file );
+						fclose( file );
+						MW_INFO("Serialized shader module {}", getSlangModuleFilename( moduleNonIRName ).data() );
+					}
+				}
+			}
+
+		}
+
+no_module_serialization_needed:
 
 		const SlangInt entryPointCount =
 			slangModule->getDefinedEntryPointCount();
