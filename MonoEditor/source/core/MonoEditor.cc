@@ -31,15 +31,17 @@ namespace Monoworks
 		{
 			MW_API_ERROR( "Unhandled editor initialization fatal exception: {}.", e.what() );
 			MW_DEBUG_BREAK;
-			std::terminate();
+			return e.GetCode();
 		}
 		catch ( const std::exception& e )
 		{
 			MW_API_ERROR( "Unhandled editor intialization exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
 		}
 		catch ( ... )
 		{
 			MW_API_WARN( "Unhandled editor initialization throw." );
+			return MW_ERROR_UNKNOWN;
 		}
 
 		try
@@ -55,10 +57,12 @@ namespace Monoworks
 		catch ( const std::exception& e )
 		{
 			MW_API_ERROR( "Unhandled editor frame exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
 		}
 		catch ( ... )
 		{
 			MW_API_WARN( "Unhandled editor frame throw." );
+			return MW_ERROR_UNKNOWN;
 		}
 
 		try
@@ -69,15 +73,17 @@ namespace Monoworks
 		{
 			MW_API_ERROR( "Unhandled editor shutdown fatal exception: {}.", e.what() );
 			MW_DEBUG_BREAK;
-			std::terminate();
+			return e.GetCode();
 		}
 		catch ( const std::exception& e )
 		{
 			MW_API_ERROR( "Unhandled editor shutdown exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
 		}
 		catch ( ... )
 		{
 			MW_API_WARN( "Unhandled editor shutdown throw." );
+			return MW_ERROR_UNKNOWN;
 		}
 
 		return 0;

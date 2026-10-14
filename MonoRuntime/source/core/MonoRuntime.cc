@@ -32,15 +32,17 @@ namespace Monoworks
 		{
 			MW_API_ERROR( "Unhandled runtime initialization fatal exception: {}.", e.what() );
 			MW_DEBUG_BREAK;
-			std::terminate();
+			return e.GetCode();
 		}
 		catch ( const std::exception& e )
 		{
 			MW_API_ERROR( "Unhandled runtime intialization exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
 		}
 		catch ( ... )
 		{
 			MW_API_WARN( "Unhandled runtime initialization throw." );
+			return MW_ERROR_UNKNOWN;
 		}
 
 		try 
@@ -51,15 +53,17 @@ namespace Monoworks
 		{
 			MW_API_ERROR( "Unhandled runtime frame fatal exception: {}.", e.what() );
 			MW_DEBUG_BREAK;
-			std::terminate();
+			return e.GetCode();
 		}
 		catch ( const std::exception& e )
 		{
 			MW_API_ERROR("Unhandled runtime frame exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
 		}
 		catch ( ... )
 		{
 			MW_API_WARN( "Unhandled runtime frame throw." );
+			return MW_ERROR_UNKNOWN;
 		}
 	
 		try
@@ -70,15 +74,17 @@ namespace Monoworks
 		{
 			MW_API_ERROR( "Unhandled runtime shutdown fatal exception: {}.", e.what() );
 			MW_DEBUG_BREAK;
-			std::terminate();
+			return e.GetCode();
 		}
 		catch ( const std::exception& e )
 		{
 			MW_API_ERROR( "Unhandled runtime shutdown exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
 		}
 		catch ( ... )
 		{
 			MW_API_WARN( "Unhandled runtime shutdown throw." );
+			return MW_ERROR_UNKNOWN;
 		}
 
 

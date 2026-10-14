@@ -39,10 +39,16 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 
 		if ( m_VulkanPipelineLayout )
-			vkDestroyPipeline( *CVulkanContext::GetDevice()->GetDevice(), m_VulkanPipeline, CVulkanContext::GetCallbacks() );
+		{
+			vkDestroyPipelineLayout( *CVulkanContext::GetDevice()->GetDevice(), m_VulkanPipelineLayout, CVulkanContext::GetCallbacks() );
+			m_VulkanPipelineLayout = nullptr;
+		}
 
 		if ( m_VulkanPipeline )
+		{
 			vkDestroyPipeline( *CVulkanContext::GetDevice()->GetDevice(), m_VulkanPipeline, CVulkanContext::GetCallbacks() );
+			m_VulkanPipeline = nullptr;
+		}
 	}
 
 
@@ -127,6 +133,9 @@ namespace Monoworks::RHI
 		{
 			m_IsCompiled = true;
 		}
+
+		vkDestroyShaderModule( *CVulkanContext::GetDevice(), computeModule, CVulkanContext::GetCallbacks() );
+
 		return VkResultToEResult( res );
 	}
 

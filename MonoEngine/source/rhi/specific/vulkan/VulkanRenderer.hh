@@ -21,6 +21,8 @@ namespace Monoworks::RHI
         MW_NOTHROW void Init() NOEXCEPT override;
         MW_NOTHROW void Shutdown() NOEXCEPT override;
         
+        MW_NOTHROW void WaitRenderingIdle() NOEXCEPT override;
+
         // TODO: add push constants
         MW_NOTHROW void DispatchCompute(        u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, DescriptorHandle* pDesciptors, size_t descriptorCount, s32 threadID = -1 ) NOEXCEPT override;
         MW_NOTHROW void DispatchCompute2(       u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;

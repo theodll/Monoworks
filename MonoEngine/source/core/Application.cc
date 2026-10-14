@@ -121,7 +121,7 @@ namespace Monoworks
 
 	}
 
-	void CApplication::Shutdown() NOEXCEPT
+	void CApplication::Shutdown( int code )
 	{
 		MW_PROFILE_FUNC;
 		
@@ -130,6 +130,9 @@ namespace Monoworks
 		CStaticRenderer::Shutdown();
 
 		m_GraphicsContext->Shutdown();
+
+		if ( code != 0 )
+			throw CFatalException( static_cast< EResult >( code ), "Fatal Shutdown requested");
 	}
 
 	void CApplication::Frame()

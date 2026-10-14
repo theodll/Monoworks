@@ -1942,6 +1942,7 @@ namespace Monoworks
 
 		CPipelineManager::DeleteGraphicsPipeline( m_DefaultBasePassPipelineHash );
 
+
 		MW_INFO( "Destroy CDefferedFrameGraph " );
 	};
 

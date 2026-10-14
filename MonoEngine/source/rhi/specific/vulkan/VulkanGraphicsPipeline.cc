@@ -35,11 +35,18 @@ namespace Monoworks::RHI
 	void CVulkanGraphicsPipeline::Shutdown()
 	{
 		MW_PROFILE_FUNC; 
-
 		auto device = CVulkanContext::GetDevice()->GetDevice();
 
-		vkDestroyPipeline( *device, m_VulkanPipeline, CVulkanContext::GetCallbacks() );
-		vkDestroyPipelineLayout( *device, m_VulkanPipelineLayout, CVulkanContext::GetCallbacks() );
+		vkDeviceWaitIdle( *device );
+
+		if ( m_VulkanPipeline )
+			vkDestroyPipeline( *device, m_VulkanPipeline, CVulkanContext::GetCallbacks() );
+
+		if ( m_VulkanPipelineLayout )
+			vkDestroyPipelineLayout( *device, m_VulkanPipelineLayout, CVulkanContext::GetCallbacks() );
+
+		m_VulkanPipeline = nullptr;
+		m_VulkanPipelineLayout = nullptr;
 	}
 
 	static VkFormat ShaderDataTypeToVulkanFormat( EShaderDataType type )
@@ -476,7 +483,7 @@ namespace Monoworks::RHI
 
 		if ( res < 0 )
 		{
-			MW_ERROR( "Non-Fataly failed to create compute pipeline." );
+			MW_ERROR( "Failed to create compute pipeline." );
 			m_IsCompiled = false;
 			throw VkResultToEResult( res );
 		}
@@ -485,7 +492,7 @@ namespace Monoworks::RHI
 			m_IsCompiled = true;
 		}
 
-		for ( const auto& module : modules )
+		for ( auto& module : modules )
 		{
 			vkDestroyShaderModule( *device, module, CVulkanContext::GetCallbacks() );
 		}

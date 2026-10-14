@@ -5,6 +5,8 @@
 #include <renderer/FrameManager.hh>
 #include <renderer/FrameGraph.hh>
 
+#include <core/Application.hh>
+
 
 namespace Monoworks 
 {
@@ -954,9 +956,12 @@ namespace Monoworks
 			m_hGraphicsPipeline = materialPipeline.value();
 			m_bUseCustomShader = true;
 			m_hShader = hShader;
-		}
+		} 
 		else
-			MW_FATAL( "Failed to create base pass pipeline." );
+		{
+			MW_ERROR("Failed to create pipeline for custom shader for Material with ID: {}", m_MaterialID);
+		}
+
 
 	}
 

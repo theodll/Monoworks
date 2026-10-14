@@ -187,10 +187,12 @@ namespace Monoworks
             else
                 B = normalize(B - dot(B, N) * N);
 
-            if (dot(cross(N, T), pixelInput.WorldBinormal) < 0.0)
-            {
+            float3 B2 = cross(N, T);
+            float handednessSign = (dot(B2, pixelInput.WorldBinormal) < 0.0) ? -1.0 : 1.0;
+            B *= handednessSign;
+
+            if (handednessSign < 0.0)
                 B = -B;
-            }
 
             float3x3 TBN = float3x3(T, B, N);
 

@@ -20,8 +20,29 @@
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #endif
 
+#if (_MSVC_VER && !__INTEL_COMPILER) 
+#ifdef (__AVX2__)
+#define MW_AVX2_SUPPORT
+#endif
+#elseif (__clang__)
+#ifdef(__AVX2__)
+#define MW_AVX2_SUPPORT
+#endif 
+#elseif (__INTEL_COMPILER)
+#ifdef (__AVX2__)
+#define MW_AVX2_SUPPORT
+#endif
+#elseif (__GNUC__)
+#ifdef (__AVX2__)
+#define MW_AVX2_SUPPORT
+#endif
+#endif
+
+
+#ifdef MW_AVX2_SUPPORT
 #ifndef GLM_FORCE_AVX2
 #define GLM_FORCE_AVX2
+#endif
 #endif
 
 // For Quaternions

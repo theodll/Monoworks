@@ -28,6 +28,8 @@ namespace Monoworks
         static MW_NOTHROW void BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT;
         static void SubmitRootCommandbuffer( u32 frameIndex );
 
+        static void WaitRenderingIdle() NOEXCEPT;
+
 		static MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
 		static MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
 

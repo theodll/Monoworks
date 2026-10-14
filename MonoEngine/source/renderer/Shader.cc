@@ -89,7 +89,7 @@ namespace Monoworks
 			for ( auto& descriptorSignature : m_ReflectionData.pDescriptorSignatures )
 				CDescriptorManager::DestroyDescriptorSignature( descriptorSignature );
 
-			CDescriptorManager::DestroyPipelineSignature( m_ReflectionData.pPipelineSignature );
+			// no need to destroy the pipeline signature here since the pipeline ideally does that
 		}
 	}
 
@@ -126,14 +126,14 @@ namespace Monoworks
 			};
 
 		constexpr static auto stripSlangExtension = []( const std::string& path ) NOEXCEPT
-			{
-				constexpr std::string_view suffix = ".slang";
+		{
+			constexpr std::string_view suffix = ".slang";
 
-				if ( path.ends_with( suffix ) )
-					return path.substr( 0, path.size() - suffix.size() );
+			if ( path.ends_with( suffix ) )
+				return path.substr( 0, path.size() - suffix.size() );
 
-				return path;
-			};
+			return path;
+		};
 
 
 		constexpr static auto getSlangModuleFilename = []( std::string_view inputName ) NOEXCEPT
@@ -181,7 +181,7 @@ namespace Monoworks
 			}
 		}
 
-		if ( !(m_CreateInfo.Flags & MW_SHADER_FLAG_DISABLE_SHADER_SERIALIZATION) )
+		if ( !( m_CreateInfo.Flags & MW_SHADER_FLAG_DISABLE_SHADER_SERIALIZATION ) )
 		{
 			auto modp = getSlangModuleFilename( moduleNonIRName );
 			if ( std::filesystem::exists( modp ) ) {
@@ -195,19 +195,19 @@ namespace Monoworks
 
 				if ( irblob )
 				{
-					FILE* file = fopen( modp.data(), "wb");
+					FILE* file = fopen( modp.data(), "wb" );
 					if ( file )
 					{
 						fwrite( irblob->getBufferPointer(), sizeof( decltype( irblob->getBufferPointer() ) ), irblob->getBufferSize(), file );
 						fclose( file );
-						MW_INFO("Serialized shader module {}", getSlangModuleFilename( moduleNonIRName ).data() );
+						MW_INFO( "Serialized shader module {}", getSlangModuleFilename( moduleNonIRName ).data() );
 					}
 				}
 			}
 
 		}
 
-no_module_serialization_needed:
+	no_module_serialization_needed:
 
 		const SlangInt entryPointCount =
 			slangModule->getDefinedEntryPointCount();
@@ -487,48 +487,30 @@ no_module_serialization_needed:
 
 		if ( !m_pSlangProgram )
 		{
-			MW_ERROR(
-				"Cannot reflect shader {}: Slang program is null",
-				m_Path.string()
-			);
+			MW_ERROR( "Cannot reflect shader {}: Slang program is null", m_Path.string() );
 
 			return reflectionData;
 		}
 
-
-		slang::ProgramLayout* pLayout =
-			m_pSlangProgram->getLayout( 0 );
+		slang::ProgramLayout* pLayout = m_pSlangProgram->getLayout( 0 );
 
 		if ( !pLayout )
 		{
-			MW_ERROR(
-				"Cannot reflect shader {}: ProgramLayout is null",
-				m_Path.string()
-			);
+			MW_ERROR( "Cannot reflect shader {}: ProgramLayout is null", m_Path.string() );
 
 			return reflectionData;
 		}
 
-
-		const VkDevice device =
-			*RHI::CVulkanContext::GetDevice()->GetDevice();
+		const VkDevice device = *RHI::CVulkanContext::GetDevice()->GetDevice();
 
 		if ( device == VK_NULL_HANDLE )
 		{
-			MW_ERROR(
-				"Cannot reflect shader {}: VkDevice is null",
-				m_Path.string()
-			);
+			MW_ERROR( "Cannot reflect shader {}: VkDevice is null", m_Path.string() );
 
 			return reflectionData;
 		}
 
-
-		MW_TRACE(
-			"Beginning Slang reflection for shader {}",
-			m_Path.string()
-		);
-
+		MW_TRACE( "Beginning Slang reflection for shader {}", m_Path.string() );
 
 		/*
 		 * -------------------------------------------------------------------------
@@ -539,8 +521,7 @@ no_module_serialization_needed:
 		 * binding range. ParameterBlock itself is intentionally not mapped here:
 		 * it is a sub-object and gets handled separately below.
 		 */
-		auto getDescriptorType =
-			[]( slang::BindingType type ) -> VkDescriptorType
+		auto getDescriptorType = []( slang::BindingType type ) -> VkDescriptorType
 			{
 				switch ( type )
 				{
@@ -577,25 +558,12 @@ no_module_serialization_needed:
 
 				case slang::BindingType::RayTracingAccelerationStructure:
 					return VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
-
-					/*
-					 * These are not Vulkan descriptor bindings:
-					 *
-					 *  PushConstant
-					 *  ParameterBlock
-					 *  varying inputs/outputs
-					 *  existential values
-					 *  mutable flags
-					 *  type-system masks
-					 */
 				default:
 					return VK_DESCRIPTOR_TYPE_MAX_ENUM;
 				}
 			};
 
-
-		auto getVkShaderStage =
-			[]( SlangStage stage ) -> VkShaderStageFlags
+		auto getVkShaderStage = []( SlangStage stage ) -> VkShaderStageFlags
 			{
 				switch ( stage )
 				{
@@ -622,9 +590,7 @@ no_module_serialization_needed:
 				}
 			};
 
-
-		auto getStageName =
-			[]( SlangStage stage ) -> const char*
+		auto getStageName = []( SlangStage stage ) -> const char*
 			{
 				switch ( stage )
 				{
@@ -651,161 +617,70 @@ no_module_serialization_needed:
 				}
 			};
 
-
-		/*
-		 * -------------------------------------------------------------------------
-		 * Intermediate descriptor representation
-		 * -------------------------------------------------------------------------
-		 *
-		 * We keep VkDescriptorBindingFlags next to the Vulkan binding itself.
-		 * This is particularly useful for unbounded Slang arrays.
-		 *
-		 * descriptorCount for VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT
-		 * is intentionally initialized to 1 here. Vulkan still requires a concrete
-		 * maximum descriptor count in VkDescriptorSetLayoutBinding; the actual
-		 * runtime descriptor count can be selected when the descriptor set is
-		 * allocated.
-		 */
 		struct DescriptorBinding
 		{
 			VkDescriptorSetLayoutBinding Binding{};
 			VkDescriptorBindingFlags Flags = 0;
 		};
 
-
-		/*
-		 * Index 0 is created immediately.
-		 *
-		 * This is the invariant requested by the renderer:
-		 *
-		 *     pDescriptorSignatures[0] always exists.
-		 *
-		 * If there are no actual bindings belonging to set 0, the Vulkan descriptor
-		 * set layout created for it will simply have bindingCount = 0.
-		 */
+		// Create a descriptor set for binding index 0.  If no globals are available, this descriptor is empty
 		std::vector<std::vector<DescriptorBinding>> descriptorSetBindings;
 		descriptorSetBindings.resize( 1 );
 
-
-		auto ensureSet =
-			[&]( SlangInt set ) -> bool
+		auto ensureSet = [&]( SlangInt set ) -> bool
 			{
 				if ( set < 0 )
 				{
-					MW_ERROR(
-						"Shader {} contains a descriptor set with an invalid "
-						"negative set index {}",
-						m_Path.string(),
-						set
-					);
+					MW_ERROR( "Shader {} contains a descriptor set with an invalid negative set index {}", m_Path.string(), set );
 
 					return false;
 				}
 
-
-				const size_t setIndex =
-					static_cast< size_t >( set );
-
+				const size_t setIndex = static_cast< size_t >( set );
 
 				if ( setIndex >= descriptorSetBindings.size() )
 				{
-					MW_TRACE(
-						"Growing reflected descriptor-set array for shader {} "
-						"from {} to {} entries",
-						m_Path.string(),
-						descriptorSetBindings.size(),
-						setIndex + 1
-					);
+					MW_TRACE( "Growing reflected descriptor-set array for shader {} from {} to {} entries", m_Path.string(), descriptorSetBindings.size(), setIndex + 1 );
 
 					descriptorSetBindings.resize( setIndex + 1 );
 				}
 
-
 				return true;
 			};
 
-
-		/*
-		 * Add one descriptor to a reflected Vulkan set.
-		 *
-		 * Two shader stages may legally contribute the same binding to the same
-		 * descriptor set. In that case their stage flags are merged.
-		 *
-		 * A binding number with two different descriptor types is not legal in a
-		 * Vulkan descriptor set layout, so such a collision is reported.
-		 */
-		auto addDescriptor =
-			[&](
-				uint32_t set,
-				uint32_t binding,
-				uint32_t descriptorCount,
-				VkDescriptorType descriptorType,
-				VkShaderStageFlags stageFlags,
-				VkDescriptorBindingFlags bindingFlags,
-				const char* debugName
-				)
+		
+		auto addDescriptor = [&]( uint32_t set, uint32_t binding, uint32_t descriptorCount, VkDescriptorType descriptorType, VkShaderStageFlags stageFlags, VkDescriptorBindingFlags bindingFlags, const char* debugName )
 			{
 				if ( descriptorType == VK_DESCRIPTOR_TYPE_MAX_ENUM )
 				{
-					MW_TRACE(
-						"Skipping unsupported descriptor '{}' in shader {} "
-						"at set {} binding {}",
-						debugName ? debugName : "<unnamed>",
-						m_Path.string(),
-						set,
-						binding
-					);
+					MW_TRACE( "Skipping unsupported descriptor '{}' in shader {} at set {} binding {}", debugName ? debugName : "<unnamed>", m_Path.string(), set, binding );
 
 					return;
 				}
-
 
 				if ( descriptorCount == 0 )
 				{
-					MW_ERROR(
-						"Shader {} produced descriptor '{}' at set {} binding {} "
-						"with descriptorCount = 0",
-						m_Path.string(),
-						debugName ? debugName : "<unnamed>",
-						set,
-						binding
-					);
+					MW_ERROR( "Shader {} produced descriptor '{}' at set {} binding {} with descriptorCount = 0", m_Path.string(), debugName ? debugName : "<unnamed>", set, binding );
 
 					return;
 				}
-
 
 				if ( !ensureSet( static_cast< SlangInt >( set ) ) )
 					return;
 
-
-				auto& bindings =
-					descriptorSetBindings[set];
-
+				auto& bindings = descriptorSetBindings[set];
 
 				for ( DescriptorBinding& existing : bindings )
 				{
 					if ( existing.Binding.binding != binding )
 						continue;
 
-
 					if ( existing.Binding.descriptorType != descriptorType )
 					{
-						MW_ERROR(
-							"Shader {} has incompatible descriptor bindings at "
-							"set {} binding {}: '{}' uses descriptor type {}, "
-							"while an existing range uses descriptor type {}",
-							m_Path.string(),
-							set,
-							binding,
-							debugName ? debugName : "<unnamed>",
-							static_cast< int >( descriptorType ),
-							static_cast< int >( existing.Binding.descriptorType )
-						);
+						MW_ERROR( "Shader {} has incompatible descriptor bindings at set {} binding {}: '{}' uses descriptor type {}, while an existing range uses descriptor type {}", m_Path.string(), set, binding, debugName ? debugName : "<unnamed>", static_cast< int >( descriptorType ), static_cast< int >( existing.Binding.descriptorType ) );
 
 						return;
 					}
-
 
 					existing.Binding.stageFlags |= stageFlags;
 					existing.Flags |= bindingFlags;
@@ -813,305 +688,119 @@ no_module_serialization_needed:
 					if ( descriptorCount > existing.Binding.descriptorCount )
 						existing.Binding.descriptorCount = descriptorCount;
 
-
-					MW_TRACE(
-						"Merged descriptor '{}' into shader {} set {} binding {} "
-						"(descriptorCount = {}, stageFlags = 0x{:X})",
-						debugName ? debugName : "<unnamed>",
-						m_Path.string(),
-						set,
-						binding,
-						existing.Binding.descriptorCount,
-						existing.Binding.stageFlags
-					);
+					MW_TRACE( "Merged descriptor '{}' into shader {} set {} binding {} (descriptorCount = {}, stageFlags = 0x{:X})", debugName ? debugName : "<unnamed>", m_Path.string(), set, binding, existing.Binding.descriptorCount, existing.Binding.stageFlags );
 
 					return;
 				}
 
-
 				DescriptorBinding descriptorBinding{};
-
-				descriptorBinding.Binding.binding =
-					binding;
-
-				descriptorBinding.Binding.descriptorType =
-					descriptorType;
-
-				descriptorBinding.Binding.descriptorCount =
-					descriptorCount;
-
-				descriptorBinding.Binding.stageFlags =
-					stageFlags;
-
-				descriptorBinding.Flags =
-					bindingFlags;
-
+				descriptorBinding.Binding.binding = binding;
+				descriptorBinding.Binding.descriptorType = descriptorType;
+				descriptorBinding.Binding.descriptorCount = descriptorCount;
+				descriptorBinding.Binding.stageFlags = stageFlags;
+				descriptorBinding.Flags = bindingFlags;
 
 				bindings.push_back( descriptorBinding );
 
-
-				MW_TRACE(
-					"Added descriptor '{}' to shader {} set {} binding {} "
-					"(type = {}, descriptorCount = {}, stageFlags = 0x{:X}, "
-					"bindingFlags = 0x{:X})",
-					debugName ? debugName : "<unnamed>",
-					m_Path.string(),
-					set,
-					binding,
-					static_cast< int >( descriptorType ),
-					descriptorCount,
-					stageFlags,
-					bindingFlags
-				);
+				MW_TRACE( "Added descriptor '{}' to shader {} set {} binding {} (type = {}, descriptorCount = {}, stageFlags = 0x{:X}, bindingFlags = 0x{:X})", debugName ? debugName : "<unnamed>", m_Path.string(), set, binding, static_cast< int >( descriptorType ), descriptorCount, stageFlags, bindingFlags );
 			};
 
-
-		/*
-		 * -------------------------------------------------------------------------
-		 * Push constants
-		 * -------------------------------------------------------------------------
-		 */
+		
 		std::vector<VkPushConstantRange> pushConstantRanges;
 
-
-		auto addPushConstant =
-			[&](
-				uint32_t offset,
-				uint32_t size,
-				VkShaderStageFlags stageFlags
-				)
+		auto addPushConstant = [&]( uint32_t offset, uint32_t size, VkShaderStageFlags stageFlags )
 			{
 				if ( size == 0 || stageFlags == 0 )
 					return;
 
-
 				for ( VkPushConstantRange& existing : pushConstantRanges )
 				{
-					if (
-						existing.offset == offset &&
-						existing.size == size
-						)
+					if ( existing.offset == offset && existing.size == size )
 					{
 						existing.stageFlags |= stageFlags;
 
-						MW_TRACE(
-							"Merged push constant range in shader {} "
-							"(offset = {}, size = {}, stageFlags = 0x{:X})",
-							m_Path.string(),
-							offset,
-							size,
-							existing.stageFlags
-						);
+						MW_TRACE( "Merged push constant range in shader {} (offset = {}, size = {}, stageFlags = 0x{:X})", m_Path.string(), offset, size, existing.stageFlags );
 
 						return;
 					}
 				}
 
-
 				VkPushConstantRange range{};
 
-				range.offset =
-					offset;
+				range.offset = offset;
 
-				range.size =
-					size;
+				range.size = size;
 
-				range.stageFlags =
-					stageFlags;
-
+				range.stageFlags = stageFlags;
 
 				pushConstantRanges.push_back( range );
 
-
-				MW_TRACE(
-					"Added push constant range to shader {} "
-					"(offset = {}, size = {}, stageFlags = 0x{:X})",
-					m_Path.string(),
-					offset,
-					size,
-					stageFlags
-				);
+				MW_TRACE( "Added push constant range to shader {} (offset = {}, size = {}, stageFlags = 0x{:X})", m_Path.string(), offset, size, stageFlags );
 			};
 
-
-		/*
-		 * -------------------------------------------------------------------------
-		 * Direct type-layout reflection
-		 * -------------------------------------------------------------------------
-		 *
-		 * THIS FUNCTION INTENTIONALLY DOES NOT WALK SUB-OBJECT RANGES.
-		 *
-		 * This is the exact distinction that matters for ParameterBlock<>:
-		 *
-		 *     getDescriptorSetCount()
-		 *
-		 * walks the descriptor sets belonging directly to this type layout.
-		 *
-		 * A ParameterBlock<> nested below this layout is not one of those sets.
-		 * It is handled separately by reflectParameterBlocks() below.
-		 */
-		auto reflectType =
-			[&](
-				slang::TypeLayoutReflection* pTypeLayout,
-				VkShaderStageFlags stageFlags
-				)
+		// Walks the descriptor sets specified in the type layout. Does not walk ParameterBlocks.
+		auto reflectType = [&]( slang::TypeLayoutReflection* pTypeLayout, VkShaderStageFlags stageFlags )
 			{
 
-				// STAGE FLAGS IS NOT BEING SET! 
-				// TODO: set shader stage !
 				if ( !pTypeLayout || stageFlags == 0 )
 					return;
 
+				const SlangInt setCount = pTypeLayout->getDescriptorSetCount();
 
-				const SlangInt setCount =
-					pTypeLayout->getDescriptorSetCount();
+				MW_TRACE( "Reflecting {} direct descriptor sets in shader {} (stageFlags = 0x{:X})", setCount, m_Path.string(), stageFlags );
 
-
-				MW_TRACE(
-					"Reflecting {} direct descriptor sets in shader {} "
-					"(stageFlags = 0x{:X})",
-					setCount,
-					m_Path.string(),
-					stageFlags
-				);
-
-
-				for (
-					SlangInt relativeSet = 0;
-					relativeSet < setCount;
-					++relativeSet
-					)
+				for ( SlangInt relativeSet = 0; relativeSet < setCount; ++relativeSet )
 				{
-					const SlangInt set =
-						pTypeLayout->getDescriptorSetSpaceOffset(
-							relativeSet
-						);
-
+					const SlangInt set = pTypeLayout->getDescriptorSetSpaceOffset( relativeSet );
 
 					if ( set < 0 )
 					{
-						MW_ERROR(
-							"Shader {} returned an invalid descriptor-set "
-							"space offset {} for relative set {}",
-							m_Path.string(),
-							set,
-							relativeSet
-						);
+						MW_ERROR( "Shader {} returned an invalid descriptor-set space offset {} for relative set {}", m_Path.string(), set, relativeSet );
 
 						continue;
 					}
 
-
 					if ( !ensureSet( set ) )
 						continue;
 
+					const SlangInt rangeCount = pTypeLayout->getDescriptorSetDescriptorRangeCount( relativeSet );
 
-					const SlangInt rangeCount =
-						pTypeLayout->getDescriptorSetDescriptorRangeCount(
-							relativeSet
-						);
+					MW_TRACE( "Shader {} direct set {} contains {} descriptor ranges", m_Path.string(), set, rangeCount );
 
-
-					MW_TRACE(
-						"Shader {} direct set {} contains {} descriptor ranges",
-						m_Path.string(),
-						set,
-						rangeCount
-					);
-
-
-					for (
-						SlangInt rangeIndex = 0;
-						rangeIndex < rangeCount;
-						++rangeIndex
-						)
+					for ( SlangInt rangeIndex = 0; rangeIndex < rangeCount; ++rangeIndex )
 					{
-						const slang::BindingType bindingType =
-							pTypeLayout->getDescriptorSetDescriptorRangeType(
-								relativeSet,
-								rangeIndex
-							);
+						const slang::BindingType bindingType = pTypeLayout->getDescriptorSetDescriptorRangeType( relativeSet, rangeIndex );
 
-
-						/*
-						 * Push constants use a separate Vulkan pipeline-layout
-						 * structure and therefore do not belong in a descriptor
-						 * set layout.
-						 */
 						if ( bindingType == slang::BindingType::PushConstant )
 							continue;
 
-
-						/*
-						 * ParameterBlock should normally never reach this point.
-						 *
-						 * If it does, that would indicate a Slang layout we do
-						 * not understand correctly, because ParameterBlock is
-						 * supposed to be exposed through sub-object ranges.
-						 */
+						// Paramter Blocks should NOT reach this point. 
 						if ( bindingType == slang::BindingType::ParameterBlock )
 						{
-							MW_TRACE(
-								"Shader {} exposed ParameterBlock as a direct "
-								"descriptor range at set {}; deferring it to "
-								"sub-object reflection",
-								m_Path.string(),
-								set
-							);
-
+							MW_TRACE( "Shader {} exposed ParameterBlock as a direct descriptor range at set {}; deferring it to sub-object reflection", m_Path.string(), set );
 							continue;
 						}
 
-
-						const VkDescriptorType descriptorType =
-							getDescriptorType( bindingType );
-
+						const VkDescriptorType descriptorType = getDescriptorType( bindingType );
 
 						if ( descriptorType == VK_DESCRIPTOR_TYPE_MAX_ENUM )
 						{
-							MW_TRACE(
-								"Skipping unsupported direct Slang binding type "
-								"{} in shader {} set {} range {}",
-								static_cast< int >( bindingType ),
-								m_Path.string(),
-								set,
-								rangeIndex
-							);
-
+							MW_TRACE( "Skipping unsupported direct Slang binding type {} in shader {} set {} range {}", static_cast< int >( bindingType ), m_Path.string(), set, rangeIndex );
 							continue;
 						}
 
-
-						const SlangInt binding =
-							pTypeLayout->getDescriptorSetDescriptorRangeIndexOffset(
-								relativeSet,
-								rangeIndex
-							);
-
+						const SlangInt binding = pTypeLayout->getDescriptorSetDescriptorRangeIndexOffset( relativeSet, rangeIndex );
 
 						if ( binding < 0 )
 						{
-							MW_ERROR(
-								"Shader {} contains a descriptor range at set {} "
-								"whose Vulkan binding index is unresolved",
-								m_Path.string(),
-								set
-							);
-
+							MW_ERROR( "Shader {} contains a descriptor range at set {} whose Vulkan binding index is unresolved", m_Path.string(), set );
 							continue;
 						}
 
-
-						const SlangInt descriptorCount =
-							pTypeLayout->getDescriptorSetDescriptorRangeDescriptorCount(
-								relativeSet,
-								rangeIndex
-							);
-
+						const SlangInt descriptorCount = pTypeLayout->getDescriptorSetDescriptorRangeDescriptorCount( relativeSet, rangeIndex );
 
 						uint32_t vkDescriptorCount = 1;
 						VkDescriptorBindingFlags bindingFlags = 0;
-
 
 						if ( descriptorCount == SLANG_UNBOUNDED_SIZE )
 						{
@@ -1130,23 +819,13 @@ no_module_serialization_needed:
 							 */
 							vkDescriptorCount = 1;
 
-							bindingFlags |=
-								VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
+							bindingFlags |= VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
 
-
-							MW_TRACE(
-								"Shader {} direct descriptor set {} binding {} "
-								"is unbounded; using variable descriptor "
-								"binding semantics",
-								m_Path.string(),
-								set,
-								binding
-							);
+							MW_TRACE( "Shader {} direct descriptor set {} binding {} is unbounded; using variable descriptor binding semantics", m_Path.string(), set, binding );
 						}
 						else if ( descriptorCount > 0 )
 						{
-							vkDescriptorCount =
-								static_cast< uint32_t >( descriptorCount );
+							vkDescriptorCount = static_cast< uint32_t >( descriptorCount );
 						}
 						else
 						{
@@ -1158,32 +837,14 @@ no_module_serialization_needed:
 							vkDescriptorCount = 1;
 						}
 
+						slang::VariableReflection* pLeafVariable = pTypeLayout->getBindingRangeLeafVariable( pTypeLayout->getFieldBindingRangeOffset( rangeIndex ) );
 
-						slang::VariableReflection* pLeafVariable =
-							pTypeLayout->getBindingRangeLeafVariable(
-								pTypeLayout->getFieldBindingRangeOffset( rangeIndex )
-							);
+						const char* debugName = pLeafVariable ? pLeafVariable->getName() : nullptr;
 
-
-						const char* debugName =
-							pLeafVariable
-							? pLeafVariable->getName()
-							: nullptr;
-
-
-						addDescriptor(
-							static_cast< uint32_t >( set ),
-							static_cast< uint32_t >( binding ),
-							vkDescriptorCount,
-							descriptorType,
-							stageFlags,
-							bindingFlags,
-							debugName
-						);
+						addDescriptor( static_cast< uint32_t >( set ), static_cast< uint32_t >( binding ), vkDescriptorCount, descriptorType, stageFlags, bindingFlags, debugName );
 					}
 				}
 			};
-
 
 		/*
 		 * -------------------------------------------------------------------------
@@ -1207,110 +868,49 @@ no_module_serialization_needed:
 		 * This also accounts for the implicit constant buffer that Slang introduces
 		 * when a ParameterBlock element contains ordinary data.
 		 */
-		std::function<
-			void(
-				slang::TypeLayoutReflection*,
-				uint32_t,
-				VkShaderStageFlags,
-				std::string_view
-				)
-		> reflectParameterBlocks;
+		std::function<void( slang::TypeLayoutReflection*, uint32_t, VkShaderStageFlags, std::string_view )> reflectParameterBlocks;
 
-
-		reflectParameterBlocks =
-			[&](
-				slang::TypeLayoutReflection* pParentTypeLayout,
-				uint32_t baseSet,
-				VkShaderStageFlags stageFlags,
-				std::string_view parentName
-				)
+		reflectParameterBlocks = [&]( slang::TypeLayoutReflection* pParentTypeLayout, uint32_t baseSet, VkShaderStageFlags stageFlags, std::string_view parentName )
 			{
 				if ( !pParentTypeLayout || stageFlags == 0 )
 					return;
 
+				const SlangInt subObjectRangeCount = pParentTypeLayout->getSubObjectRangeCount();
 
-				const SlangInt subObjectRangeCount =
-					pParentTypeLayout->getSubObjectRangeCount();
+				MW_TRACE( "Reflecting {} sub-object ranges below '{}' in shader {}", subObjectRangeCount, parentName.empty() ? "<root>" : parentName, m_Path.string() );
 
-
-				MW_TRACE(
-					"Reflecting {} sub-object ranges below '{}' in shader {}",
-					subObjectRangeCount,
-					parentName.empty() ? "<root>" : parentName,
-					m_Path.string()
-				);
-
-
-				for (
-					SlangInt subObjectRangeIndex = 0;
-					subObjectRangeIndex < subObjectRangeCount;
-					++subObjectRangeIndex
-					)
+				for ( SlangInt subObjectRangeIndex = 0; subObjectRangeIndex < subObjectRangeCount; ++subObjectRangeIndex )
 				{
-					const SlangInt bindingRangeIndex =
-						pParentTypeLayout->getSubObjectRangeBindingRangeIndex(
-							subObjectRangeIndex
-						);
-
+					const SlangInt bindingRangeIndex = pParentTypeLayout->getSubObjectRangeBindingRangeIndex( subObjectRangeIndex );
 
 					if ( bindingRangeIndex < 0 )
 					{
-						MW_ERROR(
-							"Shader {} returned invalid binding-range index {} "
-							"for sub-object range {}",
-							m_Path.string(),
-							bindingRangeIndex,
-							subObjectRangeIndex
-						);
+						MW_ERROR( "Shader {} returned invalid binding-range index {} for sub-object range {}", m_Path.string(), bindingRangeIndex, subObjectRangeIndex );
 
 						continue;
 					}
 
+					const slang::BindingType bindingType = pParentTypeLayout->getBindingRangeType( bindingRangeIndex );
 
-					const slang::BindingType bindingType =
-						pParentTypeLayout->getBindingRangeType(
-							bindingRangeIndex
-						);
-
-					slang::VariableLayoutReflection* pSubObjectLayout =
-						pParentTypeLayout->getSubObjectRangeOffset(
-							subObjectRangeIndex
-						);
+					slang::VariableLayoutReflection* pSubObjectLayout = pParentTypeLayout->getSubObjectRangeOffset( subObjectRangeIndex );
 
 					if ( !pSubObjectLayout )
 					{
-						MW_ERROR(
-							"Shader {} contains a ParameterBlock sub-object without "
-							"a variable layout",
-							m_Path.string()
-						);
+						MW_ERROR( "Shader {} contains a ParameterBlock sub-object without a variable layout", m_Path.string() );
 
 						continue;
 					}
 
-					const size_t setOffset =
-						pSubObjectLayout->getOffset(
-							slang::ParameterCategory::SubElementRegisterSpace
-						);
+					const size_t setOffset = pSubObjectLayout->getOffset( slang::ParameterCategory::SubElementRegisterSpace );
 
 					if ( setOffset == SLANG_UNKNOWN_SIZE )
 					{
-						MW_ERROR(
-							"Shader {} contains a ParameterBlock '{}' whose descriptor "
-							"set is unresolved",
-							m_Path.string(),
-							pSubObjectLayout->getName()
-							? pSubObjectLayout->getName()
-							: "<unnamed>"
-						);
+						MW_ERROR( "Shader {} contains a ParameterBlock '{}' whose descriptor set is unresolved", m_Path.string(), pSubObjectLayout->getName() ? pSubObjectLayout->getName() : "<unnamed>" );
 
 						continue;
 					}
 
-					const uint32_t set =
-						baseSet +
-						static_cast< uint32_t >( setOffset );
-
+					const uint32_t set = baseSet + static_cast< uint32_t >( setOffset );
 
 					if ( bindingType != slang::BindingType::ParameterBlock )
 					{
@@ -1320,79 +920,37 @@ no_module_serialization_needed:
 						 * this mechanism). We only turn ParameterBlock ranges into
 						 * Vulkan descriptor sets.
 						 */
-						MW_TRACE(
-							"Skipping non-ParameterBlock sub-object range {} "
-							"(bindingType = {}) in shader {}",
-							subObjectRangeIndex,
-							static_cast< int >( bindingType ),
-							m_Path.string()
-						);
+						MW_TRACE( "Skipping non-ParameterBlock sub-object range {} (bindingType = {}) in shader {}", subObjectRangeIndex, static_cast< int >( bindingType ), m_Path.string() );
 
 						continue;
 					}
-
 
 					if ( !ensureSet( static_cast< SlangInt >( set ) ) )
 						continue;
 
-
-					slang::TypeLayoutReflection* pParameterBlockTypeLayout =
-						pParentTypeLayout->getBindingRangeLeafTypeLayout(
-							bindingRangeIndex
-						);
-
+					slang::TypeLayoutReflection* pParameterBlockTypeLayout = pParentTypeLayout->getBindingRangeLeafTypeLayout( bindingRangeIndex );
 
 					if ( !pParameterBlockTypeLayout )
 					{
-						MW_ERROR(
-							"Shader {} contains a ParameterBlock sub-object "
-							"without a valid type layout",
-							m_Path.string()
-						);
+						MW_ERROR( "Shader {} contains a ParameterBlock sub-object without a valid type layout", m_Path.string() );
 
 						continue;
 					}
 
-
-					slang::TypeLayoutReflection* pElementTypeLayout =
-						pParameterBlockTypeLayout->getElementTypeLayout();
-
+					slang::TypeLayoutReflection* pElementTypeLayout = pParameterBlockTypeLayout->getElementTypeLayout();
 
 					if ( !pElementTypeLayout )
 					{
-						MW_ERROR(
-							"Shader {} contains a ParameterBlock sub-object "
-							"without a valid element type layout",
-							m_Path.string()
-						);
+						MW_ERROR( "Shader {} contains a ParameterBlock sub-object without a valid element type layout", m_Path.string() );
 
 						continue;
 					}
 
+					slang::VariableLayoutReflection* pSubObjectOffset = pParentTypeLayout->getSubObjectRangeOffset( subObjectRangeIndex );
 
-					slang::VariableLayoutReflection* pSubObjectOffset =
-						pParentTypeLayout->getSubObjectRangeOffset(
-							subObjectRangeIndex
-						);
+					const char* parameterBlockName = pSubObjectOffset ? pSubObjectOffset->getName() : nullptr;
 
-
-					const char* parameterBlockName =
-						pSubObjectOffset
-						? pSubObjectOffset->getName()
-						: nullptr;
-
-
-					MW_TRACE(
-						"Found ParameterBlock '{}' in shader {}: "
-						"set = {},"
-						"elementBindingRanges = {}, stageFlags = 0x{:X}",
-						parameterBlockName ? parameterBlockName : "<unnamed>",
-						m_Path.string(),
-						set,
-						pElementTypeLayout->getBindingRangeCount(),
-						stageFlags
-					);
-
+					MW_TRACE( "Found ParameterBlock '{}' in shader {}: set = {},elementBindingRanges = {}, stageFlags = 0x{:X}", parameterBlockName ? parameterBlockName : "<unnamed>", m_Path.string(), set, pElementTypeLayout->getBindingRangeCount(), stageFlags );
 
 					/*
 					 * Reflect the descriptor ranges belonging to the element.
@@ -1405,27 +963,13 @@ no_module_serialization_needed:
 					 */
 					uint32_t nextBinding = 0;
 
+					const SlangInt bindingRangeCount = pElementTypeLayout->getBindingRangeCount();
 
-					const SlangInt bindingRangeCount =
-						pElementTypeLayout->getBindingRangeCount();
-
-
-					for (
-						SlangInt rangeIndex = 0;
-						rangeIndex < bindingRangeCount;
-						++rangeIndex
-						)
+					for ( SlangInt rangeIndex = 0; rangeIndex < bindingRangeCount; ++rangeIndex )
 					{
-						const slang::BindingType elementBindingType =
-							pElementTypeLayout->getBindingRangeType(
-								rangeIndex
-							);
+						const slang::BindingType elementBindingType = pElementTypeLayout->getBindingRangeType( rangeIndex );
 
-
-						if (
-							elementBindingType ==
-							slang::BindingType::ParameterBlock
-							)
+						if ( elementBindingType == slang::BindingType::ParameterBlock )
 						{
 							/*
 							 * Nested ParameterBlock:
@@ -1434,24 +978,12 @@ no_module_serialization_needed:
 							 * descriptor set. Its own descriptor set is discovered
 							 * through the recursive sub-object pass below.
 							 */
-							MW_TRACE(
-								"ParameterBlock '{}' contains nested ParameterBlock "
-								"range {}. Deferring to recursive sub-object "
-								"reflection",
-								parameterBlockName
-								? parameterBlockName
-								: "<unnamed>",
-								rangeIndex
-							);
+							MW_TRACE( "ParameterBlock '{}' contains nested ParameterBlock range {}. Deferring to recursive sub-object reflection", parameterBlockName ? parameterBlockName : "<unnamed>", rangeIndex );
 
 							continue;
 						}
 
-
-						if (
-							elementBindingType ==
-							slang::BindingType::PushConstant
-							)
+						if ( elementBindingType == slang::BindingType::PushConstant )
 						{
 							/*
 							 * Push constants belong to the pipeline layout and not
@@ -1460,441 +992,169 @@ no_module_serialization_needed:
 							continue;
 						}
 
-
-						const VkDescriptorType descriptorType =
-							getDescriptorType(
-								elementBindingType
-							);
-
+						const VkDescriptorType descriptorType = getDescriptorType( elementBindingType );
 
 						if ( descriptorType == VK_DESCRIPTOR_TYPE_MAX_ENUM )
 						{
-							MW_TRACE(
-								"Skipping unsupported ParameterBlock '{}' "
-								"binding range {} of type {} in shader {}",
-								parameterBlockName
-								? parameterBlockName
-								: "<unnamed>",
-								rangeIndex,
-								static_cast< int >( elementBindingType ),
-								m_Path.string()
-							);
+							MW_TRACE( "Skipping unsupported ParameterBlock '{}' binding range {} of type {} in shader {}", parameterBlockName ? parameterBlockName : "<unnamed>", rangeIndex, static_cast< int >( elementBindingType ), m_Path.string() );
 
 							continue;
 						}
 
-
-						const SlangInt descriptorCount =
-							pElementTypeLayout->getBindingRangeBindingCount(
-								rangeIndex
-							);
-
+						const SlangInt descriptorCount = pElementTypeLayout->getBindingRangeBindingCount( rangeIndex );
 
 						uint32_t vkDescriptorCount = 1;
 						VkDescriptorBindingFlags bindingFlags = 0;
-
 
 						if ( descriptorCount == SLANG_UNBOUNDED_SIZE )
 						{
 							vkDescriptorCount = 1;
 
-							bindingFlags |=
-								VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
+							bindingFlags |= VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
 						}
 						else if ( descriptorCount > 0 )
 						{
-							vkDescriptorCount =
-								static_cast< uint32_t >( descriptorCount );
+							vkDescriptorCount = static_cast< uint32_t >( descriptorCount );
 						}
 						else
 						{
 							vkDescriptorCount = 1;
 						}
 
+						slang::VariableReflection* pLeafVariable = pElementTypeLayout->getBindingRangeLeafVariable( rangeIndex );
 
-						slang::VariableReflection* pLeafVariable =
-							pElementTypeLayout->getBindingRangeLeafVariable(
-								rangeIndex
-							);
+						const char* debugName = pLeafVariable ? pLeafVariable->getName() : nullptr;
 
+						addDescriptor( set, nextBinding, vkDescriptorCount, descriptorType, stageFlags, bindingFlags, debugName );
 
-						const char* debugName =
-							pLeafVariable
-							? pLeafVariable->getName()
-							: nullptr;
-
-
-						addDescriptor(
-							set,
-							nextBinding,
-							vkDescriptorCount,
-							descriptorType,
-							stageFlags,
-							bindingFlags,
-							debugName
-						);
-
-
-						MW_TRACE(
-							"ParameterBlock '{}' descriptor '{}' -> "
-							"set {} binding {}",
-							parameterBlockName
-							? parameterBlockName
-							: "<unnamed>",
-							debugName
-							? debugName
-							: "<unnamed>",
-							set,
-							nextBinding
-						);
-
+						MW_TRACE( "ParameterBlock '{}' descriptor '{}' -> set {} binding {}", parameterBlockName ? parameterBlockName : "<unnamed>", debugName ? debugName : "<unnamed>", set, nextBinding );
 
 						++nextBinding;
 					}
 
-
-					/*
-					 * Finally recurse into the element layout's own sub-object
-					 * ranges so nested ParameterBlocks become additional Vulkan
-					 * descriptor sets.
-					 */
-					reflectParameterBlocks(
-						pElementTypeLayout,
-						set,
-						stageFlags,
-						parameterBlockName
-						? parameterBlockName
-						: "<unnamed>"
-					);
+					reflectParameterBlocks( pElementTypeLayout, set, stageFlags, parameterBlockName ? parameterBlockName : "<unnamed>" );
 				}
 			};
 
+		auto reflectPushConstants = [&]( slang::TypeLayoutReflection* pTypeLayout, VkShaderStageFlags stageFlags )
+			{
+				if ( !pTypeLayout || stageFlags == 0 )
+					return;
 
-		/*
-		 * -------------------------------------------------------------------------
-		 * Push constant reflection
-		 * -------------------------------------------------------------------------
-		 *
-		 * PushConstant binding ranges are not descriptor-set bindings.
-		 *
-		 * Slang's typical push-constant layout starts at byte offset zero for the
-		 * program-level range, which is what the existing Monoworks reflection
-		 * structure expects.
-		 */
-			auto reflectPushConstants =
-				[&](
-					slang::TypeLayoutReflection* pTypeLayout,
-					VkShaderStageFlags stageFlags
-					)
+				const SlangInt bindingRangeCount = pTypeLayout->getBindingRangeCount();
+
+				for ( SlangInt rangeIndex = 0; rangeIndex < bindingRangeCount; ++rangeIndex )
 				{
-					if ( !pTypeLayout || stageFlags == 0 )
-						return;
+					const slang::BindingType bindingType = pTypeLayout->getBindingRangeType( rangeIndex );
 
-
-					const SlangInt bindingRangeCount =
-						pTypeLayout->getBindingRangeCount();
-
-
-					for (
-						SlangInt rangeIndex = 0;
-						rangeIndex < bindingRangeCount;
-						++rangeIndex
-						)
+					if ( bindingType != slang::BindingType::PushConstant )
 					{
-						const slang::BindingType bindingType =
-							pTypeLayout->getBindingRangeType(
-								rangeIndex
-							);
-
-
-						if (
-							bindingType !=
-							slang::BindingType::PushConstant
-							)
-						{
-							continue;
-						}
-
-						/*
-						 * A PushConstant binding range points at the
-						 * ConstantBuffer<T> layout.
-						 *
-						 * The ConstantBuffer itself is only the container.
-						 * The actual byte size required by Vulkan is the size
-						 * of its element type T.
-						 */
-						slang::TypeLayoutReflection* pConstantBufferTypeLayout =
-							pTypeLayout->getBindingRangeLeafTypeLayout(
-								rangeIndex
-							);
-
-
-						if ( !pConstantBufferTypeLayout )
-						{
-							MW_ERROR(
-								"Shader {} contains a push-constant range without "
-								"a valid ConstantBuffer type layout",
-								m_Path.string()
-							);
-
-							continue;
-						}
-
-
-						slang::TypeLayoutReflection* pElementTypeLayout =
-							pConstantBufferTypeLayout->getElementTypeLayout();
-
-
-						if ( !pElementTypeLayout )
-						{
-							MW_ERROR(
-								"Shader {} contains a push-constant ConstantBuffer "
-								"without a valid element type layout",
-								m_Path.string()
-							);
-
-							continue;
-						}
-
-
-						const size_t elementSize =
-							pElementTypeLayout->getSize();
-
-
-						if (
-							elementSize == 0 ||
-							elementSize == SLANG_UNKNOWN_SIZE
-							)
-						{
-							MW_TRACE(
-								"Shader {} push-constant range {} has no resolvable "
-								"element size",
-								m_Path.string(),
-								rangeIndex
-							);
-
-							continue;
-						}
-
-
-						if (
-							elementSize >
-							static_cast< size_t >(
-								UINT32_MAX
-								)
-							)
-						{
-							MW_ERROR(
-								"Shader {} push-constant range {} has an element "
-								"size of {} bytes, which exceeds uint32_t",
-								m_Path.string(),
-								rangeIndex,
-								elementSize
-							);
-
-							continue;
-						}
-
-
-						addPushConstant(
-							0,
-							static_cast< uint32_t >( elementSize ),
-							stageFlags
-						);
-
-
-						MW_TRACE(
-							"Reflected push constant in shader {}: "
-							"elementSize = {} bytes, offset = 0, stageFlags = 0x{:X}",
-							m_Path.string(),
-							elementSize,
-							stageFlags
-						);
+						continue;
 					}
-				};
 
+					
+					slang::TypeLayoutReflection* pConstantBufferTypeLayout = pTypeLayout->getBindingRangeLeafTypeLayout( rangeIndex );
 
-		/*
-		 * -------------------------------------------------------------------------
-		 * Reflect globals
-		 * -------------------------------------------------------------------------
-		 */
-		slang::VariableLayoutReflection* pGlobalParams =
-			pLayout->getGlobalParamsVarLayout();
+					if ( !pConstantBufferTypeLayout )
+					{
+						MW_ERROR( "Shader {} contains a push-constant range without a valid ConstantBuffer type layout", m_Path.string() );
 
+						continue;
+					}
+
+					slang::TypeLayoutReflection* pElementTypeLayout = pConstantBufferTypeLayout->getElementTypeLayout();
+
+					if ( !pElementTypeLayout )
+					{
+						MW_ERROR( "Shader {} contains a push-constant ConstantBuffer without a valid element type layout", m_Path.string() );
+
+						continue;
+					}
+
+					const size_t elementSize = pElementTypeLayout->getSize();
+
+					if ( elementSize == 0 || elementSize == SLANG_UNKNOWN_SIZE )
+					{
+						MW_TRACE( "Shader {} push-constant range {} has no resolvable element size", m_Path.string(), rangeIndex );
+
+						continue;
+					}
+
+					if ( elementSize > static_cast< size_t >( UINT32_MAX ) )
+					{
+						MW_ERROR( "Shader {} push-constant range {} has an element size of {} bytes, which exceeds uint32_t", m_Path.string(), rangeIndex, elementSize );
+
+						continue;
+					}
+
+					addPushConstant( 0, static_cast< uint32_t >( elementSize ), stageFlags );
+
+					MW_TRACE( "Reflected push constant in shader {}: elementSize = {} bytes, offset = 0, stageFlags = 0x{:X}", m_Path.string(), elementSize, stageFlags );
+				}
+			};
+
+		// Reflects Globals
+		slang::VariableLayoutReflection* pGlobalParams = pLayout->getGlobalParamsVarLayout();
 
 		if ( pGlobalParams )
 		{
-			slang::TypeLayoutReflection* pGlobalTypeLayout =
-				pGlobalParams->getTypeLayout();
-
+			slang::TypeLayoutReflection* pGlobalTypeLayout = pGlobalParams->getTypeLayout();
 
 			if ( pGlobalTypeLayout )
 			{
-				MW_TRACE(
-					"Reflecting global parameters of shader {}",
-					m_Path.string()
-				);
+				MW_TRACE( "Reflecting global parameters of shader {}", m_Path.string() );
 
+				reflectType( pGlobalTypeLayout, VK_SHADER_STAGE_ALL );
 
-				/*
-				 * Direct global resources belong to the program's normal/default
-				 * descriptor set(s).
-				 *
-				 * ParameterBlocks are NOT consumed here. They are found through
-				 * getSubObjectRangeCount() below.
-				 */
-				reflectType(
-					pGlobalTypeLayout,
-					VK_SHADER_STAGE_ALL
-				);
+				reflectPushConstants( pGlobalTypeLayout, VK_SHADER_STAGE_ALL );
 
-
-				reflectPushConstants(
-					pGlobalTypeLayout,
-					VK_SHADER_STAGE_ALL
-				);
-
-
-				reflectParameterBlocks(
-					pGlobalTypeLayout,
-					0,
-					VK_SHADER_STAGE_ALL,
-					"global"
-				);
+				reflectParameterBlocks( pGlobalTypeLayout, 0, VK_SHADER_STAGE_ALL, "global" );
 			}
 		}
 		else
+			MW_TRACE( "Shader {} has no reflected global parameter layout", m_Path.string() );
+
+		const SlangInt entryPointCount = pLayout->getEntryPointCount();
+
+		MW_TRACE( "Reflecting {} entry points of shader {}", entryPointCount, m_Path.string() );
+
+		for ( SlangInt entryPointIndex = 0; entryPointIndex < entryPointCount; ++entryPointIndex )
 		{
-			MW_TRACE(
-				"Shader {} has no reflected global parameter layout",
-				m_Path.string()
-			);
-		}
-
-
-		/*
-		 * -------------------------------------------------------------------------
-		 * Reflect entry points
-		 * -------------------------------------------------------------------------
-		 */
-		const SlangInt entryPointCount =
-			pLayout->getEntryPointCount();
-
-
-		MW_TRACE(
-			"Reflecting {} entry points of shader {}",
-			entryPointCount,
-			m_Path.string()
-		);
-
-
-		for (
-			SlangInt entryPointIndex = 0;
-			entryPointIndex < entryPointCount;
-			++entryPointIndex
-			)
-		{
-			slang::EntryPointLayout* pEntryPoint =
-				pLayout->getEntryPointByIndex(
-					entryPointIndex
-				);
-
+			slang::EntryPointLayout* pEntryPoint = pLayout->getEntryPointByIndex( entryPointIndex );
 
 			if ( !pEntryPoint )
 			{
-				MW_ERROR(
-					"Shader {} returned null EntryPointLayout at index {}",
-					m_Path.string(),
-					entryPointIndex
-				);
-
+				MW_ERROR( "Shader {} returned null EntryPointLayout at index {}", m_Path.string(), entryPointIndex );
 				continue;
 			}
 
-
-			const SlangStage slangStage =
-				pEntryPoint->getStage();
-
-
-			const VkShaderStageFlags stageFlags =
-				getVkShaderStage(
-					slangStage
-				);
-
+			const SlangStage slangStage = pEntryPoint->getStage();
+			const VkShaderStageFlags stageFlags = getVkShaderStage( slangStage );
 
 			if ( !stageFlags )
 			{
-				MW_TRACE(
-					"Skipping unsupported Slang entry-point stage {} "
-					"for shader {}",
-					static_cast< int >( slangStage ),
-					m_Path.string()
-				);
-
+				MW_TRACE( "Skipping unsupported Slang entry-point stage {} for shader {}", static_cast< int >( slangStage ), m_Path.string() );
 				continue;
 			}
 
-
-			slang::TypeLayoutReflection* pEntryPointTypeLayout =
-				pEntryPoint->getTypeLayout();
-
+			slang::TypeLayoutReflection* pEntryPointTypeLayout = pEntryPoint->getTypeLayout();
 
 			if ( !pEntryPointTypeLayout )
 			{
-				MW_ERROR(
-					"Shader {} entry point {} has no type layout",
-					m_Path.string(),
-					entryPointIndex
-				);
-
+				MW_ERROR( "Shader {} entry point {} has no type layout", m_Path.string(), entryPointIndex );
 				continue;
 			}
 
+			MW_TRACE( "Reflecting entry point {} ({}) of shader {}", entryPointIndex, getStageName( slangStage ), m_Path.string() );
 
-			MW_TRACE(
-				"Reflecting entry point {} ({}) of shader {}",
-				entryPointIndex,
-				getStageName( slangStage ),
-				m_Path.string()
-			);
-
-
-			/*
-			 * Direct entry-point parameters.
-			 *
-			 * Just like globals, this only walks the sets that belong directly to
-			 * the entry-point type layout.
-			 */
-			reflectType(
-				pEntryPointTypeLayout,
-				stageFlags
-			);
-
-
-			reflectPushConstants(
-				pEntryPointTypeLayout,
-				stageFlags
-			);
-
-
-			/*
-			 * Entry-point ParameterBlocks are sub-objects and therefore need this
-			 * separate traversal.
-			 */
-			reflectParameterBlocks(
-				pEntryPointTypeLayout,
-				0,
-				stageFlags,
-				"entry-point"
-			);
+			// Direct entry-point parameters.
+			reflectType( pEntryPointTypeLayout, stageFlags );
+			reflectPushConstants( pEntryPointTypeLayout, stageFlags );
+			reflectParameterBlocks( pEntryPointTypeLayout, 0, stageFlags, "entry-point" );
 		}
 
-
 		/*
-		 * -------------------------------------------------------------------------
 		 * Guarantee descriptor set 0
-		 * -------------------------------------------------------------------------
 		 *
 		 * We created index 0 above before reflection, so this is already guaranteed.
 		 *
@@ -1909,145 +1169,65 @@ no_module_serialization_needed:
 		if ( descriptorSetBindings.empty() )
 			descriptorSetBindings.resize( 1 );
 
+		MW_TRACE( "Shader {} reflection discovered {} Vulkan descriptor-set slots", m_Path.string(), descriptorSetBindings.size() );
 
-		MW_TRACE(
-			"Shader {} reflection discovered {} Vulkan descriptor-set slots",
-			m_Path.string(),
-			descriptorSetBindings.size()
-		);
-
-
-		/*
-		 * -------------------------------------------------------------------------
-		 * Sort descriptor bindings
-		 * -------------------------------------------------------------------------
-		 */
+		// Sort descriptor bindings
 		for ( size_t setIndex = 0; setIndex < descriptorSetBindings.size(); ++setIndex )
 		{
-			auto& bindings =
-				descriptorSetBindings[setIndex];
+			auto& bindings = descriptorSetBindings[setIndex];
 
-
-			std::sort(
-				bindings.begin(),
-				bindings.end(),
-				[]( const DescriptorBinding& lhs, const DescriptorBinding& rhs )
+			std::sort( bindings.begin(), bindings.end(), []( const DescriptorBinding& lhs, const DescriptorBinding& rhs )
 				{
-					return lhs.Binding.binding <
-						rhs.Binding.binding;
-				}
-			);
+					return lhs.Binding.binding < rhs.Binding.binding;
+				} );
 		}
 
-
-		/*
-		 * -------------------------------------------------------------------------
-		 * Validate and create Vulkan descriptor-set layouts
-		 * -------------------------------------------------------------------------
-		 */
+		// Validate and create Vulkan descriptor-set layouts
 		std::vector<VkDescriptorSetLayout> vkSetLayouts;
 
-		vkSetLayouts.resize(
-			descriptorSetBindings.size(),
-			VK_NULL_HANDLE
-		);
+		vkSetLayouts.resize( descriptorSetBindings.size(), VK_NULL_HANDLE );
 
-
-		for (
-			size_t setIndex = 0;
-			setIndex < descriptorSetBindings.size();
-			++setIndex
-			)
+		for ( size_t setIndex = 0; setIndex < descriptorSetBindings.size(); ++setIndex )
 		{
-			auto& reflectedBindings =
-				descriptorSetBindings[setIndex];
-
+			auto& reflectedBindings = descriptorSetBindings[setIndex];
 
 			std::vector<VkDescriptorSetLayoutBinding> bindings;
 			std::vector<VkDescriptorBindingFlags> bindingFlags;
 
+			bindings.reserve( reflectedBindings.size() );
 
-			bindings.reserve(
-				reflectedBindings.size()
-			);
-
-			bindingFlags.reserve(
-				reflectedBindings.size()
-			);
-
+			bindingFlags.reserve( reflectedBindings.size() );
 
 			for ( const DescriptorBinding& reflectedBinding : reflectedBindings )
 			{
-				bindings.push_back(
-					reflectedBinding.Binding
-				);
+				bindings.push_back( reflectedBinding.Binding );
 
-				bindingFlags.push_back(
-					reflectedBinding.Flags
-				);
+				bindingFlags.push_back( reflectedBinding.Flags );
 			}
 
-
-			/*
-			 * Vulkan requires a variable descriptor-count binding to be the binding
-			 * with the numerically highest binding number in the descriptor set.
-			 */
 			for ( size_t i = 0; i < bindingFlags.size(); ++i )
 			{
-				if (
-					( bindingFlags[i] &
-						VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT ) == 0
-					)
-				{
+				if ( ( bindingFlags[i] & VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT ) == 0 )
 					continue;
-				}
 
-
-				if (
-					i + 1 !=
-					bindingFlags.size()
-					)
+				if ( i + 1 != bindingFlags.size() )
 				{
-					MW_ERROR(
-						"Shader {} uses a variable descriptor-count binding in "
-						"set {} that is not the last binding",
-						m_Path.string(),
-						setIndex
-					);
+					MW_ERROR( "Shader {} uses a variable descriptor-count binding in set {} that is not the last binding", m_Path.string(), setIndex );
 
 					for ( VkDescriptorSetLayout handle : vkSetLayouts )
-					{
 						if ( handle != VK_NULL_HANDLE )
-						{
-							vkDestroyDescriptorSetLayout(
-								device,
-								handle,
-								CVulkanContext::GetCallbacks()
-							);
-						}
-					}
+							vkDestroyDescriptorSetLayout( device, handle, CVulkanContext::GetCallbacks() );
 
 					return reflectionData;
 				}
 			}
 
-
-			MW_TRACE(
-				"Creating VkDescriptorSetLayout for shader {} set {} "
-				"(bindingCount = {})",
-				m_Path.string(),
-				setIndex,
-				bindings.size()
-			);
-
+			MW_TRACE( "Creating VkDescriptorSetLayout for shader {} set {} (bindingCount = {})", m_Path.string(), setIndex, bindings.size() );
 
 			VkDescriptorSetLayoutBindingFlagsCreateInfo bindingFlagsInfo{};
-			bindingFlagsInfo.sType =
-				VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
-
+			bindingFlagsInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
 
 			bool hasBindingFlags = false;
-
 
 			for ( VkDescriptorBindingFlags flags : bindingFlags )
 			{
@@ -2058,255 +1238,93 @@ no_module_serialization_needed:
 				}
 			}
 
-
 			if ( hasBindingFlags )
 			{
-				bindingFlagsInfo.bindingCount =
-					static_cast< uint32_t >( bindingFlags.size() );
-
-				bindingFlagsInfo.pBindingFlags =
-					bindingFlags.data();
+				bindingFlagsInfo.bindingCount = static_cast< uint32_t >( bindingFlags.size() );
+				bindingFlagsInfo.pBindingFlags = bindingFlags.data();
 			}
 
-
 			VkDescriptorSetLayoutCreateInfo createInfo{};
+			createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			createInfo.bindingCount = static_cast< uint32_t >( bindings.size() );
+			createInfo.pBindings = bindings.empty() ? nullptr : bindings.data();
+			createInfo.pNext = hasBindingFlags ? &bindingFlagsInfo : nullptr;
 
-			createInfo.sType =
-				VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+			VkDescriptorSetLayout layoutHandle = VK_NULL_HANDLE;
 
-			createInfo.bindingCount =
-				static_cast< uint32_t >( bindings.size() );
-
-			createInfo.pBindings =
-				bindings.empty()
-				? nullptr
-				: bindings.data();
-
-			createInfo.pNext =
-				hasBindingFlags
-				? &bindingFlagsInfo
-				: nullptr;
-
-
-			VkDescriptorSetLayout layoutHandle =
-				VK_NULL_HANDLE;
-
-
-			const VkResult result =
-				vkCreateDescriptorSetLayout(
-					device,
-					&createInfo,
-					CVulkanContext::GetCallbacks(),
-					&layoutHandle
-				);
-
+			const VkResult result = vkCreateDescriptorSetLayout( device, &createInfo, CVulkanContext::GetCallbacks(), &layoutHandle );
 
 			if ( result != VK_SUCCESS )
 			{
-				MW_ERROR(
-					"Failed to create VkDescriptorSetLayout for shader {} "
-					"set {}. VkResult = {}",
-					m_Path.string(),
-					setIndex,
-					static_cast< int >( result )
-				);
-
-
+				MW_ERROR( "Failed to create VkDescriptorSetLayout for shader {} set {}. VkResult = {}", m_Path.string(), setIndex, static_cast< int >( result ) );
+				
 				for ( VkDescriptorSetLayout handle : vkSetLayouts )
-				{
 					if ( handle != VK_NULL_HANDLE )
-					{
-						vkDestroyDescriptorSetLayout(
-							device,
-							handle,
-							CVulkanContext::GetCallbacks()
-						);
-					}
-				}
-
+						vkDestroyDescriptorSetLayout( device, handle, CVulkanContext::GetCallbacks() );
 
 				return reflectionData;
 			}
 
-
-			vkSetLayouts[setIndex] =
-				layoutHandle;
+			vkSetLayouts[setIndex] = layoutHandle;
 		}
 
-
-		/*
-		 * -------------------------------------------------------------------------
-		 * Sort push constant ranges
-		 * -------------------------------------------------------------------------
-		 */
-		std::sort(
-			pushConstantRanges.begin(),
-			pushConstantRanges.end(),
-			[](
-				const VkPushConstantRange& lhs,
-				const VkPushConstantRange& rhs
-				)
+		std::sort( pushConstantRanges.begin(), pushConstantRanges.end(), []( const VkPushConstantRange& lhs, const VkPushConstantRange& rhs )
 			{
 				if ( lhs.offset != rhs.offset )
 					return lhs.offset < rhs.offset;
 
 				return lhs.size < rhs.size;
-			}
-		);
+			} );
 
+		// Make push constant size a multiple of 4
 		for ( auto& push : pushConstantRanges )
 			if ( push.size % 4 != 0 )
 				push.size = ( push.size + 3 ) & ~3u;
 
-		/*
-		 * -------------------------------------------------------------------------
-		 * Create Vulkan pipeline layout
-		 * -------------------------------------------------------------------------
-		 *
-		 * Because vkSetLayouts contains every set from zero to the highest set,
-		 * pDescriptorSignatures will have exactly:
-		 *
-		 *     highestSet + 1
-		 *
-		 * entries.
-		 */
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayoutInfo.setLayoutCount = static_cast< uint32_t >( vkSetLayouts.size() );
+		pipelineLayoutInfo.pSetLayouts = vkSetLayouts.data();
+		pipelineLayoutInfo.pushConstantRangeCount = static_cast< uint32_t >( pushConstantRanges.size() );
+		pipelineLayoutInfo.pPushConstantRanges = pushConstantRanges.empty() ? nullptr : pushConstantRanges.data();
 
-		pipelineLayoutInfo.sType =
-			VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
 
-		pipelineLayoutInfo.setLayoutCount =
-			static_cast< uint32_t >(
-				vkSetLayouts.size()
-				);
-
-		pipelineLayoutInfo.pSetLayouts =
-			vkSetLayouts.data();
-
-		pipelineLayoutInfo.pushConstantRangeCount =
-			static_cast< uint32_t >(
-				pushConstantRanges.size()
-				);
-
-		pipelineLayoutInfo.pPushConstantRanges =
-			pushConstantRanges.empty()
-			? nullptr
-			: pushConstantRanges.data();
-
-
-		VkPipelineLayout pipelineLayout =
-			VK_NULL_HANDLE;
-
-
-		const VkResult pipelineResult =
-			vkCreatePipelineLayout(
-				device,
-				&pipelineLayoutInfo,
-				CVulkanContext::GetCallbacks(),
-				&pipelineLayout
-			);
-
+		const VkResult pipelineResult = vkCreatePipelineLayout( device, &pipelineLayoutInfo, CVulkanContext::GetCallbacks(), &pipelineLayout );
 
 		if ( pipelineResult != VK_SUCCESS )
 		{
-			MW_ERROR(
-				"Failed to create VkPipelineLayout for shader {}. "
-				"VkResult = {}",
-				m_Path.string(),
-				static_cast< int >( pipelineResult )
-			);
-
+			MW_ERROR( "Failed to create VkPipelineLayout for shader {}. VkResult = {}", m_Path.string(), static_cast< int >( pipelineResult ) );
 
 			for ( VkDescriptorSetLayout handle : vkSetLayouts )
-			{
 				if ( handle != VK_NULL_HANDLE )
-				{
-					vkDestroyDescriptorSetLayout(
-						device,
-						handle,
-						CVulkanContext::GetCallbacks()
-					);
-				}
-			}
-
+					vkDestroyDescriptorSetLayout( device, handle, CVulkanContext::GetCallbacks() );
 
 			return reflectionData;
 		}
 
+		reflectionData.pPipelineSignature = static_cast< RHI::PipelineSignature >( pipelineLayout );
 
-		/*
-		 * -------------------------------------------------------------------------
-		 * Fill RHI reflection data
-		 * -------------------------------------------------------------------------
-		 */
-		reflectionData.pPipelineSignature =
-			reinterpret_cast< RHI::PipelineSignature >(
-				pipelineLayout
-				);
+		reflectionData.pDescriptorSignatures.resize( vkSetLayouts.size() );
 
-
-		/*
-		 * This resize is intentional.
-		 *
-		 * The returned array length is NEVER merely the number of non-empty sets.
-		 * It is always the highest Vulkan set number + 1.
-		 */
-		reflectionData.pDescriptorSignatures.resize(
-			vkSetLayouts.size()
-		);
-
-
-		for (
-			size_t setIndex = 0;
-			setIndex < vkSetLayouts.size();
-			++setIndex
-			)
+		for ( size_t setIndex = 0; setIndex < vkSetLayouts.size(); ++setIndex )
 		{
-			reflectionData.pDescriptorSignatures[setIndex] =
-				reinterpret_cast< RHI::DescriptorSignature >(
-					vkSetLayouts[setIndex]
-					);
-
-
-			MW_TRACE(
-				"Shader {} descriptor-set signature [{}] = {} bindings",
-				m_Path.string(),
-				setIndex,
-				descriptorSetBindings[setIndex].size()
-			);
+			reflectionData.pDescriptorSignatures[setIndex] = reinterpret_cast< RHI::DescriptorSignature >( vkSetLayouts[setIndex] );
+			MW_TRACE( "Shader {} descriptor-set signature [{}] = {} bindings", m_Path.string(), setIndex, descriptorSetBindings[setIndex].size() );
 		}
 
-
-		reflectionData.PushConstantRanges.reserve(
-			pushConstantRanges.size()
-		);
-
+		reflectionData.PushConstantRanges.reserve( pushConstantRanges.size() );
 
 		for ( const VkPushConstantRange& range : pushConstantRanges )
 		{
 			PushConstantRanges pushConstant{};
+			pushConstant.Offset = range.offset;
+			pushConstant.Size = range.size;
 
-			pushConstant.Offset =
-				range.offset;
-
-			pushConstant.Size =
-				range.size;
-
-
-			reflectionData.PushConstantRanges.push_back(
-				pushConstant
-			);
+			reflectionData.PushConstantRanges.push_back( pushConstant );
 		}
 
-
-		MW_TRACE(
-			"Completed Slang reflection for shader {}: "
-			"descriptorSetCount = {}, pushConstantRangeCount = {}",
-			m_Path.string(),
-			reflectionData.pDescriptorSignatures.size(),
-			reflectionData.PushConstantRanges.size()
-		);
-
+		MW_TRACE( "Completed Slang reflection for shader {}: descriptorSetCount = {}, pushConstantRangeCount = {}", m_Path.string(), reflectionData.pDescriptorSignatures.size(), reflectionData.PushConstantRanges.size() );
 
 		m_ReflectionData = reflectionData;
 
@@ -2314,10 +1332,7 @@ no_module_serialization_needed:
 
 #else
 
-		MW_ERROR(
-			"ReflectOnShader() called without Vulkan support for {}",
-			m_Path.string()
-		);
+		MW_ERROR( "ReflectOnShader() called without Vulkan support for {}", m_Path.string() );
 
 		return reflectionData;
 

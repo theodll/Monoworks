@@ -77,6 +77,8 @@ namespace Monoworks::RHI
 
         virtual MW_NOTHROW void ProfileFrameData() NOEXCEPT = 0;
 
+        virtual MW_NOTHROW void WaitRenderingIdle() NOEXCEPT = 0;
+
         /**
          * @brief Begins the root command buffer.
          * Does not begin the secondary command buffers.

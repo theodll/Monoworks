@@ -35,6 +35,10 @@ namespace Monoworks
 	MW_NOTHROW void CFrameManager::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+
+		m_hCurrentFrameGraph.Reset();
+		m_hCurrentFrameGraph = nullptr;
+
 		MW_INFO( "Shutdown CFrameManager" );
 	}
 

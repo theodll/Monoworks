@@ -113,6 +113,8 @@ namespace Monoworks::RHI
 
 		void CreatePhysicalDevice(VkInstance* instance) noexcept;
 
+		operator VkDevice() const { return m_Device; }
+
 	private:
 		void CreateLogicalDevice() noexcept;
 		void CreateCommandPool() noexcept;

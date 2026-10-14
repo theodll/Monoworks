@@ -66,9 +66,16 @@ namespace Monoworks::RHI
 	void CVulkanRenderer::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
+		WaitRenderingIdle();
 		CVulkanRenderManager::Shutdown();
 		MW_INFO( "Shutdown CVulkanRenderer" );
 	}
+
+	MW_NOTHROW void CVulkanRenderer::WaitRenderingIdle() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		vkDeviceWaitIdle(*CVulkanContext::GetDevice());
+	};
 
 	NODISCARD static VkAttachmentLoadOp ToVulkanLoadOp( 
 		EAttachmentLoadOp loadOp ) NOEXCEPT

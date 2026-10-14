@@ -94,14 +94,13 @@ namespace Monoworks
 		 * @brief Shuts the engine down.
 		 * Releases all the memory, kills the rendering context and shuts down every subsystem
 		 */
-		void Shutdown() noexcept;
+		void Shutdown( int code = 0 );
 
 		/**
 		 * @brief Executes exactly one engine frame.
 		 * Has to be called in a loop.
 		 */
 		void Frame();
-
 
 		/**
 		 * @brief Generic Getter for the Application Singleton
@@ -120,6 +119,8 @@ namespace Monoworks
 		static EGraphicsAPI m_GraphicsAPI;
 
 	};
+
+	#define MW_FATAL(fmt_str, ...) do { MW_LOG(critical, fmt_str __VA_OPT__(,) __VA_ARGS__); CApplication::Get()->Shutdown(); } while (0)
 
 
 }

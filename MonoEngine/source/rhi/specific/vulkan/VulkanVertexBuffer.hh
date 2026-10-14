@@ -20,6 +20,8 @@ namespace Monoworks::RHI
 		NODISCARD CBufferLayout*    GetLayout()			NOEXCEPT override { return &m_Layout;  };
 		NODISCARD VkBuffer*			GetVulkanBuffer()	NOEXCEPT { return &m_VertexBuffer; };
 
+		operator VkBuffer() const { return m_VertexBuffer; };
+
 	private:
 		VkBuffer m_VertexBuffer = nullptr;
 		VmaAllocation m_VertexBufferAllocation = nullptr;

@@ -84,7 +84,7 @@ namespace Monoworks::RHI
 				}
 				catch ( EResult r2 )
 				{
-					MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
+					MW_ERROR( "Discarding Pipeline at hash 0x{:X}: Unable to compile.", hash );
 					return std::unexpected( r2 );
 				}
 			}
@@ -147,7 +147,7 @@ namespace Monoworks::RHI
 				}
 				catch ( EResult r2 )
 				{
-					MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
+					MW_ERROR( "Discarding Pipeline at hash 0x{:X}: Unable to compile.", hash );
 					return std::unexpected( r2 );
 				}
 			}
@@ -255,7 +255,7 @@ namespace Monoworks::RHI
 						try { p.value()->Invalidate( &graphicsInfo ); }
 						catch ( ... )
 						{
-							MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
+							MW_ERROR( "Discarding Pipeline at hash 0x{:X}: Unable to compile.", hash );
 							m_TotalCompiledPipelineCount--;
 							m_CompiledGraphicsPipelineCount--;
 						};
@@ -263,7 +263,7 @@ namespace Monoworks::RHI
 				} 
 				else 
 				{
-					MW_API_WARN( "Non-existant hash ({}) of Graphics Pipeline referenced in deffered-compilation pipeline queue. Discarding.", hash );
+					MW_API_WARN( "Non-existant hash 0x({:X}) of Graphics Pipeline referenced in deffered-compilation pipeline queue. Discarding.", hash );
 				}				
 			} 
 			else if ( std::get<u8>( tuple ) == 1 ) // Compute Pipelines
@@ -285,7 +285,7 @@ namespace Monoworks::RHI
 						try { p.value()->Invalidate( &computeInfo ); }
 						catch ( ... )
 						{
-							MW_ERROR( "Discarding Pipeline at hash {}: Unable to compile.", hash );
+							MW_ERROR( "Discarding Pipeline at hash 0x{:X}: Unable to compile.", hash );
 							m_TotalCompiledPipelineCount--;
 							m_CompiledComputePipelineCount--;
 						};
@@ -293,7 +293,7 @@ namespace Monoworks::RHI
 				}
 				else
 				{
-					MW_API_WARN( "Non-existant hash ({}) of Graphics Pipeline referenced in deffered-compilation pipeline queue. Discarding.", hash );
+					MW_API_WARN( "Non-existant hash (0x{:X}) of Graphics Pipeline referenced in deffered-compilation pipeline queue. Discarding.", hash );
 				}
 			}
 			else 
@@ -310,7 +310,7 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 
 		m_hGraphicPipelineCache.erase( hash );
-		MW_INFO( "Deleted Graphics Pipeline with hash {} from runtime cache", hash );
+		MW_INFO( "Deleted Graphics Pipeline with hash 0x{:X} from runtime cache", hash );
 
 	}
 
@@ -318,7 +318,7 @@ namespace Monoworks::RHI
 	{
 		MW_PROFILE_FUNC;
 		m_hComputePipelineCache.erase( hash );
-		MW_INFO( "Deleted Compute Pipeline with hash {} from runtime cache", hash );
+		MW_INFO( "Deleted Compute Pipeline with hash 0x{:X} from runtime cache", hash );
 	}
 
 }

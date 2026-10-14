@@ -19,17 +19,22 @@ namespace Monoworks::RHI
 		MW_INFO( "Shutdown CVulkanDescriptorSetManager" );
 
 		auto device = *CVulkanContext::GetDevice()->GetDevice();
-		if ( m_CurrentPool )
-			vkDestroyDescriptorPool( device, m_CurrentPool, CVulkanContext::GetCallbacks() );
+
 		m_CurrentPool = nullptr;
 
 		for ( auto descriptorPool : m_UsedPools )
 			if ( descriptorPool )
+			{
 				vkDestroyDescriptorPool( device, descriptorPool, CVulkanContext::GetCallbacks() );
+				descriptorPool = nullptr;
+			}
 
 		for ( auto descriptorPool : m_FreePools )
 			if ( descriptorPool )
+			{
 				vkDestroyDescriptorPool( device, descriptorPool, CVulkanContext::GetCallbacks() );
+				descriptorPool = nullptr;
+			}
 
 		m_FreePools.clear();
 		m_UsedPools.clear();
@@ -186,7 +191,7 @@ namespace Monoworks::RHI
 		info.pPoolSizes = poolSizes.data();
 
 		VkDescriptorPool pool = VK_NULL_HANDLE;
-		if ( vkCreateDescriptorPool( *CVulkanContext::GetDevice()->GetDevice(), &info, nullptr, &pool ) != VK_SUCCESS )
+		if ( vkCreateDescriptorPool( *CVulkanContext::GetDevice()->GetDevice(), &info, CVulkanContext::GetCallbacks(), &pool) != VK_SUCCESS )
 			MW_ASSERT( false, "Failed to create Descriptor Pools" )
 		
 		return pool;

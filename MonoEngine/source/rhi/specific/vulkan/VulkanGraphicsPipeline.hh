@@ -27,6 +27,8 @@ namespace Monoworks::RHI
 		NODISCARD VkPipeline* GetVulkanPipeline()				NOEXCEPT { return &m_VulkanPipeline; };
 		NODISCARD VkPipelineLayout* GetVulkanPipelineSignature()	NOEXCEPT { return &m_VulkanPipelineLayout; };
 
+		operator VkPipeline() const { return m_VulkanPipeline; }
+
 	private:
 		std::vector<VkPipelineColorBlendAttachmentState> m_ColorAttachmentStates; 
 		std::vector<VkDynamicState> m_DynamicStates;

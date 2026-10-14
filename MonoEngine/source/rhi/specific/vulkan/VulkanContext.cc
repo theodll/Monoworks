@@ -254,8 +254,8 @@ namespace Monoworks::RHI
 		MAYBE_UNUSED void* pUserData )
 	{
 		MW_PROFILE_FUNC;
-
-		// External injector layers (e.g. Overwolf) are outside our control; don't treat as engine errors.
+		
+		// TODO: Move this to a config file with all other errors we have no control over
 		if ( pCallbackData && pCallbackData->pMessage )
 		{
 			const char* message = pCallbackData->pMessage;

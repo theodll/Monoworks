@@ -44,6 +44,8 @@ namespace Monoworks::RHI
 		MW_NOTHROW void CopyImage( u32 frameIndex, Ref<ITexture> dstImage, s32 threadID = -1, bool outsideFrameScope = false ) override;
 		MW_NOTHROW void CopyImageEC( VkCommandBuffer* pCmd, Ref<ITexture> dstImage ); 
 
+		operator VkImage() const { return m_Image; }
+
 	private:
 		void CreateImage( stbi_uc* pPixelData ) NOEXCEPT;
 		void CreateImageWithoutData() NOEXCEPT;
@@ -75,9 +77,9 @@ namespace Monoworks::RHI
 
 		VkBuffer m_StagingBuffer = VK_NULL_HANDLE;
 		VmaAllocation m_StagingBufferAllocation = VK_NULL_HANDLE;
-		VkFence m_Fence;
+		VkFence m_Fence = VK_NULL_HANDLE;
 
-		u64 m_StagingBufferSize;
+		u64 m_StagingBufferSize = 0;
 
 	};
 }

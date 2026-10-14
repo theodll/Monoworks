@@ -69,9 +69,20 @@ namespace Monoworks
 				} );
 		}
 
+		void CStaticRenderer::WaitRenderingIdle() NOEXCEPT 
+		{
+			MW_PROFILE_FUNC;
+			return m_pInstance->WaitRenderingIdle();
+		};
+
 		MW_NOTHROW void CStaticRenderer::Shutdown() NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
+
+			WaitRenderingIdle();
+			m_hMissingMap.Reset();
+			m_hMissingTexture.Reset();
+
 			RHI::CPipelineManager::Shutdown();
 			m_pInstance->Shutdown();
 			MW_INFO( "Shutdown CStaticRenderer" );

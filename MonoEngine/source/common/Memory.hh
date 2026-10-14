@@ -247,6 +247,38 @@ namespace Monoworks
 		};
 
 		/**
+		 * @brief Frees the reference.
+		 */
+		void Reset() NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			DecRef();
+		}
+		
+		/**
+		 * @brief Replaces the current CRef with other.
+		 */
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		void Swap( const CRef<U>& other ) NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			*this = other;
+		}
+		
+		
+		/**
+	    * @brief Replaces the current CRef with other.
+	    * Same as CRef::Swap
+	    */
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		void Reset( const CRef<U>& other ) NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			Swap( other );
+		}
+
+
+		/**
 		* @brief dynamic downcast
 		*/
 		template <typename U>

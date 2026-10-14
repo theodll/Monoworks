@@ -12,10 +12,12 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(COMPILE_WARNING_AS_ERROR ON)
 
-add_compile_definitions(MW_PROFILING MW_VULKAN)
+add_compile_definitions(MW_PROFILING MW_VULKAN )
 
 if (MSVC)
-    add_compile_options(/Zc:preprocessor)
+    add_compile_options(/Zc:preprocessor /arch:AVX2)
+else()
+    add_compile_options(-mavx2 )
 endif()
 
 if(WIN32)
@@ -46,19 +48,12 @@ add_subdirectory(MonoEditor)
 add_subdirectory(MonoRuntime)
 add_subdirectory(extern/doctest)
 
-# Use a Python script to copy directories inside the project-level `common/`
-# into each executable target's runtime directory. The Python script lives in
-# `scripts/copy_common.py` and performs the actual copy; CMake only invokes it
-# after the target is built.
 if(EXISTS "${CMAKE_SOURCE_DIR}/common")
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
-    # gather all entries under common (files and directories)
     file(GLOB common_entries RELATIVE "${CMAKE_SOURCE_DIR}/common" "${CMAKE_SOURCE_DIR}/common/*")
 
-    # get all known targets
     get_property(_all_targets GLOBAL PROPERTY TARGETS)
-
     foreach(_tgt IN LISTS _all_targets)
         get_target_property(_type ${_tgt} TYPE)
         if(_type STREQUAL "EXECUTABLE")

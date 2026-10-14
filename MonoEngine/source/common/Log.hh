@@ -42,7 +42,6 @@ constexpr std::string_view StripFunctionName( std::string_view name )
 #define MW_INFO(fmt_str, ...)  MW_LOG(info,     fmt_str __VA_OPT__(,) __VA_ARGS__)
 #define MW_WARN(fmt_str, ...)  MW_LOG(warn,     fmt_str __VA_OPT__(,) __VA_ARGS__)
 #define MW_ERROR(fmt_str, ...) MW_LOG(error,    fmt_str __VA_OPT__(,) __VA_ARGS__)
-#define MW_FATAL(fmt_str, ...) do { MW_LOG(critical, fmt_str __VA_OPT__(,) __VA_ARGS__); std::exit(1); } while (0)
 
 #define MW_API_WARN(fmt, ...)  MW_WARN ("Invalid API usage: " fmt __VA_OPT__(,) __VA_ARGS__)
 #define MW_API_ERROR(fmt, ...) MW_ERROR("Invalid API usage: " fmt __VA_OPT__(,) __VA_ARGS__)

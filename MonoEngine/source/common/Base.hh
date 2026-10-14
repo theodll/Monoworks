@@ -68,6 +68,7 @@
 
 
 #ifdef MW_PROFILING
+#define TRACY_ON_DEMAND
 #include <tracy/Tracy.hpp>
 
 #ifdef MW_VULKAN
@@ -265,13 +266,18 @@ namespace Monoworks
 		CRuntimeException( EResult code, std::string_view msg )
 			: std::runtime_error( msg.data() ), m_Code( code ) {};
 		
-		virtual EResult GetCode() { return m_Code; }
+		NODISCARD virtual const EResult GetCode() const NOEXCEPT { return m_Code; }
 
 	protected:
 		EResult m_Code;
 	};
 
-	class CFatalException : public CRuntimeException { public: CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {} };
+	class CFatalException : public CRuntimeException 
+	{
+	public: 
+		CFatalException( EResult code, std::string_view msg ) : CRuntimeException( code, msg.data() ) {}
+		NODISCARD virtual const EResult GetCode() const NOEXCEPT { return m_Code; }
+	};
 
 	/**
 	 * @brief Used for fatal GPU exceptions of that the engine has no control over or abillity to fix. Examples for this invlude MW_ERROR_GPU_DEVICE_LOST.
