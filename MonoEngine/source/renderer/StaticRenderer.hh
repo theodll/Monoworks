@@ -41,7 +41,7 @@ namespace Monoworks
 
         static MW_NOTHROW void BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 threadID = -1 ) NOEXCEPT;
 
-        static MW_NOTHROW void BindDescriptors( u32 frameIndex, RHI::PipelineSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID = -1 );
+		static MW_NOTHROW void BindDescriptors( u32 frameIndex, RHI::PipelineSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID = -1, RHI::EPipelineBindPoint bindpoint = RHI::MW_PIPELINE_BIND_POINT_BOTH );
 
         static MW_NOTHROW void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<RHI::IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT;
 

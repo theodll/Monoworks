@@ -67,6 +67,17 @@ namespace Monoworks::RHI
         const RenderingAttachmentInfo* MW_NULLABLE pStencilAttachment = nullptr;
     };
  
+    enum EPipelineBindPoint
+    {
+        MW_PIPELINE_BIND_POINT_NONE = 0,
+        
+        MW_PIPELINE_BIND_POINT_GRAPHICS = 1,
+        MW_PIPELINE_BIND_POINT_COMPUTE = 2,
+        MW_PIPELINE_BIND_POINT_BOTH = 3,
+
+        MW_PIPELINE_BIND_POINT_COUNT
+    };
+
     class IGraphicsAPI 
     {
     public:
@@ -140,7 +151,14 @@ namespace Monoworks::RHI
          * @brief Binds all descriptors in the pDescriptors array to the selected command buffer based on threadID for all subsequent graphics and compute pipelines.
          * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
          */
-        virtual MW_NOTHROW void BindDescriptors(        u32 frameIndex, PipelineSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) = 0;
+        virtual MW_NOTHROW void BindDescriptors( 
+                u32 frameIndex, 
+                PipelineSignature pSignature,
+                DescriptorHandle* pDescriptors, 
+                size_t descriptorCount,
+                u32 firstSet,
+                s32 MW_NULLABLE threadID = -1,
+                EPipelineBindPoint bindpoint = MW_PIPELINE_BIND_POINT_BOTH ) = 0;
 		
         
         /// @brief Binds all the viewports in the pViewports array as dynamic state to the root command buffer and all worker command buffers. 

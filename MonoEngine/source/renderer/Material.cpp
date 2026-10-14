@@ -206,6 +206,7 @@ namespace Monoworks
 		m_MaterialData.Metallicness = pInfo->Metallicness;
 		m_MaterialData.EmissionFactor = pInfo->EmissionFactor;
 		m_MaterialData.AmbientOcclusionFactor = pInfo->AmbientOcclusion;
+		m_MaterialData.Roughness = pInfo->Roughness;
 		// TODO: Implement
 		m_MaterialData.EnviromentMapRotation = 0;
 		m_MaterialData.EmissiveColor = pInfo->EmissiveColor;
@@ -267,20 +268,19 @@ namespace Monoworks
 				SetTexture( m_MaterialParameterBlock, emissive.value(), missingMap, false );
 
 		if ( occlusion )
-			if ( pInfo->hEmissiveMap )
-				SetTexture( m_MaterialParameterBlock, occlusion.value(), pInfo->hEmissiveMap, true );
+			if ( pInfo->hOcclusionMap )
+				SetTexture( m_MaterialParameterBlock, occlusion.value(), pInfo->hOcclusionMap, true );
 			else
 				SetTexture( m_MaterialParameterBlock, occlusion.value(), missingMap, false );
 
 		if ( metallic )
-			if ( pInfo->hEmissiveMap )
+			if ( pInfo->hMetallicMap )
 				SetTexture( m_MaterialParameterBlock, metallic.value(), pInfo->hMetallicMap, true );
 			else
 				SetTexture( m_MaterialParameterBlock, metallic.value(), missingMap, false );
 
-
 		if ( roughness )
-			if ( pInfo->hEmissiveMap )
+			if ( pInfo->hRoughnessMap )
 				SetTexture( m_MaterialParameterBlock, roughness.value(), pInfo->hRoughnessMap, true );
 			else
 				SetTexture( m_MaterialParameterBlock, roughness.value(), missingMap, false );
@@ -520,7 +520,7 @@ namespace Monoworks
 					return;
 				}
 
-				auto frameDescriptor = m_hDescriptors[parameterBlock];
+				auto& frameDescriptor = m_hDescriptors[parameterBlock];
 				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
 			}
 
@@ -817,14 +817,14 @@ namespace Monoworks
 			{ MW_SHADER_DATA_TYPE_FLOAT_2, "TexCoord" }
 		};
 
-		auto entrypoints = m_hShader->GetShaderEntrypoints();
+		auto entrypoints = hShader->GetShaderEntrypoints();
 		const char* vertexEntrypoint = entrypoints[MW_SHADER_STAGE_VERTEX].c_str();
 
 		SShaderObject vertexShader;
 		vertexShader.ShaderStage = MW_SHADER_STAGE_VERTEX;
 		vertexShader.pEntrypoint = vertexEntrypoint;
 
-		auto program = m_hShader->GetShaderProgram();
+		auto program = hShader->GetShaderProgram();
 		slang::ProgramLayout* layout = program->getLayout();
 
 		// Get byte code for the Vertex Shader
@@ -937,6 +937,8 @@ namespace Monoworks
 		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
 		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
 
+		m_ShaderReflectionData = hShader->ReflectOnShader();
+
 		RHI::GraphicsPipelineCreationInfo createInfo {};
 		createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
 		createInfo.VertexLayout = basePassVertexLayout;
@@ -949,7 +951,6 @@ namespace Monoworks
 
 		// Create the material pipeline.
 		auto materialPipeline = RHI::CPipelineManager::CreateGraphicsPipeline( &createInfo, &m_CustomGraphicsPipelineHash );
-
 
 		if ( materialPipeline )
 		{

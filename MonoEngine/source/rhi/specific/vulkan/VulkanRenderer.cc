@@ -22,23 +22,6 @@
 
 namespace Monoworks::RHI
 {
-	static std::vector<char> readFile( const std::string& filename, size_t* size ) {
-		std::ifstream file( filename, std::ios::ate | std::ios::binary );
-		// todo remove
-		if ( !file.is_open() ) {
-			MW_ERROR( "LECK" );
-		}
-
-		size_t fileSize = ( size_t )file.tellg();
-		*size = fileSize;
-		std::vector<char> buffer( fileSize );
-		file.seekg( 0 );
-		file.read( buffer.data(), fileSize );
-		file.close();
-
-		return buffer;
-	}
-
 	void CVulkanRenderer::Init() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -400,7 +383,8 @@ namespace Monoworks::RHI
 		DescriptorHandle* pDescriptors,
 		size_t descriptorCount,
 		u32 firstSet,
-		s32 MW_NULLABLE threadID /*= -1 */ )
+		s32 MW_NULLABLE threadID /*= -1 */,
+		RHI::EPipelineBindPoint bindpoint )
 	{
 		MW_PROFILE_FUNC;
 		
@@ -424,10 +408,21 @@ namespace Monoworks::RHI
 		}
 
 		// Bind descriptors for graphics
-		vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
-		
-		// Bind descriptors for compute
-		vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+		switch ( bindpoint )
+		{
+		case MW_PIPELINE_BIND_POINT_COMPUTE:
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+			break;
+		case MW_PIPELINE_BIND_POINT_GRAPHICS:
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+			break;
+		case MW_PIPELINE_BIND_POINT_BOTH:
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+			break;
+		default:
+			MW_API_ERROR("Invalid EPipelineBindPoint passed");
+		}
 
 	}
 

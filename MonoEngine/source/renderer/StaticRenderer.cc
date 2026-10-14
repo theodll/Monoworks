@@ -160,10 +160,10 @@ namespace Monoworks
 			return m_pInstance->BindGraphicsPipeline( frameIndex, hPipeline, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::BindDescriptors( u32 frameIndex, RHI::DescriptorSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID /*= -1 */ )
+		MW_NOTHROW void CStaticRenderer::BindDescriptors( u32 frameIndex, RHI::DescriptorSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID /*= -1 */, RHI::EPipelineBindPoint bindpoint /* = RHI::MW_PIPELINE_BIND_POINT_BOTH */ )
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->BindDescriptors( frameIndex, pSignature, pDescriptors, descriptorCount, firstSet, threadID );
+			return m_pInstance->BindDescriptors( frameIndex, pSignature, pDescriptors, descriptorCount, firstSet, threadID, bindpoint );
 		}
 
 		MW_NOTHROW void CStaticRenderer::DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID, Ref<RHI::IGraphicsPipeline> hPipelineOverride ) NOEXCEPT

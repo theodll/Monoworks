@@ -36,7 +36,7 @@ namespace Monoworks::RHI
         MW_NOTHROW void Present( MAYBE_UNUSED u32 frameIndex ) NOEXCEPT override;
 
         MW_NOTHROW void BindGraphicsPipeline(   u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
-        MW_NOTHROW void BindDescriptors(        u32 frameIndex, PipelineSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1 ) override;
+        MW_NOTHROW void BindDescriptors(        u32 frameIndex, PipelineSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1, RHI::EPipelineBindPoint bindpoint = RHI::MW_PIPELINE_BIND_POINT_BOTH ) override;
         MW_NOTHROW void DrawStaticMeshIndexed(  u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT override;
 
         MW_NOTHROW void SetDynamicViewports(    u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT override;

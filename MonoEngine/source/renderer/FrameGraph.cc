@@ -1362,12 +1362,15 @@ namespace Monoworks
 	MW_NOTHROW void CDefferedFrameGraph::SubmitSceneGeometry( u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), glm::radians( 15.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+
+		static float s_Angle = 0.0f;
+		s_Angle = std::fmod( s_Angle + 0.007f, glm::two_pi<float>() );
+		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), s_Angle, glm::vec3( 1.0f, 1.0f, 0.0f ) );
 
 		// Material / GBuffer draws need u_CameraConstants (set 1).
 		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
 		if ( camBinding && mesh && mesh->Material && mesh->Material->GetPipeline() )
-			CStaticRenderer::BindDescriptors( frameIndex, *mesh->Material->GetPipeline()->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1 );
+			CStaticRenderer::BindDescriptors( frameIndex, *mesh->Material->GetPipeline()->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
 			
 		CStaticRenderer::DrawStaticMeshIndexed( frameIndex, mesh, transform, -1 );
 
@@ -2167,7 +2170,7 @@ namespace Monoworks
 
 			// Bind the pre pass pipeline generated from graphicsPrePass::m_hShader and the descriptor for the shader globals.
 			CStaticRenderer::BindGraphicsPipeline( frameIndex, graphicsPrePass->m_hGraphicsPipeline );
-			CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), &graphicsPrePass->m_pDescriptors[frameIndex], 1, 0, -1);
+			CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), &graphicsPrePass->m_pDescriptors[frameIndex], 1, 0, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
 
 			// Invoke the execution callback specified by the pre-pass. The pre-pass manager can submit draw calls, bind state etc. here.
 			if ( graphicsPrePass->m_pExecutionScopeCallback )
@@ -2215,7 +2218,7 @@ namespace Monoworks
 		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
 
 		if ( camBinding )
-			CStaticRenderer::BindDescriptors( frameIndex, *m_hDefaultBasePassPipeline->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1 );
+			CStaticRenderer::BindDescriptors( frameIndex, *m_hDefaultBasePassPipeline->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
 		else
 			MW_DEBUG_BREAK;
 
