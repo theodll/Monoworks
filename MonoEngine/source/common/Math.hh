@@ -20,22 +20,8 @@
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #endif
 
-#if (_MSVC_VER && !__INTEL_COMPILER) 
-#ifdef (__AVX2__)
+#if defined( __AVX2__ )
 #define MW_AVX2_SUPPORT
-#endif
-#elseif (__clang__)
-#ifdef(__AVX2__)
-#define MW_AVX2_SUPPORT
-#endif 
-#elseif (__INTEL_COMPILER)
-#ifdef (__AVX2__)
-#define MW_AVX2_SUPPORT
-#endif
-#elseif (__GNUC__)
-#ifdef (__AVX2__)
-#define MW_AVX2_SUPPORT
-#endif
 #endif
 
 

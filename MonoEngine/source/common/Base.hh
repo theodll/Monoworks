@@ -68,7 +68,6 @@
 
 
 #ifdef MW_PROFILING
-#define TRACY_ON_DEMAND
 #include <tracy/Tracy.hpp>
 
 #ifdef MW_VULKAN

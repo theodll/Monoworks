@@ -482,7 +482,7 @@ namespace Monoworks::RHI
 
 		if ( res < 0 )
 		{
-			MW_ERROR( "Failed to create compute pipeline." );
+			MW_ERROR( "Failed to create graphics pipeline." );
 			m_IsCompiled = false;
 
 			for ( auto& module : modules )

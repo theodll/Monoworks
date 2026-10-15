@@ -12,12 +12,18 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(COMPILE_WARNING_AS_ERROR ON)
 
-add_compile_definitions(MW_PROFILING MW_VULKAN )
+add_compile_definitions(MW_PROFILING MW_VULKAN TRACY_ENABLE TRACY_ON_DEMAND)
 
+option(MW_ENABLE_AVX2 "Compile with AVX2" ON)
 if (MSVC)
-    add_compile_options(/Zc:preprocessor /arch:AVX2)
-else()
-    add_compile_options(-mavx2 )
+    add_compile_options(/Zc:preprocessor)
+endif()
+if (MW_ENABLE_AVX2 AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
+    if (MSVC)
+        add_compile_options(/arch:AVX2)
+    else()
+        add_compile_options(-mavx2)
+    endif()
 endif()
 
 if(WIN32)
@@ -37,8 +43,6 @@ FetchContent_Declare(
 
 set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING "" FORCE) 
 FetchContent_MakeAvailable(boost)
-
-add_compile_definitions(TRACY_ENABLE)
 
 # add_compile_definitions(MW_ENABLE_MANUAL_RENDERDOC)
 
