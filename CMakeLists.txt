@@ -63,7 +63,6 @@ add_compile_definitions(
 add_subdirectory(MonoEngine)
 add_subdirectory(MonoEditor)
 add_subdirectory(MonoRuntime)
-add_subdirectory(extern/doctest)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/common")
     find_package(Python3 COMPONENTS Interpreter REQUIRED)

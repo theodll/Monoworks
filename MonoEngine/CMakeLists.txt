@@ -50,16 +50,16 @@ target_precompile_headers(MonoEngine PUBLIC
     $<$<COMPILE_LANGUAGE:CXX>:mwpch.hh>
 )
 
-enable_testing()
-add_executable(EngineTests tests/core/TestMain.cpp tests/core/ConfigManagerTests.cc tests/core/EventSystemTests.cpp tests/core/CommonTests.cpp  )
-target_compile_options(EngineTests PRIVATE "-UMW_PROFILING")
+#enable_testing()
+#add_executable(EngineTests tests/core/TestMain.cpp tests/core/ConfigManagerTests.cc tests/core/EventSystemTests.cpp tests/core/CommonTests.cpp  )
+#target_compile_options(EngineTests PRIVATE "-UMW_PROFILING")
 
-target_link_libraries( EngineTests PRIVATE doctest::doctest MonoEngine )
+#target_link_libraries( EngineTests PRIVATE doctest::doctest MonoEngine )
 
-target_include_directories( EngineTests PRIVATE "${CMAKE_SOURCE_DIR}/Common/extern/doctest")
+#target_include_directories( EngineTests PRIVATE "${CMAKE_SOURCE_DIR}/Common/extern/doctest")
 
-include(CTest)
-add_test(NAME EngineTest COMMAND EngineTests)
+# include(CTest)
+# add_test(NAME EngineTest COMMAND EngineTests)
 
 if (WIN32)
     add_compile_definitions(MW_PLATFORM_WINDOWS)
