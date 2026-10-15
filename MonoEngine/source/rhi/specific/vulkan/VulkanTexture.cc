@@ -452,7 +452,10 @@ namespace Monoworks::RHI
 		VkCommandBuffer cmd = nullptr;
 
 		if ( frameIndex > MFIF )
+		{
 			MW_API_ERROR( "Pass invalid frameIndex. Discarding layout transition.");
+			return;
+		}
 
 		if ( outsideFrameScope )
 		{
@@ -597,7 +600,10 @@ namespace Monoworks::RHI
 		VkCommandBuffer cmd = nullptr;
 
 		if ( frameIndex > MFIF )
+		{
 			MW_API_ERROR( "Pass invalid frameIndex. Discarding image copy." );
+			return;
+		}
 
 		if ( outsideFrameScope )
 		{

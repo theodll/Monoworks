@@ -98,7 +98,7 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 
 
-		static auto writeEntrypointIntoMap = [&]( SlangStage stage, const char* name )
+		auto writeEntrypointIntoMap = [&]( SlangStage stage, const char* name )
 			{
 				switch ( stage )
 				{

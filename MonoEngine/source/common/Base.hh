@@ -264,7 +264,7 @@ namespace Monoworks
 	{
 	public:
 		CRuntimeException( EResult code, std::string_view msg )
-			: std::runtime_error( msg.data() ), m_Code( code ) {};
+			: std::runtime_error( std::string( msg ) ), m_Code( code ) {};
 		
 		NODISCARD virtual const EResult GetCode() const NOEXCEPT { return m_Code; }
 

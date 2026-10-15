@@ -391,10 +391,9 @@ namespace Monoworks::RHI
 		// This branch is executed if the user specified MW_DYNAMIC_STATE_SCISSOR (default) inside the
 		// GraphicsPipelineCreationInfo::DynamicStates vector. SExtent2D and VkRect2D are not byte compatible,
 		// therefore we have to do all this
+		std::vector<VkRect2D> scissors;
 		if ( std::ranges::contains( m_DynamicStates, MW_DYNAMIC_STATE_SCISSOR ) )
 		{
-			std::vector<VkRect2D> scissors;
-			scissors.resize( pInfo->ScissorCount );
 
 			if ( !pInfo->pScissors )
 				goto scissorsInvalid;
@@ -485,16 +484,22 @@ namespace Monoworks::RHI
 		{
 			MW_ERROR( "Failed to create compute pipeline." );
 			m_IsCompiled = false;
+
+			for ( auto& module : modules )
+			{
+				vkDestroyShaderModule( *device, module, CVulkanContext::GetCallbacks() );
+			}
+
 			throw VkResultToEResult( res );
 		}
 		else
 		{
-			m_IsCompiled = true;
-		}
+			for ( auto& module : modules )
+			{
+				vkDestroyShaderModule( *device, module, CVulkanContext::GetCallbacks() );
+			}
 
-		for ( auto& module : modules )
-		{
-			vkDestroyShaderModule( *device, module, CVulkanContext::GetCallbacks() );
+			m_IsCompiled = true;
 		}
 
 		return VkResultToEResult( res );

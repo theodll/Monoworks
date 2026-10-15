@@ -937,7 +937,7 @@ namespace Monoworks
 		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
 		colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
 
-		m_ShaderReflectionData = hShader->ReflectOnShader();
+		auto reflection = hShader->ReflectOnShader();
 
 		RHI::GraphicsPipelineCreationInfo createInfo {};
 		createInfo.Flags = MW_PIPELINE_CREATION_FLAGS_DEFFERED_INITIALIZATION_BIT | MW_PIPELINE_CREATION_FLAGS_DISABLE_DEPTH_WRITE_BIT;
@@ -945,7 +945,7 @@ namespace Monoworks
 		createInfo.ShaderObjects = shaderObjects;
 		createInfo.ColorFormats = colorFormats;
 		createInfo.ColorBlendAttachments = colorBlendAttachments;
-		createInfo.pSignature = m_ShaderReflectionData.pPipelineSignature;
+		createInfo.pSignature = reflection.pPipelineSignature;
 		createInfo.CompareOp = RHI::MW_COMPARE_OP_EQUAL;
 		createInfo.DepthAttachmentFormat = MW_FORMAT_D32_SFLOAT;
 
@@ -957,6 +957,7 @@ namespace Monoworks
 			m_hGraphicsPipeline = materialPipeline.value();
 			m_bUseCustomShader = true;
 			m_hShader = hShader;
+			m_ShaderReflectionData = reflection;
 		} 
 		else
 		{

@@ -289,44 +289,59 @@ namespace Monoworks::RHI
 		MW_VK_CHECK(vkCreateCommandPool(m_Device, &transferPoolInfo, CVulkanContext::GetCallbacks(), &m_TransferCommandPool), "Failed to create transfer command pool");
 	}
 
-	bool CVulkanDevice::IsDeviceSuitable(const VkPhysicalDevice* pPhysDevice) noexcept
+	bool CVulkanDevice::IsDeviceSuitable(const VkPhysicalDevice* pPhysDevice, VkPhysicalDeviceFeatures2* pFeatures) noexcept
 	{
-		QueueFamilyIndices indices = FindQueueFamilies( pPhysDevice );
+		if ( !pPhysDevice || !pFeatures )
+			return false;
 
+		QueueFamilyIndices indices = FindQueueFamilies( pPhysDevice );
 		bool extensionsSupported = CheckDeviceExtensionSupport( pPhysDevice );
 
-		VkPhysicalDeviceFeatures supportedFeatures;
-		vkGetPhysicalDeviceFeatures(*pPhysDevice, &supportedFeatures);
-
-		VkPhysicalDevicePushDescriptorProperties pushDescriptors{};
-		pushDescriptors.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES;
-
-		VkPhysicalDeviceSynchronization2Features sync2Features{};
-		sync2Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES;
-		sync2Features.synchronization2 = VK_TRUE;
-		sync2Features.pNext = &pushDescriptors;
-
-		VkPhysicalDeviceFeatures2 features2 = {};
-		features2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-		features2.pNext = &sync2Features;
-
-		vkGetPhysicalDeviceFeatures2(*pPhysDevice, &features2);
-
-		if ( CApplication::GetCreateInfos()->UseSwapchain ) 
+		if ( !extensionsSupported )
 		{
-			return	indices.GraphicsFamilyHasValue &&
-				indices.ComputeFamilyHasValue &&
-				indices.TransferFamilyHasValue &&
-				indices.PresentFamilyHasValue &&
-				extensionsSupported &&
-				supportedFeatures.samplerAnisotropy;
+			MW_ERROR( "Atleast one of these device extensions is not supported: ", m_DeviceExtensions );
+			for ( const char* extension : m_DeviceExtensions )
+				MW_ERROR( "\t {}", extension );
+			return false;
 		}
 
-		return	indices.GraphicsFamilyHasValue &&
-			indices.ComputeFamilyHasValue &&
-			indices.TransferFamilyHasValue &&
-			extensionsSupported &&
-			supportedFeatures.samplerAnisotropy;
+		vkGetPhysicalDeviceFeatures2( *pPhysDevice, pFeatures );
+
+		const auto& f = pFeatures->features;
+		if ( !f.samplerAnisotropy || !f.geometryShader || !f.tessellationShader ||
+			!f.fillModeNonSolid || !f.depthClamp || !f.multiDrawIndirect ||
+			!f.drawIndirectFirstInstance || !f.textureCompressionBC ||
+			!f.fragmentStoresAndAtomics || !f.vertexPipelineStoresAndAtomics ||
+			!f.shaderSampledImageArrayDynamicIndexing || !f.shaderUniformBufferArrayDynamicIndexing ||
+			!f.shaderStorageBufferArrayDynamicIndexing || !f.independentBlend || !f.multiViewport )
+		{
+			return false;
+		}
+
+		void* next = pFeatures->pNext;
+		while ( next )
+		{
+			auto* base = static_cast< VkBaseOutStructure* >( next );
+			if ( base->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES )
+			{
+				auto* vk13 = reinterpret_cast< VkPhysicalDeviceVulkan13Features* >( next );
+				if ( !vk13->dynamicRendering || !vk13->synchronization2 || !vk13->pipelineCreationCacheControl )
+					return false;
+			}
+			else if ( base->sType == VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR )
+			{
+				auto* maint7 = reinterpret_cast< VkPhysicalDeviceMaintenance7FeaturesKHR* >( next );
+				if ( !maint7->maintenance7 )
+					return false;
+			}
+			next = base->pNext;
+		}
+
+		bool swapchainValid = CApplication::GetCreateInfos()->UseSwapchain ?
+			( indices.GraphicsFamilyHasValue && indices.ComputeFamilyHasValue && indices.TransferFamilyHasValue && indices.PresentFamilyHasValue ) :
+			( indices.GraphicsFamilyHasValue && indices.ComputeFamilyHasValue && indices.TransferFamilyHasValue );
+
+		return swapchainValid && extensionsSupported;
 	}
 
 	QueueFamilyIndices CVulkanDevice::FindQueueFamilies(const VkPhysicalDevice* pPhysDevice) noexcept
