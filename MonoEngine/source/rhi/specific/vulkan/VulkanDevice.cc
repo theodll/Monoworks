@@ -114,9 +114,44 @@ namespace Monoworks::RHI
 		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(*instance, &deviceCount, devices.data());
 
+		// TODO: Move this to a config file
+		VkPhysicalDeviceMaintenance7FeaturesKHR maintenance7Features{};
+		maintenance7Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;
+		maintenance7Features.maintenance7 = VK_TRUE;
+
+		VkPhysicalDeviceVulkan13Features vulkan13Features{};
+		vulkan13Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+		vulkan13Features.dynamicRendering = VK_TRUE;
+		vulkan13Features.synchronization2 = VK_TRUE;
+		vulkan13Features.pipelineCreationCacheControl = VK_TRUE;
+		vulkan13Features.pNext = &maintenance7Features;
+
+
+		// TODO: This too
+		VkPhysicalDeviceFeatures2 deviceFeatures2{};
+		deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+		deviceFeatures2.features.samplerAnisotropy = VK_TRUE;
+		deviceFeatures2.features.geometryShader = VK_TRUE;
+		deviceFeatures2.features.tessellationShader = VK_TRUE;
+		deviceFeatures2.features.fillModeNonSolid = VK_TRUE;
+		deviceFeatures2.features.depthClamp = VK_TRUE;
+		deviceFeatures2.features.multiDrawIndirect = VK_TRUE;
+		deviceFeatures2.features.drawIndirectFirstInstance = VK_TRUE;
+		deviceFeatures2.features.textureCompressionBC = VK_TRUE;
+		deviceFeatures2.features.fragmentStoresAndAtomics = VK_TRUE;
+		deviceFeatures2.features.vertexPipelineStoresAndAtomics = VK_TRUE;
+		deviceFeatures2.features.shaderSampledImageArrayDynamicIndexing = VK_TRUE;
+		deviceFeatures2.features.shaderUniformBufferArrayDynamicIndexing = VK_TRUE;
+		deviceFeatures2.features.shaderStorageBufferArrayDynamicIndexing = VK_TRUE;
+		deviceFeatures2.features.independentBlend = VK_TRUE;
+		deviceFeatures2.features.multiViewport = VK_TRUE;
+
+		deviceFeatures2.pNext = &vulkan13Features;
+
+
 		for (const auto& device : devices)
 		{
-			if (IsDeviceSuitable(&device))
+			if (IsDeviceSuitable(&device, &deviceFeatures2))
 			{
 				m_PhysicalDevice = device;
 				break;
@@ -230,18 +265,6 @@ namespace Monoworks::RHI
 		createInfo.enabledExtensionCount = static_cast<u32>(m_DeviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();
 
-	/*	std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
-
-		if (!validationLayers.empty())
-		{
-			createInfo.enabledLayerCount = static_cast<u32>(validationLayers.size());
-			createInfo.ppEnabledLayerNames = validationLayers.data();
-		}
-		else
-		{
-			createInfo.enabledLayerCount = 0;
-		}
-		*/
 		if (vkCreateDevice(m_PhysicalDevice, &createInfo, CVulkanContext::GetCallbacks(), &m_Device) != VK_SUCCESS)
 		{
 			MW_ASSERT(false, "Failed to create logical device");
@@ -299,7 +322,7 @@ namespace Monoworks::RHI
 
 		if ( !extensionsSupported )
 		{
-			MW_ERROR( "Atleast one of these device extensions is not supported: ", m_DeviceExtensions );
+			MW_ERROR( "Atleast one of these device extensions is not supported: " );
 			for ( const char* extension : m_DeviceExtensions )
 				MW_ERROR( "\t {}", extension );
 			return false;

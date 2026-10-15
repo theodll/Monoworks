@@ -9,11 +9,6 @@ set(SLANG_ENABLE_GFX OFF CACHE BOOL "Disable legacy GFX layer" FORCE)
 set(SLANG_ENABLE_SLANG_RHI OFF CACHE BOOL "Disable Slang RHI" FORCE)
 set(SLANG_ENABLE_SLANGD OFF CACHE BOOL "Disable Slang language server" FORCE)
 
-set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
-find_package(Boost 1.92.0 REQUIRED) 
-
 
 add_subdirectory("thirdparty/glm")
 # add_subdirectory("extern/imgui")

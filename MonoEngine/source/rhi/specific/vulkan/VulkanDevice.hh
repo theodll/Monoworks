@@ -119,7 +119,7 @@ namespace Monoworks::RHI
 		void CreateLogicalDevice() noexcept;
 		void CreateCommandPool() noexcept;
 
-		NODISCARD bool IsDeviceSuitable( const VkPhysicalDevice* pPhysDevice ) noexcept;
+		NODISCARD bool IsDeviceSuitable( const VkPhysicalDevice* pPhysDevice, VkPhysicalDeviceFeatures2* pFeatures ) noexcept;
 		NODISCARD QueueFamilyIndices FindQueueFamilies( const VkPhysicalDevice* pPhysDevice ) noexcept;
 		NODISCARD bool CheckDeviceExtensionSupport( const VkPhysicalDevice* pPhysDevice ) noexcept;
 

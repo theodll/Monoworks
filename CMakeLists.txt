@@ -36,13 +36,20 @@ elseif(UNIX)
 endif()
 
 include(FetchContent)
+set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING "" FORCE)
+
 FetchContent_Declare(
     boost
     URL https://sourceforge.net/projects/boost/files/boost/1.92.0/boost_1_92_0.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    FIND_PACKAGE_ARGS 1.92.0 CONFIG
 )
-
-set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING "" FORCE) 
 FetchContent_MakeAvailable(boost)
+
+if(NOT TARGET Boost::headers)
+    add_library(Boost::headers INTERFACE IMPORTED GLOBAL)
+    target_include_directories(Boost::headers SYSTEM INTERFACE "${boost_SOURCE_DIR}")
+endif()
 
 # add_compile_definitions(MW_ENABLE_MANUAL_RENDERDOC)
 
