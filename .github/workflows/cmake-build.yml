@@ -84,10 +84,10 @@ jobs:
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
 
-    - name: Build
+    - name: Build (Windows)
       if: runner.os == 'Windows'
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }} --verbose
 
     - name: Build (Linux)
       if: runner.os == 'Linux'
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --verbose

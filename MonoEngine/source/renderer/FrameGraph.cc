@@ -1148,7 +1148,7 @@ namespace Monoworks
 				return;
 			}
 
-			auto frameDescriptor = m_pDescriptors[parameterBlock];
+			auto& frameDescriptor = m_pDescriptors[parameterBlock];
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 		}
@@ -1231,6 +1231,8 @@ namespace Monoworks
 				return;
 			}
 
+			// TODO: Fix overwriting every descriptor even when already written
+
 			for ( auto& frameDescriptors : m_pDescriptors )
 				for ( auto i { 0uz }; i < MFIF; i++ )
 					frameDescriptors[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
@@ -1282,7 +1284,7 @@ namespace Monoworks
 				return;
 			}
 
-			auto frameDescriptor = m_pDescriptors[parameterBlock];
+			auto& frameDescriptor = m_pDescriptors[parameterBlock];
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 		}

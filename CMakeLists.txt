@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0100 NEW)
 
 project(Monoworks LANGUAGES C CXX ASM)
+if(NOT CMAKE_CONFIGURATION_TYPES AND CMAKE_BUILD_TYPE)
+    file(MAKE_DIRECTORY
+        "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}"
+        "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/bin"
+        "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/lib")
+endif()
+
 option(USE_SYSTEM_SDL3 "Use system-installed SDL3 via find_package" OFF)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin-int)
