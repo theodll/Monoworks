@@ -1,4 +1,4 @@
-name: Build on MacOS, Windows and Linux
+name: Build on Windows and Linux
 
 on:
   push:
@@ -15,9 +15,9 @@ jobs:
 
 
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         build_type: [Release, Debug]
-        c_compiler: [gcc, clang, cl]
+        c_compiler: [gcc, cl]
         include:
           - os: windows-latest
             c_compiler: cl
@@ -25,9 +25,6 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-          - os: macos-latest
-            c_compiler: clang
-            cpp_compiler: clang++
         exclude:
           - os: windows-latest
             c_compiler: gcc
@@ -35,10 +32,6 @@ jobs:
             c_compiler: clang
           - os: ubuntu-latest
             c_compiler: cl
-          - os: macos-latest
-            c_compiler: cl
-          - os: macos-latest
-            c_compiler: gcc
           - os: ubuntu-latest
             c_compiler: clang
     steps:
@@ -59,7 +52,7 @@ jobs:
             version: 1.4.309.0
             cache: true
 
-    - name: Install Qt (Windows/MacOS)
+    - name: Install Qt (Windows)
       if: runner.os != 'Linux'
       uses: trollixx/setup-qt@v1
       with:
@@ -84,7 +77,7 @@ jobs:
         libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libthai-dev libusb-1.0-0-dev
 
     - name: Configure CMake
-      run: >
+      run: 
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
@@ -92,4 +85,9 @@ jobs:
         -S ${{ github.workspace }}
 
     - name: Build
+      if: runner.os == 'Windows'
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+
+    - name: Build (Linux)
+      if: runner.os == 'Linux'
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}

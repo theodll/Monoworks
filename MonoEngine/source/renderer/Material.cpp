@@ -520,8 +520,7 @@ namespace Monoworks
 					return;
 				}
 
-				auto& frameDescriptor = m_hDescriptors[parameterBlock];
-				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+				m_hDescriptors[i][parameterBlock] = CDescriptorManager::Allocate(m_ShaderReflectionData.pDescriptorSignatures[parameterBlock]);
 			}
 
 			if ( rewrite )

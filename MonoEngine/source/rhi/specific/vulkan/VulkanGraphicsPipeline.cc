@@ -42,8 +42,7 @@ namespace Monoworks::RHI
 		if ( m_VulkanPipeline )
 			vkDestroyPipeline( *device, m_VulkanPipeline, CVulkanContext::GetCallbacks() );
 
-		if ( m_VulkanPipelineLayout )
-			vkDestroyPipelineLayout( *device, m_VulkanPipelineLayout, CVulkanContext::GetCallbacks() );
+		// Do not destroy the pipeline layout here, since its borrowed from the shader.
 
 		m_VulkanPipeline = nullptr;
 		m_VulkanPipelineLayout = nullptr;

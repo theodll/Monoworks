@@ -37,12 +37,8 @@ namespace Monoworks::RHI
 	void CVulkanComputePipeline::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-
-		if ( m_VulkanPipelineLayout )
-		{
-			vkDestroyPipelineLayout( *CVulkanContext::GetDevice()->GetDevice(), m_VulkanPipelineLayout, CVulkanContext::GetCallbacks() );
-			m_VulkanPipelineLayout = nullptr;
-		}
+		
+		// Do not destroy the Pipeline layout here, its borrowed from the shader.
 
 		if ( m_VulkanPipeline )
 		{

@@ -57,7 +57,7 @@ namespace Monoworks
 
 		void CompileShader() NOEXCEPT;
 		ShaderReflectionData ReflectOnShader() NOEXCEPT; 
-		bool HasGlobalBindings() const NOEXCEPT;
+		bool HasGlobalBindings() NOEXCEPT;
 
 		NODISCARD const boost::unordered_map<RHI::EShaderStage, std::string>& GetShaderEntrypoints() NOEXCEPT { return m_Entrypoints; };
 		NODISCARD Slang::ComPtr<slang::IComponentType> GetShaderProgram() NOEXCEPT { return m_pSlangProgram; }
@@ -72,5 +72,6 @@ namespace Monoworks
 
 		ShaderReflectionData m_ReflectionData;
 		bool m_bReflected = false;
+		int m_bHasGlobals = -1; // -1 not checked, 0 = false, 1 = true
 	};
 }

@@ -1062,8 +1062,8 @@ namespace Monoworks
 					MW_ERROR( "Reflection of Shader did not yield a signature for parameter block at index {}.", parameterBlock );
 					return;
 				}
-
-				auto frameDescriptor = m_pDescriptors[parameterBlock];
+			
+				auto& frameDescriptor = m_pDescriptors[parameterBlock];
 				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 			}
 
@@ -2170,7 +2170,11 @@ namespace Monoworks
 
 			// Bind the pre pass pipeline generated from graphicsPrePass::m_hShader and the descriptor for the shader globals.
 			CStaticRenderer::BindGraphicsPipeline( frameIndex, graphicsPrePass->m_hGraphicsPipeline );
-			CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), &graphicsPrePass->m_pDescriptors[frameIndex], 1, 0, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
+			
+
+			// Maybe confusing but this only binds global scope descriptors, not any others. So only bind them if they actually exist
+			if ( graphicsPrePass->m_hShader->HasGlobalBindings() && graphicsPrePass->m_pDescriptors[frameIndex] )
+				CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), &graphicsPrePass->m_pDescriptors[frameIndex], 1, 0, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
 
 			// Invoke the execution callback specified by the pre-pass. The pre-pass manager can submit draw calls, bind state etc. here.
 			if ( graphicsPrePass->m_pExecutionScopeCallback )

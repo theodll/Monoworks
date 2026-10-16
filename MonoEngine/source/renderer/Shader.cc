@@ -198,7 +198,7 @@ namespace Monoworks
 					FILE* file = fopen( modp.data(), "wb" );
 					if ( file )
 					{
-						fwrite( irblob->getBufferPointer(), sizeof( decltype( irblob->getBufferPointer() ) ), irblob->getBufferSize(), file );
+						fwrite( irblob->getBufferPointer(), 1, irblob->getBufferSize(), file );
 						fclose( file );
 						MW_INFO( "Serialized shader module {}", getSlangModuleFilename( moduleNonIRName ).data() );
 					}
@@ -353,9 +353,12 @@ namespace Monoworks
 		}
 	}
 
-	bool CShader::HasGlobalBindings() const NOEXCEPT
+	bool CShader::HasGlobalBindings() NOEXCEPT
 	{
 #ifdef MW_VULKAN
+
+		if ( m_bHasGlobals >= 0 )
+			return m_bHasGlobals;
 
 		if ( !m_pSlangProgram )
 			return false;
@@ -395,10 +398,12 @@ namespace Monoworks
 				type != slang::BindingType::ParameterBlock
 				)
 			{
+				m_bHasGlobals = true;
 				return true;
 			}
 		}
 
+		m_bHasGlobals = false;
 		return false;
 
 #else
