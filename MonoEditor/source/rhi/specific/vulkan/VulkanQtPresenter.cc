@@ -216,20 +216,7 @@ namespace Monoworks::RHI
 
 		auto texture = m_PresentationImages[info->ImageIndex].As<CVulkanTexture2D>();
 
-		if ( texture->Layout == MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL )
-			return;
-
-		TransitionImageLayout2(
-			*info->pCmdBuffer,
-			*texture->GetImage(),
-			( VkImageLayout )texture->Layout,
-			VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
-			VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
-		);
-
-		texture->Layout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-		
+		texture->TransitionLayoutEC( info->pCmdBuffer, MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, MW_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 	};
 
 	void CVulkanQtPresenter::TransitionPresent( const IPresentationTransitionPresentInfo* pInfo ) NOEXCEPT 
@@ -241,19 +228,8 @@ namespace Monoworks::RHI
 
 		auto texture = m_PresentationImages[info->ImageIndex].As<CVulkanTexture2D>();
 
-		if ( texture->Layout == MW_IMAGE_LAYOUT_GENERAL )
-			return;
+		texture->TransitionLayoutEC( info->pCmdBuffer, MW_IMAGE_LAYOUT_GENERAL, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, MW_IMAGE_ASPECT_COLOR_BIT );
 
-		TransitionImageLayout2(
-			*info->pCmdBuffer,
-			*texture->GetImage(),
-			( VkImageLayout )texture->Layout,
-			VK_IMAGE_LAYOUT_GENERAL,
-			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT
-		);
-
-		texture->Layout = MW_IMAGE_LAYOUT_GENERAL;
 	};
 
 	void CVulkanQtPresenter::Present( MAYBE_UNUSED const IPresentationPresentInfo* pInfo ) NOEXCEPT 

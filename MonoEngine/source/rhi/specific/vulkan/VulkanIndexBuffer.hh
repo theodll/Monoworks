@@ -23,6 +23,8 @@ namespace Monoworks::RHI
 		NODISCARD VkBuffer* GetVulkanBuffer() NOEXCEPT { return &m_IndexBuffer; };
 		NODISCARD u32 GetCount() NOEXCEPT override { return m_Count; };
 
+		operator VkBuffer() const { return m_IndexBuffer; }
+
 	private:
 		VkBuffer m_IndexBuffer = nullptr;
 		VmaAllocation m_IndexBufferAllocation = nullptr;

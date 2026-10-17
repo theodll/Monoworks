@@ -19,15 +19,72 @@ int main(int argc, char** argv)
 
 namespace Monoworks 
 {
-	[[nodiscard]] int EditorMain(int argc, char** argv) 
+	[[nodiscard]] int EditorMain(int argc, char** pArgv) 
 	{
 		CMonoworksEditor editor;
 
-		editor.Init(argc, argv);
+		try
+		{
+			editor.Init( argc, pArgv );
+		}
+		catch ( const CFatalException& e )
+		{
+			MW_API_ERROR( "Unhandled editor initialization fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			return e.GetCode();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR( "Unhandled editor intialization exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled editor initialization throw." );
+			return MW_ERROR_UNKNOWN;
+		}
 
-		editor.Run();
+		try
+		{
+			editor.Run();
+		}
+		catch ( const CFatalException& e )
+		{
+			MW_API_ERROR( "Unhandled editor frame fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			std::terminate();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR( "Unhandled editor frame exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled editor frame throw." );
+			return MW_ERROR_UNKNOWN;
+		}
 
-		editor.Shutdown();
+		try
+		{
+			editor.Shutdown();
+		}
+		catch ( const CFatalException& e )
+		{
+			MW_API_ERROR( "Unhandled editor shutdown fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			return e.GetCode();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR( "Unhandled editor shutdown exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled editor shutdown throw." );
+			return MW_ERROR_UNKNOWN;
+		}
 
 		return 0;
 	}

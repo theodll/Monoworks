@@ -24,12 +24,69 @@ namespace Monoworks
 	NODISCARD int RuntimeMain([[maybe_unused]] int pArgc, [[maybe_unused]] char** pArgv) 
 	{
 		CMonoRuntime runtime;
+		try 
+		{
+			runtime.Init( pArgc, pArgv );
+		}
+		catch ( const CFatalException& e)
+		{
+			MW_API_ERROR( "Unhandled runtime initialization fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			return e.GetCode();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR( "Unhandled runtime intialization exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled runtime initialization throw." );
+			return MW_ERROR_UNKNOWN;
+		}
 
-		runtime.Init( pArgc, pArgv );
+		try 
+		{
+			runtime.Run();
+		}
+		catch ( const CFatalException& e )
+		{
+			MW_API_ERROR( "Unhandled runtime frame fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			return e.GetCode();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR("Unhandled runtime frame exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled runtime frame throw." );
+			return MW_ERROR_UNKNOWN;
+		}
+	
+		try
+		{
+			runtime.Shutdown();
+		} 
+		catch ( const CFatalException& e )
+		{
+			MW_API_ERROR( "Unhandled runtime shutdown fatal exception: {}.", e.what() );
+			MW_DEBUG_BREAK;
+			return e.GetCode();
+		}
+		catch ( const std::exception& e )
+		{
+			MW_API_ERROR( "Unhandled runtime shutdown exception: {}.", e.what() );
+			return MW_ERROR_UNKNOWN;
+		}
+		catch ( ... )
+		{
+			MW_API_WARN( "Unhandled runtime shutdown throw." );
+			return MW_ERROR_UNKNOWN;
+		}
 
-		runtime.Run();
-
-		runtime.Shutdown();
 
 		return 0;
 	}
@@ -43,7 +100,7 @@ namespace Monoworks
 		cfg.RegisterSection("Runtime");
 		cfg.RegisterSection("Rendering");
 
-		cfg.RegisterValue("Runtime", "Title", "MonoEditor");
+		cfg.RegisterValue("Runtime", "Title", "Mono Runtime");
 		cfg.RegisterValue("Runtime", "Window W", "1920");
 		cfg.RegisterValue("Runtime", "Window H", "1080");
 

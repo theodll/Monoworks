@@ -71,7 +71,7 @@ namespace Monoworks::RHI
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 		vkBeginCommandBuffer(m_Commandbuffer, &beginInfo);
-		MW_PROFILE_VK_TRANSFER_ZONE(m_Commandbuffer, "Vulkan resource transfer begin")
+		MW_PROFILE_VK_TRANSFER_ZONE( m_Commandbuffer, "Vulkan resource transfer begin" );
 	}
 
 	void CVulkanResourceUploader::End() NOEXCEPT
@@ -87,12 +87,21 @@ namespace Monoworks::RHI
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &m_Commandbuffer;
 
-		vkQueueSubmit(
+		MW_VK_CHECK( vkQueueSubmit(
 			*CVulkanContext::GetDevice()->GetTransferQueue(),
 			1,
 			&submitInfo,
 			m_Fence
-		);
+		), "Failed to submit transfer command buffer" );
+
+		MW_VK_CHECK( vkWaitForFences(
+			*CVulkanContext::GetDevice()->GetDevice(),
+			1,
+			&m_Fence,
+			VK_TRUE,
+			UINT64_MAX
+		), "Failed to wait for transfer fence after submit" );
+
 		m_Mutex.unlock();
 	}
 }

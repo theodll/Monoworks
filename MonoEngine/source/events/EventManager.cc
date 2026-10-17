@@ -24,7 +24,7 @@ namespace Monoworks
 
 	void CEventManager::Subscribe(EEventType type, std::function<bool(SEvent&)> func)
 	{
-		MW_PROFILE_FUNC;;
+		MW_PROFILE_FUNC;
 		MW_TRACE("Subscribed listener {} to event {}", reinterpret_cast<void*>(func.target<bool(*)(SEvent&)>()), EventTypeToString(type));
 		m_Callbacks[( u8 )type].emplace_back( 1, std::move( func ) );
 	};

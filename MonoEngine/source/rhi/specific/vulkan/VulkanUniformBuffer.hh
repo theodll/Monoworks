@@ -20,6 +20,9 @@ namespace Monoworks::RHI
 
 		NODISCARD VkBuffer* GetVulkanBuffer() NOEXCEPT { return &m_UniformBuffer; };
 		NODISCARD u32 GetSize() NOEXCEPT override { return m_Size; };
+
+		operator VkBuffer() const { return m_UniformBuffer; };
+
 	private:
 		void DestroyStaging(); 
 		void CreateOrResizeStaging( u32 size );

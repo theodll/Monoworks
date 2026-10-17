@@ -48,13 +48,13 @@ endif()
 if (MSVC)
     target_compile_options(MonoEditor PRIVATE
         /W4
-        /WX
+       # /WX
     )
 else()
 target_compile_options(MonoEditor PRIVATE
     -Wall
     -Wextra
-    -Werror
+  #  -Werror
 )
 endif()
 

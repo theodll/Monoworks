@@ -34,14 +34,26 @@ namespace Monoworks::RHI
 	public:
 		virtual ~ITexture() = default;
 
- 		NODISCARD virtual u32 GetWidth() const NOEXCEPT = 0;
-		NODISCARD virtual u32 GetHeight() const NOEXCEPT = 0;
+ 		NODISCARD virtual MW_NOTHROW u32 GetWidth() const NOEXCEPT = 0;
+		NODISCARD virtual MW_NOTHROW u32 GetHeight() const NOEXCEPT = 0;
+						  
+		NODISCARD virtual MW_NOTHROW u32 ReadPixel( s32 x, s32 y ) NOEXCEPT = 0;
 
-		NODISCARD virtual u32 ReadPixel( s32 x, s32 y ) NOEXCEPT = 0;
+		/**
+		 * @brief Transitions the Image layout. Only destination values are required, since current values are stored insize ITexture::Layout and ITexture::PipelineFlags.
+		 * frameIndex and threadID are required for semi-explicit commandbuffer management without global state.
+		 */
+		virtual MW_NOTHROW void TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID = -1, bool outsideFrameScope = false ) NOEXCEPT = 0;
 
-		EImageLayout Layout = MW_IMAGE_LAYOUT_UNDEFINED;
-		EPipelineFlags PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-		
+		virtual MW_NOTHROW void CopyImage( u32 frameIndex, Ref<ITexture> dstImage, s32 threadID = -1, bool outsideFrameScope = false ) = 0;
+
+	protected:
+		EImageLayout m_Layout = MW_IMAGE_LAYOUT_UNDEFINED;
+		EPipelineFlags m_PipelineFlags = MW_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+		EImageAspectFlags m_AspectFlags;
+
+		friend class CVulkanRenderer;
+		friend class CVulkanDescriptorSetManager;
 	};
 
 	class ITexture2D : public ITexture

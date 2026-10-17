@@ -19,11 +19,19 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <map>
+#include <tuple>
 #include <queue>
 #include <stack>
+#include <utility>
+#include <functional>
 
 #include <algorithm>
 #include <numeric>
+
+#include <expected>
+#include <stdexcept>
+
+#include <boost/unordered_map.hpp>
 
 // Engine
 #include <common/Math.hh>

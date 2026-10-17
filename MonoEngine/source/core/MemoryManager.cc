@@ -79,7 +79,7 @@ namespace Monoworks
 		if (!Entry.Alive || Entry.Generation != handle.Generation)
 			return; 
 
-		MW_TRACE("Delete {} bytes at handle index {} with address {}", Entry.Size, handle.Index, Entry.pMemory);
+		MW_TRACE("Delete {} bytes at {}", Entry.Size, Entry.pMemory);
 
 		::operator delete(Entry.pMemory);
 		Entry.pMemory = nullptr;

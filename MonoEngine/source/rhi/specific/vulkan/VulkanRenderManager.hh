@@ -2,6 +2,7 @@
 #include <common/Base.hh>
 
 #include <renderer/StaticRenderer.hh>
+#include <renderer/FrameManager.hh>
 #include <core/Application.hh>
 
 #include <volk/volk.h>
@@ -12,20 +13,21 @@ namespace Monoworks::RHI
 {
 	struct SVulkanFrameData 
 	{
-		VkCommandBuffer CommandBuffer;
-		VkCommandPool	CommandPool;
+		VkCommandPool	GraphicsCommandPool;
+		VkCommandBuffer GraphicsCommandBuffer;
 
 		VkSemaphore		QtReadFinishedSemaphore;
 		VkSemaphore		ImageAvailableSemaphore;
-		VkSemaphore		RenderFinishedSemaphore;
+		VkSemaphore		GraphicsSubmitSemaphore; // NOTE: Signaled when the GPass/the last graphics pass finishes and gets submitted
+		VkSemaphore		RenderFinishedSemaphore; // NOTE: Signaled when all Passes (Pre-, Main-, Resolution- & Post-Passes) have been submitted
 
 		VkFence			InFlightFence;
 	};
 
 	struct SVulkanWorkerData 
 	{
-		VkCommandPool	CommandPools[MFIF];
-		VkCommandBuffer CommandBuffers[MFIF];		
+		VkCommandPool	GraphicsCommandPools[MFIF];
+		VkCommandBuffer GraphicsCommandBuffers[MFIF];
 	};
 
 	class CVulkanRenderManager
@@ -34,30 +36,42 @@ namespace Monoworks::RHI
 		static void Init() NOEXCEPT;
 		static void Shutdown() NOEXCEPT;
 
-		static void BeginRootCommandBuffer( u32 frameIndex )	NOEXCEPT;
-		static void EndRootCommandBuffer( u32 frameIndex )		NOEXCEPT;
-		static void SubmitRootCommandBuffer( u32 frameIndex )	NOEXCEPT;
+		// One binary present-wait semaphore per swapchain image (SDL/WSI).
+		// Indexed by acquired image index — not frame-in-flight index.
+		static void InitSwapchainPresentSync( u32 swapchainImageCount ) NOEXCEPT;
 
-		static void BeginWorkerCommandBuffers( u32 frameIndex ) NOEXCEPT;
-		static void EndWorkerCommandBuffers( u32 frameIndex )	NOEXCEPT;
+		// Graphics
+		static void BeginRootGraphicsCommandBuffer( u32 frameIndex )	NOEXCEPT;
+		static void EndRootGraphicsCommandBuffer( u32 frameIndex )		NOEXCEPT;
+		static void SubmitRootGraphicsCommandBuffer( u32 frameIndex )	NOEXCEPT;
 
-		NODISCARD static VkCommandBuffer* GetRootCommandBuffer( u32 frameIndex )							NOEXCEPT { return &m_RootFrameData[frameIndex].CommandBuffer; };
-		NODISCARD static VkCommandBuffer* GetWorkerCommandBuffer( u32 workerThreadID, u32 frameIndex )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].CommandBuffers[frameIndex]; };
+		static void BeginWorkerGraphicsCommandBuffers( u32 frameIndex ) NOEXCEPT;
+		static void EndWorkerGraphicsCommandBuffers( u32 frameIndex )	NOEXCEPT;
 
-		NODISCARD static VkSemaphore* GetImageAvailableSemaphore( u32 frameIndex )					NOEXCEPT { return &m_RootFrameData[frameIndex].ImageAvailableSemaphore; };
-		NODISCARD static VkSemaphore* GetRenderFinishedSemaphore( u32 frameIndex )					NOEXCEPT { return &m_RootFrameData[frameIndex].RenderFinishedSemaphore; };
-		NODISCARD static VkSemaphore* GetQtReadFinishedSemaphore( u32 frameIndex )					NOEXCEPT { if ( !CApplication::GetCreateInfos()->UseQt ) { MW_API_ERROR( "Illegal function call: Accessing Qt specific render elements without UseQt flag specified. " ); return nullptr; } return &m_RootFrameData[frameIndex].QtReadFinishedSemaphore; }
 
-		NODISCARD static VkFence* GetInFlightFence( u32 frameIndex )								NOEXCEPT { return &m_RootFrameData[frameIndex].InFlightFence; };
+		NODISCARD static VkCommandBuffer* GetRootGraphicsCommandBuffer( u32 frameIndex )				NOEXCEPT { return &m_RootFrameData[frameIndex].GraphicsCommandBuffer; };
+		NODISCARD static VkCommandBuffer* GetWorkerCommandBuffer( u32 workerThreadID, u32 frameIndex )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].GraphicsCommandBuffers[frameIndex]; };
 
-		NODISCARD static VkCommandBuffer* GetCurrentRootCommandBuffer()									NOEXCEPT { return &m_RootFrameData[Monoworks::CStaticRenderer::GetCurrentFrameIndex()].CommandBuffer; };
-		NODISCARD static VkCommandBuffer* GetCurrentWorkerCommandBuffer( u32 workerThreadID )				NOEXCEPT { return &m_WorkerRenderData[workerThreadID].CommandBuffers[Monoworks::CStaticRenderer::GetCurrentFrameIndex()]; }
+		NODISCARD static VkSemaphore* GetImageAvailableSemaphore( u32 frameIndex )						NOEXCEPT { return &m_RootFrameData[frameIndex].ImageAvailableSemaphore; };
+		NODISCARD static VkSemaphore* GetRenderFinishedSemaphore( u32 frameIndex )						NOEXCEPT { return &m_RootFrameData[frameIndex].RenderFinishedSemaphore; };
+		NODISCARD static VkSemaphore* GetPresentWaitSemaphore( u32 imageIndex )							NOEXCEPT;
+		NODISCARD static VkSemaphore* GetGraphicsSubmitSemaphore( u32 frameIndex )						NOEXCEPT { return &m_RootFrameData[frameIndex].GraphicsSubmitSemaphore; };
+
+		NODISCARD static VkSemaphore* GetQtReadFinishedSemaphore( u32 frameIndex )						NOEXCEPT { if ( !CApplication::GetCreateInfos()->UseQt ) { MW_API_ERROR( "Illegal function call: Accessing Qt specific render elements without UseQt flag specified. " ); return nullptr; } return &m_RootFrameData[frameIndex].QtReadFinishedSemaphore; }
+
+		NODISCARD static VkFence* GetInFlightFence( u32 frameIndex )									NOEXCEPT { return &m_RootFrameData[frameIndex].InFlightFence; };
+
+		NODISCARD static VkCommandBuffer* GetCurrentRootGraphicsCommandBuffer()							NOEXCEPT { return &m_RootFrameData[Monoworks::CFrameManager::GetCurrentFrameIndex()].GraphicsCommandBuffer; };
+		NODISCARD static VkCommandBuffer* GetCurrentWorkerGraphicsCommandBuffer( u32 workerThreadID )	NOEXCEPT { return &m_WorkerRenderData[workerThreadID].GraphicsCommandBuffers[Monoworks::CFrameManager::GetCurrentFrameIndex()]; }
+
+		NODISCARD static const std::vector<SVulkanWorkerData>& GetWorkerFrameData()						NOEXCEPT { return m_WorkerRenderData; }; 
 
 	private:
 
 		
 		static SVulkanFrameData m_RootFrameData[MFIF];
 		static std::vector<SVulkanWorkerData> m_WorkerRenderData;
+		static std::vector<VkSemaphore> m_PresentWaitSemaphores;
 
 	};
 }

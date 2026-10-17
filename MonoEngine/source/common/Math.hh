@@ -11,7 +11,31 @@
 
 #include <glm/glm.hpp>
 
+// For SIMD 
+#ifndef GLM_FORCE_INTRINSICS
+#define GLM_FORCE_INTRINSICS
+#endif
+
+#ifndef GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
+#endif
+
+#if defined( __AVX2__ )
+#define MW_AVX2_SUPPORT
+#endif
+
+
+#ifdef MW_AVX2_SUPPORT
+#ifndef GLM_FORCE_AVX2
+#define GLM_FORCE_AVX2
+#endif
+#endif
+
+// For Quaternions
+#ifndef GLM_ENABLE_EXPERIMENTAL
 #define GLM_ENABLE_EXPERIMENTAL
+#endif
+
 #include <glm/gtx/quaternion.hpp>
 
 namespace Monoworks 
