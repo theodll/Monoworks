@@ -67,9 +67,9 @@ add_compile_definitions(
     $<$<CONFIG:Dist>:MW_DIST>
 )
 
-add_subdirectory(MonoEngine)
-add_subdirectory(MonoEditor)
-add_subdirectory(MonoRuntime)
+add_subdirectory(engine)
+add_subdirectory(editor)
+add_subdirectory(runtime)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/common")
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
