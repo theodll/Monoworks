@@ -97,7 +97,7 @@ endif()
 
 add_custom_target(MonoEngineCopyCommon ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/../Common"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../common"
         "$<TARGET_FILE_DIR:MonoEngine>"
     VERBATIM
 )
