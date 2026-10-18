@@ -371,10 +371,10 @@ namespace Monoworks
 
 	}
 
-	CGraphicsPrePass::CGraphicsPrePass( const GraphicsPrePassCreationInfo* pInfo )
+	CGraphicsRenderPass::CGraphicsRenderPass( const GraphicsRenderPassCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		MW_INFO( "Instatiate CGraphicsPrePass" );
+		MW_INFO( "Instatiate CGraphicsRenderPass" );
 		// TODO: expand GraphicsPrePassCreationInfo because it needs a ton of more things
 		// to even create a graphics pipeline.
 
@@ -579,121 +579,11 @@ namespace Monoworks
 	
 	}
 
-	MW_NOTHROW CGraphicsPrePass::~CGraphicsPrePass() NOEXCEPT
+	MW_NOTHROW CGraphicsRenderPass::~CGraphicsRenderPass() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		CPipelineManager::DeleteGraphicsPipeline( m_PipelineHash );
 		m_hGraphicsPipeline = nullptr;
-	}
-
-	void CGraphicsPrePass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
-	{
-		MW_PROFILE_FUNC;
-
-
-		if ( !hTexture )
-		{
-			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
-			return;
-		}
-
-		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
-		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
-			return;
-		}
-		else if ( !binding )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
-			return;
-		}
-
-		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
-			for ( auto i{ 0uz }; i < MFIF; i++ )
-			{
-				CDescriptorManager::WriteImage( m_pDescriptors[i], binding.value(), hTexture );
-				m_BindingsWritten[binding.value()] = true;
-			}
-	}
-
-	void CGraphicsPrePass::BindSampler( std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
-	{
-		MW_PROFILE_FUNC;
-		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
-		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
-			return;
-		}
-		else if ( !binding )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
-			return;
-		}
-
-		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
-			for ( auto i{ 0uz }; i < MFIF; i++ )
-			{
-				CDescriptorManager::WriteSampler( m_pDescriptors[i], binding.value(), hSampler );
-				m_BindingsWritten[binding.value()] = true;
-			}
-	}
-
-	void CGraphicsPrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer> hUniformBuffer, bool forceRewrite )
-	{
-		MW_PROFILE_FUNC;
-
-		if ( !hUniformBuffer )
-		{
-			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
-			return;
-		}
-
-		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
-		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
-			return;
-		}
-		else if ( !binding )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
-			return;
-		}
-
-		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
-			for ( auto i { 0uz }; i < MFIF; i++ )
-			{
-				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), hUniformBuffer );
-				m_BindingsWritten[binding.value()] = true;
-			}
-
-	};
-
-	void CGraphicsPrePass::BindUBO( std::string_view bindingName, Ref<RHI::IUniformBuffer>* phUniformBuffer, bool forceRewrite /*= false */ )
-	{
-		MW_PROFILE_FUNC;
-
-
-		auto binding = FindBindingNumberByString( GlobalScopeSignature, bindingName, m_hShader->GetShaderProgram()->getLayout() );
-		if ( !binding && binding.error() == MW_ERROR_NON_EXISTANT )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Non existant.", bindingName.data() );
-			return;
-		}
-		else if ( !binding )
-		{
-			MW_API_WARN( "Failed to find binding for Descriptor Slot {}: Unkown error.", bindingName.data() );
-			return;
-		}
-
-		if ( forceRewrite || !m_BindingsWritten[binding.value()] )
-			for ( auto i{ 0uz }; i < MFIF; i++ )
-			{
-				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i], binding.value(), phUniformBuffer[i] );
-				m_BindingsWritten[binding.value()] = true;
-			}
 	}
 
 	CPostProcessPass::CPostProcessPass( const PostProcessPassCreationInfo* pInfo )
@@ -930,7 +820,7 @@ namespace Monoworks
 
 	};
 
-	CDefferedResolutionPass::CDefferedResolutionPass( const DefferedResolutionPassCreationInfo* pInfo )
+	CComputeRenderPass::CComputeRenderPass( const ComputeRenderPassCreationInfo* pInfo ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -1014,13 +904,18 @@ namespace Monoworks
 
 	}
 
-	CDefferedResolutionPass::~CDefferedResolutionPass() NOEXCEPT
+	CComputeRenderPass::~CComputeRenderPass() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		// TODO: Implement destructor
 	}
 
-	void CDefferedResolutionPass::BindTexture( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
+	void MW_NOTHROW IRenderPass::BindTexture( 
+		std::string_view parameterBlockName, 
+		std::string_view bindingName,
+		Ref<RHI::ITexture2D> hTexture,
+		bool forceRewrite /*= false */, 
+		RHI::EDescriptorType imageType ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -1045,16 +940,16 @@ namespace Monoworks
 
 		auto [parameterBlock, descriptorSlot] = bindings.value();
 
-		if ( m_pDescriptors.size() <= parameterBlock )
-			m_pDescriptors.resize( parameterBlock + 1 );
-
 		// TODO: Don't base it on current frame index. iterate over array instead.
 
 		bool rewrite = forceRewrite || !m_BindingsWritten[{parameterBlock, descriptorSlot}];
 
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
-			if ( m_pDescriptors[parameterBlock][i] == nullptr )
+			if ( m_pDescriptors[i].size() <= parameterBlock )
+				m_pDescriptors[i].resize(parameterBlock + 1);
+
+			if ( m_pDescriptors[i][parameterBlock] == nullptr )
 			{
 				auto reflectionData = m_hShader->ReflectOnShader();
 				if ( !reflectionData.pDescriptorSignatures[parameterBlock] )
@@ -1063,14 +958,13 @@ namespace Monoworks
 					return;
 				}
 			
-				auto& frameDescriptor = m_pDescriptors[parameterBlock];
-				frameDescriptor[i] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
+				m_pDescriptors[i][parameterBlock] = CDescriptorManager::Allocate( reflectionData.pDescriptorSignatures[parameterBlock] );
 			}
 
 
 			if ( rewrite )
 			{
-				CDescriptorManager::WriteImage( m_pDescriptors[parameterBlock][i], descriptorSlot, hTexture );
+				CDescriptorManager::WriteImage( m_pDescriptors[i][parameterBlock], descriptorSlot, hTexture );
 
 				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
 			}
@@ -1078,13 +972,23 @@ namespace Monoworks
 
 	}
 
-	void CDefferedResolutionPass::BindTexture( std::string_view bindingName, Ref<RHI::ITexture2D> hTexture, bool forceRewrite /*= false */ )
+	void MW_NOTHROW IRenderPass::BindTexture( 
+		std::string_view bindingName, 
+		Ref<RHI::ITexture2D> hTexture, 
+		bool forceRewrite /*= false */,
+		RHI::EDescriptorType imageType ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
 		if ( !hTexture )
 		{
 			MW_API_ERROR( "Passed invalid Uniform Buffer reference." );
+			return;
+		}
+
+		if ( !m_hShader->HasGlobalBindings() )
+		{
+			MW_API_ERROR( "Try to bind Texture to Global Scope without globals defined." );
 			return;
 		}
 
@@ -1104,14 +1008,18 @@ namespace Monoworks
 		{
 
 			for ( auto i{ 0uz }; i < MFIF; i++ )
-				CDescriptorManager::WriteImage( m_pDescriptors[GlobalScopeSignature][i], binding.value(), hTexture );
+				CDescriptorManager::WriteImage( m_pDescriptors[i][GlobalScopeSignature], binding.value(), hTexture );
 
 			m_BindingsWritten[{GlobalScopeSignature, binding.value()}] = true;
 
 		}
 	}
 
-	void CDefferedResolutionPass::BindSampler( std::string_view parameterBlockName, std::string_view bindingName, Ref<RHI::ITexture2D> hSampler, bool forceRewrite /*= false */ )
+	void IRenderPass::BindSampler( 
+		std::string_view parameterBlockName,
+		std::string_view bindingName,
+		Ref<RHI::ITexture2D> hSampler,
+		bool forceRewrite /*= false */ )
 	{
 		MW_PROFILE_FUNC;
 
