@@ -1015,7 +1015,12 @@ namespace Monoworks
 		}
 	}
 
-	void IRenderPass::BindSampler( 
+		 void IRenderPass::BindTexture( std::string_view bindingName, std::span<Ref<RHI::ITexture2D>, MFIF> hTextures, bool forceRewrite /*= false*/, RHI::EDescriptorType imageType /*= RHI::MW_DESCRIPTOR_TYPE_SAMPLED_IMAGE */ ) NOEXCEPT
+		{
+
+		}
+
+		void IRenderPass::BindSampler(
 		std::string_view parameterBlockName,
 		std::string_view bindingName,
 		Ref<RHI::ITexture2D> hSampler,
