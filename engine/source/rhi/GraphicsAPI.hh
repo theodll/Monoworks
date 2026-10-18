@@ -83,12 +83,12 @@ namespace Monoworks::RHI
     public:
         virtual ~IGraphicsAPI() = default;
 
-        virtual MW_NOTHROW void Init() NOEXCEPT = 0;
-        virtual MW_NOTHROW void Shutdown() NOEXCEPT = 0;
+        virtual  void Init() NOEXCEPT = 0;
+        virtual  void Shutdown() NOEXCEPT = 0;
 
-        virtual MW_NOTHROW void ProfileFrameData() NOEXCEPT = 0;
+        virtual  void ProfileFrameData() NOEXCEPT = 0;
 
-        virtual MW_NOTHROW void WaitRenderingIdle() NOEXCEPT = 0;
+        virtual  void WaitRenderingIdle() NOEXCEPT = 0;
 
         /**
          * @brief Begins the root command buffer.
@@ -96,7 +96,7 @@ namespace Monoworks::RHI
          * Unlike BeginSecondaryCommandbuffers, this command may only be called once in the entire render loop.
          * This command must not be submitted inside any job or asynchronous action.
          */
-        virtual MW_NOTHROW void BeginRootCommandbuffer( u32 frameIndex  ) NOEXCEPT = 0;
+        virtual  void BeginRootCommandbuffer( u32 frameIndex  ) NOEXCEPT = 0;
 
         /**
          * @brief Ends and submits the root command buffer.
@@ -110,12 +110,12 @@ namespace Monoworks::RHI
          * @brief Resets and Begins all secondary command buffers.
          * This must not be submitted inside any job or any kind if asynchronous action 
          */
-        virtual MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex  ) NOEXCEPT = 0;
+        virtual  void BeginSecondaryCommandbuffers( u32 frameIndex  ) NOEXCEPT = 0;
         /**
          * @brief Merges the commands of all secondary / worker command buffers into the root command buffer.
          * This batches command buffer execution and must not be submitted inside any job or any kind of asynchronous action.
          */
-        virtual MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT = 0;
+        virtual  void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT = 0;
 
         /**
          * @brief Begins a rendering scope (vkCmdBeginRendering) based on the BeginRenderingInfo given.
@@ -123,7 +123,7 @@ namespace Monoworks::RHI
 		 * These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
 		 * Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering.
          */
-        virtual MW_NOTHROW void BeginRendering( u32 frameIndex, const BeginRenderingInfo* pInfo ) NOEXCEPT = 0; 
+        virtual  void BeginRendering( u32 frameIndex, const BeginRenderingInfo* pInfo ) NOEXCEPT = 0; 
 
         /**
 		* @brief Ends a rendering scope (vkCmdEndRendering).
@@ -131,27 +131,27 @@ namespace Monoworks::RHI
 		* These commands will be recorded into the primary command buffer and must not be submitted inside any job or any kind of asynchronous action.
 		* Furthermore, all commands recorded into secondary command buffers during this scope must be merged into the primary command buffer before EndRendering.
 		*/
-        virtual MW_NOTHROW void EndRendering( u32 frameIndex ) NOEXCEPT = 0;
+        virtual  void EndRendering( u32 frameIndex ) NOEXCEPT = 0;
 
         /**
          * @brief Acquires the next image from the selected presenter.
          */
-        virtual MW_NOTHROW u32  AcquireNextImage( u32 frameIndex ) NOEXCEPT = 0;
+        virtual  u32  AcquireNextImage( u32 frameIndex ) NOEXCEPT = 0;
 
-        virtual MW_NOTHROW void Present( u32 frameIndex ) NOEXCEPT = 0;
+        virtual  void Present( u32 frameIndex ) NOEXCEPT = 0;
 
 
         /**
          * @brief Binds the graphics pipeline (hPipeline) to the selected command buffer based on threadID.
          * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
          */
-        virtual MW_NOTHROW void BindGraphicsPipeline(   u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
+        virtual  void BindGraphicsPipeline(   u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
         
         /**
          * @brief Binds all descriptors in the pDescriptors array to the selected command buffer based on threadID for all subsequent graphics and compute pipelines.
          * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
          */
-        virtual MW_NOTHROW void BindDescriptors( 
+        virtual  void BindDescriptors( 
                 u32 frameIndex, 
                 PipelineSignature pSignature,
                 DescriptorHandle* pDescriptors, 
@@ -162,43 +162,43 @@ namespace Monoworks::RHI
 		
         
         /// @brief Binds all the viewports in the pViewports array as dynamic state to the root command buffer and all worker command buffers. 
-		virtual MW_NOTHROW void SetDynamicViewports( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT = 0;
+		virtual  void SetDynamicViewports( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT = 0;
         /// @brief Binds all the scissors in the pScissors array as dynamic state to the root command buffer and all worker command buffers.
-        virtual MW_NOTHROW void SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT = 0;
+        virtual  void SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT = 0;
 		/// @brief Binds the cull mode as dynamic state to the root command buffer and all worker command buffers.
-		virtual MW_NOTHROW void SetDynamicCullMode( u32 frameIndex, ECullMode cullMode ) NOEXCEPT = 0;
+		virtual  void SetDynamicCullMode( u32 frameIndex, ECullMode cullMode ) NOEXCEPT = 0;
 
         /**
          * @brief Binds all the viewports in the pViewports array as dynamic state to the selected command buffer based on threadID.
          * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
          */
-        virtual MW_NOTHROW void SetDynamicViewportsST( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID ) NOEXCEPT = 0;
+        virtual  void SetDynamicViewportsST( u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID ) NOEXCEPT = 0;
         
         /**
         * @brief Binds all the scissors in the pScissors array as dynamic state to the selected command buffer based on threadID.
         * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
         */
-        virtual MW_NOTHROW void SetDynamicScissorsST( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID ) NOEXCEPT = 0;
+        virtual  void SetDynamicScissorsST( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID ) NOEXCEPT = 0;
 
         /**
         * @brief Binds the cullMode dynamic state to the selected command buffer based on threadID.
         * The default value for threadID (-1) is the root command buffer corresponding to the main thread.
         */
-        virtual MW_NOTHROW void SetDynamicCullModeST( u32 frameIndex, ECullMode cullMode, s32 threadID ) NOEXCEPT = 0;
+        virtual  void SetDynamicCullModeST( u32 frameIndex, ECullMode cullMode, s32 threadID ) NOEXCEPT = 0;
 
         /**
          * @brief Dispatches the compute pipeline (hPipeline) with descriptors.
          */
-        virtual MW_NOTHROW void DispatchCompute( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, DescriptorHandle* pDesciptors, size_t descriptorCount, s32 threadID = -1 ) NOEXCEPT = 0;
+        virtual  void DispatchCompute( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, DescriptorHandle* pDesciptors, size_t descriptorCount, s32 threadID = -1 ) NOEXCEPT = 0;
         
          /**
          * @brief Dispatches the compute pipeline (hPipeline).
          */
-        virtual MW_NOTHROW void DispatchCompute2( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
+        virtual  void DispatchCompute2( u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT = 0;
 
         /// @brief Draws an indexed static mesh. When hPipelineOverride is null, the mesh material pipeline and descriptors are used.
         ///        When non-null, that pipeline is bound instead and material descriptors are skipped (for depth pre-pass etc.).
-        virtual MW_NOTHROW void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT = 0;
+        virtual  void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT = 0;
 
     };
 

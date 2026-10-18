@@ -39,8 +39,8 @@
 #define OUT
 
 #define MW_DEBUG_BREAK
-#define 
 #define MWAPI_ATTR
+#define MWAPI_ATTR_CLASS
 #define MWAPI_CALL
 
 #ifdef	MW_PLATFORM_WINDOWS
@@ -51,9 +51,11 @@
 	#define MWAPI_CALL __cdecl
 
 	#ifdef _WINDLL
-	#define MWAPI_ATTR __declspec(dllexport)
+	#define MWAPI_ATTR extern "C" __declspec(dllexport)
+	#define MWAPI_ATTR_CLASS __declspec(dllexport)
 	#else
-	#define MWAPI_ATTR __declspec(dllimport)
+	#define MWAPI_ATTR extern "C" __declspec(dllimport)
+	#define MWAPI_ATTR_CLASS __declspec(dllimport)
 	#endif
 #endif
 

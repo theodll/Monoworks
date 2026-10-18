@@ -57,18 +57,18 @@ namespace Monoworks
 		CMaterial( const MaterialCreationInfo* pInfo );
 		virtual ~CMaterial();
 
-		MW_NOTHROW void SetAlbedoFactor( const Vector& rFactor )		 NOEXCEPT;
-		MW_NOTHROW void SetEmissiveColor( const Vector& rEmissiveColor ) NOEXCEPT;
-		MW_NOTHROW void SetMetallicness( float metallic )				 NOEXCEPT;
-		MW_NOTHROW void SetRoughness( float roughness )					 NOEXCEPT;
-		MW_NOTHROW void SetAbientOcclusionFactor( float factor )		 NOEXCEPT;
+		 void SetAlbedoFactor( const Vector& rFactor )		 NOEXCEPT;
+		 void SetEmissiveColor( const Vector& rEmissiveColor ) NOEXCEPT;
+		 void SetMetallicness( float metallic )				 NOEXCEPT;
+		 void SetRoughness( float roughness )					 NOEXCEPT;
+		 void SetAbientOcclusionFactor( float factor )		 NOEXCEPT;
 
-		MW_NOTHROW void SetAlbedoMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
-		MW_NOTHROW void SetNormalMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
-		MW_NOTHROW void SetEmissiveMap(  Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
-		MW_NOTHROW void SetRoughnessMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
-		MW_NOTHROW void SetMetalllicMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
-		MW_NOTHROW void SetOcclusionMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		 void SetAlbedoMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		 void SetNormalMap(	 Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		 void SetEmissiveMap(  Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		 void SetRoughnessMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		 void SetMetalllicMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
+		 void SetOcclusionMap( Ref<RHI::ITexture2D> hMap )	 NOEXCEPT;
 
 		/**
 		* @brief Bind a texture located in a parameter block.
@@ -145,8 +145,8 @@ namespace Monoworks
 		Ref<CShader> GetShader() const { return m_hShader; };
 
 	private:
-		MW_NOTHROW void UpdateUBO() NOEXCEPT;
-		MW_NOTHROW EResult SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT;
+		 void UpdateUBO() NOEXCEPT;
+		 EResult SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT;
 
 
 		u32 m_MaterialParameterBlock;

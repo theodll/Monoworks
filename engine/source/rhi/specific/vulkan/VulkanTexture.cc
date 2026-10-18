@@ -445,7 +445,7 @@ namespace Monoworks::RHI
 		}
 	}
 
-	MW_NOTHROW void CVulkanTexture2D::TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID, bool outsideFrameScope  ) NOEXCEPT
+	 void CVulkanTexture2D::TransitionLayout( u32 frameIndex, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask, s32 MW_NULLABLE threadID, bool outsideFrameScope  ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 	
@@ -477,7 +477,7 @@ namespace Monoworks::RHI
 
 	};
 
-	MW_NOTHROW void CVulkanTexture2D::TransitionLayoutEC( VkCommandBuffer* pCmd, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask ) NOEXCEPT
+	 void CVulkanTexture2D::TransitionLayoutEC( VkCommandBuffer* pCmd, EImageLayout dstLayout, EPipelineFlags dstPipelineStage, EImageAspectFlags aspectMask ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -589,7 +589,7 @@ namespace Monoworks::RHI
 
 	};
 
-	MW_NOTHROW void CVulkanTexture2D::CopyImage( 
+	 void CVulkanTexture2D::CopyImage( 
 		u32 frameIndex,
 		Ref<ITexture> dstImage,
 		s32 threadID /*= -1*/,
@@ -625,7 +625,7 @@ namespace Monoworks::RHI
 
 	}
 
-	MW_NOTHROW void CVulkanTexture2D::CopyImageEC( VkCommandBuffer* pCmd, Ref<ITexture> dstImage )
+	 void CVulkanTexture2D::CopyImageEC( VkCommandBuffer* pCmd, Ref<ITexture> dstImage )
 	{
 		MW_PROFILE_FUNC;
 

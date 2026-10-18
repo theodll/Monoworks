@@ -20,51 +20,51 @@ namespace Monoworks
     class CStaticRenderer
     {
     public:
-        static MW_NOTHROW void Init() NOEXCEPT;
-        static MW_NOTHROW void Shutdown() NOEXCEPT;
+        static  void Init() NOEXCEPT;
+        static  void Shutdown() NOEXCEPT;
 
-        static MW_NOTHROW void ProfileFrameData() NOEXCEPT;
+        static  void ProfileFrameData() NOEXCEPT;
 
-        static MW_NOTHROW void BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT;
+        static  void BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT;
         static void SubmitRootCommandbuffer( u32 frameIndex );
 
         static void WaitRenderingIdle() NOEXCEPT;
 
-		static MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
-		static MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
+		static  void BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
+		static  void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT;
 
-		static MW_NOTHROW void BeginRendering( u32 frameIndex, const RHI::BeginRenderingInfo* pInfo ) NOEXCEPT;
-		static MW_NOTHROW void EndRendering( u32 frameIndex ) NOEXCEPT;
+		static  void BeginRendering( u32 frameIndex, const RHI::BeginRenderingInfo* pInfo ) NOEXCEPT;
+		static  void EndRendering( u32 frameIndex ) NOEXCEPT;
 
-        static MW_NOTHROW u32  AcquireNextImage( u32 frameIndex ) NOEXCEPT;
-        static MW_NOTHROW void Present( u32 frameIndex ) NOEXCEPT;
+        static  u32  AcquireNextImage( u32 frameIndex ) NOEXCEPT;
+        static  void Present( u32 frameIndex ) NOEXCEPT;
 
-        static MW_NOTHROW void BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 threadID = -1 ) NOEXCEPT;
+        static  void BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 threadID = -1 ) NOEXCEPT;
 
-		static MW_NOTHROW void BindDescriptors( u32 frameIndex, RHI::PipelineSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID = -1, RHI::EPipelineBindPoint bindpoint = RHI::MW_PIPELINE_BIND_POINT_BOTH );
+		static  void BindDescriptors( u32 frameIndex, RHI::PipelineSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID = -1, RHI::EPipelineBindPoint bindpoint = RHI::MW_PIPELINE_BIND_POINT_BOTH );
 
-        static MW_NOTHROW void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<RHI::IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT;
+        static  void DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<RHI::IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT;
 
-		static MW_NOTHROW void SetDynamicViewports( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT;
-		static MW_NOTHROW void SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT;
-		static MW_NOTHROW void SetDynamicCullMode( u32 frameIndex, RHI::ECullMode cullMode ) NOEXCEPT;
+		static  void SetDynamicViewports( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT;
+		static  void SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT;
+		static  void SetDynamicCullMode( u32 frameIndex, RHI::ECullMode cullMode ) NOEXCEPT;
 
-		static MW_NOTHROW void SetDynamicViewportsST( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID = -1 ) NOEXCEPT;
-		static MW_NOTHROW void SetDynamicScissorsST( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID = -1 ) NOEXCEPT;
-		static MW_NOTHROW void SetDynamicCullModeST( u32 frameIndex, RHI::ECullMode cullMode, s32 threadID = -1 ) NOEXCEPT;
+		static  void SetDynamicViewportsST( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID = -1 ) NOEXCEPT;
+		static  void SetDynamicScissorsST( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID = -1 ) NOEXCEPT;
+		static  void SetDynamicCullModeST( u32 frameIndex, RHI::ECullMode cullMode, s32 threadID = -1 ) NOEXCEPT;
 
-		static MW_NOTHROW void DispatchCompute( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, RHI::DescriptorHandle* pDesciptors, size_t descriptorCount, s32 threadID = -1 ) NOEXCEPT;
-		static MW_NOTHROW void DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 threadID = -1 ) NOEXCEPT;
+		static  void DispatchCompute( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, std::span<RHI::DescriptorHandle> pDesciptors, s32 threadID = -1 ) NOEXCEPT;
+		static  void DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 threadID = -1 ) NOEXCEPT;
 
         NODISCARD static Ref<RHI::ITexture2D> GetDefaultMissingTexture() { return m_hMissingTexture; };
         NODISCARD static Ref<RHI::ITexture2D> GetDefaultMissingMap() { return m_hMissingMap; };
 
         NODISCARD static Slang::ComPtr<slang::IGlobalSession> GetSlangGlobalSession() NOEXCEPT { return m_SlangGlobalSession; };
 
-        static MW_NOTHROW void SetRenderableExtend( const SExtent2D* renderableExtent ) { m_RenderableExtent = *renderableExtent; };
-        NODISCARD static MW_NOTHROW SExtent2D GetRenderableExtend() { return m_RenderableExtent; };
+        static  void SetRenderableExtend( const SExtent2D* renderableExtent ) { m_RenderableExtent = *renderableExtent; };
+        NODISCARD static  SExtent2D GetRenderableExtend() { return m_RenderableExtent; };
 
-        NODISCARD static MW_NOTHROW FrameGraphicsProfilingData* GetFrameGraphicsProfilingData() { return &m_GraphicsProfilingData; };
+        NODISCARD static  FrameGraphicsProfilingData* GetFrameGraphicsProfilingData() { return &m_GraphicsProfilingData; };
 
     private:
         // Used for albedo textures 

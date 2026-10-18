@@ -143,7 +143,7 @@ namespace Monoworks
 
 
 
-	MW_NOTHROW EResult CMaterial::SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT
+	 EResult CMaterial::SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -314,7 +314,7 @@ namespace Monoworks
 
 
 
-	MW_NOTHROW void CMaterial::SetAlbedoFactor( const Vector& rFactor ) NOEXCEPT
+	 void CMaterial::SetAlbedoFactor( const Vector& rFactor ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_MaterialData.AlbedoFactor = rFactor;
@@ -322,7 +322,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetEmissiveColor( const Vector& rEmissiveColor ) NOEXCEPT
+	 void CMaterial::SetEmissiveColor( const Vector& rEmissiveColor ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_MaterialData.EmissiveColor = rEmissiveColor;
@@ -330,7 +330,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetMetallicness( float metallic ) NOEXCEPT
+	 void CMaterial::SetMetallicness( float metallic ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_MaterialData.Metallicness = metallic;
@@ -338,7 +338,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetRoughness( float roughness ) NOEXCEPT
+	 void CMaterial::SetRoughness( float roughness ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_MaterialData.Roughness = roughness;
@@ -346,7 +346,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetAbientOcclusionFactor( float factor ) NOEXCEPT
+	 void CMaterial::SetAbientOcclusionFactor( float factor ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_MaterialData.AmbientOcclusionFactor = factor;
@@ -354,7 +354,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetAlbedoMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
+	 void CMaterial::SetAlbedoMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -375,7 +375,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetNormalMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
+	 void CMaterial::SetNormalMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -395,7 +395,7 @@ namespace Monoworks
 			MW_ERROR( "Failed to set Normal Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
-	MW_NOTHROW void CMaterial::SetEmissiveMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
+	 void CMaterial::SetEmissiveMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -415,7 +415,7 @@ namespace Monoworks
 			MW_ERROR( "Failed to set Emissive Map for Material {}: Reflection did not yield albedo map", m_MaterialID );
 	}
 
-	MW_NOTHROW void CMaterial::SetRoughnessMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
+	 void CMaterial::SetRoughnessMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -436,7 +436,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetMetalllicMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
+	 void CMaterial::SetMetalllicMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -457,7 +457,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CMaterial::SetOcclusionMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
+	 void CMaterial::SetOcclusionMap( Ref<RHI::ITexture2D> hMap ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -966,7 +966,7 @@ namespace Monoworks
 
 	}
 
-	MW_NOTHROW void CMaterial::UpdateUBO() NOEXCEPT
+	 void CMaterial::UpdateUBO() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		for ( auto i{ 0uz }; i < MFIF; i++ )

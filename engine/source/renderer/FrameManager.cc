@@ -14,7 +14,7 @@ namespace Monoworks
 
 	Ref<IFrameGraph> CFrameManager::m_hCurrentFrameGraph;
 
-	MW_NOTHROW void CFrameManager::Init() NOEXCEPT
+	 void CFrameManager::Init() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -32,7 +32,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CFrameManager::Shutdown() NOEXCEPT
+	 void CFrameManager::Shutdown() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -43,7 +43,7 @@ namespace Monoworks
 	}
 
 
-	MW_NOTHROW void CFrameManager::Render() NOEXCEPT
+	 void CFrameManager::Render() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 

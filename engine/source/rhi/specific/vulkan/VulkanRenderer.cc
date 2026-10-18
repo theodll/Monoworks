@@ -54,7 +54,7 @@ namespace Monoworks::RHI
 		MW_INFO( "Shutdown CVulkanRenderer" );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::WaitRenderingIdle() NOEXCEPT
+	 void CVulkanRenderer::WaitRenderingIdle() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		vkDeviceWaitIdle(*CVulkanContext::GetDevice());
@@ -217,7 +217,7 @@ namespace Monoworks::RHI
 
     }
 
-	MW_NOTHROW void CVulkanRenderer::DispatchCompute( 
+	 void CVulkanRenderer::DispatchCompute( 
 		u32 frameIndex,
 		Ref<IComputePipeline> hPipeline,
 		Vector workgroup,
@@ -248,7 +248,7 @@ namespace Monoworks::RHI
 		vkCmdDispatch( hCmd, workgroup.x, workgroup.y, workgroup.z );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::DispatchCompute2( 
+	 void CVulkanRenderer::DispatchCompute2( 
 		u32 frameIndex, 
 		Ref<IComputePipeline> hPipeline,
 		Vector workgroup,
@@ -276,7 +276,7 @@ namespace Monoworks::RHI
 
 	}
 
-	MW_NOTHROW void CVulkanRenderer::ProfileFrameData() NOEXCEPT
+	 void CVulkanRenderer::ProfileFrameData() NOEXCEPT
 	{
         MW_PROFILE_FUNC;
 #ifdef MW_PROFILING
@@ -289,7 +289,7 @@ namespace Monoworks::RHI
 #endif
 	}
 
-	MW_NOTHROW u32 CVulkanRenderer::AcquireNextImage( 
+	 u32 CVulkanRenderer::AcquireNextImage( 
 		u32 frameIndex ) NOEXCEPT
 	{
         MW_PROFILE_FUNC;
@@ -319,7 +319,7 @@ namespace Monoworks::RHI
 		}
 	}
 
-	MW_NOTHROW void CVulkanRenderer::Present( 
+	 void CVulkanRenderer::Present( 
 		MAYBE_UNUSED u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -346,7 +346,7 @@ namespace Monoworks::RHI
 		}
 	}
 
-	MW_NOTHROW void CVulkanRenderer::BindGraphicsPipeline( 
+	 void CVulkanRenderer::BindGraphicsPipeline( 
 		u32 frameIndex, 
 		Ref<IGraphicsPipeline> hPipeline,
 		s32 MW_NULLABLE threadID /*= -1 */ ) NOEXCEPT
@@ -377,7 +377,7 @@ namespace Monoworks::RHI
 		vkCmdBindPipeline( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, *vkPipeline->GetVulkanPipeline() );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::BindDescriptors( 
+	 void CVulkanRenderer::BindDescriptors( 
 		u32 frameIndex,
 		PipelineSignature pSignature,
 		DescriptorHandle* pDescriptors,
@@ -426,7 +426,7 @@ namespace Monoworks::RHI
 
 	}
 
-	MW_NOTHROW void CVulkanRenderer::SetDynamicViewports( 
+	 void CVulkanRenderer::SetDynamicViewports( 
 		u32 frameIndex, 
 		const Viewport* pViewports,
 		size_t viewportCount,
@@ -464,7 +464,7 @@ namespace Monoworks::RHI
 			vkCmdSetViewport( worker.GraphicsCommandBuffers[frameIndex], ( u32 )firstViewport, ( u32 )viewportCount, ( VkViewport* )pViewports );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::SetDynamicScissors( 
+	 void CVulkanRenderer::SetDynamicScissors( 
 		u32 frameIndex,
 		const SExtent2D* pScissors, 
 		size_t scissorCount, 
@@ -510,7 +510,7 @@ namespace Monoworks::RHI
 	}
 
 
-	NODISCARD static MW_NOTHROW VkCullModeFlagBits ToVulkanCullMode( 
+	NODISCARD static  VkCullModeFlagBits ToVulkanCullMode( 
 		ECullMode mode ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -531,7 +531,7 @@ namespace Monoworks::RHI
 	};
 	
 
-	MW_NOTHROW void CVulkanRenderer::SetDynamicCullMode( 
+	 void CVulkanRenderer::SetDynamicCullMode( 
 		u32 frameIndex,
 		ECullMode cullMode ) NOEXCEPT
 	{
@@ -556,7 +556,7 @@ namespace Monoworks::RHI
 	}
 
 
-	MW_NOTHROW void CVulkanRenderer::SetDynamicViewportsST( 
+	 void CVulkanRenderer::SetDynamicViewportsST( 
 		u32 frameIndex,
 		const Viewport* pViewports,
 		size_t viewportCount,
@@ -587,7 +587,7 @@ namespace Monoworks::RHI
 		vkCmdSetViewport( cmd, firstViewport, viewportCount, ( VkViewport* )pViewports );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::SetDynamicScissorsST( 
+	 void CVulkanRenderer::SetDynamicScissorsST( 
 		u32 frameIndex,
 		const SExtent2D* pScissors,
 		size_t scissorCount,
@@ -629,7 +629,7 @@ namespace Monoworks::RHI
 
 	}
 
-	MW_NOTHROW void CVulkanRenderer::SetDynamicCullModeST( 
+	 void CVulkanRenderer::SetDynamicCullModeST( 
 		u32 frameIndex,
 		ECullMode cullMode,
 		s32 threadID ) NOEXCEPT
@@ -658,7 +658,7 @@ namespace Monoworks::RHI
 		vkCmdSetCullMode( cmd, ToVulkanCullMode( cullMode ) );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::BeginRootCommandbuffer( 
+	 void CVulkanRenderer::BeginRootCommandbuffer( 
 		u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -673,21 +673,21 @@ namespace Monoworks::RHI
 		CVulkanRenderManager::SubmitRootGraphicsCommandBuffer( frameIndex );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::BeginSecondaryCommandbuffers( 
+	 void CVulkanRenderer::BeginSecondaryCommandbuffers( 
 		u32 frameIndex  ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		CVulkanRenderManager::BeginWorkerGraphicsCommandBuffers( frameIndex );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::MergeSecondaryCommandbuffers(
+	 void CVulkanRenderer::MergeSecondaryCommandbuffers(
 		u32 frameIndex ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		CVulkanRenderManager::EndWorkerGraphicsCommandBuffers( frameIndex );
 	}
 
-	MW_NOTHROW void CVulkanRenderer::DrawStaticMeshIndexed( 
+	 void CVulkanRenderer::DrawStaticMeshIndexed( 
 		u32 frameIndex,
 		Ref<CMesh> hMesh,
 		const Matrix& transform, 
