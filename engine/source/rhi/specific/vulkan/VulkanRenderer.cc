@@ -221,8 +221,7 @@ namespace Monoworks::RHI
 		u32 frameIndex,
 		Ref<IComputePipeline> hPipeline,
 		Vector workgroup,
-		DescriptorHandle* pDesciptors,
-		size_t descriptorCount,
+		std::span<DescriptorHandle> ppDesciptors,
 		s32 MW_NULLABLE threadID /*= -1*/) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -241,7 +240,7 @@ namespace Monoworks::RHI
 		}
 
 		auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
-        vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), 0, descriptorCount, (VkDescriptorSet*)(pDesciptors), 0, nullptr);
+        vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), 0, ppDesciptors.size(), (VkDescriptorSet*)(ppDesciptors.data()), 0, nullptr);
 
 		vkCmdBindPipeline( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipeline() );
 
@@ -380,8 +379,7 @@ namespace Monoworks::RHI
 	 void CVulkanRenderer::BindDescriptors( 
 		u32 frameIndex,
 		PipelineSignature pSignature,
-		DescriptorHandle* pDescriptors,
-		size_t descriptorCount,
+		std::span<DescriptorHandle> ppDescriptors,
 		u32 firstSet,
 		s32 MW_NULLABLE threadID /*= -1 */,
 		RHI::EPipelineBindPoint bindpoint )
@@ -411,14 +409,14 @@ namespace Monoworks::RHI
 		switch ( bindpoint )
 		{
 		case MW_PIPELINE_BIND_POINT_COMPUTE:
-			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, ppDescriptors.size(), ( VkDescriptorSet* )ppDescriptors.data(), 0, nullptr);
 			break;
 		case MW_PIPELINE_BIND_POINT_GRAPHICS:
-			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, ppDescriptors.size(), ( VkDescriptorSet* )ppDescriptors.data(), 0, nullptr);
 			break;
 		case MW_PIPELINE_BIND_POINT_BOTH:
-			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
-			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, descriptorCount, ( VkDescriptorSet* )pDescriptors, 0, nullptr );
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_COMPUTE, ( VkPipelineLayout )pSignature, firstSet, ppDescriptors.size(), ( VkDescriptorSet* )ppDescriptors.data(), 0, nullptr);
+			vkCmdBindDescriptorSets( cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, ( VkPipelineLayout )pSignature, firstSet, ppDescriptors.size(), ( VkDescriptorSet* )ppDescriptors.data(), 0, nullptr);
 			break;
 		default:
 			MW_API_ERROR("Invalid EPipelineBindPoint passed");
@@ -428,8 +426,7 @@ namespace Monoworks::RHI
 
 	 void CVulkanRenderer::SetDynamicViewports( 
 		u32 frameIndex, 
-		const Viewport* pViewports,
-		size_t viewportCount,
+		std::span<const Viewport> ppViewports,
 		size_t firstViewport ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -440,15 +437,15 @@ namespace Monoworks::RHI
 			return;
 		}
 
-		if ( !pViewports )
+		if ( ppViewports.empty() )
 		{
-			MW_API_ERROR( "pViewports is nullptr. Discarding dynamic viewport state bind." );
+			MW_API_ERROR( "ppViewports is empty. Discarding dynamic viewport state bind." );
 			return;
 		}
 
-		if ( !viewportCount )
+		if ( ppViewports.size() <= 0 )
 		{
-			MW_API_ERROR( "viewportCount must be greater than 0. Discarding dynamic viewport state bind." );
+			MW_API_ERROR( "ppViewports.size() must be greater than 0. Discarding dynamic viewport state bind." );
 			return;
 		}
 
@@ -457,17 +454,16 @@ namespace Monoworks::RHI
 		VkCommandBuffer rootCmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
 
 		// Binds the viewports for the root command buffer.
-		vkCmdSetViewport( rootCmd, ( u32 )firstViewport, ( u32 )viewportCount, ( VkViewport* )pViewports );
+		vkCmdSetViewport( rootCmd, ( u32 )firstViewport, ( u32 )ppViewports.size(), ( VkViewport* )ppViewports.data() );
 	
 		// Binds the viewport for all worker command buffers since state isn't inherited from the primary command buffer. 
 		for ( auto& worker : workerData )
-			vkCmdSetViewport( worker.GraphicsCommandBuffers[frameIndex], ( u32 )firstViewport, ( u32 )viewportCount, ( VkViewport* )pViewports );
+			vkCmdSetViewport( worker.GraphicsCommandBuffers[frameIndex], ( u32 )firstViewport, ( u32 )ppViewports.size(), ( VkViewport* )ppViewports.data() );
 	}
 
 	 void CVulkanRenderer::SetDynamicScissors( 
 		u32 frameIndex,
-		const SExtent2D* pScissors, 
-		size_t scissorCount, 
+		std::span<const SExtent2D> ppScissors,
 		size_t firstScissor ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -478,34 +474,34 @@ namespace Monoworks::RHI
 			return;
 		}
 
-		if ( !pScissors )
+		if ( ppScissors.empty() )
 		{
-			MW_API_ERROR( "pScissors is nullptr. Discarding dynamic scissor state bind." );
+			MW_API_ERROR( "ppScissors is empty. Discarding dynamic scissor state bind." );
 			return;
 		}
 
-		if ( !scissorCount )
+		if ( ppScissors.size() <= 0 )
 		{
-			MW_API_ERROR( "scissorCount must be greater than 0. Discarding dynamic scissor state bind." ); 
+			MW_API_ERROR( "ppScissors.size() must be greater than 0. Discarding dynamic scissor state bind." ); 
 			return;
 		}
 
-		std::vector<VkRect2D> scissors( scissorCount );
+		std::vector<VkRect2D> scissors( ppScissors.size()  );
 
 		auto i{ 0uz };
 		for ( VkRect2D& scissor : scissors )
 		{
-			scissor.extent = { pScissors[i].Width, pScissors[i].Height };
+			scissor.extent = { ppScissors[i].Width, ppScissors[i].Height };
 			scissor.offset = {};
 			i++;
 		}
 		const auto& workerData = CVulkanRenderManager::GetWorkerFrameData();
 		VkCommandBuffer rootCmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
 
-		vkCmdSetScissor( rootCmd, firstScissor, scissorCount, scissors.data() );
+		vkCmdSetScissor( rootCmd, firstScissor, ppScissors.size(), scissors.data() );
 			
 		for ( auto& worker : workerData )
-			vkCmdSetScissor( worker.GraphicsCommandBuffers[frameIndex], firstScissor, scissorCount, scissors.data() );
+			vkCmdSetScissor( worker.GraphicsCommandBuffers[frameIndex], firstScissor, ppScissors.size(), scissors.data() );
 
 	}
 
@@ -558,8 +554,7 @@ namespace Monoworks::RHI
 
 	 void CVulkanRenderer::SetDynamicViewportsST( 
 		u32 frameIndex,
-		const Viewport* pViewports,
-		size_t viewportCount,
+		std::span<const Viewport> ppViewports,
 		size_t firstViewport,
 		s32 threadID ) NOEXCEPT
 	{
@@ -584,13 +579,12 @@ namespace Monoworks::RHI
 			return;
 		}
 
-		vkCmdSetViewport( cmd, firstViewport, viewportCount, ( VkViewport* )pViewports );
+		vkCmdSetViewport( cmd, firstViewport, ppViewports.size(), ( VkViewport* )ppViewports.data());
 	}
 
 	 void CVulkanRenderer::SetDynamicScissorsST( 
 		u32 frameIndex,
-		const SExtent2D* pScissors,
-		size_t scissorCount,
+		std::span<const SExtent2D> ppScissors,
 		size_t firstScissor,
 		s32 threadID ) NOEXCEPT
 	{
@@ -616,16 +610,16 @@ namespace Monoworks::RHI
 			return;
 		}
 
-		std::vector<VkRect2D> scissors( scissorCount );
+		std::vector<VkRect2D> scissors( ppScissors.size() );
 		auto i{ 0uz };
 		for ( VkRect2D& scissor : scissors )
 		{
-			scissor.extent = { pScissors[i].Width, pScissors[i].Height };
+			scissor.extent = { ppScissors[i].Width, ppScissors[i].Height };
 			scissor.offset = {};
 			i++;
 		}
 
-		vkCmdSetScissor( cmd, firstScissor, scissorCount, scissors.data() );
+		vkCmdSetScissor( cmd, firstScissor, ppScissors.size(), scissors.data() );
 
 	}
 
