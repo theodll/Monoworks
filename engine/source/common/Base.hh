@@ -38,19 +38,44 @@
 #define IN
 #define OUT
 
-#ifdef	MW_PLATFORM_WINDOWS
-#define MW_DEBUG_BREAK __debugbreak()
-#define MW_NOTHROW __declspec(nothrow)
-#elif defined(__clang__)
-#define MW_DEBUG_BREAK __builtin_debugtrap()
-#define MW_NOTHROW
-#elif defined(__GNUC__)
-#include <csignal>
-#define MW_DEBUG_BREAK std::raise(SIGTRAP);
-#define MW_NOTHROW
-#else
 #define MW_DEBUG_BREAK
-#define MW_NOTHROW
+#define MWAPI_ATTR
+#define MWAPI_ATTR_CLASS
+#define MWAPI_CALL
+
+#ifdef	MW_PLATFORM_WINDOWS
+
+#ifdef _MSC_VER
+	#define MW_DEBUG_BREAK __debugbreak()
+	#define MWAPI_CALL __cdecl
+
+	#ifdef _WINDLL
+	#define MWAPI_ATTR extern "C" __declspec(dllexport)
+	#define MWAPI_ATTR_CLASS __declspec(dllexport)
+	#else
+	#define MWAPI_ATTR extern "C" __declspec(dllimport)
+	#define MWAPI_ATTR_CLASS __declspec(dllimport)
+	#endif
+#endif
+
+#elif defined(__clang__)
+	#define MW_DEBUG_BREAK __builtin_debugtrap()
+#elif defined(__GNUC__)
+	#include <csignal>
+#define MW_DEBUG_BREAK std::raise( SIGTRAP )
+#endif
+
+#ifndef MW_DEBUG_BREAK
+#define MW_DEBUG_BREAK
+#endif
+#ifndef MWAPI_CALL
+#define MWAPI_CALL
+#endif
+#ifndef MWAPI_ATTR
+#define MWAPI_ATTR
+#endif
+#ifndef MWAPI_ATTR_CLASS
+#define MWAPI_ATTR_CLASS
 #endif
 
 #ifdef MW_DEBUG

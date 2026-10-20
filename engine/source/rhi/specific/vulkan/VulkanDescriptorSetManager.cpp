@@ -8,12 +8,12 @@
 
 namespace Monoworks::RHI 
 {
-	MW_NOTHROW void CVulkanDescriptorSetManager::InitImpl() NOEXCEPT
+	 void CVulkanDescriptorSetManager::InitImpl() NOEXCEPT
 	{
 
 	};
 
-	MW_NOTHROW void CVulkanDescriptorSetManager::ShutdownImpl() NOEXCEPT
+	 void CVulkanDescriptorSetManager::ShutdownImpl() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		MW_INFO( "Shutdown CVulkanDescriptorSetManager" );

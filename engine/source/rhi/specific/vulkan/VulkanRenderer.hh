@@ -18,41 +18,94 @@ namespace Monoworks::RHI
     // For documentation refer to IGraphicsAPI
     class CVulkanRenderer final : public IGraphicsAPI
     {
-        MW_NOTHROW void Init() NOEXCEPT override;
-        MW_NOTHROW void Shutdown() NOEXCEPT override;
+         void MWAPI_CALL Init() NOEXCEPT override;
+         void MWAPI_CALL Shutdown() NOEXCEPT override;
         
-        MW_NOTHROW void WaitRenderingIdle() NOEXCEPT override;
+         void MWAPI_CALL WaitRenderingIdle() NOEXCEPT override;
 
         // TODO: add push constants
-        MW_NOTHROW void DispatchCompute(        u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, DescriptorHandle* pDesciptors, size_t descriptorCount, s32 threadID = -1 ) NOEXCEPT override;
-        MW_NOTHROW void DispatchCompute2(       u32 frameIndex, Ref<IComputePipeline> hPipeline, Vector workgroup, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
+         void MWAPI_CALL DispatchCompute(
+             u32 frameIndex, 
+             Ref<IComputePipeline> hPipeline,
+             Vector workgroup,
+             std::span<DescriptorHandle> ppDesciptors, 
+             u32 firstSet,
+             s32 threadID = -1 ) NOEXCEPT override;
 
-        MW_NOTHROW void BeginRendering(         u32 frameIndex, const BeginRenderingInfo* pInfo ) NOEXCEPT override;
-        MW_NOTHROW void EndRendering(           u32 frameIndex ) NOEXCEPT override;
+         void MWAPI_CALL DispatchCompute2(
+             u32 frameIndex,
+             Ref<IComputePipeline> hPipeline,
+             Vector workgroup,
+             s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
 
-        MW_NOTHROW void ProfileFrameData() NOEXCEPT override;
+         void MWAPI_CALL BeginRendering(
+             u32 frameIndex,
+             const BeginRenderingInfo* pInfo ) NOEXCEPT override;
 
-        MW_NOTHROW u32 AcquireNextImage( u32 frameIndex ) NOEXCEPT override;
-        MW_NOTHROW void Present( MAYBE_UNUSED u32 frameIndex ) NOEXCEPT override;
+         void MWAPI_CALL EndRendering( u32 frameIndex ) NOEXCEPT override;
 
-        MW_NOTHROW void BindGraphicsPipeline(   u32 frameIndex, Ref<IGraphicsPipeline> hPipeline, s32 MW_NULLABLE threadID = -1 ) NOEXCEPT override;
-        MW_NOTHROW void BindDescriptors(        u32 frameIndex, PipelineSignature pSignature, DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 MW_NULLABLE threadID = -1, RHI::EPipelineBindPoint bindpoint = RHI::MW_PIPELINE_BIND_POINT_BOTH ) override;
-        MW_NOTHROW void DrawStaticMeshIndexed(  u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID = -1, Ref<IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT override;
+         void MWAPI_CALL ProfileFrameData() NOEXCEPT override;
 
-        MW_NOTHROW void SetDynamicViewports(    u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT override;
-        MW_NOTHROW void SetDynamicScissors(     u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT override;
-        MW_NOTHROW void SetDynamicCullMode(     u32 frameIndex, ECullMode cullMode ) NOEXCEPT override;
+         u32  MWAPI_CALL AcquireNextImage( u32 frameIndex ) NOEXCEPT override;
+         void MWAPI_CALL Present( MAYBE_UNUSED u32 frameIndex ) NOEXCEPT override;
 
-		MW_NOTHROW void SetDynamicViewportsST(  u32 frameIndex, const Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID ) NOEXCEPT override;
-		MW_NOTHROW void SetDynamicScissorsST(   u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID ) NOEXCEPT override;
-		MW_NOTHROW void SetDynamicCullModeST(   u32 frameIndex, ECullMode cullMode, s32 threadID ) NOEXCEPT override;
+         void MWAPI_CALL BindGraphicsPipeline(
+             u32 frameIndex, 
+             Ref<IGraphicsPipeline> hPipeline, 
+             s32 threadID = -1 ) NOEXCEPT override;
+
+         void MWAPI_CALL BindDescriptors(
+             u32 frameIndex,
+             PipelineSignature pSignature,
+             std::span<DescriptorHandle> ppDescriptors,
+             u32 firstSet,
+             s32 threadID = -1,
+             RHI::EPipelineBindPoint bindpoint = RHI::MW_PIPELINE_BIND_POINT_BOTH ) override;
+
+         void MWAPI_CALL DrawStaticMeshIndexed(
+             u32 frameIndex,
+             Ref<CMesh> hMesh,
+             const Matrix& transform,
+             s32 threadID = -1,
+             Ref<IGraphicsPipeline> hPipelineOverride = nullptr ) NOEXCEPT override;
+
+         void MWAPI_CALL SetDynamicViewports(
+             u32 frameIndex,
+             std::span<const Viewport> ppViewports,
+             size_t firstViewport ) NOEXCEPT override;
+
+         void MWAPI_CALL SetDynamicScissors(
+             u32 frameIndex,
+             std::span<const SExtent2D> ppScissors,
+             size_t firstScissor ) NOEXCEPT override;
+
+         void MWAPI_CALL SetDynamicCullMode(
+             u32 frameIndex, 
+             ECullMode cullMode ) NOEXCEPT override;
+
+		 void MWAPI_CALL SetDynamicViewportsST(
+             u32 frameIndex,
+             std::span<const Viewport> ppViewports, 
+             size_t firstViewport, 
+             s32 threadID ) NOEXCEPT override;
+
+		 void MWAPI_CALL SetDynamicScissorsST(
+             u32 frameIndex,
+             std::span<const SExtent2D> ppScissors,
+             size_t firstScissor,
+             s32 threadID ) NOEXCEPT override;
+
+		 void MWAPI_CALL SetDynamicCullModeST(
+             u32 frameIndex,
+             ECullMode cullMode,
+             s32 threadID ) NOEXCEPT override;
 
 
-        MW_NOTHROW void BeginRootCommandbuffer( u32 frameIndex  ) NOEXCEPT override;
-        void SubmitRootCommandbuffer(           u32 frameIndex ) override;
+         void MWAPI_CALL BeginRootCommandbuffer( u32 frameIndex  ) NOEXCEPT override;
+         void MWAPI_CALL SubmitRootCommandbuffer( u32 frameIndex ) override;
 
-        MW_NOTHROW void BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT override;
-        MW_NOTHROW void MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT override;
+         void MWAPI_CALL BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT override;
+         void MWAPI_CALL MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT override;
 
     private:
 

@@ -21,7 +21,7 @@ namespace Monoworks
 		Slang::ComPtr<slang::IGlobalSession>    CStaticRenderer::m_SlangGlobalSession;
 
         
-		MW_NOTHROW void CStaticRenderer::Init() NOEXCEPT
+		 void CStaticRenderer::Init() NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			MW_INFO( "Initialize CStaticRenderer" );
@@ -75,7 +75,7 @@ namespace Monoworks
 			return m_pInstance->WaitRenderingIdle();
 		};
 
-		MW_NOTHROW void CStaticRenderer::Shutdown() NOEXCEPT
+		 void CStaticRenderer::Shutdown() NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 
@@ -88,12 +88,12 @@ namespace Monoworks
 			MW_INFO( "Shutdown CStaticRenderer" );
 		}
 
-		MW_NOTHROW void CStaticRenderer::ProfileFrameData() NOEXCEPT
+		 void CStaticRenderer::ProfileFrameData() NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 		}
 
-		MW_NOTHROW void CStaticRenderer::BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT
+		 void CStaticRenderer::BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->BeginRootCommandbuffer( frameIndex );
@@ -105,25 +105,25 @@ namespace Monoworks
 			m_pInstance->SubmitRootCommandbuffer( frameIndex );
 		}
 
-		MW_NOTHROW void CStaticRenderer::BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT
+		 void CStaticRenderer::BeginSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->BeginSecondaryCommandbuffers( frameIndex );
 		}
 
-		MW_NOTHROW void CStaticRenderer::MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT
+		 void CStaticRenderer::MergeSecondaryCommandbuffers( u32 frameIndex ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->MergeSecondaryCommandbuffers( frameIndex );
 		}
 
-		MW_NOTHROW void CStaticRenderer::DispatchCompute( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, RHI::DescriptorHandle* pDesciptors, size_t descriptorCount, s32 MW_NULLABLE threadID /*= -1*/ ) NOEXCEPT
+		 void CStaticRenderer::DispatchCompute( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, std::span<RHI::DescriptorHandle> ppDesciptors, u32 firstSet, s32 threadID /*= -1*/ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->DispatchCompute( frameIndex, hPipeline, workgroup, pDesciptors, descriptorCount, threadID );
+			return m_pInstance->DispatchCompute( frameIndex, hPipeline, workgroup, ppDesciptors, firstSet, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 threadID /*= -1 */ ) NOEXCEPT
+		 void CStaticRenderer::DispatchCompute2( u32 frameIndex, Ref<RHI::IComputePipeline> hPipeline, Vector workgroup, s32 threadID /*= -1 */ ) NOEXCEPT
 		{
             MW_PROFILE_FUNC;
             return m_pInstance->DispatchCompute2( frameIndex, hPipeline, workgroup, threadID );
@@ -142,67 +142,67 @@ namespace Monoworks
         };
 
 
-		MW_NOTHROW u32 CStaticRenderer::AcquireNextImage( u32 frameIndex ) NOEXCEPT
+		 u32 CStaticRenderer::AcquireNextImage( u32 frameIndex ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->AcquireNextImage( frameIndex );
 		}
 
-		MW_NOTHROW void CStaticRenderer::Present( u32 frameIndex ) NOEXCEPT
+		 void CStaticRenderer::Present( u32 frameIndex ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->Present( frameIndex );
 		}
 
-		MW_NOTHROW void CStaticRenderer::BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 threadID /*= -1 */ ) NOEXCEPT
+		 void CStaticRenderer::BindGraphicsPipeline( u32 frameIndex, Ref<RHI::IGraphicsPipeline> hPipeline, s32 threadID /*= -1 */ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->BindGraphicsPipeline( frameIndex, hPipeline, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::BindDescriptors( u32 frameIndex, RHI::DescriptorSignature pSignature, RHI::DescriptorHandle* pDescriptors, size_t descriptorCount, u32 firstSet, s32 threadID /*= -1 */, RHI::EPipelineBindPoint bindpoint /* = RHI::MW_PIPELINE_BIND_POINT_BOTH */ )
+		 void CStaticRenderer::BindDescriptors( u32 frameIndex, RHI::DescriptorSignature pSignature, std::span<RHI::DescriptorHandle> ppDescriptors, u32 firstSet, s32 threadID /*= -1 */, RHI::EPipelineBindPoint bindpoint /* = RHI::MW_PIPELINE_BIND_POINT_BOTH */ )
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->BindDescriptors( frameIndex, pSignature, pDescriptors, descriptorCount, firstSet, threadID, bindpoint );
+			return m_pInstance->BindDescriptors( frameIndex, pSignature, ppDescriptors, firstSet, threadID, bindpoint );
 		}
 
-		MW_NOTHROW void CStaticRenderer::DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID, Ref<RHI::IGraphicsPipeline> hPipelineOverride ) NOEXCEPT
+		 void CStaticRenderer::DrawStaticMeshIndexed( u32 frameIndex, Ref<CMesh> hMesh, const Matrix& transform, s32 threadID, Ref<RHI::IGraphicsPipeline> hPipelineOverride ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->DrawStaticMeshIndexed( frameIndex, hMesh, transform, threadID, hPipelineOverride );
 		}
 
-		MW_NOTHROW void CStaticRenderer::SetDynamicViewports( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport ) NOEXCEPT
+		 void CStaticRenderer::SetDynamicViewports( u32 frameIndex, std::span<const RHI::Viewport> ppViewports, size_t firstViewport ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->SetDynamicViewports( frameIndex, pViewports, viewportCount, firstViewport );
+			return m_pInstance->SetDynamicViewports( frameIndex, ppViewports, firstViewport );
 		}
 
-		MW_NOTHROW void CStaticRenderer::SetDynamicScissors( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor ) NOEXCEPT
+		 void CStaticRenderer::SetDynamicScissors( u32 frameIndex, std::span<const SExtent2D> ppScissors, size_t firstScissor ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->SetDynamicScissors( frameIndex, pScissors, scissorCount, firstScissor );
+			return m_pInstance->SetDynamicScissors( frameIndex, ppScissors, firstScissor );
 		}
 
-		MW_NOTHROW void CStaticRenderer::SetDynamicCullMode( u32 frameIndex, RHI::ECullMode cullMode ) NOEXCEPT
+		 void CStaticRenderer::SetDynamicCullMode( u32 frameIndex, RHI::ECullMode cullMode ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->SetDynamicCullMode( frameIndex, cullMode );
 		}
 
-		MW_NOTHROW void CStaticRenderer::SetDynamicViewportsST( u32 frameIndex, const RHI::Viewport* pViewports, size_t viewportCount, size_t firstViewport, s32 threadID /*= -1 */ ) NOEXCEPT
+		 void CStaticRenderer::SetDynamicViewportsST( u32 frameIndex, std::span<const RHI::Viewport> ppViewports, size_t firstViewport, s32 threadID /*= -1 */ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->SetDynamicViewportsST( frameIndex, pViewports, viewportCount, firstViewport, threadID );
+			return m_pInstance->SetDynamicViewportsST( frameIndex, ppViewports, firstViewport, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::SetDynamicScissorsST( u32 frameIndex, const SExtent2D* pScissors, size_t scissorCount, size_t firstScissor, s32 threadID /*= -1 */ ) NOEXCEPT
+		 void CStaticRenderer::SetDynamicScissorsST( u32 frameIndex, std::span<const SExtent2D> pScissors, size_t firstScissor, s32 threadID /*= -1 */ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->SetDynamicScissorsST( frameIndex, pScissors, scissorCount, firstScissor, threadID );
+			return m_pInstance->SetDynamicScissorsST( frameIndex, pScissors, firstScissor, threadID );
 		}
 
-		MW_NOTHROW void CStaticRenderer::SetDynamicCullModeST( u32 frameIndex, RHI::ECullMode cullMode, s32 threadID /*= -1 */ ) NOEXCEPT
+		 void CStaticRenderer::SetDynamicCullModeST( u32 frameIndex, RHI::ECullMode cullMode, s32 threadID /*= -1 */ ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
 			return m_pInstance->SetDynamicCullModeST( frameIndex, cullMode, threadID );
