@@ -271,7 +271,7 @@ namespace Monoworks
 		RHI::EImageFormat DepthFormat = RHI::MW_FORMAT_D32_SFLOAT; 
 		RHI::EImageFormat StencilFormat = RHI::MW_FORMAT_UNDEFINED;
 
-		std::optional<boost::compat::function_ref<void( u32 frameIndex )>>		MW_NULLABLE pExecutionScopeCallback = std::nullopt;
+		std::optional<boost::function<void( u32 frameIndex )>>					MW_NULLABLE pExecutionScopeCallback = std::nullopt;
 
 		Ref<CShader> hShader;
 		SExtent2D RenderingArea;

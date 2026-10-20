@@ -1893,11 +1893,12 @@ namespace Monoworks
 		// TODO: Job
 		for ( auto& graphicsPrePass : m_hGraphicsPrePasses )
 		{
+			if ( !graphicsPrePass ) continue;
+
 			// TODO: Don't do this
 			std::vector<RenderingAttachmentInfo> colorAttachments;
 			if ( graphicsPrePass->m_ColorAttachments )
-				for ( auto& colorAttachments2 : graphicsPrePass->m_ColorAttachments.value() )
-				colorAttachments.push_back( colorAttachments2[frameIndex] );
+				colorAttachments = graphicsPrePass->m_ColorAttachments.value()[frameIndex];
 				 
 
 			RHI::BeginRenderingInfo info;

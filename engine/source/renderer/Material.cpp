@@ -208,6 +208,8 @@ namespace Monoworks
 		if ( rewrite )
 			m_BindingsWritten[{set, binding}] = true;
 
+		return MW_SUCCESS;
+
 	}
 
 	CMaterial::CMaterial()
@@ -339,9 +341,10 @@ namespace Monoworks
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
 				if ( m_hDescriptors[i].size() <= GlobalScopeSignature )
-					m_hDescriptors[i].resize( GlobalScopeSignature + 1 );
-
-				m_hDescriptors[i][GlobalScopeSignature] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[GlobalScopeSignature] );
+					 m_hDescriptors[i].resize( GlobalScopeSignature + 1 );
+				
+				if ( !m_hDescriptors[i][GlobalScopeSignature] )
+					m_hDescriptors[i][GlobalScopeSignature] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[GlobalScopeSignature] );
 			}
 		}
 
