@@ -154,8 +154,6 @@ namespace Monoworks
 
 		boost::unordered_map<std::pair<u32, u32>, bool> m_BindingsWritten;
 		std::array<std::vector<RHI::DescriptorHandle>, MFIF> m_hDescriptors;
-
-		MaterialData m_MaterialData;
 		std::array<Ref<RHI::IUniformBuffer>, MFIF>	m_hMaterialUniformBuffer;
 
 		// NOTE: Either the standard GPass Pipeline specified by the Frame Graph or if any of the user-specified 
@@ -165,6 +163,8 @@ namespace Monoworks
 		Hash::hash_t m_CustomGraphicsPipelineHash;
 		Ref<RHI::IGraphicsPipeline> m_hGraphicsPipeline;
 		Ref<CShader>				m_hShader;
+
+		MaterialData m_MaterialData;
 
 		friend class CVulkanRenderer; 
 	};

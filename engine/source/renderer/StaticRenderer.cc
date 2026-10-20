@@ -67,6 +67,9 @@ namespace Monoworks
 					}
 					return false;
 				} );
+
+			CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, CStaticRenderer::OnResize );
+
 		}
 
 		void CStaticRenderer::WaitRenderingIdle() NOEXCEPT 
@@ -129,7 +132,14 @@ namespace Monoworks
             return m_pInstance->DispatchCompute2( frameIndex, hPipeline, workgroup, threadID );
 		}
 
-		void CStaticRenderer::BeginRendering( u32 frameIndex, const RHI::BeginRenderingInfo* pInfo ) NOEXCEPT
+		 bool MWAPI_CALL CStaticRenderer::OnResize( SEvent& e )
+		 {
+			 MW_PROFILE_FUNC;
+			 m_RenderableExtent = e.GetPayload<Events::SWindowResize>().NewExtent;
+			 return false; 
+		 }
+
+		 void CStaticRenderer::BeginRendering( u32 frameIndex, const RHI::BeginRenderingInfo* pInfo ) NOEXCEPT
         {
             MW_PROFILE_FUNC;
             return m_pInstance->BeginRendering( frameIndex, pInfo );

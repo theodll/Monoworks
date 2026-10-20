@@ -174,7 +174,8 @@ extern TracyVkCtx TracyTransferContext;
 #define MW_SET_CVAR(varName, value) Monoworks::CCvarManager::Set(varName, value);
 #define MW_SET_FLOAT_CVAR(varName, value) Monoworks::CCvarManager::SetValue(varName, value);
 
-#define MW_DEFINE_DISPATCHABLE_EVENT(name) namespace Events { struct S##name {}; }
+#define MW_DEFINE_DISPATCHABLE_EVENT_LEGACY(name) namespace Events { struct S##name{}; };
+#define MW_DEFINE_DISPATCHABLE_EVENT(name) namespace Events { struct ##name{};  };
 
 using u8 = uint8_t;
 using u16 = uint16_t;

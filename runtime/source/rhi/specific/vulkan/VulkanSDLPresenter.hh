@@ -33,7 +33,7 @@ namespace Monoworks::RHI
 		NODISCARD VkSwapchainKHR* GetSwapchain() NOEXCEPT { return &m_Swapchain; }
 	private:
 		VkSurfaceKHR m_Surface;
-		VkSwapchainKHR m_Swapchain;
+		VkSwapchainKHR m_Swapchain = nullptr;
 
 		SExtent2D m_SwapchainExtent;
 		SDL_Window* m_Window;

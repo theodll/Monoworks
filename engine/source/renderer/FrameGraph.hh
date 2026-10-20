@@ -418,6 +418,8 @@ namespace Monoworks
 		 void SubmitSceneGeometry( u32 frameIndex ) NOEXCEPT;
 		 void SubmitDepthPrePassGeometry( u32 frameIndex ) NOEXCEPT;
 		 inline void BindCommonData( Ref<CComputeRenderPass>& hComputeRenderPass );
+		 bool MWAPI_CALL OnResize( SEvent& e );
+
 
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
 		std::vector<Ref<CComputeRenderPass>>			m_hComputePrePasses;

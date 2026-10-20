@@ -1,5 +1,7 @@
 #pragma once
 #include <common/Base.hh>
+#include <common/Events.hh>
+#include <events/Event.hh>
 #include <common/Memory.hh>
 #include <common/Math.hh>
 
@@ -260,7 +262,9 @@ namespace Monoworks
 		 * @brief Sets the renderable surface extent.
 		 * @param renderableExtent pointer to the new renderable extent dimensions.
 		 */
-		static void MWAPI_CALL SetRenderableExtend( const SExtent2D* renderableExtent ) { m_RenderableExtent = *renderableExtent; };
+		static void MWAPI_CALL SetRenderableExtend( const SExtent2D& renderableExtent ) { m_RenderableExtent = renderableExtent; };
+
+		static bool MWAPI_CALL OnResize( SEvent& e );
 
     private:
         // Used for albedo textures 

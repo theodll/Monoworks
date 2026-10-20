@@ -111,6 +111,7 @@ namespace Monoworks
 		NODISCARD static SApplicationCreateInfos* GetCreateInfos() noexcept { return &m_pApplicationCreationInfos; };
 		NODISCARD static EGraphicsAPI GetGraphicsAPI() noexcept { return m_GraphicsAPI; }
 	private:
+
 		static CApplication* m_Singleton;
 
 		static Ref<RHI::CVulkanContext> m_GraphicsContext;

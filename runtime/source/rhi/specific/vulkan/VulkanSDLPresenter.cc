@@ -2,6 +2,7 @@
 
 #include "VulkanSDLPresenter.hh"
 
+#include <renderer/StaticRenderer.hh>
 #include <rhi/specific/vulkan/VulkanPresenter.hh>
 #include <rhi/specific/vulkan/VulkanTexture.hh>
 
@@ -249,7 +250,7 @@ namespace Monoworks::RHI
 		createInfoVk.presentMode = presentMode;
 		createInfoVk.clipped = VK_TRUE;
 
-		createInfoVk.oldSwapchain = VK_NULL_HANDLE;
+		createInfoVk.oldSwapchain = info->pOldSwapchain;
 
 		MW_VK_CHECK( vkCreateSwapchainKHR( *info->pVulkanDevice->GetDevice(), &createInfoVk, CVulkanContext::GetCallbacks(), &m_Swapchain ), "Failed to create Swapchain" );
 
@@ -292,8 +293,6 @@ namespace Monoworks::RHI
 			viewInfo.subresourceRange.layerCount = 1;
 
 			MW_VK_CHECK( vkCreateImageView( *info->pDevice, &viewInfo, CVulkanContext::GetCallbacks(), vulkanTexture->GetImageView() ), "Failed to create Image View" );
-
-			
 		}
 
 	}
@@ -349,6 +348,14 @@ namespace Monoworks::RHI
 	bool CVulkanSDLPresenter::OnResize( MAYBE_UNUSED SEvent& event )
 	{
 		MW_PROFILE_FUNC;
+		CStaticRenderer::WaitRenderingIdle();
+		SVulkanSDLPresentationInitialization2Info info;
+		info.pDevice = CVulkanContext::GetDevice()->GetDevice();
+		info.pPhysDevice = *CVulkanContext::GetDevice()->GetPhysicalDevice();
+		info.pVulkanDevice = CVulkanContext::GetDevice();
+		info.pOldSwapchain = m_Swapchain;
+		Init2( &info );
+
 		return false;
 	}
 
@@ -397,8 +404,15 @@ namespace Monoworks::RHI
 
 		auto result = vkQueuePresentKHR( *info->pPresentQueue, &presentInfo );
 
-		// TODO: Resizing
-		MW_VK_CHECK( result, "Failed to submit present queue via vkQueuePresentKHR" );
+		if ( result == VK_SUCCESS )
+		{
+		
+		}
+		else if ( result != VK_ERROR_OUT_OF_DATE_KHR || result != VK_SUBOPTIMAL_KHR )
+		{
+			// When the surface was resized, it gets caught in the next frame before rendering in the event queue. 
+			MW_ASSERT(false, "Failed to present.");
+		}
 
 		// Mark this image as having been presented at least once
 		MW_ASSERT( *info->pImageIndex < m_ImagePresentedOnce.size(), "Present image index out of range" );

@@ -73,6 +73,7 @@ void operator delete[](void* pPtr, MAYBE_UNUSED size_t size) noexcept
 
 namespace Monoworks
 {
+
 	CApplication* CApplication::m_Singleton;
 	Ref<Monoworks::RHI::CVulkanContext> CApplication::m_GraphicsContext;
 	SApplicationCreateInfos CApplication::m_pApplicationCreationInfos;
@@ -104,8 +105,7 @@ namespace Monoworks
 		m_GraphicsAPI = pInfos->GraphicsAPI;
 
 
-		CStaticRenderer::SetRenderableExtend(&m_pApplicationCreationInfos.RenderableExtent);
-
+		CStaticRenderer::SetRenderableExtend(m_pApplicationCreationInfos.RenderableExtent);
 
 		m_GraphicsContext = Ref<RHI::CVulkanContext>::Create();
 		m_GraphicsContext->Init();
@@ -156,8 +156,8 @@ namespace Monoworks
 		CEventManager::EmitEventNonDeffered(render, MW_EVENT_APP_RENDER);
 		CFrameManager::Render();
 		
-
-
 		FrameMark;
 	}
+
+
 }
