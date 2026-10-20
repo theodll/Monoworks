@@ -41,17 +41,39 @@ namespace Monoworks
 		return out;
 	}
 
-	NODISCARD static u32 GetParameterBlockSet( slang::VariableLayoutReflection* pBlockVar )
-	{
-		return static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
-	}
-
 	NODISCARD static bool IsParameterBlock( slang::VariableLayoutReflection* pVar )
 	{
 		if ( pVar == nullptr || pVar->getTypeLayout() == nullptr )
 			return false;
 
 		return pVar->getTypeLayout()->getKind() == slang::TypeReflection::Kind::ParameterBlock;
+	}
+
+	NODISCARD static bool HasGlobalBinding( std::string_view name, slang::ProgramLayout* pLayout )
+	{
+		MW_PROFILE_FUNC;
+
+		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
+		{
+			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
+
+			if ( pParam == nullptr )
+				continue;
+
+			if ( IsParameterBlock( pParam ) )
+				continue;
+
+			const char* pParamName = pParam->getName();
+			if ( pParamName && name == pParamName )
+				return true;
+		}
+
+		return false;
+	}
+
+	NODISCARD static u32 GetParameterBlockSet( slang::VariableLayoutReflection* pBlockVar )
+	{
+		return static_cast< u32 >( pBlockVar->getOffset( slang::ParameterCategory::SubElementRegisterSpace ) );
 	}
 
 	NODISCARD static slang::VariableLayoutReflection* FindParameterByName( std::string_view name, slang::ProgramLayout* pLayout )
@@ -66,6 +88,15 @@ namespace Monoworks
 		}
 
 		return nullptr;
+	}
+
+	NODISCARD static bool HasParameterBlock( std::string_view parameterBlockName, slang::ProgramLayout* pLayout )
+	{
+		MW_PROFILE_FUNC;
+
+		slang::VariableLayoutReflection* pBlockVar = FindParameterByName( parameterBlockName, pLayout );
+
+		return IsParameterBlock( pBlockVar );
 	}
 
 	NODISCARD static std::expected<u32, EResult> FindFieldBindingInParameterBlock( slang::VariableLayoutReflection* pBlockVar, std::string_view fieldName )
@@ -168,8 +199,7 @@ namespace Monoworks
 		return std::unexpected( MW_ERROR_NON_EXISTANT );
 	}
 	
-
-	CComputeRenderPass::CComputeRenderPass( const ComputeRenderPassCreationInfo* pInfo ) : IRenderPass( pInfo->hShader )
+	CComputeRenderPass::CComputeRenderPass( const ComputeRenderPassCreationInfo* pInfo ) NOEXCEPT : IRenderPass( pInfo->hShader )
 	{
 		MW_PROFILE_FUNC;
 
@@ -259,7 +289,9 @@ namespace Monoworks
 		// to even create a graphics pipeline.
 
 		m_hShader = pInfo->hShader;
-		m_pExecutionScopeCallback = pInfo->pExecutionScopeCallback;
+		if ( pInfo->pExecutionScopeCallback )
+			m_pExecutionScopeCallback = pInfo->pExecutionScopeCallback.value();
+
 		m_RenderingArea = pInfo->RenderingArea;
 		m_PipelineHash = 0;
 		
@@ -461,6 +493,12 @@ namespace Monoworks
 		CPipelineManager::DeleteGraphicsPipeline( m_PipelineHash );
 		m_hGraphicsPipeline = nullptr;
 	}
+
+	 IRenderPass::IRenderPass(Ref<CShader> hShader) NOEXCEPT : m_hShader(hShader)
+	 {
+		 MW_PROFILE_FUNC;
+	 }
+
 
 	 void MWAPI_CALL IRenderPass::BindTexture( 
 		std::string_view parameterBlockName, 
@@ -687,7 +725,7 @@ namespace Monoworks
 	void MWAPI_CALL IRenderPass::BindUBO(
 		std::string_view bindingName,
 		Ref<RHI::IUniformBuffer> hUniformBuffer,
-		bool forceRewrite = false ) NOEXCEPT
+		bool forceRewrite ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -734,7 +772,7 @@ namespace Monoworks
 		std::string_view parameterBlockName,
 		std::string_view bindingName,
 		Ref<RHI::IUniformBuffer> hUniformBuffer,
-		bool forceRewrite = false ) NOEXCEPT
+		bool forceRewrite ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -790,7 +828,7 @@ namespace Monoworks
 	void MWAPI_CALL IRenderPass::BindUBO(
 		std::string_view bindingName,
 		std::span<Ref<RHI::IUniformBuffer>, MFIF> hUniformBuffers,
-		bool forceRewrite = false ) NOEXCEPT
+		bool forceRewrite ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -842,7 +880,7 @@ namespace Monoworks
 		std::string_view parameterBlockName,
 		std::string_view bindingName,
 		std::span<Ref<RHI::IUniformBuffer>, MFIF> hUniformBuffers,
-		bool forceRewrite = false ) NOEXCEPT 
+		bool forceRewrite ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
 
@@ -960,7 +998,7 @@ namespace Monoworks
 	void MWAPI_CALL IRenderPass::BindSampler( 
 		std::string_view bindingName,
 		Ref<RHI::ITexture2D> hSampler,
-		bool forceRewrite /*= false */ )
+		bool forceRewrite /*= false */ ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 
@@ -1116,10 +1154,6 @@ namespace Monoworks
 		glm::mat4 transform = glm::rotate( glm::mat4( 1.0f ), s_Angle, glm::vec3( 1.0f, 1.0f, 0.0f ) );
 
 		// Material / GBuffer draws need u_CameraConstants (set 1).
-		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
-		if ( camBinding && mesh && mesh->Material && mesh->Material->GetPipeline() )
-			CStaticRenderer::BindDescriptors( frameIndex, *mesh->Material->GetPipeline()->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
-			
 		CStaticRenderer::DrawStaticMeshIndexed( frameIndex, mesh, transform, -1 );
 
 	}
@@ -1416,7 +1450,7 @@ namespace Monoworks
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
 				RenderingAttachmentInfo info{};
-				info.AttachmentImage = m_hGBuffers[i]->Depth;
+				info.hAttachmentImage = m_hGBuffers[i]->Depth; 
 
 				depthAttachment[i] = info;
 			}
@@ -1500,87 +1534,6 @@ namespace Monoworks
 		{
 			m_hCameraUBOs[i] = IUniformBuffer::Create( sizeof( CameraConstantsUBO ) );
 			m_hCameraUBOs[i]->SetData( &cameraUBO, sizeof cameraUBO );
-
-			auto layout = lightShader->GetShaderProgram()->getLayout();
-
-			auto gbufPb = FindParameterBlockNumberByString( c_GbufBindingName, layout );
-			u32 pb = 0;
-			if ( gbufPb )
-				pb = gbufPb.value();
-			else
-				MW_FATAL( "Failed to find GBuffer Parameter Block binding inside light shader.");
-
-			// TODO: Dont do this
-			pb = 1; 
-
-			m_hGBufferDescriptors[i] = CDescriptorManager::Allocate(lightReflectionData.pDescriptorSignatures[pb]);
-			
-			auto aoBinding = FindBindingNumberByString(	pb, c_GbufAOBindingName, layout ); // albedo occlusion
-			auto nrmBinding = FindBindingNumberByString(pb, c_GbufNRMBindingName,layout ); // normal rough metal
-			auto eBinding = FindBindingNumberByString(	pb, c_GbufEBindingName,  layout ); // emissive
-			auto mvBinding = FindBindingNumberByString(	pb, c_GbufMVBindingName, layout ); // motion vectors
-			auto emidBinding = FindBindingNumberByString( pb, c_GbufEMIDBindingName, layout ); // entity material id
-			auto dBinding = FindBindingNumberByString(	pb, c_GbufDBindingName, layout ); // depth
-			auto cBinding = FindBindingNumberByString( pb, c_GbufCBindingName, layout ); // composite
-			auto sBinding = FindBindingNumberByString( pb, c_GbufSBindingName, layout ); // sampler
-
-
-			if ( aoBinding )
-				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], aoBinding.value(), m_hGBuffers[i]->AlbedoOcclusion );
-			else if ( aoBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for ambient occlusion gbuffer target: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for ambient occlusion gbuffer target: Unkown error" );
-
-
-			if ( nrmBinding )
-				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], nrmBinding.value(), m_hGBuffers[i]->NormalRoughMetal );
-			else if ( nrmBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for normal rough metal gbuffer target: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for normal rough metal gbuffer target: Unkown error" );
-
-			if ( eBinding )
-				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], eBinding.value(), m_hGBuffers[i]->Emissive );
-			else if ( eBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for emissive gbuffer target: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for emissive gbuffer target: Unkown error" );
-
-			if ( mvBinding )
-				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], mvBinding.value(), m_hGBuffers[i]->MotionVector );
-			else if ( mvBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for motion vectors gbuffer target: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for motion vectors gbuffer target: Unkown error" );
-
-			if ( emidBinding )
-				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], emidBinding.value(), m_hGBuffers[i]->EntityMaterialID );
-			else if ( emidBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for entity material ID gbuffer target: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for entity material ID gbuffer target: Unkown error" );
-
-			if ( dBinding )
-				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], dBinding.value(), m_hGBuffers[i]->Depth );
-			else if ( dBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for depth gbuffer target: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for depth gbuffer target: Unkown error" );
-
-			if ( cBinding )
-				CDescriptorManager::WriteImage( m_hGBufferDescriptors[i], cBinding.value(), m_hCompositeImages[i], MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-			else if ( cBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for composite gbuffer target: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for composite gbuffer target: Unkown error" );
-
-			if ( sBinding )
-				CDescriptorManager::WriteSampler( m_hGBufferDescriptors[i], sBinding.value(), m_hGBuffers[i]->Sampler );
-			else if ( sBinding.error() == MW_ERROR_NON_EXISTANT )
-				MW_ERROR( "Failed to find binding for gbuffer sampler: Non existant" );
-			else
-				MW_ERROR( "Failed to find binding for gbuffer sampler: Unkown error" );
 		}
 
 		static std::array<SVertex, 24> s_CubeVertices =
@@ -1661,51 +1614,55 @@ namespace Monoworks
 		MW_INFO( "Destroy CDefferedFrameGraph " );
 	};
 
-	inline void CDefferedFrameGraph::BindCommonData( Ref<IRenderPass>& hComputeRenderPass )
+	inline void CDefferedFrameGraph::BindCommonData( Ref<CComputeRenderPass>& hComputeRenderPass )
 	{
 		MW_PROFILE_FUNC;
 		
-		static std::array<Ref<RHI::ITexture2D>, MFIF> ao;
-		static std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
-		static std::array<Ref<RHI::ITexture2D>, MFIF> e;
-		static std::array<Ref<RHI::ITexture2D>, MFIF> mv;
-		static std::array<Ref<RHI::ITexture2D>, MFIF> d;
-		static std::array<Ref<RHI::ITexture2D>, MFIF> c;
-		static std::array<Ref<RHI::ITexture2D>, MFIF> s;
-
-		for ( auto i{ 0uz }; i < MFIF; i++ )
+		if ( HasParameterBlock( c_GbufBindingName, hComputeRenderPass->m_hShader->GetShaderProgram()->getLayout()) )
 		{
-			if ( !ao[i] )
-				ao[i] = m_hGBuffers[i]->AlbedoOcclusion;
-			
-			if ( !nrm[i] )
-				nrm[i] = m_hGBuffers[i]->NormalRoughMetal;
-			
-			if ( !e[i] )
-				e[i] = m_hGBuffers[i]->Emissive;
-			
-			if ( !mv[i] )
-				mv[i] = m_hGBuffers[i]->MotionVector;
-			
-			if ( !d[i] )
-				d[i] = m_hGBuffers[i]->Depth;
+			static std::array<Ref<RHI::ITexture2D>, MFIF> ao;
+			static std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
+			static std::array<Ref<RHI::ITexture2D>, MFIF> e;
+			static std::array<Ref<RHI::ITexture2D>, MFIF> mv;
+			static std::array<Ref<RHI::ITexture2D>, MFIF> d;
+			static std::array<Ref<RHI::ITexture2D>, MFIF> c;
+			static std::array<Ref<RHI::ITexture2D>, MFIF> s;
 
-			if ( !s[i] )
-				s[i] = m_hGBuffers[i]->Sampler;
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				if ( !ao[i] )
+					ao[i] = m_hGBuffers[i]->AlbedoOcclusion;
 
-			if ( !c[i] )
-				c[i] = m_hCompositeImages[i];
+				if ( !nrm[i] )
+					nrm[i] = m_hGBuffers[i]->NormalRoughMetal;
+
+				if ( !e[i] )
+					e[i] = m_hGBuffers[i]->Emissive;
+
+				if ( !mv[i] )
+					mv[i] = m_hGBuffers[i]->MotionVector;
+
+				if ( !d[i] )
+					d[i] = m_hGBuffers[i]->Depth;
+
+				if ( !s[i] )
+					s[i] = m_hGBuffers[i]->Sampler;
+
+				if ( !c[i] )
+					c[i] = m_hCompositeImages[i];
+			}
+
+			hComputeRenderPass->BindTexture( c_GbufBindingName, ao );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, nrm );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, e );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, mv );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, d );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, s );
 		}
-		
-		hComputeRenderPass->BindTexture( c_GbufBindingName, ao );
-		hComputeRenderPass->BindTexture( c_GbufBindingName, nrm );
-		hComputeRenderPass->BindTexture( c_GbufBindingName, e );
-		hComputeRenderPass->BindTexture( c_GbufBindingName, mv );
-		hComputeRenderPass->BindTexture( c_GbufBindingName, d );
-		hComputeRenderPass->BindTexture( c_GbufBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-		hComputeRenderPass->BindTexture( c_GbufBindingName, s );
 
-		hComputeRenderPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false);
+		if ( HasGlobalBinding( c_CameraConstantsBindingName, hComputeRenderPass->m_hShader->GetShaderProgram()->getLayout() ) )
+			hComputeRenderPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false);
 	}
 
 	void CDefferedFrameGraph::AddPrePass( Ref<CComputeRenderPass> hComputePrePass, s32 MW_NULLABLE executionPriority ) NOEXCEPT
@@ -1716,7 +1673,10 @@ namespace Monoworks
 			MW_API_WARN( "Passed invalid hComputePrePass to CDefferedFrameGraph::AddPrePass (Compute). Discarding.");
 			return;
 		}
-		 
+		
+		if ( HasGlobalBinding( c_CameraConstantsBindingName, hComputePrePass->m_hShader->GetShaderProgram()->getLayout() ) )
+			hComputePrePass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false );
+
 		if ( executionPriority < 0 || executionPriority >=  m_hComputePrePasses.size() )
 		{
 			MW_INFO( "Register Compute Pre-Pass {} at execution priority {}", static_cast<void*>(hComputePrePass.raw()), m_hComputePrePasses.size() );
@@ -1737,6 +1697,9 @@ namespace Monoworks
 			MW_API_WARN( "Passed invalid hGraphicsPrePass to CDefferedFrameGraph::AddPrePass (Graphics). Discarding." );
 			return;
 		}
+
+		if ( HasGlobalBinding( c_CameraConstantsBindingName, hGraphicsPrePass->m_hShader->GetShaderProgram()->getLayout() ) )
+			hGraphicsPrePass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false );
 
 		if ( executionPriority < 0 || executionPriority >= m_hGraphicsPrePasses.size() )
 		{
@@ -1809,17 +1772,17 @@ namespace Monoworks
 		auto ex = CStaticRenderer::GetRenderableExtend();
 
 		CStaticRenderer::SetDynamicCullMode( frameIndex, MW_CULL_MODE_BACK );
-		CStaticRenderer::SetDynamicScissors( frameIndex, &ex, 1, 0 );
+		CStaticRenderer::SetDynamicScissors( frameIndex, { &ex, 1 }, 0 );
 
 		Viewport viewport{};
-		viewport.Width =  ( float )ex.Width;
+		viewport.Width = ( float )ex.Width;
 		viewport.Height = ( float )ex.Height;
 		viewport.X = 0;
 		viewport.Y = 0;
 		viewport.MaxDepth = 1.0f;
-		viewport.MinDepth = 0.0f; 
+		viewport.MinDepth = 0.0f;
 
-		CStaticRenderer::SetDynamicViewports( frameIndex, &viewport, 1, 0 );
+		CStaticRenderer::SetDynamicViewports( frameIndex, { &viewport, 1 }, 0 );
 
 	}
 
@@ -1831,7 +1794,7 @@ namespace Monoworks
 		auto ex = CStaticRenderer::GetRenderableExtend();
 
 		CStaticRenderer::SetDynamicCullModeST( frameIndex, MW_CULL_MODE_BACK, -1 );
-		CStaticRenderer::SetDynamicScissorsST( frameIndex, &ex, 1, 0, -1 );
+		CStaticRenderer::SetDynamicScissorsST( frameIndex, { &ex, 1 }, 0, -1 );
 
 		Viewport viewport{};
 		viewport.Width = ( float )ex.Width;
@@ -1841,7 +1804,7 @@ namespace Monoworks
 		viewport.MaxDepth = 1.0f;
 		viewport.MinDepth = 0.0f;
 
-		CStaticRenderer::SetDynamicViewportsST( frameIndex, &viewport, 1, 0, -1 );
+		CStaticRenderer::SetDynamicViewportsST( frameIndex, { &viewport, 1 }, 0, -1 );
 
 	}
 
@@ -1899,7 +1862,7 @@ namespace Monoworks
 		for ( auto& computePrePass : m_hComputePrePasses )
 		{
 			auto workgroup = ComputeWorkgroupSize( computePrePass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
-			CStaticRenderer::DispatchCompute( frameIndex, computePrePass->m_hComputePipeline, workgroup, &computePrePass->m_pDescriptors[frameIndex], 1 );
+			CStaticRenderer::DispatchCompute( frameIndex, computePrePass->m_hComputePipeline, workgroup, computePrePass->m_pDescriptors[frameIndex], computePrePass->m_FirstSet );
 		}
 
 		// Merge secondaries because every graphics pre-pass must have their own secondaries. That's just the way it is I'm just the messenger
@@ -1910,19 +1873,18 @@ namespace Monoworks
 		{
 			// TODO: Don't do this
 			std::vector<RenderingAttachmentInfo> colorAttachments;
-			for ( auto& colorAttachments2 : graphicsPrePass->m_ColorAttachments )
+			for ( auto& colorAttachments2 : graphicsPrePass->m_ColorAttachments.value() )
 				colorAttachments.push_back( colorAttachments2[frameIndex] );
 				 
 
 			RHI::BeginRenderingInfo info;
 			info.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
-			info.ColorAttachmentCount = graphicsPrePass->m_ColorAttachments.size();
-			info.pColorAttachments = colorAttachments.data();
-			if ( graphicsPrePass->m_InternalFlags & CGraphicsRenderPass::MW_GRAPHICS_PRE_PASS_USE_DEPTH_ATTACHMENT )
-				info.pDepthAttachment = &graphicsPrePass->m_DepthAttachment[frameIndex];
+			info.pColorAttachments = colorAttachments;
+			if ( graphicsPrePass->m_DepthAttachment )
+				info.pDepthAttachment = graphicsPrePass->m_DepthAttachment.value()[frameIndex];
 
-			if ( graphicsPrePass->m_InternalFlags & CGraphicsRenderPass::MW_GRAPHICS_PRE_PASS_USE_STENCIL_ATTACHMENT )
-				info.pStencilAttachment = &graphicsPrePass->m_StencilAttachment[frameIndex];
+			if ( graphicsPrePass->m_StencilAttachment )
+				info.pStencilAttachment = graphicsPrePass->m_StencilAttachment.value()[frameIndex];
 
 			info.RenderArea = graphicsPrePass->m_RenderingArea;
 			
@@ -1933,11 +1895,9 @@ namespace Monoworks
 
 			// Bind the pre pass pipeline generated from graphicsPrePass::m_hShader and the descriptor for the shader globals.
 			CStaticRenderer::BindGraphicsPipeline( frameIndex, graphicsPrePass->m_hGraphicsPipeline );
-			
 
 			// Maybe confusing but this only binds global scope descriptors, not any others. So only bind them if they actually exist
-			if ( graphicsPrePass->m_hShader->HasGlobalBindings() && graphicsPrePass->m_pDescriptors[frameIndex] )
-				CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), &graphicsPrePass->m_pDescriptors[frameIndex], 1, 0, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
+			CStaticRenderer::BindDescriptors( frameIndex, *graphicsPrePass->m_hGraphicsPipeline->GetSignature(), graphicsPrePass->m_pDescriptors[frameIndex], graphicsPrePass->m_FirstSet, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
 
 			// Invoke the execution callback specified by the pre-pass. The pre-pass manager can submit draw calls, bind state etc. here.
 			if ( graphicsPrePass->m_pExecutionScopeCallback )
@@ -1968,27 +1928,19 @@ namespace Monoworks
 		gbufferAttachments[4] = { m_hGBuffers[frameIndex]->EntityMaterialID };
 	
 		RHI::RenderingAttachmentInfo depthAttachment;
-		depthAttachment.AttachmentImage = m_hGBuffers[frameIndex]->Depth;
+		depthAttachment.hAttachmentImage = m_hGBuffers[frameIndex]->Depth;
 		// Preserve depth written by the depth pre-pass for EQUAL depth testing in the base pass.
 		depthAttachment.LoadOp = MW_ATTACHMENT_LOAD_OP_LOAD;
 
 		RHI::BeginRenderingInfo renderingInfo;
 		renderingInfo.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
-		renderingInfo.pColorAttachments = gbufferAttachments.data();
-		renderingInfo.ColorAttachmentCount = static_cast< u32 >( gbufferAttachments.size() );
-		renderingInfo.pDepthAttachment = &depthAttachment;
+		renderingInfo.pColorAttachments = gbufferAttachments;
+		renderingInfo.pDepthAttachment = depthAttachment;
 		renderingInfo.RenderArea = CStaticRenderer::GetRenderableExtend();
 
 		CStaticRenderer::BeginRendering( frameIndex, &renderingInfo );
 
 		// Jobs
-		auto camBinding = FindParameterBlockNumberByString( "u_CameraConstants", m_hDefaultBasePassShader->GetShaderProgram()->getLayout() );
-
-		if ( camBinding )
-			CStaticRenderer::BindDescriptors( frameIndex, *m_hDefaultBasePassPipeline->GetSignature(), &m_hCameraUBOSets[frameIndex], 1, *camBinding, -1, MW_PIPELINE_BIND_POINT_GRAPHICS );
-		else
-			MW_DEBUG_BREAK;
-
 		SubmitSceneGeometry( frameIndex );
 
 		CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );
@@ -2017,16 +1969,7 @@ namespace Monoworks
 		{
 			auto workgroup = ComputeWorkgroupSize( resolutionPass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
 
-			// set 0 = pass globals, set 1 = shared GBuffer ParameterBlock, then any extra pass sets.
-			std::vector<DescriptorHandle> descriptors;
-			descriptors.push_back( resolutionPass->m_pDescriptors[0][frameIndex] );
-			descriptors.push_back( m_hGBufferDescriptors[frameIndex] );
-
-			if ( resolutionPass->m_pDescriptors.size() > 2 )
-				for ( auto i{ 2uz }; i < resolutionPass->m_pDescriptors.size(); i++ )
-					descriptors.push_back( resolutionPass->m_pDescriptors[i][frameIndex] );
-
-			CStaticRenderer::DispatchCompute( frameIndex, resolutionPass->m_hComputePipeline, workgroup, descriptors.data(), descriptors.size() );
+			CStaticRenderer::DispatchCompute( frameIndex, resolutionPass->m_hComputePipeline, workgroup, resolutionPass->m_pDescriptors[frameIndex], resolutionPass->m_FirstSet );
 		}
 		
 	};
@@ -2040,19 +1983,7 @@ namespace Monoworks
 			{
 				auto workgroup = ComputeWorkgroupSize( pass->m_hShader->GetShaderProgram()->getLayout()->getEntryPointByIndex( 0 ) );
 
-				const size_t setCount = pass->m_hShader->ReflectOnShader().pDescriptorSignatures.size();
-				if ( setCount > 1 )
-				{
-					DescriptorHandle descriptors[2] = {
-						pass->m_pDescriptors[frameIndex],
-						m_hGBufferDescriptors[frameIndex]
-					};
-					CStaticRenderer::DispatchCompute( frameIndex, pass->m_hComputePipeline, workgroup, descriptors, 2 );
-				}
-				else
-				{
-					CStaticRenderer::DispatchCompute( frameIndex, pass->m_hComputePipeline, workgroup, &pass->m_pDescriptors[frameIndex], 1 );
-				}
+				CStaticRenderer::DispatchCompute( frameIndex, pass->m_hComputePipeline, workgroup, pass->m_pDescriptors[frameIndex], pass->m_FirstSet );
 			};
 		
 		for ( auto& postPass : m_hPostProcessPasses )

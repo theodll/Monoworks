@@ -41,11 +41,11 @@ namespace Monoworks::RHI
 
     struct RenderingAttachmentInfo 
     {  
-        Ref<ITexture2D> AttachmentImage;
+        Ref<ITexture2D> hAttachmentImage;
      
         // Used for multisampling.
         EResolveMode  MW_NULLABLE ResolveMode = MW_RESOLVE_MODE_NONE;
-        Ref<ITexture2D> MW_NULLABLE ResolveImage = nullptr; 
+        Ref<ITexture2D> MW_NULLABLE hResolveImage = nullptr; 
         
         EAttachmentLoadOp  LoadOp = MW_ATTACHMENT_LOAD_OP_CLEAR;
         EAttachmentStoreOp StoreOp = MW_ATTACHMENT_STORE_OP_STORE;
@@ -57,14 +57,12 @@ namespace Monoworks::RHI
         ERenderingFlags Flags;
         /// @brief The render area that is affected by the render pass instance.
         SExtent2D RenderArea;
-        /// @brief Number of color attachments inside the pColorAttachments array.
-        u32 ColorAttachmentCount;
-        /// @brief C-Style array of color attachments.
-        const RenderingAttachmentInfo* pColorAttachments;
+        /// @brief Array of color attachments.
+        std::optional<std::span<const RenderingAttachmentInfo>> MW_NULLABLE pColorAttachments = std::nullopt;
         /// @brief Optional depth attachment
-        const RenderingAttachmentInfo* MW_NULLABLE pDepthAttachment = nullptr;
+        std::optional<RenderingAttachmentInfo> MW_NULLABLE pDepthAttachment = std::nullopt;
         /// @brief Optional stencil attachment
-        const RenderingAttachmentInfo* MW_NULLABLE pStencilAttachment = nullptr;
+        std::optional<RenderingAttachmentInfo> MW_NULLABLE pStencilAttachment = std::nullopt;
     };
  
     enum EPipelineBindPoint
@@ -219,6 +217,7 @@ namespace Monoworks::RHI
             Ref<IComputePipeline> hPipeline, 
             Vector workgroup,
             std::span<DescriptorHandle> ppDescriptors,
+            u32 firstSet,
             s32 threadID = -1 ) NOEXCEPT = 0;
         
          /**

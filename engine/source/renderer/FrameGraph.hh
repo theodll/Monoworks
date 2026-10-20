@@ -78,6 +78,7 @@ namespace Monoworks
 		virtual const  Ref<RHI::IGraphicsPipeline> GetDefaultBasePassPipeline() const = 0;
 		/// @brief Returns a reference to the current default Base-Pass-Shader
 		virtual const  Ref<CShader> GetDefaultBasePassShader() const = 0;
+		virtual std::span<Ref<RHI::IUniformBuffer>, MFIF> GetCameraUniformBuffers() = 0;
 
 		virtual  void SetTonemapParams( TonemapParams* pParams ) NOEXCEPT = 0;
 		virtual  void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT = 0;
@@ -250,7 +251,7 @@ namespace Monoworks
 		std::array<std::vector<RHI::DescriptorHandle>, MFIF> m_pDescriptors; // One vector for each frame in flight so we can batch descriptor binding
 
 		Ref<CShader> m_hShader;
-		u32 m_FirstSet;
+		u32 m_FirstSet = 0;
 	};
 
 	enum EGraphicsRenderPassCreationFlagBits
@@ -288,13 +289,13 @@ namespace Monoworks
 	class CGraphicsRenderPass final : public IRenderPass
 	{
 	public:
-		CGraphicsRenderPass( const GraphicsRenderPassCreationInfo* pInfo );
+		CGraphicsRenderPass( const GraphicsRenderPassCreationInfo* pInfo ) NOEXCEPT;
 		 ~CGraphicsRenderPass() NOEXCEPT;
 		
 		// Bind* functions are located in IRenderPass
 
 	private:
-		boost::function<void(u32 frameIndex)> MW_NULLABLE m_pExecutionScopeCallback = nullptr;
+		boost::function<void(u32 frameIndex)> MW_NULLABLE m_pExecutionScopeCallback;
 
 		std::optional<std::array<std::vector<RHI::RenderingAttachmentInfo>, MFIF>> m_ColorAttachments;
 		std::optional<std::array<RHI::RenderingAttachmentInfo, MFIF>> m_DepthAttachment;
@@ -316,7 +317,7 @@ namespace Monoworks
 	class CComputeRenderPass final : public IRenderPass
 	{
 	public:
-		CComputeRenderPass( const ComputeRenderPassCreationInfo* pInfo );
+		CComputeRenderPass( const ComputeRenderPassCreationInfo* pInfo ) NOEXCEPT;
 		~CComputeRenderPass() NOEXCEPT;
 
 		// Bind* functions are located in IRenderPass
@@ -397,6 +398,7 @@ namespace Monoworks
 
 		 const Ref<RHI::IGraphicsPipeline>	GetDefaultBasePassPipeline() const override { return m_hDefaultBasePassPipeline; };
 		 const Ref<CShader>					GetDefaultBasePassShader() const override { return m_hDefaultBasePassShader; };
+		 std::span<Ref<RHI::IUniformBuffer>, MFIF> GetCameraUniformBuffers() override { return m_hCameraUBOs; };
 
 		 void SetCamera( Ref<CCamera> hCamera ) NOEXCEPT override { m_hCamera = hCamera; };
 		 void SetTonemapParams( TonemapParams* pParams ) NOEXCEPT 
@@ -415,7 +417,7 @@ namespace Monoworks
 	private:
 		 void SubmitSceneGeometry( u32 frameIndex ) NOEXCEPT;
 		 void SubmitDepthPrePassGeometry( u32 frameIndex ) NOEXCEPT;
-		 inline void BindCommonData( Ref<IRenderPass> hComputeRenderPass );
+		 inline void BindCommonData( Ref<CComputeRenderPass>& hComputeRenderPass );
 
 		// NOTE: Execution Priority is the index of the array. E. g. Deffered Pass is at index 0 in m_hDefferedResolutionPasses.
 		std::vector<Ref<CComputeRenderPass>>			m_hComputePrePasses;

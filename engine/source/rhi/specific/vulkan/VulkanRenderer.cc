@@ -119,32 +119,35 @@ namespace Monoworks::RHI
 		auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
 		auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
 
-		std::vector<VkRenderingAttachmentInfo> colorAttachments( pInfo->ColorAttachmentCount );
+		std::vector<VkRenderingAttachmentInfo> colorAttachments( pInfo->pColorAttachments->size() );
 		{
-			auto i{ 0uz };
-			for ( auto& ra : colorAttachments )
+			if ( pInfo->pColorAttachments )
 			{
-				auto colorAttInfo = pInfo->pColorAttachments[i];
-				auto image = colorAttInfo.AttachmentImage.As<CVulkanTexture2D>();
-				auto resolveImage = colorAttInfo.ResolveImage.As<CVulkanTexture2D>();
-
-				ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-				ra.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
-				ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-				ra.imageView = *image->GetImageView();
-				ra.imageLayout = ( VkImageLayout )image->m_Layout;
-				
-				ra.loadOp = ToVulkanLoadOp( colorAttInfo.LoadOp );
-				ra.storeOp = ToVulkanStoreOp( colorAttInfo.StoreOp );
-
-				if ( colorAttInfo.ResolveImage )
+				auto i{ 0uz };
+				for ( auto& ra : colorAttachments )
 				{
-					ra.resolveImageView = *resolveImage->GetImageView();
-					ra.resolveImageLayout = ( VkImageLayout )resolveImage->m_Layout;
-					ra.resolveMode = ToVulkanResolveMode( colorAttInfo.ResolveMode );
-				}
+					auto colorAttInfo = pInfo->pColorAttachments.value()[i];
+					auto image = colorAttInfo.hAttachmentImage.As<CVulkanTexture2D>();
+					auto resolveImage = colorAttInfo.hResolveImage.As<CVulkanTexture2D>();
 
-				i++;
+					ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+					ra.clearValue = { .color = { 1.0f, 1.0f, 1.0f } };
+					ra.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+					ra.imageView = *image->GetImageView();
+					ra.imageLayout = ( VkImageLayout )image->m_Layout;
+
+					ra.loadOp = ToVulkanLoadOp( colorAttInfo.LoadOp );
+					ra.storeOp = ToVulkanStoreOp( colorAttInfo.StoreOp );
+
+					if ( colorAttInfo.hResolveImage )
+					{
+						ra.resolveImageView = *resolveImage->GetImageView();
+						ra.resolveImageLayout = ( VkImageLayout )resolveImage->m_Layout;
+						ra.resolveMode = ToVulkanResolveMode( colorAttInfo.ResolveMode );
+					}
+
+					i++;
+				}
 			}
 		}
 
@@ -154,16 +157,17 @@ namespace Monoworks::RHI
 		{
 			depthAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
 			depthAttachment.clearValue = { .depthStencil = { 1.0f, 0 } };
-			depthAttachment.imageLayout = ( VkImageLayout )pInfo->pDepthAttachment->AttachmentImage->m_Layout;
-			depthAttachment.imageView = *pInfo->pDepthAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
+			depthAttachment.imageLayout = ( VkImageLayout )pInfo->pDepthAttachment->hAttachmentImage->m_Layout;
+			depthAttachment.imageView = *pInfo->pDepthAttachment->hAttachmentImage.As<CVulkanTexture2D>()->GetImageView();
 			
-			depthAttachment.loadOp = ToVulkanLoadOp( pInfo->pDepthAttachment->LoadOp );
-			depthAttachment.storeOp = ToVulkanStoreOp( pInfo->pDepthAttachment->StoreOp );
 
-			if ( pInfo->pDepthAttachment->ResolveImage )
+			depthAttachment.loadOp = ToVulkanLoadOp( pInfo->pDepthAttachment->LoadOp);
+			depthAttachment.storeOp = ToVulkanStoreOp( pInfo->pDepthAttachment->StoreOp);
+
+			if ( pInfo->pDepthAttachment->hResolveImage )
 			{
-				depthAttachment.resolveImageView = *pInfo->pDepthAttachment->ResolveImage.As<CVulkanTexture2D>()->GetImageView();
-				depthAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pDepthAttachment->ResolveImage->m_Layout;
+				depthAttachment.resolveImageView = *pInfo->pDepthAttachment->hResolveImage.As<CVulkanTexture2D>()->GetImageView();
+				depthAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pDepthAttachment->hResolveImage->m_Layout;
 				depthAttachment.resolveMode = ToVulkanResolveMode( pInfo->pDepthAttachment->ResolveMode );
 			}
 		}
@@ -174,16 +178,16 @@ namespace Monoworks::RHI
 		{
 			stencilAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
 			stencilAttachment.clearValue = { .depthStencil = { 1.0f, 0 } };
-			stencilAttachment.imageLayout = ( VkImageLayout )pInfo->pStencilAttachment->AttachmentImage->m_Layout;
-			stencilAttachment.imageView = *pInfo->pStencilAttachment->AttachmentImage.As<CVulkanTexture2D>()->GetImageView();
+			stencilAttachment.imageLayout = ( VkImageLayout )pInfo->pStencilAttachment->hAttachmentImage->m_Layout;
+			stencilAttachment.imageView = *pInfo->pStencilAttachment->hAttachmentImage.As<CVulkanTexture2D>()->GetImageView();
 
 			stencilAttachment.loadOp = ToVulkanLoadOp( pInfo->pStencilAttachment->LoadOp );
 			stencilAttachment.storeOp = ToVulkanStoreOp( pInfo->pStencilAttachment->StoreOp );
 
-			if ( pInfo->pStencilAttachment->ResolveImage )
+			if ( pInfo->pStencilAttachment->hResolveImage )
 			{
-				stencilAttachment.resolveImageView = *pInfo->pStencilAttachment->ResolveImage.As<CVulkanTexture2D>()->GetImageView();
-				stencilAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pStencilAttachment->ResolveImage->m_Layout;
+				stencilAttachment.resolveImageView = *pInfo->pStencilAttachment->hResolveImage.As<CVulkanTexture2D>()->GetImageView();
+				stencilAttachment.resolveImageLayout = ( VkImageLayout )pInfo->pStencilAttachment->hResolveImage->m_Layout;
 				stencilAttachment.resolveMode = ToVulkanResolveMode( pInfo->pStencilAttachment->ResolveMode );
 			}
 		}
@@ -222,6 +226,7 @@ namespace Monoworks::RHI
 		Ref<IComputePipeline> hPipeline,
 		Vector workgroup,
 		std::span<DescriptorHandle> ppDesciptors,
+		u32 firstSet,
 		s32 MW_NULLABLE threadID /*= -1*/) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -240,7 +245,7 @@ namespace Monoworks::RHI
 		}
 
 		auto vkPipeline = hPipeline.As<CVulkanComputePipeline>();
-        vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), 0, ppDesciptors.size(), (VkDescriptorSet*)(ppDesciptors.data()), 0, nullptr);
+        vkCmdBindDescriptorSets( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipelineSignature(), firstSet, ppDesciptors.size(), (VkDescriptorSet*)(ppDesciptors.data()), 0, nullptr);
 
 		vkCmdBindPipeline( hCmd, VK_PIPELINE_BIND_POINT_COMPUTE, *vkPipeline->GetVulkanPipeline() );
 

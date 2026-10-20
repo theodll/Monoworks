@@ -142,6 +142,37 @@ namespace Monoworks
 	}
 
 
+	NODISCARD static bool HasParameterBlock( std::string_view parameterBlockName, slang::ProgramLayout* pLayout )
+	{
+		MW_PROFILE_FUNC;
+
+		slang::VariableLayoutReflection* pBlockVar = FindParameterByName( parameterBlockName, pLayout );
+
+		return IsParameterBlock( pBlockVar );
+	}
+
+	NODISCARD static bool HasGlobalBinding( std::string_view name, slang::ProgramLayout* pLayout )
+	{
+		MW_PROFILE_FUNC;
+
+		for ( u32 i = 0; i < pLayout->getParameterCount(); ++i )
+		{
+			slang::VariableLayoutReflection* pParam = pLayout->getParameterByIndex( i );
+
+			if ( pParam == nullptr )
+				continue;
+
+			if ( IsParameterBlock( pParam ) )
+				continue;
+
+			const char* pParamName = pParam->getName();
+			if ( pParamName && name == pParamName )
+				return true;
+		}
+
+		return false;
+	}
+
 
 	 EResult CMaterial::SetTexture( u32 set, u32 binding, Ref<RHI::ITexture2D> hTexture, bool forceRewrite ) NOEXCEPT
 	{
@@ -303,7 +334,11 @@ namespace Monoworks
 			MW_ERROR( "Failed to find binding for material MapSampler: Non existant" );
 		else if ( !mapSampler )
 			MW_ERROR( "Failed to find binding for material MapSampler: Unkown error" );
-		
+	
+		if ( HasGlobalBinding( c_CameraConstantsBindingName, m_hShader->GetShaderProgram()->getLayout() ) )
+		{
+			this->BindUBO( c_CameraConstantsBindingName, CFrameManager::GetCurrentFrameGraph()->GetCameraUniformBuffers(), false );
+		}
 	}
 
 

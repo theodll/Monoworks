@@ -29,6 +29,7 @@ namespace Monoworks::RHI
              Ref<IComputePipeline> hPipeline,
              Vector workgroup,
              std::span<DescriptorHandle> ppDesciptors, 
+             u32 firstSet,
              s32 threadID = -1 ) NOEXCEPT override;
 
          void MWAPI_CALL DispatchCompute2(

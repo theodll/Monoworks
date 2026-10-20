@@ -224,6 +224,7 @@ namespace Monoworks
 			Ref<RHI::IComputePipeline> hPipeline,
 			Vector workgroup,
 			std::span<RHI::DescriptorHandle> pDesciptors,
+			u32 firstDescriptor,
 			s32 threadID = -1 ) NOEXCEPT;
 
 		/**
