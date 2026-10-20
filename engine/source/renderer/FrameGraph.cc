@@ -214,8 +214,6 @@ namespace Monoworks
 		m_hShader = pInfo->hShader;
 
 		const auto reflectionData = m_hShader->ReflectOnShader();
-		auto entrypoints = m_hShader->GetShaderEntrypoints();
-		const char* entrypoint = entrypoints[MW_SHADER_STAGE_COMPUTE].c_str();
 
 		Slang::ComPtr<slang::IBlob> code;
 		Slang::ComPtr<slang::IBlob> diagnostics;
@@ -240,7 +238,7 @@ namespace Monoworks
 		}
 
 		SShaderObject computeShader;
-		computeShader.pEntrypoint = entrypoint;
+		computeShader.pEntrypoint = "main";
 		computeShader.ShaderStage = MW_SHADER_STAGE_COMPUTE;
 		computeShader.Code = { code->getBufferPointer(), code->getBufferSize() };
 
@@ -297,27 +295,47 @@ namespace Monoworks
 		
 		auto pipelineReflectData = m_hShader->ReflectOnShader();
 
-		for ( auto i{ 0uz }; i < MFIF; i++ )
+		if ( pInfo->ppColorAttachments )
 		{
-		
-			if ( pInfo->ppColorAttachments )
-				for ( auto j{ 0uz }; j < pInfo->ppColorAttachments.value()[i].size(); j++ )
-					m_ColorAttachments.value()[i][j] = pInfo->ppColorAttachments.value()[i][j];
-			else
-				m_ColorAttachments = std::nullopt;
+			std::array<std::vector<Monoworks::RHI::RenderingAttachmentInfo>, MFIF> tempAttachments;
 
-			if ( pInfo->pDepthAttachment )
-				m_DepthAttachment.value()[i] = pInfo->pDepthAttachment.value()[i];
-			else
-				m_DepthAttachment = std::nullopt;
+			for ( auto i{ 0uz }; i < MFIF; i++ )
+			{
+				auto& span = pInfo->ppColorAttachments.value()[i];
+				tempAttachments[i].assign( span.begin(), span.end() );
+			}
 
-			if ( pInfo->pStencilAttachment )
-				m_StencilAttachment.value()[i] = pInfo->pStencilAttachment.value()[i];
-			else
-				m_StencilAttachment = std::nullopt;
-
+			m_ColorAttachments = std::move( tempAttachments );
+		}
+		else
+		{
+			m_ColorAttachments = std::nullopt;
 		}
 
+
+		if ( pInfo->pDepthAttachment )
+		{
+			std::array<Monoworks::RHI::RenderingAttachmentInfo, MFIF> temp{};
+
+			std::ranges::copy(
+				*pInfo->pDepthAttachment,
+				temp.begin()
+			);
+
+			m_DepthAttachment = std::move( temp );
+		}
+
+		if ( pInfo->pStencilAttachment )
+		{
+			std::array<Monoworks::RHI::RenderingAttachmentInfo, MFIF> temp{};
+
+			std::ranges::copy(
+				*pInfo->pStencilAttachment,
+				temp.begin()
+			);
+
+			m_StencilAttachment = std::move( temp );
+		}
 
 		/*
 		  NOTE: From GPassBase.slang
@@ -446,11 +464,13 @@ namespace Monoworks
 			shaderObjects.push_back( pixelShader );
 		}
 		
-		
 		std::vector<SColorBlendAttachmentState> colorBlendAttachments;
-		for ( auto i{ 0uz }; i < pInfo->ppColorAttachments.value()[0].size(); i++ )
-			colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
-
+		if ( pInfo->ppColorAttachments )
+		{
+			for ( auto i{ 0uz }; i < pInfo->ppColorAttachments.value()[0].size(); i++ )
+				colorBlendAttachments.push_back( { MW_BLEND_MODE_NONE, false } );
+		}
+		
 
 		RHI::GraphicsPipelineCreationInfo createInfo{};
 		createInfo.Flags = 0;
@@ -1270,7 +1290,7 @@ namespace Monoworks
 
 		SShaderObject pixelShader;
 		pixelShader.ShaderStage = MW_SHADER_STAGE_FRAGMENT;
-		pixelShader.pEntrypoint = tempEntry;
+		pixelShader.pEntrypoint = tempEntry; 
 
 		// Get byte code for the Pixel Shader
 		{
