@@ -338,7 +338,9 @@ namespace Monoworks
 		{
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				m_hDescriptors[i].resize( GlobalScopeSignature + 1 );
+				if ( m_hDescriptors[i].size() <= GlobalScopeSignature )
+					m_hDescriptors[i].resize( GlobalScopeSignature + 1 );
+
 				m_hDescriptors[i][GlobalScopeSignature] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[GlobalScopeSignature] );
 			}
 		}
@@ -650,8 +652,7 @@ namespace Monoworks
 					return;
 				}
 
-				auto frameDescriptor = m_hDescriptors[parameterBlock];
-				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+				m_hDescriptors[i][parameterBlock] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
 			}
 
 			if ( rewrite )
@@ -710,8 +711,7 @@ namespace Monoworks
 					return;
 				}
 
-				auto frameDescriptor = m_hDescriptors[parameterBlock];
-				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+				m_hDescriptors[i][parameterBlock] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
 			}
 
 			if ( rewrite )
@@ -796,8 +796,7 @@ namespace Monoworks
 					return;
 				}
 
-				auto frameDescriptor = m_hDescriptors[parameterBlock];
-				frameDescriptor[i] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
+				m_hDescriptors[i][parameterBlock] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[parameterBlock] );
 			}
 
 			if ( rewrite )

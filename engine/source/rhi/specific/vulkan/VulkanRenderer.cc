@@ -609,7 +609,7 @@ namespace Monoworks::RHI
 		if ( threadID < 0 )
 			cmd = *CVulkanRenderManager::GetRootGraphicsCommandBuffer( frameIndex );
 		else
-			cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
+		cmd = *CVulkanRenderManager::GetWorkerCommandBuffer( threadID, frameIndex );
 
 		if ( !cmd )
 		{
@@ -731,28 +731,35 @@ namespace Monoworks::RHI
 		if ( useMaterialPipeline )
 		{
 			auto descriptors = mat->GetDescriptors();
-
 			const auto& frameDescriptors = descriptors[frameIndex];
 
-			bool isFirstInvalid = !frameDescriptors.empty() && frameDescriptors[0] == nullptr;
-			const u32 firstSet = isFirstInvalid ? 1u : 0u;
-
-			auto descView = frameDescriptors | std::views::drop( isFirstInvalid ? 1 : 0 );
-
-			auto setCount = static_cast< uint32_t >( std::ranges::size( descView ) );
-
-			if ( setCount > 0 )
+			if ( frameDescriptors.empty() )
 			{
-				vkCmdBindDescriptorSets(
-					cmd,
-					VK_PIPELINE_BIND_POINT_GRAPHICS,
-					*vkGPipe->GetVulkanPipelineSignature(),
-					firstSet,
-					setCount,
-					reinterpret_cast< const VkDescriptorSet* >( std::ranges::data( descView ) ),
-					0, nullptr
-				);
+				MW_API_ERROR( "Material has no descriptor sets. Discarding draw call." );
+				return;
 			}
+
+			if ( std::ranges::any_of(
+				frameDescriptors,
+				[]( RHI::DescriptorHandle descriptorSet )
+				{
+					return descriptorSet == nullptr;
+				} ) )
+			{
+				MW_API_ERROR( "Material contains a null descriptor set. Discarding draw call." );
+				return;
+			}
+
+			vkCmdBindDescriptorSets(
+				cmd,
+				VK_PIPELINE_BIND_POINT_GRAPHICS,
+				*vkGPipe->GetVulkanPipelineSignature(),
+				0,
+				static_cast<uint32_t>( std::ranges::size( frameDescriptors ) ),
+				reinterpret_cast<const VkDescriptorSet*>( std::ranges::data( frameDescriptors ) ),
+				0,
+				nullptr
+			);
 		}
 
 		vkCmdDrawIndexed( cmd, hMesh->IndexBuffer->GetCount(), 1, 0, 0, 0);

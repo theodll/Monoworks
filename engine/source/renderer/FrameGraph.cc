@@ -663,13 +663,13 @@ namespace Monoworks
 
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
-			if ( hTextures[i] )
+			if ( !hTextures[i] )
 			{
 				MW_API_ERROR( "Passed invalid texture reference." );
 				return;
 			}
 
-			if ( forceRewrite )
+			if ( rewrite )
 			{
 				CDescriptorManager::WriteImage( m_pDescriptors[i][GlobalScopeSignature], descriptorSlot, hTextures[i], imageType );
 
@@ -1538,6 +1538,7 @@ namespace Monoworks
 			m_hTonemapParamsUBO->SetData( &defaultParams, sizeof( TonemapParams ) );
 
 			m_hTonemapPass->BindUBO( "u_Params", m_hTonemapParamsUBO, true );
+			BindCommonData( m_hTonemapPass );
 		}
 		
 		auto& lightShader = lightPass->m_hShader;
@@ -1679,7 +1680,7 @@ namespace Monoworks
 			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv );
 			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d );
 			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufSBindingName, s );
+			hComputeRenderPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s );
 		}
 
 		if ( HasGlobalBinding( c_CameraConstantsBindingName, hComputeRenderPass->m_hShader->GetShaderProgram()->getLayout() ) )
