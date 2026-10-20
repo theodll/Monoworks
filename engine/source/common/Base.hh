@@ -47,7 +47,6 @@
 
 #ifdef _MSC_VER
 	#define MW_DEBUG_BREAK __debugbreak()
-	#define  __declspec(nothrow)
 	#define MWAPI_CALL __cdecl
 
 	#ifdef _WINDLL
@@ -63,7 +62,20 @@
 	#define MW_DEBUG_BREAK __builtin_debugtrap()
 #elif defined(__GNUC__)
 	#include <csignal>
-	#define MW_DEBUG_BREAK std::raise(SIGTRAP);
+#define MW_DEBUG_BREAK std::raise( SIGTRAP )
+#endif
+
+#ifndef MW_DEBUG_BREAK
+#define MW_DEBUG_BREAK
+#endif
+#ifndef MWAPI_CALL
+#define MWAPI_CALL
+#endif
+#ifndef MWAPI_ATTR
+#define MWAPI_ATTR
+#endif
+#ifndef MWAPI_ATTR_CLASS
+#define MWAPI_ATTR_CLASS
 #endif
 
 #ifdef MW_DEBUG

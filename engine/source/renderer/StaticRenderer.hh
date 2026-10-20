@@ -17,7 +17,7 @@ namespace Monoworks
     };
 	
     // For Documentation of undocumented parts, refer to IGraphicsAPI.
-    class MWAPI_ATTR_CLASS CStaticRenderer
+    class CStaticRenderer
     {
     public:
 		/**
@@ -38,7 +38,8 @@ namespace Monoworks
 		/**
 		 * @brief Begins root commandbuffer recording of frame index frameIndex.
 		 * @param frameIndex frame index of the current frame.
-		 */
+		
+		*/
 		static void MWAPI_CALL BeginRootCommandbuffer( u32 frameIndex ) NOEXCEPT;
 		
 		/**

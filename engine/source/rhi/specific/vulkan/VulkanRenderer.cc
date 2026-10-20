@@ -119,10 +119,12 @@ namespace Monoworks::RHI
 		auto width = CApplication::GetCreateInfos()->RenderableExtent.Width;
 		auto height = CApplication::GetCreateInfos()->RenderableExtent.Height;
 
-		std::vector<VkRenderingAttachmentInfo> colorAttachments( pInfo->pColorAttachments->size() );
+
+		std::vector<VkRenderingAttachmentInfo> colorAttachments;
 		{
 			if ( pInfo->pColorAttachments )
 			{
+				colorAttachments.resize( pInfo->pColorAttachments->size() );
 				auto i{ 0uz };
 				for ( auto& ra : colorAttachments )
 				{

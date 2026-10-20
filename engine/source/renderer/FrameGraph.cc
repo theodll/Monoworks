@@ -279,7 +279,7 @@ namespace Monoworks
 		m_hComputePipeline = nullptr;
 	}
 
-	CGraphicsRenderPass::CGraphicsRenderPass( const GraphicsRenderPassCreationInfo* pInfo ) NOEXCEPT : IRenderPass( m_hShader )
+	CGraphicsRenderPass::CGraphicsRenderPass( const GraphicsRenderPassCreationInfo* pInfo ) NOEXCEPT : IRenderPass( pInfo->hShader )
 	{
 		MW_PROFILE_FUNC;
 		MW_INFO( "Instatiate CGraphicsRenderPass" );
@@ -502,6 +502,7 @@ namespace Monoworks
 		else
 			MW_WARN( "Reflection did not yield global bindings. Discarded allocation of global scope descriptors." );
 		
+		m_FirstSet = 0;
 		
 		// TODO: Implement error handling here.
 	
@@ -574,7 +575,7 @@ namespace Monoworks
 
 			if ( rewrite )
 			{
-				CDescriptorManager::WriteImage( m_pDescriptors[i][parameterBlock], descriptorSlot, hTexture );
+				CDescriptorManager::WriteImage( m_pDescriptors[i][parameterBlock], descriptorSlot, hTexture, imageType );
 
 				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
 			}
@@ -618,7 +619,7 @@ namespace Monoworks
 		{
 
 			for ( auto i{ 0uz }; i < MFIF; i++ )
-				CDescriptorManager::WriteImage( m_pDescriptors[i][GlobalScopeSignature], binding.value(), hTexture );
+				CDescriptorManager::WriteImage( m_pDescriptors[i][GlobalScopeSignature], binding.value(), hTexture, imageType );
 
 			m_BindingsWritten[{GlobalScopeSignature, binding.value()}] = true;
 
@@ -670,7 +671,7 @@ namespace Monoworks
 
 			if ( forceRewrite )
 			{
-				CDescriptorManager::WriteImage( m_pDescriptors[i][GlobalScopeSignature], descriptorSlot, hTextures[i] );
+				CDescriptorManager::WriteImage( m_pDescriptors[i][GlobalScopeSignature], descriptorSlot, hTextures[i], imageType );
 
 				m_BindingsWritten[{GlobalScopeSignature, descriptorSlot}] = true;
 			}
@@ -689,7 +690,7 @@ namespace Monoworks
 
 		auto bindings = FindParameterBlockAndBindingNumberByString( parameterBlockName, bindingName, m_hShader->GetShaderProgram()->getLayout() );
 
-		if ( !hTextures.empty() )
+		if ( hTextures.empty() )
 		{
 			MW_API_ERROR( "Passed invalid texture reference." );
 			return;
@@ -714,7 +715,7 @@ namespace Monoworks
 			if ( m_pDescriptors[i].size() <= parameterBlock )
 				m_pDescriptors[i].resize( parameterBlock + 1 );
 
-			if ( hTextures[i] )
+			if ( !hTextures[i] )
 			{
 				MW_API_ERROR( "Passed invalid texture reference." );
 				return;
@@ -735,7 +736,7 @@ namespace Monoworks
 
 			if ( rewrite )
 			{
-				CDescriptorManager::WriteImage( m_pDescriptors[i][parameterBlock], descriptorSlot, hTextures[i] );
+				CDescriptorManager::WriteImage( m_pDescriptors[i][parameterBlock], descriptorSlot, hTextures[i], imageType );
 
 				m_BindingsWritten[{parameterBlock, descriptorSlot}] = true;
 			}
@@ -779,7 +780,7 @@ namespace Monoworks
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
 
-			if ( forceRewrite )
+			if ( rewrite )
 			{
 				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i][GlobalScopeSignature], descriptorSlot, hUniformBuffer );
 
@@ -881,13 +882,13 @@ namespace Monoworks
 
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
-			if ( hUniformBuffers[i] )
+			if ( !hUniformBuffers[i] )
 			{
 				MW_API_ERROR( "Passed invalid texture reference." );
 				return;
 			}
 
-			if ( forceRewrite )
+			if ( rewrite )
 			{
 				CDescriptorManager::WriteUniformBuffer( m_pDescriptors[i][GlobalScopeSignature], descriptorSlot, hUniformBuffers[i] );
 
@@ -1457,7 +1458,7 @@ namespace Monoworks
 		}
 
 		// Create depth pre pass
-		// TODO: Move somewhere else
+		// TODO: Move somewhere else (move to the serialization of frame graphs)
 		Ref<CGraphicsRenderPass> depthPrePass;
 		{
 			ShaderCreateInfo shaderInfo{};
@@ -1640,13 +1641,13 @@ namespace Monoworks
 		
 		if ( HasParameterBlock( c_GbufBindingName, hComputeRenderPass->m_hShader->GetShaderProgram()->getLayout()) )
 		{
-			static std::array<Ref<RHI::ITexture2D>, MFIF> ao;
-			static std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
-			static std::array<Ref<RHI::ITexture2D>, MFIF> e;
-			static std::array<Ref<RHI::ITexture2D>, MFIF> mv;
-			static std::array<Ref<RHI::ITexture2D>, MFIF> d;
-			static std::array<Ref<RHI::ITexture2D>, MFIF> c;
-			static std::array<Ref<RHI::ITexture2D>, MFIF> s;
+			std::array<Ref<RHI::ITexture2D>, MFIF> ao;
+			std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
+			std::array<Ref<RHI::ITexture2D>, MFIF> e;
+			std::array<Ref<RHI::ITexture2D>, MFIF> mv;
+			std::array<Ref<RHI::ITexture2D>, MFIF> d;
+			std::array<Ref<RHI::ITexture2D>, MFIF> c;
+			std::array<Ref<RHI::ITexture2D>, MFIF> s;
 
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
@@ -1672,13 +1673,13 @@ namespace Monoworks
 					c[i] = m_hCompositeImages[i];
 			}
 
-			hComputeRenderPass->BindTexture( c_GbufBindingName, ao );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, nrm );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, e );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, mv );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, d );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, s );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufSBindingName, s );
 		}
 
 		if ( HasGlobalBinding( c_CameraConstantsBindingName, hComputeRenderPass->m_hShader->GetShaderProgram()->getLayout() ) )
@@ -1893,13 +1894,15 @@ namespace Monoworks
 		{
 			// TODO: Don't do this
 			std::vector<RenderingAttachmentInfo> colorAttachments;
-			for ( auto& colorAttachments2 : graphicsPrePass->m_ColorAttachments.value() )
+			if ( graphicsPrePass->m_ColorAttachments )
+				for ( auto& colorAttachments2 : graphicsPrePass->m_ColorAttachments.value() )
 				colorAttachments.push_back( colorAttachments2[frameIndex] );
 				 
 
 			RHI::BeginRenderingInfo info;
 			info.Flags = MW_RENDERING_FLAGS_WITH_SECONDARY_COMMAND_BUFFERS_BIT;
-			info.pColorAttachments = colorAttachments;
+			if ( graphicsPrePass->m_ColorAttachments )
+				info.pColorAttachments = colorAttachments;
 			if ( graphicsPrePass->m_DepthAttachment )
 				info.pDepthAttachment = graphicsPrePass->m_DepthAttachment.value()[frameIndex];
 
@@ -1921,7 +1924,7 @@ namespace Monoworks
 
 			// Invoke the execution callback specified by the pre-pass. The pre-pass manager can submit draw calls, bind state etc. here.
 			if ( graphicsPrePass->m_pExecutionScopeCallback )
-				std::invoke( graphicsPrePass->m_pExecutionScopeCallback, frameIndex );
+				graphicsPrePass->m_pExecutionScopeCallback(frameIndex);
 
 			// Merge before ending rendering, as specified by the Vulkan Specification. 
 			CStaticRenderer::MergeSecondaryCommandbuffers( frameIndex );

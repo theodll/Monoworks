@@ -256,6 +256,7 @@ namespace Monoworks
 		auto materialInputSet = FindParameterBlockNumberByString( "u_MaterialInput", shaderLayout );
 
 		if ( materialInputSet )
+		{
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
 				if ( m_hDescriptors[i].size() < materialInputSet.value() || m_hDescriptors[i].size() == 0 )
@@ -273,68 +274,75 @@ namespace Monoworks
 
 				m_hMaterialUniformBuffer[i]->SetData( &m_MaterialData, sizeof( MaterialData ) );
 			}
+
+			if ( albedo )
+				if ( pInfo->hAlbedoMap )
+					SetTexture( m_MaterialParameterBlock, albedo.value(), pInfo->hAlbedoMap, true );
+				else
+					SetTexture( m_MaterialParameterBlock, albedo.value(), CStaticRenderer::GetDefaultMissingTexture(), false );
+
+			if ( normal )
+				if ( pInfo->hNormalMap )
+					SetTexture( m_MaterialParameterBlock, normal.value(), pInfo->hNormalMap, true );
+				else
+					SetTexture( m_MaterialParameterBlock, normal.value(), missingMap, false );
+
+			if ( emissive )
+				if ( pInfo->hEmissiveMap )
+					SetTexture( m_MaterialParameterBlock, emissive.value(), pInfo->hEmissiveMap, true );
+				else
+					SetTexture( m_MaterialParameterBlock, emissive.value(), missingMap, false );
+
+			if ( occlusion )
+				if ( pInfo->hOcclusionMap )
+					SetTexture( m_MaterialParameterBlock, occlusion.value(), pInfo->hOcclusionMap, true );
+				else
+					SetTexture( m_MaterialParameterBlock, occlusion.value(), missingMap, false );
+
+			if ( metallic )
+				if ( pInfo->hMetallicMap )
+					SetTexture( m_MaterialParameterBlock, metallic.value(), pInfo->hMetallicMap, true );
+				else
+					SetTexture( m_MaterialParameterBlock, metallic.value(), missingMap, false );
+
+			if ( roughness )
+				if ( pInfo->hRoughnessMap )
+					SetTexture( m_MaterialParameterBlock, roughness.value(), pInfo->hRoughnessMap, true );
+				else
+					SetTexture( m_MaterialParameterBlock, roughness.value(), missingMap, false );
+
+			if ( mapSampler )
+			{
+				for ( auto i{ 0uz }; i < MFIF; i++ )
+					CDescriptorManager::WriteSampler( m_hDescriptors[i][materialInputSet.value()], mapSampler.value(), missingMap );
+				m_BindingsWritten[{ materialInputSet.value(), mapSampler.value() }] = true;
+			}
+			else if ( !mapSampler && mapSampler.error() == MW_ERROR_NON_EXISTANT )
+				MW_ERROR( "Failed to find binding for material MapSampler: Non existant" );
+			else if ( !mapSampler )
+				MW_ERROR( "Failed to find binding for material MapSampler: Unkown error" );
+
+		}
 		else if ( materialInputSet.error() == MW_ERROR_NON_EXISTANT )
-			MW_ERROR("Failed to find material input parameter block: Non existant. Discarding Material Creation");
-		else  
+		{
+			MW_ERROR( "Failed to find material input parameter block: Non existant. Discarding Material Creation" );
+			return;
+		}
+		else
+		{
 			MW_ERROR( "Failed to find material input parameter block: Unkown. Discarding Material Creation" );
+			return;
+		}
 
-
-		
-		if ( albedo)
-			if ( pInfo->hAlbedoMap )
-				SetTexture( m_MaterialParameterBlock, albedo.value(), pInfo->hAlbedoMap, true );
-			else
-				SetTexture( m_MaterialParameterBlock, albedo.value(), CStaticRenderer::GetDefaultMissingTexture(), false );
-		
-		if ( normal )
-			if ( pInfo->hNormalMap )
-				SetTexture( m_MaterialParameterBlock, normal.value(), pInfo->hNormalMap, true );
-			else
-				SetTexture( m_MaterialParameterBlock, normal.value(), missingMap, false );
-
-		if ( emissive )
-			if ( pInfo->hEmissiveMap )
-				SetTexture( m_MaterialParameterBlock, emissive.value(), pInfo->hEmissiveMap, true );
-			else
-				SetTexture( m_MaterialParameterBlock, emissive.value(), missingMap, false );
-
-		if ( occlusion )
-			if ( pInfo->hOcclusionMap )
-				SetTexture( m_MaterialParameterBlock, occlusion.value(), pInfo->hOcclusionMap, true );
-			else
-				SetTexture( m_MaterialParameterBlock, occlusion.value(), missingMap, false );
-
-		if ( metallic )
-			if ( pInfo->hMetallicMap )
-				SetTexture( m_MaterialParameterBlock, metallic.value(), pInfo->hMetallicMap, true );
-			else
-				SetTexture( m_MaterialParameterBlock, metallic.value(), missingMap, false );
-
-		if ( roughness )
-			if ( pInfo->hRoughnessMap )
-				SetTexture( m_MaterialParameterBlock, roughness.value(), pInfo->hRoughnessMap, true );
-			else
-				SetTexture( m_MaterialParameterBlock, roughness.value(), missingMap, false );
-
-		if ( mapSampler && materialInputSet )
+		if ( m_hShader->HasGlobalBindings() )
 		{
 			for ( auto i{ 0uz }; i < MFIF; i++ )
 			{
-				if ( m_hDescriptors[i].size() <= materialInputSet.value() )
-					m_hDescriptors[i].resize( materialInputSet.value() + 1 );
-
-				if ( !m_hDescriptors[i][materialInputSet.value()] )
-					m_hDescriptors[i][materialInputSet.value()] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[materialInputSet.value()] );
-
-				CDescriptorManager::WriteSampler( m_hDescriptors[i][materialInputSet.value()], mapSampler.value(), missingMap );
+				m_hDescriptors[i].resize( GlobalScopeSignature + 1 );
+				m_hDescriptors[i][GlobalScopeSignature] = CDescriptorManager::Allocate( m_ShaderReflectionData.pDescriptorSignatures[GlobalScopeSignature] );
 			}
-			m_BindingsWritten[{ materialInputSet.value(), mapSampler.value() }] = true;
 		}
-		else if ( !mapSampler && mapSampler.error() == MW_ERROR_NON_EXISTANT )
-			MW_ERROR( "Failed to find binding for material MapSampler: Non existant" );
-		else if ( !mapSampler )
-			MW_ERROR( "Failed to find binding for material MapSampler: Unkown error" );
-	
+
 		if ( HasGlobalBinding( c_CameraConstantsBindingName, m_hShader->GetShaderProgram()->getLayout() ) )
 		{
 			this->BindUBO( c_CameraConstantsBindingName, CFrameManager::GetCurrentFrameGraph()->GetCameraUniformBuffers(), false );
