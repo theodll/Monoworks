@@ -348,6 +348,7 @@ namespace Monoworks::RHI
 	bool CVulkanSDLPresenter::OnResize( MAYBE_UNUSED SEvent& event )
 	{
 		MW_PROFILE_FUNC;
+		m_SwapchainExtent = event.GetPayload<Events::SWindowResize>().NewExtent;
 		CStaticRenderer::WaitRenderingIdle();
 		SVulkanSDLPresentationInitialization2Info info;
 		info.pDevice = CVulkanContext::GetDevice()->GetDevice();
@@ -408,7 +409,7 @@ namespace Monoworks::RHI
 		{
 		
 		}
-		else if ( result != VK_ERROR_OUT_OF_DATE_KHR || result != VK_SUBOPTIMAL_KHR )
+		else if ( result != VK_ERROR_OUT_OF_DATE_KHR && result != VK_SUBOPTIMAL_KHR )
 		{
 			// When the surface was resized, it gets caught in the next frame before rendering in the event queue. 
 			MW_ASSERT(false, "Failed to present.");

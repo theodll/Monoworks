@@ -106,6 +106,7 @@ namespace Monoworks
 
 
 		CStaticRenderer::SetRenderableExtend(m_pApplicationCreationInfos.RenderableExtent);
+		CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, CApplication::OnResize );
 
 		m_GraphicsContext = Ref<RHI::CVulkanContext>::Create();
 		m_GraphicsContext->Init();
@@ -134,6 +135,14 @@ namespace Monoworks
 		if ( code != 0 )
 			throw CFatalException( static_cast< EResult >( code ), "Fatal Shutdown requested");
 	}
+
+	bool MWAPI_CALL CApplication::OnResize( SEvent& e ) 
+	{
+		MW_PROFILE_FUNC;
+		auto ex = e.GetPayload<Events::SWindowResize>().NewExtent;
+		m_pApplicationCreationInfos.RenderableExtent = ex;
+		return false;
+	};
 
 	void CApplication::Frame()
 	{

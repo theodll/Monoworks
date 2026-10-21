@@ -1455,7 +1455,6 @@ namespace Monoworks
 			gbuf->Emissive->TransitionLayout(			i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->MotionVector->TransitionLayout(		i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->EntityMaterialID->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
-			gbuf->Depth->TransitionLayout(				i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT, -1, true );
 		}
 
 		// Create depth pre pass
@@ -1677,17 +1676,17 @@ namespace Monoworks
 					c[i] = m_hCompositeImages[i];
 			}
 
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-			hComputeRenderPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+			hComputeRenderPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
 		}
 
 		if ( HasGlobalBinding( c_CameraConstantsBindingName, hComputeRenderPass->m_hShader->GetShaderProgram()->getLayout() ) )
-			hComputeRenderPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false);
+			hComputeRenderPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, true);
 	}
 
 	bool MWAPI_CALL CDefferedFrameGraph::OnResize( SEvent& e )
@@ -1695,14 +1694,15 @@ namespace Monoworks
 		MW_PROFILE_FUNC;
 		CStaticRenderer::WaitRenderingIdle();
 		MW_INFO("Recreating GBuffers.");
+		auto extent = e.GetPayload<Events::SWindowResize>().NewExtent;
+
+		SExtent3D re = { extent.Width, extent.Height, 1 };
+
+
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
 			auto& gbuf = m_hGBuffers[i];
 			gbuf = Ref<GBuffer>::Create();
-
-			auto extent = e.GetPayload<Events::SWindowResize>().NewExtent;
-
-			SExtent3D re = { extent.Width, extent.Height, 1 }; 
 
 			constexpr auto commonFlags = MW_IMAGE_USAGE_SAMPLED_BIT;
 
@@ -1770,7 +1770,20 @@ namespace Monoworks
 			gbuf->Emissive->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->MotionVector->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->EntityMaterialID->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
-			gbuf->Depth->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT, -1, true );
+		}
+
+		for ( auto& graphicsPrePass : m_hGraphicsPrePasses )
+		{
+			if ( !graphicsPrePass )
+				continue;
+
+			if ( graphicsPrePass->m_DepthAttachment )
+			{
+				for ( auto i{ 0uz }; i < MFIF; i++ )
+					graphicsPrePass->m_DepthAttachment.value()[i].hAttachmentImage = m_hGBuffers[i]->Depth;
+			}
+
+			graphicsPrePass->m_RenderingArea = extent;
 		}
 
 
@@ -1813,17 +1826,14 @@ namespace Monoworks
 						c[i] = m_hCompositeImages[i];
 				}
 
-				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao );
-				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm );
-				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e );
-				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv );
-				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d );
-				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-				hDefferedResolutionPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+				hDefferedResolutionPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
 			}
-
-			if ( HasGlobalBinding( c_CameraConstantsBindingName, hDefferedResolutionPass->m_hShader->GetShaderProgram()->getLayout() ) )
-				hDefferedResolutionPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false );
 		}
 
 		for ( auto& hPostProcessPass : m_hPostProcessPasses )
@@ -1865,18 +1875,62 @@ namespace Monoworks
 						c[i] = m_hCompositeImages[i];
 				}
 
-				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao );
-				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm );
-				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e );
-				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv );
-				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d );
-				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-				hPostProcessPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s );
-			}
 
-			if ( HasGlobalBinding( c_CameraConstantsBindingName, hPostProcessPass->m_hShader->GetShaderProgram()->getLayout() ) )
-				hPostProcessPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+				hPostProcessPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
+			}
 		}
+
+		std::array<Ref<RHI::ITexture2D>, MFIF> ao;
+		std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
+		std::array<Ref<RHI::ITexture2D>, MFIF> em;
+		std::array<Ref<RHI::ITexture2D>, MFIF> mv;
+		std::array<Ref<RHI::ITexture2D>, MFIF> d;
+		std::array<Ref<RHI::ITexture2D>, MFIF> c;
+		std::array<Ref<RHI::ITexture2D>, MFIF> s;
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			if ( !ao[i] )
+				ao[i] = m_hGBuffers[i]->AlbedoOcclusion;
+
+			if ( !nrm[i] )
+				nrm[i] = m_hGBuffers[i]->NormalRoughMetal;
+
+			if ( !em[i] )
+				em[i] = m_hGBuffers[i]->Emissive;
+
+			if ( !mv[i] )
+				mv[i] = m_hGBuffers[i]->MotionVector;
+
+			if ( !d[i] )
+				d[i] = m_hGBuffers[i]->Depth;
+
+			if ( !s[i] )
+				s[i] = m_hGBuffers[i]->Sampler;
+
+			if ( !c[i] )
+				c[i] = m_hCompositeImages[i];
+		}
+
+
+		m_hTonemapPass->BindTexture( "u_ProxyImage", m_hPresentationProxyImages, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, em, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+		m_hTonemapPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
+		float aspect = static_cast<float>( re.Width ) / static_cast<float>( re.Height );
+
+		m_hCamera->UpdatePerspectiveProjection( 90, aspect, 0.0f, 1.0f );
+
 		return false; 
 	}
 
