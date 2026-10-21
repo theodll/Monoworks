@@ -4,6 +4,7 @@
 #include <functional>
 
 #include <core/Application.hh>
+#include <events/EventManager.hh>
 
 #include <rhi/agnostic/ComputePipeline.hh>
 #include <rhi/agnostic/GraphicsPipeline.hh>
@@ -1454,7 +1455,6 @@ namespace Monoworks
 			gbuf->Emissive->TransitionLayout(			i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->MotionVector->TransitionLayout(		i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
 			gbuf->EntityMaterialID->TransitionLayout(	i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
-			gbuf->Depth->TransitionLayout(				i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_DEPTH_BIT, -1, true );
 		}
 
 		// Create depth pre pass
@@ -1620,6 +1620,8 @@ namespace Monoworks
 		this->AddPrePass( std::move(depthPrePass) );
 		this->AddDefferedResolutionPass( std::move( lightPass ), 0 );
 
+		m_ResizeCallbackID = CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, [&]( SEvent& e ) { return OnResize( e ); } );
+
 	};
 
 	CDefferedFrameGraph::~CDefferedFrameGraph()	 NOEXCEPT 
@@ -1631,6 +1633,7 @@ namespace Monoworks
 		m_hPostProcessPasses.clear();
 
 		CPipelineManager::DeleteGraphicsPipeline( m_DefaultBasePassPipelineHash );
+		CEventManager::Unsubscribe( MW_EVENT_WINDOW_RESIZE, m_ResizeCallbackID );
 
 
 		MW_INFO( "Destroy CDefferedFrameGraph " );
@@ -1674,17 +1677,264 @@ namespace Monoworks
 					c[i] = m_hCompositeImages[i];
 			}
 
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d );
-			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, false, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
-			hComputeRenderPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+			hComputeRenderPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+			hComputeRenderPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
 		}
 
 		if ( HasGlobalBinding( c_CameraConstantsBindingName, hComputeRenderPass->m_hShader->GetShaderProgram()->getLayout() ) )
-			hComputeRenderPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, false);
+			hComputeRenderPass->BindUBO( c_CameraConstantsBindingName, m_hCameraUBOs, true);
+	}
+
+	bool MWAPI_CALL CDefferedFrameGraph::OnResize( SEvent& e )
+	{
+		MW_PROFILE_FUNC;
+		CStaticRenderer::WaitRenderingIdle();
+		MW_INFO("Recreating GBuffers.");
+		auto extent = e.GetPayload<Events::SWindowResize>().NewExtent;
+
+		if ( extent.Width == 0 || extent.Height == 0 )
+			return false;
+
+		SExtent3D re = { extent.Width, extent.Height, 1 };
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			auto& gbuf = m_hGBuffers[i];
+			gbuf = Ref<GBuffer>::Create();
+
+			constexpr auto commonFlags = MW_IMAGE_USAGE_SAMPLED_BIT;
+
+			RHI::STextureCreateInfo gbufSamplerInfo{};
+			gbufSamplerInfo.Extent = re;
+			gbufSamplerInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			gbufSamplerInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			gbufSamplerInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_CREATION_BIT | MW_TEXTURE_CREATION_FLAG_DISABLE_IMAGE_VIEW_CREATION_BIT;
+			gbuf->Sampler = ITexture2D::Create( &gbufSamplerInfo );
+
+			RHI::STextureCreateInfo gbufImgInfo{};
+			gbufImgInfo.Extent = re;
+			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			gbufImgInfo.Flags = MW_TEXTURE_CREATION_FLAG_DISABLE_SAMPLER_CREATION_BIT; // Not needed because we have a extra sampler.
+			gbufImgInfo.Usage = MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | commonFlags;
+
+			gbufImgInfo.Format = MW_FORMAT_A2R10G10B10_UNORM_PACK32;
+			gbuf->NormalRoughMetal = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_B10G11R11_UFLOAT_PACK32;
+			gbuf->Emissive = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_R16G16_SFLOAT;
+			gbuf->MotionVector = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_R32_UINT;
+			gbuf->EntityMaterialID = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_R8G8B8A8_UNORM;
+			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			gbufImgInfo.Usage |= MW_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | MW_IMAGE_USAGE_STORAGE_BIT;
+			gbuf->AlbedoOcclusion = ITexture2D::Create( &gbufImgInfo );
+
+			gbufImgInfo.Format = MW_FORMAT_D32_SFLOAT;
+			gbufImgInfo.ImageLayout = MW_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
+			gbufImgInfo.Usage = MW_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | commonFlags;
+			gbufImgInfo.AspectMask = MW_IMAGE_ASPECT_DEPTH_BIT;
+			gbuf->Depth = ITexture2D::Create( &gbufImgInfo );
+
+			auto& composite = m_hCompositeImages[i];
+
+			RHI::STextureCreateInfo compositeImgInfo{};
+			compositeImgInfo.Extent = re;
+			compositeImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			compositeImgInfo.Format = MW_FORMAT_R16G16B16A16_SFLOAT;
+			compositeImgInfo.ImageLayout = MW_IMAGE_LAYOUT_GENERAL;
+			compositeImgInfo.Usage = MW_IMAGE_USAGE_STORAGE_BIT | MW_IMAGE_USAGE_SAMPLED_BIT;
+			composite = ITexture2D::Create( &compositeImgInfo );
+
+			RHI::STextureCreateInfo presentationProxyImgInfo{};
+			presentationProxyImgInfo.Extent = re;
+			presentationProxyImgInfo.AspectMask = MW_IMAGE_ASPECT_COLOR_BIT;
+			presentationProxyImgInfo.Format = MW_FORMAT_B8G8R8A8_UNORM;
+			presentationProxyImgInfo.ImageLayout = MW_IMAGE_LAYOUT_GENERAL;
+			presentationProxyImgInfo.Usage = MW_IMAGE_USAGE_STORAGE_BIT | MW_IMAGE_USAGE_SAMPLED_BIT | MW_IMAGE_USAGE_TRANSFER_SRC_BIT;
+
+			m_hPresentationProxyImages[i] = ITexture2D::Create( &presentationProxyImgInfo );
+
+			// Root graphics CBs are not recording during frame-graph construction; use the uploader.
+			m_hPresentationProxyImages[i]->TransitionLayout( i, MW_IMAGE_LAYOUT_GENERAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+
+
+			gbuf->AlbedoOcclusion->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->NormalRoughMetal->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->Emissive->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->MotionVector->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+			gbuf->EntityMaterialID->TransitionLayout( i, MW_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, MW_PIPELINE_STAGE_ALL_COMMANDS_BIT, MW_IMAGE_ASPECT_COLOR_BIT, -1, true );
+		}
+
+		for ( auto& graphicsPrePass : m_hGraphicsPrePasses )
+		{
+			if ( !graphicsPrePass )
+				continue;
+
+			if ( graphicsPrePass->m_DepthAttachment )
+			{
+				for ( auto i{ 0uz }; i < MFIF; i++ )
+					graphicsPrePass->m_DepthAttachment.value()[i].hAttachmentImage = m_hGBuffers[i]->Depth;
+			}
+
+			graphicsPrePass->m_RenderingArea = extent;
+		}
+
+
+		for ( auto& hDefferedResolutionPass : m_hDefferedResolutionPasses )
+		{
+			if ( !hDefferedResolutionPass )
+				continue;
+			
+			if ( HasParameterBlock( c_GbufBindingName, hDefferedResolutionPass->m_hShader->GetShaderProgram()->getLayout() ) )
+			{
+				std::array<Ref<RHI::ITexture2D>, MFIF> ao;
+				std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
+				std::array<Ref<RHI::ITexture2D>, MFIF> e;
+				std::array<Ref<RHI::ITexture2D>, MFIF> mv;
+				std::array<Ref<RHI::ITexture2D>, MFIF> d;
+				std::array<Ref<RHI::ITexture2D>, MFIF> c;
+				std::array<Ref<RHI::ITexture2D>, MFIF> s;
+
+				for ( auto i{ 0uz }; i < MFIF; i++ )
+				{
+					if ( !ao[i] )
+						ao[i] = m_hGBuffers[i]->AlbedoOcclusion;
+
+					if ( !nrm[i] )
+						nrm[i] = m_hGBuffers[i]->NormalRoughMetal;
+
+					if ( !e[i] )
+						e[i] = m_hGBuffers[i]->Emissive;
+
+					if ( !mv[i] )
+						mv[i] = m_hGBuffers[i]->MotionVector;
+
+					if ( !d[i] )
+						d[i] = m_hGBuffers[i]->Depth;
+
+					if ( !s[i] )
+						s[i] = m_hGBuffers[i]->Sampler;
+
+					if ( !c[i] )
+						c[i] = m_hCompositeImages[i];
+				}
+
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+				hDefferedResolutionPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+				hDefferedResolutionPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
+			}
+		}
+
+		for ( auto& hPostProcessPass : m_hPostProcessPasses )
+		{
+			if ( !hPostProcessPass )
+				continue;
+
+			if ( HasParameterBlock( c_GbufBindingName, hPostProcessPass->m_hShader->GetShaderProgram()->getLayout() ) )
+			{
+				std::array<Ref<RHI::ITexture2D>, MFIF> ao;
+				std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
+				std::array<Ref<RHI::ITexture2D>, MFIF> e;
+				std::array<Ref<RHI::ITexture2D>, MFIF> mv;
+				std::array<Ref<RHI::ITexture2D>, MFIF> d;
+				std::array<Ref<RHI::ITexture2D>, MFIF> c;
+				std::array<Ref<RHI::ITexture2D>, MFIF> s;
+
+				for ( auto i{ 0uz }; i < MFIF; i++ )
+				{
+					if ( !ao[i] )
+						ao[i] = m_hGBuffers[i]->AlbedoOcclusion;
+
+					if ( !nrm[i] )
+						nrm[i] = m_hGBuffers[i]->NormalRoughMetal;
+
+					if ( !e[i] )
+						e[i] = m_hGBuffers[i]->Emissive;
+
+					if ( !mv[i] )
+						mv[i] = m_hGBuffers[i]->MotionVector;
+
+					if ( !d[i] )
+						d[i] = m_hGBuffers[i]->Depth;
+
+					if ( !s[i] )
+						s[i] = m_hGBuffers[i]->Sampler;
+
+					if ( !c[i] )
+						c[i] = m_hCompositeImages[i];
+				}
+
+
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, e, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+				hPostProcessPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+				hPostProcessPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
+			}
+		}
+
+		std::array<Ref<RHI::ITexture2D>, MFIF> ao;
+		std::array<Ref<RHI::ITexture2D>, MFIF> nrm;
+		std::array<Ref<RHI::ITexture2D>, MFIF> em;
+		std::array<Ref<RHI::ITexture2D>, MFIF> mv;
+		std::array<Ref<RHI::ITexture2D>, MFIF> d;
+		std::array<Ref<RHI::ITexture2D>, MFIF> c;
+		std::array<Ref<RHI::ITexture2D>, MFIF> s;
+
+		for ( auto i{ 0uz }; i < MFIF; i++ )
+		{
+			if ( !ao[i] )
+				ao[i] = m_hGBuffers[i]->AlbedoOcclusion;
+
+			if ( !nrm[i] )
+				nrm[i] = m_hGBuffers[i]->NormalRoughMetal;
+
+			if ( !em[i] )
+				em[i] = m_hGBuffers[i]->Emissive;
+
+			if ( !mv[i] )
+				mv[i] = m_hGBuffers[i]->MotionVector;
+
+			if ( !d[i] )
+				d[i] = m_hGBuffers[i]->Depth;
+
+			if ( !s[i] )
+				s[i] = m_hGBuffers[i]->Sampler;
+
+			if ( !c[i] )
+				c[i] = m_hCompositeImages[i];
+		}
+
+
+		m_hTonemapPass->BindTexture( "u_ProxyImage", m_hPresentationProxyImages, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufAOBindingName, ao, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufNRMBindingName, nrm, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufEBindingName, em, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufMVBindingName, mv, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufDBindingName, d, true );
+		m_hTonemapPass->BindTexture( c_GbufBindingName, c_GbufCBindingName, c, true, MW_DESCRIPTOR_TYPE_STORAGE_IMAGE );
+		m_hTonemapPass->BindSampler( c_GbufBindingName, c_GbufSBindingName, s, true );
+		float aspect = static_cast<float>( re.Width ) / static_cast<float>( re.Height );
+
+		m_hCamera->UpdatePerspectiveProjection( 90, aspect, 0.0f, 1.0f );
+
+		return false; 
 	}
 
 	void CDefferedFrameGraph::AddPrePass( Ref<CComputeRenderPass> hComputePrePass, s32 MW_NULLABLE executionPriority ) NOEXCEPT

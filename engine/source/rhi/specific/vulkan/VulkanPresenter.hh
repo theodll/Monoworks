@@ -23,6 +23,7 @@ namespace Monoworks::RHI
 		CVulkanDevice*			pVulkanDevice;
 		VkPhysicalDevice		pPhysDevice;
 		const VkDevice*			pDevice;
+		VkSwapchainKHR			pOldSwapchain = nullptr;
 	};
 
 	struct SVulkanSDLPresentationAcquisitionInfo : public IPresentationAcquisitionInfo 

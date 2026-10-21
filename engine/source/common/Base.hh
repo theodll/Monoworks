@@ -174,7 +174,8 @@ extern TracyVkCtx TracyTransferContext;
 #define MW_SET_CVAR(varName, value) Monoworks::CCvarManager::Set(varName, value);
 #define MW_SET_FLOAT_CVAR(varName, value) Monoworks::CCvarManager::SetValue(varName, value);
 
-#define MW_DEFINE_DISPATCHABLE_EVENT(name) namespace Events { struct S##name {}; }
+#define MW_DEFINE_DISPATCHABLE_EVENT_LEGACY(name) namespace Events { struct DEPRECATED S##name{}; };
+#define MW_DEFINE_DISPATCHABLE_EVENT(name) namespace Events { struct name{};  };
 
 using u8 = uint8_t;
 using u16 = uint16_t;
@@ -279,9 +280,11 @@ namespace Monoworks
 		/// @brief Routine failed due to a graphics unit driver crash.
 		MW_ERROR_GPU_DEVICE_LOST = -9,
 		/// @brief Routine failed due to a parameter being invalid.
-		MW_ERROR_INVALID_PARAMETER = -10, 
+		MW_ERROR_INVALID_PARAMETER = -10,
 		/// @brief Routine failed due to invalid or missing setup before routine execution
-		MW_ERROR_INVALID_SETUP = -11
+		MW_ERROR_INVALID_SETUP = -11,
+
+		MW_ERROR_SUBOPTIMAL = -12,
 	};
 
 	class CRuntimeException : public std::runtime_error 

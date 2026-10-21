@@ -1,5 +1,7 @@
 #pragma once
 #include <common/Base.hh>
+#include <common/Events.hh>
+#include <events/Event.hh>
 #include <common/Memory.hh>
 #include <common/Math.hh>
 
@@ -91,7 +93,7 @@ namespace Monoworks
 		 * @return The matching image index to the presentation image.
 		 * @param frameIndex frame index of the current frame.
 		 */
-		static u32  MWAPI_CALL AcquireNextImage( u32 frameIndex ) NOEXCEPT;
+		static EResult MWAPI_CALL AcquireNextImage( u32 frameIndex, u32* pImageIndex ) NOEXCEPT;
 
 		/**
 		 * @brief Presents the current, from the IPresentation acquired, presentation image through the selected IPresentation interface.
@@ -260,7 +262,11 @@ namespace Monoworks
 		 * @brief Sets the renderable surface extent.
 		 * @param renderableExtent pointer to the new renderable extent dimensions.
 		 */
-		static void MWAPI_CALL SetRenderableExtend( const SExtent2D* renderableExtent ) { m_RenderableExtent = *renderableExtent; };
+		static void MWAPI_CALL SetRenderableExtend( const SExtent2D& renderableExtent ) { m_RenderableExtent = renderableExtent; };
+
+		static bool MWAPI_CALL OnResize( SEvent& e );
+
+		static bool MWAPI_CALL IsMinimized() { return m_bMinimized; };
 
     private:
         // Used for albedo textures 
@@ -271,6 +277,8 @@ namespace Monoworks
         static FrameGraphicsProfilingData m_GraphicsProfilingData;
 
         static SExtent2D m_RenderableExtent;
+
+		static bool m_bMinimized;
 
         static Slang::ComPtr<slang::IGlobalSession> m_SlangGlobalSession;
 

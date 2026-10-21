@@ -76,7 +76,9 @@ namespace Monoworks
 		 * @param type Type of the Event to subscribe
 		 * @param func Function Pointer to the function that should be executed when this event is processed
 		 */
-		static void Subscribe(EEventType type, std::function<bool(SEvent&)> func);
+		static size_t Subscribe(EEventType type, std::function<bool(SEvent&)> func);
+
+		static void	  Unsubscribe( EEventType type, size_t id );
 
 		/**
 		 * @brief Thread-Safe way to enlist a generic event into the event queue.

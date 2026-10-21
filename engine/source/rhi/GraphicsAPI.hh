@@ -136,7 +136,7 @@ namespace Monoworks::RHI
         /**
          * @brief Acquires the next image from the selected presenter.
          */
-        virtual  u32  MWAPI_CALL AcquireNextImage( u32 frameIndex ) NOEXCEPT = 0;
+        virtual  EResult  MWAPI_CALL AcquireNextImage( u32* pImageIndex, u32 frameIndex ) NOEXCEPT = 0;
 
         virtual  void MWAPI_CALL Present( u32 frameIndex ) NOEXCEPT = 0;
 

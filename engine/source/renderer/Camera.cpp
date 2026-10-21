@@ -37,13 +37,13 @@ namespace Monoworks
 		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
 	}
 
-	 void CCamera::UpdatePerspectiveProjection( float fovY, float aspect, Vector clippingPlanesNF ) NOEXCEPT
+	 void CCamera::UpdatePerspectiveProjection( float fovY, float aspect, float clipPlaneNear, float clipPlaneFar ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
 		m_PreviousProjectionMatrix = m_CurrentProjectionMatrix;
 		m_PreviousViewProjectionMatrix = m_CurrentViewProjectionMatrix;
 
-		m_CurrentProjectionMatrix = glm::perspective( glm::radians( fovY ), aspect, clippingPlanesNF.x, clippingPlanesNF.y );
+		m_CurrentProjectionMatrix = glm::perspective( glm::radians( fovY ), aspect, clipPlaneNear, clipPlaneFar );
 		m_CurrentViewProjectionMatrix = m_CurrentProjectionMatrix * m_CurrentViewMatrix;
 	}
 

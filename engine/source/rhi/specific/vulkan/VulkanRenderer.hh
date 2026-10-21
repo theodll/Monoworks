@@ -46,7 +46,7 @@ namespace Monoworks::RHI
 
          void MWAPI_CALL ProfileFrameData() NOEXCEPT override;
 
-         u32  MWAPI_CALL AcquireNextImage( u32 frameIndex ) NOEXCEPT override;
+         EResult  MWAPI_CALL AcquireNextImage( u32* pImageIndex, u32 frameIndex ) NOEXCEPT override;
          void MWAPI_CALL Present( MAYBE_UNUSED u32 frameIndex ) NOEXCEPT override;
 
          void MWAPI_CALL BindGraphicsPipeline(

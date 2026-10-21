@@ -13,7 +13,7 @@ namespace Monoworks
 
 
 		 void UpdateOrthographicProjection( Vector4 clippingPlanesLRTB, Vector2 clippingPlanesNF ) NOEXCEPT;
-		 void UpdatePerspectiveProjection( float fovY, float aspect, Vector pClippingPlanesNF ) NOEXCEPT;
+		 void UpdatePerspectiveProjection( float fovY, float aspect, float clipPlaneNear, float clipPlaneFar ) NOEXCEPT;
 
 		 void UpdateViewDirection( Vector position, Vector direction, Vector up = Vector( .0f, -1.f, .0f ) ) NOEXCEPT;
 		 void UpdateViewTarget( Vector position, Vector target, Vector up = Vector( .0f, -1.f, .0f ) ) NOEXCEPT;
