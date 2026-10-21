@@ -280,9 +280,11 @@ namespace Monoworks
 		/// @brief Routine failed due to a graphics unit driver crash.
 		MW_ERROR_GPU_DEVICE_LOST = -9,
 		/// @brief Routine failed due to a parameter being invalid.
-		MW_ERROR_INVALID_PARAMETER = -10, 
+		MW_ERROR_INVALID_PARAMETER = -10,
 		/// @brief Routine failed due to invalid or missing setup before routine execution
-		MW_ERROR_INVALID_SETUP = -11
+		MW_ERROR_INVALID_SETUP = -11,
+
+		MW_ERROR_SUBOPTIMAL = -12,
 	};
 
 	class CRuntimeException : public std::runtime_error 

@@ -63,7 +63,7 @@ namespace Monoworks::RHI
 
 		virtual bool OnResize( SEvent& event ) = 0;
 
-		NODISCARD virtual u32 Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT = 0;
+		NODISCARD virtual EResult Acquire( u32* pImageIndex, const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT = 0;
 		virtual void TransitionRender( const IPresentationTransitionRenderInfo* pInfo ) NOEXCEPT = 0;
 		virtual void TransitionPresent( const IPresentationTransitionPresentInfo* pInfo ) NOEXCEPT = 0;
 		virtual void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT = 0;

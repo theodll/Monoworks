@@ -35,7 +35,7 @@ namespace Monoworks::RHI
 		void CreateSurface( MAYBE_UNUSED const IPresentationSurfaceCreationInfo* pInfo ) NOEXCEPT {};
 		bool OnResize( MAYBE_UNUSED SEvent& event );
 
-		NODISCARD u32 Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT;
+		NODISCARD EResult Acquire( u32* pImageIndex, const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT;
 		void TransitionRender( const IPresentationTransitionRenderInfo* pInfo ) NOEXCEPT;
 		void TransitionPresent( const IPresentationTransitionPresentInfo* pInfo ) NOEXCEPT;
 		void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT;

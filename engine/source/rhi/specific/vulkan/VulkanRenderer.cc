@@ -295,8 +295,9 @@ namespace Monoworks::RHI
 #endif
 	}
 
-	 u32 CVulkanRenderer::AcquireNextImage( 
-		u32 frameIndex ) NOEXCEPT
+	 EResult CVulkanRenderer::AcquireNextImage( 
+		u32* pImageIndex,
+		 u32 frameIndex ) NOEXCEPT
 	{
         MW_PROFILE_FUNC;
         auto presenter = CVulkanContext::GetPresenter();
@@ -310,7 +311,7 @@ namespace Monoworks::RHI
 			acquisitionInfo.pImageAvailableSemaphore = CVulkanRenderManager::GetImageAvailableSemaphore( frameIndex );
 			acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
 
-			return presenter->Acquire( &acquisitionInfo );
+			return presenter->Acquire( pImageIndex, &acquisitionInfo );
 		}
 		else if ( CApplication::GetCreateInfos()->UseQt )
 		{
@@ -321,8 +322,10 @@ namespace Monoworks::RHI
 			acquisitionInfo.pInFlightFence = CVulkanRenderManager::GetInFlightFence( frameIndex );
 			acquisitionInfo.pVulkanDevice = CVulkanContext::GetDevice();
 
-			return presenter->Acquire( &acquisitionInfo );
+			return presenter->Acquire( pImageIndex, &acquisitionInfo );
 		}
+
+		return MW_ERROR_INVALID_SETUP;
 	}
 
 	 void CVulkanRenderer::Present( 

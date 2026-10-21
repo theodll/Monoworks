@@ -163,7 +163,7 @@ namespace Monoworks::RHI
 		return false;
 	};
 
-	NODISCARD u32 CVulkanQtPresenter::Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT 
+	NODISCARD EResult CVulkanQtPresenter::Acquire( u32* pImageIndex, const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
 		MW_ASSERT( pInfo->Medium == MW_PRESENTATION_MEDIUM_VULKAN_QT, "Invalid Presentation Medium" );
@@ -175,7 +175,8 @@ namespace Monoworks::RHI
 			MW_ASSERT( false, "Insufficient Presentation Images." );
 		}
 
-		m_CurrentImageIndex = ( m_CurrentImageIndex + 1 ) % MFIF;
+		*pImageIndex = ( m_CurrentImageIndex + 1 ) % MFIF;
+		m_CurrentImageIndex = *pImageIndex;
 
 		MW_VK_CHECK( vkWaitForFences(
 			*info->pVulkanDevice->GetDevice(),
@@ -204,7 +205,7 @@ namespace Monoworks::RHI
 			*info->pInFlightFence 
 		), "Failed to submit acquire semaphore trigger" );
 
-		return m_CurrentImageIndex;
+		return MW_SUCCESS;
 	};
 
 	void CVulkanQtPresenter::TransitionRender( const IPresentationTransitionRenderInfo* pInfo ) NOEXCEPT 

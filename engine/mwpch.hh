@@ -24,6 +24,7 @@
 #include <stack>
 #include <utility>
 #include <functional>
+#include <thread>
 
 #include <algorithm>
 #include <numeric>

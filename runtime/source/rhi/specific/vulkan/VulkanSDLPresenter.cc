@@ -350,17 +350,23 @@ namespace Monoworks::RHI
 		MW_PROFILE_FUNC;
 		m_SwapchainExtent = event.GetPayload<Events::SWindowResize>().NewExtent;
 		CStaticRenderer::WaitRenderingIdle();
+
+		VkSwapchainKHR oldSwapchain = m_Swapchain;
+
 		SVulkanSDLPresentationInitialization2Info info;
 		info.pDevice = CVulkanContext::GetDevice()->GetDevice();
 		info.pPhysDevice = *CVulkanContext::GetDevice()->GetPhysicalDevice();
 		info.pVulkanDevice = CVulkanContext::GetDevice();
-		info.pOldSwapchain = m_Swapchain;
+		info.pOldSwapchain = oldSwapchain;
+
 		Init2( &info );
+
+		vkDestroySwapchainKHR( *CVulkanContext::GetDevice(), oldSwapchain, CVulkanContext::GetCallbacks() );
 
 		return false;
 	}
 
-	NODISCARD u32 CVulkanSDLPresenter::Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT 
+	NODISCARD EResult CVulkanSDLPresenter::Acquire( u32* pImageIndex, const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT 
 	{
 		MW_PROFILE_FUNC;
 		MW_ASSERT( pInfo->Medium == MW_PRESENTATION_MEDIUM_VULKAN_SDL, "Invalid Presentation Medium" );
@@ -374,16 +380,20 @@ namespace Monoworks::RHI
 			VK_TRUE,
 			std::numeric_limits<uint64_t>::max() );
 
-		vkAcquireNextImageKHR(
+		auto res = vkAcquireNextImageKHR(
 			*info->pVulkanDevice->GetDevice(),
 			m_Swapchain,
 			std::numeric_limits<uint64_t>::max(),
 			*info->pImageAvailableSemaphore,
 			VK_NULL_HANDLE,
-			&m_CurrentImageIndex );
+			pImageIndex );
 
-		return m_CurrentImageIndex;
+		m_CurrentImageIndex = *pImageIndex;
 
+		if ( res == VK_SUBOPTIMAL_KHR )
+			return MW_ERROR_SUBOPTIMAL;
+
+		return MW_SUCCESS;
 	}
 	
 	void CVulkanSDLPresenter::Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT 

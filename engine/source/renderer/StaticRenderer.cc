@@ -18,6 +18,8 @@ namespace Monoworks
 
 		Monoworks::SExtent2D CStaticRenderer::m_RenderableExtent;
 
+		bool CStaticRenderer::m_bMinimized;
+
 		Slang::ComPtr<slang::IGlobalSession>    CStaticRenderer::m_SlangGlobalSession;
 
         
@@ -69,6 +71,16 @@ namespace Monoworks
 				} );
 
 			CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, CStaticRenderer::OnResize );
+			CEventManager::Subscribe( MW_EVENT_WINDOW_MINIMIZE, []( SEvent&  e ) 
+				{
+					auto p = e.GetPayload<Events::SWindowMinimize>();
+					
+					m_bMinimized = p.Minimized;
+
+					return false; 
+				} 
+			);
+
 
 		}
 
@@ -152,10 +164,10 @@ namespace Monoworks
         };
 
 
-		 u32 CStaticRenderer::AcquireNextImage( u32 frameIndex ) NOEXCEPT
+		 EResult CStaticRenderer::AcquireNextImage( u32 frameIndex, u32* pImageIndex ) NOEXCEPT
 		{
 			MW_PROFILE_FUNC;
-			return m_pInstance->AcquireNextImage( frameIndex );
+			return m_pInstance->AcquireNextImage( pImageIndex, frameIndex );
 		}
 
 		 void CStaticRenderer::Present( u32 frameIndex ) NOEXCEPT

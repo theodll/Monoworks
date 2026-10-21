@@ -93,7 +93,7 @@ namespace Monoworks
 		 * @return The matching image index to the presentation image.
 		 * @param frameIndex frame index of the current frame.
 		 */
-		static u32  MWAPI_CALL AcquireNextImage( u32 frameIndex ) NOEXCEPT;
+		static EResult MWAPI_CALL AcquireNextImage( u32 frameIndex, u32* pImageIndex ) NOEXCEPT;
 
 		/**
 		 * @brief Presents the current, from the IPresentation acquired, presentation image through the selected IPresentation interface.
@@ -266,6 +266,8 @@ namespace Monoworks
 
 		static bool MWAPI_CALL OnResize( SEvent& e );
 
+		static bool MWAPI_CALL IsMinimized() { return m_bMinimized; };
+
     private:
         // Used for albedo textures 
         static Ref<RHI::ITexture2D> m_hMissingTexture;
@@ -275,6 +277,8 @@ namespace Monoworks
         static FrameGraphicsProfilingData m_GraphicsProfilingData;
 
         static SExtent2D m_RenderableExtent;
+
+		static bool m_bMinimized;
 
         static Slang::ComPtr<slang::IGlobalSession> m_SlangGlobalSession;
 

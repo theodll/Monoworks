@@ -47,11 +47,23 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
+		if ( CStaticRenderer::IsMinimized() )
+		{
+			using namespace std::chrono_literals;
+			std::this_thread::sleep_for( 20ms );
+			return;
+		}
+
 		RHI::CPipelineManager::BatchCompile();
 
 		// Pre rendering setup
-		m_CurrentImageIndex = CStaticRenderer::AcquireNextImage( m_CurrentFrameIndex );
-		
+		EResult res = CStaticRenderer::AcquireNextImage( m_CurrentFrameIndex,&m_CurrentImageIndex );
+		if ( res == MW_ERROR_SUBOPTIMAL )
+		{
+			using namespace std::chrono_literals;
+			std::this_thread::sleep_for( 20ms );
+			return;
+		}
 		CStaticRenderer::BeginRootCommandbuffer( m_CurrentFrameIndex );
 
 		auto& presenter = CApplication::GetCreateInfos()->pPresenter;

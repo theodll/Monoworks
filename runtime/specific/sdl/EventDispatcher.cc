@@ -58,7 +58,15 @@ namespace Monoworks
 			case SDL_EVENT_WINDOW_MINIMIZED:
 			{
 				Events::SWindowMinimize e{};
+				e.Minimized = true;
 				CEventManager::EmitEvent(e, MW_EVENT_WINDOW_MINIMIZE);
+				break;
+			}
+			case SDL_EVENT_WINDOW_RESTORED:
+			{
+				Events::SWindowMinimize e{};
+				e.Minimized = false;
+				CEventManager::EmitEvent( e, MW_EVENT_WINDOW_MINIMIZE );
 				break;
 			}
 			case SDL_EVENT_KEY_DOWN:

@@ -23,7 +23,7 @@ namespace Monoworks::RHI
 
 		bool OnResize( SEvent& event ) override;
 
-		NODISCARD u32 Acquire( const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT override;
+		NODISCARD EResult Acquire( u32* pImageIndex, const IPresentationAcquisitionInfo* pInfo ) NOEXCEPT override;
 		void TransitionRender( const IPresentationTransitionRenderInfo* pInfo ) NOEXCEPT override;
 		void TransitionPresent( const IPresentationTransitionPresentInfo* pInfo ) NOEXCEPT override; 
 		void Present( const IPresentationPresentInfo* pInfo ) NOEXCEPT override;
