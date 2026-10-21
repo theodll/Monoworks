@@ -22,12 +22,24 @@ namespace Monoworks
 		MW_INFO("Shutdown CEventManager");
 	};
 
-	void CEventManager::Subscribe(EEventType type, std::function<bool(SEvent&)> func)
+	size_t CEventManager::Subscribe(EEventType type, std::function<bool(SEvent&)> func)
 	{
 		MW_PROFILE_FUNC;
-		MW_TRACE("Subscribed listener {} to event {}", reinterpret_cast<void*>(func.target<bool(*)(SEvent&)>()), EventTypeToString(type));
+		size_t id = m_Callbacks.size();
+		MW_TRACE("Subscribed listener {}({}) to event {}", id, reinterpret_cast<void*>(func.target<bool(*)(SEvent&)>()), EventTypeToString(type));
 		m_Callbacks[( u8 )type].emplace_back( 1, std::move( func ) );
+		return id;
 	};
+
+	void CEventManager::Unsubscribe( EEventType type, size_t id )
+	{
+		MW_PROFILE_FUNC;
+		MW_TRACE( "Delete listener {} from event {}", id, EventTypeToString( type ) );
+
+		auto& vec = m_Callbacks[( u8 )type];
+		vec[id].Alive = false;
+		vec[id].Function = nullptr;
+	}
 
 	void CEventManager::ProcessEvents() noexcept
 	{

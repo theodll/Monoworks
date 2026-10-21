@@ -9,34 +9,34 @@ namespace Monoworks
 
 		/// @brief Triggered when the window is closed.
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( WindowClose );
-		//MW_DEFINE_DISPATCHABLE_EVENT( WindowClose );
+		MW_DEFINE_DISPATCHABLE_EVENT( WindowClose );
 
 		/// @brief Triggered when the window gains focus.
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( WindowFocus );
-		//MW_DEFINE_DISPATCHABLE_EVENT( WindowFocus );
+		MW_DEFINE_DISPATCHABLE_EVENT( WindowFocus );
 
 		/// @brief Triggered when the window loses focus.
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( WindowLostFocus );
-		//MW_DEFINE_DISPATCHABLE_EVENT( WindowLostFocus );
+		MW_DEFINE_DISPATCHABLE_EVENT( WindowLostFocus );
 
 		/// @brief Triggered for each application tick.
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppTick );
-		//MW_DEFINE_DISPATCHABLE_EVENT( AppTick );
+		MW_DEFINE_DISPATCHABLE_EVENT( AppTick );
 
 		/// @brief Triggered when the application updates its logic.
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppUpdate );
-		//MW_DEFINE_DISPATCHABLE_EVENT( AppUpdate );
+		MW_DEFINE_DISPATCHABLE_EVENT( AppUpdate );
 
 		/// @brief Triggered when the application renders a frame.
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppRender );
-		//MW_DEFINE_DISPATCHABLE_EVENT( AppRender );
+		MW_DEFINE_DISPATCHABLE_EVENT( AppRender );
 
 		/// @brief Triggered when the application starts an entire frame cycle (before deffered event-processing).
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppFrame );
-		//MW_DEFINE_DISPATCHABLE_EVENT( AppFrame );
+		MW_DEFINE_DISPATCHABLE_EVENT( AppFrame );
 
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( PipelineCompilationStage );
-		//MW_DEFINE_DISPATCHABLE_EVENT( PipelineCompilationStage );
+		MW_DEFINE_DISPATCHABLE_EVENT( PipelineCompilationStage );
 
 		namespace Events
 		{

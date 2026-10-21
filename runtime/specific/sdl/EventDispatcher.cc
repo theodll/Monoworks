@@ -39,19 +39,19 @@ namespace Monoworks
 			}
 			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
 			{
-				Events::SWindowClose e{};
+				Events::WindowClose e{};
 				CEventManager::EmitEvent(e, MW_EVENT_WINDOW_CLOSE);
 				break;
 			}
 			case SDL_EVENT_WINDOW_FOCUS_GAINED:
 			{
-				Events::SWindowFocus e{};
+				Events::WindowFocus e{};
 				CEventManager::EmitEvent(e, MW_EVENT_WINDOW_FOCUS);
 				break;
 			}
 			case SDL_EVENT_WINDOW_FOCUS_LOST:
 			{
-				Events::SWindowLostFocus e{};
+				Events::WindowLostFocus e{};
 				CEventManager::EmitEvent(e, MW_EVENT_WINDOW_LOST_FOCUS);
 				break;
 			}

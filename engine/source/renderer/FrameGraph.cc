@@ -1620,7 +1620,7 @@ namespace Monoworks
 		this->AddPrePass( std::move(depthPrePass) );
 		this->AddDefferedResolutionPass( std::move( lightPass ), 0 );
 
-		CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, [&]( SEvent& e ) { return OnResize( e ); } );
+		m_ResizeCallbackID = CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, [&]( SEvent& e ) { return OnResize( e ); } );
 
 	};
 
@@ -1633,6 +1633,7 @@ namespace Monoworks
 		m_hPostProcessPasses.clear();
 
 		CPipelineManager::DeleteGraphicsPipeline( m_DefaultBasePassPipelineHash );
+		CEventManager::Unsubscribe( MW_EVENT_WINDOW_RESIZE, m_ResizeCallbackID );
 
 
 		MW_INFO( "Destroy CDefferedFrameGraph " );
@@ -1696,8 +1697,10 @@ namespace Monoworks
 		MW_INFO("Recreating GBuffers.");
 		auto extent = e.GetPayload<Events::SWindowResize>().NewExtent;
 
-		SExtent3D re = { extent.Width, extent.Height, 1 };
+		if ( extent.Width == 0 || extent.Height == 0 )
+			return false;
 
+		SExtent3D re = { extent.Width, extent.Height, 1 };
 
 		for ( auto i{ 0uz }; i < MFIF; i++ )
 		{
