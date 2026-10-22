@@ -70,6 +70,7 @@ add_compile_definitions(
 add_subdirectory(engine)
 add_subdirectory(editor)
 add_subdirectory(runtime)
+add_subdirectory(reporter)
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/common")
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
