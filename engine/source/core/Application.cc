@@ -12,6 +12,8 @@
 #include <common/Events.hh>
 #include <common/Base.hh>
 
+#include <debug/MessageBox.hh>
+
 #include <functional>
 #include <thread>
 #include <chrono>
@@ -119,6 +121,9 @@ namespace Monoworks
 		//Ref<CDefferedFrameGraph> defferedFrameGraph = Ref<CDefferedFrameGraph>::Create( camera );
 
 		CFrameManager::SetFrameGraph( Ref<CDefferedFrameGraph>::Create( camera ) );
+
+
+		ShowMessageBox( "Meddl leude", "Meddl Meddler was geht" );
 
 	}
 

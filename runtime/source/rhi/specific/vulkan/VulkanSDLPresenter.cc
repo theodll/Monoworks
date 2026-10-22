@@ -378,12 +378,12 @@ namespace Monoworks::RHI
 			1,
 			info->pInFlightFence,
 			VK_TRUE,
-			std::numeric_limits<uint64_t>::max() );
+			UINT64_MAX );
 
 		auto res = vkAcquireNextImageKHR(
 			*info->pVulkanDevice->GetDevice(),
 			m_Swapchain,
-			std::numeric_limits<uint64_t>::max(),
+			UINT64_MAX,
 			*info->pImageAvailableSemaphore,
 			VK_NULL_HANDLE,
 			pImageIndex );

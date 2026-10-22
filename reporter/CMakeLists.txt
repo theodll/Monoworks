@@ -1,7 +1,7 @@
 
 
 if (WIN32)
-    add_executable( MonoCrashReporter "source/core/win32/MonoCrashReporter.cc" )
+    add_executable( MonoCrashReporter "source/core/win32/MonoCrashReporterWin32.cc" )
 endif()
 
 target_include_directories( MonoCrashReporter PRIVATE "source/" "../engine/source/" "../engine/" )
