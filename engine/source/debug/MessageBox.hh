@@ -1,5 +1,4 @@
 #pragma once
-#include <common/Base.hh>
 
 namespace Monoworks
 {
@@ -60,10 +59,10 @@ namespace Monoworks
 		MW_MESSAGE_BOX_BUTTON_CONTINUE = 11,
 	};
 
-	EMessageBoxButton MWAPI_CALL ShowMessageBox(
+	EMessageBoxButton ShowMessageBox(
 		std::string_view text,
 		std::string_view caption, 
 		EMessageBoxFlags useFlags = MW_MESSAGE_BOX_TYPE_OK | MW_MESSAGE_BOX_ICON_ERROR,
-		EMessageBoxCreationFlags creationFlags = MW_MESSAGE_BOX_CREATION_FLAG_NONE ) NOEXCEPT;
+		EMessageBoxCreationFlags creationFlags = MW_MESSAGE_BOX_CREATION_FLAG_NONE ) noexcept;
 
 }

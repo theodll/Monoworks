@@ -6,10 +6,10 @@
 #include <renderer/StaticRenderer.hh>
 #include <renderer/FrameManager.hh>
 
-
 #include "EngineManager.hh"
 
 #include <QTimer>
+#include <QElapsedTimer>
 #include <kddockwidgets/qtwidgets/views/DockWidget.h>
 
 namespace Monoworks 
@@ -54,8 +54,18 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 
-		m_pEngine->Frame();
+		static QElapsedTimer timer;
+		if ( !timer.isValid() ) {
+			timer.start();
+		}
 
+		static qint64 lastTime = timer.nsecsElapsed();
+		qint64 currentTime = timer.nsecsElapsed();
+
+		CTimestep ts = static_cast< double >( currentTime - lastTime ) / 1000000000.0;
+		lastTime = currentTime;
+
+		m_pEngine->Frame( ts );
 
 		for ( auto& viewport : m_Viewports )
 		{

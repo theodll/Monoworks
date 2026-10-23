@@ -144,14 +144,22 @@ namespace Monoworks
 
 	void CMonoRuntime::Run()
 	{
-		CEventManager::Subscribe( MW_EVENT_WINDOW_CLOSE, [this]( MAYBE_UNUSED SEvent& event ) { m_Running = false; return true; } );
-
 		MW_PROFILE_FUNC;
+		static const double invFreq = 1.0 / ( double )SDL_GetPerformanceFrequency();
+		static float lastFrameTime = 0;
+		
+		u64 counter = SDL_GetPerformanceCounter();
+		double time = ( double )counter * invFreq;
+
+		CTimestep ts = time - lastFrameTime;
+		lastFrameTime = time;
+
+		CEventManager::Subscribe( MW_EVENT_WINDOW_CLOSE, [this]( MAYBE_UNUSED SEvent& event ) { m_Running = false; return true; } );
 		while(m_Running) 
 		{
 			m_Dispatcher.ProcessEvents();
 
-			m_pApplication->Frame();
+			m_pApplication->Frame( ts );
 		}
 	}
 

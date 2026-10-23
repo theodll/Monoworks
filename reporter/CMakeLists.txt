@@ -1,11 +1,11 @@
 
-add_executable( MonoCrashReporter "source/core/MonoCrashReporter.hh" )
+add_executable( MonoCrashReporter "source/core/MonoCrashReporter.hh"  "source/core/Utils.hh" "source/core/Utils.cc")
 
 if (WIN32)
-target_sources( MonoCrashReporter PRIVATE "source/core/win32/MonoCrashReporterWin32.cc" )
+target_sources( MonoCrashReporter PRIVATE "source/core/win32/MonoCrashReporterWin32.cc" "source/core/win32/UtilsWin32.cc" )
 endif()
 
-target_include_directories( MonoCrashReporter PRIVATE "source/" "../engine/source/" "../engine/" )
+target_include_directories( MonoCrashReporter PRIVATE "source/" )
 
 target_link_libraries( MonoCrashReporter PRIVATE Boost::headers )
 
@@ -14,6 +14,7 @@ if (MSVC)
     target_compile_options(MonoCrashReporter PRIVATE
         /W4
         /WX
+        /EHsc
     )
 else()
 target_compile_options(MonoCrashReporter PRIVATE

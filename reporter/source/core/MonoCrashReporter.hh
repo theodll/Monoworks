@@ -1,21 +1,21 @@
-#include <Monoworks.hh>
+#pragma once
 #include <memory>
 
 namespace Monoworks
 {
-	int MWAPI_CALL MonoCrashReporterMain( int argc, wchar_t** pArgv ) NOEXCEPT;
+	int MonoCrashReporterMain( int argc, wchar_t** pArgv ) noexcept;
 
 	class CMonoCrashReporter
 	{
 	public:
-		CMonoCrashReporter() = default;
-		virtual ~CMonoCrashReporter() = default;
+		CMonoCrashReporter() noexcept;
+		virtual ~CMonoCrashReporter() noexcept = default;
 
-		void MWAPI_CALL Init();
-		void MWAPI_CALL Shutdown();
+		int Init( int argc, wchar_t** pArgv ) noexcept;
+		int Shutdown() noexcept;
 	private:
 		struct Impl;
-		std::unique_ptr<Impl> m_pImpl;
+		::std::unique_ptr<Impl> m_pImpl;
 	};
 
 }
