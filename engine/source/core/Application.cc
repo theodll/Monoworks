@@ -12,6 +12,9 @@
 #include <common/Events.hh>
 #include <common/Base.hh>
 
+#include <debug/MessageBox.hh>
+#include <debug/CrashManager.hh>
+
 #include <functional>
 #include <thread>
 #include <chrono>
@@ -37,8 +40,6 @@ void operator delete(void* pPtr, MAYBE_UNUSED size_t size) noexcept
 {
     MW_PROFILE_FUNC;
     if (pPtr) {
-        // Tipp: Wenn dein Profiler Size-Aware-Frees unterstützt (z. B. Tracy), 
-        // nutze MW_PROFILE_FREE_N(pPtr, size), ansonsten reicht MW_PROFILE_FREE:
         MW_PROFILE_FREE(pPtr);
         std::free(pPtr);
     }
@@ -83,6 +84,7 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		CLogManager::Init();
+		CCrashManager::Init();
 		CCvarManager::Init();
 		CMemoryManager::Init();
 		CEventManager::Init();
@@ -94,6 +96,7 @@ namespace Monoworks
 		CEventManager::Shutdown();
 		CMemoryManager::Shutdown();
 		CCvarManager::Shutdown();
+		CCrashManager::Shutdown();
 		CLogManager::Shutdown();
 	}
 
@@ -119,6 +122,7 @@ namespace Monoworks
 		//Ref<CDefferedFrameGraph> defferedFrameGraph = Ref<CDefferedFrameGraph>::Create( camera );
 
 		CFrameManager::SetFrameGraph( Ref<CDefferedFrameGraph>::Create( camera ) );
+	
 
 	}
 
@@ -144,24 +148,23 @@ namespace Monoworks
 		return false;
 	};
 
-	void CApplication::Frame()
+	void CApplication::Frame( CTimestep ts )
 	{
 		MW_PROFILE_FUNC;
 
-		//MW_INFO( "frame" );
+		CCrashManager::Heartbeat( ts );
 
 		// called once per frame
-		Events::SAppFrame frame{};
+		Events::SAppFrame frame{ ts };
 		CEventManager::EmitEventNonDeffered(frame, MW_EVENT_APP_FRAME);
-
 		CEventManager::ProcessEvents();
 
-		Events::SAppTick tick{};
+		Events::SAppTick tick{ ts };
 		CEventManager::EmitEventNonDeffered(tick, MW_EVENT_APP_TICK);
 		// simulate here
 
 		// TODO: Move to frame graph
-		Events::SAppRender render{};
+		Events::SAppRender render{ ts };
 		CEventManager::EmitEventNonDeffered(render, MW_EVENT_APP_RENDER);
 		CFrameManager::Render();
 		

@@ -100,7 +100,7 @@ namespace Monoworks
 		 * @brief Executes exactly one engine frame.
 		 * Has to be called in a loop.
 		 */
-		void Frame();
+		void Frame( CTimestep ts );
 
 		/**
 		 * @brief Generic Getter for the Application Singleton

@@ -199,6 +199,8 @@ using path_t = std::filesystem::path;
 
 using flags_t = u32;
 
+using pid_t = u32;
+
 namespace Monoworks
 {
 	constexpr u32 MaxFramesInFlight = 3;
@@ -285,6 +287,10 @@ namespace Monoworks
 		MW_ERROR_INVALID_SETUP = -11,
 
 		MW_ERROR_SUBOPTIMAL = -12,
+
+		MW_ERROR_INCOMPATIBLE = - 13,
+
+		MW_ERROR_EARLY_EXIT = -14
 	};
 
 	class CRuntimeException : public std::runtime_error 
