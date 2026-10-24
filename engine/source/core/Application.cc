@@ -83,10 +83,10 @@ namespace Monoworks
 	CApplication::CApplication() noexcept
 	{
 		MW_PROFILE_FUNC;
+		CMemoryManager::Init();
 		CLogManager::Init();
 		CCrashManager::Init();
 		CCvarManager::Init();
-		CMemoryManager::Init();
 		CEventManager::Init();
 	}
 
@@ -94,10 +94,10 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		CEventManager::Shutdown();
-		CMemoryManager::Shutdown();
 		CCvarManager::Shutdown();
 		CCrashManager::Shutdown();
 		CLogManager::Shutdown();
+		CMemoryManager::Shutdown();
 	}
 
 	void CApplication::Init(const SApplicationCreateInfos* pInfos) NOEXCEPT
@@ -123,6 +123,7 @@ namespace Monoworks
 
 		CFrameManager::SetFrameGraph( Ref<CDefferedFrameGraph>::Create( camera ) );
 	
+		CCrashManager::Ready();
 
 	}
 
