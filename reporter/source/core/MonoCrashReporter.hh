@@ -12,6 +12,7 @@ namespace Monoworks
 		virtual ~CMonoCrashReporter() noexcept = default;
 
 		int Init( int argc, wchar_t** pArgv ) noexcept;
+		int CheckHeartbeat() noexcept;
 		int Shutdown() noexcept;
 	private:
 		struct Impl;

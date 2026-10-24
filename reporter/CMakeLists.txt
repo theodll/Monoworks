@@ -2,6 +2,7 @@
 add_executable( MonoCrashReporter "source/core/MonoCrashReporter.hh"  "source/core/Utils.hh" "source/core/Utils.cc")
 
 if (WIN32)
+set_target_properties(MonoCrashReporter PROPERTIES WIN32_EXECUTABLE TRUE )
 target_sources( MonoCrashReporter PRIVATE "source/core/win32/MonoCrashReporterWin32.cc" "source/core/win32/UtilsWin32.cc" )
 endif()
 

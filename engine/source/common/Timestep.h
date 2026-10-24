@@ -6,15 +6,16 @@ namespace Monoworks
 	class CTimestep 
 	{
 	public:
-		CTimestep( float flTimestep ) : m_flTimestep( flTimestep ) {};
+		CTimestep( double flTimestep ) : m_flTimestep( flTimestep ) {};
 
 		CTimestep() = default;
 
-		float GetMilliseconds() NOEXCEPT { return m_flTimestep * 1000; }
-		float GetSeconds() NOEXCEPT { return m_flTimestep; }
+		double GetMilliseconds() NOEXCEPT { return m_flTimestep * 1000; }
+		double GetSeconds() NOEXCEPT { return m_flTimestep; }
 
-		operator float() NOEXCEPT { return GetSeconds(); };
+		operator double() NOEXCEPT { return GetSeconds(); };
+
 	private:
-		float m_flTimestep;
+		double m_flTimestep;
 	};
 }

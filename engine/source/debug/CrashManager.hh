@@ -4,7 +4,7 @@
 
 namespace Monoworks 
 {
-	constexpr float c_flHeartbeatInterval = 50;
+	constexpr float c_flHeartbeatInterval = 5;
 
 	enum ECrashReporterHeartbeatStatus : byte_t
 	{

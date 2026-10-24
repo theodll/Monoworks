@@ -1,7 +1,7 @@
 #include <mwpch.hh>
 
 #include <Windows.h>
-#include <debug/CrashManager.h>
+#include <debug/CrashManager.hh>
 
 
 namespace Monoworks 
@@ -32,6 +32,9 @@ namespace Monoworks
 			return MW_ERROR_INITIALIZATION_FAILED;
 		}
 
+		
+		SetHandleInformation( hWritePipe, HANDLE_FLAG_INHERIT, 0 );
+
 		DWORD enginePid = GetCurrentProcessId();
 
 		std::wstring crashReporterCmd = std::format( L"MonoCrashReporter.exe {}", enginePid );
@@ -60,8 +63,6 @@ namespace Monoworks
 			&pi
 		);
 
-		CloseHandle( hReadPipe );
-
 		if ( !res )
 		{
 			MW_ERROR( "Failed to create crash reporter ({}).", GetLastError() );
@@ -72,6 +73,8 @@ namespace Monoworks
 		m_hImpl->hWriteHeartbeatPipe = hWritePipe;
 
 		MW_INFO( "Successfully instantiated MonoCrashReporter" );
+		return MW_SUCCESS;
+
 	}
 
 	EResult MWAPI_CALL CCrashManager::Shutdown() NOEXCEPT
@@ -88,18 +91,21 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		static float counter = 0;
-		counter += 1 * ts;
+		counter += 10 * ts;
 
 		if ( counter >= c_flHeartbeatInterval )
 		{
 			counter = 0;
 			byte_t status = MW_CRASH_REPORTER_HEARTBEAT_STATUS_OK;
 			DWORD bytesWritten = 0;
+
 			if (!WriteFile( m_hImpl->hWriteHeartbeatPipe, &status, sizeof status, &bytesWritten, nullptr ) )
 			{
 				MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early. No further heartbeats will be send." );
 				return MW_ERROR_EARLY_EXIT;
 			}
+			MW_INFO( "Heartbeat send" );
+
 		}
 
 		return MW_SUCCESS;
