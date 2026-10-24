@@ -87,6 +87,20 @@ namespace Monoworks
 		return MW_SUCCESS;
 	}
 
+
+	EResult MWAPI_CALL CCrashManager::Ready() NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		byte_t status = MW_CRASH_REPORTER_HEARTBEAT_STATUS_READY;
+		DWORD bytesWritten = 0;
+
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &status, sizeof status, &bytesWritten, nullptr ) )
+		{
+			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
+			return MW_ERROR_EARLY_EXIT;
+		}
+	}
+
 	EResult MWAPI_CALL CCrashManager::Heartbeat( CTimestep ts ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -104,8 +118,6 @@ namespace Monoworks
 				MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early. No further heartbeats will be send." );
 				return MW_ERROR_EARLY_EXIT;
 			}
-			MW_INFO( "Heartbeat send" );
-
 		}
 
 		return MW_SUCCESS;

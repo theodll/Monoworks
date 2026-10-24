@@ -123,6 +123,7 @@ namespace Monoworks
 
 		CFrameManager::SetFrameGraph( Ref<CDefferedFrameGraph>::Create( camera ) );
 	
+		CCrashManager::Ready();
 
 	}
 
