@@ -6,44 +6,9 @@
 #include <print>
 #include <thread>
 
-#define MAYBE_UNUSED [[maybe_unused]]
-
-/*
-int WINAPI wWinMain( MAYBE_UNUSED HINSTANCE hInstance, MAYBE_UNUSED HINSTANCE hPrevInstance, MAYBE_UNUSED PWSTR pCmdLine, MAYBE_UNUSED int nCmdShow )
-{
-	int argc;
-	LPWSTR* argv = CommandLineToArgvW( GetCommandLineW(), &argc);
-	auto res = Monoworks::MonoCrashReporterMain( argc, argv );
-	LocalFree( argv );
-	return res;
-};*/
-
-int wmain( int argc, wchar_t** argv )
-{
-	return Monoworks::MonoCrashReporterMain( argc, argv );
-}
 
 namespace Monoworks
 {
-
-	int MonoCrashReporterMain( int argc, wchar_t** pArgv ) noexcept
-	{
-		std::ios::sync_with_stdio( false );
-		std::cout.rdbuf()->pubsetbuf( nullptr, 0 ); 
-		setvbuf( stdout, nullptr, _IONBF, 0 );
-
-		CMonoCrashReporter rp;
-		if ( rp.Init( argc, pArgv ) < 0 )
-			return -1;
-
-		rp.WaitForReadyStatus();
-
-		rp.CheckHeartbeat();
-	
-
-		return 0;
-	}
-
 
 	struct CMonoCrashReporter::Impl
 	{
@@ -56,6 +21,11 @@ namespace Monoworks
 	CMonoCrashReporter::CMonoCrashReporter() noexcept
 		: m_pImpl(::std::make_unique<CMonoCrashReporter::Impl>())
 	{}
+
+	CMonoCrashReporter::~CMonoCrashReporter() noexcept
+	{
+
+	}
 
 	int CMonoCrashReporter::Init( int argc, wchar_t** pArgv ) noexcept
 	{
@@ -79,35 +49,11 @@ namespace Monoworks
 
 	}
 
-	int CMonoCrashReporter::WaitForReadyStatus() noexcept
-	{
-		MW_CRASH_REPORTER_INFO("Wait for ready status")
-		unsigned char readystatus = 0;
-		DWORD bytesRead = 0;
-		if ( !ReadFile( m_pImpl->HeartbeatPipe, &readystatus, sizeof( readystatus ), &bytesRead, nullptr ) )
-		{
-			MW_CRASH_REPORTER_ERROR( "Failed to read Heartbeat Pipe ({})", GetLastError() );
-			return -1;
-		}
-
-		if ( readystatus != 0x02 )
-		{
-			MW_CRASH_REPORTER_ERROR( "Invalid first status code. This is suboptimal but should idealy not impact execution.");
-		}
-		MW_CRASH_REPORTER_INFO( "Received ready status code." );
-		m_bReady = true; 
-		return 0;
-
-	}
-
 	int CMonoCrashReporter::CheckHeartbeat() noexcept
 	{
-		using clock_t = std::chrono::steady_clock;
+		using clock = std::chrono::steady_clock;
 
-		constexpr auto HEARTBEAT_TIMEOUT = std::chrono::milliseconds( 2500 );
-		constexpr auto POLL_INTERVAL = std::chrono::milliseconds( 10 );
-
-		auto lastHeartbeat = clock_t::now();
+		auto lastHeartbeat = clock::now();
 
 		unsigned char heartbeat = 0;
 
@@ -128,9 +74,9 @@ namespace Monoworks
 
 			if ( bytesAvailable > 0 )
 			{
-				DWORD bytesRead = 0;
+				size_t bytesRead = 0;
 
-				if ( !ReadFile( m_pImpl->HeartbeatPipe, &heartbeat, sizeof( heartbeat ), &bytesRead, nullptr ) )
+				if ( !ReadPipe( &heartbeat, sizeof( heartbeat ), &bytesRead ) )
 				{
 					MW_CRASH_REPORTER_ERROR( "Failed to read Heartbeat Pipe ({})", GetLastError() );
 					return -1;
@@ -138,7 +84,7 @@ namespace Monoworks
 
 				if ( bytesRead == sizeof( heartbeat ) )
 				{
-					lastHeartbeat = clock_t::now();
+					lastHeartbeat = clock::now();
 				}
 
 				continue;
@@ -150,20 +96,29 @@ namespace Monoworks
 				return -1;
 			}
 
-			if ( clock_t::now() - lastHeartbeat >= HEARTBEAT_TIMEOUT )
+			if ( clock::now() - lastHeartbeat >= c_HeartbeatInterval )
 			{
 				MW_CRASH_REPORTER_ERROR( "Heartbeat timeout exceeded." );
 				HeartbeatFailed();
 				return -1;
 			}
 
-			std::this_thread::sleep_for( POLL_INTERVAL );
+			std::this_thread::sleep_for( c_PollInterval );
 		}
 	}
 
-	int CMonoCrashReporter::HeartbeatFailed() noexcept
+	int CMonoCrashReporter::ReadPipe( void* pBuf, size_t nSize, size_t* pBytesRead )
 	{
+		DWORD dSize = ( DWORD )nSize;
+		DWORD dBytesRead = 0;
+		if ( !ReadFile( m_pImpl->HeartbeatPipe, pBuf, dSize, &dBytesRead, nullptr ) ) 
+		{
+			return GetLastError();
+		}
 
+		*pBytesRead = dBytesRead;
+
+		return 0;
 	}
 
 }

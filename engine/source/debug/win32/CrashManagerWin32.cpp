@@ -88,6 +88,18 @@ namespace Monoworks
 	}
 
 
+	EResult MWAPI_CALL CCrashManager::SendGraphicsVendor( EGraphicsVendorFlags nVendor ) NOEXCEPT
+	{
+		MW_PROFILE_FUNC;
+		DWORD bytesWritten = 0;
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &nVendor, sizeof nVendor, &bytesWritten, nullptr ) )
+		{
+			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
+			return MW_ERROR_EARLY_EXIT;
+		}
+		return MW_SUCCESS; 
+	}
+
 	EResult MWAPI_CALL CCrashManager::Ready() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
