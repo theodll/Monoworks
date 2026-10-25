@@ -168,7 +168,7 @@ namespace Monoworks::RHI
 
 		EGraphicsVendorFlags flags;
 
-		switch ( m_Properties.deviceID )
+		switch ( m_Properties.vendorID )
 		{
 		case MW_GPU_DEVICE_ID_NVIDIA:
 		{
