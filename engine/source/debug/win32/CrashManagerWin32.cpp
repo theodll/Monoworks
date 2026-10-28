@@ -92,7 +92,7 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		DWORD bytesWritten = 0;
-		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &nVendor, sizeof nVendor, &bytesWritten, nullptr ) )
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &nVendor, 1, &bytesWritten, nullptr ) )
 		{
 			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
 			return MW_ERROR_EARLY_EXIT;

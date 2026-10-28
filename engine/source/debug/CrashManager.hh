@@ -8,8 +8,12 @@ namespace Monoworks
 
 	enum ECrashReporterHeartbeatStatus : byte_t
 	{
-		MW_CRASH_REPORTER_HEARTBEAT_STATUS_OK = 0x01,
-		MW_CRASH_REPORTER_HEARTBEAT_STATUS_READY = 0x02,
+		MW_CRASH_REPORTER_HEARTBEAT_STATUS_READY = 0xA0,
+		MW_CRASH_REPORTER_HEARTBEAT_STATUS_OK = 0x0A,
+		// This signal should ideally never be issued on Windows. It is only issued for UNIX Systems 
+		// because we can't easily register external signal handlers for processes. On windows any signal should
+.		// ideally be handled by the crash reporter process.
+		MW_CRASH_REPORTER_HEARTBEAT_STATUS_CRASH = 0xFF
 	};
 
 	enum EGraphicsVendorFlagBits : unsigned char

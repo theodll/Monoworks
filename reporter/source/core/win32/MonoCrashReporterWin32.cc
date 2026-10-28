@@ -1,5 +1,9 @@
 #include <Windows.h>
+#include <minidumpapiset.h>
+#include <tlhelp32.h>
+
 #include "../MonoCrashReporter.hh"
+
 #include <core/Utils.hh>
 
 #include <string>
@@ -82,6 +86,18 @@ namespace Monoworks
 					return -1;
 				}
 
+				if ( heartbeat != MW_HEARTBEAT_SIGNAL_OK )
+				{
+					MW_CRASH_REPORTER_INFO("Signal other than OK received.");
+					if ( heartbeat == MW_HEARTBEAT_SIGNAL_CRASH )
+					{
+						MW_CRASH_REPORTER_INFO( "Crash Signal received" );
+						// If this spot gets reached on Windows, something is wrong.
+						HeartbeatFailed();
+						return 0;
+					}
+				}
+
 				if ( bytesRead == sizeof( heartbeat ) )
 				{
 					lastHeartbeat = clock::now();
@@ -105,6 +121,38 @@ namespace Monoworks
 
 			std::this_thread::sleep_for( c_PollInterval );
 		}
+	}
+
+	int CMonoCrashReporter::DumpCore() noexcept
+	{
+		HANDLE hDumpFile = CreateFileA(
+			"coredump.dump",
+			GENERIC_READ | GENERIC_WRITE,
+			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+			nullptr,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL,
+			nullptr );
+
+	
+		if (!MiniDumpWriteDump(
+			m_pImpl->EngineProcess,
+			m_pImpl->EnginePID,
+			hDumpFile, 
+			static_cast<MINIDUMP_TYPE>(
+				MiniDumpNormal 
+				| MiniDumpWithThreadInfo 
+				| MiniDumpWithAvxXStateContext),
+			nullptr,
+			nullptr,
+			nullptr
+			))
+		{
+			MW_CRASH_REPORTER_ERROR( "Failed to create minidump. ({})", GetLastError() );
+			return -1;
+		}
+
+		return  0;
 	}
 
 	int CMonoCrashReporter::ReadPipe( void* pBuf, size_t nSize, size_t* pBytesRead )

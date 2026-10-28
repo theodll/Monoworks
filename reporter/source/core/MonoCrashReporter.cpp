@@ -24,6 +24,11 @@ namespace Monoworks
 	}
 
 
+	CMonoCrashReporter::CMonoCrashReporter() noexcept
+	{
+
+	}
+
 	int CMonoCrashReporter::WaitForGraphicsVendor() noexcept
 	{
 		MW_CRASH_REPORTER_INFO("Wait for Graphics Vendor.");
@@ -43,7 +48,7 @@ namespace Monoworks
 			return -1;
 		}
 
-		MW_CRASH_REPORTER_INFO(std::format("Received Graphics Vendor: {}", (int)nFlags));
+		MW_CRASH_REPORTER_INFO("Received Graphics Vendor: {}", (int)nFlags);
 		m_nFlags |= nFlags;
 
 		std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
@@ -56,25 +61,62 @@ namespace Monoworks
 		MW_CRASH_REPORTER_INFO( "Wait for ready status." );
 		unsigned char readystatus = 0;
 		size_t bytesRead = 0;
-		if ( int res = ReadPipe( &readystatus, sizeof( readystatus ), &bytesRead ) < 0 )
+
+		while ( true )
 		{
-			MW_CRASH_REPORTER_ERROR( "Failed to read Heartbeat Pipe ({})", res );
-			return -1;
+			int res = 0;
+			if ( ( res = ReadPipe( &readystatus, sizeof( readystatus ), &bytesRead ) ) != 0 )
+			{
+				MW_CRASH_REPORTER_ERROR( "Failed to read Heartbeat Pipe (Win32 Error: {})", res );
+				return -1;
+			}
+
+			if ( bytesRead > 0 )
+			{
+				if ( readystatus == MW_HEARTBEAT_SIGNAL_READY )
+					break;
+				else
+				{
+					MW_CRASH_REPORTER_ERROR( "Received unknown status code: {:#x}", readystatus );
+				}
+			}
 		}
 
-		if ( readystatus != 0x02 )
-		{
-			MW_CRASH_REPORTER_ERROR( "Invalid first status code. This is suboptimal but should idealy not impact execution." );
-		}
 		MW_CRASH_REPORTER_INFO( "Received ready status code." );
 		m_bReady = true;
 		return 0;
+	}
+
+	int CMonoCrashReporter::Shutdown() noexcept
+	{
 
 	}
 
+	int CMonoCrashReporter::Dump() noexcept
+	{
+		MetaDumpData meta{};
+		DumpMeta( &meta );
+
+		DumpGPU();
+
+		DumpCore();
+	}
+
+	int CMonoCrashReporter::DumpMeta( MetaDumpData* pDumpData ) noexcept
+	{
+
+	}
+
+	int CMonoCrashReporter::DumpGPU() noexcept
+	{
+
+	}
+
+
 	int CMonoCrashReporter::HeartbeatFailed() noexcept
 	{
-		return -1;
+		Dump();
+		return 0;
 	}
 
 }

@@ -10,6 +10,21 @@ namespace Monoworks
 	constexpr auto c_HeartbeatTimeout = c_HeartbeatInterval * 5;
 	constexpr auto c_PollInterval = std::chrono::milliseconds( 10 );
 
+	struct MetaDumpData 
+	{
+
+	};
+
+	enum EHeartbeatSignals 
+	{
+		MW_HEARTBEAT_SIGNAL_READY = 0xA0,
+		MW_HEARTBEAT_SIGNAL_OK = 0x0A,
+		// This signal should ideally never be issued on Windows. It is only issued for UNIX Systems 
+		// because we can't easily register external signal handlers for processes. On windows any signal should
+		// ideally be handled by the crash reporter process.
+		MW_HEARTBEAT_SIGNAL_CRASH = 0xFF
+	};
+
 	enum EGraphicsVendorFlags : unsigned char
 	{
 		MW_GRAPHICS_VENDOR_UNDEFINED = 0x0,
@@ -41,6 +56,22 @@ namespace Monoworks
 		int Shutdown() noexcept;
 
 	private:
+		int Dump() noexcept 
+		{
+			MetaDumpData meta{};
+			DumpMeta( &meta );
+
+			DumpGPU();
+
+			DumpCore();
+
+		};
+
+		int DumpMeta( MetaDumpData* pDumpData ) noexcept;
+		int DumpGPU() noexcept;
+		// Has to be called last because it forcefully exits the engine on Linux and Mac by sending the SIGSEGV signal
+		int DumpCore() noexcept; // Platform Specific (MiniDump on Windows, core dump (SIGSEGV) on Linux and Mac)
+
 		int HeartbeatFailed() noexcept;
 
 		int ReadPipe( void* pBuf, size_t nSize, size_t* pBytesRead );
