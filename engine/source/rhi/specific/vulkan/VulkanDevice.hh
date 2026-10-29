@@ -1,6 +1,6 @@
 #pragma once
 #include <common/Base.hh>
-
+#include <debug/CrashManager.hh>
 
 #include <volk.h>
 
@@ -31,6 +31,12 @@ namespace Monoworks::RHI
 		std::vector<VkSurfaceFormatKHR> Formats;
 		std::vector<VkPresentModeKHR> PresentModes;
 	};
+
+#define MW_GPU_DEVICE_ID_NVIDIA 0x10DE
+#define MW_GPU_DEVICE_ID_AMD 0x1002
+#define MW_GPU_DEVICE_ID_INTEL 0x8086
+#define MW_GPU_DEVICE_ID_APPLE 0x106B
+
 
 	class CVulkanDevice 
 	{
