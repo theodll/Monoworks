@@ -117,7 +117,7 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		static float counter = 0;
-		counter += 10 * ts;
+		// counter += 10 * ts;
 
 		if ( counter >= c_flHeartbeatInterval )
 		{

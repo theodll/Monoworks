@@ -56,21 +56,15 @@ namespace Monoworks
 		int Shutdown() noexcept;
 
 	private:
-		int Dump() noexcept 
-		{
-			MetaDumpData meta{};
-			DumpMeta( &meta );
+		int Dump() noexcept;;
 
-			DumpGPU();
-
-			DumpCore();
-
-		};
-
+		int PreDumpSteps() noexcept;
 		int DumpMeta( MetaDumpData* pDumpData ) noexcept;
 		int DumpGPU() noexcept;
 		// Has to be called last because it forcefully exits the engine on Linux and Mac by sending the SIGSEGV signal
 		int DumpCore() noexcept; // Platform Specific (MiniDump on Windows, core dump (SIGSEGV) on Linux and Mac)
+
+		int TerminateEngine() noexcept;
 
 		int HeartbeatFailed() noexcept;
 

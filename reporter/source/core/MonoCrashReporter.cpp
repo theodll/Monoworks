@@ -23,12 +23,6 @@ namespace Monoworks
 		return 0;
 	}
 
-
-	CMonoCrashReporter::CMonoCrashReporter() noexcept
-	{
-
-	}
-
 	int CMonoCrashReporter::WaitForGraphicsVendor() noexcept
 	{
 		MW_CRASH_REPORTER_INFO("Wait for Graphics Vendor.");
@@ -89,33 +83,47 @@ namespace Monoworks
 
 	int CMonoCrashReporter::Shutdown() noexcept
 	{
-
+		return 0;
 	}
 
 	int CMonoCrashReporter::Dump() noexcept
 	{
+		MW_CRASH_REPORTER_INFO("Dumping Engine.");
+
+		PreDumpSteps();
+
 		MetaDumpData meta{};
-		DumpMeta( &meta );
+		int res = 0;
+		
+		res = DumpMeta( &meta );
+		if ( res < 0 )
+			return res;
 
-		DumpGPU();
+		res = DumpGPU();
+		if ( res < 0 )
+			return res;
 
-		DumpCore();
+		res = DumpCore();
+		return res;
+
 	}
 
 	int CMonoCrashReporter::DumpMeta( MetaDumpData* pDumpData ) noexcept
 	{
+		pDumpData = nullptr;
 
+		return 0;
 	}
 
 	int CMonoCrashReporter::DumpGPU() noexcept
 	{
-
+		return 0;
 	}
-
 
 	int CMonoCrashReporter::HeartbeatFailed() noexcept
 	{
 		Dump();
+		TerminateEngine();
 		return 0;
 	}
 

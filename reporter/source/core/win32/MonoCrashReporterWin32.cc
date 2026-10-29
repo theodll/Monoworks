@@ -26,10 +26,7 @@ namespace Monoworks
 		: m_pImpl(::std::make_unique<CMonoCrashReporter::Impl>())
 	{}
 
-	CMonoCrashReporter::~CMonoCrashReporter() noexcept
-	{
-
-	}
+	CMonoCrashReporter::~CMonoCrashReporter() noexcept = default;
 
 	int CMonoCrashReporter::Init( int argc, wchar_t** pArgv ) noexcept
 	{
@@ -40,7 +37,7 @@ namespace Monoworks
 		}
 		m_pImpl->EnginePID = std::stoi( std::wstring(pArgv[1]) );
 
-		m_pImpl->EngineProcess = OpenProcess( PROCESS_VM_READ | PROCESS_VM_OPERATION | SYNCHRONIZE, FALSE, m_pImpl->EnginePID );
+		m_pImpl->EngineProcess = OpenProcess( PROCESS_VM_READ | PROCESS_VM_OPERATION | PROCESS_QUERY_INFORMATION | SYNCHRONIZE | PROCESS_TERMINATE, FALSE, m_pImpl->EnginePID );
 		if ( !m_pImpl->EngineProcess )
 		{
 			MW_CRASH_REPORTER_ERROR( "Failed to Open Engine Process ({}).", GetLastError() );
@@ -126,21 +123,20 @@ namespace Monoworks
 	int CMonoCrashReporter::DumpCore() noexcept
 	{
 		HANDLE hDumpFile = CreateFileA(
-			"coredump.dump",
+			"monoengine.dmp",
 			GENERIC_READ | GENERIC_WRITE,
 			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
 			nullptr,
 			CREATE_ALWAYS,
 			FILE_ATTRIBUTE_NORMAL,
 			nullptr );
-
 	
 		if (!MiniDumpWriteDump(
 			m_pImpl->EngineProcess,
 			m_pImpl->EnginePID,
 			hDumpFile, 
 			static_cast<MINIDUMP_TYPE>(
-				MiniDumpNormal 
+				MiniDumpWithFullMemory
 				| MiniDumpWithThreadInfo 
 				| MiniDumpWithAvxXStateContext),
 			nullptr,
@@ -148,10 +144,12 @@ namespace Monoworks
 			nullptr
 			))
 		{
-			MW_CRASH_REPORTER_ERROR( "Failed to create minidump. ({})", GetLastError() );
+			MW_CRASH_REPORTER_ERROR( "Failed to create minidump. (0x{:x})", GetLastError() );
+			CloseHandle( hDumpFile );
 			return -1;
 		}
-
+		
+		CloseHandle( hDumpFile );
 		return  0;
 	}
 
@@ -168,5 +166,69 @@ namespace Monoworks
 
 		return 0;
 	}
+
+	int CMonoCrashReporter::PreDumpSteps() noexcept
+	{
+		// suspend all threads so no new memory is written.
+		HANDLE hSnapshot = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );
+		if ( hSnapshot == INVALID_HANDLE_VALUE )
+			return -1;
+
+		THREADENTRY32 te;
+		te.dwSize = sizeof( THREADENTRY32 );
+
+		if ( Thread32First( hSnapshot, &te ) )
+		{
+			do
+			{
+				if ( te.th32OwnerProcessID == m_pImpl->EnginePID )
+				{
+					HANDLE hThread = OpenThread( THREAD_SUSPEND_RESUME, FALSE, te.th32ThreadID );
+					if ( hThread != NULL )
+					{
+						SuspendThread( hThread );
+						CloseHandle( hThread );
+					}
+				}
+			} while ( Thread32Next( hSnapshot, &te ) );
+		}
+
+		CloseHandle( hSnapshot );
+		return 0;
+	}
+
+	int CMonoCrashReporter::TerminateEngine() noexcept
+	{
+		MW_CRASH_REPORTER_INFO("Terminating Engine.");
+
+		HANDLE hSnapshot = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );
+		if ( hSnapshot == INVALID_HANDLE_VALUE )
+			return -1;
+
+		THREADENTRY32 te;
+		te.dwSize = sizeof( THREADENTRY32 );
+
+		if ( Thread32First( hSnapshot, &te ) )
+		{
+			do
+			{
+				if ( te.th32OwnerProcessID == m_pImpl->EnginePID )
+				{
+					HANDLE hThread = OpenThread( THREAD_SUSPEND_RESUME, FALSE, te.th32ThreadID );
+					if ( hThread != NULL )
+					{
+						ResumeThread( hThread );
+						CloseHandle( hThread );
+					}
+				}
+			} while ( Thread32Next( hSnapshot, &te ) );
+		}
+
+		CloseHandle( hSnapshot );
+
+		TerminateProcess( m_pImpl->EngineProcess, 1 );
+		return 0;
+	}
+
 
 }
