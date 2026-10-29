@@ -1,5 +1,6 @@
 #pragma once
 #include <common/Base.hh>
+#include <common/Timestep.h>
 #include <events/Event.hh>
 
 namespace Monoworks 
@@ -19,27 +20,38 @@ namespace Monoworks
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( WindowLostFocus );
 		MW_DEFINE_DISPATCHABLE_EVENT( WindowLostFocus );
 
-		/// @brief Triggered for each application tick.
-		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppTick );
-		MW_DEFINE_DISPATCHABLE_EVENT( AppTick );
-
-		/// @brief Triggered when the application updates its logic.
-		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppUpdate );
-		MW_DEFINE_DISPATCHABLE_EVENT( AppUpdate );
-
-		/// @brief Triggered when the application renders a frame.
-		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppRender );
-		MW_DEFINE_DISPATCHABLE_EVENT( AppRender );
-
-		/// @brief Triggered when the application starts an entire frame cycle (before deffered event-processing).
-		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( AppFrame );
-		MW_DEFINE_DISPATCHABLE_EVENT( AppFrame );
-
 		MW_DEFINE_DISPATCHABLE_EVENT_LEGACY( PipelineCompilationStage );
 		MW_DEFINE_DISPATCHABLE_EVENT( PipelineCompilationStage );
 
 		namespace Events
 		{
+			/// @brief Triggered for each application tick.
+			struct AppTick 
+			{
+				CTimestep ts;
+			};
+			using SAppTick DEPRECATED = AppTick;
+
+			/// @brief Triggered when the application updates its logic.
+			struct AppUpdate
+			{
+				CTimestep ts;
+			};
+			using SAppUpdate DEPRECATED = AppUpdate;
+
+			struct AppRender 
+			{
+				CTimestep ts;
+			};
+			using SAppRender DEPRECATED = AppRender;
+			
+			/// @brief Triggered when the application starts an entire frame cycle (before deffered event-processing).
+			struct AppFrame 
+			{
+				CTimestep ts;
+			};
+			using SAppFrame DEPRECATED = AppFrame;
+
 
 		// data events 
 
