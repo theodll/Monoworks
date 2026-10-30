@@ -99,10 +99,6 @@ namespace Monoworks
 		if ( res < 0 )
 			return res;
 
-		res = DumpGPU();
-		if ( res < 0 )
-			return res;
-
 		res = DumpCore();
 		return res;
 
@@ -115,11 +111,6 @@ namespace Monoworks
 		return 0;
 	}
 
-	int CMonoCrashReporter::DumpGPU() noexcept
-	{
-		return 0;
-	}
-
 	int CMonoCrashReporter::HeartbeatFailed() noexcept
 	{
 		Dump();
@@ -127,4 +118,4 @@ namespace Monoworks
 		return 0;
 	}
 
-}
+	}

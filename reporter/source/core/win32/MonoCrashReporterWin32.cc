@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <minidumpapiset.h>
+#include <DbgHelp.h>
 #include <tlhelp32.h>
 
 #include "../MonoCrashReporter.hh"
@@ -136,7 +137,9 @@ namespace Monoworks
 			m_pImpl->EnginePID,
 			hDumpFile, 
 			static_cast<MINIDUMP_TYPE>(
-				MiniDumpWithFullMemory
+				MiniDumpWithDataSegs
+				| MiniDumpWithHandleData
+				| MiniDumpWithIndirectlyReferencedMemory
 				| MiniDumpWithThreadInfo 
 				| MiniDumpWithAvxXStateContext),
 			nullptr,
@@ -230,5 +233,48 @@ namespace Monoworks
 		return 0;
 	}
 
+	int CMonoCrashReporter::WalkStack( std::vector<StackFrame>& rStack, size_t nDepth ) noexcept
+	{
+		DWORD mainThreadId = 0;
+		ULONGLONG minCreateTime = MAXULONGLONG;
 
+		HANDLE hSnapshot = CreateToolhelp32Snapshot( TH32CS_SNAPTHREAD, 0 );
+		if ( hSnapshot == INVALID_HANDLE_VALUE ) {
+			return 0;
+		}
+
+		THREADENTRY32 te32;
+		te32.dwSize = sizeof( THREADENTRY32 );
+
+		if ( Thread32First( hSnapshot, &te32 ) ) {
+			do {
+				if ( te32.th32OwnerProcessID == m_pImpl->EnginePID ) {
+					HANDLE hThread = OpenThread( THREAD_QUERY_INFORMATION, FALSE, te32.th32ThreadID );
+					if ( hThread ) {
+						FILETIME creationTime, exitTime, kernelTime, userTime;
+						if ( GetThreadTimes( hThread, &creationTime, &exitTime, &kernelTime, &userTime ) ) {
+							ULONGLONG createTimeInt = ( ( ULONGLONG )creationTime.dwHighDateTime << 32 ) + creationTime.dwLowDateTime;
+
+							if ( createTimeInt < minCreateTime ) {
+								minCreateTime = createTimeInt;
+								mainThreadId = te32.th32ThreadID;
+							}
+						}
+						CloseHandle( hThread );
+					}
+				}
+			} while ( Thread32Next( hSnapshot, &te32 ) );
+		}
+
+		HANDLE hMainThread = OpenThread( THREAD_QUERY_INFORMATION, mainThreadId ); 
+
+		if ( !SymInitializeW( m_pImpl->EngineProcess, nullptr, false ) )
+		{
+			MW_CRASH_REPORTER_ERROR( "Failed to initialize Symbol Handler. (0x{x:})", GetLastError() );
+			return -1;
+		};
+
+		
+
+	}
 }

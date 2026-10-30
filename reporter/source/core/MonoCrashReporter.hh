@@ -10,9 +10,19 @@ namespace Monoworks
 	constexpr auto c_HeartbeatTimeout = c_HeartbeatInterval * 5;
 	constexpr auto c_PollInterval = std::chrono::milliseconds( 10 );
 
+	struct StackFrame 
+	{
+		uintptr_t ReturnAdress;
+		uintptr_t ModuleAdress;
+		
+		// Mangled or unmangled
+		std::string FunctionSignature;
+		std::string ModuleSignature;
+	};
+
 	struct MetaDumpData 
 	{
-
+		std::vector<StackFrame> StackFrames; 
 	};
 
 	enum EHeartbeatSignals 
@@ -60,7 +70,6 @@ namespace Monoworks
 
 		int PreDumpSteps() noexcept;
 		int DumpMeta( MetaDumpData* pDumpData ) noexcept;
-		int DumpGPU() noexcept;
 		// Has to be called last because it forcefully exits the engine on Linux and Mac by sending the SIGSEGV signal
 		int DumpCore() noexcept; // Platform Specific (MiniDump on Windows, core dump (SIGSEGV) on Linux and Mac)
 
@@ -69,6 +78,8 @@ namespace Monoworks
 		int HeartbeatFailed() noexcept;
 
 		int ReadPipe( void* pBuf, size_t nSize, size_t* pBytesRead );
+		int WalkStack( std::vector<StackFrame>& rStack, size_t nDepth ) noexcept;
+
 
 	private:
 		struct Impl;
