@@ -78,7 +78,7 @@ namespace Monoworks
 		int HeartbeatFailed() noexcept;
 
 		int ReadPipe( void* pBuf, size_t nSize, size_t* pBytesRead );
-		int WalkStack( std::vector<StackFrame>& rStack, size_t nDepth ) noexcept;
+		int WalkStack( std::vector<StackFrame>& rStack ) noexcept;
 
 
 	private:

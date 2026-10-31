@@ -67,6 +67,7 @@ add_compile_definitions(
     $<$<CONFIG:Dist>:MW_DIST>
 )
 
+add_subdirectory(extern/tomlplusplus)
 add_subdirectory(reporter)
 add_subdirectory(engine)
 add_subdirectory(editor)

@@ -106,7 +106,15 @@ namespace Monoworks
 
 	int CMonoCrashReporter::DumpMeta( MetaDumpData* pDumpData ) noexcept
 	{
-		pDumpData = nullptr;
+
+		WalkStack( pDumpData->StackFrames );
+
+		for ( auto& frame : pDumpData->StackFrames )
+		{
+			MW_CRASH_REPORTER_INFO("Stack Function Signature: {}", frame.FunctionSignature );
+			MW_CRASH_REPORTER_INFO( "Stack Module Signature: {}", frame.ModuleSignature );
+
+		}
 
 		return 0;
 	}

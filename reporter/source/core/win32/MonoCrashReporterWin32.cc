@@ -1,4 +1,5 @@
 #include <Windows.h>
+#include <Psapi.h>
 #include <minidumpapiset.h>
 #include <DbgHelp.h>
 #include <tlhelp32.h>
@@ -7,6 +8,7 @@
 
 #include <core/Utils.hh>
 
+#include <array>
 #include <string>
 #include <print>
 #include <thread>
@@ -233,7 +235,11 @@ namespace Monoworks
 		return 0;
 	}
 
-	int CMonoCrashReporter::WalkStack( std::vector<StackFrame>& rStack, size_t nDepth ) noexcept
+	static constexpr int c_nMaxModules = 128;
+	static constexpr int c_nMaxNameLength = 4096;
+
+
+	int CMonoCrashReporter::WalkStack( std::vector<StackFrame>& rStack ) noexcept
 	{
 		DWORD mainThreadId = 0;
 		ULONGLONG minCreateTime = MAXULONGLONG;
@@ -266,7 +272,7 @@ namespace Monoworks
 			} while ( Thread32Next( hSnapshot, &te32 ) );
 		}
 
-		HANDLE hMainThread = OpenThread( THREAD_QUERY_INFORMATION, mainThreadId ); 
+		// HANDLE hMainThread = OpenThread( THREAD_QUERY_INFORMATION, false, mainThreadId ); 
 
 		if ( !SymInitializeW( m_pImpl->EngineProcess, nullptr, false ) )
 		{
@@ -274,7 +280,96 @@ namespace Monoworks
 			return -1;
 		};
 
-		
+		DWORD symOptions = SymGetOptions();
+		symOptions |= SYMOPT_LOAD_LINES | SYMOPT_UNDNAME;
+		SymSetOptions( symOptions );
 
+		DWORD moduleHandlesSizeNeeded = 0;
+		std::vector<HMODULE> hModules;
+		hModules.resize( c_nMaxModules );
+		K32EnumProcessModules( m_pImpl->EngineProcess, hModules.data(), (DWORD)hModules.size() * sizeof HMODULE, &moduleHandlesSizeNeeded );
+
+		hModules.resize( moduleHandlesSizeNeeded / sizeof HMODULE );
+		std::vector<std::wstring> filenames( moduleHandlesSizeNeeded / sizeof HMODULE );
+		std::vector<std::wstring> moduleNames( moduleHandlesSizeNeeded / sizeof HMODULE );
+		{
+			size_t i = 0;
+			for ( auto& hModule : hModules )
+			{
+				MODULEINFO info{};
+				auto& filename = filenames[i];
+				filename.resize( c_nMaxNameLength );
+
+				auto& modulename = moduleNames[i];
+				modulename.resize( c_nMaxNameLength );
+
+				K32GetModuleInformation( m_pImpl->EngineProcess, hModule, &info, sizeof info );
+				K32GetModuleFileNameExW( m_pImpl->EngineProcess, hModule, filename.data(), c_nMaxNameLength );
+				K32GetModuleBaseNameW( m_pImpl->EngineProcess, hModule, modulename.data(), c_nMaxNameLength );
+
+				if ( !SymLoadModuleExW(
+					m_pImpl->EngineProcess,
+					0,
+					filename.data(),
+					modulename.data(),
+					( DWORD64 )info.lpBaseOfDll,
+					( DWORD )info.SizeOfImage, 0, 0 ) ) 
+				{
+					MW_CRASH_REPORTER_ERROR("Failed to load Symbols for Module (0x{:x})", GetLastError());
+				};
+
+				i++;
+			}
+		}
+
+		static constexpr int c_StackSize = 4;
+
+		std::array<void*, c_StackSize> pStack = { nullptr };
+		int64_t stacksize = RtlCaptureStackBackTrace( 2, c_StackSize, pStack.data(), nullptr );
+		rStack.resize( stacksize );
+
+
+		char symbolInfoData[sizeof(SYMBOL_INFO) + c_nMaxNameLength + 1];
+		IMAGEHLP_LINE64 line{};
+		line.SizeOfStruct = sizeof line;
+
+		for ( size_t i{}; i < (size_t)stacksize; i++ )
+		{
+			StackFrame& entry = rStack[i];
+			DWORD64 addr = ( DWORD64 )pStack[i];
+			if ( addr == 0 )
+				continue;
+
+			memset( symbolInfoData, '\0', sizeof symbolInfoData );
+
+			SYMBOL_INFO* pSymInfo = reinterpret_cast< SYMBOL_INFO* >( symbolInfoData );
+			pSymInfo->SizeOfStruct = sizeof SYMBOL_INFO;
+			pSymInfo->MaxNameLen = c_nMaxNameLength; 
+			DWORD64 displacement = 0;
+			SymFromAddr( m_pImpl->EngineProcess, addr, &displacement, pSymInfo );
+
+			entry.FunctionSignature.resize( c_nMaxNameLength );
+			entry.ModuleSignature.resize( c_nMaxNameLength );
+
+			if ( pSymInfo->Name[0] != '\0' )
+				UnDecorateSymbolName( pSymInfo->Name, entry.FunctionSignature.data(), c_nMaxNameLength, UNDNAME_COMPLETE );
+
+			IMAGEHLP_MODULE64 modInfo{};
+			modInfo.SizeOfStruct = sizeof modInfo;
+			if ( SymGetModuleInfo64(m_pImpl->EngineProcess, addr, &modInfo) )
+			{
+				int64_t copySize = sizeof modInfo.ImageName;
+				if ( copySize > c_nMaxNameLength - 1 )
+					copySize = c_nMaxNameLength - 1;
+
+				memmove( entry.ModuleSignature.data(), modInfo.ImageName, copySize );
+			}
+		}
+
+
+		SymCleanup( m_pImpl->EngineProcess );
+
+		return 0;
 	}
+
 }
