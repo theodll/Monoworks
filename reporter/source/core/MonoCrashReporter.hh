@@ -10,28 +10,23 @@ namespace Monoworks
 	constexpr auto c_HeartbeatTimeout = c_HeartbeatInterval * 5;
 	constexpr auto c_PollInterval = std::chrono::milliseconds( 10 );
 
-	struct StackFrame 
+	struct Version
 	{
-		uintptr_t ReturnAdress;
-		uintptr_t ModuleAdress;
-		
-		// Mangled or unmangled
-		std::string FunctionSignature;
-		std::string ModuleSignature;
+		uint16_t	nPatch;
+		uint8_t		nMajor;
+		uint8_t		nMinor;
 	};
 
 	struct MetaDumpData 
 	{
-		std::vector<StackFrame> StackFrames; 
+		Version EngineVersion; // Version of the Engine
+		Version ClientVersion; // Version of the Client/Runtime
 	};
 
 	enum EHeartbeatSignals 
 	{
 		MW_HEARTBEAT_SIGNAL_READY = 0xA0,
 		MW_HEARTBEAT_SIGNAL_OK = 0x0A,
-		// This signal should ideally never be issued on Windows. It is only issued for UNIX Systems 
-		// because we can't easily register external signal handlers for processes. On windows any signal should
-		// ideally be handled by the crash reporter process.
 		MW_HEARTBEAT_SIGNAL_CRASH = 0xFF
 	};
 
@@ -54,7 +49,7 @@ namespace Monoworks
 		CMonoCrashReporter() noexcept;
 		virtual ~CMonoCrashReporter() noexcept;
 		
-		// Commandline has to be formatted like this:
+		// Command line has to be formatted like this:
 		// 1. Application name (standard on most systems)
 		// 2. Parent Engine's PID
 		int Init( int argc, wchar_t** pArgv ) noexcept;

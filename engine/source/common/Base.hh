@@ -205,14 +205,17 @@ namespace Monoworks
 {
 	constexpr u32 MaxFramesInFlight = 3;
 
-	struct SVersion
+	struct Version
 	{
 		u8 Major;
 		u8 Minor;
 		u16 Patch;
 	};
 
-	using SAppVersion = SVersion;
+	using SAppVersion DEPRECATED = Version;
+	using SVersion DEPRECATED = Version;
+	using AppVersion = Version;
+
 
 	enum EGraphicsAPI
 	{
