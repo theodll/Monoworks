@@ -7,7 +7,7 @@ target_sources( MonoCrashReporter PRIVATE "source/core/win32/MonoCrashReporterWi
 target_link_libraries( MonoCrashReporter PRIVATE DbgHelp )
 endif()
 
-target_include_directories( MonoCrashReporter PRIVATE "source/" )
+target_include_directories( MonoCrashReporter PRIVATE "source/" "../" )
 
 target_link_libraries( MonoCrashReporter PRIVATE Boost::headers )
 

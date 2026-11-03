@@ -21,6 +21,8 @@ namespace Monoworks
 	{
 		Version EngineVersion; // Version of the Engine
 		Version ClientVersion; // Version of the Client/Runtime
+		std::string GitHash;
+		std::string GitBranch;
 	};
 
 	enum EHeartbeatSignals 
@@ -55,6 +57,7 @@ namespace Monoworks
 		int Init( int argc, wchar_t** pArgv ) noexcept;
 
 		// Wait for a heartbeat containing the Graphics Vendor.
+		int WaitForApplicationMeta() noexcept;
 		int WaitForGraphicsVendor() noexcept;
 		int WaitForReadyStatus() noexcept;
 		int CheckHeartbeat() noexcept;
@@ -73,7 +76,6 @@ namespace Monoworks
 		int HeartbeatFailed() noexcept;
 
 		int ReadPipe( void* pBuf, size_t nSize, size_t* pBytesRead );
-		int WalkStack( std::vector<StackFrame>& rStack ) noexcept;
 
 
 	private:

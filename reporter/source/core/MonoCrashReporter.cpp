@@ -1,6 +1,8 @@
 #include <core/MonoCrashReporter.hh>
 #include <core/Utils.hh>
 
+#include <Version.h>
+
 #include <string>
 #include <print>
 #include <thread>
@@ -106,7 +108,8 @@ namespace Monoworks
 
 	int CMonoCrashReporter::DumpMeta( MetaDumpData* pDumpData ) noexcept
 	{
-
+		pDumpData->GitHash = c_GitCommitHash;
+		pDumpData->GitBranch = c_GitBranch;
 
 		return 0;
 	}

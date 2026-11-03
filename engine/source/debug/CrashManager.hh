@@ -30,12 +30,31 @@ namespace Monoworks
 	};
 	using EGraphicsVendorFlags = flags_t;
 
+	enum ECrashManagerMetaDataFlagBits
+	{
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_NONE_BIT = 0x0,
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SDL_BIT = 0x1,
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_QT_BIT = 0x2,
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_HEADLESS_BIT = 0x4, // Not implemented
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SWAPCHAIN = 0x8,
+	};
+	using ECrashManagerMetaDataFlags = flags_t; 
 
 	class CCrashManager 
 	{
 	public:
 		static EResult MWAPI_CALL Init() NOEXCEPT;
 		static EResult MWAPI_CALL Shutdown() NOEXCEPT;
+
+		struct Meta 
+		{
+			ECrashManagerMetaDataFlags nFlags;
+			EGraphicsAPI nGraphicsAPI;
+			Version EngineVersion;
+			Version ClientVersion;
+		};
+
+		static EResult MWAPI_CALL SendApplicationMeta( Meta* pMeta ) NOEXCEPT; 
 
 		static EResult MWAPI_CALL SendGraphicsVendor( EGraphicsVendorFlags nVendor ) NOEXCEPT;
 
