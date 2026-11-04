@@ -606,7 +606,7 @@ namespace Monoworks
 		MW_MOUSE_5_BUTTON
 	};
 
-	constexpr SAppVersion MonoworksVersion = { .Major = 1, .Minor = 0, .Patch = 0 };
+	constexpr AppVersion EngineVersion = { .Major = 1, .Minor = 0, .Patch = 0 };
 	constexpr const char* EngineName = "MonoEngine";
 	constexpr u32 MFIF = MaxFramesInFlight;
 

@@ -107,6 +107,17 @@ namespace Monoworks
 		m_pApplicationCreationInfos = *pInfos;
 		m_GraphicsAPI = pInfos->GraphicsAPI;
 
+		CrashManagerApplicationMetadata meta{};
+		meta.ClientVersion = pInfos->Version;
+		meta.EngineVersion = EngineVersion;
+		meta.nGraphicsAPI = pInfos->GraphicsAPI;
+
+		pInfos->UseQt ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_QT_BIT : 0;
+		pInfos->UseSDL ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SDL_BIT : 0;
+		pInfos->UseSwapchain ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SWAPCHAIN : 0;
+		pInfos->GraphicsAPI == MW_GAPI_NONE ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_HEADLESS_BIT : 0;
+
+		CCrashManager::SendApplicationMeta( &meta );
 
 		CStaticRenderer::SetRenderableExtend(m_pApplicationCreationInfos.RenderableExtent);
 		CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, CApplication::OnResize );

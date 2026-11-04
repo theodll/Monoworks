@@ -88,6 +88,11 @@ namespace Monoworks
 	}
 
 
+	EResult MWAPI_CALL CCrashManager::SendApplicationMeta( Meta* pMeta ) NOEXCEPT
+	{
+
+	}
+
 	EResult MWAPI_CALL CCrashManager::SendGraphicsVendor( EGraphicsVendorFlags nVendor ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;

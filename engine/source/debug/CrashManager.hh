@@ -40,21 +40,21 @@ namespace Monoworks
 	};
 	using ECrashManagerMetaDataFlags = flags_t; 
 
+	struct CrashManagerApplicationMetadata
+	{
+		ECrashManagerMetaDataFlags nFlags;
+		EGraphicsAPI nGraphicsAPI;
+		Version EngineVersion;
+		Version ClientVersion;
+	};
+
 	class CCrashManager 
 	{
 	public:
 		static EResult MWAPI_CALL Init() NOEXCEPT;
 		static EResult MWAPI_CALL Shutdown() NOEXCEPT;
 
-		struct Meta 
-		{
-			ECrashManagerMetaDataFlags nFlags;
-			EGraphicsAPI nGraphicsAPI;
-			Version EngineVersion;
-			Version ClientVersion;
-		};
-
-		static EResult MWAPI_CALL SendApplicationMeta( Meta* pMeta ) NOEXCEPT; 
+		static EResult MWAPI_CALL SendApplicationMeta( const CrashManagerApplicationMetadata* pMeta ) NOEXCEPT;
 
 		static EResult MWAPI_CALL SendGraphicsVendor( EGraphicsVendorFlags nVendor ) NOEXCEPT;
 
