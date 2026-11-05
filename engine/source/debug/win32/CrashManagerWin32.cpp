@@ -88,16 +88,23 @@ namespace Monoworks
 	}
 
 
-	EResult MWAPI_CALL CCrashManager::SendApplicationMeta( Meta* pMeta ) NOEXCEPT
+	EResult MWAPI_CALL CCrashManager::SendApplicationMeta( const CrashManagerApplicationMetadata* pMeta ) NOEXCEPT
 	{
-
+		MW_PROFILE_FUNC;
+		DWORD nBytesWritten = 0;
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, pMeta, sizeof *pMeta, &nBytesWritten, nullptr ) )
+		{
+			MW_ERROR("Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early.");
+			return MW_ERROR_EARLY_EXIT;
+		}
+		return MW_SUCCESS;
 	}
 
 	EResult MWAPI_CALL CCrashManager::SendGraphicsVendor( EGraphicsVendorFlags nVendor ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		DWORD bytesWritten = 0;
-		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &nVendor, 1, &bytesWritten, nullptr ) )
+		DWORD nBytesWritten = 0;
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &nVendor, 1, &nBytesWritten, nullptr ) )
 		{
 			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
 			return MW_ERROR_EARLY_EXIT;
@@ -109,9 +116,9 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		byte_t status = MW_CRASH_REPORTER_HEARTBEAT_STATUS_READY;
-		DWORD bytesWritten = 0;
+		DWORD nBytesWritten = 0;
 
-		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &status, sizeof status, &bytesWritten, nullptr ) )
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &status, sizeof status, &nBytesWritten, nullptr ) )
 		{
 			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
 			return MW_ERROR_EARLY_EXIT;
@@ -121,12 +128,12 @@ namespace Monoworks
 	EResult MWAPI_CALL CCrashManager::Heartbeat( CTimestep ts ) NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
-		static float counter = 0;
+		static float fCounter = 0;
 		// counter += 10 * ts;
 
-		if ( counter >= c_flHeartbeatInterval )
+		if ( fCounter >= c_flHeartbeatInterval )
 		{
-			counter = 0;
+			fCounter = 0;
 			byte_t status = MW_CRASH_REPORTER_HEARTBEAT_STATUS_OK;
 			DWORD bytesWritten = 0;
 

@@ -16,8 +16,10 @@ namespace Monoworks
 		if ( rp.Init( argc, pArgv ) < 0 )
 			return -1;
 
-		rp.WaitForGraphicsVendor();
+		ApplicationMetaDumpData* pMeta = rp.GetApplicationMetaDumpData();
+		rp.WaitForApplicationMeta( pMeta );
 
+		rp.WaitForGraphicsVendor( pMeta );
 		rp.WaitForReadyStatus();
 
 		rp.CheckHeartbeat();
@@ -25,16 +27,46 @@ namespace Monoworks
 		return 0;
 	}
 
-	int CMonoCrashReporter::WaitForGraphicsVendor() noexcept
+	int CMonoCrashReporter::WaitForApplicationMeta( ApplicationMetaDumpData* pMeta ) noexcept
+	{
+		MW_CRASH_REPORTER_INFO( "Wait for Application Meta." );
+
+		struct Meta 
+		{
+			ECrashManagerMetaDataFlags nFlags;
+			EGraphicsAPI nGraphicsAPI;
+			Version EngineVersion;
+			Version ClientVersion;
+		};
+		Meta meta;
+		size_t nBytesRead = 0;
+
+		if ( int res = ReadPipe( &meta, sizeof meta, &nBytesRead ); !res )
+		{ 
+			MW_CRASH_REPORTER_ERROR("Failed to read heartbeat pipe (0x{:x})", res );
+			return -1;
+		}
+		pMeta->ClientVersion = meta.ClientVersion;
+		pMeta->EngineVersion = meta.EngineVersion;
+		pMeta->GitBranch = MW_GIT_BRANCH;
+		pMeta->GitHash = MW_GIT_COMMIT_HASH;
+		pMeta->nGraphicsAPI = meta.nGraphicsAPI;
+
+		MW_CRASH_REPORTER_INFO( "Received Application Meta." );
+
+		return 0;
+	}
+
+	int CMonoCrashReporter::WaitForGraphicsVendor( ApplicationMetaDumpData* pMeta ) noexcept
 	{
 		MW_CRASH_REPORTER_INFO("Wait for Graphics Vendor.");
 
 		EGraphicsVendorFlags nFlags = MW_GRAPHICS_VENDOR_UNDEFINED;
 		size_t nBytesRead = 0;
 
-		if ( int res = ReadPipe( &nFlags, sizeof nFlags, &nBytesRead ) < 0 )
+		if ( int res = ReadPipe( &nFlags, sizeof nFlags, &nBytesRead ); !res )
 		{
-			MW_CRASH_REPORTER_ERROR("Failed to read Heartbeat Pipe ({})", res);
+			MW_CRASH_REPORTER_ERROR("Failed to read Heartbeat Pipe (0x{:x})", res);
 			return -1;
 		}
 
@@ -45,9 +77,7 @@ namespace Monoworks
 		}
 
 		MW_CRASH_REPORTER_INFO("Received Graphics Vendor: {}", (int)nFlags);
-		m_nFlags |= nFlags;
-
-		std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
+		pMeta->GraphicsVendor |= nFlags;
 
 		return 0;
 	}
@@ -94,24 +124,9 @@ namespace Monoworks
 
 		PreDumpSteps();
 
-		MetaDumpData meta{};
-		int res = 0;
-		
-		res = DumpMeta( &meta );
-		if ( res < 0 )
-			return res;
+		int nRes = DumpCore();
+		return nRes;
 
-		res = DumpCore();
-		return res;
-
-	}
-
-	int CMonoCrashReporter::DumpMeta( MetaDumpData* pDumpData ) noexcept
-	{
-		pDumpData->GitHash = c_GitCommitHash;
-		pDumpData->GitBranch = c_GitBranch;
-
-		return 0;
 	}
 
 	int CMonoCrashReporter::HeartbeatFailed() noexcept

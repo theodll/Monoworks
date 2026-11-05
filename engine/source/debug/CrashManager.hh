@@ -63,6 +63,8 @@ namespace Monoworks
 		// reached it writes a packet into the read part of the pipe
 		static EResult MWAPI_CALL Heartbeat( CTimestep ts ) NOEXCEPT;
 	private:
+		bool m_bAlive;
+
 		struct Impl;
 		static Unique<Impl> m_hImpl;
 	};

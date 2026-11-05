@@ -570,7 +570,7 @@ namespace Monoworks::RHI
 		appInfo.pApplicationName = ApplicationInfos->pName;
 		appInfo.applicationVersion = VK_MAKE_VERSION(ApplicationInfos->Version.Major, ApplicationInfos->Version.Minor, ApplicationInfos->Version.Patch);
 		appInfo.pEngineName = EngineName;
-		appInfo.engineVersion = VK_MAKE_VERSION(MonoworksVersion.Major, MonoworksVersion.Minor, MonoworksVersion.Patch);
+		appInfo.engineVersion = VK_MAKE_VERSION(EngineVersion.Major, EngineVersion.Minor, EngineVersion.Patch);
 		appInfo.apiVersion = MW_VK_VERSION;
 
 		VkInstanceCreateInfo createInfo{};
