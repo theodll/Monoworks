@@ -16,10 +16,9 @@ namespace Monoworks
 		if ( rp.Init( argc, pArgv ) < 0 )
 			return -1;
 
-		ApplicationMetaDumpData* pMeta = rp.GetApplicationMetaDumpData();
-		rp.WaitForApplicationMeta( pMeta );
+		rp.WaitForApplicationMeta();
 
-		rp.WaitForGraphicsVendor( pMeta );
+		rp.WaitForGraphicsVendor();
 		rp.WaitForReadyStatus();
 
 		rp.CheckHeartbeat();
@@ -27,7 +26,7 @@ namespace Monoworks
 		return 0;
 	}
 
-	int CMonoCrashReporter::WaitForApplicationMeta( ApplicationMetaDumpData* pMeta ) noexcept
+	int CMonoCrashReporter::WaitForApplicationMeta() noexcept
 	{
 		MW_CRASH_REPORTER_INFO( "Wait for Application Meta." );
 
@@ -46,18 +45,18 @@ namespace Monoworks
 			MW_CRASH_REPORTER_ERROR("Failed to read heartbeat pipe (0x{:x})", res );
 			return -1;
 		}
-		pMeta->ClientVersion = meta.ClientVersion;
-		pMeta->EngineVersion = meta.EngineVersion;
-		pMeta->GitBranch = MW_GIT_BRANCH;
-		pMeta->GitHash = MW_GIT_COMMIT_HASH;
-		pMeta->nGraphicsAPI = meta.nGraphicsAPI;
+		m_ApplicationMeta.ClientVersion = meta.ClientVersion;
+		m_ApplicationMeta.EngineVersion = meta.EngineVersion;
+		m_ApplicationMeta.GitBranch = MW_GIT_BRANCH;
+		m_ApplicationMeta.GitHash = MW_GIT_COMMIT_HASH;
+		m_ApplicationMeta.nGraphicsAPI = meta.nGraphicsAPI;
 
 		MW_CRASH_REPORTER_INFO( "Received Application Meta." );
 
 		return 0;
 	}
 
-	int CMonoCrashReporter::WaitForGraphicsVendor( ApplicationMetaDumpData* pMeta ) noexcept
+	int CMonoCrashReporter::WaitForGraphicsVendor() noexcept
 	{
 		MW_CRASH_REPORTER_INFO("Wait for Graphics Vendor.");
 
@@ -77,7 +76,7 @@ namespace Monoworks
 		}
 
 		MW_CRASH_REPORTER_INFO("Received Graphics Vendor: {}", (int)nFlags);
-		pMeta->GraphicsVendor |= nFlags;
+		m_SystemMeta.nGraphicsVendor |= nFlags;
 
 		return 0;
 	}
@@ -125,7 +124,21 @@ namespace Monoworks
 		PreDumpSteps();
 
 		int nRes = DumpCore();
+		if ( nRes < 0 )
+			return nRes;
+
+		nRes = DumpSystemData( &m_SystemMeta );
+		if ( nRes < 0 )
+			return nRes;
+
 		return nRes;
+
+	}
+
+	int CMonoCrashReporter::WriteReport() noexcept
+	{
+
+
 
 	}
 
@@ -133,6 +146,7 @@ namespace Monoworks
 	{
 		Dump();
 		TerminateEngine();
+		WriteReport();
 		return 0;
 	}
 

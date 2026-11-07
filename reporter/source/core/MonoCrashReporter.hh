@@ -10,6 +10,8 @@ namespace Monoworks
 	constexpr auto c_HeartbeatTimeout = c_HeartbeatInterval * 5;
 	constexpr auto c_PollInterval = std::chrono::milliseconds( 10 );
 
+	constexpr auto c_ReportPath = "";
+
 	struct Version
 	{
 		uint16_t	nPatch;
@@ -62,21 +64,22 @@ namespace Monoworks
 		EGraphicsAPI nGraphicsAPI;
 	};
 
-	// Redundant at the moment, since it right now only supports x86_64
-	enum ECPUArch 
-	{
-		MW_CPU_ARCH_AMD64,
-		MW_CPU_ARCH_INTEL,
-		MW_CPU_ARCH_ARM64,
-		MW_CPU_ARCH_ARM,
-		MW_CPU_ARCH_UNKNOWN
-	};
-
 	struct SystemMetaData 
 	{
-		ECPUArch nCPUArch;
+		std::string CPUArch;
+		// Windows: LCUVer in regedit
+		// Linux: utsname::release
+		std::string ReleaseVersion;
+		// Windows: product name + display version (both in regedit)
+		// Linux/MacOS: utsname::nodename
+		std::string ProductName; 
+
+		// kb
+		uint64_t nTotalSystemMemory;
+		uint64_t nUsedSystemMemory;
+		uint64_t nEngineMemory;
+
 		EMonoCrashReporterFlags nGraphicsVendor;
-		std::string OperatingSystemVersionSTR;
 	};
 
 	enum EHeartbeatSignals 
@@ -98,13 +101,11 @@ namespace Monoworks
 		int Init( int argc, wchar_t** pArgv ) noexcept;
 
 		// Wait for a heartbeat containing the Graphics Vendor.
-		int WaitForApplicationMeta( ApplicationMetaData* pMeta ) noexcept;
-		int WaitForGraphicsVendor( ApplicationMetaData* pMeta ) noexcept;
+		int WaitForApplicationMeta() noexcept;
+		int WaitForGraphicsVendor() noexcept;
 		int WaitForReadyStatus() noexcept;
 		int CheckHeartbeat() noexcept;
 		int Shutdown() noexcept;
-
-		ApplicationMetaData* GetApplicationMetaDumpData() { return &m_ApplicationMeta; };
 
 	private:
 		int Dump() noexcept;
@@ -114,7 +115,7 @@ namespace Monoworks
 		// because it forcefully exits the engine on Linux and Mac by sending the SIGSEGV signal
 		int DumpCore() noexcept; // Platform Specific (MiniDump on Windows, core dump (SIGSEGV) on Linux and Mac)
 
-		int DumpUserMeta() noexcept;
+		int DumpSystemData( SystemMetaData* pMeta ) noexcept;
 
 		int WriteReport() noexcept;
 
@@ -129,6 +130,7 @@ namespace Monoworks
 		::std::unique_ptr<Impl> m_pImpl;
 
 		ApplicationMetaData m_ApplicationMeta;
+		SystemMetaData m_SystemMeta;
 
 		EMonoCrashReporterFlags m_nFlags;
 		bool m_bReady;

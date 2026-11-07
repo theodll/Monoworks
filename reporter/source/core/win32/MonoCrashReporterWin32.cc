@@ -235,5 +235,107 @@ namespace Monoworks
 		return 0;
 	}
 
+	int CMonoCrashReporter::DumpSystemData( SystemMetaData* pMeta ) noexcept
+	{
+		auto findStr = []( const char* subkey, const char* valueName )
+			{
+
+				DWORD bufferSize = 0;
+
+				if ( !RegGetValueA(
+					HKEY_LOCAL_MACHINE,
+					subkey,
+					valueName,
+					RRF_RT_REG_SZ,
+					nullptr,
+					nullptr,
+					&bufferSize
+				) )
+				{
+					MW_CRASH_REPORTER_ERROR(" Failed to find Registry Value Position: {}/{}", subkey, valueName);
+				};
+
+
+				std::string value( bufferSize / sizeof( wchar_t ), L'\0' );
+
+				if ( !RegGetValueA(
+					HKEY_LOCAL_MACHINE,
+					subkey,
+					valueName,
+					RRF_RT_REG_SZ,
+					nullptr,
+					value.data(),
+					&bufferSize
+				) ) 
+				{
+					MW_CRASH_REPORTER_ERROR("Failed to find Failed to find Registry Value: {}/{}", subkey, valueName );
+				};
+
+				if ( !value.empty() && value.back() == L'\0' )
+					value.pop_back();
+
+				return value;
+
+			};
+
+		SYSTEM_INFO si{};
+		GetSystemInfo( &si );
+
+		switch ( si.wProcessorArchitecture )
+		{
+		case PROCESSOR_ARCHITECTURE_AMD64:
+			pMeta->CPUArch = "x86_64-amd64";
+			break;
+		case PROCESSOR_ARCHITECTURE_INTEL:
+			pMeta->CPUArch = "x86";
+			break;
+		case PROCESSOR_ARCHITECTURE_ARM:
+			pMeta->CPUArch = "arm";
+			break;
+		case PROCESSOR_ARCHITECTURE_ARM64:
+			pMeta->CPUArch = "arm64";
+			break;
+		default:
+			pMeta->CPUArch = "Unknown";
+			break;
+		};
+
+		constexpr auto subkey = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion";
+		pMeta->ReleaseVersion = findStr( subkey, "LCUVer" );
+
+		auto productname = findStr( subkey, "ProductName" );
+		auto displayver = findStr( subkey, "DisplayVersion" );
+
+		pMeta->ProductName = productname + " " + displayver;
+
+		if ( !GetPhysicallyInstalledSystemMemory( &pMeta->nTotalSystemMemory ) ) 
+		{
+			return -1;
+		};
+		
+		PROCESS_MEMORY_COUNTERS pm{};
+		pm.cb = sizeof pm;
+
+		if ( !K32GetProcessMemoryInfo( m_pImpl->EngineProcess, &pm, sizeof pm ) ) 
+		{
+			return -1;
+		};
+
+		pMeta->nEngineMemory = pm.PagefileUsage / 1024;
+
+
+		MEMORYSTATUSEX ms{};
+		ms.dwLength = sizeof ms;
+
+		if ( !GlobalMemoryStatusEx( &ms ) )
+		{
+			return -1;
+		}
+			 
+		pMeta->nUsedSystemMemory = (ms.ullTotalPhys - ms.ullAvailPhys) / 1024;
+
+		return 0;
+
+	}
 
 }
