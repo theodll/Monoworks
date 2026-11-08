@@ -12,6 +12,7 @@
 #include <string>
 #include <print>
 #include <thread>
+#include <filesystem>
 
 
 namespace Monoworks
@@ -364,5 +365,20 @@ namespace Monoworks
 		return 0;
 
 	}
+
+
+	int RelocateDump( const std::filesystem::path& dir ) noexcept
+	{
+		std::filesystem::path source = "monoworks.dmp";
+
+		std::filesystem::path dst = dir / source;
+
+		std::filesystem::rename( source, dst );
+
+		return 0;
+
+	}
+
+
 
 }

@@ -142,8 +142,8 @@ namespace Monoworks
 	int CMonoCrashReporter::WriteReport() noexcept
 	{
 		const auto now = std::chrono::system_clock::now();
-		std::string reportdir = "monoworks-report_" + std::format( "{:%H-%M-%Y-%m-%d}", now );
-		std::filesystem::create_directory( reportdir );
+		m_ReportDirectory = std::filesystem::path{ std::format( "monoworks - report_{:%H-%M-%Y-%m-%d}", now ) };
+		std::filesystem::create_directory( m_ReportDirectory );
 
 		auto verString = std::format( "{}.{}.{}", m_ApplicationMeta.EngineVersion.nMajor, m_ApplicationMeta.EngineVersion.nMinor, m_ApplicationMeta.EngineVersion.nPatch );
 		auto cverString = std::format( "{}.{}.{}", m_ApplicationMeta.ClientVersion.nMajor, m_ApplicationMeta.ClientVersion.nMinor, m_ApplicationMeta.ClientVersion.nPatch );
@@ -175,11 +175,19 @@ namespace Monoworks
 			}
 		};
 
-		std::ofstream reportstream{ reportdir + "/report.json" };
+		std::ofstream reportstream( m_ReportDirectory / "report.json" );
 		reportstream << toml::json_formatter{ report };
 		reportstream.close();
 
 		return 0;
+
+	}
+
+	void CMonoCrashReporter::ComposeReport() noexcept
+	{
+		RelocateDump( m_ReportDirectory );
+
+		std::filesystem::rename( "Monoworks.log", m_ReportDirectory / "Monoworks.log" );
 
 	}
 
@@ -188,6 +196,7 @@ namespace Monoworks
 		Dump();
 		TerminateEngine();
 		WriteReport();
+		ComposeReport();
 		return 0;
 	}
 

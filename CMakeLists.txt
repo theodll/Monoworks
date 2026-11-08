@@ -70,6 +70,8 @@ add_compile_definitions(
 )
 
 add_subdirectory(extern/tomlplusplus)
+add_subdirectory(extern/libzip)
+
 add_subdirectory(reporter)
 add_subdirectory(engine)
 add_subdirectory(editor)

@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include <memory>
 #include <chrono>
 
@@ -99,6 +100,9 @@ namespace Monoworks
 		MW_HEARTBEAT_SIGNAL_CRASH = 0xFF
 	};
 
+	// move core/monoworks.dmp into the report directory
+	inline int RelocateDump( const std::filesystem::path& dir) noexcept;
+
 	class CMonoCrashReporter
 	{
 	public:
@@ -128,6 +132,7 @@ namespace Monoworks
 		int DumpSystemData( SystemMetaData* pMeta ) noexcept;
 
 		int WriteReport() noexcept;
+		void ComposeReport() noexcept;
 
 		// Does nothing on linux or macos 
 		int TerminateEngine() noexcept; 
@@ -138,6 +143,9 @@ namespace Monoworks
 	private:
 		struct Impl;
 		::std::unique_ptr<Impl> m_pImpl;
+
+		std::filesystem::path m_ReportDirectory;
+
 
 		ApplicationMetaData m_ApplicationMeta;
 		SystemMetaData m_SystemMeta;
