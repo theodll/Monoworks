@@ -114,6 +114,7 @@ namespace Monoworks
 		m_GraphicsAPI = pInfos->GraphicsAPI;
 
 		CrashManagerApplicationMetadata meta{};
+		memset( &meta, 0, sizeof meta );
 		meta.ClientVersion = pInfos->Version;
 		meta.EngineVersion = EngineVersion;
 		meta.nGraphicsAPI = pInfos->GraphicsAPI;

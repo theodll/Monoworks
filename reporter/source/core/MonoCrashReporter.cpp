@@ -7,6 +7,9 @@
 #include <print>
 #include <thread>
 #include <chrono>
+#include <filesystem>
+
+#include  <toml++/toml.hpp>
 
 namespace Monoworks
 {
@@ -30,7 +33,7 @@ namespace Monoworks
 	{
 		MW_CRASH_REPORTER_INFO( "Wait for Application Meta." );
 
-		struct Meta 
+		struct alignas(16) Meta 
 		{
 			ECrashManagerMetaDataFlags nFlags;
 			EGraphicsAPI nGraphicsAPI;
@@ -40,11 +43,12 @@ namespace Monoworks
 		Meta meta;
 		size_t nBytesRead = 0;
 
-		if ( int res = ReadPipe( &meta, sizeof meta, &nBytesRead ); !res )
+		int res = ReadPipe( &meta, sizeof meta, &nBytesRead );
+		if ( res != 0 )
 		{ 
-			MW_CRASH_REPORTER_ERROR("Failed to read heartbeat pipe (0x{:x})", res );
-			return -1;
+			MW_CRASH_REPORTER_ERROR("Failed to read heartbeat pipe (0x{:x}) !!", res );
 		}
+
 		m_ApplicationMeta.ClientVersion = meta.ClientVersion;
 		m_ApplicationMeta.EngineVersion = meta.EngineVersion;
 		m_ApplicationMeta.GitBranch = MW_GIT_BRANCH;
@@ -137,8 +141,45 @@ namespace Monoworks
 
 	int CMonoCrashReporter::WriteReport() noexcept
 	{
+		const auto now = std::chrono::system_clock::now();
+		std::string reportdir = "monoworks-report_" + std::format( "{:%H-%M-%Y-%m-%d}", now );
+		std::filesystem::create_directory( reportdir );
 
+		auto verString = std::format( "{}.{}.{}", m_ApplicationMeta.EngineVersion.nMajor, m_ApplicationMeta.EngineVersion.nMinor, m_ApplicationMeta.EngineVersion.nPatch );
+		auto cverString = std::format( "{}.{}.{}", m_ApplicationMeta.ClientVersion.nMajor, m_ApplicationMeta.ClientVersion.nMinor, m_ApplicationMeta.ClientVersion.nPatch );
 
+		auto report = toml::table
+		{
+			{ "Crash-Time",						m_ApplicationMeta.CrashTime },
+			{ "Application", toml::table{
+					{ "Engine-Version", verString },
+					{ "Client-Version", cverString },
+					{ "Build-Branch",				MW_GIT_BRANCH },
+					{ "Build-Commit-Hash",			MW_GIT_COMMIT_HASH },
+					{ "Engine-Uptime",				static_cast<int64_t>(m_ApplicationMeta.nEngineUptime) },
+					{ "Graphics-API",				static_cast<int64_t>(m_ApplicationMeta.nGraphicsAPI) }
+				}
+			},
+			{ "System", toml::table{
+					{ "Operating-System-Name",		m_SystemMeta.ProductName },
+					{ "Operating-System-Version",	m_SystemMeta.ReleaseVersion },
+					{ "CPU-Architecture",			m_SystemMeta.CPUArch },
+					{ "Graphics-Vendor",			static_cast< int64_t >( m_SystemMeta.nGraphicsVendor) },
+					{ "Memory", toml::table{
+							{ "Total",				static_cast<int64_t>(m_SystemMeta.nTotalSystemMemory) },
+							{ "Used",				static_cast<int64_t>(m_SystemMeta.nUsedSystemMemory) },
+							{ "Engine",				static_cast<int64_t>(m_SystemMeta.nEngineMemory) },
+						}
+					}
+				}
+			}
+		};
+
+		std::ofstream reportstream{ reportdir + "/report.json" };
+		reportstream << toml::json_formatter{ report };
+		reportstream.close();
+
+		return 0;
 
 	}
 

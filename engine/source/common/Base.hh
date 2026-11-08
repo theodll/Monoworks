@@ -205,7 +205,7 @@ namespace Monoworks
 {
 	constexpr u32 MaxFramesInFlight = 3;
 
-	struct Version
+	struct alignas(4) Version
 	{
 		u8 Major;
 		u8 Minor;

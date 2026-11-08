@@ -7,9 +7,9 @@ target_sources( MonoCrashReporter PRIVATE "source/core/win32/MonoCrashReporterWi
 target_link_libraries( MonoCrashReporter PRIVATE DbgHelp )
 endif()
 
-target_include_directories( MonoCrashReporter PRIVATE "source/" "../" )
+target_include_directories( MonoCrashReporter PRIVATE "source/" "../" "../extern/tomlplusplus/include/")
 
-target_link_libraries( MonoCrashReporter PRIVATE Boost::headers )
+target_link_libraries( MonoCrashReporter PRIVATE Boost::headers tomlplusplus::tomlplusplus )
 
 
 if (MSVC)

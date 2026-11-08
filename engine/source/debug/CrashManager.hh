@@ -40,7 +40,7 @@ namespace Monoworks
 	};
 	using ECrashManagerMetaDataFlags = flags_t; 
 
-	struct CrashManagerApplicationMetadata
+	struct alignas(16) CrashManagerApplicationMetadata
 	{
 		ECrashManagerMetaDataFlags nFlags;
 		EGraphicsAPI nGraphicsAPI;

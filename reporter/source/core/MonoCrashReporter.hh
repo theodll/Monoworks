@@ -10,13 +10,14 @@ namespace Monoworks
 	constexpr auto c_HeartbeatTimeout = c_HeartbeatInterval * 5;
 	constexpr auto c_PollInterval = std::chrono::milliseconds( 10 );
 
-	constexpr auto c_ReportPath = "";
+	constexpr auto c_ReportPath = "ReportMeta.toml";
 
-	struct Version
+	struct alignas(4) Version
 	{
-		uint16_t	nPatch;
 		uint8_t		nMajor;
 		uint8_t		nMinor;
+		uint16_t	nPatch;
+
 	};
 
 	enum ECrashManagerMetaDataFlagBits
@@ -56,12 +57,20 @@ namespace Monoworks
 
 	struct ApplicationMetaData
 	{
+		std::string CrashTime; // filled in in DumpCore
+
 		std::string GitHash;
 		std::string GitBranch;
 		Version EngineVersion; // Version of the Engine
 		Version ClientVersion; // Version of the Client/Runtime
 		ECrashManagerMetaDataFlags nFlags;
 		EGraphicsAPI nGraphicsAPI;
+
+		// MS
+		uint64_t nEngineUptime; // filled in in DumpCore
+
+
+
 	};
 
 	struct SystemMetaData 
@@ -74,11 +83,12 @@ namespace Monoworks
 		// Linux/MacOS: utsname::nodename
 		std::string ProductName; 
 
-		// kb
+		// KB
 		uint64_t nTotalSystemMemory;
 		uint64_t nUsedSystemMemory;
 		uint64_t nEngineMemory;
 
+		// TODO: Add driver version, vram available and architecture
 		EMonoCrashReporterFlags nGraphicsVendor;
 	};
 

@@ -125,6 +125,23 @@ namespace Monoworks
 
 	int CMonoCrashReporter::DumpCore() noexcept
 	{
+		FILETIME creationTime, exitTime, kernelTime, userTime, currentTime;
+
+		if ( !GetProcessTimes( m_pImpl->EngineProcess, &creationTime, &exitTime, &kernelTime, &userTime ) )
+		{
+			MW_CRASH_REPORTER_ERROR("Failed to get process times for the engine.");
+			return -1;
+		}
+
+		ULARGE_INTEGER creation, current;
+		GetSystemTimeAsFileTime( &currentTime );
+		creation.LowPart = creationTime.dwLowDateTime;
+		creation.HighPart = creationTime.dwHighDateTime;
+		current.LowPart = currentTime.dwLowDateTime;
+		current.HighPart = currentTime.dwHighDateTime;
+		
+		m_ApplicationMeta.nEngineUptime = ( current.QuadPart - creation.QuadPart ) / 10000;
+
 		HANDLE hDumpFile = CreateFileA(
 			"monoengine.dmp",
 			GENERIC_READ | GENERIC_WRITE,
@@ -237,12 +254,11 @@ namespace Monoworks
 
 	int CMonoCrashReporter::DumpSystemData( SystemMetaData* pMeta ) noexcept
 	{
-		auto findStr = []( const char* subkey, const char* valueName )
+		auto findStr = []( const char* subkey, const char* valueName ) -> std::string
 			{
-
 				DWORD bufferSize = 0;
 
-				if ( !RegGetValueA(
+				LSTATUS status = RegGetValueA(
 					HKEY_LOCAL_MACHINE,
 					subkey,
 					valueName,
@@ -250,15 +266,21 @@ namespace Monoworks
 					nullptr,
 					nullptr,
 					&bufferSize
-				) )
+				);
+
+				if ( status != ERROR_SUCCESS )
 				{
-					MW_CRASH_REPORTER_ERROR(" Failed to find Registry Value Position: {}/{}", subkey, valueName);
-				};
+					MW_CRASH_REPORTER_ERROR(
+						"Failed to find Registry Value Position: {}/{} (Error: {})",
+						subkey, valueName, status
+					);
 
+					return {};
+				}
 
-				std::string value( bufferSize / sizeof( wchar_t ), L'\0' );
+				std::string value( bufferSize, '\0' );
 
-				if ( !RegGetValueA(
+				status = RegGetValueA(
 					HKEY_LOCAL_MACHINE,
 					subkey,
 					valueName,
@@ -266,16 +288,21 @@ namespace Monoworks
 					nullptr,
 					value.data(),
 					&bufferSize
-				) ) 
-				{
-					MW_CRASH_REPORTER_ERROR("Failed to find Failed to find Registry Value: {}/{}", subkey, valueName );
-				};
+				);
 
-				if ( !value.empty() && value.back() == L'\0' )
+				if ( status != ERROR_SUCCESS )
+				{
+					MW_CRASH_REPORTER_ERROR(
+						"Failed to read Registry Value: {}/{} (Error: {})",
+						subkey, valueName, status
+					);
+					return {};
+				}
+
+				while ( !value.empty() && value.back() == '\0' )
 					value.pop_back();
 
 				return value;
-
 			};
 
 		SYSTEM_INFO si{};
@@ -300,7 +327,7 @@ namespace Monoworks
 			break;
 		};
 
-		constexpr auto subkey = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion";
+		constexpr auto subkey = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\";
 		pMeta->ReleaseVersion = findStr( subkey, "LCUVer" );
 
 		auto productname = findStr( subkey, "ProductName" );
