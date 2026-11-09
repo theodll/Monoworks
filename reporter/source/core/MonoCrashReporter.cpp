@@ -10,6 +10,7 @@
 #include <filesystem>
 
 #include  <toml++/toml.hpp>
+#include <lib/zip.h>
 
 namespace Monoworks
 {
@@ -142,7 +143,7 @@ namespace Monoworks
 	int CMonoCrashReporter::WriteReport() noexcept
 	{
 		const auto now = std::chrono::system_clock::now();
-		m_ReportDirectory = std::filesystem::path{ std::format( "monoworks - report_{:%H-%M-%Y-%m-%d}", now ) };
+		m_ReportDirectory = std::filesystem::path{ std::format( "monoworks-report_{:%H-%M-%Y-%m-%d}", now ) };
 		std::filesystem::create_directory( m_ReportDirectory );
 
 		auto verString = std::format( "{}.{}.{}", m_ApplicationMeta.EngineVersion.nMajor, m_ApplicationMeta.EngineVersion.nMinor, m_ApplicationMeta.EngineVersion.nPatch );
@@ -185,9 +186,100 @@ namespace Monoworks
 
 	void CMonoCrashReporter::ComposeReport() noexcept
 	{
-		RelocateDump( m_ReportDirectory );
+		MW_CRASH_REPORTER_INFO( "Start packaging report" );
 
-		std::filesystem::rename( "Monoworks.log", m_ReportDirectory / "Monoworks.log" );
+		RelocateDump( m_ReportDirectory );
+		namespace fs = std::filesystem;
+
+		try 
+		{
+			std::filesystem::copy( "Monoworks.log", m_ReportDirectory / "Monoworks.log" );
+		}
+		catch ( const std::runtime_error& e )
+		{
+			MW_CRASH_REPORTER_ERROR("Failed to relocate Log {}", e.what() );
+		}
+
+		int error = 0;
+
+		std::string zipd = std::format( "{}.mwrpt", m_ReportDirectory.string() );
+
+		zip* archive = zip_open(
+			zipd.c_str(),
+			ZIP_CREATE | ZIP_TRUNCATE,
+			&error
+		);
+
+		if ( !archive )
+			return;
+
+		for ( const auto& entry : fs::recursive_directory_iterator( m_ReportDirectory ) )
+		{
+			if ( !entry.is_regular_file() )
+				continue;
+
+			fs::path relativePath =
+				fs::relative( entry.path(), m_ReportDirectory );
+
+			std::string archivePath = relativePath.generic_string();
+
+			zip_source* source = zip_source_file(
+				archive,
+				entry.path().string().c_str(),
+				0,
+				-1
+			);
+
+			if ( !source )
+			{
+				zip_discard( archive );
+				return;
+			}
+
+			int64_t indexs;
+			indexs = zip_file_add(
+				archive,
+				archivePath.c_str(),
+				source,
+				ZIP_FL_ENC_UTF_8
+			);
+
+			if ( indexs < 0 )
+			{
+				zip_source_free( source );
+				zip_discard( archive );
+				return;
+			}
+
+			if ( zip_set_file_compression(
+				archive,
+				static_cast< uint64_t >( indexs ),
+				ZIP_CM_DEFLATE,
+				1
+			) < 0 )
+			{
+				zip_discard( archive );
+				return;
+			}
+		}
+
+		if ( zip_close( archive ) < 0 )
+		{
+			zip_discard( archive );
+			return;
+		}
+
+		try
+		{
+			fs::remove_all( m_ReportDirectory );
+		}
+		catch ( const std::runtime_error& e )
+		{
+			MW_CRASH_REPORTER_ERROR("Failed to remove m_ReportDir {}", e.what());
+		}
+
+
+		MW_CRASH_REPORTER_INFO( "Finish packaging report" );
 
 	}
 

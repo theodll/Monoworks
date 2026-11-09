@@ -369,11 +369,18 @@ namespace Monoworks
 
 	int RelocateDump( const std::filesystem::path& dir ) noexcept
 	{
-		std::filesystem::path source = "monoworks.dmp";
+		std::filesystem::path source = "monoengine.dmp";
 
 		std::filesystem::path dst = dir / source;
 
-		std::filesystem::rename( source, dst );
+		try 
+		{
+			std::filesystem::rename( source, dst );
+		}
+		catch ( const std::runtime_error& e ) 
+		{
+			MW_CRASH_REPORTER_ERROR("Failed to relocate dump {}", e.what() );
+		}
 
 		return 0;
 

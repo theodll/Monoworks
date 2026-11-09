@@ -101,7 +101,7 @@ namespace Monoworks
 	};
 
 	// move core/monoworks.dmp into the report directory
-	inline int RelocateDump( const std::filesystem::path& dir) noexcept;
+	int RelocateDump( const std::filesystem::path& dir ) noexcept;
 
 	class CMonoCrashReporter
 	{

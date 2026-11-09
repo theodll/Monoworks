@@ -69,6 +69,18 @@ add_compile_definitions(
     $<$<CONFIG:Dist>:MW_DIST>
 )
 
+FetchContent_Declare(
+    zlib
+    GIT_REPOSITORY https://github.com/madler/zlib.git
+    GIT_TAG v1.3.1
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(zlib)
+
+set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR}" CACHE PATH "" FORCE)
+set(ZLIB_LIBRARY zlibstatic CACHE STRING "" FORCE)
+
 add_subdirectory(extern/tomlplusplus)
 add_subdirectory(extern/libzip)
 
