@@ -67,6 +67,14 @@ namespace Monoworks::RHI
 	VkPipelineCache CVulkanContext::m_PipelineCache;
 	CVulkanResourceUploader CVulkanContext::m_ResourceUploader;
 	VkAllocationCallbacks CVulkanContext::m_AllocationCallbacks;
+	
+#ifdef MW_AFTERMATH
+	bool CVulkanContext::m_bNVIDIADiagnosticCheckpoints = false;
+
+	std::map<u64, std::string> CVulkanContext::m_ManagedCheckpoints;
+
+
+#endif
 
 #ifdef MW_PROFILING
 	STotalAllocs CVulkanContext::m_TotalVulkanAllocated{};
@@ -364,7 +372,14 @@ namespace Monoworks::RHI
 		m_Presenter->Init( &presentationInfo );
 
 		m_Device.Init(&m_Instance);
+
+#ifdef MW_AFTERMATH
+		if ( m_Device.GetVendor() == MW_GRAPHICS_VENDOR_NVIDIA )
+			m_bNVIDIADiagnosticCheckpoints = true;
+#endif
+		
 		volkLoadDevice(*m_Device.GetDevice());
+
 
 		VmaAllocatorCreateInfo allocatorCreateInfo {};
 		allocatorCreateInfo.physicalDevice = *m_Device.GetPhysicalDevice();
@@ -728,5 +743,4 @@ namespace Monoworks::RHI
 		{
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 		}
-	}
-}
+	}}

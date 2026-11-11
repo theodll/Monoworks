@@ -149,6 +149,30 @@ namespace Monoworks
 		auto verString = std::format( "{}.{}.{}", m_ApplicationMeta.EngineVersion.nMajor, m_ApplicationMeta.EngineVersion.nMinor, m_ApplicationMeta.EngineVersion.nPatch );
 		auto cverString = std::format( "{}.{}.{}", m_ApplicationMeta.ClientVersion.nMajor, m_ApplicationMeta.ClientVersion.nMinor, m_ApplicationMeta.ClientVersion.nPatch );
 
+		constexpr auto vendorStr = []( EMonoCrashReporterFlags nFlags ) constexpr noexcept
+			{
+				switch ( nFlags )
+				{
+				case MW_GRAPHICS_VENDOR_AMD: return "AMD";
+				case MW_GRAPHICS_VENDOR_APPLE: return "APPLE";
+				case MW_GRAPHICS_VENDOR_INTEL: return "INTEL";
+				case MW_GRAPHICS_VENDOR_NVIDIA: return "NVIDIA";
+				case MW_GRAPHICS_VENDOR_NVIDIA_OLD: return "NVIDIA (OLD)";
+				case MW_GRAPHICS_VENDOR_NONE: return "NONE";
+				default: return "INVALID";
+				}
+			};
+
+		constexpr auto gapiStr = []( EGraphicsAPI nGAPI ) constexpr noexcept
+			{
+				switch ( nGAPI )
+				{
+				case MW_GAPI_VULKAN: return "VULKAN";
+				case MW_GAPI_NONE: return "NONE";
+				default: return "INVALID";
+				}
+			};
+
 		auto report = toml::table
 		{
 			{ "Crash-Time",						m_ApplicationMeta.CrashTime },
@@ -157,15 +181,15 @@ namespace Monoworks
 					{ "Client-Version", cverString },
 					{ "Build-Branch",				MW_GIT_BRANCH },
 					{ "Build-Commit-Hash",			MW_GIT_COMMIT_HASH },
-					{ "Engine-Uptime",				static_cast<int64_t>(m_ApplicationMeta.nEngineUptime) },
-					{ "Graphics-API",				static_cast<int64_t>(m_ApplicationMeta.nGraphicsAPI) }
+					{ "Engine-Uptime",				static_cast<int64_t>(m_ApplicationMeta.nEngineUptime / 1000) },
+					{ "Graphics-API",				gapiStr(m_ApplicationMeta.nGraphicsAPI) }
 				}
 			},
 			{ "System", toml::table{
 					{ "Operating-System-Name",		m_SystemMeta.ProductName },
 					{ "Operating-System-Version",	m_SystemMeta.ReleaseVersion },
 					{ "CPU-Architecture",			m_SystemMeta.CPUArch },
-					{ "Graphics-Vendor",			static_cast< int64_t >( m_SystemMeta.nGraphicsVendor) },
+					{ "Graphics-Vendor",			vendorStr( m_SystemMeta.nGraphicsVendor ) },
 					{ "Memory", toml::table{
 							{ "Total",				static_cast<int64_t>(m_SystemMeta.nTotalSystemMemory) },
 							{ "Used",				static_cast<int64_t>(m_SystemMeta.nUsedSystemMemory) },
@@ -190,6 +214,11 @@ namespace Monoworks
 
 		RelocateDump( m_ReportDirectory );
 		namespace fs = std::filesystem;
+
+		if ( fs::exists( "gpudata.mwgpudbg" ) )
+		{
+			fs::rename( "gpudata.mwgpudbg", m_ReportDirectory / "gpudata.mwgpudbg");
+		}
 
 		try 
 		{
