@@ -50,6 +50,10 @@ TracyVkCtx TracyTransferContext = nullptr;
 
 #endif
 
+#ifdef MW_AFTERMATH
+	#include <GFSDK_Aftermath_GpuCrashDump.h>
+#endif
+
 
 namespace Monoworks::RHI 
 {
@@ -317,6 +321,11 @@ namespace Monoworks::RHI
 		return temp;
 	}
 
+	static void GPUCrashDumpCallback( const void* pGPUCrashDump, const u32 nGPUCrashDumpSize, void* pUserData ) 
+	{
+		CCrashManager::DumpEngineWithGPUCrashData( nGPUCrashDumpSize, pGPUCrashDump );
+	}
+
 	void CVulkanContext::Init() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -484,6 +493,21 @@ namespace Monoworks::RHI
 
 #endif
 		CDescriptorManager::Init();
+
+#ifdef MW_AFTERMATH
+
+		GFSDK_Aftermath_EnableGpuCrashDumps(
+			GFSDK_Aftermath_Version_API,
+			GFSDK_Aftermath_GpuCrashDumpWatchedApiFlags_Vulkan,
+			GFSDK_Aftermath_GpuCrashDumpFeatureFlags_Default,   // Default behavior.
+			GPUCrashDumpCallback,                               // Register callback for GPU crash dumps.
+			nullptr,                       // Register callback for shader debug information.
+			nullptr,                       // Register callback for GPU crash dump description.
+			nullptr,                       // Register callback for marker resolution (R495 or later NVIDIA graphics driver).
+			nullptr);
+
+#endif
+
 	}
 
 	static inline bool CheckValidationLayerSupport( const std::vector<const char*>& validationLayers ) NOEXCEPT

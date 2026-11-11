@@ -112,6 +112,35 @@ namespace Monoworks
 		return MW_SUCCESS; 
 	}
 
+
+	EResult MWAPI_CALL CCrashManager::DumpEngineWithGPUCrashData( size_t nCrashDataSize, const void* pCrashData ) NOEXCEPT
+	{
+		byte_t nStatus = MW_CRASH_REPORTER_HEARTBEAT_STATUS_GPU_CRASH;
+		DWORD nBytesWritten = 0;
+
+		// Send status that a GPU Crash occured
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &nStatus, sizeof nStatus, &nBytesWritten, nullptr ) )
+		{
+			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
+			return MW_ERROR_EARLY_EXIT;
+		}
+
+		// Send size of the following data
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, &nCrashDataSize, sizeof nCrashDataSize, &nBytesWritten, nullptr ) )
+		{
+			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
+			return MW_ERROR_EARLY_EXIT;
+		}
+
+		// Send crash data
+		if ( !WriteFile( m_hImpl->hWriteHeartbeatPipe, pCrashData, nCrashDataSize, &nBytesWritten, nullptr ) )
+		{
+			MW_ERROR( "Failed to write to heartbeat-pipe. This is a sign that MonoCrashReporter has exited early." );
+			return MW_ERROR_EARLY_EXIT;
+		}
+
+	}
+
 	EResult MWAPI_CALL CCrashManager::Ready() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;

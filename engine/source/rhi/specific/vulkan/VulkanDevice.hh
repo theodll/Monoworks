@@ -111,6 +111,8 @@ namespace Monoworks::RHI
 
 		NODISCARD u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
 
+		NODISCARD EGraphicsVendorFlags GetVendor() const { return m_nVendor; };
+
 		NODISCARD QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(&m_PhysicalDevice); }
 		
 		NODISCARD VkFormat FindSupportedFormat( const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features );
@@ -146,6 +148,8 @@ namespace Monoworks::RHI
 		VkQueue m_PresentQueue = nullptr;
 
 		VkInstance* m_Instance = nullptr;
+
+		EGraphicsVendorFlags m_nVendor = MW_GRAPHICS_VENDOR_UNDEFINED;
 
 		// TODO: Move this to a config file
 		std::vector<const char*> m_DeviceExtensions =

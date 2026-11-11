@@ -54,6 +54,51 @@ namespace Monoworks
 
 	}
 
+	int CMonoCrashReporter::HandleGPUCrash() noexcept
+	{
+		size_t nGPUDataSize;
+		std::vector<byte_t> buf;
+
+		size_t bytesRead = 0;
+
+		int res;
+		if ( ( res = ReadPipe( &nGPUDataSize, sizeof nGPUDataSize, &bytesRead ) ) != 0 )
+		{
+			MW_CRASH_REPORTER_ERROR( "Failed to read Heartbeat Pipe (Win32 Error: {})", res );
+			return -1;
+		}
+
+		buf.resize( nGPUDataSize );
+		
+		if ( ( res = ReadPipe( buf.data(), nGPUDataSize, &bytesRead) ) != 0 )
+		{
+			MW_CRASH_REPORTER_ERROR( "Failed to read Heartbeat Pipe (Win32 Error: {})", res );
+			return -1;
+		}
+
+		HANDLE hFile = CreateFileA(
+			"gpudata.mwgpudbg",
+			GENERIC_WRITE,
+			0,
+			nullptr,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL,
+			nullptr
+		);
+
+		DWORD bytesWritten = 0;
+
+		if ( !WriteFile( hFile, buf.data(), buf.size(), &bytesWritten, nullptr ) )
+		{
+			MW_CRASH_REPORTER_ERROR( "Failed to write GPU Crash file (Win32 Error: {})", GetLastError() );
+			return -1;
+		}
+
+		CloseHandle( hFile );
+
+	}
+
+
 	int CMonoCrashReporter::CheckHeartbeat() noexcept
 	{
 		using clock = std::chrono::steady_clock;
@@ -87,16 +132,23 @@ namespace Monoworks
 					return -1;
 				}
 
-				if ( heartbeat != MW_HEARTBEAT_SIGNAL_OK )
+				switch ( heartbeat )
 				{
-					MW_CRASH_REPORTER_INFO("Signal other than OK received.");
-					if ( heartbeat == MW_HEARTBEAT_SIGNAL_CRASH )
-					{
-						MW_CRASH_REPORTER_INFO( "Crash Signal received" );
-						// If this spot gets reached on Windows, something is wrong.
-						HeartbeatFailed();
-						return 0;
-					}
+				case MW_HEARTBEAT_SIGNAL_OK:
+					break;
+				case MW_HEARTBEAT_SIGNAL_CRASH:
+					MW_CRASH_REPORTER_INFO( "Crash Signal received." );
+					// If this spot gets reached on Windows, something is wrong.
+					HeartbeatFailed();
+					return 0;
+				case MW_HEARTBEAT_GPU_CRASH:
+					MW_CRASH_REPORTER_INFO( "GPU Crash Signal received." );
+
+					HandleGPUCrash();
+					HeartbeatFailed();
+					return 0;
+				default:
+					MW_CRASH_REPORTER_ERROR("Invalid heartbeat signal.");
 				}
 
 				if ( bytesRead == sizeof( heartbeat ) )

@@ -93,10 +93,11 @@ namespace Monoworks
 		EMonoCrashReporterFlags nGraphicsVendor;
 	};
 
-	enum EHeartbeatSignals 
+	enum EHeartbeatSignals
 	{
 		MW_HEARTBEAT_SIGNAL_READY = 0xA0,
 		MW_HEARTBEAT_SIGNAL_OK = 0x0A,
+		MW_HEARTBEAT_GPU_CRASH = 0xFE,
 		MW_HEARTBEAT_SIGNAL_CRASH = 0xFF
 	};
 
@@ -139,6 +140,7 @@ namespace Monoworks
 		int HeartbeatFailed() noexcept;
 		int ReadPipe( void* pBuf, size_t nSize, size_t* pBytesRead );
 
+		int HandleGPUCrash() noexcept;
 
 	private:
 		struct Impl;
