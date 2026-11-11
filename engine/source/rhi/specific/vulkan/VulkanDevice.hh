@@ -1,6 +1,6 @@
 #pragma once
 #include <common/Base.hh>
-
+#include <debug/CrashManager.hh>
 
 #include <volk.h>
 
@@ -31,6 +31,12 @@ namespace Monoworks::RHI
 		std::vector<VkSurfaceFormatKHR> Formats;
 		std::vector<VkPresentModeKHR> PresentModes;
 	};
+
+#define MW_GPU_DEVICE_ID_NVIDIA 0x10DE
+#define MW_GPU_DEVICE_ID_AMD 0x1002
+#define MW_GPU_DEVICE_ID_INTEL 0x8086
+#define MW_GPU_DEVICE_ID_APPLE 0x106B
+
 
 	class CVulkanDevice 
 	{
@@ -105,6 +111,8 @@ namespace Monoworks::RHI
 
 		NODISCARD u32 FindMemoryType(u32 typeFilter, VkMemoryPropertyFlags properties);
 
+		NODISCARD EGraphicsVendorFlags GetVendor() const { return m_nVendor; };
+
 		NODISCARD QueueFamilyIndices FindPhysicalQueueFamilies() { return FindQueueFamilies(&m_PhysicalDevice); }
 		
 		NODISCARD VkFormat FindSupportedFormat( const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features );
@@ -140,6 +148,8 @@ namespace Monoworks::RHI
 		VkQueue m_PresentQueue = nullptr;
 
 		VkInstance* m_Instance = nullptr;
+
+		EGraphicsVendorFlags m_nVendor = MW_GRAPHICS_VENDOR_UNDEFINED;
 
 		// TODO: Move this to a config file
 		std::vector<const char*> m_DeviceExtensions =

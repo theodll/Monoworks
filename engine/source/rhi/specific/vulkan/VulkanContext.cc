@@ -50,6 +50,10 @@ TracyVkCtx TracyTransferContext = nullptr;
 
 #endif
 
+#ifdef MW_AFTERMATH
+	#include <GFSDK_Aftermath_GpuCrashDump.h>
+#endif
+
 
 namespace Monoworks::RHI 
 {
@@ -63,6 +67,14 @@ namespace Monoworks::RHI
 	VkPipelineCache CVulkanContext::m_PipelineCache;
 	CVulkanResourceUploader CVulkanContext::m_ResourceUploader;
 	VkAllocationCallbacks CVulkanContext::m_AllocationCallbacks;
+	
+#ifdef MW_AFTERMATH
+	bool CVulkanContext::m_bNVIDIADiagnosticCheckpoints = false;
+
+	std::map<u64, std::string> CVulkanContext::m_ManagedCheckpoints;
+
+
+#endif
 
 #ifdef MW_PROFILING
 	STotalAllocs CVulkanContext::m_TotalVulkanAllocated{};
@@ -317,6 +329,11 @@ namespace Monoworks::RHI
 		return temp;
 	}
 
+	static void GPUCrashDumpCallback( const void* pGPUCrashDump, const u32 nGPUCrashDumpSize, void* pUserData ) 
+	{
+		CCrashManager::DumpEngineWithGPUCrashData( nGPUCrashDumpSize, pGPUCrashDump );
+	}
+
 	void CVulkanContext::Init() NOEXCEPT
 	{
 		MW_PROFILE_FUNC;
@@ -355,7 +372,14 @@ namespace Monoworks::RHI
 		m_Presenter->Init( &presentationInfo );
 
 		m_Device.Init(&m_Instance);
+
+#ifdef MW_AFTERMATH
+		if ( m_Device.GetVendor() == MW_GRAPHICS_VENDOR_NVIDIA )
+			m_bNVIDIADiagnosticCheckpoints = true;
+#endif
+		
 		volkLoadDevice(*m_Device.GetDevice());
+
 
 		VmaAllocatorCreateInfo allocatorCreateInfo {};
 		allocatorCreateInfo.physicalDevice = *m_Device.GetPhysicalDevice();
@@ -484,6 +508,21 @@ namespace Monoworks::RHI
 
 #endif
 		CDescriptorManager::Init();
+
+#ifdef MW_AFTERMATH
+
+		GFSDK_Aftermath_EnableGpuCrashDumps(
+			GFSDK_Aftermath_Version_API,
+			GFSDK_Aftermath_GpuCrashDumpWatchedApiFlags_Vulkan,
+			GFSDK_Aftermath_GpuCrashDumpFeatureFlags_Default,   // Default behavior.
+			GPUCrashDumpCallback,                               // Register callback for GPU crash dumps.
+			nullptr,                       // Register callback for shader debug information.
+			nullptr,                       // Register callback for GPU crash dump description.
+			nullptr,                       // Register callback for marker resolution (R495 or later NVIDIA graphics driver).
+			nullptr);
+
+#endif
+
 	}
 
 	static inline bool CheckValidationLayerSupport( const std::vector<const char*>& validationLayers ) NOEXCEPT
@@ -570,7 +609,7 @@ namespace Monoworks::RHI
 		appInfo.pApplicationName = ApplicationInfos->pName;
 		appInfo.applicationVersion = VK_MAKE_VERSION(ApplicationInfos->Version.Major, ApplicationInfos->Version.Minor, ApplicationInfos->Version.Patch);
 		appInfo.pEngineName = EngineName;
-		appInfo.engineVersion = VK_MAKE_VERSION(MonoworksVersion.Major, MonoworksVersion.Minor, MonoworksVersion.Patch);
+		appInfo.engineVersion = VK_MAKE_VERSION(EngineVersion.Major, EngineVersion.Minor, EngineVersion.Patch);
 		appInfo.apiVersion = MW_VK_VERSION;
 
 		VkInstanceCreateInfo createInfo{};
@@ -704,5 +743,4 @@ namespace Monoworks::RHI
 		{
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 		}
-	}
-}
+	}}

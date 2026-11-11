@@ -144,14 +144,33 @@ namespace Monoworks
 
 	void CMonoRuntime::Run()
 	{
-		CEventManager::Subscribe( MW_EVENT_WINDOW_CLOSE, [this]( MAYBE_UNUSED SEvent& event ) { m_Running = false; return true; } );
-
 		MW_PROFILE_FUNC;
+
+		CEventManager::Subscribe( MW_EVENT_WINDOW_CLOSE, [this]( MAYBE_UNUSED SEvent& event ) { m_Running = false; return true; } );
 		while(m_Running) 
 		{
+
+			static const double invFreq = 1.0 / ( double )SDL_GetPerformanceFrequency();
+			static double lastFrameTime = 0.0;
+			static bool isFirstFrame = true;
+
+			u64 counter = SDL_GetPerformanceCounter();
+			double time = ( double )counter * invFreq;
+
+			if ( isFirstFrame )
+			{
+				lastFrameTime = time;
+				isFirstFrame = false;
+			}
+
+			double deltaTime = time - lastFrameTime;
+			lastFrameTime = time;
+
+			CTimestep ts = deltaTime;
+
 			m_Dispatcher.ProcessEvents();
 
-			m_pApplication->Frame();
+			m_pApplication->Frame( ts );
 		}
 	}
 

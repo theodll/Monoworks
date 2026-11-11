@@ -377,7 +377,176 @@ namespace Monoworks
 	{
 		return !(a == b);
 	}
+
+	template <typename T>
+	class CUnique
+	{
+		template <typename>
+		friend class CUnique;
+
+	private:
+
+		using FDestroy = void ( * )( void* );
+
+		SHandle m_Handle = MW_NULL_MEMORY;
+		T* m_pPtr = nullptr;
+		FDestroy m_pDestroy = nullptr;
+
+		void Destroy() NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			if ( m_pDestroy && CMemoryManager::IsValid( m_Handle ) )
+			{
+				m_pDestroy( CMemoryManager::Get( m_Handle ) );
+				CMemoryManager::Delete( m_Handle );
+			}
+			m_Handle = MW_NULL_MEMORY;
+			m_pPtr = nullptr;
+			m_pDestroy = nullptr;
+		}
+
+	public:
+		CUnique() NOEXCEPT = default;
+		CUnique( std::nullptr_t ) NOEXCEPT {}
+
+		CUnique( const CUnique& ) = delete;
+		CUnique& operator=( const CUnique& ) = delete;
+
+		CUnique( CUnique&& other ) NOEXCEPT
+			: m_Handle( other.m_Handle )
+			, m_pPtr( other.m_pPtr )
+			, m_pDestroy( other.m_pDestroy )
+		{
+			other.m_Handle = MW_NULL_MEMORY;
+			other.m_pPtr = nullptr;
+			other.m_pDestroy = nullptr;
+		}
+
+		/**
+		 * @brief Converting move constructor, enabled when U* converts to T* (upcast).
+		 */
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		CUnique( CUnique<U>&& other ) NOEXCEPT
+			: m_Handle( other.m_Handle )
+			, m_pPtr( other.m_pPtr )
+			, m_pDestroy( other.m_pDestroy )
+		{
+			other.m_Handle = MW_NULL_MEMORY;
+			other.m_pPtr = nullptr;
+			other.m_pDestroy = nullptr;
+		}
+
+		~CUnique() NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			Destroy();
+		}
+
+		CUnique& operator=( CUnique&& other ) NOEXCEPT
+		{
+			if ( this != &other )
+			{
+				Destroy();
+				m_Handle = other.m_Handle;
+				m_pPtr = other.m_pPtr;
+				m_pDestroy = other.m_pDestroy;
+				other.m_Handle = MW_NULL_MEMORY;
+				other.m_pPtr = nullptr;
+				other.m_pDestroy = nullptr;
+			}
+			return *this;
+		}
+
+		template <typename U, typename = std::enable_if_t<std::is_convertible_v<U*, T*>>>
+		CUnique& operator=( CUnique<U>&& other ) NOEXCEPT
+		{
+			Destroy();
+			m_Handle = other.m_Handle;
+			m_pPtr = other.m_pPtr;
+			m_pDestroy = other.m_pDestroy;
+			other.m_Handle = MW_NULL_MEMORY;
+			other.m_pPtr = nullptr;
+			other.m_pDestroy = nullptr;
+			return *this;
+		}
+
+		CUnique& operator=( std::nullptr_t ) NOEXCEPT
+		{
+			Destroy();
+			return *this;
+		}
+
+		/**
+		 * @brief Creates a unique pointer (like std::make_unique).
+		 * Concrete type selectable: CUnique<IBase>::Create<CDerived>( ... )
+		 * @tparam U Concrete type to construct, defaults to T
+		 * @param args Arguments to forward to U's constructor
+		 */
+		template <typename U = T, typename... Args>
+		NODISCARD static CUnique<T> Create( Args&&... args )
+		{
+			MW_PROFILE_FUNC;
+			static_assert( std::is_convertible_v<U*, T*>, "U* must be convertible to T*" );
+
+			SHandle handle = CMemoryManager::Allocate( static_cast< u32 >( sizeof( U ) ) );
+			void* pRawMem = CMemoryManager::Get( handle );
+
+			if ( !pRawMem ) UNLIKELY
+			{
+				return CUnique<T>();
+			}
+
+			U* pObject = new ( pRawMem ) U( std::forward<Args>( args )... );
+
+			CUnique<T> result;
+			result.m_Handle = handle;
+			result.m_pPtr = pObject;
+			result.m_pDestroy = []( void* pMem ) { static_cast< U* >( pMem )->~U(); };
+			return result;
+		}
+
+		/**
+		 * @brief Destroys the owned object.
+		 */
+		void Reset() NOEXCEPT
+		{
+			MW_PROFILE_FUNC;
+			Destroy();
+		}
+
+		/**
+		 * @brief Exchanges ownership with other (std::swap-Semantik).
+		 */
+		void Swap( CUnique& other ) NOEXCEPT
+		{
+			std::swap( m_Handle, other.m_Handle );
+			std::swap( m_pPtr, other.m_pPtr );
+			std::swap( m_pDestroy, other.m_pDestroy );
+		}
+
+		NODISCARD T* raw() const NOEXCEPT { return m_pPtr; }
+		NODISCARD T& operator*() const NOEXCEPT { return *m_pPtr; }
+		NODISCARD T* operator->() const NOEXCEPT { return m_pPtr; }
+		NODISCARD explicit operator bool() const NOEXCEPT { return m_pPtr != nullptr; }
+		NODISCARD const SHandle& GetHandle() const NOEXCEPT { return m_Handle; }
+	};
+
+	template <class T, class U>
+	inline bool operator==( const CUnique<T>& a, const CUnique<U>& b ) NOEXCEPT
+	{
+		return a.GetHandle() == b.GetHandle();
+	}
+
+	template <class T, class U>
+	inline bool operator!=( const CUnique<T>& a, const CUnique<U>& b ) NOEXCEPT
+	{
+		return !( a == b );
+	}
 }
 
 template <typename T>
 using Ref = Monoworks::CRef<T>;
+
+template <typename T>
+using Unique = Monoworks::CUnique<T>;
+

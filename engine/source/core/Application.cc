@@ -1,6 +1,7 @@
 #include "Application.hh"
 #include "CVarManager.hh"
 #include "ConfigManager.hh"
+#include <Version.h>
 
 #include <renderer/StaticRenderer.hh>
 #include <renderer/FrameGraph.hh>
@@ -11,6 +12,9 @@
 
 #include <common/Events.hh>
 #include <common/Base.hh>
+
+#include <debug/MessageBox.hh>
+#include <debug/CrashManager.hh>
 
 #include <functional>
 #include <thread>
@@ -37,8 +41,6 @@ void operator delete(void* pPtr, MAYBE_UNUSED size_t size) noexcept
 {
     MW_PROFILE_FUNC;
     if (pPtr) {
-        // Tipp: Wenn dein Profiler Size-Aware-Frees unterstützt (z. B. Tracy), 
-        // nutze MW_PROFILE_FREE_N(pPtr, size), ansonsten reicht MW_PROFILE_FREE:
         MW_PROFILE_FREE(pPtr);
         std::free(pPtr);
     }
@@ -82,9 +84,15 @@ namespace Monoworks
 	CApplication::CApplication() noexcept
 	{
 		MW_PROFILE_FUNC;
-		CLogManager::Init();
-		CCvarManager::Init();
 		CMemoryManager::Init();
+		CLogManager::Init();
+
+		MW_INFO( "Engine Version: {}.{}.{}", EngineVersion.Major, EngineVersion.Minor, EngineVersion.Patch );
+		MW_INFO( "Commit hash: {}", MW_GIT_COMMIT_HASH );
+		MW_INFO( "Branch: {}", MW_GIT_BRANCH );
+
+		CCrashManager::Init();
+		CCvarManager::Init();
 		CEventManager::Init();
 	}
 
@@ -92,9 +100,10 @@ namespace Monoworks
 	{
 		MW_PROFILE_FUNC;
 		CEventManager::Shutdown();
-		CMemoryManager::Shutdown();
 		CCvarManager::Shutdown();
+		CCrashManager::Shutdown();
 		CLogManager::Shutdown();
+		CMemoryManager::Shutdown();
 	}
 
 	void CApplication::Init(const SApplicationCreateInfos* pInfos) NOEXCEPT
@@ -104,6 +113,18 @@ namespace Monoworks
 		m_pApplicationCreationInfos = *pInfos;
 		m_GraphicsAPI = pInfos->GraphicsAPI;
 
+		CrashManagerApplicationMetadata meta{};
+		memset( &meta, 0, sizeof meta );
+		meta.ClientVersion = pInfos->Version;
+		meta.EngineVersion = EngineVersion;
+		meta.nGraphicsAPI = pInfos->GraphicsAPI;
+
+		pInfos->UseQt ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_QT_BIT : 0;
+		pInfos->UseSDL ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SDL_BIT : 0;
+		pInfos->UseSwapchain ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SWAPCHAIN : 0;
+		pInfos->GraphicsAPI == MW_GAPI_NONE ? meta.nFlags |= MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_HEADLESS_BIT : 0;
+
+		CCrashManager::SendApplicationMeta( &meta );
 
 		CStaticRenderer::SetRenderableExtend(m_pApplicationCreationInfos.RenderableExtent);
 		CEventManager::Subscribe( MW_EVENT_WINDOW_RESIZE, CApplication::OnResize );
@@ -119,6 +140,8 @@ namespace Monoworks
 		//Ref<CDefferedFrameGraph> defferedFrameGraph = Ref<CDefferedFrameGraph>::Create( camera );
 
 		CFrameManager::SetFrameGraph( Ref<CDefferedFrameGraph>::Create( camera ) );
+	
+		CCrashManager::Ready();
 
 	}
 
@@ -144,24 +167,23 @@ namespace Monoworks
 		return false;
 	};
 
-	void CApplication::Frame()
+	void CApplication::Frame( CTimestep ts )
 	{
 		MW_PROFILE_FUNC;
 
-		//MW_INFO( "frame" );
+		CCrashManager::Heartbeat( ts );
 
 		// called once per frame
-		Events::SAppFrame frame{};
+		Events::SAppFrame frame{ ts };
 		CEventManager::EmitEventNonDeffered(frame, MW_EVENT_APP_FRAME);
-
 		CEventManager::ProcessEvents();
 
-		Events::SAppTick tick{};
+		Events::SAppTick tick{ ts };
 		CEventManager::EmitEventNonDeffered(tick, MW_EVENT_APP_TICK);
 		// simulate here
 
 		// TODO: Move to frame graph
-		Events::SAppRender render{};
+		Events::SAppRender render{ ts };
 		CEventManager::EmitEventNonDeffered(render, MW_EVENT_APP_RENDER);
 		CFrameManager::Render();
 		

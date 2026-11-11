@@ -1,6 +1,10 @@
 cmake_policy(SET CMP0100 NEW)
 
-add_library(MonoEngine STATIC "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.hh" "source/core/CVarManager.hh" "source/core/CVarManager.cc" "source/core/ConfigManager.hh" "source/core/ConfigManager.cc" "source/events/Event.hh" "source/common/SafeQueue.hh" "source/events/EventManager.hh" "source/events/EventManager.cc" "source/common/Events.hh" "source/jobs/Threadpool.hh" "source/jobs/Fibers.hh" "source/rhi/GraphicsAPI.hh" "source/rhi/specific/vulkan/VulkanContext.hh" "source/rhi/specific/vulkan/VulkanContext.cc" "source/rhi/agnostic/GraphicsContext.hh"  "source/rhi/specific/vulkan/VulkanDevice.hh" "source/rhi/specific/vulkan/VulkanDevice.cc"  "source/rhi/specific/vulkan/VulkanRenderer.hh" "source/rhi/specific/vulkan/VulkanRenderer.cc" "source/rhi/specific/vulkan/VulkanResourceUploader.hh" "source/renderer/StaticRenderer.hh" "source/renderer/StaticRenderer.cc" "source/rhi/specific/vulkan/VulkanResourceUploader.cc" "source/rhi/agnostic/VertexBuffer.hh" "source/rhi/agnostic/VertexBuffer.cc" "source/rhi/specific/vulkan/VulkanVertexBuffer.hh" "source/rhi/specific/vulkan/VulkanVertexBuffer.cc" "source/rhi/agnostic/IndexBuffer.cc" "source/rhi/specific/vulkan/VulkanIndexBuffer.hh" "source/rhi/specific/vulkan/VulkanIndexBuffer.cc" "source/rhi/agnostic/UniformBuffer.hh" "source/rhi/agnostic/UniformBuffer.cc" "source/rhi/specific/vulkan/VulkanUniformBuffer.hh" "source/rhi/specific/vulkan/VulkanUniformBuffer.cc" "source/rhi/agnostic/Texture.hh" "source/rhi/Utils.hh" "source/rhi/agnostic/Texture.cc" "source/rhi/specific/vulkan/VulkanTexture.hh" "source/rhi/specific/vulkan/VulkanTexture.cc" "source/rhi/agnostic/Presenter.hh" "source/renderer/SceneRenderer.hh" "source/rhi/specific/vulkan/VulkanPresenter.hh" "source/rhi/specific/vulkan/VulkanGraphicsPipeline.hh" "source/rhi/agnostic/GraphicsPipeline.hh" "source/rhi/agnostic/GraphicsPipeline.cc" "source/rhi/specific/vulkan/VulkanGraphicsPipeline.cc" "source/rhi/specific/vulkan/VulkanRenderManager.hh" "source/rhi/specific/vulkan/VulkanRenderManager.cc" "source/renderer/FrameManager.hh" "source/renderer/FrameManager.cc" "source/renderer/FrameGraph.hh" "source/renderer/Shader.hh" "source/renderer/Shader.cc" "source/rhi/agnostic/PipelineManager.hh" "source/rhi/agnostic/ComputePipeline.hh" "source/rhi/specific/vulkan/VulkanComputePipeline.hh" "source/rhi/specific/vulkan/VulkanComputePipeline.cpp" "source/rhi/agnostic/PipelineManager.cc" "source/rhi/specific/vulkan/VulkanDescriptorSetManager.h" "source/renderer/FrameGraph.cc" "source/rhi/agnostic/ComputePipeline.cpp" "source/rhi/agnostic/DescriptorManager.hh" "source/rhi/specific/vulkan/VulkanDescriptorSetManager.cpp" "source/rhi/agnostic/DescriptorManager.cc"  "source/renderer/Material.h" "source/renderer/Material.cpp" "source/renderer/Camera.hh" "source/renderer/Camera.cpp" "source/renderer/Mesh.h") 
+add_library(MonoEngine STATIC "source/common/Math.hh" "source/core/Application.cc" "source/core/Application.hh" "Monoworks.hh" "source/common/Memory.hh" "source/core/MemoryManager.hh" "source/core/MemoryManager.cc" "source/core/LogManager.hh" "source/core/LogManager.cc" "source/common/Log.hh" "source/core/CVarManager.hh" "source/core/CVarManager.cc" "source/core/ConfigManager.hh" "source/core/ConfigManager.cc" "source/events/Event.hh" "source/common/SafeQueue.hh" "source/events/EventManager.hh" "source/events/EventManager.cc" "source/common/Events.hh" "source/jobs/Threadpool.hh" "source/jobs/Fibers.hh" "source/rhi/GraphicsAPI.hh" "source/rhi/specific/vulkan/VulkanContext.hh" "source/rhi/specific/vulkan/VulkanContext.cc" "source/rhi/agnostic/GraphicsContext.hh"  "source/rhi/specific/vulkan/VulkanDevice.hh" "source/rhi/specific/vulkan/VulkanDevice.cc"  "source/rhi/specific/vulkan/VulkanRenderer.hh" "source/rhi/specific/vulkan/VulkanRenderer.cc" "source/rhi/specific/vulkan/VulkanResourceUploader.hh" "source/renderer/StaticRenderer.hh" "source/renderer/StaticRenderer.cc" "source/rhi/specific/vulkan/VulkanResourceUploader.cc" "source/rhi/agnostic/VertexBuffer.hh" "source/rhi/agnostic/VertexBuffer.cc" "source/rhi/specific/vulkan/VulkanVertexBuffer.hh" "source/rhi/specific/vulkan/VulkanVertexBuffer.cc" "source/rhi/agnostic/IndexBuffer.cc" "source/rhi/specific/vulkan/VulkanIndexBuffer.hh" "source/rhi/specific/vulkan/VulkanIndexBuffer.cc" "source/rhi/agnostic/UniformBuffer.hh" "source/rhi/agnostic/UniformBuffer.cc" "source/rhi/specific/vulkan/VulkanUniformBuffer.hh" "source/rhi/specific/vulkan/VulkanUniformBuffer.cc" "source/rhi/agnostic/Texture.hh" "source/rhi/Utils.hh" "source/rhi/agnostic/Texture.cc" "source/rhi/specific/vulkan/VulkanTexture.hh" "source/rhi/specific/vulkan/VulkanTexture.cc" "source/rhi/agnostic/Presenter.hh" "source/renderer/SceneRenderer.hh" "source/rhi/specific/vulkan/VulkanPresenter.hh" "source/rhi/specific/vulkan/VulkanGraphicsPipeline.hh" "source/rhi/agnostic/GraphicsPipeline.hh" "source/rhi/agnostic/GraphicsPipeline.cc" "source/rhi/specific/vulkan/VulkanGraphicsPipeline.cc" "source/rhi/specific/vulkan/VulkanRenderManager.hh" "source/rhi/specific/vulkan/VulkanRenderManager.cc" "source/renderer/FrameManager.hh" "source/renderer/FrameManager.cc" "source/renderer/FrameGraph.hh" "source/renderer/Shader.hh" "source/renderer/Shader.cc" "source/rhi/agnostic/PipelineManager.hh" "source/rhi/agnostic/ComputePipeline.hh" "source/rhi/specific/vulkan/VulkanComputePipeline.hh" "source/rhi/specific/vulkan/VulkanComputePipeline.cpp" "source/rhi/agnostic/PipelineManager.cc" "source/rhi/specific/vulkan/VulkanDescriptorSetManager.h" "source/renderer/FrameGraph.cc" "source/rhi/agnostic/ComputePipeline.cpp" "source/rhi/agnostic/DescriptorManager.hh" "source/rhi/specific/vulkan/VulkanDescriptorSetManager.cpp" "source/rhi/agnostic/DescriptorManager.cc"  "source/renderer/Material.h" "source/renderer/Material.cpp" "source/renderer/Camera.hh" "source/renderer/Camera.cpp" "source/renderer/Mesh.h" "source/debug/CrashManager.hh" "source/common/Timestep.h") 
+
+if (WIN32)
+target_sources( MonoEngine PRIVATE "source/debug/MessageBox.hh" "source/debug/win32/MessageBoxWin32.cc"  "source/debug/win32/CrashManagerWin32.cpp")
+endif()
 
 set(GLM_BUILD_LIBRARY OFF CACHE INTERNAL "") 
 set(SLANG_ENABLE_TESTS OFF CACHE BOOL "Disable Slang tests" FORCE)
@@ -9,6 +13,70 @@ set(SLANG_ENABLE_GFX OFF CACHE BOOL "Disable legacy GFX layer" FORCE)
 set(SLANG_ENABLE_SLANG_RHI OFF CACHE BOOL "Disable Slang RHI" FORCE)
 set(SLANG_ENABLE_SLANGD OFF CACHE BOOL "Disable Slang language server" FORCE)
 
+option(MW_AFTERMATH "Enable NVIDIA Nsight Aftermath" ON)
+
+if(MW_AFTERMATH AND WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+
+    include(FetchContent)
+
+    set(AFTERMATH_VERSION "2026.3.0")
+
+    FetchContent_Declare(
+        nsight_aftermath
+        URL
+            "https://developer.nvidia.com/downloads/assets/tools/secure/nsight-aftermath-sdk/2026_3_0/windows_x64/NVIDIA_Nsight_Aftermath_SDK_2026.3.0.26197-windows_x64.zip"
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+
+    FetchContent_MakeAvailable(nsight_aftermath)
+
+    find_path(AFTERMATH_INCLUDE_DIR
+        NAMES GFSDK_Aftermath.h
+        PATHS "${nsight_aftermath_SOURCE_DIR}"
+        PATH_SUFFIXES include
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+
+    find_library(AFTERMATH_LIBRARY
+        NAMES GFSDK_Aftermath_Lib.x64
+        PATHS "${nsight_aftermath_SOURCE_DIR}"
+        PATH_SUFFIXES lib/x64
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+
+    add_library(NsightAftermath UNKNOWN IMPORTED)
+
+    set_target_properties(NsightAftermath PROPERTIES
+        IMPORTED_LOCATION "${AFTERMATH_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${AFTERMATH_INCLUDE_DIR}"
+    )
+
+    target_link_libraries(MonoEngine PRIVATE NsightAftermath)
+
+    target_compile_definitions(MonoEngine PRIVATE MW_AFTERMATH)
+
+    find_file(AFTERMATH_DLL
+        NAMES GFSDK_Aftermath_Lib.x64.dll
+        PATHS "${nsight_aftermath_SOURCE_DIR}"
+        PATH_SUFFIXES lib/x64
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+    
+    set(AFTERMATH_DLL_DESTINATION "${CMAKE_BINARY_DIR}/bin-int")
+    
+    add_custom_command(TARGET MonoEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${AFTERMATH_DLL_DESTINATION}"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${AFTERMATH_DLL}"
+            "${AFTERMATH_DLL_DESTINATION}/GFSDK_Aftermath_Lib.x64.dll"
+        COMMENT "Copying NVIDIA Nsight Aftermath DLL to ${AFTERMATH_DLL_DESTINATION}"
+        VERBATIM
+    )
+
+endif()
 
 add_subdirectory("thirdparty/glm")
 # add_subdirectory("extern/imgui")
@@ -102,6 +170,6 @@ add_custom_target(MonoEngineCopyCommon ALL
     VERBATIM
 )
 
-add_dependencies(MonoEngine MonoEngineCopyCommon)
+add_dependencies(MonoEngine MonoEngineCopyCommon MonoCrashReporter )
 
 target_compile_definitions(MonoEngine PRIVATE MW_ENGINE TRACY_ENABLE)
