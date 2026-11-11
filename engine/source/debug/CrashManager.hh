@@ -10,26 +10,32 @@ namespace Monoworks
 	{
 		MW_CRASH_REPORTER_HEARTBEAT_STATUS_READY = 0xA0,
 		MW_CRASH_REPORTER_HEARTBEAT_STATUS_OK = 0x0A,
+		// Called when a GPU Crash occured. Signal for the Crash reporter to listen for the next 4 
+		// bytes to get the size and then the size amout of bytes to get the crash dump data
+		MW_CRASH_REPORTER_HEARTBEAT_STATUS_GPU_CRASH = 0xFE, 
 		// This signal should ideally never be issued on Windows. It is only issued for UNIX Systems 
 		// because we can't easily register external signal handlers for processes. On windows any signal should
-.		// ideally be handled by the crash reporter process.
+		// ideally be handled by the crash reporter process.
 		MW_CRASH_REPORTER_HEARTBEAT_STATUS_CRASH = 0xFF
 	};
 
-	enum EGraphicsVendorFlagBits : unsigned char
+	enum ECrashManagerMetaDataFlagBits
 	{
-		MW_GRAPHICS_VENDOR_UNDEFINED = 0x0,
-		MW_GRAPHICS_VENDOR_NVIDIA = 0x01,
-		// NVIDIA Cards with architecture released before NVIDIA Pascal, like Maxwell (GTX 970, 980, 750 Ti) or Kepler .
-		MW_GRAPHICS_VENDOR_NVIDIA_OLD = 0x02,
-		MW_GRAPHICS_VENDOR_AMD = 0x04,
-		MW_GRAPHICS_VENDOR_INTEL = 0x08,
-		MW_GRAPHICS_VENDOR_APPLE = 0x10, // currently unsupported
-		MW_GRAPHICS_VENDOR_NONE = 0x20,
-		MW_GRAPHICS_VENDOR_UNKNOWN = 0x40
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_NONE_BIT = 0x0,
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SDL_BIT = 0x1,
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_QT_BIT = 0x2,
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_HEADLESS_BIT = 0x4, // Not implemented
+		MW_CRASH_MANAGER_APPLICATION_META_DATA_FLAG_USE_SWAPCHAIN = 0x8,
 	};
-	using EGraphicsVendorFlags = flags_t;
+	using ECrashManagerMetaDataFlags = flags_t; 
 
+	struct alignas(16) CrashManagerApplicationMetadata
+	{
+		ECrashManagerMetaDataFlags nFlags;
+		EGraphicsAPI nGraphicsAPI;
+		Version EngineVersion;
+		Version ClientVersion;
+	};
 
 	class CCrashManager 
 	{
@@ -37,13 +43,19 @@ namespace Monoworks
 		static EResult MWAPI_CALL Init() NOEXCEPT;
 		static EResult MWAPI_CALL Shutdown() NOEXCEPT;
 
+		static EResult MWAPI_CALL SendApplicationMeta( const CrashManagerApplicationMetadata* pMeta ) NOEXCEPT;
+
 		static EResult MWAPI_CALL SendGraphicsVendor( EGraphicsVendorFlags nVendor ) NOEXCEPT;
+
+		static EResult MWAPI_CALL DumpEngineWithGPUCrashData( size_t nCrashDataSize, const void* pCrashData ) NOEXCEPT;
 
 		static EResult MWAPI_CALL Ready() NOEXCEPT;
 		// Not actually sends a heartbeat but counts up to a specified number and when that is 
 		// reached it writes a packet into the read part of the pipe
 		static EResult MWAPI_CALL Heartbeat( CTimestep ts ) NOEXCEPT;
 	private:
+		bool m_bAlive;
+
 		struct Impl;
 		static Unique<Impl> m_hImpl;
 	};

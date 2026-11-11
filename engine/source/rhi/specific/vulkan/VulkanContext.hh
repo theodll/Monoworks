@@ -1,6 +1,8 @@
 #pragma once
 #include <common/Base.hh>
 
+#include <boost/fusion/container.hpp>
+
 #include <rhi/agnostic/GraphicsContext.hh>
 #include <rhi/agnostic/Presenter.hh>
 
@@ -53,6 +55,10 @@ namespace Monoworks::RHI
 #ifdef MW_PROFILING
 		NODISCARD static STotalAllocs& GetTotalVulkanAllocations() NOEXCEPT { return m_TotalVulkanAllocated; }
 #endif
+#ifdef MW_AFTERMATH
+		NODISCARD static bool			NVIDIADiagnosticCheckpointsAvailable() NOEXCEPT { return m_bNVIDIADiagnosticCheckpoints; };
+		NODISCARD static auto&			GetManagedCheckpoints() NOEXCEPT { return m_ManagedCheckpoints; };
+#endif
 
 	private:
 		void CreateInstance() NOEXCEPT;
@@ -78,7 +84,10 @@ namespace Monoworks::RHI
 		static CVulkanResourceUploader m_ResourceUploader;
 		
 		static IPresenter* m_Presenter;
-
+#ifdef MW_AFTERMATH
+		static bool m_bNVIDIADiagnosticCheckpoints;
+		static std::map<u64, std::string> m_ManagedCheckpoints;
+#endif
 		const std::vector<const char*> m_ValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 		bool m_EnableValidationLayers = true;
 

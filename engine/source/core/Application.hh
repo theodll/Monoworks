@@ -60,7 +60,7 @@ namespace Monoworks
 		/**
 		 * @brief Version of the associated Application.
 		 */
-		MAYBE_UNUSED SAppVersion Version;
+		MAYBE_UNUSED AppVersion Version;
 		/**
 		 * @brief Define whether to use the Vulkan swapchain.
 		 */

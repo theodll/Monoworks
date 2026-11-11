@@ -236,6 +236,8 @@ namespace Monoworks::RHI
 			flags = MW_GRAPHICS_VENDOR_UNKNOWN;
 		}
 
+		m_nVendor = flags;
+
 		CCrashManager::SendGraphicsVendor( flags );
 	}
 
@@ -290,7 +292,6 @@ namespace Monoworks::RHI
 			priorityIndex++;
 		}
 
-
 		// TODO: Move this to a config file
 		VkPhysicalDeviceMaintenance7FeaturesKHR maintenance7Features{};
 		maintenance7Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;
@@ -333,6 +334,30 @@ namespace Monoworks::RHI
 
 		createInfo.pEnabledFeatures = nullptr;
 		createInfo.pNext = &deviceFeatures2;
+
+#ifdef MW_AFTERMATH
+
+		if ( m_nVendor & MW_GRAPHICS_VENDOR_NVIDIA )
+		{
+			m_DeviceExtensions.push_back( VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME );
+			m_DeviceExtensions.push_back( VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME );
+
+			VkDeviceDiagnosticsConfigFlagsNV afFlags = 
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV | 
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV |     
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV |     
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV;
+
+			VkDeviceDiagnosticsConfigCreateInfoNV aftermathInfo{};
+			aftermathInfo.sType = VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV;
+			aftermathInfo.pNext = &deviceFeatures2;
+			aftermathInfo.flags = afFlags;
+
+			createInfo.pNext = &aftermathInfo;
+
+		}
+
+#endif
 
 		createInfo.enabledExtensionCount = static_cast<u32>(m_DeviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();

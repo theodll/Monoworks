@@ -13,6 +13,70 @@ set(SLANG_ENABLE_GFX OFF CACHE BOOL "Disable legacy GFX layer" FORCE)
 set(SLANG_ENABLE_SLANG_RHI OFF CACHE BOOL "Disable Slang RHI" FORCE)
 set(SLANG_ENABLE_SLANGD OFF CACHE BOOL "Disable Slang language server" FORCE)
 
+option(MW_AFTERMATH "Enable NVIDIA Nsight Aftermath" ON)
+
+if(MW_AFTERMATH AND WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+
+    include(FetchContent)
+
+    set(AFTERMATH_VERSION "2026.3.0")
+
+    FetchContent_Declare(
+        nsight_aftermath
+        URL
+            "https://developer.nvidia.com/downloads/assets/tools/secure/nsight-aftermath-sdk/2026_3_0/windows_x64/NVIDIA_Nsight_Aftermath_SDK_2026.3.0.26197-windows_x64.zip"
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+
+    FetchContent_MakeAvailable(nsight_aftermath)
+
+    find_path(AFTERMATH_INCLUDE_DIR
+        NAMES GFSDK_Aftermath.h
+        PATHS "${nsight_aftermath_SOURCE_DIR}"
+        PATH_SUFFIXES include
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+
+    find_library(AFTERMATH_LIBRARY
+        NAMES GFSDK_Aftermath_Lib.x64
+        PATHS "${nsight_aftermath_SOURCE_DIR}"
+        PATH_SUFFIXES lib/x64
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+
+    add_library(NsightAftermath UNKNOWN IMPORTED)
+
+    set_target_properties(NsightAftermath PROPERTIES
+        IMPORTED_LOCATION "${AFTERMATH_LIBRARY}"
+        INTERFACE_INCLUDE_DIRECTORIES "${AFTERMATH_INCLUDE_DIR}"
+    )
+
+    target_link_libraries(MonoEngine PRIVATE NsightAftermath)
+
+    target_compile_definitions(MonoEngine PRIVATE MW_AFTERMATH)
+
+    find_file(AFTERMATH_DLL
+        NAMES GFSDK_Aftermath_Lib.x64.dll
+        PATHS "${nsight_aftermath_SOURCE_DIR}"
+        PATH_SUFFIXES lib/x64
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+    
+    set(AFTERMATH_DLL_DESTINATION "${CMAKE_BINARY_DIR}/bin-int")
+    
+    add_custom_command(TARGET MonoEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${AFTERMATH_DLL_DESTINATION}"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${AFTERMATH_DLL}"
+            "${AFTERMATH_DLL_DESTINATION}/GFSDK_Aftermath_Lib.x64.dll"
+        COMMENT "Copying NVIDIA Nsight Aftermath DLL to ${AFTERMATH_DLL_DESTINATION}"
+        VERBATIM
+    )
+
+endif()
 
 add_subdirectory("thirdparty/glm")
 # add_subdirectory("extern/imgui")

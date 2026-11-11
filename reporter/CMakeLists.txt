@@ -4,11 +4,12 @@ add_executable( MonoCrashReporter "source/core/MonoCrashReporter.hh"  "source/co
 if (WIN32)
 #set_target_properties(MonoCrashReporter PROPERTIES WIN32_EXECUTABLE TRUE )
 target_sources( MonoCrashReporter PRIVATE "source/core/win32/MonoCrashReporterWin32.cc" "source/core/win32/UtilsWin32.cc"  "source/core/win32/main.cpp")
+target_link_libraries( MonoCrashReporter PRIVATE DbgHelp )
 endif()
 
-target_include_directories( MonoCrashReporter PRIVATE "source/" )
+target_include_directories( MonoCrashReporter PRIVATE "source/" "../" "../extern/tomlplusplus/include/" "../extern/libzip/" "../extern/libzip/xcode/" )
 
-target_link_libraries( MonoCrashReporter PRIVATE Boost::headers )
+target_link_libraries( MonoCrashReporter PRIVATE Boost::headers tomlplusplus::tomlplusplus zip )
 
 
 if (MSVC)
