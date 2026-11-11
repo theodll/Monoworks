@@ -88,13 +88,15 @@ namespace Monoworks
 
 		DWORD bytesWritten = 0;
 
-		if ( !WriteFile( hFile, buf.data(), buf.size(), &bytesWritten, nullptr ) )
+		if ( !WriteFile( hFile, buf.data(), static_cast<DWORD>(buf.size()), &bytesWritten, nullptr ) )
 		{
 			MW_CRASH_REPORTER_ERROR( "Failed to write GPU Crash file (Win32 Error: {})", GetLastError() );
 			return -1;
 		}
 
 		CloseHandle( hFile );
+
+		return 0;
 
 	}
 

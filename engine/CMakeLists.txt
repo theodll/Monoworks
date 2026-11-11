@@ -57,6 +57,25 @@ if(MW_AFTERMATH AND WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
 
     target_compile_definitions(MonoEngine PRIVATE MW_AFTERMATH)
 
+    find_file(AFTERMATH_DLL
+        NAMES GFSDK_Aftermath_Lib.x64.dll
+        PATHS "${nsight_aftermath_SOURCE_DIR}"
+        PATH_SUFFIXES lib/x64
+        NO_DEFAULT_PATH
+        REQUIRED
+    )
+    
+    set(AFTERMATH_DLL_DESTINATION "${CMAKE_BINARY_DIR}/bin-int")
+    
+    add_custom_command(TARGET MonoEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${AFTERMATH_DLL_DESTINATION}"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${AFTERMATH_DLL}"
+            "${AFTERMATH_DLL_DESTINATION}/GFSDK_Aftermath_Lib.x64.dll"
+        COMMENT "Copying NVIDIA Nsight Aftermath DLL to ${AFTERMATH_DLL_DESTINATION}"
+        VERBATIM
+    )
+
 endif()
 
 add_subdirectory("thirdparty/glm")
