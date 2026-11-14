@@ -205,7 +205,7 @@ namespace Monoworks
 		reportstream.close();
 
 		return 0;
-
+		 
 	}
 
 	void CMonoCrashReporter::ComposeReport() noexcept
