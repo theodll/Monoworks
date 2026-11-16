@@ -3,10 +3,11 @@ package org.monoworks.tools
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.monoworks.tools.routes.ReceiveReport
 
 fun Application.configureRouting() {
     routing {
-
+        ReceiveReport();
        /* put("/crash-repotrs")
         {
             // load crash report zip into memory and check if it's a zip bomb
