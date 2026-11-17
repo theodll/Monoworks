@@ -10,7 +10,11 @@ import io.ktor.utils.io.toByteArray
 import kotlinx.io.files.Path
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.util.UUID
 import java.util.zip.ZipInputStream
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 data class ReportLimits(
     val MaxZippedBytes: Long = 100L * 1024L * 1024L,
@@ -18,11 +22,11 @@ data class ReportLimits(
     val MaxZipEntries: Int = 100
 )
 
-class CrashReport ( report: ByteArray, reportLimits: ReportLimits = ReportLimits() )
+final class CrashReport ( report: ByteArray, reportLimits: ReportLimits = ReportLimits() )
 {
     private var m_ReportJSON: String? = null;
-    private var m_ReportLimits: ReportLimits = reportLimits;
-    private var m_ZippedReport: ByteArray = report;
+    private val m_ReportLimits: ReportLimits = reportLimits;
+    private val m_ZippedReport: ByteArray = report;
 
     init
     {
@@ -30,9 +34,22 @@ class CrashReport ( report: ByteArray, reportLimits: ReportLimits = ReportLimits
 
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     public fun Store( dirPath: Path )
     {
+        val uuid = Uuid.generateV7().toString();
+        val file = File(dirPath.toString()).resolve(uuid);
 
+        file.parentFile?.mkdirs();
+        file.createNewFile();
+
+        file.writeBytes( m_ZippedReport );
+
+
+        // generate UUID
+        // save report with the UUID as name at dirPath
+        // build up a query using the information from m_ReportJSON and link to the file/UUID
+        // store the query in a database
     }
 
     private fun ExtractJSON(): ByteArray?
