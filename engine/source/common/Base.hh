@@ -199,18 +199,23 @@ using path_t = std::filesystem::path;
 
 using flags_t = u32;
 
+using pid_t = u32;
+
 namespace Monoworks
 {
 	constexpr u32 MaxFramesInFlight = 3;
 
-	struct SVersion
+	struct alignas(4) Version
 	{
 		u8 Major;
 		u8 Minor;
 		u16 Patch;
 	};
 
-	using SAppVersion = SVersion;
+	using SAppVersion DEPRECATED = Version;
+	using SVersion DEPRECATED = Version;
+	using AppVersion = Version;
+
 
 	enum EGraphicsAPI
 	{
@@ -285,7 +290,25 @@ namespace Monoworks
 		MW_ERROR_INVALID_SETUP = -11,
 
 		MW_ERROR_SUBOPTIMAL = -12,
+
+		MW_ERROR_INCOMPATIBLE = - 13,
+
+		MW_ERROR_EARLY_EXIT = -14
 	};
+
+	enum EGraphicsVendorFlagBits : unsigned char
+	{
+		MW_GRAPHICS_VENDOR_UNDEFINED = 0x0,
+		MW_GRAPHICS_VENDOR_NVIDIA = 0x01,
+		// NVIDIA Cards with architecture released before NVIDIA Pascal, like Maxwell (GTX 970, 980, 750 Ti) or Kepler .
+		MW_GRAPHICS_VENDOR_NVIDIA_OLD = 0x02,
+		MW_GRAPHICS_VENDOR_AMD = 0x04,
+		MW_GRAPHICS_VENDOR_INTEL = 0x08,
+		MW_GRAPHICS_VENDOR_APPLE = 0x10, // currently unsupported
+		MW_GRAPHICS_VENDOR_NONE = 0x20,
+		MW_GRAPHICS_VENDOR_UNKNOWN = 0x40
+	};
+	using EGraphicsVendorFlags = flags_t;
 
 	class CRuntimeException : public std::runtime_error 
 	{
@@ -597,7 +620,7 @@ namespace Monoworks
 		MW_MOUSE_5_BUTTON
 	};
 
-	constexpr SAppVersion MonoworksVersion = { .Major = 1, .Minor = 0, .Patch = 0 };
+	constexpr AppVersion EngineVersion = { .Major = 0, .Minor = 1, .Patch = 0 };
 	constexpr const char* EngineName = "MonoEngine";
 	constexpr u32 MFIF = MaxFramesInFlight;
 

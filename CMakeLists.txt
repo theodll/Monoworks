@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 cmake_policy(SET CMP0100 NEW)
 
 project(Monoworks LANGUAGES C CXX ASM)
+
 if(NOT CMAKE_CONFIGURATION_TYPES AND CMAKE_BUILD_TYPE)
     file(MAKE_DIRECTORY
         "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}"
@@ -22,11 +23,13 @@ set(COMPILE_WARNING_AS_ERROR ON)
 add_compile_definitions(MW_PROFILING MW_VULKAN TRACY_ENABLE TRACY_ON_DEMAND)
 
 option(MW_ENABLE_AVX2 "Compile with AVX2" ON)
-if (MSVC)
+
+if(MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
-if (MW_ENABLE_AVX2 AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
-    if (MSVC)
+
+if(MW_ENABLE_AVX2 AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64)$")
+    if(MSVC)
         add_compile_options(/arch:AVX2)
     else()
         add_compile_options(-mavx2)
@@ -59,7 +62,6 @@ if(NOT TARGET Boost::headers)
 endif()
 
 # add_compile_definitions(MW_ENABLE_MANUAL_RENDERDOC)
-
 add_compile_definitions(
     FMT_UNICODE=0
     $<$<CONFIG:Debug>:MW_DEBUG>
@@ -67,27 +69,68 @@ add_compile_definitions(
     $<$<CONFIG:Dist>:MW_DIST>
 )
 
+FetchContent_Declare(
+    zlib
+    GIT_REPOSITORY https://github.com/madler/zlib.git
+    GIT_TAG v1.3.1
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(zlib)
+
+set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR}" CACHE PATH "" FORCE)
+set(ZLIB_LIBRARY zlibstatic CACHE STRING "" FORCE)
+
+add_subdirectory(extern/tomlplusplus)
+add_subdirectory(extern/libzip)
+
+add_subdirectory(reporter)
 add_subdirectory(engine)
 add_subdirectory(editor)
 add_subdirectory(runtime)
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/common")
-    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
+if(EXISTS "${CMAKE_SOURCE_DIR}/common")
     file(GLOB common_entries RELATIVE "${CMAKE_SOURCE_DIR}/common" "${CMAKE_SOURCE_DIR}/common/*")
 
     get_property(_all_targets GLOBAL PROPERTY TARGETS)
+
     foreach(_tgt IN LISTS _all_targets)
         get_target_property(_type ${_tgt} TYPE)
+
         if(_type STREQUAL "EXECUTABLE")
             if(common_entries)
                 add_custom_command(TARGET ${_tgt} POST_BUILD
                     COMMAND ${Python3_EXECUTABLE} "${CMAKE_SOURCE_DIR}/scripts/copy_common.py"
-                        --source-dir "${CMAKE_SOURCE_DIR}/common"
-                        --dest-dir "$<TARGET_FILE_DIR:${_tgt}>"
+                    --source-dir "${CMAKE_SOURCE_DIR}/common"
+                    --dest-dir "$<TARGET_FILE_DIR:${_tgt}>"
                     COMMENT "Running copy_common.py for target ${_tgt}"
                 )
             endif()
         endif()
     endforeach()
 endif()
+
+set(MW_VERSION_SCRIPT ${CMAKE_SOURCE_DIR}/scripts/generate_version.py)
+set(MW_VERSION_HEADER ${CMAKE_SOURCE_DIR}/Version.h)
+
+execute_process(
+    COMMAND ${Python3_EXECUTABLE} ${MW_VERSION_SCRIPT}
+    --repo-root ${CMAKE_SOURCE_DIR}
+    --output ${MW_VERSION_HEADER}
+    --quiet
+)
+
+add_custom_target(MonoworksGenerateVersion
+    COMMAND ${Python3_EXECUTABLE} ${MW_VERSION_SCRIPT}
+    --repo-root ${CMAKE_SOURCE_DIR}
+    --output ${MW_VERSION_HEADER}
+    --quiet
+    BYPRODUCTS ${MW_VERSION_HEADER}
+    COMMENT "Generating Version.h"
+    VERBATIM
+)
+
+add_dependencies(MonoEngine MonoworksGenerateVersion)
+target_include_directories(MonoEngine PRIVATE ${CMAKE_SOURCE_DIR})

@@ -60,7 +60,7 @@ namespace Monoworks
 		/**
 		 * @brief Version of the associated Application.
 		 */
-		MAYBE_UNUSED SAppVersion Version;
+		MAYBE_UNUSED AppVersion Version;
 		/**
 		 * @brief Define whether to use the Vulkan swapchain.
 		 */
@@ -100,7 +100,7 @@ namespace Monoworks
 		 * @brief Executes exactly one engine frame.
 		 * Has to be called in a loop.
 		 */
-		void Frame();
+		void Frame( CTimestep ts );
 
 		/**
 		 * @brief Generic Getter for the Application Singleton

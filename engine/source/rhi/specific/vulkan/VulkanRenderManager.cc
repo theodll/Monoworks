@@ -217,6 +217,14 @@ namespace Monoworks::RHI
 
 			presenter->TransitionRender( &renderInfo );
 		}
+#ifdef MW_AFTERMATH
+		if ( CVulkanContext::NVIDIADiagnosticCheckpointsAvailable() )
+		{
+			const auto checkpoints = CVulkanContext::GetManagedCheckpoints();
+			size_t id = checkpoints.size() + 1; 
+			vkCmdSetCheckpointNV( cmdbuf, (const void*)id );
+		}
+#endif
 	};
 
 	void CVulkanRenderManager::EndRootGraphicsCommandBuffer( u32 frameIndex ) NOEXCEPT

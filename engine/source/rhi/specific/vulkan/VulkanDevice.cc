@@ -163,8 +163,82 @@ namespace Monoworks::RHI
 			MW_ASSERT(false, "Failed to find a Suitable Physical Device.");
 		}
 
-		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &m_Properties); //  <-- hier
+		vkGetPhysicalDeviceProperties(m_PhysicalDevice, &m_Properties); 
 		MW_INFO("Physical Device: {}", m_Properties.deviceName);
+
+		EGraphicsVendorFlags flags;
+
+		switch ( m_Properties.vendorID )
+		{
+		case MW_GPU_DEVICE_ID_NVIDIA:
+		{
+			// Check if driver is newer than 531.41 or not.
+			// NVIDIA Aftermath NSIGHT only works with the driver 531.41 or newer 
+			VkPhysicalDeviceProperties deviceProperties;
+			VkPhysicalDeviceDriverProperties driverProperties{};
+			driverProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
+			driverProperties.pNext = nullptr;
+
+			VkPhysicalDeviceProperties2 deviceProperties2{};
+			deviceProperties2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+			deviceProperties2.pNext = &driverProperties;
+
+			vkGetPhysicalDeviceProperties2( m_PhysicalDevice, &deviceProperties2 );
+
+			std::string driverInfoStr( driverProperties.driverInfo );
+
+			size_t firstDigit = driverInfoStr.find_first_of( "0123456789" );
+			if ( firstDigit == std::string::npos )
+			{
+				MW_WARN( "Driver older than 531.41 detected. ",
+					"Due to this, NVIDIA Aftermath SDK does not work or may not execute properly and no GPU Memory Dumps are going to be recorded.",
+					"This is normal if your GPU was manufactured before NVIDIA Pascal (GTX 10, Tesla P4, Quadro P) released. If not, consider updating your graphics driver." );
+				flags = MW_GRAPHICS_VENDOR_NVIDIA_OLD;
+				break;
+			}
+
+			std::string versionStr = driverInfoStr.substr( firstDigit );
+			std::stringstream ss( versionStr );
+
+			int major = 0;
+			int minor = 0;
+			char dot;
+
+			if ( ss >> major >> dot >> minor ) {
+				if ( major > 531 ) {
+					flags = MW_GRAPHICS_VENDOR_NVIDIA;
+					break;
+				}
+				else if ( major == 531 )
+					if ( minor >= 41 )
+					{
+						flags = MW_GRAPHICS_VENDOR_NVIDIA;
+						break;
+					}
+			}
+
+			MW_WARN( "Driver older than 531.41 detected. ",
+				"Due to this, NVIDIA Aftermath SDK does not work or may not execute properly and no GPU Memory Dumps are going to be recorded.",
+				"This is normal if your GPU was manufactured before NVIDIA Pascal (GTX 10, Tesla P4, Quadro P) released. If not, consider updating your graphics driver." );
+			flags = MW_GRAPHICS_VENDOR_NVIDIA_OLD;
+			break;
+		}
+		case MW_GPU_DEVICE_ID_AMD:
+			flags = MW_GRAPHICS_VENDOR_AMD;
+			break;
+		case MW_GPU_DEVICE_ID_INTEL:
+			flags = MW_GRAPHICS_VENDOR_INTEL;
+			break;
+		case MW_GPU_DEVICE_ID_APPLE:
+			flags = MW_GRAPHICS_VENDOR_APPLE;
+			break;
+		default:
+			flags = MW_GRAPHICS_VENDOR_UNKNOWN;
+		}
+
+		m_nVendor = flags;
+
+		CCrashManager::SendGraphicsVendor( flags );
 	}
 
 	void CVulkanDevice::CreateLogicalDevice() noexcept
@@ -218,7 +292,6 @@ namespace Monoworks::RHI
 			priorityIndex++;
 		}
 
-
 		// TODO: Move this to a config file
 		VkPhysicalDeviceMaintenance7FeaturesKHR maintenance7Features{};
 		maintenance7Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_7_FEATURES_KHR;
@@ -261,6 +334,30 @@ namespace Monoworks::RHI
 
 		createInfo.pEnabledFeatures = nullptr;
 		createInfo.pNext = &deviceFeatures2;
+
+#ifdef MW_AFTERMATH
+
+		if ( m_nVendor & MW_GRAPHICS_VENDOR_NVIDIA )
+		{
+			m_DeviceExtensions.push_back( VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME );
+			m_DeviceExtensions.push_back( VK_NV_DEVICE_DIAGNOSTICS_CONFIG_EXTENSION_NAME );
+
+			VkDeviceDiagnosticsConfigFlagsNV afFlags = 
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_AUTOMATIC_CHECKPOINTS_BIT_NV | 
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_RESOURCE_TRACKING_BIT_NV |     
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_DEBUG_INFO_BIT_NV |     
+				VK_DEVICE_DIAGNOSTICS_CONFIG_ENABLE_SHADER_ERROR_REPORTING_BIT_NV;
+
+			VkDeviceDiagnosticsConfigCreateInfoNV aftermathInfo{};
+			aftermathInfo.sType = VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV;
+			aftermathInfo.pNext = &deviceFeatures2;
+			aftermathInfo.flags = afFlags;
+
+			createInfo.pNext = &aftermathInfo;
+
+		}
+
+#endif
 
 		createInfo.enabledExtensionCount = static_cast<u32>(m_DeviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = m_DeviceExtensions.data();
